@@ -68,8 +68,8 @@ def determine_serve_dir(port=DEFAULT_PORT, custom_dir=None):
 
 
 class SPAHandler(SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=self.server.serve_dir, **kwargs)
+    def __init__(self, request, client_address, server, directory=None):
+        super().__init__(request, client_address, server, directory=server.serve_dir)
 
     def do_GET(self):
         serve_dir = self.server.serve_dir

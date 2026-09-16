@@ -131,12 +131,18 @@ dmypy.json
 # AI-BS: Large binaries & build artifacts
 # -----------------------------------------------------------------------
 *.exe
+*.msi
+*.dmg
+*.pkg
 *.img
 *.iso
 *.tar.gz
 *.torrent
 *.zip
 *.vsix
+*.m4a
+.gradle_home/
+frontend/android/.gradle_home/
 
 # Specific large root-level binaries
 Antigravity-x64.exe
@@ -233,6 +239,12 @@ BroadcastStudioApp/dist/
 BroadcastStudioApp/dist-electron/
 dist-electron/
 dist/
+.gradle/
+.gradle_tmp/
+*.gradle_tmp*
+android/.gradle/
+frontend/android/.gradle_tmp/
+frontend/android/.gradle/
 frontend/desktop-build/
 desktop-build/
 stehouwer_vector_memory/
