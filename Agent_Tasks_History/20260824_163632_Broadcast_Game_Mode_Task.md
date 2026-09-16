@@ -1,0 +1,8 @@
+- [x] Update `AI_BS_Backend.py` to handle Game Mode (kill/relaunch ComfyUI and Ollama)
+- [x] Update `BroadcastStudio.jsx` to add Game Mode UI toggle
+- [x] Deploy frontend to Firebase (per STRICT RULE)
+- [ ] Update Master Architectural Ledger
+- [ ] Update Ecosystem Manual
+- [ ] Archive Implementation Plan and Task List
+- [ ] Update Chronology Logs
+- [ ] Test the Game Mode Endpoint

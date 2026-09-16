@@ -1,0 +1,23 @@
+# Tasks: 30+ Node Ultra-Syndication & IndexNow Global Matrix Integration (v5.127.0)
+
+- [x] 1. Expand Backend Syndication Router (`backend/modules/syndication_router.py`) <!-- id: 0 -->
+  - [x] Implement categorized 30+ node broadcast executor covering:
+    - **IndexNow Fleet (7 nodes)**: Central Hub, Bing, Yandex, Naver, Seznam.cz, Yep (Ahrefs), AmazonBot.
+    - **XML-RPC Ping Network (12 nodes)**: Weblogs.com, FeedBurner, Bitacoras, FC2, Bloggers Japan, Exblog, Cocolog-Nifty, Goo Weblog, MyBlog JP, Twingly, Ping-O-Matic, Blo.gs.
+    - **WebSub / PubSubHubbub Hubs (4 nodes)**: Google Hub, Superfeedr Open Hub, WebSubHub.com, Switchboard Live Hub.
+    - **Decentralized Standards (2 nodes)**: RSSCloud Standard (`http://rpc.rsscloud.co/ping`), Webmention Protocol Relay.
+    - **Multi-Aggregator Gateways (5 nodes)**: Pingomatic REST Gateway, FeedShark, Pingler, PingFarm, PingMyBlog. <!-- id: 1 -->
+  - [x] Add category breakdown and channel filtering support to `POST /api/syndication/broadcast`. <!-- id: 2 -->
+  - [x] Verify non-blocking ThreadPoolExecutor execution with 2.5-second timeouts per request to prevent slow nodes from blocking fast nodes. <!-- id: 3 -->
+- [x] 2. Upgrade Frontend `SyndicationTab.jsx` and Desktop Studio UI <!-- id: 4 -->
+  - [x] Add category filter pills (`All (30+)`, `IndexNow Fleet`, `XML-RPC Network`, `WebSub Push Hubs`, `Decentralized`, `Aggregators`). <!-- id: 5 -->
+  - [x] Add node-by-node category badges, real-time status indicators, and summary metric cards (Total Broadcasted, Active Nodes, Average Latency, Success Rate). <!-- id: 6 -->
+  - [x] Mirror updates in `frontend/components/SyndicationTab.jsx` and `BroadcastStudioApp/src/components/SyndicationTab.jsx`. <!-- id: 7 -->
+- [x] 3. Version Parity Bump to `v5.127.0` <!-- id: 8 -->
+  - [x] Update version badges in `frontend/App.jsx`, `Sidebar.jsx`, `TopNavbar.jsx`, `ChatTab.jsx`, `EcosystemBlueprintTab.jsx`, and `BroadcastStudio.jsx`. <!-- id: 9 -->
+- [x] 4. Build Frontend & Deploy to Firebase Hosting <!-- id: 10 -->
+  - [x] Execute `npm run build` and `firebase deploy --only hosting --non-interactive` in `C:\AI-BS\frontend`. <!-- id: 11 -->
+- [x] 5. Master Documentation, Ledger & Chronology Synchronization <!-- id: 12 -->
+  - [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` with 30+ node matrix specs. <!-- id: 13 -->
+  - [x] Update `docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md` (bump to `v5.127.0`), persist versioned artifact copy to `saved_data/artifacts/20260829_AI_BS_Master_Ecosystem_Manual.md`, and log entry in `NotebookLM_Records/artifact_history.md`. <!-- id: 14 -->
+  - [x] Archive `task.md` and `implementation_plan.md` to master history directories and update `MASTER_TASKS_CHRONOLOGY.md`, `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md`, and `MASTER_HISTORICAL_INDEX.md`. <!-- id: 15 -->

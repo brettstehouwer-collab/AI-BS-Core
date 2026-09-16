@@ -1,0 +1,24 @@
+# Task: RTX 4090 Wan 2.1 Video Generation Pipeline Recovery & Timeout Remediation
+
+- [x] Phase 1: Planning & Specification <!-- id: 500 -->
+  - [x] Diagnose root cause of 585s timeout and "Server returned HTTP Connection Offline" <!-- id: 501 -->
+  - [x] Verify local ComfyUI Wan 2.1 engine and benchmark 49-frame generation on RTX 4090 (55s runtime) <!-- id: 502 -->
+  - [x] Author comprehensive implementation plan artifact <!-- id: 503 -->
+- [x] Phase 2: Backend Video Pipeline Optimization (`tool_registry.py` & `comfy_bridge.py`) <!-- id: 504 -->
+  - [x] Add immediate node exception capture in `backend/comfy_bridge.py` <!-- id: 505 -->
+  - [x] Calibrate Wan 2.1 duration (default 3s, k=12, 49 frames @ 16fps) in `backend/tools/tool_registry.py` <!-- id: 506 -->
+  - [x] Enforce 16-pixel divisibility on width (512-960) and height (384-544) for Wan patch embeds <!-- id: 507 -->
+  - [x] Fix hazardous SDXL fallback latent batch size from 64 to 8 <!-- id: 508 -->
+- [x] Phase 3: Frontend Streaming Resilience (`MobileStehouwerChat.jsx`, `ChatTab.jsx`, `MobileGeminiChat.jsx`) <!-- id: 509 -->
+  - [x] Scope accumulated text outside stream try/catch to preserve partial tokens and keep-alives <!-- id: 510 -->
+  - [x] Prevent destructive non-streaming failover when stream has already delivered partial content <!-- id: 511 -->
+  - [x] Increase media generation timeout ceiling to 900s (15 min) <!-- id: 512 -->
+  - [x] Sync changes across mirror components in `frontend/src/` and `frontend/components/` <!-- id: 513 -->
+- [x] Phase 4: Production Build, Deployment & Backend Reload <!-- id: 514 -->
+  - [x] Rebuild frontend bundle (`npm run build`) and deploy to Firebase Hosting (`ai-bs-dashboard.web.app`) <!-- id: 515 -->
+  - [x] Mirror dist to `C:\Program Files\AI-BS Sovereign Studio\frontend_dist` <!-- id: 516 -->
+  - [x] Reload FastAPI backend daemon on Port 8080 <!-- id: 517 -->
+- [x] Phase 5: Verification & Ledger Documentation <!-- id: 518 -->
+  - [x] Validate end-to-end video synthesis via test script (57.18s execution, verified H.264 video stream) <!-- id: 519 -->
+  - [x] Deliver generated cyberpunk matrix flight video artifact to operator <!-- id: 520 -->
+  - [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`, `AI_BS_MASTER_ECOSYSTEM_MANUAL.md`, and master chronologies <!-- id: 521 -->

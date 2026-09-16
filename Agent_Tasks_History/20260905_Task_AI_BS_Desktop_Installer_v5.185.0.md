@@ -1,0 +1,30 @@
+# Tasks: AI-BS Sovereign Studio Windows Desktop Installer (v5.185.0)
+
+- [x] Desktop Runner & Local Web Server Architecture <!-- id: 500 -->
+  - [x] Create `installer/serve_desktop.py` (ultra-fast zero-dependency local SPA web server with MIME types and fallback routing) <!-- id: 501 -->
+  - [x] Create `installer/Launch_Desktop_Studio.bat` and `installer/Launch_Desktop_Studio.vbs` (silent one-click desktop app mode launcher) <!-- id: 502 -->
+  - [x] Create `installer/Launch_Broadcast_Studio.bat` and `installer/Launch_Wave_Studio.bat` <!-- id: 503 -->
+  - [x] Create `installer/Shutdown_Desktop_Studio.bat` for clean system shutdown <!-- id: 504 -->
+- [x] Inno Setup 6 Packaging Script (`installer/AI_BS_Studio_Setup.iss`) <!-- id: 505 -->
+  - [x] Configure high-compression LZMA2 setup wizard with custom branding and metadata <!-- id: 506 -->
+  - [x] Package production frontend bundle (`frontend/dist/`) with Stehouwer Wave Studio, Music DAW, Broadcast Studio, and Phone Repair Guide <!-- id: 507 -->
+  - [x] Package BroadcastStudioApp production bundle (`BroadcastStudioApp/dist/`) <!-- id: 508 -->
+  - [x] Package core backend scripts and daemons (`backend/AI_BS_Backend.py`, broadcast daemons, VST daemon, social daemon, security watchdog) <!-- id: 509 -->
+  - [x] Package Go Commercial Gateway (`go-core/aibs_engine.exe`) <!-- id: 510 -->
+  - [x] Package desktop launchers, batch orchestrators, and custom application icon (`build/icon.ico`) <!-- id: 511 -->
+  - [x] Create Windows Desktop shortcuts: "AI-BS Sovereign Studio", "AI-BS Broadcast Studio", "AI-BS Matrix Launcher", "AI-BS Clean Shutdown" <!-- id: 512 -->
+  - [x] Create Windows Start Menu Program Group: "AI-BS Sovereign Studio" with all component launchers and documentation <!-- id: 513 -->
+  - [x] Configure file associations (`.aibs`, `.daw`, `.stehouwer`) and Windows uninstaller registration <!-- id: 514 -->
+- [x] Build & Compile Installer Executable <!-- id: 515 -->
+  - [x] Create PowerShell automated build script `installer/build_desktop_installer.ps1` <!-- id: 516 -->
+  - [x] Compile using Inno Setup 6 (`ISCC.exe`) to generate `AI_BS_Studio_Setup_v5.185.0.exe` <!-- id: 517 -->
+  - [x] Mirror compiled installer executable to `C:\AI-BS\InstallerEXE's\` <!-- id: 518 -->
+- [x] UI Version Parity (v5.185.0) & Firebase Production Deployment <!-- id: 519 -->
+  - [x] Sweep version badges to `v5.185.0` across `TopNavbar.jsx`, `ChatTab.jsx`, `PhoneRepairGuideTab.jsx` and all 3 mirror directory trees <!-- id: 520 -->
+  - [x] Run `npm run build` in `C:\AI-BS\frontend` <!-- id: 521 -->
+  - [x] Deploy live to Firebase Hosting (`https://ai-bs-dashboard.web.app`) <!-- id: 522 -->
+- [x] Master Documentation & Chronology Synchronization <!-- id: 523 -->
+  - [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` with timestamped `v5.185.0` entry <!-- id: 524 -->
+  - [x] Update `docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md` (bump to 5.185.0) and persist copy to `saved_data/artifacts/20260905_AI_BS_Master_Ecosystem_Manual_v5.185.0.md` <!-- id: 525 -->
+  - [x] Log lineage in `NotebookLM_Records/artifact_history.md` <!-- id: 526 -->
+  - [x] Update `MASTER_TASKS_CHRONOLOGY.md`, `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md`, and `MASTER_HISTORICAL_INDEX.md` <!-- id: 527 -->

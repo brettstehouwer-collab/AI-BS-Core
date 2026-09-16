@@ -1,0 +1,5 @@
+- [x] Neuter `scavenger_tool_agent.py` by hardcoding `run_sweep_and_repair` to return immediately.
+- [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` to reflect the deactivation of Phase 4 (Scavenger Engine).
+- [ ] Archive `implementation_plan.md` and `task.md` to History folders.
+- [ ] Update chronologies in `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md` and `MASTER_TASKS_CHRONOLOGY.md`.
+- [ ] Create `walkthrough.md` to summarize the changes.

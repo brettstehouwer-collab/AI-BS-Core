@@ -1,0 +1,24 @@
+# Task: Npcap-Backed L2/L3 Promiscuous Packet Capture & Hybrid Telemetry Engine
+
+- [x] Phase 1: Environment & Dependency Preparation <!-- id: 200 -->
+  - [x] Inspect and install `scapy` into Python environment via project-standard toolchain (`uv pip install scapy`) <!-- id: 201 -->
+  - [x] Validate non-blocking fallback if Npcap NDIS driver is not yet installed on host OS <!-- id: 202 -->
+- [x] Phase 2: Telemetry Module L2/L3 Architecture Integration (`backend/modules/network_telemetry.py`) <!-- id: 203 -->
+  - [x] Define unified `TelemetryRecord` dataclass supporting L2 MAC metadata, L3 IP, transport, and engine identifiers <!-- id: 204 -->
+  - [x] Integrate Scapy `AsyncSniffer` promiscuous capture loop with kernel BPF filtering <!-- id: 205 -->
+  - [x] Implement multi-mode capture selector (`ASGI`, `NPCAP`, `HYBRID`) in `UnifiedTelemetryManager` <!-- id: 206 -->
+  - [x] Preserve existing SSE subscriber dispatch, Stehouwer-Publishing classification, and credential scrubbing <!-- id: 207 -->
+  - [x] Add network interface enumeration utility (`get_network_interfaces()`) <!-- id: 208 -->
+- [x] Phase 3: Router & Endpoint Expansion (`backend/routers/network_telemetry_router.py`) <!-- id: 209 -->
+  - [x] Add `POST /api/network-telemetry/capture-mode` to dynamically switch between `ASGI`, `NPCAP`, and `HYBRID` <!-- id: 210 -->
+  - [x] Add `GET /api/network-telemetry/interfaces` to query available host network adapters <!-- id: 211 -->
+  - [x] Update `/api/network-telemetry/summary` to return capture engine status, Npcap availability, and active BPF filter <!-- id: 212 -->
+- [x] Phase 4: Frontend Category 2 Enhancement & Engine Mode Controls (`frontend/src/components/BetaAnalyticsTab.jsx`) <!-- id: 213 -->
+  - [x] Add Capture Engine selector (ASGI / NPCAP / HYBRID) with live status badge <!-- id: 214 -->
+  - [x] Render Layer 2 MAC addresses (`src_mac`, `dst_mac`) in the wire packet stream table <!-- id: 215 -->
+  - [x] Sweep UI version parity to `v5.240.0` across frontend components and manifests <!-- id: 216 -->
+- [x] Phase 5: Verification, Production Deployment & Ledger Maintenance <!-- id: 217 -->
+  - [x] Execute automated test suite validating mode toggling, fallback behavior, and ASGI continuity <!-- id: 218 -->
+  - [x] Build production bundle (`npm run build`) and deploy live to Firebase Hosting (`ai-bs-dashboard.web.app`) <!-- id: 219 -->
+  - [x] Mirror `dist` to `C:\Program Files\AI-BS Sovereign Studio\frontend_dist` <!-- id: 220 -->
+  - [x] Synchronize `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`, `AI_BS_MASTER_ECOSYSTEM_MANUAL.md` (v5.240.0), `saved_data/artifacts/`, and chronologies <!-- id: 221 -->

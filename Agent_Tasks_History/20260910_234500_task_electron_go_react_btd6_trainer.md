@@ -1,0 +1,32 @@
+# Task: Electron / Go / React BTD6 Memory Trainer Build & Pipeline Integration
+
+- [ ] Architectural Design & Specification Plan <!-- id: 0 -->
+  - [ ] Detail Go Native Memory Engine & IPC Daemon (`go-core/cmd/btd6_trainer_daemon/main.go`)
+  - [ ] Detail Electron Main Process IPC Pipeline (`trainer_frontend/src/main/index.ts`)
+  - [ ] Detail React UI Renderer with Multi-Stage Scanner & Cheats Deck (`trainer_frontend/src/renderer/src/App.tsx`)
+- [ ] Implement Go Native Memory Engine & IPC Daemon <!-- id: 1 -->
+  - [ ] Native Win32 Memory API bindings (`OpenProcess`, `VirtualQueryEx`, `ReadProcessMemory`, `WriteProcessMemory`)
+  - [ ] Enforce 8-byte alignment for doubles and 4-byte alignment for int32
+  - [ ] Implement `FirstScanCash`, `NextScanCash`, `FirstScanCoins`, `NextScanCoins`, candidate tracking, and auto-lock
+  - [ ] Implement 25ms tick loop for value freezing without scanning
+  - [ ] Implement stdio JSON IPC protocol (`state_update`, `error`, commands)
+  - [ ] Compile Go binary to `trainer_frontend/resources/btd6_trainer_daemon.exe` and `C:\AI-BS\EXE\btd6_trainer_daemon.exe`
+- [ ] Upgrade Electron Main & Preload Process <!-- id: 2 -->
+  - [ ] Update `src/main/index.ts` to prioritize spawning `btd6_trainer_daemon.exe`
+  - [ ] Add frameless window styling and native window control IPC (`minimize`, `maximize`, `close`)
+  - [ ] Update `src/preload/index.ts` to expose window control methods and typed daemon messaging
+- [ ] Upgrade React UI Renderer (`trainer_frontend/src/renderer/src`) <!-- id: 3 -->
+  - [ ] Implement cyberpunk themed layout with custom draggable header and window controls
+  - [ ] Build Tab 1: 🎯 Memory Scanner (Starting cash pills $650/$850/$450/$1750, First Scan, Next Scan, candidate badges)
+  - [ ] Build Tab 2: ⚡ Match Cheats (F1-F7, F10 with dual key badges and toggle animations)
+  - [ ] Build Tab 3: 🎛️ Variables & Limits
+  - [ ] Build Tab 4: 📊 Live Memory Telemetry & Logs
+  - [ ] Add Steam Launch button (`steam://rungameid/960090`)
+- [ ] Automated Testing & Verification <!-- id: 4 -->
+  - [ ] Authored automated test script validating Go daemon JSON IPC and memory routines
+  - [ ] Run test suite against mock target process
+  - [ ] Build Electron production package via `npm run build` and `electron-builder`
+- [ ] UI Version Parity, Master Ledger & Chronology Synchronization <!-- id: 5 -->
+  - [ ] Bump version to `5.249.0` across manifests
+  - [ ] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` and `AI_BS_MASTER_ECOSYSTEM_MANUAL.md`
+  - [ ] Archive task and plan artifacts, sync chronologies and index

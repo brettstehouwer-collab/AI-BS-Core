@@ -1,0 +1,23 @@
+# Tasks: Omni-Channel Automated Broadcast & Campaign Matrix (v5.130.0)
+
+- [x] Phase 1: Backend Omni-Channel Dispatch Engines (`backend/modules/syndication_router.py`) <!-- id: 0 -->
+  - [x] Implement Discord Rich Embed Webhook Dispatcher. <!-- id: 1 -->
+  - [x] Implement Telegram Channel Broadcast Dispatcher. <!-- id: 2 -->
+  - [x] Implement Bluesky (AT Protocol) & Mastodon (ActivityPub) Open API Auto-Posters. <!-- id: 3 -->
+  - [x] Implement Dynamic Local `sitemap.xml` & `feed.xml` Synchronization Engine. <!-- id: 4 -->
+  - [x] Implement Multi-URL Campaign Multiplexing (`urls` array support in `BroadcastRequest`). <!-- id: 5 -->
+- [x] Phase 2: Frontend Omni-Channel Campaign Matrix UI (`frontend/components/SyndicationTab.jsx`) <!-- id: 6 -->
+  - [x] Add Campaign Scope Selector (Single URL, Full Media Footprint, Music Fleet, Literary Suite). <!-- id: 7 -->
+  - [x] Add Active Channel Switches (Discord, Telegram, Bluesky, Mastodon, Sitemap/RSS). <!-- id: 8 -->
+  - [x] Mirror component to `BroadcastStudioApp/src/components/SyndicationTab.jsx`. <!-- id: 9 -->
+- [x] Phase 3: Automated Verification & Testing <!-- id: 10 -->
+  - [x] Create `backend/test_omnichannel_syndication.py` testing Discord, Telegram, Bluesky, Sitemap/RSS, and multi-URL multiplexing. <!-- id: 11 -->
+  - [x] Execute automated tests with 100% pass rate. <!-- id: 12 -->
+- [x] Phase 4: Version Parity, Live Build & Firebase Deployment (v5.130.0) <!-- id: 13 -->
+  - [x] Sweep version badges across UI tabs to `v5.130.0`. <!-- id: 14 -->
+  - [x] Build Vite bundle and deploy live to Firebase Hosting (`ai-bs-dashboard.web.app`). <!-- id: 15 -->
+- [x] Phase 5: Master Ledger & Ecosystem Manual Synchronization <!-- id: 16 -->
+  - [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` (`v5.130.0`). <!-- id: 17 -->
+  - [x] Update `docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md` (`v5.130.0`), copy to `saved_data/artifacts/`, and log in `NotebookLM_Records/artifact_history.md`. <!-- id: 18 -->
+  - [x] Prepend entries to `MASTER_TASKS_CHRONOLOGY.md`, `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md`, and `MASTER_HISTORICAL_INDEX.md`. <!-- id: 19 -->
+  - [x] Archive `task.md` and `implementation_plan.md`. <!-- id: 20 -->

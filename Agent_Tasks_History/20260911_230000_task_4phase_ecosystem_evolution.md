@@ -1,0 +1,22 @@
+# Task: 4-Phase Comprehensive Ecosystem Multi-Domain Evolution
+
+- [x] Phase 1: Full Ecosystem Daemon & 18-Port Topology Matrix Health Audit <!-- id: 0 -->
+  - [x] 1.1 Develop automated probe script `backend/scripts/audit_18_port_topology_matrix.py` testing all 18 collision-free ports <!-- id: 1 -->
+  - [x] 1.2 Inspect active PIDs, listening state, and protocol responses across FastAPI, Node, Go, ChromaDB, ComfyUI, OBS, and Ollama <!-- id: 2 -->
+  - [x] 1.3 Emit structured JSON & Markdown report to `saved_data/artifacts/` <!-- id: 3 -->
+- [x] Phase 2: Live Unreal Engine 5 Screenplay Bridge Execution <!-- id: 4 -->
+  - [x] 2.1 Verify Port 8888 signaling server and Port 30010 Remote Control API connectivity <!-- id: 5 -->
+  - [x] 2.2 Execute `scene_builder.py` and `character_spawner.py` for *The Bad Side Upside Down* <!-- id: 6 -->
+  - [x] 2.3 Verify actors, coordinates, and Weeble Wobble physics constraints in UE5 <!-- id: 7 -->
+- [x] Phase 3: Local ComfyUI Video Scene & Concept Art Synthesis <!-- id: 8 -->
+  - [x] 3.1 Verify ComfyUI local daemon on Port 8189 / 8188 (RTX 4090 CUDA accelerated) <!-- id: 9 -->
+  - [x] 3.2 Ingest screenplay visual prompts from `concept_art_prompts.json` <!-- id: 10 -->
+  - [x] 3.3 Synthesize localized visual assets and video diffusion sequences with zero external paid APIs <!-- id: 11 -->
+- [x] Phase 4: React Native Expo Mobile App Telemetry & Ledger Integration <!-- id: 12 -->
+  - [x] 4.1 Connect `mobile-app/` to live Port 8080 network telemetry and CDZ audit ledger <!-- id: 13 -->
+  - [x] 4.2 Enforce multi-tenant `X-Client-ID` header isolation in mobile client <!-- id: 14 -->
+  - [x] 4.3 Validate TypeScript types via `npx tsc --noEmit` and verify mobile tunnel scripts <!-- id: 15 -->
+- [x] Phase 5: Milestone Verification, Ledger Sync & Version Bump (`v5.261.0`) <!-- id: 16 -->
+  - [x] 5.1 Run automated test suite across all modified modules <!-- id: 17 -->
+  - [x] 5.2 Build frontend production bundle and stage live Firebase Hosting deployment <!-- id: 18 -->
+  - [x] 5.3 Synchronize Master Architectural Ledger, Ecosystem Manual, and Chronologies <!-- id: 19 -->

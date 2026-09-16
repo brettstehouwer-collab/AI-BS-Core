@@ -1,0 +1,25 @@
+# Task List: Full Ecosystem Health Verification & Production Deployment
+
+- [/] **Phase 1: Daemon & Subsystem Health Audit** <!-- id: 0 -->
+  - [x] Create automated multi-endpoint audit script for all local servers <!-- id: 1 -->
+  - [/] Test & ensure all daemons are active:
+    - [x] Port 8080 (FastAPI Master Core & Sample Vault) <!-- id: 2 -->
+    - [ ] Port 8088 (DirectX 11 NVENC Broadcast Kernel & Game Scanner) <!-- id: 3 -->
+    - [x] Port 8005 (Legacy Broadcast Stream Manager) <!-- id: 4 -->
+    - [x] Port 8013 (VST3 DSP & Audio Theme Bridge) <!-- id: 5 -->
+    - [x] Port 8002 (ChromaDB Vector Store) <!-- id: 6 -->
+    - [x] Port 11434 (Ollama Local RTX 4090 GPU LLM) <!-- id: 7 -->
+    - [x] Port 4455 (OBS Studio v30 WebSocket) <!-- id: 8 -->
+- [ ] **Phase 2: Tab, Subtab & Module Codebase Verification** <!-- id: 9 -->
+  - [ ] Validate all frontend tab modules and subcomponents for import integrity <!-- id: 10 -->
+  - [ ] Validate BS-Studio standalone workstation components (Broadcast + DAW + VST3) <!-- id: 11 -->
+  - [ ] Verify zero build/lint errors across both codebases <!-- id: 12 -->
+- [ ] **Phase 3: Production Build & Multi-Volume Synchronization** <!-- id: 13 -->
+  - [ ] Build `BroadcastStudioApp` production bundle and package desktop distribution <!-- id: 14 -->
+  - [ ] Synchronize unpacked `BS-Studio.exe` and `BS-Studio Setup 5.151.0.exe` to `E:\AI-BS Broadcast Studio\` and `frontend/desktop-build/` <!-- id: 15 -->
+  - [ ] Build and deploy `frontend` to Firebase Hosting (`ai-bs-dashboard.web.app`) <!-- id: 16 -->
+- [ ] **Phase 4: Master Architectural Ledger & Ecosystem Manual Maintenance** <!-- id: 17 -->
+  - [ ] Bump ecosystem version (`5.151.0` -> `5.152.0`) in `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` <!-- id: 18 -->
+  - [ ] Update `docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md` and persist copy to `saved_data/artifacts/` <!-- id: 19 -->
+  - [ ] Update `NotebookLM_Records/artifact_history.md` and `MASTER_HISTORICAL_INDEX.md` <!-- id: 20 -->
+  - [ ] Create timestamped `SAVED_CHECKPOINT.md` save point <!-- id: 21 -->

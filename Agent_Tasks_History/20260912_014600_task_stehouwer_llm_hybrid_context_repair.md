@@ -1,0 +1,22 @@
+# Task: Stehouwer LLM Hybrid Chat Multi-Turn Context Memory Restoration & SQLite Grounding (v5.263.0)
+
+- [x] Phase 1: Forensic Root Cause Investigation & Database Reality Verification <!-- id: 0 -->
+  - [x] 1.1 Verify consolidation state of 7 SQLite databases in `backend/aibs_master.db` (27 tables, 6,010 rows) <!-- id: 1 -->
+  - [x] 1.2 Inspect BS-Chat / FastAPI Edge request payloads in `ChatTab.jsx` and `MobileStehouwerChat.jsx` <!-- id: 2 -->
+  - [x] 1.3 Identify negative refusal trigger tokens in `backend/core/sovereign_reasoning/dispatcher.py` <!-- id: 3 -->
+- [x] Phase 2: Affirmative System Prompt Re-Engineering & Architectural Grounding <!-- id: 4 -->
+  - [x] 2.1 Excise literal refusal strings ("I cannot create explicit content") from `dispatcher.py` <!-- id: 5 -->
+  - [x] 2.2 Inject affirmative execution directives authorizing database, code, and system workflows <!-- id: 6 -->
+  - [x] 2.3 Explicitly ground model prompt in `aibs_master.db` reality and Markdown architectural ledger <!-- id: 7 -->
+- [x] Phase 3: Multi-Turn Conversational Memory Pipeline Integration <!-- id: 8 -->
+  - [x] 3.1 Upgrade `ChatRequest` in `hybrid_reasoning_engine.py` and `dispatcher.py` to accept message history <!-- id: 9 -->
+  - [x] 3.2 Reconstruct recent conversational context preamble before current instruction <!-- id: 10 -->
+  - [x] 3.3 Update all 4 frontend mirror trees of `ChatTab.jsx` and both mirrors of `MobileStehouwerChat.jsx` to pass `messages` <!-- id: 11 -->
+- [x] Phase 4: Diagnostic Suite & Matrix Doctor Realignment <!-- id: 12 -->
+  - [x] 4.1 Update `backend/matrix_doctor.py` and `backend/core/real_system_tools.py` to highlight `aibs_master.db` <!-- id: 13 -->
+- [x] Phase 5: Automated Probe Testing, Verification, Cloud Push & Master Ledger Sync (`v5.263.0`) <!-- id: 14 -->
+  - [x] 5.1 Run automated test probe `scripts/test_fixed_stehouwer_chat.py` against local Ollama `stehouwer_llm` <!-- id: 15 -->
+  - [x] 5.2 Validate TypeScript in `mobile-app` (`npx tsc --noEmit`) <!-- id: 16 -->
+  - [x] 5.3 Sweep version `v5.263.0` across manifests, UI badges, service workers, and compile Vite production bundle <!-- id: 17 -->
+  - [x] 5.4 Deploy live to Firebase Hosting (`ai-bs-dashboard.web.app`) <!-- id: 18 -->
+  - [x] 5.5 Synchronize Master Architectural Ledger, Ecosystem Manual, and Chronologies <!-- id: 19 -->

@@ -1,0 +1,26 @@
+# Tasks: Automated Posting & Syndication Tab Integration
+
+- [x] 1. Verify and mount Backend Syndication Router in `backend/AI_BS_Backend.py` <!-- id: 0 -->
+  - [x] Ensure `modules/syndication_router.py` provides `POST /api/syndication/broadcast` and `GET /api/syndication/history` with multi-tenant isolation (`Depends(get_tenant)` fallback to `stehouwer_publishing`) and SQLite persistence (`saved_data/syndication_history.sqlite`). <!-- id: 1 -->
+  - [x] Add `app.include_router(syndication_router)` to `backend/AI_BS_Backend.py` and run a quick verification test against the endpoint. <!-- id: 2 -->
+- [x] 2. Audit & polish Frontend `SyndicationTab.jsx` <!-- id: 3 -->
+  - [x] Verify `frontend/components/SyndicationTab.jsx` contains 1-Click Broadcast Engine, Live Console Terminal, and Multi-Channel Ad Copy Dispatcher with quick-copy presets. <!-- id: 4 -->
+  - [x] Ensure `BroadcastStudioApp/src/components/SyndicationTab.jsx` is present and in parity. <!-- id: 5 -->
+- [x] 3. Register SyndicationTab across System Navigators <!-- id: 6 -->
+  - [x] Verify registration in `frontend/App.jsx` (`tabs` array) and `frontend/components/navigationConfig.js` (`creator_media_studio` hub). <!-- id: 7 -->
+  - [x] Register `SyndicationTab` in `BroadcastStudioApp/src/App.jsx` under `STUDIO_TABS` for standalone desktop suite integration. <!-- id: 8 -->
+- [x] 4. Sync System Version to v5.126.0 across UI Badges <!-- id: 9 -->
+  - [x] Verify `frontend/App.jsx` (`v5.126.0`) <!-- id: 10 -->
+  - [x] Verify `frontend/components/Sidebar.jsx` (`v5.126.0`) <!-- id: 11 -->
+  - [x] Verify `frontend/components/TopNavbar.jsx` (`v5.126.0`) <!-- id: 12 -->
+  - [x] Verify `frontend/components/ChatTab.jsx` (`v5.126.0`) <!-- id: 13 -->
+  - [x] Verify `frontend/src/components/EcosystemBlueprintTab.jsx` (`v5.126.0`) <!-- id: 14 -->
+- [x] 5. Rebuild Frontend and Deploy to Firebase Hosting <!-- id: 15 -->
+  - [x] Execute `npm run build` and `firebase deploy --only hosting --non-interactive` in `C:\AI-BS\frontend`. <!-- id: 16 -->
+- [x] 6. Update Master Architectural Ledger & Ecosystem Manual <!-- id: 17 -->
+  - [x] Update `C:\AI-BS\AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` with complete technical specifications and AI rationale. <!-- id: 18 -->
+  - [x] Update `C:\AI-BS\docs\AI_BS_MASTER_ECOSYSTEM_MANUAL.md`, persist copy to `saved_data/artifacts/20260829_AI_BS_Master_Ecosystem_Manual.md`, and log entry in `NotebookLM_Records/artifact_history.md`. <!-- id: 19 -->
+- [x] 7. Archive Tasks & Plans to Master Chronologies <!-- id: 20 -->
+  - [x] Archive `task.md` to `C:\AI-BS\Agent_Tasks_History\` and append to `MASTER_TASKS_CHRONOLOGY.md`. <!-- id: 21 -->
+  - [x] Archive `implementation_plan.md` to `C:\AI-BS\Agent_Implementation_Plans_History\` and append to `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md`. <!-- id: 22 -->
+  - [x] Sync `C:\AI-BS\MASTER_HISTORICAL_INDEX.md`. <!-- id: 23 -->

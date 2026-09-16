@@ -1,0 +1,12 @@
+- `[x]` **1. Setup Moby Thesaurus**
+  - `[x]` Install `moby` npm package in `C:\AI-BS\backend` to pull the raw data.
+- `[x]` **2. Ingestion Script Creation**
+  - `[x]` Create `C:\AI-BS\backend\core\lexicon_ingestor.py`.
+  - `[x]` Implement Wordset JSON parsing.
+  - `[x]` Implement Moby Thesaurus parsing/lookup.
+  - `[x]` Implement SQLite database creation with FTS5 for fast/accurate retrieval (`lexicon_vault.db`).
+- `[x]` **3. Execute Ingestion**
+  - `[x]` Run the ingestion script.
+- `[x]` **4. Verification & Ledger Update**
+  - `[x]` Test querying the new SQLite database.
+  - `[x]` Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`.

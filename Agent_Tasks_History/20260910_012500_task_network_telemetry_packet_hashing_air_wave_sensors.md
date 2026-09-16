@@ -1,0 +1,49 @@
+# Task: Unified Telemetry Suite, Packet Analysis & Over-The-Air Wave Sensor Architecture
+
+- [x] Phase 1: Review & Operator Approval <!-- id: 0 -->
+  - [x] Research existing middleware, telemetry structures, and frontend tabs <!-- id: 1 -->
+  - [x] Incorporate SHA-256 packet hashing and `stehouwer-publishing.com` domain tracking <!-- id: 2 -->
+  - [x] Incorporate Over-The-Air RF/wave hardware sensor scanning & beacon hash persistence <!-- id: 3 -->
+  - [x] Plan category-based frontend blending into the Web Traffic tab under Stehouwer Publishing <!-- id: 4 -->
+  - [x] Render interactive implementation plan artifact for operator review <!-- id: 5 -->
+  - [x] Await explicit manual operator consent prior to code modification <!-- id: 6 -->
+- [x] Phase 2: Core ASGI Telemetry & Ambient Wave Sensor Engines <!-- id: 7 -->
+  - [x] Create `backend/modules/network_telemetry.py` with pure ASGI `NetworkTelemetryMiddleware` <!-- id: 8 -->
+  - [x] Implement request/response lifecycle wrappers for HTTP and WebSocket protocols <!-- id: 9 -->
+  - [x] Implement payload byte accumulators and SHA-256 cryptographic packet hashing (inbound & outbound) <!-- id: 10 -->
+  - [x] Implement domain & origin classifier for `stehouwer-publishing.com` (Host, Origin, Referer) <!-- id: 11 -->
+  - [x] Enforce credential sanitization (masking Authorization, Cookies, API Keys, Passwords) <!-- id: 12 -->
+  - [x] Implement `AirWaveSensorEngine` in `backend/modules/ambient_sensor_telemetry.py` <!-- id: 13 -->
+  - [x] Implement 802.11 Wi-Fi RF beacon scanner (2.4GHz/5GHz/6GHz: SSID, BSSID, RSSI, Channel, Auth) <!-- id: 14 -->
+  - [x] Implement Bluetooth / BLE device advertisement scanner (2.4GHz ISM band) <!-- id: 15 -->
+  - [x] Implement cryptographic beacon hasher (SHA-256 of over-the-air RF frame signatures) <!-- id: 16 -->
+  - [x] Implement persistent SQLite / ring buffer store for air packet hashes (`air_sensor_telemetry.db`) <!-- id: 17 -->
+- [x] Phase 3: Telemetry Query & Streaming Endpoints Router <!-- id: 18 -->
+  - [x] Create `backend/routers/network_telemetry_router.py` with multi-tenant `X-Client-ID` extraction <!-- id: 19 -->
+  - [x] Implement `GET /api/network-telemetry/summary` with bandwidth, latency, and `stehouwer_publishing` stats <!-- id: 20 -->
+  - [x] Implement `GET /api/network-telemetry/traffic` with domain, hash, and packet filtering <!-- id: 21 -->
+  - [x] Implement `GET /api/network-telemetry/routes` for endpoint distribution statistics <!-- id: 22 -->
+  - [x] Implement `GET /api/network-telemetry/air/scan` to trigger/return on-demand over-the-air RF scan <!-- id: 23 -->
+  - [x] Implement `GET /api/network-telemetry/air/records` to query stored air packet and beacon hashes <!-- id: 24 -->
+  - [x] Implement `GET /api/network-telemetry/air/summary` for RF landscape metrics (band breakdown, total unique hashes) <!-- id: 25 -->
+  - [x] Implement `GET /api/network-telemetry/stream` (SSE) for live event delivery to frontend <!-- id: 26 -->
+  - [x] Implement `POST /api/network-telemetry/clear` for buffer flushing <!-- id: 27 -->
+- [x] Phase 4: Frontend UI Blending into Web Traffic Tab <!-- id: 28 -->
+  - [x] Upgrade `frontend/src/components/BetaAnalyticsTab.jsx` with 4 organized telemetry categories: <!-- id: 29 -->
+    - Category 1: 🌐 Stehouwer Web Traffic & Analytics (Dwell times, scroll depths, Geo-IP, hardware specs, Web Vitals, form drop-offs, GPU telemetry) <!-- id: 30 -->
+    - Category 2: 🔒 Wire Packet Hashes & Gateway Telemetry (Live HTTP/WS wire packets, byte volume, latencies, status codes, SHA-256 payload hashes) <!-- id: 31 -->
+    - Category 3: 📡 Over-The-Air Wave Hardware Sensors (Live 2.4GHz/5GHz/6GHz Wi-Fi and BLE beacon detection, signal strength %, cryptographic beacon hashes, SQLite history) <!-- id: 32 -->
+    - Category 4: ⚡ Commercial API & Security Telemetry (API calls, banned IPs, auth events) <!-- id: 33 -->
+  - [x] Update `frontend/src/components/components/StehouwerCMSTab.jsx` telemetry card overview <!-- id: 34 -->
+  - [x] Run production frontend build and deploy to Firebase Hosting <!-- id: 35 -->
+- [x] Phase 5: Gateway Integration & Automated Testing <!-- id: 36 -->
+  - [x] Register middleware and router in `backend/AI_BS_Backend.py` <!-- id: 37 -->
+  - [x] Create standalone unit test `backend/test_network_telemetry.py` verifying byte tracking, SHA-256 hashing, `stehouwer-publishing.com` classification, credential hygiene, and air wave sensor scanning <!-- id: 38 -->
+  - [x] Execute test suite and verify 100% pass <!-- id: 39 -->
+- [x] Phase 6: Master Architectural Ledgers & Version Synchronization <!-- id: 40 -->
+  - [x] Increment system version and sweep UI badges <!-- id: 41 -->
+  - [x] Update `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md` and `docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md` <!-- id: 42 -->
+  - [x] Persist artifact to `saved_data/artifacts/` and log in `NotebookLM_Records/artifact_history.md` <!-- id: 43 -->
+  - [x] Archive task and plan to history directories and sync chronologies <!-- id: 44 -->
+
+

@@ -1,0 +1,21 @@
+# Task: Risk-Weighted Sentiment and Compliance Scoring System (Content Governance Engine)
+
+- [ ] Task 1: Extend `aibs_reasoning_engine.py` with `AIBSRiskGovernanceEngine` class <!-- id: 0 -->
+  - Implements 6-vector Semantic Mapping (Litigation, Harassment/HR, PR/Polarizing, Discrimination, Confidentiality, Tone/Aggression)
+  - Implements Contextual Weighting Layer for internal/external/press/executive contexts
+  - Implements Dynamic Thresholding ($\tau$) and Quantifiable Risk Scoring ($S_f$)
+  - Implements Terminology Optimization & Refinement Engine ("Original" -> "Refined Professional")
+- [ ] Task 2: Create FastAPI backend router `backend/routers/content_governance_router.py` <!-- id: 1 -->
+  - `POST /api/v1/content-governance/analyze` endpoint
+  - Mount router in `AI_BS_Backend.py`
+- [ ] Task 3: Build frontend `ContentGovernanceRiskModal.jsx` and styling <!-- id: 2 -->
+  - Multidimensional Risk Vector Heat Map & Gauge Meter
+  - Context & Audience Selectors (Internal, External, Public Press, Executive)
+  - Interactive Threshold Slider ($\tau$)
+  - Terminology Optimization & 1-Click Refinement Replacement tool
+- [ ] Task 4: Integrate Content Governance Activator tool across master workspaces <!-- id: 3 -->
+  - Add `🛡️ Content Risk & Governance Analyzer` trigger in `EmailClientTab.jsx`, `AdvertisingTab.jsx`, `DefinitionsModuleTab.jsx`, `ChatTab.jsx`, and `SimpleDashboardPortal.jsx`
+- [ ] Task 5: System Version Bump, Build & Live Firebase Deployment <!-- id: 4 -->
+  - Bump system version to `v5.35.0 (Phase 44)`
+  - Rebuild Vite frontend bundle and deploy to Firebase Hosting
+  - Sync `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`, `AI_BS_MASTER_ECOSYSTEM_MANUAL.md`, archive artifact & task chronology

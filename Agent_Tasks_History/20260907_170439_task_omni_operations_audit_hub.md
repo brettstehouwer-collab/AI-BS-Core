@@ -1,0 +1,24 @@
+# Task: Omni Operations & Live Audit Hub Implementation
+
+- [x] Audit and report all live active processes, ports, media queues, and background services <!-- id: 1 -->
+- [x] Render interactive architectural plan in `implementation_plan.md` (Side-Box Artifact) <!-- id: 2 -->
+- [x] Await explicit user review and typed manual confirmation (Prohibition of Auto-Proceed) <!-- id: 3 -->
+- [x] Develop backend streaming router `backend/routers/operations_audit_router.py` <!-- id: 4 -->
+  - [x] Implement `/api/operations/processes` (live PIDs, ports, RSS RAM, CPU %, kill/restart signals) <!-- id: 5 -->
+  - [x] Implement `/api/operations/media-workloads` (ComfyUI queue, history, recent renders with direct media URLs, RTMP/HLS streams) <!-- id: 6 -->
+  - [x] Implement `/api/operations/saves-and-work` (continuous autosaves, modified files last 24h, DB write telemetry) <!-- id: 7 -->
+  - [x] Implement `/api/operations/admin-submissions` (cross-database live records from state.db, clients.db, stehouwer_accounting.db, stehouwer_vault.db, prestige_powerwash.db) <!-- id: 8 -->
+  - [x] Implement `/api/operations/error-diagnostics` (parser scanning 30+ logs in C:\AI-BS\logs for [ERROR], [CRITICAL], tracebacks, socket timeouts, hung tasks) <!-- id: 9 -->
+  - [x] Implement `/api/operations/log-tail` (real-time tail of any selected system log file) <!-- id: 10 -->
+- [x] Mount `operations_audit_router` in `backend/AI_BS_Backend.py` <!-- id: 11 -->
+- [x] Develop frontend component `frontend/components/OperationsAuditHubTab.jsx` <!-- id: 12 -->
+  - [x] Sub-panel 1: Active Tasks, Daemons & Hardware Telemetry (PIDs, ports, memory, kill/restart) <!-- id: 13 -->
+  - [x] Sub-panel 2: Media Generation Pipeline (ComfyUI photo/video requests, active queue, live output preview) <!-- id: 14 -->
+  - [x] Sub-panel 3: Project Saves & Continuous Autosave Ledger <!-- id: 15 -->
+  - [x] Sub-panel 4: Admin User Data Vault (Submissions by Brett, Sean, Julie across CRM, quotes, accounting, vault) <!-- id: 16 -->
+  - [x] Sub-panel 5: System Error & Crash Diagnostics (Live traceback inspector, stopped tasks, hung timeout logs) <!-- id: 17 -->
+- [x] Register new tab in `navigationConfig.js` and `App.jsx` <!-- id: 18 -->
+- [x] Compile frontend bundle via `npm run build` <!-- id: 19 -->
+- [x] Deploy to Firebase Hosting (`ai-bs-dashboard.web.app`) <!-- id: 20 -->
+- [x] Synchronize compiled bundle to `C:\Program Files\AI-BS Sovereign Studio\frontend_dist` <!-- id: 21 -->
+- [x] Update Master Architectural Ledger, System Manual, and chronologies <!-- id: 22 -->

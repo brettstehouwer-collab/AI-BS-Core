@@ -1,0 +1,9 @@
+- `[x]` Phase 1: Async Refinement Engine (`aibs_reasoning_engine.py`)
+- `[x]` Phase 2: Telemetry Ledger Logging
+- `[x]` Phase 3: Gateway Integration (`gateway_router.py`)
+- `[x]` Phase 4: Finalization
+- `[x]` Phase 5: Persona Dataset Compilation (WhatsApp)
+  - `[x]` Write Python script to parse and clean raw WhatsApp logs.
+  - `[x]` Output clean data to `C:\AI-BS\docs\WhatsApp Chat with Sean My Brother Who Never Leaves.md`.
+  - `[x]` Output JSONL data for LoRA fine-tuning.
+  - `[x]` Calculate line/block consolidation metrics.

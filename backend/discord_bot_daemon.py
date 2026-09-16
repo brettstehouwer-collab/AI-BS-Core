@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import json
 import logging
 import asyncio
@@ -584,9 +585,15 @@ def main():
 
     if not DISCORD_BOT_TOKEN:
         logger.warning("DISCORD_BOT_TOKEN not configured in .env. Bot commands inactive.")
-        return
+        while True:
+            time.sleep(3600)
 
-    bot.run(DISCORD_BOT_TOKEN)
+    try:
+        bot.run(DISCORD_BOT_TOKEN)
+    except Exception as e:
+        logger.warning(f"Discord bot login failed ({e}). Entering idle standby mode.")
+        while True:
+            time.sleep(3600)
 
 
 if __name__ == "__main__":

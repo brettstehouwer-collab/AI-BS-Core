@@ -1,0 +1,20 @@
+- `[x]` **1. Core Lexicon API**
+  - `[x]` Create `backend/core/lexicon_service.py` with wrapper for `lexicon_vault.db`.
+  - `[x]` Implement `get_synonyms(word)`, `bulk_expand(text)`, and `hybrid_tool_lookup(word)`.
+- `[x]` **2. Phase 1: LLM Inference Pipeline**
+  - `[x]` Modify `backend/aibs_reasoning_engine.py` (or equivalent).
+  - `[x]` Add synonym injection pre-processor for prompts.
+  - `[x]` Register `get_synonyms` as a callable tool.
+  - `[x]` Implement regex-based post-processor.
+- `[x]` **3. Phase 2: FastAPI Exposure**
+  - `[x]` Modify `backend/main.py`.
+  - `[x]` Expose `GET /lexicon/synonyms` and `POST /lexicon/enrich`.
+- `[x]` **4. Phase 3: ChromaDB Vector Memory**
+  - `[x]` Modify `backend/chroma_vault_service.py`.
+  - `[x]` Hook search queries into `lexicon_service.bulk_expand(text)`.
+- `[x]` **5. Phase 4: Stehouwer Persona Engine**
+  - `[x]` Modify `backend/aibs_nlp_analysis.py` or `bullshit_heuristics_daemon.py`.
+  - `[x]` Hook lexicon engine into heuristics generator.
+- `[/]` **6. Verification & Archiving**
+  - `[ ]` Run manual verification.
+  - `[ ]` Archive artifacts and update master ledgers.

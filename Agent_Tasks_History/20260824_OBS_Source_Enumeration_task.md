@@ -1,0 +1,11 @@
+- [x] **Implement System Enumeration APIs**
+  - Create `GET /system/devices` endpoint to query FFmpeg `dshow` for Video and Audio devices.
+  - Create `GET /system/windows` endpoint to query Windows for visible Application Titles via `win32gui`.
+- [x] **Update Frontend API Integration**
+  - Modify `refreshMediaDevices` in `BroadcastStudio.jsx` to fetch and store `backendVideoDevices`, `backendAudioDevices`, and `availableWindows`.
+- [x] **Revamp 'Add Source' UI Modal**
+  - Implement dynamic sub-menu for device/window selection based on source type (just like OBS).
+  - Inject `deviceId` mapping into active `sources` state.
+- [x] **Refactor FFmpeg `start_stream` Pipeline** `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`
+- [ ] Document changes in `MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md`
+- [ ] Document changes in `MASTER_TASKS_CHRONOLOGY.md`

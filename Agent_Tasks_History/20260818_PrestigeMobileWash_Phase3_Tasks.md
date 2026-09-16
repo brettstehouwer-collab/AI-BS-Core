@@ -1,0 +1,5 @@
+- `[x]` Kill stale `AI_BS_Backend.py` process listening on port 8080.
+- `[x]` Restart `AI_BS_Backend.py` using `Launch_AI_BS.bat` parameters to load the new router.
+- `[x]` Verify `api.brettstehouwer.live` cloudflare tunnel returns live backend telemetry.
+- `[x]` Inject `VITE_BACKEND_URL=https://api.brettstehouwer.live` into `C:\AI-BS\PrestigeMobileWash\.env`.
+- `[x]` Execute Vite production build in `PrestigeMobileWash`.
