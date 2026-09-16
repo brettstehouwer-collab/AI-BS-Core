@@ -13,6 +13,9 @@ if _root_dir not in sys.path:
 if _backend_dir not in sys.path:
     sys.path.insert(0, _backend_dir)
 
+import sys
+sys.setrecursionlimit(5000)
+
 # Ensure CUDA 13 / cuDNN 9 DLL directory is registered for onnxruntime-gpu and PyTorch
 _cuda_dll_dir = os.path.join(_root_dir, "ComfyUI", "python_embeded", "Lib", "site-packages", "torch", "lib")
 if os.path.exists(_cuda_dll_dir):
