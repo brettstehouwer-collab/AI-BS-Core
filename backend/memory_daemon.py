@@ -63,6 +63,7 @@ REASONING_TRACES_COLLECTION = "reasoning_traces"
 REASONING_TRACES_DB = WORKSPACE_ROOT / "reasoning_traces_pending.db"
 
 OLLAMA_EMBED_URL = os.environ.get("OLLAMA_EMBED_URL", "http://127.0.0.1:11435/api/embed")
+MANAGED = bool(os.getenv("DAEMON_MANAGER_OWNED", ""))
 
 # ---------------------------------------------------------------------------
 # Logging

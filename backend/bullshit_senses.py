@@ -161,7 +161,7 @@ async def speak_text(payload: TTSPayload):
 
     return {
         "status": "success",
-        "audio_url": f"http://127.0.0.1:{os.getenv('BULLSHIT_SENSES_PORT', '8055')}/tts/audio/{filename}",
+        "audio_url": f"http://127.0.0.1:{os.getenv('BULLSHIT_SENSES_PORT', '8056')}/tts/audio/{filename}",
     }
 
 
@@ -193,7 +193,7 @@ else:
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("BULLSHIT_SENSES_PORT", "8055"))
+    port = int(os.getenv("BULLSHIT_SENSES_PORT", "8056"))
     print("==================================================")
     print(f"Starting AI-BS Bullshit Senses Daemon on Port {port}...")
     print("Combined Wake-Word, Voice Orchestrator, and TTS")

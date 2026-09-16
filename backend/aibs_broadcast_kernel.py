@@ -11,6 +11,32 @@ import socket
 import re
 import csv
 import io
+
+# Ensure all subprocess calls on Windows are completely silent (no flashing console/terminal windows)
+if sys.platform == "win32":
+    _orig_run = subprocess.run
+    _orig_popen = subprocess.Popen
+    _orig_check_output = subprocess.check_output
+
+    def _silent_run(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_run(*args, **kwargs)
+
+    class _SilentPopen(_orig_popen):
+        def __init__(self, *args, **kwargs):
+            if "creationflags" not in kwargs:
+                kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+            super().__init__(*args, **kwargs)
+
+    def _silent_check_output(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_check_output(*args, **kwargs)
+
+    subprocess.run = _silent_run
+    subprocess.Popen = _SilentPopen
+    subprocess.check_output = _silent_check_output
 from typing import List, Dict, Any, Optional
 import numpy as np
 import psutil

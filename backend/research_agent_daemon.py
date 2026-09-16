@@ -1,3 +1,4 @@
+import os
 import time
 import hashlib
 import httpx
@@ -22,7 +23,7 @@ CHROMA_HOST = "localhost"
 CHROMA_PORT = 8001
 OLLAMA_EMBED_URL = os.environ.get("OLLAMA_EMBED_URL", "http://127.0.0.1:11435/api/embeddings")
 EMBED_MODEL = "nomic-embed-text"
-
+COLLECTION_NAME = "research_intelligence"
 
 def _embed(text: str):
     try:

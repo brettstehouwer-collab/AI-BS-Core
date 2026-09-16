@@ -531,7 +531,10 @@ class DaemonManager:
 
         daemon.proc = proc
         daemon.last_restart_at = time.monotonic()
-        pid_path.write_text(str(proc.pid), encoding="utf-8")
+        try:
+            self._pid_path(daemon.name).write_text(str(proc.pid), encoding="utf-8")
+        except Exception as e:
+            logger.warning("DaemonManager: could not write pid file for '%s': %s", daemon.name, e)
         logger.info("DaemonManager: started '%s' (PID %d).", daemon.name, proc.pid)
         self._notify_listeners("start", daemon.name, {"pid": proc.pid, "port": daemon.port, "category": daemon.category})
         return True

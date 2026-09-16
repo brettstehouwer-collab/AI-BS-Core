@@ -6,6 +6,32 @@ import sys
 from datetime import datetime, timezone
 from uuid import uuid4
 
+# Ensure all subprocess calls on Windows are completely silent (no flashing console/terminal windows)
+if sys.platform == "win32":
+    _orig_run = subprocess.run
+    _orig_popen = subprocess.Popen
+    _orig_check_output = subprocess.check_output
+
+    def _silent_run(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_run(*args, **kwargs)
+
+    class _SilentPopen(_orig_popen):
+        def __init__(self, *args, **kwargs):
+            if "creationflags" not in kwargs:
+                kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+            super().__init__(*args, **kwargs)
+
+    def _silent_check_output(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_check_output(*args, **kwargs)
+
+    subprocess.run = _silent_run
+    subprocess.Popen = _SilentPopen
+    subprocess.check_output = _silent_check_output
+
 _backend_dir = os.path.dirname(os.path.abspath(__file__))
 _root_dir = os.path.dirname(_backend_dir)
 if _root_dir not in sys.path:
@@ -320,9 +346,16 @@ def _run_job_worker(job_id: str) -> None:
         job["finished_at"] = _now_iso()
 
 
+def _get_python_bin() -> str:
+    venv_py = os.path.join(_root_dir, "pyppeteer_env", "Scripts", "python.exe")
+    if os.path.exists(venv_py):
+        return venv_py
+    return sys.executable
+
+
 def _make_cmd(script_name: str) -> ShellCommand:
     return ShellCommand(
-        command=sys.executable,
+        command=_get_python_bin(),
         cwd=Path(_backend_dir),
         args=[os.path.join(_backend_dir, script_name)],
         sandbox=False,
@@ -341,7 +374,7 @@ daemon_supervisor.register("discord_bot_daemon", _make_cmd("discord_bot_daemon.p
 daemon_supervisor.register(
     "chroma_daemon",
     ShellCommand(
-        command=sys.executable,
+        command=_get_python_bin(),
         cwd=Path(_backend_dir).parent,
         args=[
             "-c",
@@ -353,7 +386,7 @@ daemon_supervisor.register(
 daemon_supervisor.register(
     "chroma_edrive_daemon",
     ShellCommand(
-        command=sys.executable,
+        command=_get_python_bin(),
         cwd=Path(_backend_dir).parent,
         args=[
             "-c",

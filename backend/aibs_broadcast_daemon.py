@@ -7,6 +7,31 @@ if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     except Exception:
         pass
+
+    # Ensure all subprocess calls on Windows are completely silent (no flashing console/terminal windows)
+    _orig_run = subprocess.run
+    _orig_popen = subprocess.Popen
+    _orig_check_output = subprocess.check_output
+
+    def _silent_run(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_run(*args, **kwargs)
+
+    class _SilentPopen(_orig_popen):
+        def __init__(self, *args, **kwargs):
+            if "creationflags" not in kwargs:
+                kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+            super().__init__(*args, **kwargs)
+
+    def _silent_check_output(*args, **kwargs):
+        if "creationflags" not in kwargs:
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        return _orig_check_output(*args, **kwargs)
+
+    subprocess.run = _silent_run
+    subprocess.Popen = _SilentPopen
+    subprocess.check_output = _silent_check_output
 import logging
 import json
 import os
