@@ -1,0 +1,377 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Media & Video Screen Recordings
+MP4 medial screen recordings/
+*.mp4
+*.webm
+*.mov
+*.avi
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nosenv/
+.pytest_cache/
+.nox/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Sphinx documentation
+doc/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# PEP 582; used by e.g. pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# -----------------------------------------------------------------------
+# AI-BS: Large binaries & build artifacts
+# -----------------------------------------------------------------------
+*.exe
+*.img
+*.iso
+*.tar.gz
+*.torrent
+*.zip
+*.vsix
+
+# Specific large root-level binaries
+Antigravity-x64.exe
+build_versioned.exe
+
+# -----------------------------------------------------------------------
+# AI-BS: Runtime data, logs & databases (generated at runtime, not source)
+# -----------------------------------------------------------------------
+*.jsonl
+*.sqlite
+*.sqlite3*
+*.db
+*.db-shm
+*.db-wal
+*.sqlite-shm
+*.sqlite-wal
+trainer_daemon_logs.jsonl
+memory_daemon_logs.jsonl
+active_agent_transcript.jsonl
+session_transcript_log.md
+telemetry_checkpoint.sqlite
+vision_sync_state.db
+reasoning_traces_pending.db
+telemetry_cache.json
+compute_telemetry.json
+wallet_telemetry.json
+drip_ledger.json
+handoff_state.json
+state.json
+leads_store.json
+remote_agents.json
+lead_gen_cache.json
+*.pid
+*.log
+
+# -----------------------------------------------------------------------
+# AI-BS: Certificates & private keys (NEVER commit)
+# -----------------------------------------------------------------------
+*.pem
+cert.pem
+key.pem
+
+# -----------------------------------------------------------------------
+# AI-BS: Node dependencies
+# -----------------------------------------------------------------------
+node_modules/
+
+# -----------------------------------------------------------------------
+# AI-BS: MatrixOS / Sandbox (contains multi-GB disk images)
+# -----------------------------------------------------------------------
+sandbox/
+MatrixOS_Builder/
+MatrixOS_Builder copy/
+
+# Secrets
+*recovery-codes.txt
+*recovery_codes.txt
+
+# -----------------------------------------------------------------------
+# AI-BS: Massive Data Directories & Large Transient Files (Prevent Git Add Hangs)
+# -----------------------------------------------------------------------
+.ollama/
+UnrealHub/
+screenplay_projects/
+saved_data/
+ComfyUI/
+pyppeteer_env/
+Android Studio/
+symbol_graph.json
+py_health_audit.json
+memory_daemon_logs.jsonl
+*.pt
+*.onnx
+*.bin
+antigravity-sdk-python/
+
+# -----------------------------------------------------------------------
+# AI-BS: Media, Cloud Drive, Sound Banks & Audio Assets (Prevent Git Hangs / Permission Errors)
+# -----------------------------------------------------------------------
+shared_cloud_drive/
+*.flac
+*.wav
+*.sfz
+*.mp3
+*.ogg
+*.aac
+*.7z
+*.tar.xz
+
+# -----------------------------------------------------------------------
+# AI-BS: Build Artifacts & Caches
+# -----------------------------------------------------------------------
+BroadcastStudioApp/dist/
+BroadcastStudioApp/dist-electron/
+dist-electron/
+dist/
+frontend/desktop-build/
+desktop-build/
+stehouwer_vector_memory/
+backend/stehouwer_vector_memory/
+Pictures/Screenshots/
+ScreenVideoSnipping/
+.firebase/
+hosting.*.cache
+.vercel/
+
+# -----------------------------------------------------------------------
+# AI-BS: OBS Runtime Logs & Profiler Data
+# -----------------------------------------------------------------------
+obs-core/config/obs-studio/logs/
+obs-core/config/obs-studio/profiler_data/
+obs-core/bin/64bit/*.disabled
+
+# -----------------------------------------------------------------------
+# AI-BS: Scratch & Temporary Scripts
+# -----------------------------------------------------------------------
+scratch/
+.vercel
+.env*
+
+# -----------------------------------------------------------------------
+# PRIVACY & PERSONAL DATA GOVERNANCE (NEVER PUSH TO GITHUB)
+# -----------------------------------------------------------------------
+# Medical & Health Records
+*MyChart*
+*Medical*
+MyChart - Test Details_files/
+
+# Personal / Client Projects / Family / Research
+zmomreasarch/
+JuliesPlace/
+PrestigeMobileWash/
+Buissnessuit/
+work help/
+
+# Personal Documents & Takeouts
+Documents/
+Gemini_Takeout_Data/
+Gemini_Takeout_Dataparrent/
+downloads/
+downloads_archive/
+uploads/
+New folder/
+New folder (2)/
+*.pdf
+*.docx
+*.xlsx
+*.csv
+
+# Personal Media, Audio, Video & Desktop Screen Captures
+Pictures/
+ScreenShots/
+ScreenVideoSnipping/
+MP4 medial screen recordings/
+music/
+Audio Downloads/
+tts_output/
+streams/
+
+# Private Knowledge Vaults, Local Vector Stores & Dumps
+Agent Vector Memory/
+MASTER_KNOWLEDGE_VAULT/
+AI-BS_Knowledge_Vaults/
+NotebookLM_Records/
+Context_Memory_Swap/
+VRAM_Tensor_Swap/
+master_memory_dump.json
+recovered_intelligence.json
+
+# Financial, Crypto & Accounting Ledgers
+*accounting*
+*crypto*
+*drip*
+*wallet*
+*ledger*
+leads_store.json
+
+# Binary Installations & Tools
+EXE/
+InstallerEXE's/
+custome pythons builds/
+miners/
+aria2-1.37.0-win-64bit-build1/
+
+# -----------------------------------------------------------------------
+# STEHOUWER PUBLISHING & FILM INDUSTRY GOVERNANCE (CONFIDENTIAL)
+# -----------------------------------------------------------------------
+# Stehouwer Publishing & Contracts
+*Stehouwer*Publishing*
+Stehouwer_Publishing*
+*NDA*
+*Agreement*
+*Contract*
+*contracts_vault*
+contracts_vault/
+*Costner*
+
+# Film Industry, Screenplays & Creative Manuscripts
+screenplay_projects/
+Workflows for comfy ui/
+*Screenplay*
+*Film*
+*Manuscript*
+*Script*
+*Book*
+TheSimpleChef*
+Echoes_Within*
+*Bad Side*
+*Benny*
+
+# Legacy Archives & Storage Dumps
+_archive_v1/
+Archive_Legacy/
+AI_History_BS/
+.aibs_backups/
+.ide_audit_logs/
+
+# Heavy Neural Network Model Weights (GGUF, Safetensors, Checkpoints)
+AI-BS-Models/
+models/checkpoints/
+models/unet/
+models/clip/
+*.gguf
+*.safetensors
+*.pth
+*.ckpt
+*.pt
+blobs/
+
+# Video Editing Render Dumps
+AI-BS_Modual_Video_Editing/
+AI-BS_Module_Video_Editing/
+
+# Personal Transcripts & Notes
+*Brett's gemini word*
+*.word
+
+

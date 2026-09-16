@@ -1,0 +1,32 @@
+{
+  "422": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "video/flux3_i2v",
+      "format": "auto",
+      "codec": "auto",
+      "video": ["424", 0]
+    }
+  },
+  "423": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "space_caravan.png",
+      "upload": "image"
+    }
+  },
+  "424": {
+    "class_type": "Flux3ImageToVideoNode",
+    "inputs": {
+      "keyframes.image_0": ["423", 0],
+      "prompt": "Enter your prompt here",
+      "placement": "spread across the clip",
+      "aspect_ratio": "auto",
+      "duration": "5",
+      "resolution": "720p",
+      "generate_audio": true,
+      "safety_tolerance": 2,
+      "seed": 1525159707
+    }
+  }
+}

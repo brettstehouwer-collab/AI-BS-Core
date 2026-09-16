@@ -1,0 +1,312 @@
+{
+    "openapi":  "3.1.0",
+    "info":  {
+                 "title":  "AI-BS Central Cognitive Engine API",
+                 "version":  "0.1.0"
+             },
+    "paths":  {
+                  "/chroma-db/api/v1/get-heuristics":  {
+                                                           "get":  {
+                                                                       "summary":  "Get Heuristics",
+                                                                       "operationId":  "get_heuristics_chroma_db_api_v1_get_heuristics_get",
+                                                                       "responses":  {
+                                                                                         "200":  {
+                                                                                                     "description":  "Successful Response",
+                                                                                                     "content":  "@{application/json=}"
+                                                                                                 }
+                                                                                     }
+                                                                   }
+                                                       },
+                  "/polyglot-execution-engine/execute":  {
+                                                             "post":  {
+                                                                          "summary":  "Polyglot Execute",
+                                                                          "operationId":  "polyglot_execute_polyglot_execution_engine_execute_post",
+                                                                          "requestBody":  {
+                                                                                              "content":  {
+                                                                                                              "application/json":  "@{schema=}"
+                                                                                                          },
+                                                                                              "required":  true
+                                                                                          },
+                                                                          "responses":  {
+                                                                                            "200":  {
+                                                                                                        "description":  "Successful Response",
+                                                                                                        "content":  "@{application/json=}"
+                                                                                                    },
+                                                                                            "422":  {
+                                                                                                        "description":  "Validation Error",
+                                                                                                        "content":  "@{application/json=}"
+                                                                                                    }
+                                                                                        }
+                                                                      }
+                                                         },
+                  "/stage-engine/orchestrate":  {
+                                                    "post":  {
+                                                                 "summary":  "Orchestrate Stages",
+                                                                 "operationId":  "orchestrate_stages_stage_engine_orchestrate_post",
+                                                                 "requestBody":  {
+                                                                                     "content":  {
+                                                                                                     "application/json":  "@{schema=}"
+                                                                                                 },
+                                                                                     "required":  true
+                                                                                 },
+                                                                 "responses":  {
+                                                                                   "200":  {
+                                                                                               "description":  "Successful Response",
+                                                                                               "content":  "@{application/json=}"
+                                                                                           },
+                                                                                   "422":  {
+                                                                                               "description":  "Validation Error",
+                                                                                               "content":  "@{application/json=}"
+                                                                                           }
+                                                                               }
+                                                             }
+                                                },
+                  "/ai-bs-core/execute":  {
+                                              "post":  {
+                                                           "summary":  "Execute Core Pipeline",
+                                                           "description":  "Executes tasks dynamically across the 32-thread Out-of-Order Engine.",
+                                                           "operationId":  "execute_core_pipeline_ai_bs_core_execute_post",
+                                                           "requestBody":  {
+                                                                               "content":  {
+                                                                                               "application/json":  "@{schema=}"
+                                                                                           },
+                                                                               "required":  true
+                                                                           },
+                                                           "responses":  {
+                                                                             "200":  {
+                                                                                         "description":  "Successful Response",
+                                                                                         "content":  "@{application/json=}"
+                                                                                     },
+                                                                             "422":  {
+                                                                                         "description":  "Validation Error",
+                                                                                         "content":  "@{application/json=}"
+                                                                                     }
+                                                                         }
+                                                       }
+                                          },
+                  "/scavenger/build":  {
+                                           "post":  {
+                                                        "summary":  "Scavenger Build",
+                                                        "description":  "Parses local drives and executes a build using hijacked LLM frameworks.",
+                                                        "operationId":  "scavenger_build_scavenger_build_post",
+                                                        "requestBody":  {
+                                                                            "content":  {
+                                                                                            "application/json":  "@{schema=}"
+                                                                                        },
+                                                                            "required":  true
+                                                                        },
+                                                        "responses":  {
+                                                                          "200":  {
+                                                                                      "description":  "Successful Response",
+                                                                                      "content":  "@{application/json=}"
+                                                                                  },
+                                                                          "422":  {
+                                                                                      "description":  "Validation Error",
+                                                                                      "content":  "@{application/json=}"
+                                                                                  }
+                                                                      }
+                                                    }
+                                       },
+                  "/ui-generator/build":  {
+                                              "post":  {
+                                                           "summary":  "Generate Ui Component",
+                                                           "description":  "Takes a UI prompt, hits the local LLM, and writes raw code to the frontend.",
+                                                           "operationId":  "generate_ui_component_ui_generator_build_post",
+                                                           "requestBody":  {
+                                                                               "content":  {
+                                                                                               "application/json":  "@{schema=}"
+                                                                                           },
+                                                                               "required":  true
+                                                                           },
+                                                           "responses":  {
+                                                                             "200":  {
+                                                                                         "description":  "Successful Response",
+                                                                                         "content":  "@{application/json=}"
+                                                                                     },
+                                                                             "422":  {
+                                                                                         "description":  "Validation Error",
+                                                                                         "content":  "@{application/json=}"
+                                                                                     }
+                                                                         }
+                                                       }
+                                          },
+                  "/github/commit":  {
+                                         "post":  {
+                                                      "summary":  "Github Commit",
+                                                      "operationId":  "github_commit_github_commit_post",
+                                                      "requestBody":  {
+                                                                          "content":  {
+                                                                                          "application/json":  "@{schema=}"
+                                                                                      },
+                                                                          "required":  true
+                                                                      },
+                                                      "responses":  {
+                                                                        "200":  {
+                                                                                    "description":  "Successful Response",
+                                                                                    "content":  "@{application/json=}"
+                                                                                },
+                                                                        "422":  {
+                                                                                    "description":  "Validation Error",
+                                                                                    "content":  "@{application/json=}"
+                                                                                }
+                                                                    }
+                                                  }
+                                     }
+              },
+    "components":  {
+                       "schemas":  {
+                                       "CorePayload":  {
+                                                           "properties":  {
+                                                                              "monolithic_tasks":  {
+                                                                                                       "items":  "",
+                                                                                                       "type":  "array",
+                                                                                                       "title":  "Monolithic Tasks"
+                                                                                                   }
+                                                                          },
+                                                           "type":  "object",
+                                                           "required":  [
+                                                                            "monolithic_tasks"
+                                                                        ],
+                                                           "title":  "CorePayload"
+                                                       },
+                                       "GithubPayload":  {
+                                                             "properties":  {
+                                                                                "repo_path":  {
+                                                                                                  "type":  "string",
+                                                                                                  "title":  "Repo Path"
+                                                                                              },
+                                                                                "commit_message":  {
+                                                                                                       "type":  "string",
+                                                                                                       "title":  "Commit Message"
+                                                                                                   }
+                                                                            },
+                                                             "type":  "object",
+                                                             "required":  [
+                                                                              "repo_path",
+                                                                              "commit_message"
+                                                                          ],
+                                                             "title":  "GithubPayload"
+                                                         },
+                                       "HTTPValidationError":  {
+                                                                   "properties":  {
+                                                                                      "detail":  {
+                                                                                                     "items":  "@{$ref=#/components/schemas/ValidationError}",
+                                                                                                     "type":  "array",
+                                                                                                     "title":  "Detail"
+                                                                                                 }
+                                                                                  },
+                                                                   "type":  "object",
+                                                                   "title":  "HTTPValidationError"
+                                                               },
+                                       "PolyglotPayload":  {
+                                                               "properties":  {
+                                                                                  "command":  {
+                                                                                                  "type":  "string",
+                                                                                                  "title":  "Command"
+                                                                                              },
+                                                                                  "language":  {
+                                                                                                   "type":  "string",
+                                                                                                   "title":  "Language"
+                                                                                               }
+                                                                              },
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "command",
+                                                                                "language"
+                                                                            ],
+                                                               "title":  "PolyglotPayload"
+                                                           },
+                                       "ScavengerPayload":  {
+                                                                "properties":  {
+                                                                                   "human_idea":  {
+                                                                                                      "type":  "string",
+                                                                                                      "title":  "Human Idea"
+                                                                                                  },
+                                                                                   "project_keyword":  {
+                                                                                                           "type":  "string",
+                                                                                                           "title":  "Project Keyword"
+                                                                                                       }
+                                                                               },
+                                                                "type":  "object",
+                                                                "required":  [
+                                                                                 "human_idea",
+                                                                                 "project_keyword"
+                                                                             ],
+                                                                "title":  "ScavengerPayload"
+                                                            },
+                                       "StagePayload":  {
+                                                            "properties":  {
+                                                                               "master_goal":  {
+                                                                                                   "type":  "string",
+                                                                                                   "title":  "Master Goal"
+                                                                                               },
+                                                                               "steps":  {
+                                                                                             "items":  "",
+                                                                                             "type":  "array",
+                                                                                             "title":  "Steps"
+                                                                                         }
+                                                                           },
+                                                            "type":  "object",
+                                                            "required":  [
+                                                                             "master_goal",
+                                                                             "steps"
+                                                                         ],
+                                                            "title":  "StagePayload"
+                                                        },
+                                       "UIPayload":  {
+                                                         "properties":  {
+                                                                            "human_idea":  {
+                                                                                               "type":  "string",
+                                                                                               "title":  "Human Idea"
+                                                                                           },
+                                                                            "component_name":  {
+                                                                                                   "type":  "string",
+                                                                                                   "title":  "Component Name"
+                                                                                               },
+                                                                            "file_extension":  {
+                                                                                                   "type":  "string",
+                                                                                                   "title":  "File Extension",
+                                                                                                   "default":  ".jsx"
+                                                                                               }
+                                                                        },
+                                                         "type":  "object",
+                                                         "required":  [
+                                                                          "human_idea",
+                                                                          "component_name"
+                                                                      ],
+                                                         "title":  "UIPayload"
+                                                     },
+                                       "ValidationError":  {
+                                                               "properties":  {
+                                                                                  "loc":  {
+                                                                                              "items":  "@{anyOf=System.Object[]}",
+                                                                                              "type":  "array",
+                                                                                              "title":  "Location"
+                                                                                          },
+                                                                                  "msg":  {
+                                                                                              "type":  "string",
+                                                                                              "title":  "Message"
+                                                                                          },
+                                                                                  "type":  {
+                                                                                               "type":  "string",
+                                                                                               "title":  "Error Type"
+                                                                                           },
+                                                                                  "input":  {
+                                                                                                "title":  "Input"
+                                                                                            },
+                                                                                  "ctx":  {
+                                                                                              "type":  "object",
+                                                                                              "title":  "Context"
+                                                                                          }
+                                                                              },
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "loc",
+                                                                                "msg",
+                                                                                "type"
+                                                                            ],
+                                                               "title":  "ValidationError"
+                                                           }
+                                   }
+                   }
+}

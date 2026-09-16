@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-electron/
+dist-analyze/
+build-output/
+desktop-build/
+release-build/
+*.asar
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+

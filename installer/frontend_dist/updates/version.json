@@ -1,0 +1,25 @@
+{
+    "appName":  "AI-BS Sovereign Intelligence Studio",
+    "version":  "5.230.4",
+    "releaseDate":  "2026-09-08",
+    "channel":  "stable",
+    "minInstallerVersion":  "1.0.0",
+    "mandatory":  false,
+    "releaseNotes":  "AI-BS Sovereign Intelligence Studio v5.230.4: Chrome Browser Profile Migration to Developer Chrome Instance with Local State DPAPI Key Preservation and Automated Sync Engine.",
+    "downloadUrl":  "https://api.brettstehouwer.live/api/v1/updater/payload",
+    "fallbackUrl":  "http://127.0.0.1:8080/api/v1/updater/payload",
+    "sha256":  "71eafe15ea2bcb1aa0b7df72d4fca9e5a34ddc6aacdaaa9fce77f7a0f0d97ec6",
+    "sizeBytes":  888296085,
+    "payloadType":  "zip_delta",
+    "files":  [
+                  "frontend_dist/*",
+                  "resources/app.asar",
+                  "resources/go-core/aibs_engine.exe",
+                  "go-core/aibs_engine.exe",
+                  "aibs_updater.exe",
+                  "Update_Desktop_Studio.bat",
+                  "backend/*",
+                  "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+                  "docs/AI_BS_MASTER_ECOSYSTEM_MANUAL.md"
+              ]
+}

@@ -1,0 +1,602 @@
+[
+    {
+        "sender": "noreply@microsoftadvertising.com",
+        "subject": "Welcome to Microsoft Advertising! Start reaching new customers in minutes.",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@metamask.io",
+        "subject": "Welcome to MetaMask",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@tradingview.com",
+        "subject": "Welcome to the TradingView family",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@news.crypto.com",
+        "subject": "Welcome to Level Up: Plus",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googledev-noreply@google.com",
+        "subject": "Welcome to GEAR",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "contact@vast.ai",
+        "subject": "Welcome to Vast.ai \u2014 spin up a GPU in minutes",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "notify2@myheritage.com",
+        "subject": "Brett, welcome to MyHeritage DNA",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@share-dns.net",
+        "subject": "\u3010GNAME\u3011 Account created successfully",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "workspace-noreply@google.com",
+        "subject": "Welcome to Google Workspace",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "engage@go.explore.redhat.com",
+        "subject": "Welcome to Red Hat Developer",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@airdroid.com",
+        "subject": "Welcome to AirDroid\n",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@airdroid.com",
+        "subject": "Verify Your Email Address - AirDroid\n",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@rapidapi.com",
+        "subject": "Verify your email",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@rapidapi.com",
+        "subject": "Verify your email",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@mail.gpai.app",
+        "subject": "Welcome to GPAI! \ud83c\udf89",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googlecloud@google.com",
+        "subject": "Welcome to your Google Cloud Free Trial",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@hiveon.com",
+        "subject": "Welcome to Hiveon \ud83d\ude80 - Lets start! We are here to help \ud83d\udc68\u200d\ud83d\ude80\u26cf",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@github.com",
+        "subject": "[GitHub] Welcome to your trial of GitHub Enterprise",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@github.com",
+        "subject": "[GitHub] Please verify your email to activate your Enterprise trial",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "customersupport-us@indebted.co",
+        "subject": "Discount Offer Expiring Soon - Welcome to InDebted, Brett",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@docker.com",
+        "subject": "Welcome to Docker: Connect and run MCP servers easily and securely",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "google-maps-platform-noreply@google.com",
+        "subject": "Welcome to Google Maps Platform!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply-googlecloud-notifications@google.com",
+        "subject": "Welcome to Gemini Enterprise app \u2013 your workplace AI platform!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googlecloud@google.com",
+        "subject": "Welcome to Gemini Enterprise app \u2013 Business edition",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "gmpinnovators@google.com",
+        "subject": "Welcome to Google Maps Platform Innovators!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@gdg.community.dev",
+        "subject": "Welcome to Google Developer Groups!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googledev-noreply@google.com",
+        "subject": "Welcome to the New Google Cloud & NVIDIA Community!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@ads.amazon.com",
+        "subject": "Welcome to Amazon Ads",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@t.learn.coursera.org",
+        "subject": "Welcome to AI Fundamentals",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@t.learn.coursera.org",
+        "subject": "Welcome to the Google AI Professional Certificate",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@ads.amazon.com",
+        "subject": "Welcome to Amazon Ads",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@documentgenius.com",
+        "subject": "Welcome to DocumentGenius",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply-acx@audible.com",
+        "subject": "Welcome to ACX! Here's What You Need to Know.",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "VZWMail@ecrmemail.verizonwireless.com",
+        "subject": "You\u2019re in! Welcome to Verizon Dollars.",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@github.com",
+        "subject": "[GitHub] Please verify your email address.",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@github.com",
+        "subject": "[GitHub] Please verify your email address.",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@signup.aws",
+        "subject": "Verify your email address",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "team@m.ngrok.com",
+        "subject": "Welcome to ngrok!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "marketing@m.kashkick.com",
+        "subject": "\ud83c\udf89 Welcome to KashKick!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@web3forms.com",
+        "subject": "Welcome to Web3Forms \ud83c\udf89",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "cargurus@mail.cargurus.com",
+        "subject": "\ud83d\ude97 Welcome to CarGurus \ud83d\ude99",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "customersupport-us@indebted.co",
+        "subject": "Welcome to InDebted, Brett",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "newsletters-noreply@linkedin.com",
+        "subject": "Welcome to Disorientation",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "updates@news.weather.com",
+        "subject": "On Your Radar: Welcome To Weather Labs",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "donotreply@newsletter.rockstargames.com",
+        "subject": "Welcome to GTA+",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "adctr@microsoft.com",
+        "subject": "Welcome to Microsoft Advertising!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "zmail@zmail.zillow.com",
+        "subject": "Welcome to the Zillow app!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "flickrteam@arrow.flickr.com",
+        "subject": "Welcome to the Flickr Dispatch",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "logitechg@messaging.logitech.com",
+        "subject": "Welcome to Logitech G Insiders - Life is more fun when you play",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@account.fanduel.com",
+        "subject": "Welcome to PokerStars Exclusively on FanDuel!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "firebase-no-reply@google.com",
+        "subject": "Welcome to Firebase",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@mc.siriusxm.com",
+        "subject": "Welcome to SiriusXM, Brett!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply-purchases@youtube.com",
+        "subject": "Welcome to YouTube Premium!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@amazonmusic.com",
+        "subject": "Welcome to Amazon Music Unlimited",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@iemail.moneylion.com",
+        "subject": " Brett, welcome to Instacash\u2120!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "videoeditor@streamlabs.com",
+        "subject": "Welcome to Streamlabs Video Editor!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "editors-noreply@linkedin.com",
+        "subject": "Welcome to the 'influencer Olympics'",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "promoter@firstpromoter.com",
+        "subject": "Welcome to Bronze Affiliate !",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "send@mail.restream.io",
+        "subject": "Welcome to Restream! Let\u2019s get started",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "logitechg@messaging.logitech.com",
+        "subject": "Welcome to Logitech G Insiders - Life is more fun when you play",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "marcom@riverside.fm",
+        "subject": "\ud83c\udf99\ufe0f Welcome to Riverside!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "notifications@riverside.fm",
+        "subject": "Welcome to the free 14-day Live trial!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "contact@streamyard.com",
+        "subject": "Welcome to StreamYard",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googleone-noreply@google.com",
+        "subject": "Welcome to Google One, Brett",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "googleone-noreply@google.com",
+        "subject": "Welcome to Google AI Pro, Brett",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@splitit.com",
+        "subject": "Welcome to Splitit \u2013 You\u2019re All Set to Pay in Installments",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "huipin@visla.us",
+        "subject": "Welcome to Visla!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@image-line.com",
+        "subject": "Image Line Account | Please Verify Your Email [ Action Required ! ]",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "info@e.yoodli.ai",
+        "subject": "\ud83d\udc4b  Welcome to Yoodli, Brett - we're so glad you're here!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "shop@emails.macys.com",
+        "subject": "Welcome to Macy\u2019s \u2014 here\u2019s 25% off to kick things off! \ud83c\udf89",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@cloud.blackmagicdesign.com",
+        "subject": "Welcome to Blackmagic Cloud",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "Windowsinsiderprogram@e-mails.microsoft.com",
+        "subject": "Welcome to the Windows Insider Program!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply-purchases@youtube.com",
+        "subject": "Welcome to YouTube Premium",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply-purchases@youtube.com",
+        "subject": "Welcome to YouTube Premium",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@iemail.moneylion.com",
+        "subject": "Click, Play, Earn - Welcome to Swagbucks!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "flickrteam@arrow.flickr.com",
+        "subject": "Welcome to Flickr!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "huipin@visla.us",
+        "subject": "Welcome to Visla!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@graphite.dev",
+        "subject": "\u2728 Welcome to Graphite!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "team@mail.skylum.com",
+        "subject": "Welcome to the Luminar Neo experience!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "noreply@finaldraft.com",
+        "subject": "Welcome to the Final Draft Community + special offer inside!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@self.inc",
+        "subject": "Welcome to Self",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@self.inc",
+        "subject": "Welcome to Self",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@self.inc",
+        "subject": "Welcome to Self",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "support@account.gfmgivingfund.org",
+        "subject": "Welcome to your Giving Fund",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "no-reply@sublid.com",
+        "subject": "Please Verify Your Email Address Brett",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "help@members.solofunds.com",
+        "subject": "Welcome to SoLo",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "xbox@e.xbox.com",
+        "subject": "Welcome to Xbox Game Pass Ultimate",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@mail.hellobrigit.com",
+        "subject": "Welcome to Brigit Plus!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "donotreply@accounts.t-mobile.com",
+        "subject": "Welcome to T-Mobile!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "do-not-reply@amazon.com",
+        "subject": "Welcome to Alexa Calendar and Email",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "Info@cannariver.com",
+        "subject": "\ud83c\udf89 Welcome to Canna River! Here\u2019s 30% Off \ud83d\ude0c",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "notifications@sezzle.com",
+        "subject": "Welcome to Sezzle Anywhere!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@info.shopback.com",
+        "subject": "ShopBack: Verify your email address",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "deals@promo.shopback.com",
+        "subject": "Hello Brett Stehouwer. Welcome to ShopBack",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "hello@p.perpay.com",
+        "subject": "Brett, welcome to Perpay!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "transunion@em-tuci.transunion.com",
+        "subject": "Verify your email for TransUnion Online Service Center",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "logitechg@messaging.logitech.com",
+        "subject": "Welcome to Logitech G Insiders - Life is more fun when you play",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "notifications@sezzle.com",
+        "subject": "Welcome to Sezzle Up!",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "marketing@github.com",
+        "subject": "Welcome to Copilot Pro: Let\u2019s get started",
+        "company": "Unknown",
+        "category": "Other"
+    },
+    {
+        "sender": "news@updates.ubisoft.com",
+        "subject": "Welcome to the Republic, Rider!",
+        "company": "Unknown",
+        "category": "Other"
+    }
+]

@@ -1,0 +1,11 @@
+{
+  "api_request_limit": 1000,
+  "api_request_threshold": 80,
+  "primary_model": "gemini-3.1-pro-low",
+  "fallback_model": "stehouwer_llm",
+  "coding_model": "codestral",
+  "embedding_model": "nomic-embed-text",
+  "ollama_host": "127.0.0.1:11434",
+  "chromadb_path": "./chroma_db",
+  "log_level": "INFO"
+}

@@ -1,0 +1,9 @@
+{
+  "appId": "com.stehouwerpublishing.digitalstorefront",
+  "appName": "Stehouwer Digital Storefront",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

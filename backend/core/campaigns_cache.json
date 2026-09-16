@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cmp-101",
+    "subject": "\ud83d\udce2 Welcome to Stehouwer Publishing Enterprise AI System",
+    "preview_text": "Explore OSINT Recon, WebRTC Video Meetings, and Live Cloudflare Email Workers.",
+    "body_html": "<p>Hi {{first_name}},</p><p>Welcome to <strong>{{company}}</strong>!</p>",
+    "target_tags": [
+      "VIP",
+      "Executive"
+    ],
+    "status": "completed",
+    "sent_count": 4,
+    "opened_count": 3,
+    "clicked_count": 2,
+    "bounce_count": 0,
+    "created_at": "2026-08-19"
+  }
+]

@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+
+export default function GridLoadShedding({ BACKEND_URL }) {
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleAction = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/utilities/grid_shedding`, { method: 'POST' });
+      const data = await res.json();
+      setResult(data);
+    } catch (e) {
+      setResult({ error: "Failed to connect to AI-BS backend." });
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-lg mt-4">
+      <h3 className="font-bold text-slate-300 mb-2">GridLoadShedding</h3>
+      <p className="text-sm text-slate-400 mb-4">Trigger controlled brown-outs</p>
+      
+      <button 
+        onClick={handleAction} 
+        disabled={loading}
+        className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded"
+      >
+        {loading ? "Processing..." : "Execute"}
+      </button>
+
+      {result && (
+        <div className="mt-4 p-3 bg-slate-900 rounded border border-slate-700">
+          <pre className="text-xs text-emerald-400 overflow-x-auto">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+}

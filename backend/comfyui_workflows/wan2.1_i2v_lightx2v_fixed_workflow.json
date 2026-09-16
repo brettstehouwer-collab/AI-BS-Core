@@ -1,0 +1,261 @@
+{
+  "id": "42b4bd78-7708-4a9d-94a5-284a3b4ad851",
+  "revision": 0,
+  "last_node_id": 76,
+  "last_link_id": 90,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [1279.9999726783708, 319.9999392082668],
+      "size": [299.96875, 419.96875],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "images", "name": "images", "type": "IMAGE", "link": 80},
+        {"localized_name": "filename_prefix", "name": "filename_prefix", "type": "STRING", "widget": {"name": "filename_prefix"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "images", "name": "images", "type": "IMAGE", "links": null}],
+      "properties": {"Node name for S&R": "SaveImage", "cnr_id": "comfy-core", "ver": "0.3.64"},
+      "widgets_values": ["ComfyUI"]
+    },
+    {
+      "id": 62,
+      "type": "CLIPLoader",
+      "pos": [-239.9999987113997, 420.0000536491848],
+      "size": [339.96875, 169.28125],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "clip_name", "name": "clip_name", "type": "COMBO", "widget": {"name": "clip_name"}, "link": null},
+        {"localized_name": "type", "name": "type", "type": "COMBO", "widget": {"name": "type"}, "link": null},
+        {"localized_name": "device", "name": "device", "shape": 7, "type": "COMBO", "widget": {"name": "device"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "CLIP", "name": "CLIP", "type": "CLIP", "links": [79]}],
+      "properties": {"Node name for S&R": "CLIPLoader", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["umt5_xxl_fp16.safetensors", "wan", "default"]
+    },
+    {
+      "id": 63,
+      "type": "VAELoader",
+      "pos": [659.9998200904802, 699.9998629143215],
+      "size": [319.96875, 106.625],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [{"localized_name": "vae_name", "name": "vae_name", "type": "COMBO", "widget": {"name": "vae_name"}, "link": null}],
+      "outputs": [{"localized_name": "VAE", "name": "VAE", "type": "VAE", "links": [74]}],
+      "properties": {"Node name for S&R": "VAELoader", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["ae.safetensors"]
+    },
+    {
+      "id": 65,
+      "type": "VAEDecode",
+      "pos": [1019.9998200904802, 319.9999392082668],
+      "size": [224.984375, 95.96875],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "samples", "name": "samples", "type": "LATENT", "link": 73},
+        {"localized_name": "vae", "name": "vae", "type": "VAE", "link": 74}
+      ],
+      "outputs": [{"localized_name": "IMAGE", "name": "IMAGE", "type": "IMAGE", "slot_index": 0, "links": [80]}],
+      "properties": {"Node name for S&R": "VAEDecode", "cnr_id": "comfy-core", "ver": "0.3.64"},
+      "widgets_values": []
+    },
+    {
+      "id": 66,
+      "type": "UNETLoader",
+      "pos": [-239.9999987113997, 110.00000596546897],
+      "size": [379.96875, 139.5625],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "unet_name", "name": "unet_name", "type": "COMBO", "widget": {"name": "unet_name"}, "link": null},
+        {"localized_name": "weight_dtype", "name": "weight_dtype", "type": "COMBO", "widget": {"name": "weight_dtype"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "MODEL", "name": "MODEL", "type": "MODEL", "links": [83]}],
+      "properties": {"Node name for S&R": "UNETLoader", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors", "default"]
+    },
+    {
+      "id": 72,
+      "type": "LoraLoader",
+      "pos": [170.00001082534345, 110.00000596546897],
+      "size": [314.96875, 140.0],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "model", "name": "model", "type": "MODEL", "link": 83},
+        {"localized_name": "clip", "name": "clip", "type": "CLIP", "link": 79}
+      ],
+      "outputs": [
+        {"localized_name": "MODEL", "name": "MODEL", "type": "MODEL", "links": [72]},
+        {"localized_name": "CLIP", "name": "CLIP", "type": "CLIP", "links": [84, 85]}
+      ],
+      "properties": {"Node name for S&R": "LoraLoader", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors", 1.0, 1.0]
+    },
+    {
+      "id": 73,
+      "type": "CLIPVisionLoader",
+      "pos": [-239.9999987113997, 650.0000536491848],
+      "size": [339.96875, 106.625],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "clip_name", "name": "clip_name", "type": "COMBO", "widget": {"name": "clip_name"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "CLIP_VISION", "name": "CLIP_VISION", "type": "CLIP_VISION", "links": [86]}],
+      "properties": {"Node name for S&R": "CLIPVisionLoader", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["sigclip_vision_patch14_384.safetensors"]
+    },
+    {
+      "id": 74,
+      "type": "LoadImage",
+      "pos": [-239.9999987113997, 800.0000536491848],
+      "size": [314.96875, 314.0],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"localized_name": "IMAGE", "name": "IMAGE", "type": "IMAGE", "links": [87]},
+        {"localized_name": "MASK", "name": "MASK", "type": "MASK", "links": null}
+      ],
+      "properties": {"Node name for S&R": "LoadImage", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 75,
+      "type": "CLIPVisionEncode",
+      "pos": [170.00001082534345, 690.0000536491848],
+      "size": [314.96875, 100.0],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "clip_vision", "name": "clip_vision", "type": "CLIP_VISION", "link": 86},
+        {"localized_name": "image", "name": "image", "type": "IMAGE", "link": 87}
+      ],
+      "outputs": [{"localized_name": "CLIP_VISION_OUTPUT", "name": "CLIP_VISION_OUTPUT", "type": "CLIP_VISION_OUTPUT", "links": []}],
+      "properties": {"Node name for S&R": "CLIPVisionEncode", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["crop"]
+    },
+    {
+      "id": 67,
+      "type": "CLIPTextEncode",
+      "pos": [170.00001082534345, 290.0000536491848],
+      "size": [409.96875, 159.96875],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "clip", "name": "clip", "type": "CLIP", "link": 84},
+        {"localized_name": "text", "name": "text", "type": "STRING", "widget": {"name": "text"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "CONDITIONING", "name": "CONDITIONING", "type": "CONDITIONING", "links": [76]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["anime RPG game style, cute anime girl with gigantic fennec ears and a big fluffy fox tail with long wavy blonde hair and large blue eyes blonde colored eyelashes wearing a pink sweater a large oversized gold trimmed black winter coat and a long blue maxi skirt and a red scarf, she is sitting beside a campfire in the wilderness at night playing guitar with a milky way galaxy sky"]
+    },
+    {
+      "id": 68,
+      "type": "EmptySD3LatentImage",
+      "pos": [310.0000489723161, 700.0000155022121],
+      "size": [259.96875, 167.96875],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "width", "name": "width", "type": "INT", "widget": {"name": "width"}, "link": null},
+        {"localized_name": "height", "name": "height", "type": "INT", "widget": {"name": "height"}, "link": null},
+        {"localized_name": "batch_size", "name": "batch_size", "type": "INT", "widget": {"name": "batch_size"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "LATENT", "name": "LATENT", "slot_index": 0, "links": [78]}],
+      "properties": {"Node name for S&R": "EmptySD3LatentImage", "cnr_id": "comfy-core", "ver": "0.3.64"},
+      "widgets_values": [1024, 1024, 1]
+    },
+    {
+      "id": 69,
+      "type": "ModelSamplingAuraFlow",
+      "pos": [520.0000108253435, 110.00000596546897],
+      "size": [309.96875, 103.96875],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "model", "name": "model", "type": "MODEL", "link": 72},
+        {"localized_name": "shift", "name": "shift", "type": "FLOAT", "widget": {"name": "shift"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "MODEL", "name": "MODEL", "slot_index": 0, "links": [75]}],
+      "properties": {"Node name for S&R": "ModelSamplingAuraFlow", "cnr_id": "comfy-core", "ver": "0.3.64"},
+      "widgets_values": [3]
+    },
+    {
+      "id": 70,
+      "type": "KSampler",
+      "pos": [659.9998200904802, 319.9999392082668],
+      "size": [314.96875, 341.28125],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "model", "name": "model", "type": "MODEL", "link": 75},
+        {"localized_name": "positive", "name": "positive", "type": "CONDITIONING", "link": 76},
+        {"localized_name": "negative", "name": "negative", "type": "CONDITIONING", "link": 82},
+        {"localized_name": "latent_image", "name": "latent_image", "type": "LATENT", "link": 78},
+        {"localized_name": "seed", "name": "seed", "type": "INT", "widget": {"name": "seed"}, "link": null},
+        {"localized_name": "steps", "name": "steps", "type": "INT", "widget": {"name": "steps"}, "link": null},
+        {"localized_name": "cfg", "name": "cfg", "type": "FLOAT", "widget": {"name": "cfg"}, "link": null},
+        {"localized_name": "sampler_name", "name": "sampler_name", "type": "COMBO", "widget": {"name": "sampler_name"}, "link": null},
+        {"localized_name": "scheduler", "name": "scheduler", "type": "COMBO", "widget": {"name": "scheduler"}, "link": null},
+        {"localized_name": "denoise", "name": "denoise", "type": "FLOAT", "widget": {"name": "denoise"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "LATENT", "name": "LATENT", "slot_index": 0, "links": [73]}],
+      "properties": {"Node name for S&R": "KSampler", "cnr_id": "comfy-core", "ver": "0.3.64"},
+      "widgets_values": [42, "fixed", 8, 1, "res_multistep", "simple", 1]
+    },
+    {
+      "id": 71,
+      "type": "CLIPTextEncode",
+      "pos": [170.00001082534345, 520.0000536491848],
+      "size": [405.4375, 139.96875],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {"localized_name": "clip", "name": "clip", "type": "CLIP", "link": 85},
+        {"localized_name": "text", "name": "text", "type": "STRING", "widget": {"name": "text"}, "link": null}
+      ],
+      "outputs": [{"localized_name": "CONDITIONING", "name": "CONDITIONING", "type": "CONDITIONING", "links": [82]}],
+      "properties": {"Node name for S&R": "CLIPTextEncode", "cnr_id": "comfy-core", "ver": "0.3.73"},
+      "widgets_values": ["low quality, bad anatomy, extra digits, missing digits, extra limbs, missing limbs"]
+    }
+  ],
+  "links": [
+    [72, 72, 0, 69, 0, "MODEL"],
+    [73, 70, 0, 65, 0, "LATENT"],
+    [74, 63, 0, 65, 1, "VAE"],
+    [75, 69, 0, 70, 0, "MODEL"],
+    [76, 67, 0, 70, 1, "CONDITIONING"],
+    [78, 68, 0, 70, 3, "LATENT"],
+    [79, 62, 0, 72, 1, "CLIP"],
+    [80, 65, 0, 9, 0, "IMAGE"],
+    [82, 71, 0, 70, 2, "CONDITIONING"],
+    [83, 66, 0, 72, 0, "MODEL"],
+    [84, 72, 1, 67, 0, "CLIP"],
+    [85, 72, 1, 71, 0, "CLIP"],
+    [86, 73, 0, 75, 0, "CLIP_VISION"],
+    [87, 74, 0, 75, 1, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {"ds": {"scale": 0.9, "offset": [417.8214246961808, 184.68119303385419]}},
+  "version": 0.4
+}

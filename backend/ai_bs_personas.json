@@ -1,0 +1,38 @@
+{
+  "sandbox-task-1781915382-08ac73": {
+    "alias": "Promoted Python Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1781915382_08ac73.py",
+    "capabilities": "Executes successful python code blocks."
+  },
+  "sandbox-task-1781915384-47bcc2": {
+    "alias": "Promoted Python Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1781915384_47bcc2.py",
+    "capabilities": "Executes successful python code blocks."
+  },
+  "sandbox-task-1781915407-3e3bee": {
+    "alias": "Promoted Python Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1781915407_3e3bee.py",
+    "capabilities": "Executes successful python code blocks."
+  },
+  "sandbox-task-1781915407-db88b6": {
+    "alias": "Promoted Python Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1781915407_db88b6.py",
+    "capabilities": "Executes successful python code blocks."
+  },
+  "sandbox-task-1781915410-11d482": {
+    "alias": "Promoted Python Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1781915410_11d482.py",
+    "capabilities": "Executes successful python code blocks."
+  },
+  "sandbox-task-1785423705-9b824d": {
+    "alias": "Promoted Powershell Builder",
+    "persona": "Automatically promoted agent from a successful sandbox run.",
+    "script_binding": "promoted_agents/sandbox_task_1785423705_9b824d.ps1",
+    "capabilities": "Executes successful powershell code blocks."
+  }
+}

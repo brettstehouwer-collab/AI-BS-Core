@@ -1,0 +1,6 @@
+{
+  "version": "5.296.0",
+  "release_tag": "v5.296.0-stehouwer-17-model-swarm-and-brain-vault",
+  "release_date": "2026-09-16",
+  "description": "Stehouwer LLM 17-Model Unrestricted Fleet, 175-Session Brain Ingestion (139K Records / 67K Vectors), and Port 8080 Lifespan Stabilization."
+}

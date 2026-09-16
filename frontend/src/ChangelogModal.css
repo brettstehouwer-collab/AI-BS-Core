@@ -1,0 +1,133 @@
+.changelog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.changelog-modal {
+  width: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 46, 147, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 46, 147, 0.2);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.changelog-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(255, 46, 147, 0.1) 0%, transparent 100%);
+}
+
+.changelog-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #ff4444;
+}
+
+.changelog-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.release-block {
+  margin-bottom: 10px;
+}
+
+.release-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.release-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #00f0ff;
+}
+
+.release-date {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.release-title {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.release-changes {
+  margin: 0;
+  padding-left: 20px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.release-changes li {
+  margin-bottom: 8px;
+}
+
+.release-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 24px 0;
+}
+
+.changelog-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.got-it-btn {
+  background: linear-gradient(135deg, #ff2e93 0%, #ff8a00 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.got-it-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 46, 147, 0.4);
+}

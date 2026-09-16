@@ -1,0 +1,436 @@
+/* Word & Google Docs Hybrid Paper Canvas Stylesheet */
+
+.word-docs-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+/* ══════════ THEME PALETTES ══════════ */
+.theme-white_paper {
+  --desk-bg: #eef2f6;
+  --ribbon-bg: #ffffff;
+  --ribbon-border: #d0d7de;
+  --ribbon-text: #334155;
+  --paper-bg: #ffffff;
+  --paper-text: #0f172a;
+  --paper-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.05);
+  --statusbar-bg: #ffffff;
+  --statusbar-text: #64748b;
+  --statusbar-border: #e2e8f0;
+}
+
+.theme-focus_sepia {
+  --desk-bg: #ece5d8;
+  --ribbon-bg: #f9f5ed;
+  --ribbon-border: #ded3be;
+  --ribbon-text: #453c30;
+  --paper-bg: #fcf8f0;
+  --paper-text: #2c2214;
+  --paper-shadow: 0 4px 6px -1px rgba(69, 60, 48, 0.08), 0 12px 24px -4px rgba(69, 60, 48, 0.12);
+  --statusbar-bg: #f9f5ed;
+  --statusbar-text: #786b59;
+  --statusbar-border: #ded3be;
+}
+
+.theme-dark_studio {
+  --desk-bg: #090d16;
+  --ribbon-bg: #0f172a;
+  --ribbon-border: #1e293b;
+  --ribbon-text: #cbd5e1;
+  --paper-bg: #1e293b;
+  --paper-text: #f8fafc;
+  --paper-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px #334155;
+  --statusbar-bg: #0f172a;
+  --statusbar-text: #94a3b8;
+  --statusbar-border: #1e293b;
+}
+
+/* ══════════ TOP RIBBON & FORMATTING BAR ══════════ */
+.word-docs-ribbon {
+  background: var(--ribbon-bg);
+  border-bottom: 1px solid var(--ribbon-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.docs-ribbon-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--ribbon-border);
+  gap: 12px;
+}
+
+.docs-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.docs-app-icon {
+  font-size: 1.3rem;
+}
+
+.docs-filename-input {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ribbon-text);
+  outline: none;
+  min-width: 200px;
+  max-width: 400px;
+  transition: all 0.15s;
+}
+
+.docs-filename-input:hover {
+  border-color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.docs-filename-input:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.docs-filename-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ribbon-text);
+  padding: 4px 8px;
+}
+
+.docs-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.docs-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.docs-autosave-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--statusbar-text);
+  font-weight: 600;
+}
+
+.docs-view-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--ribbon-border);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.docs-view-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--ribbon-text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.docs-view-btn.active {
+  background: #ffffff;
+  color: #2563eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.docs-save-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.docs-save-btn:hover {
+  background: #1d4ed8;
+}
+
+.docs-aux-btn {
+  background: transparent;
+  border: 1px solid var(--ribbon-border);
+  color: var(--ribbon-text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.docs-aux-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: #2563eb;
+}
+
+/* ══════════ FIND & REPLACE STRIP ══════════ */
+.docs-find-replace-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(37, 99, 235, 0.04);
+  border-top: 1px solid var(--ribbon-border);
+  animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.find-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.find-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ribbon-text);
+}
+
+.find-input {
+  background: #ffffff;
+  border: 1px solid var(--ribbon-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.82rem;
+  outline: none;
+  color: #0f172a;
+}
+
+.find-input:focus {
+  border-color: #2563eb;
+}
+
+.match-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.find-btn {
+  background: var(--ribbon-bg);
+  border: 1px solid var(--ribbon-border);
+  color: var(--ribbon-text);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.find-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.find-btn.highlight {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.find-close-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--statusbar-text);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* ══════════ FORMATTING RIBBON BAR ══════════ */
+.docs-formatting-bar {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  gap: 6px;
+  overflow-x: auto;
+  background: var(--ribbon-bg);
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--ribbon-border);
+  margin: 0 4px;
+}
+
+.toolbar-select {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ribbon-text);
+  cursor: pointer;
+  outline: none;
+}
+
+.toolbar-select:hover {
+  border-color: var(--ribbon-border);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.toolbar-select.font-family {
+  min-width: 140px;
+}
+
+.toolbar-select.font-size {
+  min-width: 80px;
+}
+
+.toolbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--ribbon-text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toolbar-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--ribbon-border);
+}
+
+.toolbar-btn.active {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #2563eb;
+}
+
+.toolbar-btn.text-btn {
+  width: auto;
+  padding: 0 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* ══════════ THE DESK VIEWPORT & PAPER SHEET ══════════ */
+.word-docs-viewport {
+  flex: 1;
+  background: var(--desk-bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 64px 16px;
+}
+
+.word-docs-paper-sheet {
+  background: var(--paper-bg);
+  box-shadow: var(--paper-shadow);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 816px; /* 8.5 inches at 96 DPI */
+  min-height: 1056px; /* 11 inches at 96 DPI */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.paper-margin-ruler {
+  height: 48px;
+  width: 100%;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.paper-content-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 960px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--paper-text);
+  padding: 24px 64px 64px 64px; /* Standard 1-inch margins */
+  box-sizing: border-box;
+  resize: none;
+  font-variant-ligatures: common-ligatures;
+}
+
+.paper-content-textarea::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ══════════ BOTTOM METRICS STATUSBAR ══════════ */
+.word-docs-statusbar {
+  background: var(--statusbar-bg);
+  border-top: 1px solid var(--statusbar-border);
+  padding: 6px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--statusbar-text);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.statusbar-left, .statusbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusbar-separator {
+  color: #cbd5e1;
+}

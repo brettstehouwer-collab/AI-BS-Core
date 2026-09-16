@@ -1,0 +1,76 @@
+/* Responsive Layout Fixes & Mobile Optimizations */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden !important; 
+}
+
+.app-shell {
+  height: 100vh !important;
+  width: 100vw !important;
+  overflow: hidden;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 15px;
+}
+
+.topbar, .footer-bar, .screenwriting-container {
+  flex-wrap: wrap !important;
+  height: auto !important;
+}
+
+.footer-input-row {
+  min-width: 100%; 
+}
+
+/* Fluid Resizing & Touch Targets for Mobile */
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column !important;
+  }
+  
+  .sidebar-panel {
+    height: auto !important;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  
+  button, .status-pill, select, input {
+    min-height: 44px; /* Apple/Google recommended touch target */
+    font-size: 0.9rem !important;
+    padding: 8px 12px !important;
+    margin: 4px !important;
+  }
+
+  .status-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  /* Ensure all subtabs are scrollable with adequate touch size */
+  nav > button, .topbar > button {
+    min-height: 44px;
+    font-size: 0.9rem !important;
+  }
+  
+  .content-area {
+    padding: 8px !important;
+  }
+}
+
+/* Base interactive elements */
+button, select, input {
+  transition: all 0.2s ease;
+}

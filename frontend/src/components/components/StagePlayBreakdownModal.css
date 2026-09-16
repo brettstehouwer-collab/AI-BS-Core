@@ -1,0 +1,29 @@
+/* Inherit most from ProductionBreakdownModal.css via the generic .production-breakdown-modal class */
+
+.stage-play-breakdown-modal .tabs-header button.active {
+  color: #a78bfa; /* Purple for theatre instead of blue/yellow */
+  border-bottom-color: #a78bfa;
+}
+
+.stage-play-breakdown-modal .csv-export-btn {
+  background: #a78bfa;
+  color: #4c1d95;
+}
+
+.stage-play-breakdown-modal .csv-export-btn:hover {
+  background: #8b5cf6;
+}
+
+.recoupment-container {
+  padding: 16px;
+}
+
+.rc-card {
+  border: 1px solid #334155;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.rc-card p {
+  margin: 12px 0;
+  font-size: 1.1rem;
+}

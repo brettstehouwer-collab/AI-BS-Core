@@ -1,0 +1,18 @@
+# AI-BS Sovereign Intelligence Matrix
+
+> AI-BS is a high-performance local-first platform featuring autonomous coding agents, sovereign LLM inference, Bible concordance and study engine, DAW workstation, and enterprise operational dashboards.
+
+## Core Hubs & Systems
+
+- [Command Center](https://ai-bs-dashboard.web.app/?tab=dashboard): Mission control hub with real-time daemon supervision, agent launchers, and hardware telemetry.
+- [Sovereign Bible Hub](https://ai-bs-dashboard.web.app/?tab=bible_hub): Complete 27-book New Testament study environment with KJV and NIV parallel translation and concordance search.
+- [Shared Drive & Cloud](https://ai-bs-dashboard.web.app/?tab=shared_cloud_drive): Encrypted distributed cloud storage and document synchronization.
+- [Systems & ROI Blueprint](https://ai-bs-dashboard.web.app/?tab=blueprint_roi): Architectural maps, resource metrics, and operational ROI calculator.
+- [Hollywood Screenplay Studio](https://ai-bs-dashboard.web.app/?tab=screenplay_studio): Creative screenplay development and narrative structuring suite.
+- [Prestige Wash OS](https://ai-bs-dashboard.web.app/?tab=prestige_mobile_wash): Fleet management and field operations platform.
+- [Neural Intelligence & Local LLM](https://ai-bs-dashboard.web.app/?tab=neural_intelligence): Sovereign local model orchestration and PyTorch/CUDA execution engine.
+
+## Documentation & Developer Resources
+
+- [System Manual](https://ai-bs-dashboard.web.app/docs): Comprehensive operations manual and architecture specifications.
+- [API Reference](https://ai-bs-dashboard.web.app/api): Local daemon endpoints, health probes, and streaming gateways.

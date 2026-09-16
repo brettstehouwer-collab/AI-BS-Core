@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="fireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF4500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E74C3C;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#1A0800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGlow)"/>
+  <!-- Fire bolt icon -->
+  <path d="M280 80 L200 240 L260 240 L220 432 L340 220 L280 220 L320 80 Z" 
+        fill="url(#fireGrad)" 
+        stroke="none"
+        opacity="0.95"/>
+  <!-- Subtle glow -->
+  <path d="M280 80 L200 240 L260 240 L220 432 L340 220 L280 220 L320 80 Z" 
+        fill="none" 
+        stroke="url(#fireGrad)" 
+        stroke-width="3"
+        opacity="0.4"
+        filter="url(#blur)"/>
+</svg>

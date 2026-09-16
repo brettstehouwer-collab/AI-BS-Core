@@ -1,0 +1,181 @@
+/* TourGuideEngine.css */
+
+.tour-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000000;
+  pointer-events: auto;
+  transition: all 0.25s ease;
+}
+
+.tour-spotlight-box {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(3, 7, 18, 0.75), 0 0 25px rgba(56, 189, 248, 0.85);
+  border: 2px solid #38bdf8;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000001;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 9999px rgba(3, 7, 18, 0.75), 0 0 15px rgba(56, 189, 248, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 9999px rgba(3, 7, 18, 0.75), 0 0 30px rgba(56, 189, 248, 0.95);
+  }
+  100% {
+    box-shadow: 0 0 0 9999px rgba(3, 7, 18, 0.75), 0 0 15px rgba(56, 189, 248, 0.6);
+  }
+}
+
+.tour-popover-card {
+  position: fixed;
+  width: 360px;
+  max-width: 90vw;
+  background: #0f172a;
+  border: 1px solid #38bdf8;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(2, 132, 199, 0.4);
+  z-index: 1000002;
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tour-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tour-step-badge {
+  background: rgba(2, 132, 199, 0.3);
+  border: 1px solid #0284c7;
+  color: #38bdf8;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tour-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.tour-close-btn:hover {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.tour-popover-body {
+  margin-bottom: 1.25rem;
+}
+
+.tour-popover-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.tour-popover-text {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+
+.tour-popover-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #1e293b;
+  padding-top: 0.85rem;
+}
+
+.tour-btn-skip {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  transition: all 0.2s;
+}
+
+.tour-btn-skip:hover {
+  color: #94a3b8;
+}
+
+.tour-nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tour-btn-prev {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tour-btn-prev:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+.tour-btn-next {
+  background: #0284c7;
+  border: 1px solid #38bdf8;
+  color: #ffffff;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+  transition: all 0.2s;
+}
+
+.tour-btn-next:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.tour-btn-finish {
+  background: #10b981;
+  border: 1px solid #34d399;
+  color: #ffffff;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s;
+}
+
+.tour-btn-finish:hover {
+  background: #059669;
+}

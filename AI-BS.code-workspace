@@ -1,0 +1,69 @@
+{
+	"folders": [
+		{
+			"name": "AI-BS",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/node_modules": true,
+			"**/pyppeteer_env": true,
+			"**/__pycache__": true,
+			"**/*.pyc": true,
+			"**/.vercel": true,
+			"**/.firebase": true,
+			"**/.ollama": true,
+			"**/VRAM_Tensor_Swap": true,
+			"**/Context_Memory_Swap": true,
+			"**/temp_unzip": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true,
+			"**/kaalia.log": true
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/pyppeteer_env": true,
+			"**/dist": true,
+			"**/build": true,
+			"**/release-build": true,
+			"**/win-unpacked": true,
+			"**/.ollama": true,
+			"**/VRAM_Tensor_Swap": true,
+			"**/Context_Memory_Swap": true,
+			"**/temp_unzip": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true,
+			"**/kaalia.log": true,
+			"**/*.sqlite3": true,
+			"**/*.db": true,
+			"**/*.tar.gz": true,
+			"**/*.zip": true,
+			"**/*.exe": true
+		},
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/**": true,
+			"**/.ollama/**": true,
+			"**/VRAM_Tensor_Swap/**": true,
+			"**/Context_Memory_Swap/**": true,
+			"**/temp_unzip/**": true,
+			"**/dist/**": true,
+			"**/build/**": true,
+			"**/win-unpacked/**": true,
+			"**/release-build/**": true,
+			"**/*.jsonl": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true
+		},
+		"terminal.integrated.cwd": "C:\\AI-BS",
+		"terminal.integrated.defaultProfile.windows": "PowerShell",
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}

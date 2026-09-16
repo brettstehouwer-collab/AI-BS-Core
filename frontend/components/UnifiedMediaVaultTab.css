@@ -1,0 +1,219 @@
+.media-vault-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  overflow-y: auto;
+}
+
+.media-vault-header {
+  margin-bottom: 24px;
+}
+
+.media-vault-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #e040fb;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.media-vault-header p {
+  font-size: 14px;
+  color: #8b949e;
+  margin: 0;
+}
+
+.media-vault-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #30363d;
+  padding-bottom: 16px;
+}
+
+.vault-category-btn {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.vault-category-btn:hover {
+  background-color: #21262d;
+  color: #c9d1d9;
+  border-color: #8b949e;
+}
+
+.vault-category-btn.active {
+  background-color: #e040fb;
+  color: #ffffff;
+  border-color: #e040fb;
+  box-shadow: 0 0 10px rgba(224, 64, 251, 0.3);
+}
+
+.media-vault-grid {
+  column-count: 1;
+  column-gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .media-vault-grid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .media-vault-grid {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1440px) {
+  .media-vault-grid {
+    column-count: 4;
+  }
+}
+
+.vault-media-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: zoom-in;
+}
+
+.vault-media-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border-color: #e040fb;
+}
+
+.vault-media-preview {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  background-color: #000;
+}
+
+.vault-media-video {
+  width: 100%;
+  display: block;
+  background-color: #000;
+}
+
+.vault-media-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  padding: 30px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.vault-media-card:hover .vault-media-overlay {
+  opacity: 1;
+}
+
+.vault-media-filename {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vault-media-size {
+  color: #8b949e;
+  font-size: 10px;
+}
+
+.media-vault-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #8b949e;
+  font-size: 14px;
+}
+
+/* Lightbox */
+.vault-lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.9);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.vault-lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vault-lightbox-media-img,
+.vault-lightbox-media-vid {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.vault-lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.vault-lightbox-close:hover {
+  opacity: 1;
+}
+
+.vault-lightbox-details {
+  margin-top: 16px;
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  gap: 16px;
+  background-color: #161b22;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #30363d;
+}

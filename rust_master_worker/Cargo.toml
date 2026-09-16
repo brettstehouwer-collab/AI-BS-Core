@@ -1,0 +1,8 @@
+[package]
+name = "rust_master_worker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rusqlite = "0.29.0"
+tokio = { version = "1", features = ["full"] }

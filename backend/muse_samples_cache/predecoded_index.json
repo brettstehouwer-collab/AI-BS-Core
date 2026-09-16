@@ -1,0 +1,500 @@
+{
+  "bass trombone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass trombone_0_3c3bc987a6a6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass trombone_1_d3b3c8dc5c80.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass trombone_2_af7b85a7473f.wav"
+  ],
+  "cimbasso": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cimbasso_0_b88306603a95.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cimbasso_1_5850aeb70025.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cimbasso_2_c54aa53aad8d.wav"
+  ],
+  "french horn": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horn_0_6b438cd863fe.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horn_1_b61503ddc615.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horn_2_2648ab897051.wav"
+  ],
+  "french horns a6": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horns a6_0_578701398d6e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horns a6_1_58c7c3768ba3.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\french horns a6_2_becdca7a3360.wav"
+  ],
+  "trombone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombone_0_da28f5403df3.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombone_1_c7145e25936f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombone_2_1a4533c64a2f.wav"
+  ],
+  "trombones a3": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombones a3_0_7ad2148070ff.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombones a3_1_e1b3db8c68cf.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trombones a3_2_8fc85f897760.wav"
+  ],
+  "trumpet": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpet_0_a62969fabf48.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpet_1_dde3304bd513.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpet_2_e4e30c5094f3.wav"
+  ],
+  "trumpets a4": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpets a4_0_007ec05c5f06.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpets a4_1_e4eabdd2b2b8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trumpets a4_2_0b2511ccb251.wav"
+  ],
+  "tuba": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tuba_0_f73f0307799a.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tuba_1_6e6d96fbaaea.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tuba_2_27fb44cb8c27.wav"
+  ],
+  "altos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\altos_0_e4475ee3251d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\altos_1_8a20124e1ee9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\altos_2_8571b61545eb.wav"
+  ],
+  "basses": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\basses_0_b863b97c2b56.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\basses_1_304b218f6438.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\basses_2_bdeb68c27ac6.wav"
+  ],
+  "sopranos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sopranos_0_c455370d8cd2.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sopranos_1_279069ebe172.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sopranos_2_58347dfa53c5.wav"
+  ],
+  "tenors": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenors_0_e2be2885c79f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenors_1_e41593dce5e5.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenors_2_a18bef74c618.wav"
+  ],
+  "acoustic nylon": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic nylon_0_430fc0a02253.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic nylon_1_4ec77bbb377d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic nylon_2_85cf3ecf8c76.wav"
+  ],
+  "acoustic steel picked": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel picked_0_c2f89046b7cd.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel picked_1_b4a0c72526f6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel picked_2_f8aaf1f173a9.wav"
+  ],
+  "acoustic steel plucked": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel plucked_0_6690284a8ef0.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel plucked_1_ff2d49173538.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\acoustic steel plucked_2_71ff4c895463.wav"
+  ],
+  "electric bass": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric bass_0_0c3588793e7d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric bass_1_6ef13876a608.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric bass_2_bdc954353689.wav"
+  ],
+  "electric lp - clean": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric lp - clean_0_a6b6d02ae71a.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric lp - clean_1_9a689f0b9b20.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric lp - clean_2_462db9dfce18.wav"
+  ],
+  "electric sc - clean": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric sc - clean_0_0970744c402f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric sc - clean_1_fc8e143f23e8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\electric sc - clean_2_3d3c2c45f993.wav"
+  ],
+  "harp": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harp_0_cac6c9be078e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harp_1_b164cdbc7ebc.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harp_2_7d21bc1c4934.wav"
+  ],
+  "celesta": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\celesta_0_d1ef32e0a37c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\celesta_1_102b7c619457.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\celesta_2_a4b9061c0aeb.wav"
+  ],
+  "dream piano": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\dream piano_0_fdc9951ed845.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\dream piano_1_49e299c6152a.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\dream piano_2_fb511feebb22.wav"
+  ],
+  "hammond organ": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\hammond organ_0_55b2bf8de10c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\hammond organ_1_d93f1c2f6076.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\hammond organ_2_16e89c88853c.wav"
+  ],
+  "harpsichord": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harpsichord_0_c1d23f6bb4ef.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harpsichord_1_047472eaf8bd.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\harpsichord_2_fb3e2cd5056c.wav"
+  ],
+  "piano": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piano_0_39b116cb84c1.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piano_1_a5b4a48905a3.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piano_2_e4d5837578f5.wav"
+  ],
+  "soft piano": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soft piano_0_8f3dbaf79db8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soft piano_1_a9bad4051f31.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soft piano_2_27c9f6ef9d38.wav"
+  ],
+  "suitcase piano": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suitcase piano_0_dfd86acffd5e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suitcase piano_1_15bb939194e4.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suitcase piano_2_3454605736aa.wav"
+  ],
+  "upright piano": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\upright piano_0_44a429459553.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\upright piano_1_82a6018b5558.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\upright piano_2_c841b12db4d5.wav"
+  ],
+  "wurly 200a": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\wurly 200a_0_890068d866af.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\wurly 200a_1_910c6d17349f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\wurly 200a_2_3359fd55f27e.wav"
+  ],
+  "agogos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\agogos_0_8793ad75b45e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\agogos_1_56853cbbfd35.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\agogos_2_456f36833db7.wav"
+  ],
+  "bass drum": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass drum_0_09bdd486100d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass drum_1_087f6b0d7104.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass drum_2_5a6882a77e9d.wav"
+  ],
+  "bell tree": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bell tree_0_5bb2f014da9d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bell tree_1_7290a1b501ee.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bell tree_2_1ad433793bcf.wav"
+  ],
+  "big kit": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\big kit_0_b0dbe8ede9d5.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\big kit_1_ec7354208620.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\big kit_2_4b2c064da921.wav"
+  ],
+  "bongos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bongos_0_f4f06820c5fe.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bongos_1_5b85a8d81265.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bongos_2_aa1b73b16f27.wav"
+  ],
+  "cabasa": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cabasa_0_7ac87f9ff53c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cabasa_1_6d0c6df2cda4.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cabasa_2_e62b6af0fbfc.wav"
+  ],
+  "castanets": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\castanets_0_7884147cc5ab.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\castanets_1_b30fea434dc8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\castanets_2_64e61b50e503.wav"
+  ],
+  "china": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\china_0_21ecd52ccf12.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\china_1_5988eb1e078f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\china_2_64247988765e.wav"
+  ],
+  "clap": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clap_0_c30f8d22d616.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clap_1_7b6c5d7a9b13.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clap_2_2b2831320a71.wav"
+  ],
+  "claves": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\claves_0_75dee6e40e31.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\claves_1_c4c741f541ab.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\claves_2_7a469d106a7f.wav"
+  ],
+  "concert combo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\concert combo_0_eb1cda360a5f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\concert combo_1_195cf77f8976.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\concert combo_2_ac94a4fede4a.wav"
+  ],
+  "congas": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\congas_0_21a8f1d28f82.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\congas_1_0a730763f786.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\congas_2_71aacbe54bf2.wav"
+  ],
+  "cowbell": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cowbell_0_d11d204d4850.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cowbell_1_f0edfc85afcf.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cowbell_2_e9af75b524c9.wav"
+  ],
+  "crotales": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\crotales_0_7f26bbada36f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\crotales_1_28f226f3a93c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\crotales_2_6d699775eb51.wav"
+  ],
+  "cuica": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cuica_0_26ca535fb470.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cuica_1_de7d5c35a3a8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cuica_2_206381975146.wav"
+  ],
+  "drum kit": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\drum kit_0_e0ba34066db5.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\drum kit_1_519c8013bdd8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\drum kit_2_198304a45589.wav"
+  ],
+  "field drum": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\field drum_0_7eb58d9afde1.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\field drum_1_483d52d419f9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\field drum_2_625de295a1f8.wav"
+  ],
+  "glockenspiel": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\glockenspiel_0_0758fdc2953d.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\glockenspiel_1_80d05d05cc50.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\glockenspiel_2_aaca767907f5.wav"
+  ],
+  "gm kit": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gm kit_0_13ad7db8c266.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gm kit_1_fed0e6f13606.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gm kit_2_0b7a96c42347.wav"
+  ],
+  "gong": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gong_0_05d8fd4f53fd.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gong_1_428b3df52f27.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\gong_2_92d2f4215c36.wav"
+  ],
+  "guiro": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\guiro_0_e2843aa75f05.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\guiro_1_8a2cfe925c56.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\guiro_2_bdbbc5075b8e.wav"
+  ],
+  "maracas": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\maracas_0_42f8246968b0.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\maracas_1_2ef106078249.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\maracas_2_f08321dc9216.wav"
+  ],
+  "marimba": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\marimba_0_94f487bc75a9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\marimba_1_8cdfc5daccee.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\marimba_2_121a49fad9fc.wav"
+  ],
+  "mark tree": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\mark tree_0_4be2877fbaff.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\mark tree_1_3779257d03f1.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\mark tree_2_6dc9cdb12dae.wav"
+  ],
+  "metronome": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\metronome_0_6f8117606963.wav"
+  ],
+  "piatti": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piatti_0_b25e8fb732b9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piatti_1_269e81bb2578.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piatti_2_0eac035e509d.wav"
+  ],
+  "shaker": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\shaker_0_60766310db7e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\shaker_1_06b699b08087.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\shaker_2_c04097e35874.wav"
+  ],
+  "slapstick": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\slapstick_0_d555f94ff69f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\slapstick_1_f6f378554906.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\slapstick_2_492b4dc886f5.wav"
+  ],
+  "sleigh bells": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sleigh bells_0_8f83feb5ed51.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sleigh bells_1_a3ae5dc5d488.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\sleigh bells_2_3d0769b8ce96.wav"
+  ],
+  "snare": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\snare_0_c4bcf84c16c6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\snare_1_e1ced6e2a03c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\snare_2_12501646a4d9.wav"
+  ],
+  "suspended cymbal": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suspended cymbal_0_20e650dd9a79.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suspended cymbal_1_e04f3cf4258c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\suspended cymbal_2_33edd6b441fb.wav"
+  ],
+  "taikos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\taikos_0_2e22851cd11c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\taikos_1_866d735901c1.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\taikos_2_e565b1abee33.wav"
+  ],
+  "tam-tam": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tam-tam_0_92bd47c67691.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tam-tam_1_69c2459e1343.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tam-tam_2_841a673d90c1.wav"
+  ],
+  "tambourine": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tambourine_0_765233c69597.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tambourine_1_a81e784e8e82.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tambourine_2_cd7f5310f4a2.wav"
+  ],
+  "timbales": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timbales_0_ce119bf8af84.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timbales_1_097a01700a5a.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timbales_2_2ffffa7af209.wav"
+  ],
+  "timpani": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timpani_0_fa5c16d027a9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timpani_1_1b87edfe7158.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\timpani_2_b1c8b9af8fea.wav"
+  ],
+  "toms": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\toms_0_c98c13a8e8db.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\toms_1_11b073a218ae.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\toms_2_d3230f205a45.wav"
+  ],
+  "trap kit": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trap kit_0_0dbf60567283.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trap kit_1_d1e72bc4774f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\trap kit_2_950dc59b471d.wav"
+  ],
+  "triangle": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\triangle_0_9ee09e5bc296.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\triangle_1_0c31118d02fa.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\triangle_2_8d34d3b304fb.wav"
+  ],
+  "tubular bells": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tubular bells_0_285db6f5d715.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tubular bells_1_1b214ab02b35.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tubular bells_2_7cc5046f5267.wav"
+  ],
+  "vibraphone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraphone_0_6d85b1f1a633.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraphone_1_236a31774657.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraphone_2_7770ad2070ef.wav"
+  ],
+  "vibraslap": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraslap_0_7d6ea3c87608.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraslap_1_6876c969df72.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\vibraslap_2_e99843e662d5.wav"
+  ],
+  "whistle": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\whistle_0_3965e57dfdc9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\whistle_1_02a0d87cdd68.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\whistle_2_dbc6dc432860.wav"
+  ],
+  "woodblocks": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\woodblocks_0_37fe87edfdf0.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\woodblocks_1_998db3a82308.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\woodblocks_2_2c23f9939c4b.wav"
+  ],
+  "xylophone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\xylophone_0_09adc9a4e9be.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\xylophone_1_4584afead727.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\xylophone_2_c63693d0695c.wav"
+  ],
+  "cello solo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cello solo_0_cbaf312d1afe.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cello solo_1_2980a5728dff.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cello solo_2_bd87e8f5b8b1.wav"
+  ],
+  "cellos": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cellos_0_f9fd4d126cf3.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cellos_1_f3e47c33aff2.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\cellos_2_5bde256e686b.wav"
+  ],
+  "contrabasses": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabasses_0_54b76c43d0e2.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabasses_1_eba96f07c0a7.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabasses_2_30816b98dbb7.wav"
+  ],
+  "viola solo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\viola solo_0_a0903d127291.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\viola solo_1_387189cd5a75.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\viola solo_2_1b1998bccd39.wav"
+  ],
+  "violas": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violas_0_627e42a25fd7.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violas_1_5c1cb7ce1071.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violas_2_e18b34b0dfbc.wav"
+  ],
+  "violin 1 solo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 1 solo_0_9230b4d0b25a.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 1 solo_1_36d9d3e6c03c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 1 solo_2_25ad7da7af3f.wav"
+  ],
+  "violin 2 solo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 2 solo_0_78cabe6522ba.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 2 solo_1_527e45f2999f.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violin 2 solo_2_b13a88a5d3c2.wav"
+  ],
+  "violins 1": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 1_0_413bbb3779fd.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 1_1_4d51dc934294.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 1_2_9dc69520604c.wav"
+  ],
+  "violins 2": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 2_0_abedc7c00d88.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 2_1_1ccc1fb05e93.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\violins 2_2_6bf2d2b03056.wav"
+  ],
+  "alto flute": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto flute_0_3acc2988a90c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto flute_1_6341e0a5b2a3.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto flute_2_71b419c83932.wav"
+  ],
+  "alto saxophone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto saxophone_0_22463a64b1a9.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto saxophone_1_4dba0bb21720.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\alto saxophone_2_ea29e38fa6cc.wav"
+  ],
+  "baritone saxophone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\baritone saxophone_0_3c457be08d90.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\baritone saxophone_1_455512c604a8.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\baritone saxophone_2_280b302da273.wav"
+  ],
+  "bass clarinet": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass clarinet_0_02de20d24373.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass clarinet_1_2325f00b0b95.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass clarinet_2_2b6446c74aae.wav"
+  ],
+  "bass flute": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass flute_0_7c23f3a5d43b.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass flute_1_a78380898aa6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bass flute_2_cb78884f66bb.wav"
+  ],
+  "bassoon": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bassoon_0_2de4d3d312ad.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bassoon_1_d16c9ef6b3fd.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\bassoon_2_178014994bcc.wav"
+  ],
+  "clarinet in bb": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in bb_0_ebafe5251751.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in bb_1_1af19377808e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in bb_2_1b303972ebce.wav"
+  ],
+  "clarinet in eb": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in eb_0_08e9a81ea832.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in eb_1_c7dfc8b200bc.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\clarinet in eb_2_8fdf2372373c.wav"
+  ],
+  "contrabass flute": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabass flute_0_241649d8f994.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabass flute_1_e522a5cf94ba.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabass flute_2_eada086029a4.wav"
+  ],
+  "contrabassoon": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabassoon_0_d9c40c36d4dc.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabassoon_1_52531293015e.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\contrabassoon_2_519f40929ba6.wav"
+  ],
+  "english horn": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\english horn_0_04a8f8b0137c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\english horn_1_b914a59f7ea6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\english horn_2_33ae56569c30.wav"
+  ],
+  "flute 1": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 1_0_542c03e0a739.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 1_1_b76fe78dd0b2.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 1_2_fea39f1743ea.wav"
+  ],
+  "flute 2": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 2_0_d5a19adacc78.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 2_1_12332f40a9ff.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\flute 2_2_c4536fbee2ce.wav"
+  ],
+  "oboe": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\oboe_0_6379cc37cbb6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\oboe_1_1bb58fd74058.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\oboe_2_75719e4fd10a.wav"
+  ],
+  "piccolo": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piccolo_0_892a65d57ff7.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piccolo_1_2546f1f911ef.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\piccolo_2_f2b76ab05267.wav"
+  ],
+  "soprano saxophone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soprano saxophone_0_6392b9823d7c.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soprano saxophone_1_83b8dbe9f0b6.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\soprano saxophone_2_f200dcb9e119.wav"
+  ],
+  "tenor saxophone": [
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenor saxophone_0_560aec8fd293.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenor saxophone_1_8f771a977460.wav",
+    "C:\\AI-BS\\backend\\muse_samples_cache\\tenor saxophone_2_3cb7f92618c8.wav"
+  ]
+}

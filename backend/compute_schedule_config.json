@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "current_mode": "clore_only",
+  "time_slots": [
+    {
+      "provider": "salad",
+      "start_hour": 0,
+      "end_hour": 8,
+      "name": "Salad Overnight"
+    },
+    {
+      "provider": "vast",
+      "start_hour": 8,
+      "end_hour": 16,
+      "name": "Vast.ai Peak Inference"
+    },
+    {
+      "provider": "clore",
+      "start_hour": 16,
+      "end_hour": 24,
+      "name": "Clore.ai Evening Node"
+    }
+  ],
+  "previous_mode": "auto_schedule"
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://dev.epicgames.com/community/api/cms/videos/V_MCYW21/embed.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style class="vjs-styles-defaults">
+      .video-js {
+        width: 300px;
+        height: 150px;
+      }
+
+      .vjs-fluid:not(.vjs-audio-only-mode) {
+        padding-top: 56.25%
+      }
+    </style>
+    
+    <title></title>
+
+    <link rel="preconnect" href="https://electra-web.qstv.on.epicgames.com/">
+    <link rel="preconnect" href="https://cdn.qstv.on.epicgames.com/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+
+    <script src="./electra-web-player.js.download"></script>
+    <link rel="stylesheet" href="./electra-web-player.css">
+
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        overflow: hidden;
+      }
+      video {
+        height: 100%;
+        width: 100%;
+      }
+      .video-js {
+        width: 100%;
+        height: 100vh;
+      }
+      .video-js .vjs-big-play-button {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+      }
+    </style>
+  <script src="./api.js.download" async="" defer=""></script></head>
+  <body>
+    <video id="electraPlayer" class="video-js vjs-layout-large"></video>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const AUTOPLAY = 'autoplay';
+        const LOOP='loop'
+        const MUTED='MUTED'
+        const videoUrl = "qsep://cdn.qstv.on.epicgames.com/99575efd-dacf-4931-b8c3-27ff11bddef8?s=eyJraWQiOiJMRW13ZEZzVmMiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtOXk5V0J1b1dqSzJvWEVYbXBmOG9iQUVjTGcxOXRlM0VmZHFIVzFkM2drPSIsImV4cCI6MTc4NjQ3MjE3OH0.wBiI6DBAOkm1Ws3vf3D_bWkg_oCBKAHJfasvS2EmnnRbRGtrgHs8wg-93h3cv5xXoIIX4JxYRGxu_CpYqr51Uw";
+        const posterUrl = `${document.location.origin}/community/api/cms/image/ae09b9ac-5ab1-4e7b-95d7-d4d458c2bb69?assignment_entity_type=video_thumbnail&resizing_type=fill&width=1047&height=573`;
+        const urlSearchParams = new URLSearchParams(window.location.search)
+        const electraPlayer = document.getElementById('electraPlayer')
+
+        const sources = [ 
+          {
+            src:  videoUrl,
+            type: "quicksilver"
+          },
+        ]
+
+        if (urlSearchParams.get(AUTOPLAY)){
+        electraPlayer.setAttribute(MUTED,'')
+        electraPlayer.setAttribute(AUTOPLAY,'')
+
+         }
+        if (urlSearchParams.get(LOOP)) electraPlayer.setAttribute(LOOP,'')
+
+
+        let isPlayerLoaded = false
+        let isPlayerVisible = false
+
+        const playerObserver = new IntersectionObserver(event => {
+          isPlayerVisible = event[0].isIntersecting
+          if (isPlayerVisible && !isPlayerLoaded) {
+            isPlayerLoaded = true
+
+            const player = new electra.ElectraPlayer({
+              appId: 'EDC',
+              videoElement: 'electraPlayer',
+              environment: 'production',
+              sources: sources,
+              poster: posterUrl,
+            })
+          }
+        }, { threshold: .05 })
+
+        playerObserver.observe(electraPlayer)
+      })
+    </script>
+  
+
+</body></html>

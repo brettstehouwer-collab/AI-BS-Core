@@ -1,0 +1,29 @@
+{
+  "appId": "com.stehouwer.ai-bs-matrix",
+  "productName": "AI-BS",
+  "directories": {
+    "output": "release-build"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "../backend/dist/AI-BS.exe",
+      "to": "AI-BS.exe"
+    }
+  ],
+  "win": {
+    "target": ["nsis", "portable"],
+    "forceCodeSigning": false,
+    "verifyUpdateCodeSignature": false,
+    "signExecutable": false
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "shortcutName": "AI-BS Matrix"
+  }
+}

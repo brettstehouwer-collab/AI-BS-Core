@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><title>Capture Test</title></head>
+<body>
+<button id="btn" onclick="capture()">Click to Capture</button>
+<div id="output">Waiting...</div>
+<script>
+async function capture() {
+  const out = document.getElementById('output');
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: {
+        displaySurface: 'window',
+        frameRate: { ideal: 60, max: 60 },
+        width: { ideal: 1920, max: 2560 },
+        height: { ideal: 1080, max: 1440 }
+      },
+      audio: false,
+      surfaceSwitching: 'include',
+      selfBrowserSurface: 'exclude'
+    });
+    out.innerText = "SUCCESS: " + stream.getVideoTracks()[0].label;
+  } catch (e) {
+    out.innerText = "ERROR: " + e.name + " - " + e.message;
+  }
+}
+</script>
+</body>
+</html>

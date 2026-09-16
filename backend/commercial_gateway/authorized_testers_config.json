@@ -1,0 +1,35 @@
+{
+  "pen_testing_enabled": true,
+  "default_secret_header_name": "X-AI-BS-Test-Auth",
+  "authorized_testers": [
+    {
+      "tester_id": "auditor_primary_01",
+      "tester_name": "Authorized Security Auditor",
+      "tester_email": "auditor@securityfirm.com",
+      "allowed_ips": [
+        "127.0.0.1"
+      ],
+      "tester_api_passkey": "sk_aibs_test_auditor_passkey_sample",
+      "secret_header_name": "X-AI-BS-Test-Auth",
+      "secret_header_value": "sec_token_aibs_auditor_998822",
+      "window_start": "2026-07-27T00:00:00Z",
+      "window_end": "2026-08-31T23:59:59Z",
+      "suppress_auto_ban": true,
+      "log_findings_only": true
+    },
+    {
+      "tester_id": "auditor_88e26bac",
+      "tester_email": "Stehouwer@gmail.com",
+      "allowed_ips": [
+        "127.0.0.1"
+      ],
+      "tester_api_passkey": "sk_aibs_test_ecac1c146df792ea097c86be85d880ca9f830aa0",
+      "secret_header_name": "X-AI-BS-Test-Auth",
+      "secret_header_value": "sec_token_aibs_5cb93222c3ed347e777875c59187c2d6",
+      "window_start": "2026-07-30T12:43:59.435876Z",
+      "window_end": "2026-08-29T12:43:59.435876Z",
+      "suppress_auto_ban": true,
+      "log_findings_only": true
+    }
+  ]
+}

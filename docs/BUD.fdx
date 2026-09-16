@@ -1,0 +1,1537 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+
+  <ElementSettings Type="Scene Heading">
+    <FontSpec Font="Courier" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="1.5" LeftIndent="1.5" RightIndent="7.5" SpaceBefore="24" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Scene Heading" ReturnCreates="Action" TabCreates="Scene Heading"/>
+  </ElementSettings>
+  <ElementSettings Type="Action">
+    <FontSpec Font="Courier" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="1.5" LeftIndent="1.5" RightIndent="7.5" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Action" ReturnCreates="Action" TabCreates="Character"/>
+  </ElementSettings>
+  <ElementSettings Type="Character">
+    <FontSpec Font="Courier" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="3.7" LeftIndent="3.7" RightIndent="7.5" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Character" ReturnCreates="Dialogue" TabCreates="Transition"/>
+  </ElementSettings>
+  <ElementSettings Type="Dialogue">
+    <FontSpec Font="Courier" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="2.5" LeftIndent="2.5" RightIndent="6.5" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Dialogue" ReturnCreates="Action" TabCreates="Parenthetical"/>
+  </ElementSettings>
+  <ElementSettings Type="Parenthetical">
+    <FontSpec Font="Courier" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="3.1" LeftIndent="3.1" RightIndent="5.5" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Parenthetical" ReturnCreates="Dialogue" TabCreates="Dialogue"/>
+  </ElementSettings>
+  <ElementSettings Type="Transition">
+    <FontSpec Font="Courier" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Right" FirstIndent="5.5" LeftIndent="5.5" RightIndent="7.5" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior PaginateAs="Transition" ReturnCreates="Scene Heading" TabCreates="Scene Heading"/>
+  </ElementSettings>
+
+  <Content>
+    <Paragraph Type="Action">
+      <Text>Title: Default Project</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. MORNING - STOREFRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>22 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Black hair, brown eyes. Dressed in silky shorts and a baseball image t-shirt. With sunglasses.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>16 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Parentheticals</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy looks at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Hey guys, what&#x27;s up?</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>HARRIS BLACK (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Black hair, brown eyes. Wearing black shorts and a red shirt that has an image of a pad of paper and lines created on the shirt. Carries a pencil and pad of paper in his backpack in case he has to take notes.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Not much, Fredy. Just discussing your... questionable choices.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FLO (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Blonde hair in a big bun, blue eyes. Wearing red shorts and a white shirt. Always has a handheld mirror and lip gloss. In her purse that she takes out at any given time.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>I&#x27;m telling you, Fredy, it&#x27;s not cool to steal candy bars from the store.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FRESHEY (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A flirt with brown hair and blue eyes. Wearing a short shirt and skirt, sandals with a little heel in rainbow colors, always has a GQ magazine for fashion tips.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Yeah, Fredy, you&#x27;re gonna get in trouble one of these days.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>White robe, no shoes. Wounds (holes) in hands and feet. Brown beard and long hair. Jesus represents God&#x27;s love, forgiveness, and salvation for humanity. He is seen as the Messiah, the Son of God, who came to reconcile humanity with God through his sacrifice and teachings.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>A red robe with long red hair and long nails. Satan is a prominent figure representing evil, temptation, and opposition to God. While often depicted as a fallen angel or a devil, his role and characteristics vary across different faiths.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>MR. THE PIMP (STORE OWNER):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dresses like a pimp.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>WTF! What kind of nonsense is this?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>stomping with his fist back and froth punching in the air</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Excellent job, Fredy!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Squats a little looking directly at Fredy)</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What candy bar did you steal?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Snickers</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fist bump in the air Fredy’s direction</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fucken A right!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Shaking his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Disappointment on his face</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What kind of language is that to teach a child?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>smiling looking at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus (CONT.)</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Looking back at Fredy</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>pauses with shock, looking at the ground, then walking</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Why my name is Fredy, Jesus like</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy Cougar, I just stole a candy bar. Fuck!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, if you keep stealing, you will be in jail one day.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FREDY looks at Satin, then steps on the side of Jesus and scratches his head.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>surprised facial expression looks up at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I was thinking HELL Jesus, but you&#x27;re telling me to straighten up, so I have a chance?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Smiling</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, listen with your heart</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Get loud talking to Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>With my heart! My heart is what leads to this mess.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>COLD OPEN</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. KITCHEN - EARLY MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Harris&#x27;s Information...</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story begins with Fredy, a 15-year-old boy, standing outside a store with his friends Satin and Jesus. The scene represents a blend of heaven and hell, with vivid contrasts of red fire flames and white clouds. Fredy is caught stealing a candy bar from the store, and Jesus tries to reason with him about making better choices. Satin, on the other hand, encourages Fredy&#x27;s misbehavior. The story takes place in a small town, and the characters&#x27; personalities and motivations are starting to emerge.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Here is the adapted screenplay format for the provided prose segment:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. MORNING - STOREFRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>BACKGROUND A vivid contrast of red fire flames and a firing furnace on one side,</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>juxtaposed with white clouds, blue sky, and a white picket fence with a house on the other.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Black hoodie, black sweets, and tennis shoes.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING outside the store, holding a candy bar.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Red robe, sandals, tattoos on his feet, like Jesus.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING next to Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>White robe with a Bible in hand, nail prints in his hands and feet.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING between Satin and Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Dressed like a pimp, walks out of the candy store.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>LOOKING at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>stomping with his fist back and forth</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Excellent job, Fredy!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Squats down, looking directly at Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What candy bar did you steal?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Snickers</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>fist bump in the air, Fredy&#x27;s direction</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fucken A right!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Shaking his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Disappointment on his face.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What kind of language is that to teach a child?</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Satin</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>smiling, looking at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>(CONT.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Looking back at Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>pauses with shock, looking at the ground, then walking over to Satin&#x27;s side and laughs</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Why my name is Fredy, Jesus like... Fredy Cougar, I just stole a candy bar. Fuck!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fredy, if you keep stealing, you will be in jail one day.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>looks at Satin, then steps on the side of Jesus and scratches his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I was thinking HELL Jesus, but you&#x27;re telling me to straighten up, so I have a chance?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>COLD OPEN</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. KITCHEN - EARLY MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>HARRIS&#x27;S INFORMATION spread out on the table.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>HENRY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What you talking about last night?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>And now...</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Dam, I had one hell of a nightmare last night!</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SATURDAY MORNING RAINING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A knock at the front door. Disturbed standing out on the porch in the rain with his umbrella punched out on the ground and the handle in his hand.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. FRONT DOOR</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FREDY opens the door and starts to laugh frantically as the others run to the door.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>They all begin to laugh.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Coming running down the sidewalk, Freshey, yelling towards the children coming to the store to get a vivid imitation of Fredy&#x27;s story.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FRESHEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Did you hear the news?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What news are you talking about? President Trump has a little dick and South Park is getting sued,</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Tow benches with the children drinking a soda out of a can sitting on the benches as Fredy stands in front of them.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Before we get to my story, for those in front of me I need to break it down to about Beavis and Butthead and South Park listen up!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Fredy walks back and forth with his soda, scratching his chin telling the story&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>This is recent gossip. Listen up! South park imo. One of the funniest things south park does that i think sets it above other shows is the quick production time on their episodes.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. OUSDE LOUDE THUNDER AND LIGHTING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, Flo, Henry, and Disturbed all look at each other with big eyes.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What was your dream Fredy?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Takes a deep breath</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I&#x27;ll tell you, let&#x27;s go down to the old man Pimp&#x27;s store. I&#x27;ll tell you on the way.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Fredy continues to scratch his head as the others watch and listen close&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Freshey stopped in front of the store looking at Fredy and the other young children.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FRESHEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Did you hear the news?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What news are you talking about? President Trump has a little dick and South Park is getting sued,</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Tow benches with the children drinking a soda out of a can sitting on the benches as Fredy stands in front of them.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I heard,</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fredy looks at all his friends</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>We all have to roast based on SUBJECTIVE OPINION.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo leans forward&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>We&#x27;re not in a court room Fredy, take it down a little.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>HENRY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>This is absolutely one of the defining features of Beavis and Butt-Head, especially in its original run. The duo&#x27;s crude, simplistic, and often hilarious commentary on music videos was a groundbreaking and highly popular aspect of the show.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo looks around&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Shits and grina got to go!</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues to scratch his head as the others watch and listen close.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Okay, here&#x27;s a funny comeback to that joke, playing on its elements:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&quot;Yeah, but at least Kenny stays dead in South Park! Beavis and Butt-Head just keep giggling, and Linkin Park&#x27;s screaming makes me wonder if they&#x27;re the ones who killed Kenny and can&#x27;t handle the guilt.&quot;</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo looks around&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Shits and grina got to go!</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues to tell his story.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story takes a turn as Fredy&#x27;s friends gather at the table to discuss their opinions on Beavis and Butthead and South Park. They engage in a lively conversation, sharing their thoughts on the shows&#x27; humor and production time. Meanwhile, Fredy&#x27;s dream from the previous night is still unclear, leaving his friends curious about what happened.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Here is the adapted screenplay format for the next segment:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hello, Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Oh, hello, Disturbed.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**EXT. SIDEWALK BY MR. PIMP&#x27;S STORE - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The Store Owner shakes his head, walking through the door, which shuts behind him.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>WTF</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy&#x27;s phone rings with Disturbed on the other end of the line.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hello?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Finish your story about your dream.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Seriously, dude!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**EXT. SIDEWALK BY MR. PIMP&#x27;S STORE - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The Store Owner looks at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>WTF</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues his story on the phone with Disturbed.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>You just had to be there.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hey, let&#x27;s meet at Smakey&#x27;s Park and light off firecrackers.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I&#x27;ll dress like Beavis today, except my direction won&#x27;t need a permission slip HA HA HA</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**NEW SCENE - ACT TWO**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>**EXT. SMAKEY&#x27;S PARK - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy and Disturbed are seen walking towards the park, laughing and joking around.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>See you at the park, bring the works and lighter!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story continues as Fredy finishes telling his friends about his dream from the previous night. Meanwhile, he receives a call from Disturbed, who invites him to meet up at Smakey&#x27;s Park to light off firecrackers. The scene cuts to Fredy and Disturbed walking towards the park, excited for their next adventure.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Note: I have adapted the screenplay format according to the provided instructions, with exact indentation and spacing as required.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Title: Default Project</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. MORNING - STOREFRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>22 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Black hair, brown eyes. Dressed in silky shorts and a baseball image t-shirt. With sunglasses.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>16 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Parentheticals</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy looks at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Hey guys, what&#x27;s up?</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>HARRIS BLACK (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Black hair, brown eyes. Wearing black shorts and a red shirt that has an image of a pad of paper and lines created on the shirt. Carries a pencil and pad of paper in his backpack in case he has to take notes.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Not much, Fredy. Just discussing your... questionable choices.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FLO (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Blonde hair in a big bun, blue eyes. Wearing red shorts and a white shirt. Always has a handheld mirror and lip gloss. In her purse that she takes out at any given time.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>I&#x27;m telling you, Fredy, it&#x27;s not cool to steal candy bars from the store.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FRESHEY (15):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A flirt with brown hair and blue eyes. Wearing a short shirt and skirt, sandals with a little heel in rainbow colors, always has a GQ magazine for fashion tips.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Yeah, Fredy, you&#x27;re gonna get in trouble one of these days.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>White robe, no shoes. Wounds (holes) in hands and feet. Brown beard and long hair. Jesus represents God&#x27;s love, forgiveness, and salvation for humanity. He is seen as the Messiah, the Son of God, who came to reconcile humanity with God through his sacrifice and teachings.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>A red robe with long red hair and long nails. Satan is a prominent figure representing evil, temptation, and opposition to God. While often depicted as a fallen angel or a devil, his role and characteristics vary across different faiths.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>MR. THE PIMP (STORE OWNER):</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dresses like a pimp.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>WTF! What kind of nonsense is this?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>stomping with his fist back and froth punching in the air</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Excellent job, Fredy!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Squats a little looking directly at Fredy)</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What candy bar did you steal?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Snickers</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fist bump in the air Fredy’s direction</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fucken A right!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Shaking his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Disappointment on his face</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What kind of language is that to teach a child?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>smiling looking at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus (CONT.)</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Looking back at Fredy</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>pauses with shock, looking at the ground, then walking</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Why my name is Fredy, Jesus like</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy Cougar, I just stole a candy bar. Fuck!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, if you keep stealing, you will be in jail one day.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FREDY looks at Satin, then steps on the side of Jesus and scratches his head.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>surprised facial expression looks up at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I was thinking HELL Jesus, but you&#x27;re telling me to straighten up, so I have a chance?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Smiling</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fredy, listen with your heart</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Get loud talking to Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>With my heart! My heart is what leads to this mess.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>COLD OPEN</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. KITCHEN - EARLY MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>10 spaces</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Harris&#x27;s Information...</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story begins with Fredy, a 15-year-old boy, standing outside a store with his friends Satin and Jesus. The scene represents a blend of heaven and hell, with vivid contrasts of red fire flames and white clouds. Fredy is caught stealing a candy bar from the store, and Jesus tries to reason with him about making better choices. Satin, on the other hand, encourages Fredy&#x27;s misbehavior. The story takes place in a small town, and the characters&#x27; personalities and motivations are starting to emerge.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Here is the adapted screenplay format for the provided prose segment:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. MORNING - STOREFRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>BACKGROUND A vivid contrast of red fire flames and a firing furnace on one side,</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>juxtaposed with white clouds, blue sky, and a white picket fence with a house on the other.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Black hoodie, black sweets, and tennis shoes.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING outside the store, holding a candy bar.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>15</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Red robe, sandals, tattoos on his feet, like Jesus.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING next to Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>White robe with a Bible in hand, nail prints in his hands and feet.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>STANDING between Satin and Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Dressed like a pimp, walks out of the candy store.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>LOOKING at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>stomping with his fist back and forth</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Excellent job, Fredy!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Squats down, looking directly at Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What candy bar did you steal?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Snickers</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>SATIN</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>fist bump in the air, Fredy&#x27;s direction</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fucken A right!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JESUS</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Shaking his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Disappointment on his face.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>What kind of language is that to teach a child?</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Satin</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>smiling, looking at Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>My language, remember you kicked me out of heaven. No rules here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>(CONT.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Looking back at Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, why did you steal the candy bar?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>pauses with shock, looking at the ground, then walking over to Satin&#x27;s side and laughs</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Why my name is Fredy, Jesus like... Fredy Cougar, I just stole a candy bar. Fuck!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Jesus</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fredy, if you keep stealing, you will be in jail one day.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>looks at Satin, then steps on the side of Jesus and scratches his head</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I was thinking HELL Jesus, but you&#x27;re telling me to straighten up, so I have a chance?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>COLD OPEN</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. KITCHEN - EARLY MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>HARRIS&#x27;S INFORMATION spread out on the table.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>HENRY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What you talking about last night?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>And now...</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Dam, I had one hell of a nightmare last night!</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SATURDAY MORNING RAINING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A knock at the front door. Disturbed standing out on the porch in the rain with his umbrella punched out on the ground and the handle in his hand.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. FRONT DOOR</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>FREDY opens the door and starts to laugh frantically as the others run to the door.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>They all begin to laugh.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Coming running down the sidewalk, Freshey, yelling towards the children coming to the store to get a vivid imitation of Fredy&#x27;s story.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FRESHEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Did you hear the news?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What news are you talking about? President Trump has a little dick and South Park is getting sued,</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Tow benches with the children drinking a soda out of a can sitting on the benches as Fredy stands in front of them.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Before we get to my story, for those in front of me I need to break it down to about Beavis and Butthead and South Park listen up!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Fredy walks back and forth with his soda, scratching his chin telling the story&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>This is recent gossip. Listen up! South park imo. One of the funniest things south park does that i think sets it above other shows is the quick production time on their episodes.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. OUSDE LOUDE THUNDER AND LIGHTING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy, Flo, Henry, and Disturbed all look at each other with big eyes.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What was your dream Fredy?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Takes a deep breath</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I&#x27;ll tell you, let&#x27;s go down to the old man Pimp&#x27;s store. I&#x27;ll tell you on the way.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Fredy continues to scratch his head as the others watch and listen close&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Freshey stopped in front of the store looking at Fredy and the other young children.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FRESHEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Did you hear the news?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>What news are you talking about? President Trump has a little dick and South Park is getting sued,</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Tow benches with the children drinking a soda out of a can sitting on the benches as Fredy stands in front of them.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I heard,</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>Fredy looks at all his friends</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>We all have to roast based on SUBJECTIVE OPINION.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo leans forward&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>We&#x27;re not in a court room Fredy, take it down a little.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>HENRY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>This is absolutely one of the defining features of Beavis and Butt-Head, especially in its original run. The duo&#x27;s crude, simplistic, and often hilarious commentary on music videos was a groundbreaking and highly popular aspect of the show.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo looks around&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Shits and grina got to go!</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. LATE MORNING MR. PIMP&#x27;S STORE FRONT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues to scratch his head as the others watch and listen close.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Okay, here&#x27;s a funny comeback to that joke, playing on its elements:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&quot;Yeah, but at least Kenny stays dead in South Park! Beavis and Butt-Head just keep giggling, and Linkin Park&#x27;s screaming makes me wonder if they&#x27;re the ones who killed Kenny and can&#x27;t handle the guilt.&quot;</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>&lt;Flo looks around&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FLO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Shits and grina got to go!</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SIDEWALK BY MR. PIMP&#x27;S STORE</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues to tell his story.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story takes a turn as Fredy&#x27;s friends gather at the table to discuss their opinions on Beavis and Butthead and South Park. They engage in a lively conversation, sharing their thoughts on the shows&#x27; humor and production time. Meanwhile, Fredy&#x27;s dream from the previous night is still unclear, leaving his friends curious about what happened.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Here is the adapted screenplay format for the next segment:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hello, Fredy.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Oh, hello, Disturbed.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**EXT. SIDEWALK BY MR. PIMP&#x27;S STORE - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The Store Owner shakes his head, walking through the door, which shuts behind him.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>WTF</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy&#x27;s phone rings with Disturbed on the other end of the line.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hello?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Finish your story about your dream.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Seriously, dude!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**EXT. SIDEWALK BY MR. PIMP&#x27;S STORE - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The Store Owner looks at Jesus, then Satan.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MR. PIMP</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>WTF</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**INT. FREDY&#x27;S BEDROOM - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy continues his story on the phone with Disturbed.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>You just had to be there.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DISTURBED (V.O.)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Hey, let&#x27;s meet at Smakey&#x27;s Park and light off firecrackers.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I&#x27;ll dress like Beavis today, except my direction won&#x27;t need a permission slip HA HA HA</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>**NEW SCENE - ACT TWO**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>**EXT. SMAKEY&#x27;S PARK - DAY**</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Fredy and Disturbed are seen walking towards the park, laughing and joking around.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FREDY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>See you at the park, bring the works and lighter!</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>&lt;SUMMARY&gt;</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>The story continues as Fredy finishes telling his friends about his dream from the previous night. Meanwhile, he receives a call from Disturbed, who invites him to meet up at Smakey&#x27;s Park to light off firecrackers. The scene cuts to Fredy and Disturbed walking towards the park, excited for their next adventure.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Note: I have adapted the screenplay format according to the provided instructions, with exact indentation and spacing as required.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

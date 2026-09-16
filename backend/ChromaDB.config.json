@@ -1,0 +1,5 @@
+{
+  "chroma_db_impl": "duckdb+parquet",
+  "persist_directory": "./chroma_storage",
+  "anonymized_telemetry": false
+}

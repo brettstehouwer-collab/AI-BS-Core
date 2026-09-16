@@ -1,0 +1,30 @@
+{
+  "project_name": "AI-BS Ecosystem Authorized Penetration Test Scope Manifest",
+  "version": "1.0.0",
+  "updated_at": "2026-07-27T10:22:00Z",
+  "in_scope_targets": [
+    {
+      "name": "AI-BS Master Dashboard",
+      "url": "https://ai-bs-dashboard.web.app",
+      "local_url": "http://127.0.0.1:8000",
+      "tech_stack": "React / Vite, FastAPI / Python, SQLite, Firebase Hosting",
+      "testing_types": ["OWASP Top 10", "API Authentication", "Role-Based Access Control", "Rate Limiting"]
+    },
+    {
+      "name": "Stehouwer Publishing Platform",
+      "url": "https://stehouwer-publishing.com",
+      "tech_stack": "Vanilla HTML5 / JavaScript, CSS3, Firebase Hosting",
+      "testing_types": ["XSS Payload Injection", "Form Honeypot Validation", "Client-Side Rate Limiting"]
+    }
+  ],
+  "out_of_scope_targets": [
+    "DDoS / Distributed Denial of Service Infrastructure Flooding",
+    "Social Engineering or Phishing targeting employees, authors, or clients",
+    "Permanent destruction, modification, or exfiltration of live database records",
+    "Third-party hosting providers (Firebase Infrastructure, Google Cloud Platform physical datacenters)"
+  ],
+  "testing_rules": {
+    "ip_ban_bypass_method": "Secret Header 'X-AI-BS-Test-Auth' or Tester API Passkey",
+    "audit_logging": "All findings are logged to security_audit.db in Log-Only Mode"
+  }
+}

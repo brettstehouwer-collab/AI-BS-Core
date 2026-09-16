@@ -1,0 +1,36 @@
+.chat-context-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: #0d1117;
+  border-top: 1px solid #30363d;
+}
+
+.context-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.context-btn:hover {
+  background: #161b22;
+  color: #c9d1d9;
+}
+
+.context-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #38bdf8;
+}
+
+.context-icon {
+  width: 16px;
+  height: 16px;
+}

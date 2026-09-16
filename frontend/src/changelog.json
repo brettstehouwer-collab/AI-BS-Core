@@ -1,0 +1,41 @@
+[
+  {
+    "version": "1.4.0",
+    "date": "2026-06-23",
+    "title": "UI Overhaul & Permanent Memory",
+    "changes": [
+      "Completely redesigned the application layout, replacing the bulky left sidebars with a sleek, space-saving Top Menu Bar.",
+      "Introduced the Permanent Memory DB integration. The system now autonomously saves verified architectural logic and physics/math proofs to the G:\\ drive.",
+      "Implemented a true 'Autonomous ReAct Loop'. The LLM can now run Polyglot Python scripts in the sandbox, read the terminal output, and self-correct errors.",
+      "Added an automated 'What's New' Changelog Modal to track version history."
+    ]
+  },
+  {
+    "version": "1.3.0",
+    "date": "2026-06-22",
+    "title": "Omni-Context & Local Scanners",
+    "changes": [
+      "Integrated the Vault Auto-Scanner daemon to continuously sweep all internal hard drives (C:\\, G:\\, S:\\, F:\\, D:\\) for Markdown documents.",
+      "Implemented Omni-Context Hybrid Retrieval. The AI now pulls data simultaneously from live Web Searches, local Vector Vaults, and the OmniDrive SQLite Database."
+    ]
+  },
+  {
+    "version": "1.2.0",
+    "date": "2026-06-20",
+    "title": "Cognitive Engine Initialization",
+    "changes": [
+      "Launched the multi-agent swarm architecture.",
+      "Connected the backend FastApi server with the Python execution environment.",
+      "Implemented initial UI tabs for Media Studio, Developer Workspace, and Fire Writing."
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "date": "2026-05-15",
+    "title": "Alpha Release",
+    "changes": [
+      "Initial build of the Stehouwer Publishing Bullshit AI.",
+      "Basic Chat interface connected to the local Ollama daemon."
+    ]
+  }
+]

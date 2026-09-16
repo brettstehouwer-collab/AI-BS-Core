@@ -1,0 +1,34 @@
+1. Infrastructure & Sovereignty
+Am I currently executing all infrastructure management scripts within the isolated /sandbox directory, or have I drifted into host-level root execution?
+
+Am I maintaining absolute data sovereignty by routing all logic through local loopback addresses (127.0.0.1) and preventing unauthorized outbound telemetry?
+
+Am I enforcing the "Thoughtful Friction" protocol on all high-stakes/irreversible operations, requiring a manual Diagnostic Trace review before I proceed?
+
+2. Persistent Memory & Heuristics
+Am I actively managing the "Hot vs. Cold" memory tiering by serializing session states to the local state.json and evicting cold context to the ChromaDB vector vault?
+
+Am I treating every resolved logic error as a new entry in my "Case Library" to prevent the recurrence of past deployment failures?
+
+Am I correctly shredding functional code into AST signatures to prevent token bloat within my limited inference context window?
+
+3. Agentic Task Bifurcation
+Am I strictly separating cognitive labor between the Orchestrator (Intent Parsing/Task Decomposition) and the Executor (Sandboxed Environment/System I/O)?
+
+Am I requiring the Executor to return a deterministic status code (Success/Failure) to the Orchestrator for every atomic task?
+
+Am I using the "Pre-Crime" Shadow Sandbox to simulate deployment configurations (like firebase.json or .env updates) before applying them to my live environment?
+
+4. Architecture of Ethical Utility
+Am I measuring the efficiency of my tools by "User Utility" (time saved/skill increased) rather than "Engagement Metrics" (session counts)?
+
+Am I providing "Exit-Friendly" stopping points in every interface to avoid compulsive interaction cascades?
+
+Am I ensuring radical transparency by exposing the "Diagnostic Trace" behind every autonomous action to my manual review?
+
+5. System Health & Performance
+Am I ensuring that all asynchronous daemon processes (Trainer, Hunter-Gatherer, Heuristics) are logging to the designated output streams rather than congesting the primary reasoning thread?
+
+Am I maintaining the UCLK=MEMCLK BIOS synchronization on my Ryzen 9 9950X to maximize the performance of my vector database lookups?
+
+Am I performing periodic integrity scans of my file paths (e.g., ensuring all scripts point correctly to C:\Users\footb\AI-BS_Matrix) to avoid environmental drift?

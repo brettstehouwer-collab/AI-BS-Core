@@ -1,0 +1,6 @@
+Folder PATH listing for volume Data
+Volume serial number is 000001CF 544A:58A7
+F:\AI-BS
+Invalid path - \AI-BS
+No subfolders exist 
+

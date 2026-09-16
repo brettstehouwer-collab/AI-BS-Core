@@ -1,0 +1,20 @@
+Bullshit AI - Version 1.4.0 (2026-06-23)
+=========================================
+
+What's New in This Build:
+
+1. UI Overhaul & Permanent Memory
+   - Completely redesigned the application layout, replacing the bulky left sidebars with a sleek, space-saving Top Menu Bar.
+   - Introduced the Permanent Memory DB integration. The system now autonomously saves verified architectural logic to the G:\ drive.
+   - Implemented a true 'Autonomous ReAct Loop'. The LLM can now run scripts in the sandbox, read the terminal output, and self-correct errors.
+   - Added an automated 'What's New' Changelog Modal to track version history.
+
+2. Omni-Context & Local Scanners (v1.3.0)
+   - Integrated the Vault Auto-Scanner daemon to continuously sweep all internal hard drives for Markdown documents.
+   - Implemented Omni-Context Hybrid Retrieval (Web Searches + Local Vector Vaults + OmniDrive SQLite).
+
+3. Cognitive Engine Initialization (v1.2.0)
+   - Launched the multi-agent swarm architecture.
+   - Connected the backend FastApi server with the Python execution environment.
+
+Thank you for installing the latest update to Stehouwer Publishing Bullshit AI!

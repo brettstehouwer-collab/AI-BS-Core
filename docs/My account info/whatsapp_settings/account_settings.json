@@ -1,0 +1,98 @@
+{
+  "wa_settings": {
+    "last_seen_privacy": "none",
+    "profile_photo_privacy": "all",
+    "about_privacy": "none",
+    "status_privacy": [
+      "My Contacts (active)"
+    ],
+    "blocked_numbers": [
+      "Phone: +15312463811",
+      "Phone: +14133098597"
+    ],
+    "blocked_numbers_update_time": 1777932712,
+    "blocked_3p_users": [
+      
+    ],
+    "read_receipts": "all",
+    "is_dma_eligible": false,
+    "opted_in_dma_integrators": [
+      
+    ],
+    "settings_last_fetch_time": {
+      "15": 1785858734,
+      "13": 1784297958,
+      "12": 1783657389,
+      "0": 1785750521
+    },
+    "current_sync_session_id": "Gq9SM8xolImL6xj6h5cTrA==",
+    "current_sync_session_account_registration_time": 1755535398,
+    "sync_sessions": [
+      {
+        "sync_session_id": "Gq9SM8xolImL6xj6h5cTrA==",
+        "account_registration_time": 1755535398,
+        "state_collections": [
+          "critical_block",
+          "critical_unblock_low",
+          "regular",
+          "regular_high",
+          "regular_low"
+        ]
+      }
+    ],
+    "device_sync_status": [
+      {
+        "device_id": 0
+      },
+      {
+        "device_id": 12
+      },
+      {
+        "device_id": 13
+      },
+      {
+        "device_id": 15
+      }
+    ],
+    "device_info": [
+      {
+        "device_id": 0,
+        "app_version": "Android-2.26.29.73",
+        "operating_system_version": "16",
+        "device_manufacturer": "samsung",
+        "device_model": "pa3q"
+      },
+      {
+        "device_id": 12,
+        "app_version": "Web-2.3000.1042972685.262501,WinHybrid",
+        "operating_system_version": "0.1",
+        "device_manufacturer": "",
+        "device_model": "Desktop"
+      },
+      {
+        "device_id": 13,
+        "app_version": "Web-2.3000.1043390318.262701,WinHybrid",
+        "operating_system_version": "0.1",
+        "device_manufacturer": "",
+        "device_model": "Desktop"
+      },
+      {
+        "device_id": 15,
+        "app_version": "Web-2.3000.1044443731.262900,WinHybrid",
+        "operating_system_version": "0.1",
+        "device_manufacturer": "",
+        "device_model": "Desktop"
+      }
+    ],
+    "notification_settings": [
+      
+    ],
+    "muted_groups": [
+      
+    ],
+    "is_nc_eligible": true,
+    "whatsapp_contacts": true,
+    "group_create_privacy": "ON_STANDARD",
+    "dependent_account_messages_privacy": "ALL"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Stehouwer Digital Storefront</string>
+    <string name="title_activity_main">Stehouwer Digital Storefront</string>
+    <string name="package_name">com.stehouwerpublishing.digitalstorefront</string>
+    <string name="custom_url_scheme">com.stehouwerpublishing.digitalstorefront</string>
+</resources>

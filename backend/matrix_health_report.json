@@ -1,0 +1,138 @@
+{
+  "timestamp": 1789414824.7721198,
+  "version": "v5.263.0",
+  "services_online": 16,
+  "services_total": 20,
+  "ports": {
+    "8080": {
+      "name": "FastAPI Core Backend",
+      "online": true,
+      "latency_ms": 15.2
+    },
+    "8000": {
+      "name": "Go Matrix Gateway",
+      "online": true,
+      "latency_ms": 0.43
+    },
+    "8001": {
+      "name": "Theatrical Gateway",
+      "online": true,
+      "latency_ms": 0.37
+    },
+    "8002": {
+      "name": "ChromaDB Vector Store (E-Drive)",
+      "online": true,
+      "latency_ms": 14.64
+    },
+    "8005": {
+      "name": "Broadcast Studio Daemon",
+      "online": true,
+      "latency_ms": 15.93
+    },
+    "8006": {
+      "name": "Twitch/IRC Social Hub",
+      "online": true,
+      "latency_ms": 16.0
+    },
+    "8008": {
+      "name": "Supabase Kong Gateway",
+      "online": false,
+      "latency_ms": null
+    },
+    "8010": {
+      "name": "SHM Telemetry Gateway",
+      "online": true,
+      "latency_ms": 0.41
+    },
+    "8013": {
+      "name": "VST3 Audio Bridge",
+      "online": true,
+      "latency_ms": 15.35
+    },
+    "8085": {
+      "name": "Ubuntu-Bio Bridge",
+      "online": true,
+      "latency_ms": 14.61
+    },
+    "8088": {
+      "name": "Broadcast Kernel (Multi-Track)",
+      "online": true,
+      "latency_ms": 15.42
+    },
+    "8099": {
+      "name": "Gemini MCP Server",
+      "online": true,
+      "latency_ms": 0.4
+    },
+    "8189": {
+      "name": "ComfyUI Diffusion Studio",
+      "online": true,
+      "latency_ms": 0.17
+    },
+    "8888": {
+      "name": "Unreal Engine Signaling",
+      "online": true,
+      "latency_ms": 14.6
+    },
+    "4455": {
+      "name": "OBS Studio WebSocket",
+      "online": false,
+      "latency_ms": null
+    },
+    "3001": {
+      "name": "Node.js Backend Server",
+      "online": true,
+      "latency_ms": 0.26
+    },
+    "5173": {
+      "name": "Primary React Dashboard",
+      "online": true,
+      "latency_ms": 14.94
+    },
+    "5174": {
+      "name": "BroadcastStudioApp Vite",
+      "online": false,
+      "latency_ms": null
+    },
+    "11434": {
+      "name": "Ollama Primary LLM (C-Drive)",
+      "online": false,
+      "latency_ms": null
+    },
+    "11435": {
+      "name": "Ollama Secondary LLM (E-Drive)",
+      "online": true,
+      "latency_ms": 0.38
+    }
+  },
+  "databases": {
+    "aibs_master.db": "ok",
+    "lexicon_vault.db": "ok",
+    "audio_catalog.db": "ok",
+    "LLM_CrossCheck_Ledger.db": "ok",
+    "state.db": "ok",
+    "clients.db": "ok",
+    "unreal_assets.db": "ok",
+    "stehouwer_vault.db": "ok",
+    "stehouwer_accounting.db": "ok",
+    "west_michigan.db": "ok",
+    "drip_ledger.db": "ok"
+  },
+  "database_roles": {
+    "aibs_master.db": "Primary Consolidated Master (27 Tables)",
+    "lexicon_vault.db": "Lexicon Vector & Vocabulary Store",
+    "audio_catalog.db": "Audio Catalog & DSP Vector Store",
+    "LLM_CrossCheck_Ledger.db": "LLM Inference CrossCheck Ledger",
+    "state.db": "Legacy Store (Consolidated into Master)",
+    "clients.db": "Legacy Store (Consolidated into Master)",
+    "unreal_assets.db": "Legacy Store (Consolidated into Master)",
+    "stehouwer_vault.db": "Legacy Store (Consolidated into Master)",
+    "stehouwer_accounting.db": "Legacy Store (Consolidated into Master)",
+    "west_michigan.db": "Legacy Store (Consolidated into Master)",
+    "drip_ledger.db": "Legacy Store (Consolidated into Master)"
+  },
+  "cpu_percent": 33.2,
+  "ram_percent": 75.5,
+  "ram_used_gb": 46.52,
+  "ram_total_gb": 61.65
+}

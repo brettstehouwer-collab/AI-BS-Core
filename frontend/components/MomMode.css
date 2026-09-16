@@ -1,0 +1,495 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   AI-BS MOM MODE — MAXIMUM ACCESSIBILITY & READABILITY STYLES
+   Designed specifically for crystal-clear readability, large click targets,
+   high-contrast text, and zero eye-strain scaling across all 32+ tools.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Top Hardcoded Red Alert Banner */
+.mom-mode-top-banner {
+  width: 100%;
+  background: linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%);
+  border-bottom: 2px solid #f87171;
+  color: #ffffff;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.45);
+  z-index: 10001;
+  animation: momPulseAlert 2.5s infinite ease-in-out;
+}
+
+@keyframes momPulseAlert {
+  0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 22px rgba(239, 68, 68, 0.85); }
+  100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+}
+
+.mom-banner-btn-large {
+  background: #ffffff;
+  color: #991b1b;
+  border: 2px solid #fecaca;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mom-banner-btn-large:hover {
+  transform: scale(1.04);
+  background: #fef2f2;
+  color: #7f1d1d;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.mom-banner-btn-large.active {
+  background: #fef08a;
+  color: #854d0e;
+  border-color: #fde047;
+}
+
+.mom-banner-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mom-zoom-step-btn {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mom-zoom-step-btn:hover {
+  background: #38bdf8;
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+.mom-zoom-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fef08a;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GLOBAL MOM-MODE ACTIVE OVERRIDES
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body.mom-mode-active {
+  --mom-text-main: #ffffff;
+  --mom-text-sub: #f8fafc;
+  --mom-text-muted: #e2e8f0;
+  --mom-accent: #38bdf8;
+  --mom-highlight: #fde047;
+  --mom-border: #475569;
+}
+
+/* Global Font Size & Line Height Elevation */
+body.mom-mode-active {
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+}
+
+/* High Contrast Pure-White Text Everywhere */
+body.mom-mode-active p,
+body.mom-mode-active span,
+body.mom-mode-active div,
+body.mom-mode-active label,
+body.mom-mode-active li,
+body.mom-mode-active a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Eliminate faint grey text that is hard for older eyes to see */
+body.mom-mode-active .text-gray-400,
+body.mom-mode-active .text-gray-500,
+body.mom-mode-active .text-slate-400,
+body.mom-mode-active .text-slate-500,
+body.mom-mode-active [style*="color: #8b949e"],
+body.mom-mode-active [style*="color: #64748b"],
+body.mom-mode-active [style*="color: #94a3b8"],
+body.mom-mode-active [style*="color:#8b949e"],
+body.mom-mode-active [style*="color:#64748b"],
+body.mom-mode-active [style*="color:#94a3b8"] {
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+}
+
+/* Headings Boost */
+body.mom-mode-active h1 {
+  font-size: 2.2rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+}
+
+body.mom-mode-active h2 {
+  font-size: 1.7rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+body.mom-mode-active h3 {
+  font-size: 1.35rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+body.mom-mode-active h4,
+body.mom-mode-active h5 {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #fef08a !important;
+}
+
+/* Large Click Targets for All Buttons */
+body.mom-mode-active button {
+  min-height: 44px !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  border-width: 2px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+/* Input Fields & Textareas */
+body.mom-mode-active input,
+body.mom-mode-active textarea,
+body.mom-mode-active select {
+  font-size: 1.05rem !important;
+  padding: 10px 14px !important;
+  min-height: 46px !important;
+  border: 2px solid #64748b !important;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.mom-mode-active input:focus,
+body.mom-mode-active textarea:focus,
+body.mom-mode-active select:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35) !important;
+}
+
+/* Cards & Panels */
+body.mom-mode-active .glass-panel,
+body.mom-mode-active .card,
+body.mom-mode-active .starter-card,
+body.mom-mode-active .master-hub-card,
+body.mom-mode-active .tool-explorer-card {
+  border: 2px solid #475569 !important;
+  background: #0f172a !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Monaco & Screenplay Editor Legibility */
+body.mom-mode-active .monaco-editor,
+body.mom-mode-active .fountain-editor-wrapper {
+  font-size: 20px !important;
+  line-height: 1.65 !important;
+}
+
+/* Table Rows Extra Spacious */
+body.mom-mode-active table tr {
+  height: 52px !important;
+}
+
+body.mom-mode-active table th,
+body.mom-mode-active table td {
+  font-size: 1rem !important;
+  padding: 12px 16px !important;
+  color: #f8fafc !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FLOATING ACCESSIBILITY HUD CONTROLLER
+   ══════════════════════════════════════════════════════════════════════════ */
+.mom-hud-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 11000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.mom-hud-card {
+  background: #0f172a;
+  border: 2px solid #f87171;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 280px;
+  animation: momSlideUp 0.25s ease-out;
+}
+
+@keyframes momSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mom-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 8px;
+}
+
+.mom-hud-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #f87171;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mom-hud-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.mom-hud-close-btn:hover {
+  color: #ffffff;
+  background: #334155;
+}
+
+.mom-hud-section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mom-hud-zoom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mom-hud-zoom-btn {
+  flex: 1;
+  background: #1e293b;
+  color: #ffffff;
+  border: 1px solid #475569;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mom-hud-zoom-btn:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.mom-hud-zoom-display {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fde047;
+  min-width: 70px;
+  text-align: center;
+}
+
+.mom-hud-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mom-hud-action-btn {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.mom-hud-action-btn:hover {
+  background: #334155;
+  border-color: #94a3b8;
+}
+
+.mom-hud-minimized-badge {
+  background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  border: 2px solid #fecaca;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.5);
+  transition: all 0.2s;
+}
+
+.mom-hud-minimized-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 28px rgba(220, 38, 38, 0.7);
+}
+
+/* Preserve compact sizing on specialized studio ribbons and editor toolbars even in Mom Mode */
+body.mom-mode-active .sw-ribbon-btn,
+body.mom-mode-active .sw-toolbar-btn,
+body.mom-mode-active .sw-permanent-page-bar button,
+body.mom-mode-active .sw-permanent-page-bar input,
+body.mom-mode-active .audio-track-btn,
+body.mom-mode-active .daw-piano-roll-btn,
+body.mom-mode-active .ide-action-btn {
+  min-height: 28px !important;
+  font-size: 0.82rem !important;
+  padding: 2px 8px !important;
+  letter-spacing: normal !important;
+  border-width: 1px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HIGH-CONTRAST PALETTES (AMBER, CYAN, MONO)
+   ══════════════════════════════════════════════════════════════════════════ */
+body.mom-mode-active.mom-theme-amber {
+  background-color: #000000 !important;
+  color: #fef08a !important;
+}
+body.mom-mode-active.mom-theme-amber p,
+body.mom-mode-active.mom-theme-amber span,
+body.mom-mode-active.mom-theme-amber div,
+body.mom-mode-active.mom-theme-amber label,
+body.mom-mode-active.mom-theme-amber li,
+body.mom-mode-active.mom-theme-amber h1,
+body.mom-mode-active.mom-theme-amber h2,
+body.mom-mode-active.mom-theme-amber h3,
+body.mom-mode-active.mom-theme-amber h4 {
+  color: #fef08a !important;
+}
+body.mom-mode-active.mom-theme-amber .glass-panel,
+body.mom-mode-active.mom-theme-amber .card {
+  background: #0d0900 !important;
+  border-color: #ca8a04 !important;
+}
+
+body.mom-mode-active.mom-theme-cyan {
+  background-color: #030712 !important;
+  color: #e0f2fe !important;
+}
+body.mom-mode-active.mom-theme-cyan p,
+body.mom-mode-active.mom-theme-cyan span,
+body.mom-mode-active.mom-theme-cyan div,
+body.mom-mode-active.mom-theme-cyan label,
+body.mom-mode-active.mom-theme-cyan li {
+  color: #e0f2fe !important;
+}
+body.mom-mode-active.mom-theme-cyan h1,
+body.mom-mode-active.mom-theme-cyan h2,
+body.mom-mode-active.mom-theme-cyan h3 {
+  color: #38bdf8 !important;
+}
+body.mom-mode-active.mom-theme-cyan .glass-panel,
+body.mom-mode-active.mom-theme-cyan .card {
+  background: #082f49 !important;
+  border-color: #0284c7 !important;
+}
+
+body.mom-mode-active.mom-theme-mono {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+body.mom-mode-active.mom-theme-mono p,
+body.mom-mode-active.mom-theme-mono span,
+body.mom-mode-active.mom-theme-mono div,
+body.mom-mode-active.mom-theme-mono label,
+body.mom-mode-active.mom-theme-mono li,
+body.mom-mode-active.mom-theme-mono h1,
+body.mom-mode-active.mom-theme-mono h2,
+body.mom-mode-active.mom-theme-mono h3 {
+  color: #ffffff !important;
+}
+body.mom-mode-active.mom-theme-mono .glass-panel,
+body.mom-mode-active.mom-theme-mono .card {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FONT LEGIBILITY & DYSLEXIA OVERRIDES
+   ══════════════════════════════════════════════════════════════════════════ */
+body.mom-mode-active.mom-font-dyslexic,
+body.mom-mode-active.mom-font-dyslexic * {
+  font-family: 'Verdana', 'Lucida Grande', 'Segoe UI', sans-serif !important;
+  letter-spacing: 0.5px !important;
+}
+
+body.mom-mode-active.mom-font-serif,
+body.mom-mode-active.mom-font-serif * {
+  font-family: 'Georgia', 'Merriweather', 'Times New Roman', serif !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LINE & LETTER SPACING OVERRIDES
+   ══════════════════════════════════════════════════════════════════════════ */
+body.mom-mode-active.mom-spacing-relaxed {
+  line-height: 1.85 !important;
+}
+body.mom-mode-active.mom-spacing-relaxed p,
+body.mom-mode-active.mom-spacing-relaxed span,
+body.mom-mode-active.mom-spacing-relaxed div {
+  line-height: 1.85 !important;
+}
+
+body.mom-mode-active.mom-spacing-loose {
+  line-height: 2.2 !important;
+  letter-spacing: 0.8px !important;
+}
+body.mom-mode-active.mom-spacing-loose p,
+body.mom-mode-active.mom-spacing-loose span,
+body.mom-mode-active.mom-spacing-loose div {
+  line-height: 2.2 !important;
+}
