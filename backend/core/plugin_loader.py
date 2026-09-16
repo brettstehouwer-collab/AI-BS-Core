@@ -1,4 +1,4 @@
-﻿import importlib
+import importlib
 import inspect
 import logging
 import os
@@ -47,6 +47,12 @@ class PluginRegistry:
                     # 1. Look for 'router' attribute
                     router = getattr(module, "router", None)
                     if isinstance(router, APIRouter):
+                        import contextlib
+                        @contextlib.asynccontextmanager
+                        async def _noop_lifespan(app):
+                            yield
+                        router.lifespan_context = _noop_lifespan
+                        
                         app.include_router(router)
                         route_count = len(router.routes)
                         logger.info(f"[PluginLoader] Mounted router: '{name}' ({route_count} routes)")

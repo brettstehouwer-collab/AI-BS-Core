@@ -91,9 +91,9 @@ if exist "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs" (
 ) else if exist "%BASE_DIR%installer\Launch_Desktop_Studio.bat" (
     start "" "%BASE_DIR%installer\Launch_Desktop_Studio.bat"
 )
-start "" "http://localhost"
-start "" "C:\Users\footb\AppData\Local\Programs\Pearl Wallet\Pearl Wallet.exe"
-start "" "https://clore.ai/my-servers/detail?name=LINUX_d5d4b81e2bc648be85e47ee0a745969c"
+:: start "" "http://localhost"
+:: start "" "C:\Users\footb\AppData\Local\Programs\Pearl Wallet\Pearl Wallet.exe"
+:: start "" "https://clore.ai/my-servers/detail?name=LINUX_d5d4b81e2bc648be85e47ee0a745969c"
 
 echo.
 echo ===================================================
