@@ -13,6 +13,10 @@ echo [Pre-Boot] Running Complete Save ^& Shutdown Sequence for a clean slate...
 call "%BASE_DIR%Shutdown_AI_BS.bat"
 echo.
 
+echo [0/9] Rotating Headless Daemon Logs (Max 50MB ceiling)...
+"%BASE_DIR%pyppeteer_env\Scripts\python.exe" "%BASE_DIR%scripts\log_rotator.py"
+echo.
+
 echo [1/9] Executing Smart Zombie Node Sweep to reclaim RAM...
 "%BASE_DIR%pyppeteer_env\Scripts\python.exe" "%BASE_DIR%backend\zombie_node_cleaner.py"
 echo.
@@ -34,13 +38,13 @@ set OLLAMA_MAX_LOADED_MODELS=1
 set OLLAMA_FLASH_ATTENTION=1
 
 :: Launch background Ollama daemon with verified model directory
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList '%BASE_DIR%scripts\start_ollama_sovereign.py' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList '%BASE_DIR%scripts\start_ollama_sovereign.py' -RedirectStandardOutput '%BASE_DIR%logs\start_ollama_sovereign.log' -RedirectStandardError '%BASE_DIR%logs\start_ollama_sovereign.err' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%ComfyUI && run_nvidia_gpu.bat' -WindowStyle Hidden"
 :: Minor staggering delay before launching the main backend to let PyTorch allocate VRAM
-ping 127.0.0.1 -n 3 > nul
+ping 127.0.0.1 -n 1 > nul
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'node.exe' -ArgumentList 'server.js' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'AI_BS_Backend.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'shm_websocket_gateway.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'AI_BS_Backend.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\AI_BS_Backend.log' -RedirectStandardError '%BASE_DIR%logs\AI_BS_Backend.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'shm_websocket_gateway.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\shm_websocket_gateway.log' -RedirectStandardError '%BASE_DIR%logs\shm_websocket_gateway.err' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%go-core\aibs_engine.exe' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'C:\Users\footb\AppData\Local\Microsoft\WinGet\Packages\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\nginx-1.31.3\nginx.exe' -ArgumentList '-p C:\StehouwerPublishing.com -c C:\StehouwerPublishing.com\nginx.conf' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%vnc_bridge.exe' -WindowStyle Hidden"
@@ -51,26 +55,26 @@ powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%
 
 :: Launch ChromaDB Vector Database on E-Drive (Port 8002)
 :: Minor staggering delay for ChromaDB initialization
-ping 127.0.0.1 -n 2 > nul
+ping 127.0.0.1 -n 1 > nul
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\chroma.exe' -ArgumentList 'run --path E:\AI_BS_Resources\ChromaDB --port 8002 --host 127.0.0.1' -WindowStyle Hidden"
 
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%frontend && npm run dev' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%BroadcastStudioApp && npm run dev' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'AI_BS_Unreal_Signaling_Server.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'gemini_mcp_server.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'AI_BS_Master_Worker.py' -WorkingDirectory '%BASE_DIR%' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'AI_BS_Universal_Data_Ingestor.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_broadcast_kernel.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_broadcast_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_social_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_overlay_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_vst_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'aibs_security_watchdog.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'theatrical_gateway.py' -WorkingDirectory '%BASE_DIR%NoCo Vision' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'crypto_trader_bot.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'pearl_payout_watcher.py' -WorkingDirectory '%BASE_DIR%miners' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'vast_clore_pearl_watchdog.py' -WorkingDirectory '%BASE_DIR%miners' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'core\unified_crypto_pearl_watchdog.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'AI_BS_Unreal_Signaling_Server.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\AI_BS_Unreal_Signaling_Server.log' -RedirectStandardError '%BASE_DIR%logs\AI_BS_Unreal_Signaling_Server.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'gemini_mcp_server.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\gemini_mcp_server.log' -RedirectStandardError '%BASE_DIR%logs\gemini_mcp_server.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'AI_BS_Master_Worker.py' -WorkingDirectory '%BASE_DIR%' -RedirectStandardOutput '%BASE_DIR%logs\AI_BS_Master_Worker.log' -RedirectStandardError '%BASE_DIR%logs\AI_BS_Master_Worker.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'AI_BS_Universal_Data_Ingestor.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\AI_BS_Universal_Data_Ingestor.log' -RedirectStandardError '%BASE_DIR%logs\AI_BS_Universal_Data_Ingestor.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_broadcast_kernel.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_broadcast_kernel.log' -RedirectStandardError '%BASE_DIR%logs\aibs_broadcast_kernel.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_broadcast_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_broadcast_daemon.log' -RedirectStandardError '%BASE_DIR%logs\aibs_broadcast_daemon.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_social_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_social_daemon.log' -RedirectStandardError '%BASE_DIR%logs\aibs_social_daemon.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_overlay_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_overlay_daemon.log' -RedirectStandardError '%BASE_DIR%logs\aibs_overlay_daemon.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_vst_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_vst_daemon.log' -RedirectStandardError '%BASE_DIR%logs\aibs_vst_daemon.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'aibs_security_watchdog.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\aibs_security_watchdog.log' -RedirectStandardError '%BASE_DIR%logs\aibs_security_watchdog.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'theatrical_gateway.py' -WorkingDirectory '%BASE_DIR%NoCo Vision' -RedirectStandardOutput '%BASE_DIR%logs\theatrical_gateway.log' -RedirectStandardError '%BASE_DIR%logs\theatrical_gateway.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'crypto_trader_bot.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\crypto_trader_bot.log' -RedirectStandardError '%BASE_DIR%logs\crypto_trader_bot.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'pearl_payout_watcher.py' -WorkingDirectory '%BASE_DIR%miners' -RedirectStandardOutput '%BASE_DIR%logs\pearl_payout_watcher.log' -RedirectStandardError '%BASE_DIR%logs\pearl_payout_watcher.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'vast_clore_pearl_watchdog.py' -WorkingDirectory '%BASE_DIR%miners' -RedirectStandardOutput '%BASE_DIR%logs\vast_clore_pearl_watchdog.log' -RedirectStandardError '%BASE_DIR%logs\vast_clore_pearl_watchdog.err' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'core\unified_crypto_pearl_watchdog.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\unified_crypto_pearl_watchdog.log' -RedirectStandardError '%BASE_DIR%logs\unified_crypto_pearl_watchdog.err' -WindowStyle Hidden"
 :: Unreal Engine is now launched ON-DEMAND via Launch_Unreal_OnDemand.bat to save GPU resources.
 :: Run C:\AI-BS\Launch_Unreal_OnDemand.bat when using 3D/Video Studio tools.
 

@@ -432,36 +432,57 @@ class DaemonManager:
             )
             return False
 
-        # Guard 2: stale pid-file check
-        pid_path = self._pid_path(daemon.name)
-        if pid_path.exists():
-            try:
-                stale_pid = int(pid_path.read_text().strip())
-                if psutil.pid_exists(stale_pid):
+        # Guard 2: stale pid-file check (check both base_dir and state_dir)
+        state_dir = self.base_dir.parent / "state"
+        possible_pid_paths = [
+            self._pid_path(daemon.name),
+            state_dir / f"{daemon.name}.pid",
+        ]
+        for p_path in possible_pid_paths:
+            if p_path.exists():
+                try:
+                    stale_pid = int(p_path.read_text().strip())
+                    if psutil.pid_exists(stale_pid):
+                        try:
+                            proc = psutil.Process(stale_pid)
+                            if "python" in proc.name().lower():
+                                logger.warning(
+                                    "DaemonManager: '%s' already running externally from pid file (PID %d). Adopting existing process.",
+                                    daemon.name, stale_pid
+                                )
+                                daemon.proc = _AdoptedProcess(stale_pid)
+                                return True
+                        except (psutil.NoSuchProcess, psutil.AccessDenied):
+                            pass
+                except (ValueError, OSError):
+                    pass
+                try:
+                    p_path.unlink(missing_ok=True)
+                except Exception:
+                    pass
+
+        # Guard 3: Dynamic psutil query by script name
+        if psutil:
+            script_name = None
+            for arg in daemon.cmd.args:
+                if arg.endswith(".py"):
+                    script_name = Path(arg).name
+                    break
+            
+            if script_name:
+                for p in psutil.process_iter(['pid', 'name', 'cmdline']):
                     try:
-                        proc = psutil.Process(stale_pid)
-                        if "python" in proc.name().lower():
-                            logger.warning(
-                                "DaemonManager: '%s' already running externally (PID %d). "
-                                "Adopting existing process.",
-                                daemon.name,
-                                stale_pid,
-                            )
-                            # Adopt the external process so we can manage it
-                            daemon.proc = subprocess.Popen.__new__(subprocess.Popen)
-                            # We can't truly adopt an arbitrary PID into Popen,
-                            # so we just record the PID for health checks via
-                            # psutil.
-                            daemon.proc = _AdoptedProcess(stale_pid)
-                            return True
+                        if p.info['name'] and 'python' in p.info['name'].lower():
+                            cmd = ' '.join(p.info['cmdline'] or [])
+                            if script_name.lower() in cmd.lower():
+                                logger.warning(
+                                    "DaemonManager: '%s' already running dynamically detected (PID %d). Adopting existing process.",
+                                    daemon.name, p.info['pid']
+                                )
+                                daemon.proc = _AdoptedProcess(p.info['pid'])
+                                return True
                     except (psutil.NoSuchProcess, psutil.AccessDenied):
                         pass
-            except (ValueError, OSError):
-                pass
-            try:
-                pid_path.unlink(missing_ok=True)
-            except Exception:
-                pass
 
         # Thermal throttle guard for JIT daemons
         if daemon.category == "jit" and self.check_hardware_thermal_throttle():
@@ -476,7 +497,7 @@ class DaemonManager:
 
         try:
             creation_flags = (
-                subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
+                (subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW) if os.name == "nt" else 0
             )
 
             # Ensure logs directory exists
