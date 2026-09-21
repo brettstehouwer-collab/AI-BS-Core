@@ -1,0 +1,38 @@
+SOURCE-AVAILABLE NON-COMMERCIAL & PEER-REVIEW EVALUATION LICENSE
+
+Copyright (c) 2026 Brett Stehouwer / Stehouwer Publishing.
+All Rights Reserved.
+Official Contact: brettstehouwer@gmail.com
+
+--------------------------------------------------------------------------------
+TERMS AND CONDITIONS FOR ACCESS, INSPECTION, AND EVALUATION
+--------------------------------------------------------------------------------
+
+1. DEFINITIONS
+"Author" refers to Brett Stehouwer / Stehouwer Publishing, the sole creator and copyright owner of the AI-BS software and architecture.
+"Software" refers to all source code, architecture, configuration files, scripts, documentation, vector databases, schemas, and asset pipelines contained within this repository.
+"Commercial Use" means any use of the Software or its proprietary concepts, designs, or algorithms for business, enterprise, corporate, revenue-generating, or commercial monetization purposes.
+
+2. GRANT OF NON-COMMERCIAL INSPECTION & PEER-REVIEW RIGHTS
+Subject to the restrictions in Section 3, the Author hereby grants any individual who accesses this repository a limited, personal, non-exclusive, non-transferable, revocable license to:
+  (a) View, read, and inspect the source code and architectural documentation with human eyes;
+  (b) Compile and run the Software locally solely for private, non-commercial educational review, security auditing, or peer evaluation;
+  (c) Identify, document, and submit bug reports, logic discrepancies, performance feedback, or pull requests to the Author.
+
+3. STRICT COMMERCIAL & PROPRIETARY RESTRICTIONS
+The following acts are STRICTLY PROHIBITED without the express, written, signed consent of the Author and payment of agreed licensing fees:
+  (a) NO COMMERCIAL USE: You may not use, run, deploy, or integrate the Software (in whole or in part) within any commercial enterprise, business system, paid service, SaaS, or revenue-earning entity.
+  (b) NO PROPRIETARY REPLICATION: You may not copy, reverse-engineer, decompile, or extract the proprietary architectural ideas (including the 18-port collision matrix, IPC telemetry bridge, or autonomous agent coordination pipelines) to construct competing software or commercial systems.
+  (c) NO REDISTRIBUTION OR RESALE: You may not sell, rent, lease, sub-license, repackage, or distribute copies or derivatives of this Software under another name or another license.
+  (d) NO AI MODEL SCRAPING: You may not scrape, ingest, tokenize, or use this repository to train, evaluate, or fine-tune public or commercial machine learning or generative AI models without written permission.
+
+4. COMMERCIAL LICENSING & INQUIRIES
+To request commercial authorization, enterprise deployment rights, or architectural licensing, contact:
+  Brett Stehouwer
+  Email: brettstehouwer@gmail.com
+
+5. STATUTORY REMEDIES & ENFORCEMENT
+Any unauthorized commercial use, reproduction, or distribution constitutes willful copyright infringement under Title 17 of the United States Code. Infringers are subject to statutory damages of up to $150,000 per willful infringement, injunctive relief, and liability for attorney's fees and costs.
+
+6. DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

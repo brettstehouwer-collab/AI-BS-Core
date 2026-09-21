@@ -1,311 +1,147 @@
-# Google Antigravity SDK
+# AI-BS (Autonomous Intelligence & Build System)
+### High-Performance Sovereign AI Ecosystem & Autonomous Workstation Core
+**Architect & Copyright Holder:** Brett Stehouwer / Stehouwer Publishing  
+**Official Inquiries & Licensing:** [brettstehouwer@gmail.com](mailto:brettstehouwer@gmail.com)  
+**License:** Source-Available Non-Commercial & Peer-Review Evaluation License (All Commercial Rights Reserved)
 
-The Google Antigravity SDK is a Python SDK for building AI agents powered by
-Antigravity and Gemini. It provides a secure, scalable, and stateful
-infrastructure layer that abstracts the agentic loop, letting you focus on what
-your agent *does* rather than how it runs.
+---
 
-## Installation
-
-```sh
-pip install google-antigravity
-```
+## ⚠️ Proprietary Notice & Legal Terms of Viewing
 
 > [!IMPORTANT]
-> The Google Antigravity SDK relies on a compiled runtime binary that is
-> included in the platform-specific wheels published to
-> [PyPI](https://pypi.org/project/google-antigravity/). **Cloning this
-> repository alone is not sufficient to run the SDK.** Always install from
-> PyPI with `pip install google-antigravity` to obtain the binary.
+> **PLEASE READ CAREFULLY BEFORE INSPECTING OR CLONING THIS REPOSITORY.**  
+> This repository contains proprietary architecture, custom IPC bridges, novel daemon orchestration, and software designs developed by **Brett Stehouwer**. 
+>
+> Viewing or accessing this repository **does NOT grant any commercial license or right to copy, replicate, or monetize** these systems.
 
-## Quickstart
+### 1. Permitted Uses (Inspection, Peer Review & Auditing)
+Fellow software engineers, systems architects, and security researchers are expressly granted permission to:
+- **Inspect & Study:** Read and examine the source code, scripts, configuration files, and documentation for educational purposes and architectural evaluation.
+- **Audit & Identify Discrepancies:** Evaluate system mechanics, identify race conditions, spot discrepancies in logic or data flows, and review hardware integration.
+- **Submit Feedback & Discrepancies:** Open [GitHub Issues](https://github.com/brettstehouwer-collab/AI-BS-Core/issues) or submit pull requests to document discrepancies, bug reports, or performance optimizations for review.
 
-Get started by running one of the [`examples/`](examples/), such as the
-`hello_world` example with:
+### 2. Strict Commercial & Proprietary Prohibitions
+Without an explicit, executed written commercial license agreement signed by Brett Stehouwer, you may **NOT**:
+- **Commercial Deployment:** Deploy, execute, host, or integrate any part of this software for business, commercial, enterprise, or revenue-generating purposes.
+- **Idea & Architectural Replication:** Extract, copy, re-implement, or adapt proprietary workflows, the 18-port collision matrix, or autonomous agent algorithms to produce competing software or commercial services.
+- **Redistribution & Reselling:** Sell, sub-license, repackage, distribute, or publish this codebase or its derivatives under another name, organization, or open-source license.
+- **Automated AI Scraping & Training:** Scrape, ingest, crawl, or process this repository to train, fine-tune, or validate machine learning models or commercial AI systems.
 
-```sh
-export GEMINI_API_KEY="your_api_key_here"
-python ./examples/getting_started/hello_world.py
+### 3. Commercial Licensing, Fees & Statutory Enforcement
+- **Enterprise & Commercial Inquiries:** If your organization wishes to deploy, license, or integrate AI-BS technology, contact: **[brettstehouwer@gmail.com](mailto:brettstehouwer@gmail.com)**.
+- **Statutory Infringement Warning:** Any unauthorized commercial exploitation, distribution, or intellectual property theft is subject to civil and criminal liability, including statutory damages of up to **$150,000 per willful infringement** under 17 U.S.C. § 504(c), injunctive relief, and recovery of legal fees.
+
+---
+
+## 🔍 Purpose: Open Architecture for Human-Eye Auditing
+
+AI-BS is made source-available so that seasoned engineers can inspect how the entire ecosystem connects from end to end. We value precision and encourage technical reviewers to inspect our pipelines with a human eye:
+- **Architectural Cohesion:** How our Windows 11 host orchestration coordinates with WSL2 Ubuntu environments.
+- **Concurrency & IPC:** How the high-speed shared memory (SHM) ring buffers, telemetry daemons, and WebSocket channels avoid contention.
+- **Discrepancy Reporting:** If you notice a mismatch between frontend state and backend routers, an unhandled error state, or a redundant call pattern, please report it via GitHub Issues.
+
+---
+
+## 🗺️ System Architecture & How Everything Functions
+
+AI-BS bridges desktop UI engineering, local sovereign AI, hardware-accelerated media rendering, and cross-platform daemons into a unified workstation:
+
 ```
-## Gemini Enterprise Agent Platform (formerly Vertex AI)
-
-To use the SDK with Gemini Enterprise Agent Platform (formerly Vertex AI),
-configure `LocalAgentConfig` with `vertex=True` and specify your GCP `project`
-and `location`.
-
-By default, the SDK uses Application Default Credentials (ADC) for
-authentication.
-
-```python
-from google.antigravity import Agent, LocalAgentConfig
-
-config = LocalAgentConfig(
-    vertex=True,
-    project="your-gcp-project",
-    location="us-central1",
-)
-
-async with Agent(config) as agent:
-    response = await agent.chat("Hello!")
-    print(await response.text())
-```
-
-Ensure you have authenticated locally before running the agent:
-
-```sh
-gcloud auth application-default login
-```
-
-## Concepts
-
-### Simple Agent
-
-The `Agent` class is the easiest way to get started. It manages the full
-lifecycle — binary discovery, tool wiring, hook registration, and policy
-defaults — behind a single async context manager.
-
-The `system_instructions` parameter is optional.
-
-```python
-import asyncio
-from google.antigravity import Agent, LocalAgentConfig
-
-async def main():
-    config = LocalAgentConfig(
-        system_instructions="You are an expert assistant for codebase navigation.",
-        # api_key="your_api_key_here",
-    )
-    async with Agent(config) as agent:
-        response = await agent.chat("What files are in the current directory?")
-        print(await response.text())
-
-async def run():
-    await main()
-
-if __name__ == "__main__":
-    asyncio.run(run())
+                                 ┌─────────────────────────────────┐
+                                 │    Vite Desktop Studio (:5173)   │
+                                 │     React 19 + Glassmorphism    │
+                                 └────────────────┬────────────────┘
+                                                  │ WebSocket / REST
+                                                  ▼
+                                 ┌─────────────────────────────────┐
+                                 │   FastAPI Core Engine (:8080)   │
+                                 │    Router, Auth, State Vault    │
+                                 └───────┬───────────────┬─────────┘
+                                         │               │
+                      ┌──────────────────┴──┐         ┌──┴──────────────────┐
+                      │                     │         │                     │
+                      ▼                     ▼         ▼                     ▼
+          ┌───────────────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+          │ Sovereign Reasoning   │ │ NVENC Studio │ │ ChromaDB     │ │ WSL2 Linux   │
+          │ Local Ollama / VLM    │ │ Media Vault  │ │ Vector Store │ │ GPU Mining & │
+          │ (:11434 / :11435)     │ │ (:8088)      │ │ (:8002)      │ │ Daemons      │
+          └───────────────────────┘ └──────────────┘ └──────────────┘ └──────────────┘
 ```
 
-### Streaming Responses
+### Core Subsystems
 
-To stream agent output in real-time (e.g., for fluid UI or console applications), simply iterate over the `ChatResponse` object using an `async for` loop. The stream wrapper natively yields conversational `str` text tokens as they arrive, with zero network overhead:
+#### 1. Desktop Studio (`frontend/`)
+- **Technology:** React 19, Vite, Vanilla CSS design tokens with custom glassmorphic styling.
+- **4-Pillar Navigation:** Categorizes operations into **Creation Studio**, **Intelligence & Agents**, **System & Hardware Operations**, and **Vault & Media Records**.
+- **Media & Screenwriting:** Includes the Fountain screenplay script adapter, dynamic Character Vault modals, and BV-Media Audio/Video creator with real-time waveform inspection.
 
-```python
-import asyncio
-import sys
-from google.antigravity import Agent, LocalAgentConfig
+#### 2. FastAPI Core Engine (`backend/`)
+- **Technology:** Python 3.10+ ASGI backend powered by FastAPI and Uvicorn on port `8080`.
+- **Capabilities:** Manages system telemetry, token tracking, character profile vaults, automated prompt enhancement, and session persistence.
 
-async def main():
-    config = LocalAgentConfig()
-    async with Agent(config) as agent:
-        # Returns instantly — does not block
-        response = await agent.chat("Write a short poem about space.")
-        
-        async for token in response:
-            sys.stdout.write(token)
-            sys.stdout.flush()
-        print()
+#### 3. Sovereign AI & Local LLM Cluster
+- **Local Inference:** Fully local, privacy-preserving LLM execution running on dedicated ports `11434` (Ollama Host) and `11435` (Ollama Extended Drive).
+- **Zero-Cost Mandate:** Operates entirely without paid commercial third-party APIs, running quantized open weights locally on RTX 4090 hardware.
 
-asyncio.run(main())
-```
+#### 4. The 18-Port Collision Matrix
+To eliminate dynamic socket race conditions across background daemons, ports are statically mapped:
+- `80`: Nginx Gateway
+- `3001`: Node Backend Service
+- `4455`: OBS Studio WebSocket
+- `5173`: Vite Development Studio
+- `8000`: Go Telemetry Gateway
+- `8002`: ChromaDB Vector Store
+- `8005`: Broadcast Kernel Daemon
+- `8006`: Social Hub & IRC Dispatcher
+- `8007`: Crypto Swarm & Scalp Daemon
+- `8010`: Shared Memory (SHM) Telemetry Bridge
+- `8013`: VST3 Audio Bridge
+- `8080`: FastAPI Core Engine
+- `8085`: Ubuntu-Bio Bridge
+- `8088`: NVENC Hardware Streamer & Video Kernel
+- `8089`: WSL HLS Ingest Stream
+- `8099`: Gemini Protocol Bridge
+- `8189`: ComfyUI Screenplay / Secondary Pipeline
+- `8888`: Unreal Engine WebRTC Signaling Server
+- `11434`: Primary Ollama LLM Host
+- `11435`: Secondary / Extended Drive Ollama Instance
 
-### Sugared Thoughts & Tool Call Streams (Advanced)
+#### 5. Cross-Platform Windows 11 & WSL2 Integration
+- Orchestrates Windows 11 PowerShell execution (`-ExecutionPolicy Bypass`) with dual Ubuntu distributions in WSL2 (`Ubuntu` and `Ubuntu-24.04`) for distributed workload acceleration.
 
-For more complex use cases, you can also stream internal model reasoning/thinking or intercept tool call dispatches in real-time using dedicated async stream properties:
+---
 
-```python
-# 1. Stream reasoning/thinking deltas
-async for thought in response.thoughts:
-    show_thinking_bubble(thought)
+## 🛠️ Local Inspection & Setup (For Peer Reviewers)
 
-# 2. Stream strongly-typed ToolCall events
-async for call in response.tool_calls:
-    show_executing_spinner(call.name)
-```
+To run and inspect the ecosystem locally for non-commercial evaluation:
 
-By default, `Agent` runs in **read-only mode** for safety. Pass
-`capabilities=CapabilitiesConfig()` to enable all tools (including writes).
+### Prerequisites
+- **Operating System:** Windows 11 Pro with WSL2 enabled.
+- **Hardware Recommended:** NVIDIA RTX 40-series GPU (RTX 4090 optimal).
+- **Runtimes:** Python 3.10+, Node.js 20+, Git.
 
-### Interactive Loop
+### Quick Inspection Launch
+1. Clone the repository for inspection:
+   ```powershell
+   git clone https://github.com/brettstehouwer-collab/AI-BS-Core.git
+   cd AI-BS-Core
+   ```
+2. Launch the dev ecosystem:
+   ```powershell
+   .\Launch_AI_BS_Dev.bat
+   ```
+3. Open your browser to the local studio:
+   ```
+   http://localhost:5173
+   ```
 
-```python
-from google.antigravity import LocalAgentConfig, CapabilitiesConfig
-from google.antigravity.utils.interactive import run_interactive_loop
+---
 
-config = LocalAgentConfig(
-    # api_key="your_api_key_here",
-    capabilities=CapabilitiesConfig(),
-)
-await run_interactive_loop(config)
-```
+## 📬 Reporting Discrepancies & Contact
 
-### Advanced Usage with Conversation
+If you inspect the code and discover discrepancies, bugs, or architectural improvements:
+- **Bug Reports & Feedback:** Open an issue at [GitHub Issues](https://github.com/brettstehouwer-collab/AI-BS-Core/issues).
+- **Commercial & Enterprise Inquiries:** Contact Brett Stehouwer directly at **[brettstehouwer@gmail.com](mailto:brettstehouwer@gmail.com)**.
 
-For full control over the connection lifecycle, use `Conversation` with a
-`ConnectionStrategy` directly. `Conversation` is a stateful session that
-accumulates step history, provides a `chat()` convenience method, and exposes
-state introspection:
-
-```python
-import asyncio
-from google.antigravity.connections.local import LocalConnectionStrategy
-from google.antigravity.conversation.conversation import Conversation
-from google.antigravity.tools.tool_runner import ToolRunner
-
-async def main():
-    tool_runner = ToolRunner()
-    strategy = LocalConnectionStrategy(
-        tool_runner=tool_runner,
-    )
-    
-    async with Conversation.create(strategy) as conversation:
-        # High-level: one-call send + collect
-        response = await conversation.chat("What files are here?")
-        print(await response.text())
-        
-        # Step history accumulates automatically
-        print(f"Total steps: {len(conversation.history)}")
-        print(f"Turns: {conversation.turn_count}")
-        print(f"Last response: {conversation.last_response}")
-        
-        # Low-level: streaming steps
-        await conversation.send("Tell me more.")
-        async for step in conversation.receive_steps():
-            if step.is_complete_response:
-                print(step.content)
-
-asyncio.run(main())
-```
-
-## Features
-
-### Multimodal Ingestion
-
-Pass rich multimedia file attachments (images, videos, audio, and documents) to the agent alongside textual instruction prompt lists.
-
-You can attach assets **directly using content classes** (perfect for in-memory bytes) or **conveniently from a filesystem path** (which automatically resolves types and guesses MIME formats):
-
-```python
-from google.antigravity import Agent, LocalAgentConfig
-from google.antigravity.types import Image, from_file
-
-config = LocalAgentConfig(system_instructions="You are an expert software architect.")
-async with Agent(config) as agent:
-    # 1. Flat filesystem shortcut (automatically resolves as types.Document)
-    pdf_spec = from_file("spec.pdf")
-    
-    # 2. Direct constructor instantiation (perfect for in-memory raw bytes)
-    chart_image = Image(
-        data=b"raw_png_bytes_here", 
-        mime_type="image/png", 
-        description="Architecture blueprint"
-    )
-    
-    # Send a mixed list of text instructions and content classes
-    prompt = [
-        "Analyze this chart against the specification and list three security vulnerabilities:",
-        chart_image,
-        pdf_spec
-    ]
-    response = await agent.chat(prompt)
-    print(await response.text())
-```
-
-### Custom Tools
-
-Register Python functions as tools that the agent can call:
-
-```python
-def get_weather(city: str) -> str:
-    """Returns the current weather for a city."""
-    return f"It's sunny in {city}."
-
-config = LocalAgentConfig(
-    tools=[get_weather],
-)
-async with Agent(config) as agent:
-    response = await agent.chat("What's the weather in Tokyo?")
-```
-
-### MCP Integration
-
-Connect to external [MCP](https://modelcontextprotocol.io/) servers and expose
-their tools to the agent:
-
-```python
-from google.antigravity import Agent, LocalAgentConfig
-from google.antigravity.types import McpStdioServer
-
-config = LocalAgentConfig(
-    mcp_servers=[McpStdioServer(name="my_server", command="npx", args=["my-mcp-server"])],
-)
-async with Agent(config) as agent:
-    response = await agent.chat("Use the MCP tools to help me.")
-```
-
-### Hooks and Policies
-
-Control agent behavior with a declarative policy system:
-
-```python
-from google.antigravity import LocalAgentConfig, CapabilitiesConfig
-from google.antigravity.hooks.policy import deny, allow, ask_user, enforce
-from google.antigravity.utils.interactive import run_interactive_loop
-
-policies = [
-    deny("*"),                          # Block all tools by default
-    allow("view_file"),                 # Allow reading files
-    ask_user("run_command", handler=my_handler),  # Ask before running commands
-]
-
-config = LocalAgentConfig(
-    capabilities=CapabilitiesConfig(),
-    policies=policies,
-)
-await run_interactive_loop(config)
-```
-
-### Triggers
-
-Run background tasks that react to external events and push messages into the
-agent:
-
-```python
-from google.antigravity import LocalAgentConfig
-from google.antigravity.triggers import every
-from google.antigravity.utils.interactive import run_interactive_loop
-
-async def check_status(ctx):
-    await ctx.send("Check the deployment status.")
-
-config = LocalAgentConfig(
-    triggers=[every(60, check_status)],
-)
-await run_interactive_loop(config)
-```
-
-## Architecture
-
-The SDK follows a three-layer architecture:
-
-| Layer | Purpose | Key Classes |
-|:------|:--------|:------------|
-| **Layer 1** — Simplified | High-level, batteries-included entry point | `Agent` |
-| **Layer 2** — Session | Stateful session with history and convenience methods | `Conversation`, `ChatResponse`, `Step`, `ToolCall`, `AgentConfig`, `HookRunner`, `ToolRunner`, `TriggerRunner` |
-| **Layer 3** — Adapter | Transport and backend abstraction | `Connection`, `ConnectionStrategy`, `LocalConnection` |
-
-## Component Documentation
-
-For more detailed documentation on specific components, see:
-
--   [Agent](google/antigravity/agent.py) — High-level, batteries-included entry point.
--   [Connections](google/antigravity/connections/README.md) — Transport and backend abstraction.
--   [Conversation](google/antigravity/conversation/README.md) — Stateful session management.
--   [Hooks](google/antigravity/hooks/README.md) — Agent lifecycle interception and policies.
--   [MCP](google/antigravity/mcp/README.md) — Model Context Protocol integration.
--   [Tools](google/antigravity/tools/README.md) — In-process tool execution.
--   [Triggers](google/antigravity/triggers/README.md) — Background tasks and external events.
-
-## License
-
-[Apache License 2.0](LICENSE)
+---
+*Copyright © 2026 Brett Stehouwer / Stehouwer Publishing. All Rights Reserved. No commercial use or unauthorized reproduction permitted.*
