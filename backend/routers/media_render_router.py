@@ -321,3 +321,87 @@ async def render_blender_endpoint(req: BlenderHeadlessRequest):
 @router.post("/render/canvas/overlay")
 async def render_canvas_endpoint(req: CanvasOverlayRequest):
     return MediaRenderEngine.render_canvas_overlay(req.title, req.metrics, req.theme, req.output_filename)
+
+
+# =========================================================================
+# BSMEDIA-CHAT, DEDICATED CHROMADB & VLM ENDPOINTS (v5.297.0)
+# =========================================================================
+class MediaChatRequest(BaseModel):
+    prompt: str = Field(..., description="Creator prompt or directive")
+    media_context: Optional[Dict[str, Any]] = None
+    messages: Optional[List[Dict[str, Any]]] = None
+
+class MediaIndexRequest(BaseModel):
+    media_id: Optional[str] = None
+    media_type: str = Field(..., description="video, image, audio, or recipe")
+    title: str
+    description: str
+    file_path: str
+    metadata: Optional[Dict[str, Any]] = None
+
+class MediaSearchRequest(BaseModel):
+    query: str
+    top_k: int = 5
+    media_type: Optional[str] = None
+
+class VLMAnalyzeRequest(BaseModel):
+    media_path: str
+    instruction: Optional[str] = "Analyze this media frame and provide specific directorial edit instructions."
+
+@router.post("/chat/stream")
+async def stream_media_chat(req: MediaChatRequest):
+    """Streams conversational guidance from BsMedia-Chat powered by VLM & stehouwer_media_memory."""
+    from fastapi.responses import StreamingResponse
+    from core.sovereign_reasoning.vlm_guidance_engine import vlm_guidance_engine
+
+    async def event_generator():
+        async for chunk in vlm_guidance_engine.stream_media_chat_guidance(
+            prompt=req.prompt,
+            media_context=req.media_context,
+            messages=req.messages
+        ):
+            yield f"data: {json.dumps({'chunk': chunk})}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+@router.post("/vault/index")
+async def index_media_asset_endpoint(req: MediaIndexRequest):
+    """Indexes a media asset into the dedicated stehouwer_media_memory ChromaDB collection."""
+    from core.media_chromadb_vault import media_chroma_vault
+    import uuid
+    m_id = req.media_id or f"media_{uuid.uuid4().hex[:8]}"
+    return media_chroma_vault.add_media_asset(
+        media_id=m_id,
+        media_type=req.media_type,
+        title=req.title,
+        description=req.description,
+        file_path=req.file_path,
+        metadata=req.metadata
+    )
+
+@router.post("/vault/search")
+async def search_media_vault_endpoint(req: MediaSearchRequest):
+    """Searches the dedicated stehouwer_media_memory ChromaDB collection."""
+    from core.media_chromadb_vault import media_chroma_vault
+    return media_chroma_vault.search_media_memory(
+        query=req.query,
+        top_k=req.top_k,
+        media_type=req.media_type
+    )
+
+@router.get("/vault/stats")
+async def get_media_vault_stats():
+    """Returns statistics on the dedicated media ChromaDB collection."""
+    from core.media_chromadb_vault import media_chroma_vault
+    return media_chroma_vault.get_stats()
+
+@router.post("/vlm/analyze")
+async def analyze_visual_endpoint(req: VLMAnalyzeRequest):
+    """Analyzes a visual asset using the local VLM engine."""
+    from core.sovereign_reasoning.vlm_guidance_engine import vlm_guidance_engine
+    return await vlm_guidance_engine.analyze_visual_asset(
+        image_or_frame_path=req.media_path,
+        instruction=req.instruction
+    )
+

@@ -338,3 +338,205 @@
   color: #4ade80;
   font-weight: bold;
 }
+
+/* STATE TAX INCENTIVE STYLES */
+.tax-incentive-box {
+  background: #111827;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tax-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.live-pill {
+  font-size: 0.68rem;
+  background: #064e3b;
+  color: #34d399;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid #059669;
+}
+
+.state-dropdown {
+  background: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #4b5563 !important;
+  padding: 8px !important;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.state-meta-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.state-rate-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.rate-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.rate-badge.base {
+  background: #0284c7;
+  color: #f0f9ff;
+}
+
+.rate-badge.max {
+  background: #7c3aed;
+  color: #f5f3ff;
+}
+
+.structure-tag {
+  font-size: 0.7rem;
+  background: #374151;
+  color: #9ca3af;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.uplift-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  background: #0f172a;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px dashed #475569;
+}
+
+.uplift-toggle input {
+  cursor: pointer;
+}
+
+.state-info-details {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.35;
+}
+
+.state-blurb {
+  margin: 4px 0 0 0;
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+/* BUDGET TAB STATE INCENTIVE BANNER */
+.state-budget-banner {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #38bdf8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.state-budget-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.state-badge-flag {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #facc15;
+}
+
+.state-status-pill {
+  font-size: 0.75rem;
+  background: #1e3a8a;
+  color: #93c5fd;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.state-budget-metrics {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.metric-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.metric-box .label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-box .val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+.metric-box .val.highlight {
+  color: #38bdf8;
+}
+
+.metric-box .val.credit {
+  color: #f87171;
+}
+
+.metric-box .val.net {
+  color: #4ade80;
+}
+
+.incentive-rebate-row td {
+  background: #1e1b4b;
+  color: #c7d2fe;
+  font-weight: 600;
+}
+
+.rebate-note {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #818cf8;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.amount.rebate-val {
+  color: #f87171 !important;
+}

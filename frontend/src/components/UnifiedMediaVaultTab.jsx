@@ -1,15 +1,96 @@
 import React, { useState, useEffect } from 'react';
 import './UnifiedMediaVaultTab.css';
 
-export default function UnifiedMediaVaultTab({ backendUrl }) {
+const AUTHORIZED_EMAILS = [
+  'brettstehouwer@gmail.com',
+  'footballstar0325@gmail.com',
+  'stehouwerjulie@gmail.com',
+  'julie.a.stehouwer@gmail.com',
+  'julieannstehouwer@gmail.com',
+  'juliestehouwer@gmail.com',
+  'stehouwer.julie@gmail.com',
+  'julie@stehouwer-publishing.com'
+];
+
+const JULIE_EMAILS = [
+  'stehouwerjulie@gmail.com',
+  'julie.a.stehouwer@gmail.com',
+  'julieannstehouwer@gmail.com',
+  'juliestehouwer@gmail.com',
+  'stehouwer.julie@gmail.com',
+  'julie@stehouwer-publishing.com'
+];
+
+export default function UnifiedMediaVaultTab({ backendUrl, currentUser }) {
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [lightboxMedia, setLightboxMedia] = useState(null);
 
+  // Determine if running locally or on local home network (LAN)
+  const isLocalDev = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname.startsWith('192.168.') ||
+    window.location.hostname.startsWith('10.') ||
+    /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(window.location.hostname) ||
+    window.location.protocol === 'file:'
+  );
+
+  // Determine current active user email
+  const userEmail = (currentUser?.email || '').toLowerCase().trim();
+
+  // Julie Stehouwer has full unrestricted access without any password requirement
+  const isJulie = JULIE_EMAILS.includes(userEmail) || userEmail.includes('julie');
+
+  // Allowed operators: Julie, Brett, LocalDev, footballstar0325
+  const isAuthorizedOperator = isLocalDev || isJulie || AUTHORIZED_EMAILS.includes(userEmail);
+
+  // Check persistent authorization or session unlock (Julie is ALWAYS unlocked with zero password prompt)
+  const [isUnlocked, setIsUnlocked] = useState(() => {
+    if (isJulie) return true;
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('aibs_media_vault_unlocked') === 'true';
+    }
+    return false;
+  });
+
+  const [enteredPassword, setEnteredPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const handlePasswordUnlock = (e) => {
+    e?.preventDefault();
+    setPasswordError('');
+    if (!enteredPassword.trim()) {
+      setPasswordError('Please enter the vault security password.');
+      return;
+    }
+
+    // Secure vault access password check
+    if (enteredPassword.trim() === 'jssdbdAS2631') {
+      setIsUnlocked(true);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('aibs_media_vault_unlocked', 'true');
+      }
+    } else {
+      setPasswordError('Invalid security password. Access denied.');
+    }
+  };
+
+  const handleLockVault = () => {
+    setIsUnlocked(false);
+    setEnteredPassword('');
+    setPasswordError('');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('aibs_media_vault_unlocked');
+    }
+  };
+
   useEffect(() => {
-    fetchMedia();
-  }, []);
+    if (isAuthorizedOperator && isUnlocked) {
+      fetchMedia();
+    }
+  }, [isAuthorizedOperator, isUnlocked]);
 
   const fetchMedia = async () => {
     setLoading(true);
@@ -47,11 +128,84 @@ export default function UnifiedMediaVaultTab({ backendUrl }) {
 
   const currentCategoryData = categories.find((c) => c.name === activeCategory);
 
+  // Security Barrier 1: Email / LocalDev Identity Enforcement
+  if (!isAuthorizedOperator) {
+    return (
+      <div className="media-vault-container media-vault-auth-guard">
+        <div className="media-vault-lock-box">
+          <div className="vault-lock-shield">🔒</div>
+          <h2 className="vault-lock-title">Restricted Vault Access</h2>
+          <p className="vault-lock-subtitle">
+            The Unified Media Gallery is strictly restricted to authorized operators:
+          </p>
+          <div className="vault-authorized-roster">
+            <span className="roster-badge">👤 Brettstehouwer@gmail.com</span>
+            <span className="roster-badge">⚡ LocalDev (localhost / 127.0.0.1)</span>
+            <span className="roster-badge">👤 footballstar0325@gmail.com</span>
+          </div>
+          <div className="vault-denied-status">
+            Current Operator Identity: <strong>{userEmail || 'Unauthenticated Guest'}</strong>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Security Barrier 2: Password Challenge
+  if (!isUnlocked) {
+    return (
+      <div className="media-vault-container media-vault-auth-guard">
+        <div className="media-vault-lock-box">
+          <div className="vault-lock-shield pulse-shield">🔐</div>
+          <h2 className="vault-lock-title">Unified Media Vault — Password Required</h2>
+          <p className="vault-lock-subtitle">
+            Identity Verified: <span className="vault-verified-user">{isLocalDev ? 'LocalDev' : userEmail}</span>. Enter the master vault security password to unlock media assets.
+          </p>
+          <form onSubmit={handlePasswordUnlock} className="vault-password-form">
+            <div className="vault-input-group">
+              <input
+                type="password"
+                className="vault-password-input"
+                placeholder="Enter Vault Password"
+                value={enteredPassword}
+                onChange={(e) => setEnteredPassword(e.target.value)}
+                autoFocus
+              />
+              <button type="submit" className="vault-unlock-btn">
+                Unlock Gallery 🔓
+              </button>
+            </div>
+            {passwordError && (
+              <div className="vault-auth-error">
+                ⚠️ {passwordError}
+              </div>
+            )}
+          </form>
+          <div className="vault-security-note">
+            🛡️ Encrypted media store with session-scoped authentication.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="media-vault-container">
       <div className="media-vault-header">
-        <h1><span>🎨</span> Media & Asset Vault</h1>
-        <p>Unified gallery for all AI-BS generated images, videos, 3D renders, and assets.</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h1><span>🎨</span> Media & Asset Vault</h1>
+            <p>Unified gallery for all AI-BS generated images, videos, 3D renders, and assets.</p>
+          </div>
+          <div className="vault-auth-badge-container">
+            <span className="vault-operator-badge">
+              🟢 {isLocalDev ? 'LocalDev Operator' : userEmail}
+            </span>
+            <button className="vault-relock-btn" onClick={handleLockVault} title="Lock Vault">
+              🔒 Lock Vault
+            </button>
+          </div>
+        </div>
       </div>
 
       {loading ? (

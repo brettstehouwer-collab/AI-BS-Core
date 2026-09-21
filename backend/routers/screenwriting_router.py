@@ -47,6 +47,8 @@ class BudgetParameters(BaseModel):
     tax_incentive_pct: float = 0.25
     contingency_percentage: float = 0.10
     completion_bond_required: bool = False
+    selected_state: Optional[str] = "GA"
+    include_uplifts: bool = False
 
 class ProductionBreakdownPayload(BaseModel):
     script_text: str
@@ -516,12 +518,41 @@ class CharacterPayload(BaseModel):
     name: str
     bio: str = ""
     speaking_style: str = ""
+    gender: Optional[str] = "Male"
+    role: Optional[str] = ""
+    voice_tag: Optional[str] = ""
+    vocal_tone: Optional[str] = ""
+    vocal_pitch: Optional[str] = ""
+    accent: Optional[str] = ""
+    personality: Optional[str] = ""
 
 
 @router.get("/api/screenwriting/projects/characters")
 def get_characters():
     proj = _get_current_project()
-    return {"status": "success", "characters": proj.metadata.get('characters', [])}
+    chars = proj.metadata.get('characters', [])
+    if not chars:
+        # Dynamically autofill Character Vault from screenplay and source book
+        try:
+            from core.character_extractor import extract_project_characters
+            content = proj.read_screenplay()
+            source_text = ""
+            chunks_path = proj.project_dir / "chunks.json"
+            if chunks_path.exists():
+                try:
+                    import json
+                    chunks = json.loads(chunks_path.read_text(encoding="utf-8", errors="ignore"))
+                    source_text = "\n".join(chunks)
+                except Exception:
+                    pass
+            chars = extract_project_characters(content, source_text)
+            if chars:
+                proj.metadata['characters'] = chars
+                proj.save_metadata()
+        except Exception as e:
+            print(f"[Character Vault Auto-Fill Error] {e}")
+            
+    return {"status": "success", "characters": chars}
 
 
 @router.post("/api/screenwriting/projects/characters")
@@ -529,14 +560,25 @@ def save_character(payload: CharacterPayload):
     proj = _get_current_project()
     chars = proj.metadata.get('characters', [])
     updated = False
-    for c in chars:
-        if c['name'] == payload.name:
-            c['bio'] = payload.bio
-            c['speaking_style'] = payload.speaking_style
+    new_entry = {
+        "name": payload.name,
+        "bio": payload.bio,
+        "speaking_style": payload.speaking_style,
+        "gender": payload.gender or "Male",
+        "role": payload.role or "",
+        "voice_tag": payload.voice_tag or "",
+        "vocal_tone": payload.vocal_tone or "",
+        "vocal_pitch": payload.vocal_pitch or "",
+        "accent": payload.accent or "",
+        "personality": payload.personality or ""
+    }
+    for idx, c in enumerate(chars):
+        if c.get('name') == payload.name:
+            chars[idx] = {**c, **new_entry}
             updated = True
             break
     if not updated:
-        chars.append({"name": payload.name, "bio": payload.bio, "speaking_style": payload.speaking_style})
+        chars.append(new_entry)
 
     proj.metadata['characters'] = chars
     proj.save_metadata()
@@ -827,7 +869,23 @@ async def production_breakdown(payload: ProductionBreakdownPayload):
         if payload.parameters.completion_bond_required:
             gross_budget += gross_budget * 0.05
             
-        net_budget = gross_budget * (1.0 - payload.parameters.tax_incentive_pct)
+        # State Tax Incentive Calculation
+        from core.state_tax_incentives import get_state_incentive, get_all_state_incentives
+        selected_state_code = (payload.parameters.selected_state or "GA").upper()
+        state_info = get_state_incentive(selected_state_code) or get_state_incentive("GA")
+        
+        # Effective rate can use base rate or uplift rate if requested
+        if payload.parameters.include_uplifts:
+            effective_tax_incentive_rate = state_info["max_rate"]
+        else:
+            effective_tax_incentive_rate = state_info["base_rate"]
+            
+        # If user explicitly overrode tax_incentive_pct with custom value different from state, prioritize state unless state is NONE
+        if selected_state_code == "NONE":
+            effective_tax_incentive_rate = payload.parameters.tax_incentive_pct
+            
+        tax_rebate_amount = gross_budget * effective_tax_incentive_rate
+        net_budget = gross_budget - tax_rebate_amount
         
         top_sheet = {
             "above_the_line": round(above_the_line, 2),
@@ -835,6 +893,8 @@ async def production_breakdown(payload: ProductionBreakdownPayload):
             "post_production": round(post_production, 2),
             "contingency": round(contingency, 2),
             "gross_budget": round(gross_budget, 2),
+            "tax_rebate_amount": round(tax_rebate_amount, 2),
+            "effective_tax_incentive_rate": effective_tax_incentive_rate,
             "net_budget": round(net_budget, 2)
         }
         
@@ -847,6 +907,7 @@ async def production_breakdown(payload: ProductionBreakdownPayload):
         writer.writerow(["3000", "Post Production", top_sheet["post_production"]])
         writer.writerow(["4000", "Contingency", top_sheet["contingency"]])
         writer.writerow(["", "GROSS TOTAL", top_sheet["gross_budget"]])
+        writer.writerow(["", f"TAX REBATE ({state_info['name']} {round(effective_tax_incentive_rate * 100, 1)}%)", f"-{top_sheet['tax_rebate_amount']}"])
         writer.writerow(["", "NET TOTAL", top_sheet["net_budget"]])
         csv_data = output.getvalue()
         
@@ -859,11 +920,36 @@ async def production_breakdown(payload: ProductionBreakdownPayload):
                 "total_shoot_days": total_shoot_days,
                 "dood": dood,
                 "top_sheet": top_sheet,
+                "tax_incentive_meta": {
+                    "selected_state": selected_state_code,
+                    "state_name": state_info["name"],
+                    "base_rate": state_info["base_rate"],
+                    "max_rate": state_info["max_rate"],
+                    "effective_rate": effective_tax_incentive_rate,
+                    "rebate_amount": round(tax_rebate_amount, 2),
+                    "structure": state_info["structure"],
+                    "annual_cap": state_info["annual_cap"],
+                    "min_spend": state_info["min_spend"],
+                    "details": state_info["details"],
+                    "status": state_info["status"],
+                    "last_updated": state_info["last_updated"],
+                    "all_states": get_all_state_incentives()
+                },
                 "csv_data": csv_data
             }
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+@router.get("/api/screenwriting/tax_incentives")
+def get_tax_incentives():
+    from core.state_tax_incentives import get_all_state_incentives
+    return {
+        "status": "success",
+        "timestamp": datetime.now().isoformat(),
+        "states": get_all_state_incentives()
+    }
 
 
 @router.post("/api/screenwriting/stage_play_breakdown")

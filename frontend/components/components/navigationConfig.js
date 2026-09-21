@@ -1,97 +1,93 @@
 /**
  * Master Navigation Configuration for AI-BS Matrix.
- * Cleanly organized into 5 primary operating hubs:
- * 1. Stehouwer Publishing (Admin HQ & Business Operations)
- * 2. Hollywood Creation Suite (Screenwriting, Adaptation & Story Bible)
- * 3. Noto Hospitality OS (Venues, Banquets & Floor Plans)
- * 4. Creator Studio & Revenue (Storefront, Advertising & Video Studio)
- * 5. Neural Intelligence & Dev IDE (BS-CHAT, Deep Learning & Vector Memory)
+ * Cleanly organized into 4 primary operating pillars:
+ * 1. 🧠 Intelligence & Code (BS-CHAT, Models, DAG Builder, Terminal, Telemetry)
+ * 2. 🎨 Creative Media Studio (BV-Media Creator, BsMedia-Chat, Screenplay, DAW Beatmaker, Autonomous Media)
+ * 3. 💼 Business & Operations (Command Center, Cloud Drive, Clients CRM, Accounting, NDA, Email)
+ * 4. 🛠️ Engineering & Specialized Labs (Phone Repair, Mobile Wash, Project NoCo, Crypto Swarm, Gaming Lab)
  */
+
+export const PINNED_QUICK_TABS = [
+  { key: 'ide', label: 'BS-CHAT', icon: '💻', badge: 'AI CORE' },
+  { key: 'bv_media_creator', label: 'BV-Media Studio', icon: '🎨', badge: 'CREATOR' },
+  { key: 'dashboard', label: 'Command Center', icon: '📊', badge: 'HQ' },
+  { key: 'shared_cloud_drive', label: 'Cloud Drive', icon: '☁️', badge: 'STORAGE' },
+  { key: 'workflow_dag', label: 'DAG Builder', icon: '⚡', badge: 'AGENTS' },
+  { key: 'terminal', label: 'Host Terminal', icon: '⌨️', badge: 'SHELL' }
+];
 
 export const masterHubs = [
   {
-    key: 'stehouwer_publishing',
-    label: 'Stehouwer Publishing',
-    icon: '📚',
-    defaultTab: 'dashboard',
-    subTabs: [
-      { key: 'dashboard', label: 'Command Center', icon: '📊', description: 'Executive Mission Control & System Overview' },
-      { key: 'ecosystem_blueprint', label: 'Matrix Blueprint & ROI', icon: '🌐', description: 'Systemic Architecture, 5-Pillar Matrix & TCO ROI Simulator' },
-      { key: 'shared_cloud_drive', label: 'Shared Cloud Drive', icon: '☁️', description: 'Google Drive-Style Cloud Storage, Document Creator & Asset Sharing' },
-      { key: 'power_washing', label: 'Prestige Mobile Wash', icon: '💦', description: 'Commercial & Residential Pressure Washing CRM, Chemical Estimator & Fleet Portal' },
-      { key: 'phone_repair', label: 'Phone & Tablet Repair Lab', icon: '🔧', description: 'Master technical teardowns, Face ID serialization & diagnostic trees for Apple, Android & Tablets' },
-      { key: 'bible_hub', label: 'Sovereign Bible Hub', icon: '📖', description: 'Dual KJV & NIV Canonical New Testament Reader, Parallel Comparison & Verse Concordance' },
-      { key: 'unified_calendar', label: 'Calendar & Action Items', icon: '📅', description: 'Master Calendar, Schedule & Task Matrix' },
-      { key: 'client_scheduler', label: 'Client & Event Scheduler', icon: '🗓️', description: 'Multi-Service Booking & Appointments' },
-      { key: 'lost_property', label: 'Lost Property Vault', icon: '🔍', description: 'Guest Claim Logging & Asset Tracking' },
-      { key: 'unified_financial', label: 'Financial Ledger & Taxes', icon: '💰', description: 'Master Accounting, P&L, Expense Tracking' },
-      { key: 'clients', label: 'Clients Hub & CRM', icon: '🏢', description: 'Client Contracts, Profiles & Directory' },
-      { key: 'nda_module', label: 'Sovereign NDA & Anti-Tamper', icon: '📜', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal' },
-      { key: 'leadmatrix', label: 'Lead Matrix & Growth', icon: '🎯', description: 'Automated B2B Lead Scoring & Funnels' },
-      { key: 'unified_osint', label: 'OSINT Recon & API Hub', icon: '🌐', description: 'Deep Intelligence, Domain Recon & RapidAPI' },
-      { key: 'email_client', label: 'Business Email Client', icon: '📧', description: 'Integrated IMAP/SMTP Local Business Mail' },
-      { key: 'beta', label: 'Web Traffic & Telemetry Suite', icon: '📈', description: 'Stehouwer Web Traffic, Wire Packet Hashes & Over-The-Air Wave Sensors' },
-      { key: 'system_economics', label: 'System Economics', icon: '💎', description: 'Compute Costs, GPU Hashrates & Yields' },
-      { key: 'security_monitor', label: 'Admin Security & Telemetry', icon: '🛡️', description: 'Hardware Telemetry & Anti-Tamper Audit' },
-      { key: 'system_health', label: 'System Health & Audit', icon: '🏥', description: 'Live Server Diagnostics & Database Health' },
-      { key: 'vms', label: 'Virtual Machines & VNC', icon: '🖥️', description: 'Direct Virtual Machine GUI Management' },
-      { key: 'terminal', label: 'Host System Terminal', icon: '⌨️', description: 'Virtual Shell & Powershell Execution' },
-      { key: 'unified_crypto', label: 'Crypto Swarm & Mining', icon: '⚡', description: 'Clore/Vast Node Telemetry & Mining Rig' }
-    ]
-  },
-  {
-    key: 'hollywood_creation_suite',
-    label: 'Hollywood Creation Suite',
-    icon: '🎬',
-    defaultTab: 'unified_creation',
-    subTabs: [
-      { key: 'unified_creation', label: 'Universal Screenwriting Studio', icon: '✍️', description: 'Hollywood AST Editor, Book-to-Script AI Matrix & FDX Serializer' },
-      { key: 'stehouwer_cms', label: 'Stehouwer CMS & Publications', icon: '📖', description: 'Story Bibles, Character Vault & Headless Publishing' },
-      { key: 'project_noco', label: 'Project NoCo & Living Stage Studio', icon: '🏛️', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio' },
-      { key: 'unified_media_gallery', label: 'Media & Asset Vault', icon: '🖼️', description: 'Screenplay Graphics, Audio Stems & Storyboards' }
-    ]
-  },
-  {
-    key: 'noto_hospitality_os',
-    label: 'Noto Hospitality OS',
-    icon: '🍷',
-    defaultTab: 'banquet_architect',
-    subTabs: [
-      { key: 'banquet_architect', label: 'Banquet Architect Studio', icon: '💒', description: '2D/3D Floor Plans, Seating Charts & Dietary Registry' },
-      { key: 'notos_enterprise', label: "Noto's Enterprise OS", icon: '🍷', description: 'Internal Hospitality Operating Platform for GR & GH' },
-      { key: 'noto_inventory', label: 'Notō Multi-Bar Stock & Dispatch', icon: '🍸', description: 'Live Multi-Bar Inventory, Barback Dispatch & MLCC Distributor PO Engine' },
-      { key: 'project_noco_studio', label: 'Project NoCo Studio', icon: '🏛️', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio' }
-    ]
-  },
-  {
-    key: 'creator_media_studio',
-    label: 'Creator Studio & Revenue',
-    icon: '🎨',
-    defaultTab: 'digital_storefront',
-    subTabs: [
-      { key: 'digital_storefront', label: 'Digital Storefront & Pricing', icon: '🏪', description: 'Public Cart, Passes, Stripe & Web3 Crypto Checkout' },
-      { key: 'public_playground', label: 'AI Studio & Playground', icon: '🎨', description: 'Customer Creative Sandbox & Multi-Modal Generation' },
-      { key: 'personal_brand', label: 'Personal Brand Studio', icon: '🔥', description: 'Social Media Ghostwriter & Content Calendar' },
-      { key: 'advertising', label: 'Advertising Campaign Studio', icon: '📢', description: 'AI Ad Copy, Headline Matrix & Funnel Creatives' },
-      { key: 'syndication', label: 'Automated Syndication & Ads', icon: '🌐', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite' },
-      { key: 'universal_studio', label: 'Universal AV Omni-Studio', icon: '🎛️', description: 'Consolidated Video, Broadcast, Neural Audio, & DAW Master Studio' },
-      { key: 'media_studio', label: '🎬 Autonomous Media Studio', icon: '🎬', description: 'Autonomous Headless Media Production Studio, 13-Domain NLE & Visual Editor' }
-    ]
-  },
-  {
-    key: 'neural_intelligence',
-    label: 'Neural Intelligence & IDE',
+    key: 'intelligence_and_code',
+    label: 'Intelligence & Code',
     icon: '🧠',
     defaultTab: 'ide',
     subTabs: [
-      { key: 'ide', label: 'BS-CHAT Developer IDE', icon: '💻', description: 'Split-Pane Code Editor & IPC Telemetry Hub' },
-      { key: 'gaming_lab', label: '🎮 Gaming & Process Memory Lab', icon: '🎮', description: 'Win32 Runtime Memory Manipulation, Pointer Tracking & Game Trainer Suite' },
-      { key: 'deep_learning_studio', label: 'Deep Learning Studio', icon: '🧠', description: 'Computation Graphs & Model Fine-Tuning' },
-      { key: 'agent_memory', label: 'Agent Memory & ChromaDB Vault', icon: '💾', description: 'Semantic Vector Memory & RAG Explorer' },
-      { key: 'reasoning_attention', label: 'Self-Refinement & Attention', icon: '⚡', description: 'Transformer Heatmaps & Contextual Encodings' },
-      { key: 'lexicon_dashboard', label: '🎭 Lexicon Engine Dashboard', icon: '🎭', description: 'Real-time semantic expansion and Persona trigger visualization' },
-      { key: 'definitions', label: 'Definitions & Architectural Lore', icon: '📖', description: 'Knowledge Wiki, Glossaries & History Ledger' },
-      { key: 'learning_material_hub', label: 'Educational Modules', icon: '🎓', description: 'Interactive Guides & System Explainers' }
+      { key: 'ide', label: 'BS-CHAT Interface', icon: '💻', description: 'Split-Pane Sovereign AI Chat & IPC Telemetry Hub' },
+      { key: 'workflow_dag', label: 'Multi-Agent DAG Builder', icon: '⚡', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder' },
+      { key: 'terminal', label: 'Host Terminal Shell', icon: '⌨️', description: 'Interactive Windows 11 PowerShell Virtual Terminal' },
+      { key: 'deep_learning_studio', label: 'Deep Learning Studio', icon: '🧠', description: '17-Model Fleet Topology & Dynamic Graph Visualizer' },
+      { key: 'agent_memory', label: 'Agent Vector Memory', icon: '💾', description: 'ChromaDB Vector Store Explorer & Memory Bank' },
+      { key: 'reasoning_attention', label: 'Self-Refinement & Attention', icon: '⚡', description: 'Contextual Encodings & Attention Heatmaps' },
+      { key: 'system_health', label: 'System Health & Audit Logs', icon: '🏥', description: 'Real-time Server Telemetry, Lifespan Logs & DB Status' },
+      { key: 'vms', label: 'Virtual Machines & VNC', icon: '🖥️', description: 'Local VM GUI Management & Hypervisor Bridge' },
+      { key: 'automation_console', label: 'Automation Console', icon: '⚙️', description: 'Trusted Windows Job Queue & Task Automation' },
+      { key: 'definitions', label: 'System Lore & Glossaries', icon: '📖', description: 'Interactive AI-BS Architectural Wiki & Lexicon' }
+    ]
+  },
+  {
+    key: 'creative_media_studio',
+    label: 'Creative Media Studio',
+    icon: '🎨',
+    defaultTab: 'bv_media_creator',
+    subTabs: [
+      { key: 'bv_media_creator', label: 'BV-Media Creator Studio', icon: '🎨', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault' },
+      { key: 'media_studio', label: 'Autonomous Media Studio', icon: '🎬', description: 'Autonomous Headless Media Production Studio across 13 Domains' },
+      { key: 'unified_creation', label: 'Universal Screenwriting Studio', icon: '✍️', description: 'Hollywood AST Screenplay Editor, Book Adaptation & Story Bible' },
+      { key: 'music_daw', label: 'FL Music Studio (DAW)', icon: '🎵', description: 'Pattern-Based DAW, Synthesizer & Beat Maker' },
+      { key: 'personal_brand', label: 'Personal Brand Studio', icon: '🔥', description: 'AI Ghostwriter & Multi-Channel Social Content Matrix' },
+      { key: 'advertising', label: 'Advertising Studio', icon: '📢', description: 'Targeted Ad Copy, Campaign Funnels & Creative Variants' },
+      { key: 'syndication', label: 'Automated Syndication', icon: '🌐', description: '1-Click Multi-Channel Broadcaster & Ad Distribution' },
+      { key: 'stehouwer_cms', label: 'Stehouwer Publications & CMS', icon: '📖', description: 'Headless Publishing, Character Bibles & KDP Stream' },
+      { key: 'unified_media_gallery', label: 'Media & Asset Vault', icon: '🖼️', description: 'Asset Archive, Visual Renders & Audio Stems' },
+      { key: 'digital_storefront', label: 'Digital Storefront & Pricing', icon: '🏪', description: 'Monetize Local Compute, Passes & Crypto Checkout' }
+    ]
+  },
+  {
+    key: 'business_operations',
+    label: 'Business & Operations',
+    icon: '💼',
+    defaultTab: 'dashboard',
+    subTabs: [
+      { key: 'dashboard', label: 'Command Center', icon: '📊', description: 'Executive Mission Control & Ecosystem Status' },
+      { key: 'shared_cloud_drive', label: 'Shared Cloud Drive', icon: '☁️', description: 'Google Drive-Style Cloud Storage & Asset Sharing' },
+      { key: 'operations_audit', label: 'Omni Operations Audit Hub', icon: '📋', description: 'Live Tasks, Media Queue, Autosaves & Daemon Diagnostics' },
+      { key: 'clients', label: 'Clients Hub & CRM', icon: '🏢', description: 'Client Profiles, Interaction History & Contract Matrix' },
+      { key: 'onboarding', label: 'Client Onboarding', icon: '🚀', description: 'Intelligent Client Intake & Onboarding Portal' },
+      { key: 'unified_financial', label: 'Financial Ledger & Taxes', icon: '💰', description: 'Master Accounting, P&L, Expense Tracking & Tax Suite' },
+      { key: 'nda_module', label: 'Sovereign NDA & Anti-Tamper', icon: '📜', description: 'Interactive Master NDA Generator, Cryptographic Tamper Seal' },
+      { key: 'email_client', label: 'Business Email Client', icon: '📧', description: 'Integrated IMAP/SMTP Local Business Mail' },
+      { key: 'unified_calendar', label: 'Master Schedule & Calendar', icon: '📅', description: 'Unified Appointments, Calendar & Event Pipeline' },
+      { key: 'beta', label: 'Web Traffic & Telemetry', icon: '📈', description: 'Live Web Analytics, Wire Hashes & Wave Telemetry' },
+      { key: 'ecosystem_blueprint', label: 'Matrix Blueprint & ROI', icon: '🌐', description: 'Systemic Architecture, 5-Pillar Matrix & Financial ROI' }
+    ]
+  },
+  {
+    key: 'engineering_labs',
+    label: 'Engineering & Specialized Labs',
+    icon: '🛠️',
+    defaultTab: 'phone_repair',
+    subTabs: [
+      { key: 'phone_repair', label: 'Phone & Tablet Repair Lab', icon: '🔧', description: 'Master Teardowns, Face ID Diagnostics & Diode Values' },
+      { key: 'power_washing', label: 'Prestige Mobile Wash', icon: '💦', description: 'Commercial Pressure Washing CRM, Chemical Estimator & Fleet' },
+      { key: 'banquet_architect', label: 'Banquet Architect Studio', icon: '💒', description: '2D/3D Floor Plans, Seating Charts & BEO Generator' },
+      { key: 'notos_enterprise', label: "Noto's Enterprise OS", icon: '🍷', description: 'Internal Hospitality Operating Platform for GR & GH' },
+      { key: 'noto_inventory', label: 'Notō Multi-Bar Stock', icon: '🍸', description: 'Live Inventory, Barback Dispatch & Distributor POs' },
+      { key: 'project_noco', label: 'Project NoCo Living Stage', icon: '🏛️', description: 'Autonomous Acoustic-Agricultural Enclave & Studio' },
+      { key: 'unified_crypto', label: 'Crypto Swarm & Mining', icon: '⚡', description: 'Clore/Vast Node Telemetry & Fast-Scalping Bot' },
+      { key: 'gaming_lab', label: 'Gaming & Process Memory Lab', icon: '🎮', description: 'Win32 Runtime Memory Manipulation & Trainer Suite' },
+      { key: 'bible_hub', label: 'Sovereign Bible Hub', icon: '📖', description: 'Dual KJV & NIV Canonical New Testament Reader' },
+      { key: 'lost_property', label: 'Lost Property Vault', icon: '🔍', description: 'Guest Claim Logging & Asset Recovery Tracking' }
     ]
   }
 ];

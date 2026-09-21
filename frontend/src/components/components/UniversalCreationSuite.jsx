@@ -7,7 +7,87 @@ const PlaywrightTab = lazy(() => import('./PlaywrightTab.jsx'));
 const VideoStudioTab = lazy(() => import('./VideoStudioTab.jsx'));
 const ComfyUIStudio = lazy(() => import('../src/components/ComfyUIStudio.jsx'));
 
+const AUTHORIZED_EMAILS = [
+    'brettstehouwer@gmail.com',
+    'footballstar0325@gmail.com',
+    'stehouwerjulie@gmail.com',
+    'julie.a.stehouwer@gmail.com',
+    'julieannstehouwer@gmail.com',
+    'juliestehouwer@gmail.com',
+    'stehouwer.julie@gmail.com',
+    'julie@stehouwer-publishing.com'
+];
+
+const JULIE_EMAILS = [
+    'stehouwerjulie@gmail.com',
+    'julie.a.stehouwer@gmail.com',
+    'julieannstehouwer@gmail.com',
+    'juliestehouwer@gmail.com',
+    'stehouwer.julie@gmail.com',
+    'julie@stehouwer-publishing.com'
+];
+
 export default function UniversalCreationSuite(props) {
+    const { currentUser } = props;
+
+    // Determine if running locally or on local home network (LAN)
+    const isLocalDev = typeof window !== 'undefined' && (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname.startsWith('192.168.') ||
+        window.location.hostname.startsWith('10.') ||
+        /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(window.location.hostname) ||
+        window.location.protocol === 'file:'
+    );
+
+    // Determine current active user email
+    const userEmail = (currentUser?.email || '').toLowerCase().trim();
+
+    // Julie Stehouwer has full unrestricted access without any password requirement
+    const isJulie = JULIE_EMAILS.includes(userEmail) || userEmail.includes('julie');
+
+    // Allowed operators: Julie, Brett, LocalDev, footballstar0325
+    const isAuthorizedOperator = isLocalDev || isJulie || AUTHORIZED_EMAILS.includes(userEmail);
+
+    // Check persistent authorization or session unlock (Julie is ALWAYS unlocked with zero password prompt)
+    const [isUnlocked, setIsUnlocked] = useState(() => {
+        if (isJulie) return true;
+        if (typeof window !== 'undefined') {
+            return sessionStorage.getItem('aibs_universal_creation_unlocked') === 'true';
+        }
+        return false;
+    });
+
+    const [enteredPassword, setEnteredPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const handlePasswordUnlock = (e) => {
+        e?.preventDefault();
+        setPasswordError('');
+        if (!enteredPassword.trim()) {
+            setPasswordError('Please enter the creation suite security password.');
+            return;
+        }
+
+        if (enteredPassword.trim() === 'jssdbdAS2631') {
+            setIsUnlocked(true);
+            if (typeof window !== 'undefined') {
+                sessionStorage.setItem('aibs_universal_creation_unlocked', 'true');
+            }
+        } else {
+            setPasswordError('Invalid security password. Access denied.');
+        }
+    };
+
+    const handleLockVault = () => {
+        setIsUnlocked(false);
+        setEnteredPassword('');
+        setPasswordError('');
+        if (typeof window !== 'undefined') {
+            sessionStorage.removeItem('aibs_universal_creation_unlocked');
+        }
+    };
+
     const [activeTool, setActiveTool] = useState(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -58,6 +138,130 @@ export default function UniversalCreationSuite(props) {
                 return <PlaywrightTab {...props} />;
         }
     };
+
+    // Security Barrier 1: Email / LocalDev Identity Enforcement
+    if (!isAuthorizedOperator) {
+        return (
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '80vh',
+                padding: '32px 16px',
+                background: '#0d1117',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            }}>
+                <div style={{
+                    background: '#161b22',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    borderRadius: '16px',
+                    padding: '40px 32px',
+                    maxWidth: '520px',
+                    width: '100%',
+                    textAlign: 'center',
+                    boxShadow: '0 20px 45px rgba(0,0,0,0.7)'
+                }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔒</div>
+                    <h2 style={{ color: '#ef4444', fontSize: '24px', fontWeight: '800', margin: '0 0 12px 0' }}>
+                        Restricted Studio Access
+                    </h2>
+                    <p style={{ color: '#8b949e', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>
+                        The Universal Creation & Screenwriting Studio is strictly restricted to authorized operators:
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+                        <span style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', padding: '8px 14px', fontSize: '13px', color: '#c9d1d9', fontWeight: '600' }}>
+                            👤 Brettstehouwer@gmail.com
+                        </span>
+                        <span style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', padding: '8px 14px', fontSize: '13px', color: '#38bdf8', fontWeight: '600' }}>
+                            ⚡ LocalDev (localhost / 127.0.0.1)
+                        </span>
+                        <span style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', padding: '8px 14px', fontSize: '13px', color: '#c9d1d9', fontWeight: '600' }}>
+                            👤 footballstar0325@gmail.com
+                        </span>
+                    </div>
+                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: '#fca5a5' }}>
+                        Current Operator Identity: <strong>{userEmail || 'Unauthenticated Guest'}</strong>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Security Barrier 2: Password Challenge
+    if (!isUnlocked) {
+        return (
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '80vh',
+                padding: '32px 16px',
+                background: '#0d1117',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            }}>
+                <div style={{
+                    background: '#161b22',
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    borderRadius: '16px',
+                    padding: '40px 32px',
+                    maxWidth: '520px',
+                    width: '100%',
+                    textAlign: 'center',
+                    boxShadow: '0 20px 45px rgba(0,0,0,0.7)'
+                }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔐</div>
+                    <h2 style={{ color: '#38bdf8', fontSize: '24px', fontWeight: '800', margin: '0 0 12px 0' }}>
+                        Universal Creation Suite — Password Required
+                    </h2>
+                    <p style={{ color: '#8b949e', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>
+                        Identity Verified: <span style={{ color: '#38bdf8', fontWeight: '700' }}>{isLocalDev ? 'LocalDev' : userEmail}</span>. Enter the master security password to unlock the studio workspace.
+                    </p>
+                    <form onSubmit={handlePasswordUnlock} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <input
+                                type="password"
+                                placeholder="Enter Vault Password"
+                                value={enteredPassword}
+                                onChange={(e) => setEnteredPassword(e.target.value)}
+                                autoFocus
+                                style={{
+                                    flex: 1,
+                                    background: '#0d1117',
+                                    border: '1px solid #30363d',
+                                    borderRadius: '8px',
+                                    padding: '12px 16px',
+                                    color: '#fff',
+                                    fontSize: '14px',
+                                    outline: 'none'
+                                }}
+                            />
+                            <button
+                                type="submit"
+                                style={{
+                                    background: 'linear-gradient(135deg, #1f6feb 0%, #38bdf8 100%)',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: '12px 20px',
+                                    fontWeight: '700',
+                                    fontSize: '14px',
+                                    cursor: 'pointer',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                Unlock Studio 🔓
+                            </button>
+                        </div>
+                        {passwordError && (
+                            <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '8px', padding: '10px 14px', fontSize: '13px', color: '#f87171', textAlign: 'left' }}>
+                                ⚠️ {passwordError}
+                            </div>
+                        )}
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#0d1117', flexWrap: 'nowrap', overflow: 'hidden' }}>
@@ -189,6 +393,26 @@ export default function UniversalCreationSuite(props) {
                         }}
                     >
                         <span>💡 {showTips ? 'Hide Tips' : 'Studio Guide'}</span>
+                    </button>
+
+                    <button
+                        onClick={handleLockVault}
+                        title="Lock Studio (Requires password to re-enter)"
+                        style={{
+                            background: '#21262d',
+                            color: '#f85149',
+                            border: '1px solid rgba(248, 81, 73, 0.4)',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '0.75rem',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                        }}
+                    >
+                        <span>🔒 Lock Studio</span>
                     </button>
                 </div>
             </div>

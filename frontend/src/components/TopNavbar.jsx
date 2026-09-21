@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { masterHubs, simpleModeNavItems } from './navigationConfig';
+import { masterHubs, simpleModeNavItems, PINNED_QUICK_TABS } from './navigationConfig';
 import { useAppStore } from './useAppStore';
 import AIProviderSettingsModal from './AIProviderSettingsModal';
 import GlobalWalkthroughGuide from './GlobalWalkthroughGuide';
@@ -199,7 +199,7 @@ export default function TopNavbar({
         )}
       </div>
 
-      {/* Main Top Navbar with Horizontal Pan Controls */}
+      {/* Main Top Navbar with Pinned Quick-Dock & Horizontal Pan Controls */}
       <div ref={navRef} style={{
         height: 'auto',
         minHeight: '54px',
@@ -220,8 +220,105 @@ export default function TopNavbar({
           <span style={{ fontWeight: '700', color: '#58a6ff', fontSize: '0.95rem', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             Stehouwer Publishing AI
           </span>
-          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.296.0</span>
+          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.297.0</span>
         </div>
+
+        {/* ⚡ PINNED QUICK-DOCK BAR (Instant 1-Click Jumping) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          background: 'rgba(22, 27, 34, 0.85)',
+          padding: '2px 6px',
+          borderRadius: '8px',
+          border: '1px solid rgba(56, 189, 248, 0.25)',
+          boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+          flexShrink: 0
+        }}>
+          {PINNED_QUICK_TABS.map((pt) => {
+            const isDockActive = activeTab === pt.key;
+            return (
+              <button
+                key={pt.key}
+                onClick={() => onTabChange(pt.key)}
+                title={`Quick Jump to ${pt.label} (${pt.badge})`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '5px 9px',
+                  borderRadius: '6px',
+                  border: isDockActive ? '1px solid #38bdf8' : '1px solid transparent',
+                  background: isDockActive ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(147, 51, 234, 0.3))' : 'transparent',
+                  color: isDockActive ? '#ffffff' : '#94a3b8',
+                  fontSize: '0.78rem',
+                  fontWeight: isDockActive ? '700' : '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  boxShadow: isDockActive ? '0 0 8px rgba(56, 189, 248, 0.4)' : 'none',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isDockActive) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                    e.currentTarget.style.color = '#ffffff';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isDockActive) {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = '#94a3b8';
+                  }
+                }}
+              >
+                <span>{pt.icon}</span>
+                <span style={{ display: 'inline-block' }}>{pt.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 🔍 PROMINENT SEARCH EVERYWHERE BUTTON (Ctrl+K) */}
+        <button
+          onClick={() => setShowCmdPalette(true)}
+          title="Search all 50+ Tools, Commands & Pages (Ctrl+K)"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.8)',
+            border: '1px solid rgba(56, 189, 248, 0.4)',
+            color: '#38bdf8',
+            padding: '5px 12px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '0.78rem',
+            fontWeight: '600',
+            flexShrink: 0,
+            boxShadow: '0 0 10px rgba(56, 189, 248, 0.15)',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#38bdf8';
+            e.currentTarget.style.background = 'rgba(56, 189, 248, 0.12)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+            e.currentTarget.style.background = 'rgba(15, 23, 42, 0.8)';
+          }}
+        >
+          <span>🔍 Jump to tool...</span>
+          <kbd style={{
+            background: '#1e293b',
+            color: '#94a3b8',
+            padding: '1px 5px',
+            borderRadius: '4px',
+            fontSize: '0.68rem',
+            border: '1px solid #334155'
+          }}>
+            Ctrl+K
+          </kbd>
+        </button>
 
         {/* ◀ PAN LEFT BUTTON */}
         <button

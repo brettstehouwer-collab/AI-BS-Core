@@ -128,6 +128,7 @@ const LexiconTheatricalDashboard = safeLazy(() => import('./src/components/Lexic
 const OperationsAuditHubTab = safeLazy(() => import('./components/OperationsAuditHubTab.jsx'));
 const NdaModuleTab = safeLazy(() => import('./components/NdaModuleTab.jsx'));
 const MediaStudioTab = safeLazy(() => import('./components/MediaStudioTab.jsx'));
+const BsMediaCreatorTab = safeLazy(() => import('./components/BsMediaCreatorTab.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -241,6 +242,7 @@ const tabs = [
   { key: 'neon_lounge_studio', label: 'Neon Lounge Studio', description: 'Futuristic Neon Lounge Architectural Design Studio & AI Autograd Engine', Component: FuturisticNeonLoungeStudio },
   { key: 'project_noco', label: 'Project NoCo & Living Stage Studio', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio', Component: ProjectNoCoStudioTab },
   { key: 'universal_studio', label: 'Universal AV Studio', description: 'Master Broadcast, Video WebRTC, DAW & Neural Voice Engine', Component: OmniStudioTab },
+  { key: 'bv_media_creator', label: '🎨 BV-Media Creator & BsMedia-Chat', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault', Component: BsMediaCreatorTab },
   { key: 'media_studio', label: '🎬 Autonomous Media Studio', description: 'Autonomous Headless Media Production Studio, 13-Domain NLE & Visual Editor', Component: MediaStudioTab },
   { key: 'music_daw', label: 'FL Music Studio (DAW)', description: 'Pattern-based Digital Audio Workspace & FL Studio-Style Beat Maker', Component: MusicDAWStudioTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Autonomous 5-Node Visual Pipeline Engine', Component: VisualWorkflowDAGTab },

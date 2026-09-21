@@ -1,38 +1,38 @@
 {
-  "timestamp": 1789414824.7721198,
+  "timestamp": 1789803824.2379434,
   "version": "v5.263.0",
-  "services_online": 16,
+  "services_online": 17,
   "services_total": 20,
   "ports": {
     "8080": {
       "name": "FastAPI Core Backend",
       "online": true,
-      "latency_ms": 15.2
+      "latency_ms": 0.31
     },
     "8000": {
       "name": "Go Matrix Gateway",
       "online": true,
-      "latency_ms": 0.43
+      "latency_ms": 0.15
     },
     "8001": {
       "name": "Theatrical Gateway",
       "online": true,
-      "latency_ms": 0.37
+      "latency_ms": 17.42
     },
     "8002": {
       "name": "ChromaDB Vector Store (E-Drive)",
       "online": true,
-      "latency_ms": 14.64
+      "latency_ms": 0.27
     },
     "8005": {
       "name": "Broadcast Studio Daemon",
       "online": true,
-      "latency_ms": 15.93
+      "latency_ms": 0.17
     },
     "8006": {
       "name": "Twitch/IRC Social Hub",
       "online": true,
-      "latency_ms": 16.0
+      "latency_ms": 14.89
     },
     "8008": {
       "name": "Supabase Kong Gateway",
@@ -42,37 +42,37 @@
     "8010": {
       "name": "SHM Telemetry Gateway",
       "online": true,
-      "latency_ms": 0.41
+      "latency_ms": 0.22
     },
     "8013": {
       "name": "VST3 Audio Bridge",
       "online": true,
-      "latency_ms": 15.35
+      "latency_ms": 0.23
     },
     "8085": {
       "name": "Ubuntu-Bio Bridge",
       "online": true,
-      "latency_ms": 14.61
+      "latency_ms": 0.48
     },
     "8088": {
       "name": "Broadcast Kernel (Multi-Track)",
       "online": true,
-      "latency_ms": 15.42
+      "latency_ms": 14.04
     },
     "8099": {
       "name": "Gemini MCP Server",
       "online": true,
-      "latency_ms": 0.4
+      "latency_ms": 0.29
     },
     "8189": {
       "name": "ComfyUI Diffusion Studio",
       "online": true,
-      "latency_ms": 0.17
+      "latency_ms": 0.16
     },
     "8888": {
       "name": "Unreal Engine Signaling",
       "online": true,
-      "latency_ms": 14.6
+      "latency_ms": 0.1
     },
     "4455": {
       "name": "OBS Studio WebSocket",
@@ -82,12 +82,12 @@
     "3001": {
       "name": "Node.js Backend Server",
       "online": true,
-      "latency_ms": 0.26
+      "latency_ms": 0.52
     },
     "5173": {
       "name": "Primary React Dashboard",
       "online": true,
-      "latency_ms": 14.94
+      "latency_ms": 0.16
     },
     "5174": {
       "name": "BroadcastStudioApp Vite",
@@ -96,13 +96,13 @@
     },
     "11434": {
       "name": "Ollama Primary LLM (C-Drive)",
-      "online": false,
-      "latency_ms": null
+      "online": true,
+      "latency_ms": 0.34
     },
     "11435": {
       "name": "Ollama Secondary LLM (E-Drive)",
       "online": true,
-      "latency_ms": 0.38
+      "latency_ms": 0.25
     }
   },
   "databases": {
@@ -131,8 +131,8 @@
     "west_michigan.db": "Legacy Store (Consolidated into Master)",
     "drip_ledger.db": "Legacy Store (Consolidated into Master)"
   },
-  "cpu_percent": 33.2,
-  "ram_percent": 75.5,
-  "ram_used_gb": 46.52,
+  "cpu_percent": 13.4,
+  "ram_percent": 71.9,
+  "ram_used_gb": 44.3,
   "ram_total_gb": 61.65
 }

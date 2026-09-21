@@ -1,12 +1,51 @@
 # AI-BS Active State Recovery Checkpoint
 
-**Last Updated:** 2026-09-16
-**Active Ecosystem Version:** v5.296.0
-**Active Resume Keyword:** `RESUME_INGESTION_AND_17_MODEL_FLEET_V5_296_0`
+**Last Updated:** 2026-09-20
+**Active Ecosystem Version:** v5.297.0
+**Active Resume Keyword:** `RESUME_BV_MEDIA_CREATOR_STUDIO_V5_297_0`
 
 ---
 
-## 0. Executive Summary: Stehouwer LLM 17-Model Unrestricted Fleet, 175-Session Brain Ingestion (139,512 Vault Items / 67,748 ChromaDB Vectors) & Port 8080 Lifespan Stabilization (v5.296.0)
+## 0. Executive Summary: Dedicated BsMedia-Chat, Unified Media Creator Studio (BsMediaCreatorTab), stehouwer_media_memory ChromaDB Vault, Local VLM Guidance Engine & mtd.mp4 Pipeline Verification (v5.297.0)
+* **Operator Directives & Architectural Enhancements Completed:**
+  1. **Comprehensive Model Audit & Cross-Drive Corruption Check (Zero Duplicate Downloads):**
+     - Audited and verified all local diffusion and video models across drives `C:\`, `D:\`, `E:\`, and Desktop to guarantee zero redundant downloads and zero corruption:
+       - `C:\AI-BS\AI-BS-Models\diffusion_models\wan2.1_t2v_1.3b.safetensors` (5.41 GB, 825 tensors) -> **VALID / CLEAN**
+       - `C:\AI-BS-Models\checkpoints\ltx-video-2b-v0.9.1.safetensors` (5.45 GB, 1,012 tensors) -> **VALID / CLEAN**
+       - `C:\AI-BS\AI-BS-Models\unet\ltx-video-2b-v0.9.1-q8_0.gguf` (1.95 GB) -> **VALID / CLEAN**
+       - `D:\huggingface_cache\hub\models--THUDM--CogVideoX-2b\...` (3.23 GB transformer + 822 MB VAE) -> **VALID / CLEAN**
+       - `Wan2_1_VAE_bf16.safetensors`, `sigclip_vision_patch14_384.safetensors`, `qwen3vl_4b_fp8_scaled.safetensors`, and `t5xxl_fp16.safetensors` verified 100% uncorrupted.
+     - Updated `C:\AI-BS\ComfyUI\ComfyUI\extra_model_paths.yaml` integrating all discovered local weights.
+  2. **Real-World Media Pipeline Execution on `mtd.mp4`:**
+     - Ingested and executed end-to-end pipeline (`scripts/demo_video_mtd_pipeline.py`) on `C:\AI-BS\MP4 medial screen recordings\mtd.mp4`:
+       - Cut 15-second 4K sample via NVENC (`saved_data/mtd_demo_showcase/mtd_15s_sample.mp4`).
+       - Passed Domain 12 30fps CFR normalization gate.
+       - Detected 3 shot boundaries and generated EDL (`saved_data/media_renders/cuts_1789915305.json`).
+       - Generated 9:16 vertical reframe crop coordinates (`reframe_1789915305.json`).
+       - Rendered vertical short `mtd_vertical_short_9x16.mp4` (1080x1920).
+       - Indexed segment metadata in `backend/stehouwer_vault.db`.
+  3. **Dedicated Media ChromaDB Vault (`stehouwer_media_memory`):**
+     - Codified `backend/core/media_chromadb_vault.py` providing a dedicated ChromaDB collection on Port 8002 specifically for media assets, keyframes, transcripts, prompt recipes, and audio stems, with resilient SQLite fallback to `media_memory_vault`.
+  4. **Local VLM (Vision-Language Model) Multi-Modal Guidance Engine:**
+     - Created `backend/core/sovereign_reasoning/vlm_guidance_engine.py` using local RTX 4090 GPU and Qwen3-VL/Ollama vision to critique visual frames, analyze edits, and output JSON editing plans.
+     - Added endpoints in `backend/routers/media_render_router.py`: `/api/v1/media/chat/stream`, `/vault/index`, `/vault/search`, `/vault/stats`, and `/vlm/analyze`.
+  5. **Dedicated BsMedia-Chat & Unified Studio Tab (`BsMediaCreatorTab.jsx`):**
+     - Built unified creator workspace consolidating:
+       - Directorial multi-modal `BsMedia-Chat` with instant quick prompts.
+       - Photo Canvas (RMBG matting, 4x UltraSharp upscaling, generative inpainting).
+       - Video Studio (Wan2.1 / LTX-Video, 9:16 vertical shorts, CFR gate).
+       - Audio Lab (Demucs stems, F5-TTS voice cloning).
+       - Dedicated Media Vector Memory Vault browser.
+     - Added `bv_media_creator` tab to `TAB_CONFIG` in `frontend/App.jsx`.
+  6. **Automated Mirror Parity & Cloud Deployment (Rules 1, 3, 4):**
+     - Synchronized all 4 frontend mirrors with 100% SHA256 parity across all 432 files (`scripts/sync_mirrors.py`).
+     - Bumped ecosystem version authority to `v5.297.0` across `package.json`, `version.txt`, `public/version.json`, and `public/sw.js`.
+     - Compiled production Vite bundle and deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app`).
+     - Passed all automated test suites in `backend/test_bs_media_creator.py` (3/3 OK).
+
+---
+
+## 1. Executive Summary: Stehouwer LLM 17-Model Unrestricted Fleet, 175-Session Brain Ingestion (139,512 Vault Items / 67,748 ChromaDB Vectors) & Port 8080 Lifespan Stabilization (v5.296.0)
 * **Operator Directives & Architectural Enhancements Completed:**
   1. **175-Session Antigravity Brain Ingestion Pipeline:**
      - Ingested 175 session folders from `C:\Users\footb\OneDrive\Desktop\ingest folder` (4,425 user prompts, 57,103 model responses, 89 tasks, 105 implementation plans, 97 walkthroughs) in 7.89s via `scripts/ingest_antigravity_sessions.py`.

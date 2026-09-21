@@ -1,41 +1,47 @@
-# Mission Specification: Permanent Suppression of pyppeteer_env Console Popups
+# Locked Mission Architecture Specification: Add a persistent SQLite event-logging daemon for Pearl mining stratum telemetry
 
-## 1. Executive Summary
-Eliminate recurring blank Windows Terminal console popups titled `C:\AI-BS\pyppeteer_env\` and establish 100% windowless, headless background daemon execution across the AI-BS ecosystem.
-
-## 2. Root Cause Analysis
-1. **Missing `CREATE_NO_WINDOW` in `DaemonManager`:**
-   - In `backend/core/daemon_manager.py`, `_spawn()` executes `subprocess.Popen` with `creation_flags = (subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0)`.
-   - On Windows 11 with Windows Terminal set as default terminal application, any process launched without `subprocess.CREATE_NO_WINDOW` (`0x08000000`) causes Windows to allocate a console window hosted in Windows Terminal.
-   - Because stdout and stderr are redirected to log files, the allocated window appears completely black with only a blinking cursor.
-
-2. **Watchdog Duplicate Spawn & Collision Loop:**
-   - `Launch_AI_BS.bat` launches `core\unified_crypto_pearl_watchdog.py`.
-   - `backend/AI_BS_Backend.py` also registers `unified_crypto_pearl_watchdog.py` with `DaemonManager`.
-   - `unified_crypto_pearl_watchdog.py` enforces a singleton lock. When `DaemonManager` attempts to spawn it, the second instance detects the active PID and cleanly exits.
-   - `DaemonManager` detects that the process exited, interprets it as a crash, and re-spawns it on a loop, opening a new terminal window on each attempt.
-   - `DaemonManager` failed to adopt the running watchdog because `unified_crypto_pearl_watchdog.py` writes its PID to `state/unified_crypto_pearl_watchdog.pid`, while `DaemonManager` looks in `backend/unified_crypto_pearl_watchdog.pid`.
-
-3. **Console vs GUI Python Binary in Batch Launchers:**
-   - `Launch_AI_BS.bat` launches background daemons using `pyppeteer_env\Scripts\python.exe` with `Start-Process -WindowStyle Hidden`.
-   - On Windows 11, Windows Terminal's console broker often bypasses `WindowStyle Hidden` for console-subsystem executables (`python.exe`).
-   - `pyppeteer_env\Scripts\pythonw.exe` is the native GUI subsystem binary (`IMAGE_SUBSYSTEM_WINDOWS_GUI`), which is inherently incapable of triggering console window allocations.
+**Specification ID:** `grill_1789976998`
+**Locked Timestamp:** 2026-09-21 03:52:06
+**Status:** LOCKED & ARCHITECTURALLY VERIFIED
 
 ---
 
-## 3. Locked Architectural Decisions (Grill Resolutions)
+## 1. Verified Codebase Context
+- **Workspace Root:** `C:\AI-BS`
+- **Context Discoveries:** Inspected workspace: verified 41 relevant modules and 1 schemas.
+- Verified Module: `backend\aibs_sqlite_backup_daemon.py`
+- Verified Module: `backend\aibs_broadcast_daemon.py`
+- Verified Module: `backend\aibs_gpu_worker_daemon.py`
+- Verified Module: `backend\aibs_overlay_daemon.py`
+- Verified Module: `backend\aibs_social_daemon.py`
+- Verified Module: `backend\aibs_vst_daemon.py`
+- Verified Schema: `backend/aibs_master.db (27 tables, WAL mode enabled)`
 
-### Branch 1: Subprocess Windowless Guarantees
-- In `backend/core/daemon_manager.py`, patch `_spawn()` to enforce:
-  `creation_flags = (subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)`
-- In `Launch_AI_BS.bat` and satellite launchers, switch background daemon execution from `python.exe` to `pythonw.exe`.
+---
 
-### Branch 2: Process Ownership & Dynamic PID Adoption
-- Harmonize `DaemonManager` to check running processes dynamically via `psutil` matching script filenames, adopting existing PIDs rather than attempting to spawn duplicate instances.
-- Harmonize PID file paths to resolve both `backend/` and `state/`.
+## 2. Agreed Architectural Decisions
 
-### Branch 3: Diagnostics & Crash Recovery
-- For background processes launched via `pythonw.exe` in `Launch_AI_BS.bat`, redirect stdout and stderr to `logs/<service>.log` and `logs/<service>.err` to retain full silent diagnostic observability.
+### Decision 1: Data Schemas & State Persistence
+- **Edge Case / Question:** If stratum/event telemetry logs continuously, direct synchronous disk writes will lock SQLite during peak bursts.
+- **Locked Recommendation:** Implement a Python in-memory queue (queue.Queue) flushing batches every 5 seconds or 50 entries using WAL mode (PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;).
+- **Approval Status:** operator_approval
 
-### Branch 4: Immediate Process Remediation
-- Terminate the currently open blank terminal popup (`OpenConsole.exe` PID 38296) and execute `backend/zombie_node_cleaner.py` to clear duplicate daemon instances.
+### Decision 2: Storage Retention & Bloat Mitigation
+- **Edge Case / Question:** High-frequency telemetry will bloat SQLite past 2GB within weeks.
+- **Locked Recommendation:** Add an automatic rolling prune trigger maintaining a rolling 7-day window (DELETE FROM telemetry WHERE timestamp < strftime('%s', 'now', '-7 days')).
+- **Approval Status:** operator_approval
+
+### Decision 3: Data Schemas & State Persistence
+- **Edge Case / Question:** If stratum/event telemetry logs continuously, direct synchronous disk writes will lock SQLite during peak bursts.
+- **Locked Recommendation:** Implement a Python in-memory queue (queue.Queue) flushing batches every 5 seconds or 50 entries using WAL mode (PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;).
+- **Approval Status:** operator_approval
+
+### Decision 4: Storage Retention & Bloat Mitigation
+- **Edge Case / Question:** High-frequency telemetry will bloat SQLite past 2GB within weeks.
+- **Locked Recommendation:** Add an automatic rolling prune trigger maintaining a rolling 7-day window (DELETE FROM telemetry WHERE timestamp < strftime('%s', 'now', '-7 days')).
+- **Approval Status:** operator_approval
+
+---
+
+## 3. Transition to Stage 2 Planning & Execution
+This specification is locked and directly feeds into `task.md`, `implementation_plan.md`, and the Autonomous Multi-Tool Execution Loop.

@@ -18,6 +18,7 @@ import ScreenplayTableReadModal from './ScreenplayTableReadModal';
 import AnalyticsOverlay from './AnalyticsOverlay';
 import ProductionBreakdownModal from './ProductionBreakdownModal';
 import StagePlayBreakdownModal from './StagePlayBreakdownModal';
+import ScriptTelemetryModal from './ScriptTelemetryModal';
 import './StagePlayBreakdownModal.css';
 
 const StoryboardModal = ({ isOpen, onClose, storyboards }) => {
@@ -310,6 +311,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const [showAnalyticsOverlay, setShowAnalyticsOverlay] = useState(false);
   const [showProductionBreakdown, setShowProductionBreakdown] = useState(false);
   const [showStagePlayBreakdown, setShowStagePlayBreakdown] = useState(false);
+  const [showScriptTelemetryModal, setShowScriptTelemetryModal] = useState(false);
 
   // Page Review & !proof State
   const [showPageReviewModal, setShowPageReviewModal] = useState(false);
@@ -1746,6 +1748,13 @@ ${origFountain}`;
             >
               🎙️ Table Read Studio
             </button>
+            <button 
+              onClick={() => setShowScriptTelemetryModal(true)} 
+              style={{ background: 'linear-gradient(90deg, #0284c7 0%, #0369a1 100%)', color: '#fff', border: '1px solid #38bdf8', borderRadius: '4px', padding: '4px 10px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(2, 132, 199, 0.4)' }}
+              title="Watch pages being written, AI thoughts & execution telemetry live"
+            >
+              ⚡ Thoughts & Pages Telemetry
+            </button>
             <button onClick={handleImportClick} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #34d399', color: '#34d399', padding: '4px 8px', fontSize: '0.8rem' }}>
               📥 Import
             </button>
@@ -2857,6 +2866,19 @@ ${origFountain}`;
         onClose={() => setShowTableReadModal(false)}
         screenplayText={screenplay}
         projectName={currentProject?.name || currentProject || 'Active Script'}
+      />
+
+      {/* ── Live Writing & AI Thought Telemetry Modal ── */}
+      <ScriptTelemetryModal
+        isOpen={showScriptTelemetryModal}
+        onClose={() => setShowScriptTelemetryModal(false)}
+        projectName={currentProject?.name || currentProject || 'The Mafia'}
+        screenplayText={screenplay}
+        ast={ast}
+        totalScriptPages={totalScriptPages}
+        autoSaveStatus={autoSaveStatus}
+        lastSavedTime={lastSavedTime}
+        backendUrl={BACKEND_URL}
       />
 
     </div>

@@ -1,5 +1,5 @@
-// AI-BS Matrix Service Worker 5.296.0
-const CACHE_NAME = 'aibs-matrix-5.296.0';
+// AI-BS Matrix Service Worker 5.297.0
+const CACHE_NAME = 'aibs-matrix-5.297.0';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
