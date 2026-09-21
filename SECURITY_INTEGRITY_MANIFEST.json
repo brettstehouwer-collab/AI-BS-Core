@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "document_type": "Cryptographic Integrity Manifest & Digital Attestation of Authorship",
+  "project": "AI-BS (Autonomous Intelligence & Build System)",
+  "repository": "https://github.com/brettstehouwer-collab/AI-BS-Core",
+  "governing_statutes": [
+    "15 U.S.C. § 7001 (Electronic Signatures in Global and National Commerce Act - ESIGN)",
+    "17 U.S.C. § 1202 (Integrity of Copyright Management Information)",
+    "17 U.S.C. § 504 (Remedies for Infringement - Statutory Damages)"
+  ],
+  "attestation": {
+    "signatory": "Brett Stehouwer",
+    "title": "Sole Creator, Lead Systems Architect & Sovereign Rights Holder",
+    "entity": "Stehouwer Publishing / AI-BS Autonomous Intelligence Core",
+    "attestation_email": "brettstehouwer@gmail.com",
+    "execution_date": "2026-09-21",
+    "signature": "/s/ Brett Stehouwer",
+    "intent": "Formal attestation that the referenced files establish a Source-Available Non-Commercial & Peer-Review Evaluation License with All Commercial Rights Reserved."
+  },
+  "tamper_proof_hashes": {
+    "algorithm": "SHA-256",
+    "manifest_records": [
+      {
+        "file": "README.md",
+        "sha256": "B5150A5391186C2E9B699856BE7B44C6CA338EC4F24B760E6FFC3A3B32D2D24D",
+        "description": "Architectural documentation, peer-review terms, system overview, and typed signature"
+      },
+      {
+        "file": "LICENSE",
+        "sha256": "8B82A9E6288635264CE9826F4B7AFD4CEA66B4EF027A881ADC4B29633AE77732",
+        "description": "Source-Available Non-Commercial & Peer-Review Evaluation License with statutory CMI protection"
+      }
+    ]
+  },
+  "verification_protocol": {
+    "windows_powershell": "Get-FileHash -Algorithm SHA256 README.md, LICENSE",
+    "linux_unix_bash": "sha256sum README.md LICENSE",
+    "notice": "Any modification or divergence in hash invalidates the authenticity of the modified document and serves as prima facie evidence of unauthorized tampering with Copyright Management Information."
+  }
+}

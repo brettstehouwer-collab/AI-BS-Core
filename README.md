@@ -16,14 +16,14 @@
 
 ### 1. Permitted Uses (Inspection, Peer Review & Auditing)
 Fellow software engineers, systems architects, and security researchers are expressly granted permission to:
-- **Inspect & Study:** Read and examine the source code, scripts, configuration files, and documentation for educational purposes and architectural evaluation.
+- **Inspect & Study:** Read and examine the source code, scripts, configuration files, and documentation for educational purposes and architectural evaluation with human eyes.
 - **Audit & Identify Discrepancies:** Evaluate system mechanics, identify race conditions, spot discrepancies in logic or data flows, and review hardware integration.
 - **Submit Feedback & Discrepancies:** Open [GitHub Issues](https://github.com/brettstehouwer-collab/AI-BS-Core/issues) or submit pull requests to document discrepancies, bug reports, or performance optimizations for review.
 
 ### 2. Strict Commercial & Proprietary Prohibitions
 Without an explicit, executed written commercial license agreement signed by Brett Stehouwer, you may **NOT**:
 - **Commercial Deployment:** Deploy, execute, host, or integrate any part of this software for business, commercial, enterprise, or revenue-generating purposes.
-- **Idea & Architectural Replication:** Extract, copy, re-implement, or adapt proprietary workflows, the 18-port collision matrix, or autonomous agent algorithms to produce competing software or commercial services.
+- **Idea & Architectural Replication:** Extract, copy, re-implement, or adapt proprietary workflows, the 18-port collision matrix, or autonomous agent algorithms to produce competing software or commercial systems.
 - **Redistribution & Reselling:** Sell, sub-license, repackage, distribute, or publish this codebase or its derivatives under another name, organization, or open-source license.
 - **Automated AI Scraping & Training:** Scrape, ingest, crawl, or process this repository to train, fine-tune, or validate machine learning models or commercial AI systems.
 
@@ -142,6 +142,47 @@ To run and inspect the ecosystem locally for non-commercial evaluation:
 If you inspect the code and discover discrepancies, bugs, or architectural improvements:
 - **Bug Reports & Feedback:** Open an issue at [GitHub Issues](https://github.com/brettstehouwer-collab/AI-BS-Core/issues).
 - **Commercial & Enterprise Inquiries:** Contact Brett Stehouwer directly at **[brettstehouwer@gmail.com](mailto:brettstehouwer@gmail.com)**.
+
+---
+
+## ✍️ Digital Signature & Attestation of Authorship
+*Executed pursuant to 15 U.S.C. § 7001 (Electronic Signatures in Global and National Commerce Act)*
+
+```
+================================================================================
+DIGITAL EXECUTION & NOTARIAL ATTESTATION
+================================================================================
+Signatory:           Brett Stehouwer
+Title / Authority:   Sole Creator, Lead Systems Architect & Sovereign Rights Holder
+Publishing Entity:   Stehouwer Publishing / AI-BS Autonomous Intelligence Core
+Primary Email:       brettstehouwer@gmail.com
+Execution Date:      September 21, 2026
+Formal Signature:    /s/ Brett Stehouwer
+================================================================================
+```
+
+---
+
+## 🔒 Tamper-Proof Cryptographic Verification Seal
+*Integrity Protection under 17 U.S.C. § 1202 (Integrity of Copyright Management Information)*
+
+To protect these terms against modification, stripping, or unauthorized tampering, this repository is cryptographically anchored by a SHA-256 integrity seal recorded in [`SECURITY_INTEGRITY_MANIFEST.json`](./SECURITY_INTEGRITY_MANIFEST.json).
+
+### How to Verify Integrity:
+You can verify that these legal and architectural terms have not been altered or tampered with by running:
+
+**PowerShell (Windows):**
+```powershell
+Get-FileHash -Algorithm SHA256 README.md, LICENSE
+```
+
+**Bash / Linux / macOS:**
+```bash
+sha256sum README.md LICENSE
+```
+
+> [!WARNING]
+> Any alteration, deletion, or removal of this signature block, license terms, or its cryptographic hash constitutes prima facie evidence of willful tampering with Copyright Management Information under **17 U.S.C. § 1202**, punishable by statutory fines and civil damages.
 
 ---
 *Copyright © 2026 Brett Stehouwer / Stehouwer Publishing. All Rights Reserved. No commercial use or unauthorized reproduction permitted.*
