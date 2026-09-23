@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="3">
+  <ElementSettings Type="General">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="1.25" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Scene Heading">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="24" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Action">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Character">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="2.20" RightIndent="0.00" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Parenthetical">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="-0.10" Leading="Regular" LeftIndent="1.60" RightIndent="2.00" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Dialogue">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style=""/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="1.00" RightIndent="1.50" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Transition">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Right" FirstIndent="0.00" Leading="Regular" LeftIndent="4.00" RightIndent="0.00" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Shot">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <ElementSettings Type="Cast List">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
+  <HeaderAndFooter>
+    <Header>
+      <Paragraph Alignment="Right" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="0" Spacing="1" StartsNewPage="No">
+        <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="">[PageNumber].</Text>
+      </Paragraph>
+    </Header>
+  </HeaderAndFooter>
+  <PageLayout BackgroundColor="#FFFFFFFFFFFF" BottomMargin="720" BreakDialogueAndActionAtSentences="Yes" DocumentType="Script" HeaderMargin="360" FooterMargin="360" LeftMargin="1080" RightMargin="720" TopMargin="720">
+    <PageSize Height="11.00" Width="8.50"/>
+  </PageLayout>
+  <Content>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Title: THE MAFIA Credit: Written by Author: Screenwriter  Julie Ann Stehouwer Draft date: September 19, 2026</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. OPEN HIGHWAY - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Heat waves rise from the blacktop stretching toward an endless horizon. A vintage Mustang tears down the lane, engine roaring.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. MUSTANG - CONTINUOUS</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">LEO (30s) grips the steering wheel, eyes fixed on the rearview mirror.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">LEO</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">(into phone)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">I have the coordinates. Tell them I&apos;m coming in.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">He stomps on the gas. FADE OUT. FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. STREET - DAY (TEASER) A vibrant, sun-drenched morning fills the streets with cheering families, running children, and bustling sidewalk vendors. It is a rare day of peace where the authorities have declared a truce, uniting the factions for a grand parade featuring the LAWSAREOUT motorcycle gang led by BO BO (&quot;The Barreto&quot;), the GIVONNE FAMILY, the CUBIN FAMILY, and the following procession floats: the HEIRLOOM AMERICAN, the SICILIAN GRECOOON, the DRUNKETTIL FAMILY (ITALY), the KINGS OF LATIN from Chicago/New York, the NORIEPDCOO FAMILY from Chicago, and the SICILY—CORLEONOO float. Genevabandena family floats all proceed through the streets decorated in their culture. The local Catholic priest and members of the community sanctuary stand along the crowded sidewalks of Sicily, sharing food, laughter, and mutual respect. For today, old grievances are off the table. The locals with keas on the side of the street are making spaghetti plates and pouring drinks for the spectators. The local band is playing Sicilian music.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">The Sicilian DÍA is walking down the street in full uniform, watching all activity around them. The Genevabandena family is perched on the rooftops as the floats gradually make the turn to follow the other floats along the street. The guns were aimed downward. The Genevabandena woman and children were standing by; other family members were on the street celebrating. Five police officers in brown uniforms stand at attention along the curb as elaborate Sicilian floats and others start to round the corner one by one to the sound of bright morning laughter and festive music. A bit further along the street, six men dressed in black suits are spread out among the crowd, each holding a handheld controller. They look up as a smooth object whizzes across the sky. Children sporting facial paint of their culture run down the streets as the parade&apos;s women throw candy around. Suddenly—</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JOEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">I gotta’ go, babe. Gotta’ take care of business. He hangs up. Matt and Bobby laugh at Joey.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">CONTINUED:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. STREET - DAY (CONTINUED)</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">The men walk down the winding stairwell as they talk. Bobby addresses Giovanni:</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">BOBBY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Who the fuck do you think you are coming on my turf?! Who sent you?! Who’s family are you fucking from?! GIOVANNI I ain’t saying a fucking thing! BOBBY Have it your way. Matt laughs. MATT Somebody royally fucked up! Matt hands Giovanni off to Joey. MATT (CONT’D) Take over, will ya’? Matt lets go of Giovanni, walks towards a next set of stairs to the main restaurant entrance. JOEY Where the fuck do you think you’re going? Go get Jack! MATT Alright, alright.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">CONTINUED:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. STREET - DAY (CONTINUED)</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">GIOVANNI</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Jack walks away, but as he does, he pats Victor on the chest, as if letting Victor speak for him to Giovanni: VICTOR Letting you go, means next time we see you, you get a bullet to the head. Bobby and Joey drop Giovanni on the ground. MATT Now you can go back to talking to your girlfriend! JOEY Yeah, I’ll do more than that! The guys all walk back inside &quot;Class Act&quot;, leaving Giovanni to scramble for his life.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">FADE TO BLACK.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. ALEXANDER HOME, KITCHEN - MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Sunlight invades a modern kitchen; white covers, stainless steel appliances. It looks like a professional Chef’s kitchen. ELLA ALEXANDER, 40, blue eyes, long black hair, China-doll complexion, in Nautica outfit, is in the middle of cooking breakfast. ELIJAH ALEXANDER, 12, black hair, brown eyes, in shape, in athletic attire (sweats), gold necklace, sits at the dining table eating breakfast. ADAM ALEXANDER, 13, black hair, brown eyes, also in shape, also in athletic attire (sweats), gold necklace, also sits at the dining table eating breakfast. CONTINUED:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. ALEXANDER HOME, KITCHEN - MORNING (CONTINUED)</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">NATHAN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Of course, like I always do. ELLA I will be dropping the boys off at school and I’ll meet you there. Adam hesitates to come out with something: ADAM Dad, can I ask you a question? NATHAN Of course, Adam, ask away. ADAM Will Chanel be okay? Ella looks over at Nathan with Adam’s question, and Nathan looks back at her before addressing Adam: NATHAN Of course, son. She’s your little sister, and a fighter. Why do you ask? ADAM It’s just, you know, she’s been in the hospital a long time, and - NATHAN Adam, I - ELLA That’s enough, Adam, that’s enough. Don’t upset your Father. He has a lot on his mind. Let’s just enjoy our breakfast. NATHAN Right. Listen to your Mother. Breakfast is a good start to the day.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">CONTINUED:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, HALLWAY - MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Nathan approaches a closed door with a keypad on it. He punches in a code, the door opens. Beyond the door, there’s sounds of men chatting.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, JACK’S OFFICE - MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Nathan enters Jack’s office. Victor, Bobby, Joey, Matt and Jack (sitting at his desk), all in suits, all are here.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">NATHAN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">All right, gentlemen. Someone give me the scoop on what happened yesterday. Fill me in. Giovanni came to town with no money? JOEY You’re fucking right. We took his ass right outside the back door. See, this wise guy thinks he can...</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">CONTINUED:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, JACK’S OFFICE - MORNING (CONTINUED)</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">..business.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">A moment.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JACK</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Nathan, I need you to find out who’s family Giovanni is working for. Jack turns to Matt. JACK Matt, find out more about Giovanni. Everywhere he hangs out with, everything he does, where he’s from. All of it. Jack turns to Bobby. JACK (CONT’D) And you, Bobby. Keep an eye on the streets. If anything happens, you’re the first call.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">FADE TO BLACK. SUMMARY: In a sun-drenched Sicilian street, a grand parade unites factions for a day of peace. Tensions rise as the LAWSAREOUT gang confronts an outsider, Giovanni. Meanwhile, the Alexander family prepares for the day, with concerns for their hospitalized daughter, Chanel. The story follows Nathan, a detective, as he investigates Giovanni&apos;s ties to a powerful family and the growing unrest in the community. FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">A vibrant, sun-drenched evening fills the restaurant with the laughter of guests and the clinking of glasses. The LA DULCE VITA, a beachfront establishment, exudes an air of exclusivity and modernity. Its clientele is a mix of high society and influential individuals, enjoying the fine dining experience within its walls. The restaurant&apos;s exterior is sleek and inviting, with a façade that reflects the calmness of the ocean it overlooks.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Inside, the restaurant is a symphony of elegance and luxury. The décor is minimalist yet sophisticated, with dim lighting that casts a warm glow over the diners. The staff moves with precision, ensuring every guest feels attended to. At the bar, Stella and Willow are attending to the evening&apos;s patrons, their movements graceful and their smiles welcoming. Ariana, the newly hired dance instructor, stands near the entrance, observing the scene with a mix of excitement and nervousness. She is dressed in a chic, yet comfortable outfit, fitting for the role she has just begun. Her eyes scan the room, taking in the details of the setting, the people, and the atmosphere. Stella approaches Ariana, a warm smile on her face.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">STELLA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana, welcome to the team. I trust you&apos;re feeling as excited as we are to have you on board?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">ARIANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Thank you, Stella. I&apos;m thrilled to be here.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Stella hands her a set of papers. STELLA (CONT&apos;D) These are the contract details. Just sign here, here, and here. Ariana signs the papers, her hand steady despite the nerves. STELLA (CONT&apos;D) And, Ariana, we&apos;ve decided to triple your previous pay. We believe in rewarding talent and passion. Ariana&apos;s eyes widen slightly, but she maintains her composure.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">ARIANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Thank you, that&apos;s very generous.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Stella nods, pleased.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">STELLA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Now, remember, our guests are diverse and discerning. Always be approachable, but don&apos;t let your personal life become intertwined with your work. And, of course, avoid sensitive topics like religion, politics, and race.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana nods, understanding the importance of professionalism. STELLA (CONT&apos;D) And, Ariana, please be discreet about what goes on here. Our establishment is a sanctuary for many, and we want to keep it that way.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">ARIANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">I understand. I&apos;ll be careful.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Willow joins them, a mischievous twinkle in her eye.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">WILLOW</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">So, Ariana, are you ready to dazzle our guests with your dance moves?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">ARIANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Absolutely, I can&apos;t wait to share my passion for dance.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Willow grins, delighted.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">WILLOW</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Perfect. We&apos;ll introduce you to the girls tomorrow. They&apos;re going to love you.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Stella and Willow bid Ariana a good evening and return to their duties, leaving Ariana alone for a moment. She takes a deep breath, the weight of her new role settling in. She&apos;s ready to bring her passion for dance to the stage of La Dulce Vita, unaware of the complex web of stories and secrets that intertwine the lives of the restaurant&apos;s patrons. &lt;SUMMARY&gt; The story continues with Ariana starting her new role as the dance instructor at La Dulce Vita, a high-end restaurant. She is welcomed by Stella and Willow, who brief her on the restaurant&apos;s rules and expectations. Meanwhile, the restaurant&apos;s patrons hide secrets and stories that could change everything. FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">A vibrant, sun-drenched evening fills the streets with cheering families, running children, and bustling sidewalk vendors. It is a rare day of peace where the authorities have declared a truce, uniting the factions for a grand parade featuring the LAWSAREOUT motorcycle gang led by BO BO (&quot;The Barreto&quot;), the GIVONNE FAMILY, the CUBIN FAMILY, and the following procession floats: the HEIRLOOM AMERICAN, the SICILIAN GRECOOON, the DRUNKETTIL FAMILY (ITALY), the KINGS OF LATIN from Chicago/New York, the NORIEPDCOO FAMILY from Chicago, and the SICILY—CORLEONOO float. Genevabandena family floats all proceed through the streets decorated in their culture. The local Catholic priest and members of the community sanctuary stand along the crowded sidewalks of Sicily, sharing food, laughter, and mutual respect. For today, old grievances are off the table. The locals with keas on the side of the street are making spaghetti plates and pouring drinks for the spectators. The local band is playing Sicilian music. The Sicilian DÍA is walking down the street in full uniform, watching all activity around them. The Genevabandena family is perched on the rooftops as the floats gradually make the turn to follow the other floats along the street. The guns were aimed downward. The Genevabandena woman and children were standing by; other family members were on the street celebrating. Five police officers in brown uniforms stand at attention along the curb as elaborate Sicilian floats and others start to round the corner one by one to the sound of bright morning laughter and festive music. A bit further along the street, six men dressed in black suits are spread out among the crowd, each holding a handheld controller. They look up as a smooth object whizzes across the sky. Children sporting facial paint of their culture run down the streets as the parade&apos;s women throw candy around. Suddenly—</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">BRETT, 20s, 5 ft. 7, blond, in Gucci shorts and a t-shirt that reads &quot;JACKSON STREET PUB&quot; and &quot;hey dudes&quot; shoes, enters the bar with ERIN, 30, 5 ft. 8, sandy-blond, in Nautica shorts and a matching &quot;JACKSON STREET PUB&quot; t-shirt and &quot;hey dudes&quot; shoes. Behind them enters SEAN, 27, 5 ft. 8, military haircut, very G.Q. (high-scale society), wearing Ralph-Lauren shorts and a &quot;JACKSON STREET PUB&quot; t-shirt and a pair of Docksiders shoes.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">BRETT</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Hey! Bring your bathing suits! Party at Jackson Street Pub! ERIN Taco Tuesday! Bring your own Tacos! SEAN Yeah! Bring the hot sauce! He points at himself. SEAN (CONT’D) Oh, I forgot! I’ve already got the fireball shots on me!</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">They laugh as they continue to the bar.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">EXT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">A beach-front, modern restaurant that serves exclusive clientele in certain parts of the restaurant itself. The atmosphere is luxurious and refined, with patrons dressed in high-end attire.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Several high-class PEOPLE are eating dinner. PAT, 70, Hispanic, 5 ft. 10, 210 pounds, sandy-brown hair, brown eyes, in Gucci button-up and black slacks, Gold Rolex watch, enters the restaurant, meets up with JACK, in Avar Merino wool crew-neck sweater and dark-gray pants.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JACK</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Kids! Come on over here! Take a seat, and I will start ordering pizza! CHILDREN Thank you so much Jack! JACK Oh, you children really light up my world! Eat to your little hearts’ content!</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. CATHOLIC CHURCH, BISHOP ALLEN THOMAS’ OFFICE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">BISHOP ALLEN THOMAS, 60, in a Catholic robe and other Bishop attire, sits behind his desk, working on papers. He gets a phone call.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">ALLEN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Yes? A voice on the other end of the phone is heard, the true identity blocked by a voice scrambler. MYSTERY CALLER (V.O.) I swore I’ve seen Father Bobby in a suit at &quot;Class Act&quot; with some tough men. I think they were talking about hurting somebody. ALLEN Who is this? No response. ALLEN (CONT’D) How would you even know this? That can’t be right. A moment. MYSTERY CALLER (V.O.) I’ve been undercover watching him.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, HALLWAY - MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Nathan approaches a closed door with a keypad on it. He punches in a code, the door opens. Beyond the door, there’s sounds of men chatting.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, JACK’S OFFICE - MORNING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Nathan enters Jack’s office. Victor, Bobby, Joey, Matt and Jack (sitting at his desk), all in suits, all are here.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">NATHAN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">All right, gentlemen. Someone give me the scoop on what happened yesterday. Fill me in. Giovanni came to town with no money? JOEY You’re fucking right. We took his ass right outside the back door. See, this wise guy thinks he can...</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;LA DULCE VITA&quot; RESTAURANT - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Willow and Stella are on stage singing a song in harmony.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">A henchman, 50s, slicked-back hair, in black suit, white shirt, trench-coat, knuckle-ring, enters the bar. The henchman sits down at a table amidst the other patrons close by the stage. The henchman watches Ariana dance.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, HALLWAY - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana is about to get in her car when a henchman approaches her with a gun.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Malcolm intervenes with a couple swift martial arts moves, knocking him down to the ground, taking the gun from him.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot;, BACK OFFICE - EVENING</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Joey, Matt, and Victor are discussing the situation with Giovanni.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JOEY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">He’s from the Marco family. His family originally immigrated from Sicily to the States back in the 1920s, and made a name for themselves with &quot;Marco’s Deli&quot; here in Michigan. JACK So right here in our own backyard? Joey nods. Jack turns off the lights.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition" Alignment="Right">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">FADE TO BLACK. SUMMARY: The story begins with a vibrant parade in Sicily, featuring various factions and floats. The narrative then shifts to &quot;Class Act,&quot; a bar where tensions rise as Giovanni, a man from the Marco family, causes trouble. A henchman attempts to shoot Ariana, but is stopped by Malcolm. The group discusses the implications of Giovanni&apos;s actions, hinting at a deeper conflict. to a guy named Giovanni. He’s got a rep from the Marco family.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JULIANNA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Marco family, huh? That’s a big deal. Hudson looks up at her. HUDSON That’s why I need you to dig up everything you can on them. JULIANNA Got it. I’ll get right on it. JULIANNA One question, Lieutenant. HUDSON Shoot. JULIANNA Who’s the dirty cop? Hudon hesitates. HUDSON I can’t tell you that yet. JULIANNA Alright, I’ll get started then. JULIANNA I’ll be in touch. Julianna leaves. 53.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana, in a cocktail dress, and Julianna, in a cocktail dress, stand in front of the bar. The bartender is a man in his 40s, black hair, black shirt, black bowtie, black vest, black suspenders, black pants. He wipes down the bar with a white dishtowel.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">BARTENDER</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ladies, what can I get you? ARIANA We’ll have two Kamikazes. BARTENDER Coming right up. The bartender pours the drinks. BARTENDER (CONT’D) Here you go, ladies. Ariana and Julianna clink glasses. ARIANA To our friendship. JULIANNA And to surviving this crazy life. They drink. INT. &quot;CLASS ACT&quot; - NIGHT Ariana and Julianna, in their cocktail dresses, dance on the stage to the music of a live band. The crowd is cheering and clapping. The girls are having the time of their lives. A man, 50s, slicked-back hair, in a black suit, white shirt, trench coat, knuckle ring, enters the bar. He looks around and spots Ariana and Julianna on stage. He watches them for a moment before he starts walking toward them. 54.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">The man, GIOVANNI, approaches Ariana and Julianna on the stage. He’s smiling.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">GIOVANNI</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ladies. JULIANNA Can I help you? GIOVANNI I just wanted to meet you both. GIOVANNI (CONT’D) You’re doing a fantastic job up here. I’m a big fan. ARIANA Thank you. JULIANNA We appreciate it. GIOVANNI I have a proposition for you. JULIANNA What kind of proposition? GIOVANNI I can make you both very rich. JULIANNA We’re happy with what we have. GIOVANNI Come on, it’s just a little favor. JULIANNA We don’t do favors for strangers. GIOVANNI I’m not a stranger. I can help you both get out of this place. JULIANNA What do you mean? GIOVANNI I can take care of all your bills. ARIANA We don’t need your help. GIOVANNI You don’t know what you need until you know what you need. GIOVANNI I’ll be in touch. Giovanni leaves. 55.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana and Julianna continue to dance on the stage. The crowd is cheering and clapping. The girls are having the time of their lives. Suddenly, a man, 50s, slicked-back hair, in a black suit, white shirt, trench coat, knuckle ring, bursts onto the stage from the back. He’s shouting.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">GIOVANNI</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">I know what you two are doing! JULIANNA What are you talking about? GIOVANNI You’re in deep, deep trouble! The crowd gasps. The girls are confused. GIOVANNI (CONT’D) You’re in bed with the wrong guys! The girls look at each other. JULIANNA We don’t know what you’re talking about. GIOVANNI You’re working for the cops! The girls look at each other again. ARIANA That’s a lie! GIOVANNI You’re both dead to me! Giovanni turns and runs off the stage. 56.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana and Julianna stand on the stage, confused and upset. The crowd is murmuring and whispering. The girls are in shock.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JULIANNA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">What just happened? ARIANA I have no idea. JULIANNA We need to talk to Jack. They walk off the stage and head towards the back of the bar. INT. &quot;CLASS ACT&quot; - NIGHT Ariana and Julianna meet up with Jack in his office. They’re all seated around the table. JACK What happened out there? JULIANNA This guy, Giovanni, came up on the stage and started shouting that we were working for the cops. ARIANA It’s not true! JACK I believe you. But we need to figure out who this guy is and what he wants. JACK (CONT’D) I have some information about him. He’s connected to the Marco family. JULIANNA The Marco family? JACK Yes. And I think they might be involved in some shady dealings. JACK (CONT’D) We need to be careful. JACK (CONT’D) I’ll do some digging and see what I can find out. JACK (CONT’D) In the meantime, you two need to lay low. ARIANA We can do that. JACK Good. I’ll be in touch. They all stand up and head out of the office. 57.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ariana and Julianna sit at a table near the bar, sipping their drinks. They’re trying to make sense of what just happened.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JULIANNA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Do you think it’s true? ARIANA I don’t know. But it doesn’t matter. We’re not working for the cops. JULIANNA No, we’re not. ARIANA We’re just trying to make a living. JULIANNA And we’re doing a good job of it. ARIANA Yeah, we are. JULIANNA So let’s not worry about what this guy says. We’ll figure it out. ARIANA Right. Let’s just enjoy the night. JULIANNA Agreed. They clink glasses again and take a sip of their drinks. INT. &quot;CLASS ACT&quot; - NIGHT The live band is playing a slow song. The crowd is dancing and swaying to the music. Ariana and Julianna get up from their seats and join in. They dance together, laughing and having the time of their lives. The night is young and anything can happen. 58.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">FADE OUT. and blue) decorations. People are at their tables, waiting for the show to start. The stage is lit up, and the curtains are open. The lights dim, and the music begins. A spotlight shines on Willow, who is center stage.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">WILLOW</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Ladies and Gentlemen, welcome to &quot;Class Act&quot;. Tonight, we honor those who gave their lives on that fateful day, 9/11. We have a wonderful show for you tonight. 67.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Willow motions to the stagehands, who pull back the curtains. The singers, dancers and musicians come out on stage. The music begins, and the show starts.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">The show goes on for hours. The music, singing, dancing, and acting are all top-notch. The audience is captivated. As the show comes to an end, the audience gives a standing ovation.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">After the show, the cast takes a bow. Jack and Victor stand at the edge of the stage, clapping. Jack turns to Victor.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">JACK</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Victor, this was a great show! I couldn’t have done it without you. VICTOR Thank you, boss. Jack puts his hand on Victor’s shoulder. JACK I have one more thing for you to do. I need you to get in contact with the people from the other restaurants. We’re going to do this again. We’re going to make this a regular thing. VICTOR I’ll get right on it, boss. Jack turns to the cast. JACK Everyone, thank you! You all did a wonderful job! I’ll see you all at the after-party. 68.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="Bold+AllCaps">INT. &quot;CLASS ACT&quot; - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">The after-party is in full swing. The cast, Patrons, and Employees are all dancing, drinking and having a good time. Jack and Victor stand at the bar, drinking and talking. Suddenly, a WAITRESS (20s) bumps into Victor.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps">WAITRESS</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">Oh, I’m so sorry! Victor looks at her. VICTOR No, it’s my fault. He looks at the floor, and sees a piece of paper. VICTOR What’s this? He picks up the paper, and reads it. VICTOR This is a note from Lady Sophia. It says, &quot;Meet me at the docks at midnight. Come alone.&quot; Victor looks up at Jack. VICTOR Boss, I think we have a problem. 69.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12">SUMMARY: The story is about a group of people working at &quot;Class Act&quot;, a restaurant that serves as a front for illicit activities. The main characters, Nathan, a former detective, Jack, the owner of the restaurant, and Victor, a loyal employee, are dealing with personal and professional conflicts. They are trying to uncover the truth behind recent violence and bloodshed, while also navigating their complicated relationships. The story takes a turn when a note from Lady Sophia, a mysterious woman, suggests that there is more to their world than they realize. &lt;SUMMARY&gt; The story takes place in a world where secrets and loyalty intertwine, set in a high-class restaurant and nightclub called &quot;Class Act.&quot; Nathan, a conflicted detective dealing with his daughter&apos;s illness, encounters various characters including Ariana, a dance instructor, and Lady Sophia, a mysterious woman with a hidden agenda. As tensions rise between rival families and secrets are revealed, the characters must navigate their complicated lives and confront their dilemmas. The plot is currently at the beginning, introducing the characters and setting, with the story unfolding from here.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>
