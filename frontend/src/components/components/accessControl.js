@@ -58,6 +58,7 @@ export const USER_TIERS = {
 // Map each tab key to the tiers allowed to access it
 export const TAB_PERMISSIONS = {
   // --- Admin / Host Root Tools ---
+  executive_cockpit: ['admin', 'enterprise_all_access'],
   shared_cloud_drive: ['admin', 'enterprise_all_access'],
   power_washing: ['admin', 'enterprise_all_access', 'b2b_growth'],
   terminal: ['admin'],

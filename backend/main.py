@@ -192,6 +192,13 @@ def start_fastapi_server():
         from routers.vst_router import router as vst_router
         app.include_router(vst_router)
 
+        # Import and include Executive Command Cockpit router (v5.298.0)
+        try:
+            from routers.executive_cockpit_router import router as executive_cockpit_router
+            app.include_router(executive_cockpit_router)
+        except Exception as e:
+            print(f"[Backend] Warning: could not mount executive_cockpit_router: {e}")
+
         @app.get("/")
         def read_root():
             return {"status": "AI-BS Backend Online"}

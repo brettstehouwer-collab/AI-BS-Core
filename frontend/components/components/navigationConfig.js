@@ -8,6 +8,7 @@
  */
 
 export const PINNED_QUICK_TABS = [
+  { key: 'executive_cockpit', label: 'Executive Cockpit', icon: '⚡', badge: 'COCKPIT' },
   { key: 'ide', label: 'BS-CHAT', icon: '💻', badge: 'AI CORE' },
   { key: 'bv_media_creator', label: 'BV-Media Studio', icon: '🎨', badge: 'CREATOR' },
   { key: 'dashboard', label: 'Command Center', icon: '📊', badge: 'HQ' },
@@ -21,8 +22,9 @@ export const masterHubs = [
     key: 'intelligence_and_code',
     label: 'Intelligence & Code',
     icon: '🧠',
-    defaultTab: 'ide',
+    defaultTab: 'executive_cockpit',
     subTabs: [
+      { key: 'executive_cockpit', label: 'Executive Command Cockpit', icon: '⚡', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD' },
       { key: 'ide', label: 'BS-CHAT Interface', icon: '💻', description: 'Split-Pane Sovereign AI Chat & IPC Telemetry Hub' },
       { key: 'workflow_dag', label: 'Multi-Agent DAG Builder', icon: '⚡', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder' },
       { key: 'terminal', label: 'Host Terminal Shell', icon: '⌨️', description: 'Interactive Windows 11 PowerShell Virtual Terminal' },

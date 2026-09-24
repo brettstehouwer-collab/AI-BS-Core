@@ -33,7 +33,16 @@ export default defineConfig({
       }
     },
     watch: {
-      ignored: ['**/public/media/generated/**', '**/node_modules/**', '**/desktop-build/**', '**/dist/**']
+      ignored: [
+        '**/public/media/generated/**',
+        '**/node_modules/**',
+        '**/desktop-build/**',
+        '**/dist/**',
+        '**/android/**',
+        '**/ios/**',
+        '**/.gradle/**',
+        '**/.gradle_home/**'
+      ]
     }
   },
 

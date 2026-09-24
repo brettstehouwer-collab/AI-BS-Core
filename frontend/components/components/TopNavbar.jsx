@@ -220,7 +220,7 @@ export default function TopNavbar({
           <span style={{ fontWeight: '700', color: '#58a6ff', fontSize: '0.95rem', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             Stehouwer Publishing AI
           </span>
-          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.297.0</span>
+          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.299.0</span>
         </div>
 
         {/* ⚡ PINNED QUICK-DOCK BAR (Instant 1-Click Jumping) */}

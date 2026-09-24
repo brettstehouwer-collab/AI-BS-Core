@@ -495,8 +495,21 @@ async def lifespan(app: FastAPI):
             await asyncio.sleep(2.0)
     asyncio.create_task(telemetry_broadcast_loop())
 
+    # Start Autonomous Sentinel Engine (v5.299.0)
+    try:
+        from core.autonomous_sentinel_engine import sentinel_engine
+        await sentinel_engine.start()
+        print("[Monolithic Core] AutonomousSentinelEngine online.")
+    except Exception as e:
+        print(f"[Monolithic Core] AutonomousSentinelEngine startup warning: {e}")
+
     print("[Monolithic Core] Background Daemons Online.")
     yield
+    try:
+        from core.autonomous_sentinel_engine import sentinel_engine
+        await sentinel_engine.stop()
+    except Exception:
+        pass
     daemon_engine.stop()
     daemon_supervisor.stop_all()
 
@@ -661,6 +674,12 @@ try:
     app.include_router(media_render_router)
 except ImportError as e:
     print(f"Warning: Could not load media_render_router: {e}")
+
+try:
+    from routers.executive_cockpit_router import router as executive_cockpit_router
+    app.include_router(executive_cockpit_router)
+except ImportError as e:
+    print(f"Warning: Could not load executive_cockpit_router: {e}")
 
 try:
     from routers.ebook_factoring_router import router as ebook_factoring_router

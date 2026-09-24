@@ -44,6 +44,14 @@ def sweep_zombie_nodes():
             pid = proc.info["pid"]
 
             if pname and pname.lower() in target_names:
+                try:
+                    cmdline_str = " ".join(proc.cmdline()).lower()
+                    if any(prot in cmdline_str for prot in ["ai_bs_backend", "vite", "dev", "server.js", "shm_websocket_gateway"]):
+                        print(f"   [PRESERVING CORE SERVICE] {pname} (PID: {pid})")
+                        continue
+                except Exception:
+                    pass
+
                 if pid not in active_pids:
                     # Check if process is an orphaned worker
                     mem = (

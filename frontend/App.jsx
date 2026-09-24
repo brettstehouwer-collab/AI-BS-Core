@@ -129,6 +129,7 @@ const OperationsAuditHubTab = safeLazy(() => import('./components/OperationsAudi
 const NdaModuleTab = safeLazy(() => import('./components/NdaModuleTab.jsx'));
 const MediaStudioTab = safeLazy(() => import('./components/MediaStudioTab.jsx'));
 const BsMediaCreatorTab = safeLazy(() => import('./components/BsMediaCreatorTab.jsx'));
+const ExecutiveCockpitTab = safeLazy(() => import('./components/ExecutiveCockpitTab.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -186,6 +187,7 @@ class TabErrorBoundary extends React.Component {
 const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
+  { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder', Component: VisualWorkflowDAGTab },

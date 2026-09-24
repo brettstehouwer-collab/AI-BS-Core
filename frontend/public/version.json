@@ -1,6 +1,6 @@
 {
-  "version": "5.297.0",
-  "release_tag": "v5.297.0-bv-media-creator-and-bsmedia-chat",
-  "release_date": "2026-09-20",
-  "description": "Dedicated BsMedia-Chat, BV-Media Creator Studio, Dedicated Media ChromaDB (stehouwer_media_memory), and Local VLM Guidance Engine."
+  "version": "5.299.0",
+  "release_tag": "v5.299.0-sentinel-voice-cloudburst-desktop",
+  "release_date": "2026-09-24",
+  "description": "AI-BS Executive Cockpit: Autonomous Sentinel Engine, Directorial Voice HUD, Sovereign GPU Execution & Native Desktop Packaging."
 }
