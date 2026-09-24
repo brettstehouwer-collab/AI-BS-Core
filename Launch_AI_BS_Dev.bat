@@ -4,7 +4,7 @@ color 0B
 
 echo ===================================================
 echo     AI-BS MATRIX FAST DEVELOPMENT BOOT SEQUENCE
-echo        [Live Auto-Reload & Watcher Active]
+echo        [Live Auto-Reload ^& Watcher Active]
 echo ===================================================
 echo.
 
