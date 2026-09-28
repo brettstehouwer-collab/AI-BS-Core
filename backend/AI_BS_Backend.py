@@ -6553,6 +6553,100 @@ async def get_watchdog_status():
     return {"status": "initializing"}
 
 
+# --- Host Terminal Execution ---
+@app.post("/api/terminal/run")
+async def terminal_run(request: Request):
+    """
+    Execute a raw PowerShell command on the host machine and return stdout/stderr.
+    Runs with ExecutionPolicy Bypass. 30-second timeout.
+    """
+    try:
+        body = await request.json()
+        command = body.get("command", "").strip()
+        if not command:
+            return {"stdout": "", "stderr": "No command provided", "exit_code": 1}
+
+        result = subprocess.run(
+            ["powershell", "-ExecutionPolicy", "Bypass", "-NoProfile", "-Command", command],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            cwd=r"C:\AI-BS"
+        )
+        return {
+            "stdout": result.stdout,
+            "stderr": result.stderr,
+            "exit_code": result.returncode
+        }
+    except subprocess.TimeoutExpired:
+        return {"stdout": "", "stderr": "Command timed out after 30 seconds", "exit_code": -1}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"stdout": "", "stderr": str(e), "exit_code": -1})
+
+
+@app.post("/api/v1/mining/gpu/max-power")
+async def gpu_max_power(request: Request):
+    """
+    Lock RTX 4090 to sovereign max-performance clocks (2550-2700 MHz core / 10501 MHz VRAM)
+    and optionally launch the Pearl miner for dedicated max-yield mining mode.
+    Body: { "start_miner": bool }
+    """
+    try:
+        body = await request.json()
+        start_miner = bool(body.get("start_miner", False))
+        results = {}
+
+        # 1. Lock GPU core clocks
+        r1 = subprocess.run(
+            ["nvidia-smi", "-i", "0", "--lock-gpu-clocks=2550,2700"],
+            capture_output=True, text=True, timeout=8
+        )
+        results["core_lock"] = r1.stdout.strip() or r1.stderr.strip()
+
+        # 2. Lock VRAM memory clocks to full 10501 MHz
+        r2 = subprocess.run(
+            ["nvidia-smi", "-i", "0", "--lock-memory-clocks=10501,10501"],
+            capture_output=True, text=True, timeout=8
+        )
+        results["vram_lock"] = r2.stdout.strip() or r2.stderr.strip()
+
+        # 3. Verify telemetry after lock
+        r3 = subprocess.run(
+            ["nvidia-smi", "--query-gpu=clocks.gr,clocks.mem,power.draw,temperature.gpu", "--format=csv,noheader"],
+            capture_output=True, text=True, timeout=5
+        )
+        results["telemetry"] = r3.stdout.strip()
+
+        miner_result = None
+        if start_miner:
+            # Clear user-stop sentinel so watchdog stays alive
+            Path(r"C:\AI-BS\.pearl_stopped").unlink(missing_ok=True)
+            # Check if peakminer is already running in WSL2
+            check = subprocess.run(
+                ["wsl.exe", "-d", "Ubuntu", "-u", "root", "--", "sh", "-c", "ps aux | grep -v grep | grep peakminer"],
+                capture_output=True, text=True, timeout=6
+            )
+            if check.returncode == 0 and check.stdout.strip():
+                miner_result = "already_running"
+            else:
+                subprocess.Popen(
+                    ["powershell", "-ExecutionPolicy", "Bypass", "-Command",
+                     "Start-Process cmd.exe -ArgumentList '/c C:\\AI-BS\\miners\\Mine_Pearl.bat' -WindowStyle Hidden"],
+                    creationflags=subprocess.DETACHED_PROCESS if sys.platform == "win32" else 0
+                )
+                miner_result = "started"
+
+        return {
+            "status": "success",
+            "gpu_locked": True,
+            "start_miner": start_miner,
+            "miner_result": miner_result,
+            "results": results
+        }
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
+
+
 
 # --- API Gateway Proxy Routes (Ports 8001, 8002, 3000, 3001, 4067, 4068, 8003, 8006, 8007) ---
 @app.api_route(

@@ -19,6 +19,8 @@ export default function PearlMiningHubTab() {
   const [actionLoading, setActionLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [gpuPowerLoading, setGpuPowerLoading] = useState(false);
+  const [gpuPowerStatus, setGpuPowerStatus] = useState(null); // null | 'locked' | 'mining_mode'
 
   const WALLET_ADDRESS = "prl1p5r4kvz636h2pa9fuww723s4r02flt25rec9qs6yjckk7lyejkvjs67a4n5";
   const POOL_WEB_URL = `https://pearl.herominers.com/?address=${WALLET_ADDRESS}`;
@@ -77,6 +79,29 @@ export default function PearlMiningHubTab() {
       console.error("Control action error:", e);
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleGpuMaxPower = async (startMiner = false) => {
+    setGpuPowerLoading(true);
+    setGpuPowerStatus(null);
+    try {
+      const apiBase = getEffectiveApiBase();
+      const res = await fetch(`${apiBase}/api/v1/mining/gpu/max-power`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ start_miner: startMiner })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        setGpuPowerStatus(startMiner ? 'mining_mode' : 'locked');
+        if (startMiner) setTimeout(fetchTelemetry, 3000);
+      }
+    } catch (e) {
+      console.error('GPU max power error:', e);
+    } finally {
+      setGpuPowerLoading(false);
+      setTimeout(() => setGpuPowerStatus(null), 6000);
     }
   };
 
@@ -284,6 +309,62 @@ export default function PearlMiningHubTab() {
               {actionLoading ? 'Starting...' : '▶ Start Miner'}
             </button>
           )}
+
+          {/* ⚡ Full GPU Power Button */}
+          <button
+            onClick={() => handleGpuMaxPower(false)}
+            disabled={gpuPowerLoading}
+            title="Lock RTX 4090 to max clocks (2700 MHz core / 10501 MHz VRAM). Eliminates power-save downclocking."
+            style={{
+              padding: '10px 16px',
+              background: gpuPowerStatus === 'locked'
+                ? 'linear-gradient(135deg, rgba(245,158,11,0.35), rgba(251,191,36,0.2))'
+                : 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(251,191,36,0.08))',
+              color: gpuPowerStatus === 'locked' ? '#fbbf24' : '#f59e0b',
+              border: `1px solid ${gpuPowerStatus === 'locked' ? 'rgba(251,191,36,0.7)' : 'rgba(245,158,11,0.45)'}`,
+              borderRadius: '8px',
+              fontWeight: '700',
+              fontSize: '13px',
+              cursor: gpuPowerLoading ? 'not-allowed' : 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: gpuPowerStatus === 'locked' ? '0 0 14px rgba(251,191,36,0.4)' : 'none',
+              transition: 'all 0.2s',
+              opacity: gpuPowerLoading ? 0.7 : 1
+            }}
+          >
+            {gpuPowerLoading && !gpuPowerStatus ? '⏳' : '⚡'}
+            <span>{gpuPowerStatus === 'locked' ? 'GPU Locked ✓' : 'Full GPU Power'}</span>
+          </button>
+
+          {/* 🦪⚡ Mining Mode Button */}
+          <button
+            onClick={() => handleGpuMaxPower(true)}
+            disabled={gpuPowerLoading}
+            title="Lock GPU to max clocks AND launch Pearl miner — dedicates RTX 4090 to peak PRL yield output."
+            style={{
+              padding: '10px 16px',
+              background: gpuPowerStatus === 'mining_mode'
+                ? 'linear-gradient(135deg, rgba(168,85,247,0.35), rgba(139,92,246,0.2))'
+                : 'linear-gradient(135deg, rgba(168,85,247,0.18), rgba(139,92,246,0.1))',
+              color: gpuPowerStatus === 'mining_mode' ? '#d8b4fe' : '#a855f7',
+              border: `1px solid ${gpuPowerStatus === 'mining_mode' ? 'rgba(216,180,254,0.7)' : 'rgba(168,85,247,0.45)'}`,
+              borderRadius: '8px',
+              fontWeight: '700',
+              fontSize: '13px',
+              cursor: gpuPowerLoading ? 'not-allowed' : 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: gpuPowerStatus === 'mining_mode' ? '0 0 18px rgba(168,85,247,0.5)' : 'none',
+              transition: 'all 0.2s',
+              opacity: gpuPowerLoading ? 0.7 : 1
+            }}
+          >
+            {gpuPowerLoading && !gpuPowerStatus ? '⏳' : '🦪'}
+            <span>{gpuPowerStatus === 'mining_mode' ? 'Mining Mode Active ✓' : '⚡ Mining Mode'}</span>
+          </button>
 
           <button
             onClick={fetchTelemetry}
