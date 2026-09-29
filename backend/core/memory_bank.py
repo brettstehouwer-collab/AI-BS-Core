@@ -47,16 +47,30 @@ def get_master_memory_path() -> str:
 VAULT_DB_PATH = str(_backend_dir / "stehouwer_vault.db")
 VECTOR_DB_DIR = str(_root_dir / "stehouwer_vector_memory")
 
+chroma_client = None
+heuristics_collection = None
+cases_collection = None
+
 try:
     import chromadb
     from chromadb.utils import embedding_functions
-    chroma_client = chromadb.PersistentClient(path=VECTOR_DB_DIR)
-    default_ef = embedding_functions.ONNXMiniLM_L6_V2(preferred_providers=['CPUExecutionProvider'])
-    heuristics_collection = chroma_client.get_or_create_collection(name="stehouwer_llm_memory", embedding_function=default_ef)
-    cases_collection = chroma_client.get_or_create_collection(name="stehouwer_cases_v2", embedding_function=default_ef)
-    logger.info("ChromaDB Memory Collections (stehouwer_llm_memory) initialized with CPU provider.")
+
+    # Prefer HTTP client to connect to chroma_daemon (Port 8001) to prevent file-lock corruption & memory leaks
+    try:
+        http_client = chromadb.HttpClient(host="127.0.0.1", port=8001)
+        http_client.heartbeat()
+        chroma_client = http_client
+        heuristics_collection = chroma_client.get_or_create_collection(name="stehouwer_llm_memory")
+        cases_collection = chroma_client.get_or_create_collection(name="stehouwer_cases_v2")
+        logger.info("ChromaDB Memory Collections connected cleanly via HTTP daemon (Port 8001).")
+    except Exception as http_err:
+        logger.debug(f"ChromaDB HTTP daemon unavailable ({http_err}), falling back to local PersistentClient...")
+        chroma_client = chromadb.PersistentClient(path=VECTOR_DB_DIR)
+        heuristics_collection = chroma_client.get_or_create_collection(name="stehouwer_llm_memory")
+        cases_collection = chroma_client.get_or_create_collection(name="stehouwer_cases_v2")
+        logger.info("ChromaDB Memory Collections initialized via local PersistentClient fallback.")
 except Exception as e:
-    logger.warning(f"ChromaDB local client unavailable ({e}), using SQLite vault fallback.")
+    logger.warning(f"ChromaDB client unavailable ({e}), using SQLite vault fallback.")
 
 def store_heuristic(heuristic_text: str, metadata: Optional[Dict[str, Any]] = None) -> bool:
     """Stores a learned heuristic in ChromaDB, SQLite Vault, and master_memory_dump.json."""

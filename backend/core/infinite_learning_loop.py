@@ -136,45 +136,57 @@ class InfiniteLearningLoop:
         self.last_tick_time = time.time()
         telemetry = self.get_telemetry()
 
-        # Guardrail: If RAM exceeds safety ceiling, pause
-        if telemetry["system_ram_used_mb"] > 60000:  # 60 GB
-            logger.warning("Safety threshold exceeded. Pausing deduction tick.")
-            time.sleep(10)
+        # Guardrail: Check local process & system memory to guarantee zero pagefile spikes
+        import gc
+        cur_proc = psutil.Process()
+        proc_rss_mb = cur_proc.memory_info().rss / (1024 * 1024)
+        if proc_rss_mb > 1500:  # If daemon process itself uses > 1.5 GB, force garbage collection
+            gc.collect()
+
+        vm = psutil.virtual_memory()
+        if vm.percent > 88:  # System under heavy load (e.g. gaming)
+            logger.warning(f"High system memory usage ({vm.percent}%). Pausing learning tick to preserve gaming headroom.")
+            time.sleep(15)
             return
 
         # Check transcript discoveries
         discoveries = self.ingest_recent_transcripts()
         if discoveries:
-            heuristic_summary = f"Deduction Tick {self.iteration}: Synthesized context on [{discoveries[0][:60]}...]"
+            # Avoid storing duplicate discoveries in the memory bank
+            new_text = str(discoveries[0])
+            already_stored = any(new_text[:80] in str(h.get("text", "")) for h in self.recent_heuristics)
+            if not already_stored:
+                heuristic_summary = f"Deduction Tick {self.iteration}: Synthesized context on [{new_text[:60]}...]"
+                # Persist genuine new knowledge to Memory Bank (ChromaDB, SQLite, JSON)
+                store_heuristic(
+                    heuristic_summary,
+                    metadata={
+                        "iteration": self.iteration,
+                        "source": "infinite_learning_loop",
+                        "cpu_percent": telemetry["cpu_percent"],
+                        "vram_mb": telemetry["vram_used_mb"],
+                        "ram_mb": telemetry["system_ram_used_mb"]
+                    }
+                )
+                entry = {
+                    "iteration": self.iteration,
+                    "text": heuristic_summary,
+                    "timestamp": self.last_tick_time,
+                    "telemetry": telemetry
+                }
+                self.recent_heuristics.insert(0, entry)
+                if len(self.recent_heuristics) > self.max_history_entries:
+                    self.recent_heuristics.pop()
+                logger.info(f"Tick {self.iteration} stored new heuristic | CPU: {telemetry['cpu_percent']}% | RAM: {telemetry['system_ram_used_mb']}MB")
+                self.throttle_seconds = 4.0
+            else:
+                self.throttle_seconds = 10.0
         else:
-            heuristic_summary = f"Deduction Tick {self.iteration}: Autonomous heuristic baseline verified at {time.strftime('%H:%M:%S')}."
-
-        # Persist to Memory Bank
-        store_heuristic(
-            heuristic_summary,
-            metadata={
-                "iteration": self.iteration,
-                "source": "infinite_learning_loop",
-                "cpu_percent": telemetry["cpu_percent"],
-                "vram_mb": telemetry["vram_used_mb"],
-                "ram_mb": telemetry["system_ram_used_mb"]
-            }
-        )
-
-        entry = {
-            "iteration": self.iteration,
-            "text": heuristic_summary,
-            "timestamp": self.last_tick_time,
-            "telemetry": telemetry
-        }
-        self.recent_heuristics.insert(0, entry)
-        if len(self.recent_heuristics) > self.max_history_entries:
-            self.recent_heuristics.pop()
-
-        logger.info(f"Tick {self.iteration} complete | CPU: {telemetry['cpu_percent']}% | RAM: {telemetry['system_ram_used_mb']}MB")
+            # Idle baseline: update in-memory telemetry without polluting databases with dummy records
+            self.throttle_seconds = 15.0
 
     def _loop_worker(self):
-        logger.info("Infinite Learning Loop background worker engaged.")
+        logger.info("Infinite Learning Loop background worker engaged with memory protection.")
         while self.running:
             try:
                 self.learning_tick()
