@@ -49,7 +49,8 @@ powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'C:\Users\f
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%vnc_bridge.exe' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- systemctl start clore-hosting.service' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- systemctl start ubuntu-bio-bridge.service' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- bash -c \"systemctl start nginx; sleep infinity\"' -WindowStyle Hidden"
+:: NOTE: Host Nginx on Port 80 is handled above on Windows. Redundant WSL Nginx commented out to eliminate Port 80 contention.
+:: powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- bash -c \"systemctl start nginx; sleep infinity\"' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%cloudflared.exe' -ArgumentList 'tunnel run ai-bs' -WindowStyle Hidden"
 
 :: Launch ChromaDB Vector Database on E-Drive (Port 8002)
@@ -68,8 +69,10 @@ echo.
 echo [3/9] Instant UI Launch...
 call :WaitForPort 5173 "Vite Frontend" 10
 
-:: Immediately open native desktop application and browser tabs
-if exist "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs" (
+:: Immediately open native desktop application and browser tabs (Prioritize local C:\AI-BS Executive Studio)
+if exist "%BASE_DIR%Launch_Desktop_Studio.vbs" (
+    start "" "%BASE_DIR%Launch_Desktop_Studio.vbs"
+) else if exist "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs" (
     start "" "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs"
 ) else if exist "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.bat" (
     start "" "C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.bat"

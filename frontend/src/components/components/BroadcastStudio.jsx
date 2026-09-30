@@ -248,7 +248,7 @@ const BroadcastStudio = () => {
   const [videoBitrate, setVideoBitrate] = useStickyState('6000k', 'aibs_video_bitrate');
   const [audioBitrate, setAudioBitrate] = useStickyState('160k', 'aibs_audio_bitrate');
   const [hardwareEncoder, setHardwareEncoder] = useStickyState('h264_nvenc', 'aibs_encoder');
-  const [encoderPreset, setEncoderPreset] = useStickyState('p5', 'aibs_preset');
+  const [encoderPreset, setEncoderPreset] = useStickyState('p1', 'aibs_preset');
   const [recordingFormat, setRecordingFormat] = useStickyState('hybrid_mp4', 'aibs_format');
   const [audioSampleRate, setAudioSampleRate] = useStickyState('48000', 'aibs_sample_rate');
   const [audioBufferSize, setAudioBufferSize] = useStickyState('512', 'aibs_buffer_size');
@@ -716,6 +716,12 @@ const BroadcastStudio = () => {
 
       const videoTrack = stream.getVideoTracks()[0];
       if (videoTrack) {
+        if ('contentHint' in videoTrack) {
+          videoTrack.contentHint = 'motion';
+        }
+        try {
+          videoTrack.applyConstraints({ frameRate: { ideal: 60, min: 60, max: 60 } }).catch(() => {});
+        } catch (e) {}
         videoTrack.onended = () => {
           setScreenStream(null);
           setSources(prev => prev.map(s => (s.type === 'game' || s.type === 'screen') ? { ...s, active: false } : s));
@@ -1927,11 +1933,11 @@ const BroadcastStudio = () => {
                         onChange={(e) => setEncoderPreset(e.target.value)}
                         style={{ width: '100%', background: '#020617', border: '1px solid #334155', color: '#f8fafc', padding: '8px 10px', borderRadius: '6px', fontSize: '12px' }}
                       >
-                        <option value="p5">P5: Slow (Good Quality - Recommended)</option>
-                        <option value="p4">P4: Medium (Default Low Latency)</option>
+                        <option value="p1">P1: Fastest (Ultra-Low Latency 5-15ms - Default)</option>
+                        <option value="p4">P4: Medium (Low Latency Balanced)</option>
+                        <option value="p5">P5: Slow (Good Quality)</option>
                         <option value="p6">P6: Slower (Better Quality)</option>
                         <option value="p7">P7: Slowest (Highest Quality)</option>
-                        <option value="p1">P1: Fastest (Lowest Latency)</option>
                       </select>
                     </div>
                   </div>

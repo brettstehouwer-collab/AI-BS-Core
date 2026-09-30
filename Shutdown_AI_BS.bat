@@ -14,11 +14,12 @@ if exist "%~dp0.git" (
     cd /d "C:\AI-BS"
 )
 
-echo [1/3] Saving all workspace changes in Git...
+echo [1/3] Saving all workspace code and documentation changes in Git...
 git rev-parse --is-inside-work-tree >nul 2>&1
 if %ERRORLEVEL% equ 0 (
+    git reset >nul 2>&1
     git add -u
-    git add backend/ frontend/src/ go-core/ scripts/ docs/ *.md >nul 2>&1
+    git add frontend/src/ frontend/components/ go-core/ scripts/ docs/ *.md >nul 2>&1
     git diff --cached --quiet || git commit -m "Auto-saved workspace before shutdown"
 ) else (
     echo [Notice] Git repository not detected or already clean.
