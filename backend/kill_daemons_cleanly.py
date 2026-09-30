@@ -7,7 +7,6 @@ sys.stdout.reconfigure(encoding='utf-8')
 current_pid = os.getpid()
 
 target_scripts = [
-    'auto_healer_daemon.py',
     'context_ingestor_daemon.py',
     'research_agent_daemon.py',
     'wallet_tracker_daemon.py',

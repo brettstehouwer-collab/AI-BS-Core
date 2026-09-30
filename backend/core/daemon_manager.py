@@ -761,17 +761,7 @@ def build_default_manager(base_dir: str | None = None) -> DaemonManager:
     # Extend here for gcs_sync_daemon, etc.
     # manager.register("gcs_sync_daemon", [sys.executable, str(base / "backend" / "gcs_sync_daemon.py")])
 
-    # Auto-Healer daemon — self-healing crash watcher
-    manager.register(
-        "auto_healer_daemon",
-        ShellCommand(
-            command=sys.executable,
-            cwd=base,
-            args=[str(base / "backend" / "auto_healer_daemon.py")],
-        ),
-    )
-
-    # Research Agent daemon — web scraping market intelligence
+    # Research Agent daemon — web scraping market intelligence (on-demand)
     manager.register(
         "research_agent_daemon",
         ShellCommand(

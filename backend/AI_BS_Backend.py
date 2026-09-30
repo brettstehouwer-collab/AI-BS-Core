@@ -362,15 +362,15 @@ def _make_cmd(script_name: str) -> ShellCommand:
     )
 
 
-# Register core daemons
+# Register core daemons (ChromaDB vector stores run on boot; non-essential daemons are on-demand)
 # daemon_supervisor.register("memory_daemon", _make_cmd("memory_daemon.py")) # Migrated to ConsolidatedDaemonEngine
 daemon_supervisor.register(
-    "context_ingestor_daemon", _make_cmd("context_ingestor_daemon.py")
+    "context_ingestor_daemon", _make_cmd("context_ingestor_daemon.py"), auto_start=False
 )
-daemon_supervisor.register("researcher_daemon", _make_cmd("research_agent_daemon.py"))
-daemon_supervisor.register("discord_bot_daemon", _make_cmd("discord_bot_daemon.py"))
+daemon_supervisor.register("researcher_daemon", _make_cmd("research_agent_daemon.py"), auto_start=False)
+daemon_supervisor.register("discord_bot_daemon", _make_cmd("discord_bot_daemon.py"), auto_start=False)
 
-# Register Vector Database Daemons
+# Register Vector Database Daemons (Essential for Long-Term Memory)
 daemon_supervisor.register(
     "chroma_daemon",
     ShellCommand(
@@ -395,42 +395,31 @@ daemon_supervisor.register(
         sandbox=False
     )
 )
-# daemon_supervisor.register(
-#     "wallet_tracker_daemon", _make_cmd("wallet_tracker_daemon.py")
-# ) # Migrated to ConsolidatedDaemonEngine
-daemon_supervisor.register("crypto_trader_bot", _make_cmd("crypto_trader_bot.py"))
-daemon_supervisor.register("auto_healer_daemon", _make_cmd("auto_healer_daemon.py"))
+# On-demand daemons (decoupled from startup)
+daemon_supervisor.register("crypto_trader_bot", _make_cmd("crypto_trader_bot.py"), auto_start=False)
+# auto_healer_daemon permanently excised — placeholder script not needed
 daemon_supervisor.register(
-    "bullshit_writer_daemon", _make_cmd("bullshit_writer_daemon.py")
+    "bullshit_writer_daemon", _make_cmd("bullshit_writer_daemon.py"), auto_start=False
 )
-# daemon_supervisor.register(
-#     "bullshit_heuristics_daemon", _make_cmd("bullshit_heuristics_daemon.py")
-# ) # Migrated to ConsolidatedDaemonEngine
-daemon_supervisor.register("broadcast_daemon", _make_cmd("aibs_broadcast_daemon.py"))
-daemon_supervisor.register("bullshit_senses", _make_cmd("bullshit_senses.py"))
-daemon_supervisor.register("bullshit_medic", _make_cmd("bullshit_medic.py"))
-daemon_supervisor.register("bullshit_memory", _make_cmd("bullshit_memory.py"))
-daemon_supervisor.register("bullshit_trainer", _make_cmd("bullshit_trainer.py"))
-# daemon_supervisor.register(
-#     "bullshit_vault_watchdog", _make_cmd("bullshit_vault_watchdog.py")
-# ) # Migrated to ConsolidatedDaemonEngine
+daemon_supervisor.register("broadcast_daemon", _make_cmd("aibs_broadcast_daemon.py"), auto_start=False)
+daemon_supervisor.register("bullshit_senses", _make_cmd("bullshit_senses.py"), auto_start=False)
+daemon_supervisor.register("bullshit_medic", _make_cmd("bullshit_medic.py"), auto_start=False)
+daemon_supervisor.register("bullshit_memory", _make_cmd("bullshit_memory.py"), auto_start=False)
+daemon_supervisor.register("bullshit_trainer", _make_cmd("bullshit_trainer.py"), auto_start=False)
 daemon_supervisor.register(
-    "news_firehose_daemon", _make_cmd("core/news_firehose_daemon.py")
+    "news_firehose_daemon", _make_cmd("core/news_firehose_daemon.py"), auto_start=False
 )
 daemon_supervisor.register(
-    "unreal_signaling_daemon", _make_cmd("AI_BS_Unreal_Signaling_Server.py")
+    "unreal_signaling_daemon", _make_cmd("AI_BS_Unreal_Signaling_Server.py"), auto_start=False
 )
 daemon_supervisor.register(
-    "finance_ingest_daemon", _make_cmd("ingest_finance_api.py")
+    "finance_ingest_daemon", _make_cmd("ingest_finance_api.py"), auto_start=False
 )
 daemon_supervisor.register(
-    "news_ingest_daemon", _make_cmd("ingest_news_rss.py")
+    "news_ingest_daemon", _make_cmd("ingest_news_rss.py"), auto_start=False
 )
 daemon_supervisor.register(
-    "infinite_learning_loop", _make_cmd("core/infinite_learning_loop.py")
-)
-daemon_supervisor.register(
-    "unified_crypto_pearl_watchdog", _make_cmd("core/unified_crypto_pearl_watchdog.py")
+    "unified_crypto_pearl_watchdog", _make_cmd("core/unified_crypto_pearl_watchdog.py"), auto_start=False
 )
 
 
@@ -454,30 +443,8 @@ async def lifespan(app: FastAPI):
     # --- Consolidated Background Daemons (Migrated from on_event) ---
     print("[Monolithic Core] Initializing Consolidated Background Daemons...")
     
-    # 1. Lead Generator Daemon Loop
-    from bullshit_lead_generator import WestMichiganLeadGen
-    import logging
-    logger = logging.getLogger(__name__)
-    async def lead_gen_loop():
-        gen = WestMichiganLeadGen()
-        while True:
-            try:
-                await gen.run_sweep()
-            except Exception as e:
-                logger.error(f"Lead Gen Daemon fault: {e}")
-            await asyncio.sleep(86400)  # Sweep once per 24 hours
-    asyncio.create_task(lead_gen_loop())
-
     # Consolidated Daemon Engine handles memory_daemon, heuristics_daemon, wallet_tracker, vault_watchdog
     asyncio.create_task(daemon_engine.start())
-    
-    # Pre-load LocalMattingEngine Lifespan Singleton on GPU
-    try:
-        from modules.vision_matting import get_matting_engine
-        app.state.matting_engine = get_matting_engine("birefnet-general")
-        print("[Monolithic Core] LocalMattingEngine Lifespan Singleton Online on GPU.")
-    except Exception as e:
-        print(f"[Monolithic Core] LocalMattingEngine startup warning: {e}")
 
     # Start periodic telemetry broadcast loop (active whenever clients are connected)
     async def telemetry_broadcast_loop():
@@ -734,6 +701,13 @@ try:
     app.include_router(codebase_knowledge_router)
 except ImportError as e:
     print(f"Warning: Could not load codebase_knowledge_router: {e}")
+
+try:
+    from routers.steam_router import router as steam_router
+    app.include_router(steam_router)
+except ImportError as e:
+    print(f"Warning: Could not load steam_router: {e}")
+
 
 class StreamProbeRequest(BaseModel):
     endpoints: Optional[List[Dict[str, Any]]] = []

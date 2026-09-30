@@ -63,6 +63,7 @@ const BibleStudyTab = safeLazy(() => import('./src/components/BibleStudyTab.jsx'
 const DashboardView = safeLazy(() => import('./components/CommandCenterTab'));
 const IdeView = safeLazy(() => import('./components/SplitPaneIDEWorkspace.jsx'));
 const ChatTab = safeLazy(() => import('./components/ChatTab'));
+const SteamGamingHubTab = safeLazy(() => import('./components/SteamGamingHubTab.jsx'));
 
 const AdvertisingTab = safeLazy(() => import('./components/AdvertisingTab'));
 const SyndicationTab = safeLazy(() => import('./components/SyndicationTab.jsx'));
@@ -188,6 +189,7 @@ const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
+  { key: 'steam_gaming', label: '🎮 Steam Gaming Hub', description: 'Native Game Library, One-Click Launcher & Hardware RTX 4090 Game Mode Governor', Component: SteamGamingHubTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder', Component: VisualWorkflowDAGTab },

@@ -1,8 +1,8 @@
 # AI-BS Active State Recovery Checkpoint
 
-**Last Updated:** 2026-09-24
-**Active Ecosystem Version:** v5.299.0
-**Active Resume Keyword:** `RESUME_SENTINEL_VOICE_CLOUDBURST_V5_299_0`
+**Last Updated:** 2026-09-30
+**Active Ecosystem Version:** v5.299.1
+**Active Resume Keyword:** `RESUME_AFTER_SYSTEM_RESTART_V5_299_1`
 
 ---
 

@@ -100,6 +100,10 @@ class InfiniteLearningLoop:
         try:
             # Handle JSON list (e.g. session_history_archive.json)
             if path.endswith(".json"):
+                mtime = os.path.getmtime(path)
+                if getattr(self, "_last_json_mtime", None) == mtime:
+                    return []
+                self._last_json_mtime = mtime
                 with open(path, "r", encoding="utf-8", errors="ignore") as f:
                     data = json.load(f)
                     if isinstance(data, list) and data:
@@ -136,17 +140,19 @@ class InfiniteLearningLoop:
         self.last_tick_time = time.time()
         telemetry = self.get_telemetry()
 
-        # Guardrail: Check local process & system memory to guarantee zero pagefile spikes
+        # Guardrail: Check local process & system memory to guarantee zero pooling or leaks
         import gc
         cur_proc = psutil.Process()
         proc_rss_mb = cur_proc.memory_info().rss / (1024 * 1024)
-        if proc_rss_mb > 1500:  # If daemon process itself uses > 1.5 GB, force garbage collection
+        if proc_rss_mb > 350:  # If daemon process uses > 350 MB, aggressively force garbage collection & clear caches
             gc.collect()
+            if len(self.recent_heuristics) > 10:
+                self.recent_heuristics = self.recent_heuristics[:10]
 
         vm = psutil.virtual_memory()
-        if vm.percent > 88:  # System under heavy load (e.g. gaming)
-            logger.warning(f"High system memory usage ({vm.percent}%). Pausing learning tick to preserve gaming headroom.")
-            time.sleep(15)
+        if vm.percent > 78:  # System under heavy load (e.g. gaming, rendering, training)
+            logger.info(f"System memory usage elevated ({vm.percent}%). Idling learning tick for 60s to preserve headspace.")
+            time.sleep(60)
             return
 
         # Check transcript discoveries
@@ -175,15 +181,15 @@ class InfiniteLearningLoop:
                     "telemetry": telemetry
                 }
                 self.recent_heuristics.insert(0, entry)
-                if len(self.recent_heuristics) > self.max_history_entries:
-                    self.recent_heuristics.pop()
+                if len(self.recent_heuristics) > 20:
+                    self.recent_heuristics = self.recent_heuristics[:20]
                 logger.info(f"Tick {self.iteration} stored new heuristic | CPU: {telemetry['cpu_percent']}% | RAM: {telemetry['system_ram_used_mb']}MB")
-                self.throttle_seconds = 4.0
-            else:
                 self.throttle_seconds = 10.0
+            else:
+                self.throttle_seconds = 60.0
         else:
-            # Idle baseline: update in-memory telemetry without polluting databases with dummy records
-            self.throttle_seconds = 15.0
+            # Idle baseline: idle for 120 seconds when there is no new activity or input, preventing constant polling
+            self.throttle_seconds = 120.0
 
     def _loop_worker(self):
         logger.info("Infinite Learning Loop background worker engaged with memory protection.")

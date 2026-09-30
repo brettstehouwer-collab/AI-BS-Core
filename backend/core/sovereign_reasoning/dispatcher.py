@@ -222,10 +222,49 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
             yield f"- **Status:** `{res.get('status')}`\n"
             return
 
-    # 3. Dynamic Model Affinity Discovery (Fast Single-Model or Executive Persona)
+    # 3. Dynamic Model Affinity Discovery & Swarm Pre-Parse Pass
     from .model_domain_matrix import ModelDomainMatrix
+    from .cross_model_bus import CrossModelCognitiveBus
     ranked_models = ModelDomainMatrix.score_prompt_against_fleet(user_query)
-    top_specialist = ranked_models[0]["model"] if (ranked_models and ranked_models[0]["score"] > 2.0) else "stehouwer_llm"
+    top_candidate = ranked_models[0] if ranked_models else None
+    
+    specialist_briefing = ""
+    # If the user prompt has strong affinity to a specialized model (coding, hardware, math, long-context)
+    # execute an atomic pre-parse pass to give Stehouwer LLM verified domain context
+    if top_candidate and top_candidate["score"] >= 3.0:
+        target_model = top_candidate["model"]
+        clean_target = target_model.split(":")[0].lower()
+        if "stehouwer_llm" not in clean_target and "stehouwer-llm" not in clean_target:
+            try:
+                yield f"> 🧠 **[Swarm Pre-Parse: Specialist `{target_model}`]** *({top_candidate.get('title')})*\n"
+                yield f"> 💭 *Analyzing domain constraints and constructing technical grounding briefing...*\n\n"
+                
+                spec_system = (
+                    f"You are the {top_candidate.get('title')} in the AI-BS ecosystem. "
+                    f"Provide an accurate, concise, domain-grounded technical analysis and solution outline "
+                    f"for the user request. Keep your output focused, factual, and actionable.\n\n"
+                    f"User Request: {user_query}"
+                )
+                spec_system = inject_safety_directive(spec_system)
+
+                async with httpx.AsyncClient() as pre_client:
+                    spec_output = await CrossModelCognitiveBus.call_model_atomic(
+                        client=pre_client,
+                        model=target_model,
+                        prompt=user_query,
+                        system_prompt=spec_system,
+                        max_tokens=450,
+                        temperature=0.4,
+                        timeout=35.0
+                    )
+                    if spec_output and not spec_output.startswith("["):
+                        specialist_briefing = (
+                            f"\n\n[SWARM SPECIALIST PRE-PARSE BRIEFING — {top_candidate.get('title')} ({target_model})]:\n"
+                            f"{spec_output}\n"
+                            f"[END OF SWARM BRIEFING — Deliver the final synthesized answer directly to the user in your sovereign Stehouwer voice.]\n\n"
+                        )
+            except Exception as pe:
+                print(f"[Swarm Pre-Parse Warning] {pe}")
 
     # Use clean_user_query so memory vault and lexicon search don't explode on massive document payloads
     context = await asyncio.to_thread(SovereignMemoryVault.get_unified_context, user_query)
@@ -265,9 +304,11 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
 
     stehouwer_system_prompt = inject_safety_directive(stehouwer_system_prompt)
 
+    synthesized_prompt = f"{specialist_briefing}{final_prompt}" if specialist_briefing else final_prompt
+
     payload = {
         "model": "stehouwer_llm",
-        "prompt": final_prompt,
+        "prompt": synthesized_prompt,
         "system": stehouwer_system_prompt,
         "stream": True,
         "keep_alive": "15m",

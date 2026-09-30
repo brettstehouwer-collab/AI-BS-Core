@@ -11,7 +11,6 @@ target_keywords = [
     'track_live',
     'audit_all_cards',
     'focus_new_drops',
-    'auto_healer_daemon',
     'context_ingestor_daemon',
     'research_agent_daemon',
     'wallet_tracker_daemon',

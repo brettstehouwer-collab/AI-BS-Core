@@ -322,6 +322,105 @@ MODEL_FLEET_TAXONOMY: Dict[str, Dict[str, Any]] = {
             r"\b(?:stehouwer|ai-bs|sovereign|executive\s+core)\b",
             r"\b(?:brett|master\s+directive|18-port\s+matrix)\b"
         ]
+    },
+
+    "stehouwer-llm:latest": {
+        "title": "Sovereign Executive Core (Hyphenated Tag)",
+        "role": "sovereign_executive_core",
+        "weight": 1.00,
+        "description": "Alias for the sovereign executive core model.",
+        "keywords": ["stehouwer", "ai-bs", "sovereign"],
+        "regex_patterns": [r"\b(?:stehouwer|ai-bs)\b"]
+    },
+
+    "stehouwer-persona-v2:latest": {
+        "title": "Stehouwer Persona v2 Resonant Memory Core",
+        "role": "stehouwer_persona_v2_resonance",
+        "weight": 0.94,
+        "description": "Enhanced persona model tuned for memory resonance, creative dialogue, and unfiltered authorial presence.",
+        "keywords": ["persona", "stehouwer persona", "v2 persona", "author voice", "presence", "character"],
+        "regex_patterns": [r"\b(?:persona\s*v2|stehouwer\s+persona)\b"]
+    },
+
+    "stehouwer-qwen:latest": {
+        "title": "Station 13 Hardware & Boardview Diagnostician (Hyphenated)",
+        "role": "hardware_schematics_boardview",
+        "weight": 0.95,
+        "description": "Motherboard schematics, diode mode readings, IC pinouts, and hardware diagnostics.",
+        "keywords": ["hardware", "schematic", "boardview", "diode mode", "short circuit", "power rail", "bios"],
+        "regex_patterns": [r"\b(?:diode\s+mode|power\s+rail|boardview|schematic|station\s*13)\b"]
+    },
+
+    "stehouwer-dolphin:latest": {
+        "title": "Wave Studio Audio DSP & Prosody (Hyphenated)",
+        "role": "audio_dsp_prosody_engineering",
+        "weight": 0.92,
+        "description": "Audio stem separation, SoX filtergraphs, LUFS mastering, and creative prosody.",
+        "keywords": ["audio", "dsp", "stem", "demucs", "vocal", "lufs", "ebu r128", "mastering"],
+        "regex_patterns": [r"\b(?:demucs|stems?|lufs|prosody|sox|vst3)\b"]
+    },
+
+    "stehouwer-hermes:latest": {
+        "title": "Autonomous Agentic Orchestrator & Tool Supervisor (Hyphenated)",
+        "role": "agentic_tool_supervision",
+        "weight": 0.90,
+        "description": "Multi-agent crew orchestration, tool parameters, and execution dispatch.",
+        "keywords": ["agentic", "tool calling", "function call", "autonomous agent", "agent crew"],
+        "regex_patterns": [r"\b(?:tool\s+calling|function\s+call|agentic\s+loop)\b"]
+    },
+
+    "stehouwer-llm-dolphin:latest": {
+        "title": "Stehouwer Narrative Fidelitas & Autobiographical Archivist (Hyphenated)",
+        "role": "stehouwer_fidelitas_archival",
+        "weight": 0.91,
+        "description": "Stehouwer family lore, verbatim reality archival blocks, and personal memoir streams.",
+        "keywords": ["stehouwer narrative", "reality archival block", "verbatim stream", "autobiography", "memoir"],
+        "regex_patterns": [r"\b(?:stehouwer\s+reality|archival\s+block|fidelitas\s+mandate)\b"]
+    },
+
+    "gemma4-12b:latest": {
+        "title": "Factual Grounding & Empirical Logic Validator (Full Tag)",
+        "role": "factual_grounding_logic_auditor",
+        "weight": 0.91,
+        "description": "Empirical grounding, counterarguments, and factual verification.",
+        "keywords": ["fact check", "verify", "audit", "grounding", "accuracy", "fallacy"],
+        "regex_patterns": [r"\b(?:fact[- ]check|verify\s+claims?|logical\s+fallacy)\b"]
+    },
+
+    "llama3.1-8b-instruct:latest": {
+        "title": "High-Efficiency Instruction Execution Specialist",
+        "role": "rapid_instruction_parsing",
+        "weight": 0.89,
+        "description": "Direct, structured instruction following with fast token generation.",
+        "keywords": ["instructions", "step by step", "follow precisely", "format output", "json response"],
+        "regex_patterns": [r"\b(?:follow\s+instructions?|format\s+as\s+json)\b"]
+    },
+
+    "llama3.1:8b-instruct-q8_0": {
+        "title": "High-Precision Quantized Llama 3.1 Instruction Core",
+        "role": "high_precision_reasoning",
+        "weight": 0.92,
+        "description": "Full 8-bit quantization for superior mathematical and logic accuracy without quantization loss.",
+        "keywords": ["math", "precision", "calculation", "formula", "algebra", "numerical", "exact"],
+        "regex_patterns": [r"\b(?:precision|high[- ]accuracy|exact\s+calculation)\b"]
+    },
+
+    "llama3.1-technical:latest": {
+        "title": "Technical Systems Specification & Architecture SOP",
+        "role": "context_coherence_technical_reports",
+        "weight": 0.91,
+        "description": "Formal technical systems architecture specifications, protocols, and standard operating procedures.",
+        "keywords": ["specification", "system specification", "spec sheet", "rfc", "protocol", "technical manual"],
+        "regex_patterns": [r"\b(?:specification|system\s+spec|sop|protocol\s+spec)\b"]
+    },
+
+    "llama3-baseline:latest": {
+        "title": "Standard Reference Baseline & Sanity Auditor",
+        "role": "baseline_benchmark_sanity",
+        "weight": 0.88,
+        "description": "Unmodified standard baseline reference for validating regressions and sanity checks.",
+        "keywords": ["baseline", "reference check", "sanity audit", "unmodified baseline"],
+        "regex_patterns": [r"\b(?:baseline|sanity\s+check)\b"]
     }
 }
 

@@ -121,31 +121,36 @@ def store_heuristic(heuristic_text: str, metadata: Optional[Dict[str, Any]] = No
     except Exception as e:
         logger.debug(f"SQLite vault insert notice: {e}")
 
-    # 3. Store in master_memory_dump.json
+    # 3. Store in master_memory_dump.json (streaming / memory-bounded)
     try:
         mem_path = get_master_memory_path()
-        entries = []
-        if os.path.exists(mem_path):
-            with open(mem_path, "r", encoding="utf-8", errors="ignore") as f:
-                try:
-                    entries = json.load(f)
-                    if not isinstance(entries, list):
-                        entries = [entries]
-                except Exception:
-                    entries = []
-
         entry = {
             "id": doc_id,
             "text": heuristic_text,
             "metadata": meta,
             "timestamp": meta["timestamp"]
         }
-        entries.append(entry)
-        if len(entries) > 1000:
-            entries = entries[-1000:]
-
-        with open(mem_path, "w", encoding="utf-8") as f:
-            json.dump(entries, f, indent=2)
+        # If file is very large, avoid parsing massive JSON arrays into RAM on every tick
+        file_size_mb = os.path.getsize(mem_path) / (1024 * 1024) if os.path.exists(mem_path) else 0
+        if file_size_mb > 5.0:
+            # Over 5MB: append as JSON-lines or write with minimal overhead to prevent pooling
+            with open(mem_path + "l", "a", encoding="utf-8") as f:
+                f.write(json.dumps(entry) + "\n")
+        else:
+            entries = []
+            if os.path.exists(mem_path):
+                with open(mem_path, "r", encoding="utf-8", errors="ignore") as f:
+                    try:
+                        entries = json.load(f)
+                        if not isinstance(entries, list):
+                            entries = [entries]
+                    except Exception:
+                        entries = []
+            entries.append(entry)
+            if len(entries) > 500:
+                entries = entries[-500:]
+            with open(mem_path, "w", encoding="utf-8") as f:
+                json.dump(entries, f, indent=2)
     except Exception as e:
         logger.debug(f"Master memory dump write notice: {e}")
 
