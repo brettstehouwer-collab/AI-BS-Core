@@ -415,6 +415,49 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     }
   };
 
+  // 8b. Vibe Checkpoint & Rollback Handlers (Vibe-Coding Protection Engine)
+  const [isCheckpointing, setIsCheckpointing] = useState(false);
+  const [lastCheckpointHash, setLastCheckpointHash] = useState(null);
+
+  const handleCreateVibeCheckpoint = async () => {
+    setIsCheckpointing(true);
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/executive/vibe-checkpoint`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label: 'Manual Executive Vibe Checkpoint', author: 'Operator' })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLastCheckpointHash(data.checkpoint);
+        alert(`✅ Vibe-Checkpoint Captured: [${data.checkpoint}] in ${data.elapsed_ms}ms.`);
+      }
+    } catch (err) {
+      console.error('Checkpoint error:', err);
+    } finally {
+      setIsCheckpointing(false);
+    }
+  };
+
+  const handleRollbackVibeCheckpoint = async () => {
+    if (!window.confirm('⚠️ ROLLBACK: Revert all uncommitted code changes to the last safe Vibe-Checkpoint?')) return;
+    setIsCheckpointing(true);
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/executive/vibe-rollback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      if (res.ok) {
+        alert('✅ Rollback Complete: Workspace code restored to last safe Vibe-Checkpoint.');
+      }
+    } catch (err) {
+      console.error('Rollback error:', err);
+    } finally {
+      setIsCheckpointing(false);
+    }
+  };
+
   // =========================================================================
   // PRESET COMMANDS
   // =========================================================================
@@ -550,6 +593,52 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               );
             })}
           </div>
+
+          {/* Vibe Checkpoint & Rollback Controls */}
+          <button
+            onClick={handleCreateVibeCheckpoint}
+            disabled={isCheckpointing}
+            style={{
+              background: 'linear-gradient(180deg, #1f6feb 0%, #1158c7 100%)',
+              color: '#ffffff',
+              border: '1px solid #388bfd',
+              borderRadius: '6px',
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              boxShadow: '0 0 8px rgba(56, 139, 253, 0.3)'
+            }}
+            title="Create an instant non-destructive Git snapshot of your code"
+          >
+            <span>💾</span>
+            <span>{isCheckpointing ? 'SAVING...' : 'VIBE-CHECKPOINT'}</span>
+          </button>
+
+          <button
+            onClick={handleRollbackVibeCheckpoint}
+            disabled={isCheckpointing}
+            style={{
+              background: '#21262d',
+              color: '#e6edf3',
+              border: '1px solid #30363d',
+              borderRadius: '6px',
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+            title="Revert all uncommitted code changes to last safe Vibe-Checkpoint"
+          >
+            <span>↩️</span>
+            <span>ROLLBACK</span>
+          </button>
 
           {/* Emergency Halt Button */}
           <button
