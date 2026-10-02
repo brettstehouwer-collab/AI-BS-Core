@@ -63,7 +63,7 @@ const BibleStudyTab = safeLazy(() => import('./src/components/BibleStudyTab.jsx'
 const DashboardView = safeLazy(() => import('./components/CommandCenterTab'));
 const IdeView = safeLazy(() => import('./components/SplitPaneIDEWorkspace.jsx'));
 const ChatTab = safeLazy(() => import('./components/ChatTab'));
-const SteamGamingHubTab = safeLazy(() => import('./components/SteamGamingHubTab.jsx'));
+const CentralGamingHubTab = safeLazy(() => import('./components/CentralGamingHubTab.jsx'));
 
 const AdvertisingTab = safeLazy(() => import('./components/AdvertisingTab'));
 const SyndicationTab = safeLazy(() => import('./components/SyndicationTab.jsx'));
@@ -189,7 +189,7 @@ const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
-  { key: 'steam_gaming', label: '🎮 Steam Gaming Hub', description: 'Native Game Library, One-Click Launcher & Hardware RTX 4090 Game Mode Governor', Component: SteamGamingHubTab },
+  { key: 'central_gaming_hub', label: '🎮 Central Gaming Hub', description: 'Unified Ludic Nexus: 2-Player P2P Dyadic Hub, Steam Game Library & Win32 Memory Trainer', Component: CentralGamingHubTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder', Component: VisualWorkflowDAGTab },
@@ -249,10 +249,8 @@ const tabs = [
   { key: 'bv_media_creator', label: '🎨 BV-Media Creator & BsMedia-Chat', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault', Component: BsMediaCreatorTab },
   { key: 'media_studio', label: '🎬 Autonomous Media Studio', description: 'Autonomous Headless Media Production Studio, 13-Domain NLE & Visual Editor', Component: MediaStudioTab },
   { key: 'music_daw', label: 'FL Music Studio (DAW)', description: 'Pattern-based Digital Audio Workspace & FL Studio-Style Beat Maker', Component: MusicDAWStudioTab },
-  { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Autonomous 5-Node Visual Pipeline Engine', Component: VisualWorkflowDAGTab },
   { key: 'ecosystem_blueprint', label: 'Matrix Blueprint & ROI', description: 'Interactive Ecosystem Architecture, 5-Pillar Matrix & Financial ROI Simulator', Component: EcosystemBlueprintTab },
-  { key: 'lexicon_dashboard', label: '🎭 Lexicon Engine Dashboard', description: 'Real-time semantic expansion and Persona trigger visualization', Component: LexiconTheatricalDashboard },
-  { key: 'gaming_lab', label: '🎮 Gaming & Process Memory Lab', description: 'Win32 Runtime Memory Manipulation, Pointer Tracking & Game Trainer Suite', Component: ProcessMemoryLabTab }
+  { key: 'lexicon_dashboard', label: '🎭 Lexicon Engine Dashboard', description: 'Real-time semantic expansion and Persona trigger visualization', Component: LexiconTheatricalDashboard }
 ];
 
 export default function App() {
@@ -268,9 +266,16 @@ export default function App() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlTab = params.get('tab') || (params.get('portal') === 'nda' ? 'nda_module' : null);
-      if (urlTab) return urlTab;
+      if (urlTab) {
+        if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') return 'central_gaming_hub';
+        if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) return 'unified_crypto';
+        return urlTab;
+      }
     }
-    return localStorage.getItem(ACTIVE_TAB_STORAGE_KEY) || 'dashboard';
+    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY) || 'dashboard';
+    if (stored === 'steam_gaming' || stored === 'gaming_lab') return 'central_gaming_hub';
+    if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(stored)) return 'unified_crypto';
+    return stored;
   });
   const { backendUrl, backendStatus } = useBackendHealth();
   const [localTrustState, setLocalTrustState] = useState({ enabled: false, allowedUsers: [] });
@@ -573,7 +578,9 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
-      const urlTab = params.get('tab');
+      let urlTab = params.get('tab');
+      if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') urlTab = 'central_gaming_hub';
+      if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) urlTab = 'unified_crypto';
       if (urlTab && urlTab !== activeTab) {
         setActiveTab(urlTab);
       }

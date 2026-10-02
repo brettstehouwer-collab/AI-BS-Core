@@ -1,47 +1,62 @@
-# Locked Mission Architecture Specification: Add a persistent SQLite event-logging daemon for Pearl mining stratum telemetry
+# AI-BS Mission Specification: AI Music & Vocal Production Suite
 
-**Specification ID:** `grill_1789976998`
-**Locked Timestamp:** 2026-09-21 03:52:06
-**Status:** LOCKED & ARCHITECTURALLY VERIFIED
-
----
-
-## 1. Verified Codebase Context
-- **Workspace Root:** `C:\AI-BS`
-- **Context Discoveries:** Inspected workspace: verified 41 relevant modules and 1 schemas.
-- Verified Module: `backend\aibs_sqlite_backup_daemon.py`
-- Verified Module: `backend\aibs_broadcast_daemon.py`
-- Verified Module: `backend\aibs_gpu_worker_daemon.py`
-- Verified Module: `backend\aibs_overlay_daemon.py`
-- Verified Module: `backend\aibs_social_daemon.py`
-- Verified Module: `backend\aibs_vst_daemon.py`
-- Verified Schema: `backend/aibs_master.db (27 tables, WAL mode enabled)`
+**Date:** 2026-10-01  
+**Status:** LOCKED & APPROVED via `/grill-me`  
+**Target Subsystem:** Audio & Vocal Studio (`MusicDAWStudioTab.jsx`, `vst_router.py`, `aibs_vst_daemon.py`, `f5_tts_daemon.py`)  
+**Target Version Increment:** Next Release Milestone  
 
 ---
 
-## 2. Agreed Architectural Decisions
+## 1. Architectural Scope & Objectives
 
-### Decision 1: Data Schemas & State Persistence
-- **Edge Case / Question:** If stratum/event telemetry logs continuously, direct synchronous disk writes will lock SQLite during peak bursts.
-- **Locked Recommendation:** Implement a Python in-memory queue (queue.Queue) flushing batches every 5 seconds or 50 entries using WAL mode (PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;).
-- **Approval Status:** operator_approval
+Integrate a sovereign, zero-cost AI Music & Vocal Production Suite directly into the AI-BS ecosystem, unifying neural stem separation, local vocal synthesis/cloning, and multi-track audio workstation control:
 
-### Decision 2: Storage Retention & Bloat Mitigation
-- **Edge Case / Question:** High-frequency telemetry will bloat SQLite past 2GB within weeks.
-- **Locked Recommendation:** Add an automatic rolling prune trigger maintaining a rolling 7-day window (DELETE FROM telemetry WHERE timestamp < strftime('%s', 'now', '-7 days')).
-- **Approval Status:** operator_approval
-
-### Decision 3: Data Schemas & State Persistence
-- **Edge Case / Question:** If stratum/event telemetry logs continuously, direct synchronous disk writes will lock SQLite during peak bursts.
-- **Locked Recommendation:** Implement a Python in-memory queue (queue.Queue) flushing batches every 5 seconds or 50 entries using WAL mode (PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;).
-- **Approval Status:** operator_approval
-
-### Decision 4: Storage Retention & Bloat Mitigation
-- **Edge Case / Question:** High-frequency telemetry will bloat SQLite past 2GB within weeks.
-- **Locked Recommendation:** Add an automatic rolling prune trigger maintaining a rolling 7-day window (DELETE FROM telemetry WHERE timestamp < strftime('%s', 'now', '-7 days')).
-- **Approval Status:** operator_approval
+1. **Neural Stem Separation (Demucs)**:
+   - Separate input audio (MP3/WAV/FLAC) into 4 isolated stems: `Vocals`, `Drums`, `Bass`, `Other`.
+   - Multi-thread execution with on-demand GPU offload and JIT VRAM purge.
+2. **Neural Vocal Synthesis & Voice Cloning (F5-TTS)**:
+   - Voice cloning and lyrical vocal synthesis via existing backend daemon [`backend/f5_tts_daemon.py`](file:///C:/AI-BS/backend/f5_tts_daemon.py).
+   - High-fidelity 24kHz/48kHz WAV audio generation from text/lyric prompts.
+3. **DAW & VST Integration**:
+   - Direct integration into [`frontend/src/components/daw/MusicDAWStudioTab.jsx`](file:///C:/AI-BS/frontend/src/components/daw/MusicDAWStudioTab.jsx).
+   - Real-time stem track loading into Channel Rack, Piano Roll, and Mixer.
+   - VST Bridge hook via Port 8013 / [`backend/routers/vst_router.py`](file:///C:/AI-BS/backend/routers/vst_router.py).
 
 ---
 
-## 3. Transition to Stage 2 Planning & Execution
-This specification is locked and directly feeds into `task.md`, `implementation_plan.md`, and the Autonomous Multi-Tool Execution Loop.
+## 2. Decision Tree Matrix (Resolved via /grill-me)
+
+### Branch 1: Data Schemas & State Persistence
+* **Artifact Directory**: `saved_data/audio_stems/<project_id>/`
+  - `original.wav`, `vocals.wav`, `drums.wav`, `bass.wav`, `other.wav`.
+* **Database Vault**: Table `audio_vocal_projects` in [`backend/stehouwer_vault.db`](file:///C:/AI-BS/backend/stehouwer_vault.db):
+  - `id`: TEXT PRIMARY KEY
+  - `title`: TEXT
+  - `created_at`: TIMESTAMP
+  - `source_file`: TEXT
+  - `stems_path`: TEXT
+  - `vocal_prompt`: TEXT
+  - `duration_seconds`: REAL
+  - `sample_rate`: INTEGER
+  - `status`: TEXT ('queued', 'processing', 'completed', 'failed')
+  - `metadata_json`: TEXT
+* **Write Mode**: SQLite `PRAGMA journal_mode=WAL;` with busy timeout = 5000ms.
+
+### Branch 2: Concurrency, Locking & Resource Limits
+* **JIT VRAM Allocation Policy**:
+  - Neural models (Demucs / F5-TTS) load into RTX 4090 VRAM ONLY during active generation passes.
+  - Automatic `torch.cuda.empty_cache()` and garbage collection immediately after pass completion.
+  - Zero persistent VRAM footprint to maintain Salad top-tier container qualification (>16 GB free VRAM headroom).
+* **Thermal & Power Guard**:
+  - Bound by [`scripts/gpu_thermal_guardian.py`](file:///C:/AI-BS/scripts/gpu_thermal_guardian.py) (<74°C tripwire).
+
+### Branch 3: Error Handling & Circuit Breakers
+* **Fallback Strategy**: If GPU VRAM is under high external demand (>18 GB utilized by Salad), automatically fall back to CPU multi-threading (AMD Ryzen 9 9950X, 16 cores / 32 threads) without failing the job.
+* **Timeout & Recovery**: Maximum 180s per separation job; automatically remove orphaned `.tmp` audio chunks on failure.
+
+### Branch 4: Security, Network & Compliance
+* **Zero-Cost Mandate**: 100% local runtimes; strictly zero commercial API tokens, paid endpoints, or cloud billing.
+* **18-Port Collision Matrix**:
+  - Port 8013: VST3 Audio Bridge.
+  - Port 8080: FastAPI Core Engine (Router mounted under `/api/v1/audio`).
+* **Multi-Mirror Synchronization**: All UI components synchronized across all 4 mirror paths before release build.

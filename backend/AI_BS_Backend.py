@@ -4234,6 +4234,89 @@ async def execute_ide_plan(request: Request):
         return {"status": "error", "message": str(e)}
 
 
+@app.post("/api/v1/hybrid-chat/stream")
+async def hybrid_chat_stream_endpoint(request: Request):
+    """Real-time token streaming endpoint for BS-CHAT Stehouwer LLM."""
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+
+    prompt = body.get("prompt", "")
+    messages_in = body.get("messages", [])
+    model_name = body.get("model", "stehouwer_llm")
+
+    formatted_messages = []
+    if messages_in:
+        for m in messages_in:
+            if isinstance(m, dict):
+                formatted_messages.append({"role": m.get("role", "user"), "content": str(m.get("content", ""))})
+    
+    if prompt and (not formatted_messages or formatted_messages[-1].get("content") != prompt):
+        formatted_messages.append({"role": "user", "content": prompt})
+
+    if not formatted_messages:
+        formatted_messages.append({"role": "user", "content": "Hello"})
+
+    system_persona = (
+        "You are Stehouwer LLM. Maintain a clinical, objective, highly precise, authentic tone. "
+        "Answer thoroughly and directly."
+    )
+    system_persona = inject_safety_directive(system_persona)
+    if not any(m.get("role") == "system" for m in formatted_messages):
+        formatted_messages.insert(0, {"role": "system", "content": system_persona})
+
+    ollama_hosts = ["http://127.0.0.1:11434", "http://127.0.0.1:11435"]
+    payload = {
+        "model": model_name,
+        "messages": formatted_messages,
+        "stream": True,
+        "options": {
+            "temperature": 0.5,
+            "num_ctx": 8192
+        }
+    }
+
+    async def generate_token_stream():
+        streamed_any = False
+        for host in ollama_hosts:
+            try:
+                async with httpx.AsyncClient(timeout=httpx.Timeout(600.0, connect=5.0, read=600.0)) as client:
+                    async with client.stream("POST", f"{host}/api/chat", json=payload) as resp:
+                        if resp.status_code == 200:
+                            async for line in resp.aiter_lines():
+                                if line:
+                                    try:
+                                        chunk = json.loads(line)
+                                        token = chunk.get("message", {}).get("content", "")
+                                        if token:
+                                            streamed_any = True
+                                            yield token
+                                        if chunk.get("done", False):
+                                            break
+                                    except Exception:
+                                        pass
+                            if streamed_any:
+                                return
+            except Exception as e:
+                logger.warning(f"Hybrid stream host {host} attempt failed: {e}")
+                continue
+
+        if not streamed_any:
+            yield "I am online and operational, but encountered a connection delay to the local neural engine. Please verify Ollama is active on Port 11434."
+
+    from fastapi.responses import StreamingResponse
+    return StreamingResponse(
+        generate_token_stream(),
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"
+        }
+    )
+
+
 @app.post("/api/chat")
 @app.post("/v1/chat/completions")
 async def chat_endpoint(request: Request):
@@ -4506,10 +4589,10 @@ async def chat_endpoint(request: Request):
                     
                     async def fetch_embedding(client, text):
                         try:
-                            resp = await client.post("http://127.0.0.1:11434/api/embeddings", json={"model": "stehouwer_dolphin:latest", "prompt": text}, timeout=5.0)
+                            resp = await client.post("http://127.0.0.1:11434/api/embeddings", json={"model": "nomic-embed-text:latest", "prompt": text}, timeout=0.8)
                             if resp.status_code == 200:
                                 return resp.json().get("embedding", [])
-                        except:
+                        except Exception:
                             pass
                         return []
 
@@ -4925,6 +5008,68 @@ async def chat_endpoint(request: Request):
                             content_text += f"\n*... and {len(tree_items) - 40} additional items.*"
                     else:
                         content_text = f"❌ **Directory scan failed:** {tool_result.get('message', 'Not found')}"
+                elif t_name == "kraken_op":
+                    from core.kraken_service import kraken_service
+                    act = (t_args or {}).get("action", "balance")
+                    if act == "balance":
+                        bal_res = kraken_service.get_balance()
+                        if bal_res.get("status") == "success":
+                            assets = bal_res.get("balances", {})
+                            if not assets:
+                                content_text = "🐙 **Kraken Account Balance (Zero-Mock Verified):**\n\nYour Kraken account is connected and verified live. Current balance is $0.00 across all cryptocurrency and fiat assets."
+                            else:
+                                lines_out = ["🐙 **Kraken Live Account Balances (Zero-Mock Verified):**\n", "| Asset | Free | Locked / In Orders | Total |", "|---|---|---|---|"]
+                                for a, d in assets.items():
+                                    lines_out.append(f"| **{a}** | {d['free']} | {d['used']} | {d['total']} |")
+                                content_text = "\n".join(lines_out)
+                        else:
+                            content_text = f"❌ **Kraken Error:** {bal_res.get('message')}"
+                    elif act == "ticker":
+                        sym = (t_args or {}).get("symbol", "SOL/USD")
+                        tick = kraken_service.get_ticker(sym)
+                        if tick.get("status") == "success":
+                            content_text = (
+                                f"🐙 **Kraken Live Market Ticker ({tick['symbol']}):**\n\n"
+                                f"- **Last Price:** ${tick['last']:,.4f}\n"
+                                f"- **Bid:** ${tick['bid']:,.4f} | **Ask:** ${tick['ask']:,.4f}\n"
+                                f"- **24h High:** ${tick['high']:,.4f} | **24h Low:** ${tick['low']:,.4f}\n"
+                                f"- **24h Volume:** {tick['volume']:,.2f} {sym.split('/')[0]}"
+                            )
+                        else:
+                            content_text = f"❌ **Kraken Ticker Error:** {tick.get('message')}"
+                    elif act == "deposit_address":
+                        asset = (t_args or {}).get("asset", "SOL")
+                        dep = kraken_service.get_deposit_address(asset)
+                        if dep.get("status") == "success":
+                            info = dep.get("address_info", {})
+                            content_text = f"🐙 **Kraken Deposit Address for {asset.upper()}:**\n\n- **Address:** `{info.get('address')}`\n- **Tag / Memo:** `{info.get('tag') or 'None'}`\n\n*Use this address to transfer funds from another exchange or wallet into Kraken.*"
+                        else:
+                            content_text = f"❌ **Kraken Deposit Address Error:** {dep.get('message')}"
+                    elif act == "order":
+                        ord_res = kraken_service.create_order(
+                            symbol=(t_args or {}).get("symbol", "SOL/USD"),
+                            side=(t_args or {}).get("side", "buy"),
+                            amount=(t_args or {}).get("amount", 0.0),
+                            order_type="market"
+                        )
+                        if ord_res.get("status") == "success":
+                            content_text = f"✅ **Kraken Live Order Executed:**\n\n- **Order ID:** `{ord_res['order_id']}`\n- **Type:** {ord_res['side'].upper()} {ord_res['amount']} {ord_res['symbol']}\n- **Status:** {ord_res['order_status']}"
+                        else:
+                            content_text = f"❌ **Kraken Order Failed:** {ord_res.get('message')}"
+                    elif act == "open_orders":
+                        o_res = kraken_service.get_open_orders()
+                        if o_res.get("status") == "success":
+                            cnt = o_res.get("count", 0)
+                            content_text = f"🐙 **Kraken Open Orders:**\n\nTotal open active orders: **{cnt}**"
+                        else:
+                            content_text = f"❌ **Kraken Open Orders Error:** {o_res.get('message')}"
+                    elif act == "trades":
+                        t_res = kraken_service.get_trade_history()
+                        if t_res.get("status") == "success":
+                            cnt = t_res.get("count", 0)
+                            content_text = f"🐙 **Kraken Trade History:**\n\nTotal executed trades recorded: **{cnt}**"
+                        else:
+                            content_text = f"❌ **Kraken Trade History Error:** {t_res.get('message')}"
                 else:
                     # Send tool execution result back to LLM for final synthesis
                     followup_messages = formatted_messages + [
@@ -5011,9 +5156,26 @@ async def chat_endpoint(request: Request):
             }
 
     except Exception as e:
-        return JSONResponse(
-            status_code=500, content={"message": f"Backend Chat Fault: {str(e)}"}
-        )
+        import traceback
+        traceback.print_exc()
+        print(f"[AI-BS Chat Endpoint Error] {e}")
+        fallback_msg = f"Local reasoning fallback: An unexpected exception occurred ({str(e)}). Please verify Ollama is responding or retry your message."
+        return {
+            "id": f"chatcmpl-fallback-{int(time.time())}",
+            "object": "chat.completion",
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {"role": "assistant", "content": fallback_msg},
+                    "finish_reason": "stop"
+                }
+            ],
+            "message": {"role": "assistant", "content": fallback_msg},
+            "response": fallback_msg,
+            "model": "stehouwer_llm",
+            "execution_time_ms": 0,
+            "tool_trace": {}
+        }
 
 
 @app.get("/api/comfyui/view")

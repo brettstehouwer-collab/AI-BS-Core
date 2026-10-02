@@ -12,14 +12,14 @@ export const isNativeMobile = () => {
 
 export const getApiBase = () => {
   if (typeof window !== 'undefined') {
-    // 1. Mobile devices (Capacitor APK, iPhone PWA, Mobile browsers) or HTTPS ALWAYS use Cloudflare Tunnel
-    if (isNativeMobile() || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.location.protocol === 'https:') {
-      return (currentApiBase && currentApiBase.startsWith('https://')) ? currentApiBase : 'https://api.brettstehouwer.live';
+    // 1. Local desktop PC dev (plain http://localhost or http://127.0.0.1) ALWAYS routes directly to local core
+    if (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      return 'http://127.0.0.1:8080';
     }
 
-    // 2. Local desktop PC dev (only on plain http://localhost or http://127.0.0.1)
-    if (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return currentApiBase || 'http://127.0.0.1:8080';
+    // 2. Mobile devices (Capacitor APK, iPhone PWA, Mobile browsers) or HTTPS use Cloudflare Tunnel
+    if (isNativeMobile() || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.location.protocol === 'https:') {
+      return (currentApiBase && currentApiBase.startsWith('https://')) ? currentApiBase : 'https://api.brettstehouwer.live';
     }
 
     // 3. Local LAN IP directly
@@ -27,7 +27,7 @@ export const getApiBase = () => {
       return `http://${window.location.hostname}:8080`;
     }
   }
-  return currentApiBase || 'https://api.brettstehouwer.live';
+  return 'http://127.0.0.1:8080';
 };
 
 export const setApiBase = (url) => {

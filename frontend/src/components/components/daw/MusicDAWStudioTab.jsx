@@ -12,6 +12,7 @@ import Mixer from './Mixer';
 import VideoPreviewMonitor from './VideoPreviewMonitor';
 import ThematicVstVisualizer from '../ThematicVstVisualizer';
 import StehouwerWaveStudio from './StehouwerWaveStudio';
+import AiVocalStemSuite from './AiVocalStemSuite';
 
 function audioBufferToWavBlob(buffer) {
   const numOfChan = buffer.numberOfChannels;
@@ -437,6 +438,7 @@ const MusicDAWStudioTab = () => {
         <span style={{ fontSize: '10px', color: '#666', fontWeight: 'bold' }}>VIEWS:</span>
         {[
           { key: 'multimedia', label: '🎬 Multimedia Video+Audio Studio' },
+          { key: 'ai_stems', label: '✨ AI Vocal & Stems Suite (Demucs/F5)' },
           { key: 'wave_studio', label: '🎙️ Stehouwer Wave Studio' },
           { key: 'all', label: '🎛 Full Audio Studio Layout' },
           { key: 'channel_rack', label: '🥁 Channel Rack & Piano Roll' },
@@ -567,6 +569,18 @@ const MusicDAWStudioTab = () => {
           {activeView === 'mixer' && (
             <div style={{ height: '100%', overflow: 'hidden' }}>
               <Mixer />
+            </div>
+          )}
+
+          {/* AI VOCAL & STEMS SUITE (DEMUCS & F5-TTS) */}
+          {activeView === 'ai_stems' && (
+            <div style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <AiVocalStemSuite 
+                onSendStemToPlaylist={(buffer, name) => {
+                  useDawStore.getState().addPlaylistClip?.({ name, buffer, startBar: 0, lengthBars: 4 });
+                  setActiveView('playlist');
+                }}
+              />
             </div>
           )}
 

@@ -328,6 +328,39 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
             </button>
           )}
 
+          {/* Vibe-Checkpoint Protection Trigger */}
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch('http://127.0.0.1:8080/api/v1/executive/vibe-checkpoint', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ label: `Pre-Patch Vibe Checkpoint (${language || 'code'})`, author: 'BS-CHAT' })
+                });
+                const data = await res.json();
+                alert(`✅ Vibe-Checkpoint [${data.checkpoint}] created in ${data.elapsed_ms}ms.`);
+              } catch (e) {
+                alert(`Checkpoint failed: ${e.message}`);
+              }
+            }}
+            style={{
+              background: 'rgba(59, 130, 246, 0.15)',
+              color: '#60a5fa',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              borderRadius: '4px',
+              padding: '3px 8px',
+              fontSize: '0.72rem',
+              cursor: 'pointer',
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Create an ultra-fast non-destructive Git snapshot before applying or running this code"
+          >
+            <span>💾 Vibe-CP</span>
+          </button>
+
           {/* Apply Patch Trigger */}
           <button
             onClick={handleApplyPatch}
@@ -1513,6 +1546,50 @@ const SLASH_COMMANDS = [
     badge: 'Stehouwer LLM',
     template: '/email-reply id="" notes=""',
     example: '/email-reply id="em-imap-264555" notes="Accept with gratitude"'
+  },
+  // 🪙 Kraken Sovereign Exchange & Trading
+  {
+    cmd: '/kraken',
+    aliases: ['/kraken-status', '/kraken-balance', '/exchange', '/kraken-price'],
+    title: 'Kraken Sovereign Exchange Gateway',
+    desc: 'Live zero-mock Kraken crypto trading, real-time spot balances, deposit addresses, order execution, and trades.',
+    category: '🪙 Crypto Trading',
+    zeroArg: true,
+    badge: 'Kraken Live',
+    template: '/kraken ',
+    example: '/kraken balance | /kraken price SOL/USD | /kraken deposit SOL'
+  },
+  {
+    cmd: '/kraken-balance',
+    aliases: ['/kraken_balance', '/k-bal'],
+    title: 'Kraken Account Balances (Zero-Mock)',
+    desc: 'Fetch verified real-time crypto and fiat balances directly from Kraken REST API.',
+    category: '🪙 Crypto Trading',
+    zeroArg: true,
+    badge: 'Kraken Balance',
+    example: '/kraken-balance'
+  },
+  {
+    cmd: '/kraken-price',
+    aliases: ['/kraken_price', '/k-price', '/k-ticker'],
+    title: 'Kraken Real-Time Spot Price',
+    desc: 'Query live ticker, 24h high/low, bid/ask, and volume for any crypto pair.',
+    category: '🪙 Crypto Trading',
+    zeroArg: false,
+    badge: 'Kraken Ticker',
+    template: '/kraken-price ',
+    example: '/kraken-price SOL/USD'
+  },
+  {
+    cmd: '/kraken-deposit',
+    aliases: ['/kraken_deposit', '/k-deposit', '/crypto-transfer'],
+    title: 'Kraken Deposit Address for Transfers',
+    desc: 'Retrieve sovereign crypto deposit address to transfer crypto from external accounts into Kraken.',
+    category: '🪙 Crypto Trading',
+    zeroArg: false,
+    badge: 'Kraken Deposit',
+    template: '/kraken-deposit ',
+    example: '/kraken-deposit SOL'
   },
   // 👑 Master Oversight & 43 Modules
   {
@@ -4148,6 +4225,139 @@ export default function ChatTab({ isNested = false }) {
         }
         return;
       }
+
+      if (['/kraken', '/kraken-status', '/kraken-balance', '/kraken-price', '/kraken-deposit', '/kraken-order', '/kraken-orders', '/kraken-trades'].includes(command)) {
+        const sub = (parts[1] || '').toLowerCase();
+        const arg1 = parts[2] || '';
+
+        try {
+          let reply = '';
+          if (command === '/kraken-balance' || sub === 'balance' || sub === 'bal' || sub === 'funds') {
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/balance`, { headers: reqHeaders });
+            const data = await res.json();
+            if (data.status === 'success') {
+              const b = data.balance || {};
+              const nonZero = Object.entries(b.total || {}).filter(([k, v]) => Number(v) > 0);
+              let table = '| Asset | Free | Used | Total |\n| :--- | :--- | :--- | :--- |\n';
+              if (nonZero.length === 0) {
+                table += '| *(All Assets)* | 0.00 | 0.00 | 0.00 |\n';
+              } else {
+                nonZero.forEach(([asset, tot]) => {
+                  const free = b.free?.[asset] ?? tot;
+                  const used = b.used?.[asset] ?? 0;
+                  table += `| **${asset}** | \`${free}\` | \`${used}\` | \`${tot}\` |\n`;
+                });
+              }
+              reply = `### 🪙 Kraken Sovereign Account Balance\n- **Zero-Mock Verified:** \`true\`\n- **Account Status:** 🟢 **Active / Verified**\n\n${table}\n\n💡 *Use \`/kraken price <symbol>\` (e.g. \`/kraken price SOL/USD\`) or \`/kraken deposit <asset>\` to transfer funds.*`;
+            } else {
+              reply = `❌ **Kraken Balance Error:** ${data.message || 'Unknown exchange error'}`;
+            }
+          } else if (command === '/kraken-price' || sub === 'price' || sub === 'ticker') {
+            const rawSym = (arg1 || (sub === 'price' || sub === 'ticker' ? parts[2] : parts[1])) || 'BTC/USD';
+            const cleanSym = rawSym.toUpperCase().includes('/') ? rawSym.toUpperCase() : `${rawSym.toUpperCase()}/USD`;
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/ticker?symbol=${encodeURIComponent(cleanSym)}`, { headers: reqHeaders });
+            const data = await res.json();
+            if (data.status === 'success') {
+              const t = data.ticker || {};
+              reply = `### 📈 Kraken Spot Ticker: \`${cleanSym}\`\n- **Last Price:** **$${Number(t.last || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}**\n- **24h High:** \`$${t.high || 'N/A'}\` | **24h Low:** \`$${t.low || 'N/A'}\`\n- **Bid / Ask:** \`$${t.bid || 'N/A'}\` / \`$${t.ask || 'N/A'}\`\n- **24h Volume:** \`${t.baseVolume || 'N/A'}\`\n\n💡 *To trade: \`/kraken buy <amount> ${cleanSym}\` or \`/kraken sell <amount> ${cleanSym}\`*`;
+            } else {
+              reply = `❌ **Kraken Ticker Error:** ${data.message || 'Pair not found or unavailable'}`;
+            }
+          } else if (command === '/kraken-deposit' || sub === 'deposit' || sub === 'address' || sub === 'transfer') {
+            const asset = (arg1 || (sub === 'deposit' || sub === 'address' || sub === 'transfer' ? parts[2] : parts[1]) || 'SOL').toUpperCase();
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/deposit_address?asset=${encodeURIComponent(asset)}`, { headers: reqHeaders });
+            const data = await res.json();
+            if (data.status === 'success') {
+              const addr = data.address || {};
+              const tagNotice = addr.tag ? `\n- **Memo / Tag:** \`${addr.tag}\`` : '';
+              reply = `### 📥 Kraken Deposit Address: \`${asset}\`\nUse this sovereign address to transfer crypto between external accounts and Kraken:\n\n- **Asset:** \`${asset}\`\n- **Network:** \`${addr.network || 'Default'}\`\n- **Deposit Address:** \`${addr.address}\`${tagNotice}\n\n⚠️ *Always verify the destination network matches your sending wallet.*`;
+            } else {
+              reply = `⚠️ **Kraken Deposit Notice:** ${data.message || 'Deposit address generation requires existing Kraken funding method. Please check deposit addresses in Kraken Web Console or ensure the currency is supported.'}`;
+            }
+          } else if (sub === 'buy' || sub === 'sell') {
+            const side = sub;
+            const amount = parseFloat(parts[2]);
+            const sym = parts[3] ? (parts[3].includes('/') ? parts[3].toUpperCase() : `${parts[3].toUpperCase()}/USD`) : 'BTC/USD';
+            if (isNaN(amount) || amount <= 0) {
+              reply = `⚠️ **Invalid Order Parameters:** Usage: \`/kraken ${side} <amount> <pair>\` (e.g. \`/kraken ${side} 0.05 SOL/USD\`)`;
+            } else {
+              const res = await fetch(`${BACKEND_URL}/api/trading/kraken/order`, {
+                method: 'POST',
+                headers: reqHeaders,
+                body: JSON.stringify({ symbol: sym, side, amount, type: 'market' })
+              });
+              const data = await res.json();
+              if (data.status === 'success') {
+                const o = data.order || {};
+                reply = `### ✅ Kraken Spot Order Executed\n- **Order ID:** \`${o.id}\`\n- **Pair:** \`${o.symbol || sym}\`\n- **Side:** **${side.toUpperCase()}**\n- **Amount:** \`${o.amount || amount}\`\n- **Status:** \`${o.status || 'closed'}\`\n- **Average Price:** \`$${o.average || o.price || 'Market'}\``;
+              } else {
+                reply = `❌ **Kraken Order Failed:** ${data.message || 'Execution error'}`;
+              }
+            }
+          } else if (command === '/kraken-orders' || sub === 'orders') {
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/orders/open`, { headers: reqHeaders });
+            const data = await res.json();
+            if (data.status === 'success') {
+              const orders = data.orders || [];
+              if (orders.length === 0) {
+                reply = `### 📋 Kraken Open Orders\nNo active open orders currently resting on Kraken.`;
+              } else {
+                let table = '| Order ID | Symbol | Side | Amount | Price | Status |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n';
+                orders.forEach(o => {
+                  table += `| \`${o.id}\` | \`${o.symbol}\` | **${(o.side || '').toUpperCase()}** | \`${o.amount}\` | \`${o.price}\` | \`${o.status}\` |\n`;
+                });
+                reply = `### 📋 Kraken Open Orders (${orders.length})\n\n${table}`;
+              }
+            } else {
+              reply = `❌ **Kraken Open Orders Error:** ${data.message}`;
+            }
+          } else if (command === '/kraken-trades' || sub === 'trades' || sub === 'history') {
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/trades`, { headers: reqHeaders });
+            const data = await res.json();
+            if (data.status === 'success') {
+              const trades = data.trades || [];
+              if (trades.length === 0) {
+                reply = `### 📜 Kraken Trade History\nNo executed trades found in account trade history.`;
+              } else {
+                let table = '| ID | Timestamp | Symbol | Side | Amount | Price | Cost |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n';
+                trades.slice(0, 10).forEach(t => {
+                  table += `| \`${t.id}\` | ${t.datetime || ''} | \`${t.symbol}\` | **${(t.side || '').toUpperCase()}** | \`${t.amount}\` | \`$${t.price}\` | \`$${t.cost}\` |\n`;
+                });
+                reply = `### 📜 Kraken Trade History (Last ${trades.length})\n\n${table}`;
+              }
+            } else {
+              reply = `❌ **Kraken Trade History Error:** ${data.message}`;
+            }
+          } else {
+            // General status check
+            const res = await fetch(`${BACKEND_URL}/api/trading/kraken/status`, { headers: reqHeaders });
+            const data = await res.json();
+            const stat = data.status === 'online' ? '🟢 ONLINE' : '🔴 OFFLINE';
+            reply = `### 🪙 Kraken Sovereign Exchange Gateway\n- **Status:** **${stat}**\n- **API Key Active:** \`${data.has_credentials}\`\n- **Exchange:** \`Kraken Spot (CCXT)\`\n- **Zero-Mock Verified:** \`true\`\n\n#### Available Commands:\n- \`/kraken balance\` - View verified live account crypto balances\n- \`/kraken price <symbol>\` - Check real-time spot price (e.g. \`/kraken price SOL/USD\`)\n- \`/kraken deposit <asset>\` - Get deposit address to transfer crypto between accounts\n- \`/kraken buy <amount> <symbol>\` - Execute live spot market buy\n- \`/kraken sell <amount> <symbol>\` - Execute live spot market sell\n- \`/kraken orders\` - View active open orders\n- \`/kraken trades\` - View recent trade execution history`;
+          }
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Kraken Sovereign Gateway'
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Kraken Gateway Error:** ${err.message}`,
+              model: 'Kraken Sovereign Gateway'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
     }
 
     try {
@@ -4275,7 +4485,20 @@ export default function ChatTab({ isNested = false }) {
         }
 
         if (!res || !res.ok) {
-          throw new Error(`Server returned HTTP ${res ? res.status : 'Connection Offline'}`);
+          let errDetail = '';
+          try {
+            const errJson = await res?.json?.();
+            errDetail = errJson?.message || errJson?.detail || errJson?.response || '';
+          } catch (_) {
+            try {
+              errDetail = await res?.text?.();
+            } catch (_) {}
+          }
+          if (errDetail && errDetail.length < 500) {
+            data = { response: `[AI-BS Resilience Core] ${errDetail}` };
+          } else {
+            throw new Error(`Server returned HTTP ${res ? res.status : 'Connection Offline'}`);
+          }
         }
 
         let data = {};

@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel, EmailStr
 
 router = APIRouter(prefix="/api/v1/chef", tags=["The Simple Chef E-Commerce"])
@@ -522,3 +522,30 @@ async def get_chef_stats():
         "gross_revenue": round(gross_revenue, 2),
         "currency": "USD"
     }
+
+
+@router.get("/invoice")
+@router.get("/invoice/pdf")
+async def get_invoice_pdf():
+    """Serves the official commercial invoice PDF for The Simple Chef."""
+    pdf_path = Path("C:/AI-BS/TheSimpleChef_Invoice_TSC-2026-001.pdf")
+    if not pdf_path.exists():
+        raise HTTPException(status_code=404, detail="Invoice PDF not found.")
+    return FileResponse(
+        path=str(pdf_path),
+        filename="TheSimpleChef_Invoice_TSC-2026-001.pdf",
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=TheSimpleChef_Invoice_TSC-2026-001.pdf"}
+    )
+
+
+@router.get("/invoice/html")
+async def get_invoice_html():
+    """Serves the interactive web invoice HTML for The Simple Chef."""
+    html_path = Path("C:/AI-BS/TheSimpleChef_Invoice_TSC-2026-001.html")
+    if not html_path.exists():
+        raise HTTPException(status_code=404, detail="Invoice HTML not found.")
+    return FileResponse(
+        path=str(html_path),
+        media_type="text/html"
+    )

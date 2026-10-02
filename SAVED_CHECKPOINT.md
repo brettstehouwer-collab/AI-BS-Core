@@ -1,8 +1,8 @@
 # AI-BS Active State Recovery Checkpoint
 
 **Last Updated:** 2026-09-30
-**Active Ecosystem Version:** v5.299.1
-**Active Resume Keyword:** `RESUME_AFTER_SYSTEM_RESTART_V5_299_1`
+**Active Ecosystem Version:** v5.299.2
+**Active Resume Keyword:** `RESUME_AIBS_NATIVE_SHM_V5_299_2`
 
 ---
 

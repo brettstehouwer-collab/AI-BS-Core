@@ -59,6 +59,7 @@ export const USER_TIERS = {
 export const TAB_PERMISSIONS = {
   // --- Admin / Host Root Tools ---
   executive_cockpit: ['admin', 'enterprise_all_access'],
+  central_gaming_hub: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
   steam_gaming: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
   shared_cloud_drive: ['admin', 'enterprise_all_access'],
   power_washing: ['admin', 'enterprise_all_access', 'b2b_growth'],

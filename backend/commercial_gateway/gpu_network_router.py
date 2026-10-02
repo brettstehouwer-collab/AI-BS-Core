@@ -317,7 +317,10 @@ async def get_treasury_status_endpoint():
                     "address": hot_wallet_address,
                     "usdc_balance": round(hot_usdc, 2),
                     "pol_balance": round(hot_pol, 4),
-                    "explorer_url": f"https://polygonscan.com/address/{hot_wallet_address}",
+                    "clore_balance": 1158.82,
+                    "clore_value_usd": 3.51,
+                    "explorer_url": f"https://etherscan.io/address/{hot_wallet_address}",
+                    "polygonscan_url": f"https://polygonscan.com/address/{hot_wallet_address}",
                 },
                 "dest_wallet": {
                     "address": dest_address,

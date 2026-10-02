@@ -246,7 +246,6 @@ export default function SteamGamingHubTab({ backendUrl = 'http://127.0.0.1:8080'
                     width: '100%',
                     padding: '10px',
                     borderRadius: '8px',
-                    border: 'none',
                     background: game.is_running ? '#238636' : 'linear-gradient(135deg, #1b2838 0%, #2a475e 100%)',
                     border: '1px solid #66c0f4',
                     color: '#ffffff',

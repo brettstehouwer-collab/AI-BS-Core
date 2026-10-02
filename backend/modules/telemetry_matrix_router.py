@@ -31,6 +31,92 @@ class SyncUsersRequest(BaseModel):
     users: List[Dict[str, Any]]
 
 
+def get_salad_telemetry() -> Dict[str, Any]:
+    """Inspects live Salad processes, WSL container state, and compute logs."""
+    salad_pids = []
+    salad_cpu = 0.0
+    salad_mem_mb = 0.0
+    for p in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_info']):
+        try:
+            name = (p.info.get('name') or '').lower()
+            if 'salad' in name:
+                salad_pids.append(p.info['pid'])
+                salad_cpu += (p.info.get('cpu_percent') or 0.0)
+                mem = p.info.get('memory_info')
+                if mem:
+                    salad_mem_mb += (mem.rss / (1024 * 1024))
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+
+    # Read latest bandwidth rate or Rigel mining status if logs exist
+    latest_status = "idle"
+    bandwidth_mbps = 0.0
+    rigel_running = False
+
+    for p in psutil.process_iter(['name']):
+        try:
+            pname = (p.info.get('name') or '').lower()
+            if 'rigel' in pname:
+                rigel_running = True
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+
+    log_dir = r"E:\SaladData\ProgramData\Salad\logs\ndm"
+    if os.path.exists(log_dir):
+        try:
+            log_files = sorted(
+                [os.path.join(log_dir, f) for f in os.listdir(log_dir) if f.endswith('.log')],
+                key=os.path.getmtime,
+                reverse=True
+            )
+            if log_files:
+                with open(log_files[0], 'r', encoding='utf-8', errors='ignore') as lf:
+                    lines = lf.readlines()[-10:]
+                    for line in reversed(lines):
+                        if "Upload rate:" in line or "Uploading..." in line:
+                            parts = line.strip().split()
+                            for i, part in enumerate(parts):
+                                if "Mbps" in part and i > 0:
+                                    try:
+                                        bandwidth_mbps = float(parts[i-1])
+                                        latest_status = "sharing_bandwidth"
+                                        break
+                                    except ValueError:
+                                        pass
+                            if bandwidth_mbps > 0:
+                                break
+        except Exception:
+            pass
+
+    if rigel_running:
+        latest_status = "mining_gpu"
+    elif len(salad_pids) > 0 and latest_status == "idle":
+        latest_status = "active_standby"
+
+    return {
+        "installed": os.path.exists(r"E:\SaladData\ProgramFiles\Salad\Salad.exe"),
+        "running": len(salad_pids) > 0,
+        "process_count": len(salad_pids),
+        "status": latest_status,
+        "cpu_percent": round(salad_cpu, 1),
+        "memory_mb": round(salad_mem_mb, 1),
+        "bandwidth_mbps": round(bandwidth_mbps, 1),
+        "rigel_mining": rigel_running,
+        "data_root": r"E:\SaladData",
+        "container_store": r"C:\ProgramData\Salad\wsl"
+    }
+
+
+@router.get("/salad")
+def get_salad_status():
+    """Dedicated endpoint returning live Salad telemetry feed for AI-BS."""
+    return {
+        "status": "success",
+        "timestamp": time.time(),
+        "salad": get_salad_telemetry()
+    }
+
+
 @router.get("/matrix")
 def get_telemetry_matrix():
     """Returns multi-layer live telemetry data for the Input Matrix."""
@@ -39,6 +125,7 @@ def get_telemetry_matrix():
     disk = psutil.disk_usage("/")
     net_io = psutil.net_io_counters()
     active_processes = len(psutil.pids())
+    salad_info = get_salad_telemetry()
 
     return {
         "status": "success",
@@ -58,6 +145,7 @@ def get_telemetry_matrix():
                 "active_processes": active_processes,
                 "uptime": time.time() - psutil.boot_time(),
             },
+            "salad": salad_info,
             "sensors": {
                 "CO2": cpu_percent * 10,
                 "TEMP": 30 + (cpu_percent * 0.5),
@@ -65,6 +153,7 @@ def get_telemetry_matrix():
             },
         },
     }
+
 
 
 # ─── Live User Presence & Session Audit Telemetry ──────────────────────────────

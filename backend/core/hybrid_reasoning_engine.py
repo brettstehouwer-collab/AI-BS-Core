@@ -87,6 +87,29 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
     """Inspects the prompt for explicit tool calls or visual/database generation intents across multiple directives."""
     p_lower = prompt.lower().strip()
     
+    # -9. Kraken Sovereign Exchange & Trading Intent (/kraken)
+    if p_lower.startswith(("/kraken", "kraken ")):
+        parts = prompt.strip().split()
+        subcmd = parts[1].lower() if len(parts) > 1 else "balance"
+        if subcmd in ["balance", "bal", "funds", "portfolio", "wallets"]:
+            return "kraken_op", {"action": "balance"}
+        elif subcmd in ["ticker", "price", "quote"]:
+            symbol = parts[2] if len(parts) > 2 else "SOL/USD"
+            return "kraken_op", {"action": "ticker", "symbol": symbol}
+        elif subcmd in ["buy", "sell"]:
+            amount = float(parts[2]) if len(parts) > 2 and parts[2].replace('.', '', 1).isdigit() else 0.0
+            symbol = parts[3] if len(parts) > 3 else "SOL/USD"
+            return "kraken_op", {"action": "order", "side": subcmd, "amount": amount, "symbol": symbol}
+        elif subcmd in ["orders", "open"]:
+            return "kraken_op", {"action": "open_orders"}
+        elif subcmd in ["trades", "history"]:
+            return "kraken_op", {"action": "trades"}
+        elif subcmd in ["deposit", "address"]:
+            asset = parts[2] if len(parts) > 2 else "SOL"
+            return "kraken_op", {"action": "deposit_address", "asset": asset}
+        else:
+            return "kraken_op", {"action": "balance"}
+
     # -8. Static Analysis & Pre-Flight Security Sweep (/audit)
     if p_lower.startswith(("/audit", "/sweep", "/ast-check", "/pre-flight")):
         parts = prompt.strip().split(maxsplit=1)

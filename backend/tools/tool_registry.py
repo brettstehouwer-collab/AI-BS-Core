@@ -2052,7 +2052,35 @@ class ToolRegistry:
         """Executes a tool by name with provided arguments and returns execution result dict."""
         try:
             import time, os, sys, json, re, subprocess, urllib.request
-            if tool_name == "compile_typst_document":
+            if tool_name == "kraken_op":
+                from core.kraken_service import kraken_service
+                act = arguments.get("action", "balance")
+                if act == "balance":
+                    return kraken_service.get_balance()
+                elif act == "ticker":
+                    return kraken_service.get_ticker(arguments.get("symbol", "SOL/USD"))
+                elif act in ["deposit_address", "deposit"]:
+                    return kraken_service.get_deposit_address(arguments.get("asset", "SOL"))
+                elif act == "order":
+                    return kraken_service.create_order(
+                        symbol=arguments.get("symbol", "SOL/USD"),
+                        side=arguments.get("side", "buy"),
+                        amount=float(arguments.get("amount", 0.0)),
+                        order_type=arguments.get("type", "market"),
+                        price=arguments.get("price")
+                    )
+                elif act in ["open_orders", "orders"]:
+                    return kraken_service.get_open_orders()
+                elif act in ["trades", "history"]:
+                    return kraken_service.get_trade_history()
+                elif act == "cancel":
+                    return kraken_service.cancel_order(arguments.get("order_id", ""))
+                elif act == "status":
+                    return kraken_service.get_status()
+                else:
+                    return {"status": "error", "message": f"Unknown kraken action: {act}"}
+
+            elif tool_name == "compile_typst_document":
                 from core.typst_pandoc_engine import TypstPandocEngine
                 return TypstPandocEngine.compile_typst(
                     markup_text=arguments.get("markup_text", ""),

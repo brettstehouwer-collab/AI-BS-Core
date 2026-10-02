@@ -25,6 +25,14 @@ echo [1.5/9] Verifying Windows Defender Firewall Streaming ^& Network Access Por
 powershell -ExecutionPolicy Bypass -File "%BASE_DIR%scripts\open_streaming_firewall_ports.ps1"
 echo.
 
+echo [1.8/9] Verifying High-Speed ComfyUI Model Links (D:\AI-BS-ComfyUI-Models)...
+if not exist "%BASE_DIR%ComfyUI\ComfyUI\models" (
+    if exist "D:\AI-BS-ComfyUI-Models" (
+        powershell -ExecutionPolicy Bypass -Command "New-Item -ItemType Junction -Path '%BASE_DIR%ComfyUI\ComfyUI\models' -Target 'D:\AI-BS-ComfyUI-Models' -Force" > nul 2>&1
+    )
+)
+echo.
+
 echo [2/9] Starting All Core Engines Silently in Background...
 set CUDA_VISIBLE_DEVICES=0
 set OLLAMA_IGPU_ENABLE=0

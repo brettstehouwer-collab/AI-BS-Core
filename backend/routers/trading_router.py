@@ -139,3 +139,94 @@ async def execute_trade_order(order: TradeOrderRequest):
         status_code=503,
         detail="Live exchange trade execution gateway is standing by. Ensure crypto_trader_bot daemon has completed initial liquidity probing."
     )
+
+
+# =====================================================================
+# Kraken Sovereign Exchange Endpoints
+# =====================================================================
+
+class KrakenOrderRequest(BaseModel):
+    symbol: str = "SOL/USD"
+    side: str = "buy"  # "buy" or "sell"
+    amount: float = 0.1
+    order_type: str = "market"  # "market" or "limit"
+    price: Optional[float] = None
+
+
+@router.get("/kraken/status")
+async def get_kraken_status():
+    """Returns Kraken exchange API connection and zero-mock status."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_status()
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.get("/kraken/balance")
+async def get_kraken_balance():
+    """Fetches real-time non-zero wallet balances from Kraken (Strict Zero-Mock)."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_balance()
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.get("/kraken/ticker")
+async def get_kraken_ticker(symbol: str = "SOL/USD"):
+    """Fetches real-time ticker data (bid, ask, last price) for a pair on Kraken."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_ticker(symbol)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.post("/kraken/order")
+async def execute_kraken_order(req: KrakenOrderRequest):
+    """
+    Executes a live spot trade order on Kraken.
+    Enforces daily cap safety and strict zero-mock execution.
+    """
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.create_order(
+            symbol=req.symbol,
+            side=req.side,
+            amount=req.amount,
+            order_type=req.order_type,
+            price=req.price
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/kraken/orders/open")
+async def get_kraken_open_orders(symbol: Optional[str] = None):
+    """Returns open orders on Kraken."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_open_orders(symbol)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.get("/kraken/trades")
+async def get_kraken_trade_history(symbol: Optional[str] = None, limit: int = 50):
+    """Returns verified trade history from Kraken."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_trade_history(symbol, limit=limit)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@router.get("/kraken/deposit_address")
+async def get_kraken_deposit_address(asset: str = "SOL"):
+    """Returns wallet deposit address for transferring from other accounts to Kraken."""
+    try:
+        from core.kraken_service import kraken_service
+        return kraken_service.get_deposit_address(asset)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}

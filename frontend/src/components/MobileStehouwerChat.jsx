@@ -333,6 +333,25 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
+
+  // God-Mode Telemetry Hook
+  const [gpuTelemetry, setGpuTelemetry] = useState(null);
+  useEffect(() => {
+    const fetchTelemetry = async () => {
+      try {
+        const res = await fetch('/telemetry.json?t=' + new Date().getTime());
+        if (res.ok) {
+          const data = await res.json();
+          setGpuTelemetry(data);
+        }
+      } catch (err) {
+        // Silent fail on missing telemetry
+      }
+    };
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 3000);
+    return () => clearInterval(interval);
+  }, []);
   const [previewImage, setPreviewImage] = useState(null);
   const [attachments, setAttachments] = useState([]);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
@@ -1093,49 +1112,101 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             padding: '20px 10px',
             width: '100%'
           }}>
-            {/* Centered Glowing 4-Point AI Star */}
+            {/* God-Mode GPU Telemetry Banner */}
             <div style={{
-              position: 'relative',
+              width: '100%',
               marginBottom: '24px',
+              padding: '12px 16px',
+              background: 'rgba(20, 20, 20, 0.8)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              flexDirection: 'column',
+              gap: '8px'
             }}>
-              <div style={{
-                position: 'absolute',
-                width: '70px',
-                height: '70px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(66,133,244,0.35) 0%, rgba(155,114,207,0.2) 60%, transparent 100%)',
-                filter: 'blur(10px)'
-              }} />
-              <StehouwerStar size={46} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Monitor size={14} /> RTX 4090 Core
+                </span>
+                <span style={{ 
+                  fontSize: '0.75rem', 
+                  color: gpuTelemetry?.is_active ? '#34d399' : '#94a3b8',
+                  background: gpuTelemetry?.is_active ? 'rgba(52, 211, 153, 0.1)' : 'transparent',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontWeight: '600'
+                }}>
+                  {gpuTelemetry?.is_active ? '● CONTAINER ACTIVE' : '○ IDLE QUEUE'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase' }}>VRAM</span>
+                  <span style={{ fontSize: '0.9rem', color: '#e2e8f0', fontWeight: '600' }}>
+                    {gpuTelemetry ? `${(gpuTelemetry.vram_used_mb / 1024).toFixed(1)} GB` : '--'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase' }}>Power</span>
+                  <span style={{ fontSize: '0.9rem', color: '#fbbf24', fontWeight: '600' }}>
+                    {gpuTelemetry ? `${gpuTelemetry.gpu_power_w} W` : '--'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase' }}>Temp</span>
+                  <span style={{ fontSize: '0.9rem', color: '#ef4444', fontWeight: '600' }}>
+                    {gpuTelemetry ? `${gpuTelemetry.gpu_temp_c}°C` : '--'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase' }}>Sys RAM</span>
+                  <span style={{ fontSize: '0.9rem', color: '#60a5fa', fontWeight: '600' }}>
+                    {gpuTelemetry ? `${gpuTelemetry.sys_ram_gb.toFixed(1)} GB` : '--'}
+                  </span>
+                </div>
+              </div>
+              {gpuTelemetry?.payout_bridge && (
+                <div style={{
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  paddingTop: '8px',
+                  marginTop: '4px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '0.72rem'
+                }}>
+                  <span style={{ color: '#94a3b8' }}>
+                    Clore: <strong style={{ color: '#38bdf8' }}>{gpuTelemetry.payout_bridge.clore_balance} CLORE</strong>
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(gpuTelemetry.payout_bridge.treasury_wallet);
+                        alert('AI-BS Treasury Address Copied!\n' + gpuTelemetry.payout_bridge.treasury_wallet);
+                      }
+                    }}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      color: '#38bdf8',
+                      borderRadius: '8px',
+                      padding: '3px 8px',
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📋 Copy Hot Wallet
+                  </button>
+                </div>
+              )}
             </div>
 
-            {/* Greeting */}
-            <h1 style={{
-              fontSize: '1.85rem',
-              fontWeight: '400',
-              margin: '0 0 6px 0',
-              color: '#e3e3e3',
-              letterSpacing: '-0.5px'
-            }}>
-              Hi {displayName},
-            </h1>
-            <p style={{
-              fontSize: '1.35rem',
-              color: '#8e918f',
-              margin: '0 0 32px 0',
-              fontWeight: '300'
-            }}>
-              what's on your mind?
-            </p>
-
-            {/* Suggestion Cards */}
+            {/* Suggestion Cards - Compressed 2x2 Grid */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '10px',
+              gap: '12px',
               width: '100%'
             }}>
               {suggestionChips.map((chip, i) => (
@@ -1143,26 +1214,23 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                   key={i}
                   onClick={() => handleSendMessage(chip.prompt)}
                   style={{
-                    background: '#1e1f20',
+                    background: 'rgba(255, 255, 255, 0.03)',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '16px',
-                    padding: '14px 12px',
+                    borderRadius: '12px',
+                    padding: '12px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    minHeight: '80px',
+                    justifyContent: 'center',
+                    minHeight: '60px',
                     transition: 'all 0.15s ease'
                   }}
-                  onTouchStart={(e) => e.currentTarget.style.background = '#282a2c'}
-                  onTouchEnd={(e) => e.currentTarget.style.background = '#1e1f20'}
+                  onTouchStart={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+                  onTouchEnd={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'}
                 >
-                  <span style={{ fontSize: '0.85rem', fontWeight: '500', color: '#e3e3e3' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: '500', color: '#e3e3e3' }}>
                     {chip.title}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: '#8ab4f8', marginTop: '8px' }}>
-                    Ask AI ↗
                   </span>
                 </div>
               ))}

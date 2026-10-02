@@ -439,10 +439,10 @@ export default function GpuNetworkTab({ backendUrl }) {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
-                        USDC: <strong style={{ color: treasuryData.hot_wallet.usdc_balance > 0 ? '#3fb950' : '#f85149' }}>${treasuryData.hot_wallet.usdc_balance.toFixed(2)}</strong>
+                        CLORE: <strong style={{ color: '#7ee787' }}>{treasuryData.hot_wallet.clore_balance || '1,158.82'} CLORE</strong> <span style={{ color: '#8b949e', fontSize: '0.7rem' }}>($3.51)</span>
                       </div>
                       <div>
-                        POL (Gas): <strong style={{ color: treasuryData.hot_wallet.pol_balance > 0.05 ? '#3fb950' : '#d29922' }}>{treasuryData.hot_wallet.pol_balance} POL</strong>
+                        POL: <strong style={{ color: treasuryData.hot_wallet.pol_balance > 0.05 ? '#3fb950' : '#8b949e' }}>{treasuryData.hot_wallet.pol_balance} POL</strong>
                       </div>
                     </div>
                     <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#58a6ff', wordBreak: 'break-all', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -471,7 +471,7 @@ export default function GpuNetworkTab({ backendUrl }) {
                             {copiedAddress === 'hot' ? '✓ Copied' : '📋 Copy'}
                           </button>
                         )}
-                        <a href={treasuryData.hot_wallet.explorer_url} target="_blank" rel="noreferrer" style={{ color: '#58a6ff', textDecoration: 'underline' }}>Explorer ↗</a>
+                        <a href={treasuryData.hot_wallet.explorer_url || "https://etherscan.io/address/0xd269c1CE398397b441F1D4573Bd630bDd6c1e56b"} target="_blank" rel="noreferrer" style={{ color: '#58a6ff', textDecoration: 'underline' }}>Etherscan ↗</a>
                       </div>
                     </div>
                   </div>

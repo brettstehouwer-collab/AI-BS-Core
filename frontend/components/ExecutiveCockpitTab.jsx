@@ -615,7 +615,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
             title="Create an instant non-destructive Git snapshot of your code"
           >
             <span>💾</span>
-            <span>{isCheckpointing ? 'SAVING...' : 'VIBE-CHECKPOINT'}</span>
+            <span>{isCheckpointing ? 'SAVING...' : lastCheckpointHash ? `CP: [${lastCheckpointHash}]` : 'VIBE-CHECKPOINT'}</span>
           </button>
 
           <button
@@ -1210,6 +1210,38 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 <div>• Context Window: <span style={{ color: '#c9d1d9' }}>8,192 tokens with SSD Virtual Swap</span></div>
               </div>
             </div>
+
+            {/* Pillar 5: Salad Compute & Distributed Telemetry Feed */}
+            <div style={{
+              backgroundColor: '#161b22',
+              borderRadius: '7px',
+              border: '1px solid #30363d',
+              padding: '12px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.1rem' }}>🥗</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#7ee787' }}>Salad Distributed Node</span>
+                </div>
+                <span style={{
+                  fontSize: '0.66rem',
+                  fontWeight: 700,
+                  color: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? '#3fb950' : '#8b949e',
+                  background: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'rgba(63, 185, 80, 0.15)' : 'rgba(139, 148, 158, 0.15)',
+                  padding: '2px 6px',
+                  borderRadius: '4px'
+                }}>
+                  {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'ACTIVE' : 'IDLE'}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Workload State: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'idle'}</span></div>
+                <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{(matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps || 0) > 0 ? `${matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps} Mbps` : 'Online / Listening'}</span></div>
+                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : '#c9d1d9' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Rigel RTX 4090 Mining' : 'RTX 4090 Available'}</span></div>
+                <div>• Container Disk: <span style={{ color: '#c9d1d9' }}>E:\SaladData\ (Junction on C:\)</span></div>
+              </div>
+            </div>
+
           </div>
         </div>
 

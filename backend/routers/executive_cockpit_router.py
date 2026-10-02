@@ -489,6 +489,20 @@ async def get_matrix_status_endpoint():
     # 6. Vault Records
     vault_stats = executive_dispatcher._exec_vault_query("get_vault_stats", {})
 
+    # 7. Salad Telemetry
+    salad_data = {
+        "installed": os.path.exists(r"E:\SaladData\ProgramFiles\Salad\Salad.exe"),
+        "running": False,
+        "status": "idle",
+        "bandwidth_mbps": 0.0,
+        "rigel_mining": False
+    }
+    try:
+        from modules.telemetry_matrix_router import get_salad_telemetry
+        salad_data = get_salad_telemetry()
+    except Exception:
+        pass
+
     elapsed_ms = round((time.time() - start_time) * 1000, 2)
 
     return {
@@ -505,7 +519,8 @@ async def get_matrix_status_endpoint():
                 "port": 11434,
                 "models_count": len(ollama_models),
                 "models_sample": ollama_models[:5]
-            }
+            },
+            "salad_engine": salad_data
         },
         "hardware": {
             "gpu_name": "NVIDIA GeForce RTX 4090 (24GB)",
@@ -521,8 +536,10 @@ async def get_matrix_status_endpoint():
             "disk_total_gb": round(disk.total / (1024**3), 2),
             "disk_percent": disk.percent
         },
+        "salad": salad_data,
         "vault": vault_stats
     }
+
 
 
 @router.post("/settings/autonomy")
