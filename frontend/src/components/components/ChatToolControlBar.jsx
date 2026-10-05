@@ -49,7 +49,7 @@ export default function ChatToolControlBar({ onToolToggle }) {
             fontWeight: enabled ? 600 : 400
           }}
         >
-          {enabled ? '●' : '○'} {key === 'plan_and_review' ? '📋 Mode: Plan & Review' : (key === 'shadow_coder' ? '⚡ Shadow Coder' : (key === 'media_studio' ? '🎬 Media Studio (v5.296.0)' : key.replace('_', ' ')))}
+          {enabled ? '●' : '○'} {key === 'plan_and_review' ? '📋 Mode: Plan & Review' : (key === 'shadow_coder' ? '⚡ Shadow Coder' : (key === 'media_studio' ? '🎬 Media Studio (v5.305.0)' : key.replace('_', ' ')))}
         </button>
       ))}
     </div>

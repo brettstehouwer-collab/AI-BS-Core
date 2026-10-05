@@ -136,7 +136,7 @@ const Sidebar = ({ activeTab, onTabChange }) => {
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', whiteSpace: 'nowrap' }}>
               Stehouwer Publishing
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>v5.296.0</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>v5.305.0</div>
           </div>
         )}
         <button 

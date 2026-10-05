@@ -518,6 +518,12 @@ except ImportError as e:
     print(f"Warning: Could not load hybrid_reasoning_engine: {e}")
 
 try:
+    from routers.gpu_telemetry_router import router as gpu_telemetry_router
+    app.include_router(gpu_telemetry_router)
+except ImportError as e:
+    print(f"Warning: Could not load gpu_telemetry_router: {e}")
+
+try:
     from routers.wan_media_router import router as wan_media_router, set_telemetry_broadcaster as set_wan_broadcaster
     app.include_router(wan_media_router)
     set_wan_broadcaster(telemetry_hub.broadcast)
@@ -931,6 +937,12 @@ app.include_router(email_client_router)
 from routers.chef_orders_router import router as chef_orders_router
 app.include_router(chef_orders_router)
 
+try:
+    from commercial_gateway.gateway_router import gateway_router
+    app.include_router(gateway_router)
+except Exception as e:
+    print(f"Warning: Could not load gateway_router: {e}")
+
 # Direct Learning Loop Aliases
 @app.get("/api/learning-loop/status")
 async def root_learning_loop_status():
@@ -1279,17 +1291,29 @@ async def root_models():
     }
 
 
+_MEDIA_VAULT_CACHE = {"timestamp": 0, "data": None}
+
 @app.get("/api/comfy/media")
 async def root_proxy_comfy_media(
     filename: str, subfolder: str = "", type: str = "output"
 ):
-    """Proxies ComfyUI generated MP4 video and PNG image files directly to frontend media players."""
-    import httpx
-    from fastapi import Response
+    """Directly serves or proxies ComfyUI generated MP4 video and PNG image files."""
+    import os
+    from fastapi.responses import FileResponse, Response
 
+    # Fast direct local disk serving
+    comfy_out = r"C:\AI-BS\ComfyUI\ComfyUI\output"
+    target_path = os.path.join(comfy_out, subfolder, filename) if subfolder else os.path.join(comfy_out, filename)
+    target_path = os.path.abspath(target_path)
+    if target_path.startswith(r"C:\AI-BS") and os.path.exists(target_path) and os.path.isfile(target_path):
+        media_type = "video/mp4" if filename.endswith((".mp4", ".webm")) else ("image/webp" if filename.endswith(".webp") else "image/png")
+        return FileResponse(target_path, media_type=media_type)
+
+    # Fallback: Proxy to ComfyUI port 8189
+    import httpx
     comfy_url = f"http://127.0.0.1:8189/view?filename={filename}&subfolder={subfolder}&type={type}"
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=4.0) as client:
             resp = await client.get(comfy_url)
             if resp.status_code == 200:
                 media_type = resp.headers.get(
@@ -1313,15 +1337,23 @@ def serve_media(path: str):
     abs_path = os.path.abspath(path)
     if not abs_path.startswith(r"C:\AI-BS"):
         raise HTTPException(status_code=403, detail="Forbidden")
-    if not os.path.exists(abs_path):
+    if not os.path.exists(abs_path) or not os.path.isfile(abs_path):
         raise HTTPException(status_code=404, detail="File not found")
-    media_type = "video/mp4" if abs_path.endswith((".mp4", ".webm")) else "image/png"
+    media_type = "video/mp4" if abs_path.endswith((".mp4", ".webm")) else ("image/webp" if abs_path.endswith(".webp") else "image/png")
     return FileResponse(abs_path, media_type=media_type)
 
 @app.get("/api/media-vault/all")
 def get_all_media_vault_items():
+    global _MEDIA_VAULT_CACHE
     import os
+    import time
     import urllib.parse
+
+    now = time.time()
+    # Cache for 30 seconds to prevent event-loop stalls
+    if _MEDIA_VAULT_CACHE["data"] is not None and (now - _MEDIA_VAULT_CACHE["timestamp"]) < 30.0:
+        return _MEDIA_VAULT_CACHE["data"]
+
     comfy_out = r"C:\AI-BS\ComfyUI\ComfyUI\output"
     
     categories = {
@@ -1337,67 +1369,73 @@ def get_all_media_vault_items():
     
     # 1. ComfyUI Outputs
     if os.path.exists(comfy_out):
-        for fname in sorted(os.listdir(comfy_out), reverse=True):
-            if not (fname.endswith(".png") or fname.endswith(".mp4") or fname.endswith(".webp") or fname.endswith(".gif")):
-                continue
-                
-            file_path = os.path.join(comfy_out, fname)
-            size = os.path.getsize(file_path)
-            media_type = "video" if fname.endswith(".mp4") or fname.endswith(".webm") else "image"
-            
-            item = {
-                "filename": fname,
-                "url": f"/api/comfy/media?filename={fname}&subfolder=&type=output",
-                "type": media_type,
-                "size": size
-            }
-            
-            if fname.startswith("AI_BS_COMMERCIAL"):
-                categories["Commercial Assets"].append(item)
-            elif fname.startswith("AI_BS_UltraHD") or fname.startswith("AI_BS_HD"):
-                categories["UltraHD Renders"].append(item)
-            elif fname.startswith("WanVideo") or fname.startswith("LTX_Video") or fname.startswith("Wan2_Tour"):
-                categories["Cinematic Video"].append(item)
-            elif fname.startswith("VirtualStaged"):
-                categories["Virtual Staging"].append(item)
-            elif fname.startswith("AI_BS_3D_Model"):
-                categories["3D & Prototypes"].append(item)
-            elif fname.startswith("AI_BS_LoRA") or fname.startswith("AI_BS_Workflow"):
-                categories["LoRA & Workflows"].append(item)
-            else:
-                categories["Standard Renders"].append(item)
-
-    # 2. Root Workspace Media Scan
-    root_dir = r"C:\AI-BS"
-    excludes = {
-        "node_modules", ".git", ".venv", "venv", ".gemini", 
-        "dist", "build", "__pycache__", ".vscode", "python_embeded",
-        "Android Studio", "frontend", "backend", "ComfyUI", "Agent_Tasks_History",
-        "Agent_Implementation_Plans_History", "Agent_Handoff_Summaries", "docs",
-        "apps", "saved_data", "logs"
-    }
-    media_extensions = {".png", ".mp4", ".webp", ".gif", ".jpg", ".jpeg"}
-    
-    root_media = []
-    for dirpath, dirnames, filenames in os.walk(root_dir):
-        dirnames[:] = [d for d in dirnames if d not in excludes and not d.startswith('.')]
-        for f in filenames:
-            ext = os.path.splitext(f)[1].lower()
-            if ext in media_extensions:
-                file_path = os.path.join(dirpath, f)
+        try:
+            for fname in sorted(os.listdir(comfy_out), reverse=True):
+                if not (fname.endswith(".png") or fname.endswith(".mp4") or fname.endswith(".webp") or fname.endswith(".gif")):
+                    continue
+                    
+                file_path = os.path.join(comfy_out, fname)
                 try:
                     size = os.path.getsize(file_path)
-                    media_type = "video" if ext in {".mp4", ".webm"} else "image"
-                    encoded_path = urllib.parse.quote(file_path)
-                    item = {
-                        "filename": f,
-                        "url": f"/api/media/serve?path={encoded_path}",
-                        "type": media_type,
-                        "size": size
-                    }
-                    root_media.append(item)
                 except Exception:
-                    pass
+                    size = 0
+                media_type = "video" if fname.endswith((".mp4", ".webm")) else "image"
+                
+                item = {
+                    "filename": fname,
+                    "url": f"/api/comfy/media?filename={fname}&subfolder=&type=output",
+                    "type": media_type,
+                    "size": size
+                }
+                
+                if fname.startswith("AI_BS_COMMERCIAL"):
+                    categories["Commercial Assets"].append(item)
+                elif fname.startswith("AI_BS_UltraHD") or fname.startswith("AI_BS_HD"):
+                    categories["UltraHD Renders"].append(item)
+                elif fname.startswith("WanVideo") or fname.startswith("LTX_Video") or fname.startswith("Wan2_Tour"):
+                    categories["Cinematic Video"].append(item)
+                elif fname.startswith("VirtualStaged"):
+                    categories["Virtual Staging"].append(item)
+                elif fname.startswith("AI_BS_3D_Model"):
+                    categories["3D & Prototypes"].append(item)
+                elif fname.startswith("AI_BS_LoRA") or fname.startswith("AI_BS_Workflow"):
+                    categories["LoRA & Workflows"].append(item)
+                else:
+                    categories["Standard Renders"].append(item)
+        except Exception:
+            pass
+
+    # 2. Targeted Media Directories (Fast scan without recursive tree walking)
+    targeted_dirs = [
+        r"C:\AI-BS\saved_data\mtd_demo_showcase",
+        r"C:\AI-BS\frontend\public\assets",
+        r"C:\AI-BS\saved_data\artifacts"
+    ]
+    media_extensions = {".png", ".mp4", ".webp", ".gif", ".jpg", ".jpeg"}
+    root_media = []
+
+    for tdir in targeted_dirs:
+        if os.path.exists(tdir):
+            try:
+                for f in os.listdir(tdir):
+                    ext = os.path.splitext(f)[1].lower()
+                    if ext in media_extensions:
+                        file_path = os.path.join(tdir, f)
+                        try:
+                            size = os.path.getsize(file_path)
+                            media_type = "video" if ext in {".mp4", ".webm"} else "image"
+                            encoded_path = urllib.parse.quote(file_path)
+                            item = {
+                                "filename": f,
+                                "url": f"/api/media/serve?path={encoded_path}",
+                                "type": media_type,
+                                "size": size
+                            }
+                            root_media.append(item)
+                        except Exception:
+                            pass
+            except Exception:
+                pass
     
     root_media.sort(key=lambda x: x["filename"])
     categories["Root Workspace Media"].extend(root_media)
@@ -1410,7 +1448,9 @@ def get_all_media_vault_items():
                 "files": items
             })
             
-    return {"categories": result}
+    response_data = {"categories": result}
+    _MEDIA_VAULT_CACHE = {"timestamp": now, "data": response_data}
+    return response_data
 
 
 
@@ -1449,8 +1489,10 @@ from routers.unreal_bridge_new import router as unreal_bridge_router
 from routers.data_feed_router import router as data_feed_router
 from f5_tts_daemon import router as f5_tts_router
 from vault_auto_ingestor import router as vault_ingestor_router
+from modules.notos_hospitality import router as notos_hospitality_router
 
 app.include_router(noto_router)
+app.include_router(notos_hospitality_router)
 app.include_router(core_demos_router)
 app.include_router(unreal_asset_router)
 app.include_router(industry_router)

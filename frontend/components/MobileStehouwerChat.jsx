@@ -1515,7 +1515,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                 <StehouwerStar size={24} />
                 <div>
                   <div style={{ fontSize: '0.92rem', fontWeight: '700', color: '#e3e3e3' }}>Stehouwer AI</div>
-                  <div style={{ fontSize: '0.68rem', color: '#8ab4f8' }}>v5.296.0 • Sovereign Mobile</div>
+                  <div style={{ fontSize: '0.68rem', color: '#8ab4f8' }}>v5.305.0 • Sovereign Mobile</div>
                 </div>
               </div>
               <button 

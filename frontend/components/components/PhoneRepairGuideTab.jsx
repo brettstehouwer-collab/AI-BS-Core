@@ -494,7 +494,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                 AI-BS Hardware Master Repair & Diagnostics Hub
               </h1>
               <span style={{ fontSize: '0.7rem', fontWeight: 800, background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #38bdf8', color: '#38bdf8', padding: '2px 8px', borderRadius: '6px' }}>
-                v5.296.0 STANDALONE HUB
+                v5.305.0 STANDALONE HUB
               </span>
             </div>
             <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#94a3b8' }}>

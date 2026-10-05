@@ -232,7 +232,7 @@ Building sovereign operating infrastructure from the ground up.`);
               padding: '2px 8px',
               borderRadius: '6px'
             }}>
-              v5.296.0 ACTIVE
+              v5.305.0 ACTIVE
             </span>
           </div>
           <p style={{ margin: '6px 0 0 0', color: '#94a3b8', fontSize: '0.88rem' }}>

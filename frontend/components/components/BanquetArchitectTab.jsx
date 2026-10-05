@@ -540,10 +540,92 @@ export default function BanquetArchitectTab({ backendUrl }) {
               )}
               
               {!banquetImg && !isGenerating && (
-                <div style={{ color: '#555', textAlign: 'center', fontFamily: 'serif' }}>
-                  <Sparkles size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-                  <h2>Studio Canvas Empty</h2>
-                  <p>Configure parameters on the left and initialize rendering.</p>
+                <div style={{ width: '100%', maxWidth: '820px', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                  <div style={{
+                    width: '100%',
+                    background: '#070b12',
+                    border: '1px solid #1e293b',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    boxShadow: '0 12px 36px rgba(0,0,0,0.6)',
+                    position: 'relative'
+                  }}>
+                    {/* Blueprint Title Bar */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1e293b', paddingBottom: '12px', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '18px' }}>📐</span>
+                        <div>
+                          <div style={{ fontSize: '14px', fontWeight: '700', color: '#f0f6fc', letterSpacing: '0.05em' }}>
+                            GRAND BALLROOM • 2D SPATIAL DRAFT BLUEPRINT
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#64748b' }}>
+                            Scale: 1 grid = 5 ft • Capacity: {tableCount * 8} Guests • Style: {stylePreset.toUpperCase()} • Lighting: {lightingRig}
+                          </div>
+                        </div>
+                      </div>
+                      <span style={{ fontSize: '11px', padding: '4px 8px', borderRadius: '4px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                        READY FOR TENSOR RENDER
+                      </span>
+                    </div>
+
+                    {/* SVG Vector Blueprint */}
+                    <svg viewBox="0 0 800 480" style={{ width: '100%', height: 'auto', maxHeight: '420px', background: '#040711', borderRadius: '8px', border: '1px solid #0f172a' }}>
+                      <defs>
+                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(56, 189, 248, 0.08)" strokeWidth="1"/>
+                        </pattern>
+                      </defs>
+                      <rect width="800" height="480" fill="url(#grid)" />
+
+                      {/* Room Perimeter Walls */}
+                      <rect x="20" y="20" width="760" height="440" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeDasharray="6 2" opacity="0.8"/>
+
+                      {/* Stage & Presentation Rig */}
+                      <rect x="250" y="30" width="300" height="50" rx="4" fill="rgba(212, 175, 55, 0.15)" stroke="#d4af37" strokeWidth="1.5"/>
+                      <text x="400" y="60" fill="#d4af37" fontSize="12" fontWeight="bold" textAnchor="middle">MAIN ELEVATED STAGE & LECTERN</text>
+
+                      {/* Dance Floor */}
+                      <rect x="300" y="190" width="200" height="130" rx="6" fill="rgba(99, 102, 241, 0.12)" stroke="#818cf8" strokeWidth="1.5"/>
+                      <text x="400" y="260" fill="#a5b4fc" fontSize="11" fontWeight="bold" textAnchor="middle">PARQUET DANCE FLOOR</text>
+
+                      {/* Head Table */}
+                      <rect x="280" y="95" width="240" height="24" rx="3" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" strokeWidth="1.2"/>
+                      <text x="400" y="111" fill="#34d399" fontSize="10" textAnchor="middle">VIP HEAD TABLE (10 SEATS)</text>
+
+                      {/* Banquet Bar Stations */}
+                      <rect x="35" y="160" width="45" height="160" rx="4" fill="rgba(239, 68, 68, 0.15)" stroke="#f87171" strokeWidth="1.2"/>
+                      <text x="57" y="245" fill="#fca5a5" fontSize="10" fontWeight="bold" textAnchor="middle" transform="rotate(-90 57 245)">BANQUET BAR A</text>
+
+                      <rect x="720" y="160" width="45" height="160" rx="4" fill="rgba(239, 68, 68, 0.15)" stroke="#f87171" strokeWidth="1.2"/>
+                      <text x="742" y="245" fill="#fca5a5" fontSize="10" fontWeight="bold" textAnchor="middle" transform="rotate(90 742 245)">BANQUET BAR B</text>
+
+                      {/* Guest Round Tables (Dynamic Count) */}
+                      {Array.from({ length: Math.min(tableCount, 12) }).map((_, idx) => {
+                        const col = idx % 4;
+                        const row = Math.floor(idx / 4);
+                        const cx = col < 2 ? 140 + col * 80 : 500 + (col - 2) * 80;
+                        const cy = 160 + row * 95;
+                        return (
+                          <g key={idx}>
+                            <circle cx={cx} cy={cy} r="22" fill="rgba(255,255,255,0.06)" stroke="#64748b" strokeWidth="1.2"/>
+                            {/* 8 Chairs per table */}
+                            {Array.from({ length: 8 }).map((__, cIdx) => {
+                              const angle = (cIdx * 45) * (Math.PI / 180);
+                              const chairX = cx + Math.cos(angle) * 30;
+                              const chairY = cy + Math.sin(angle) * 30;
+                              return (
+                                <circle key={cIdx} cx={chairX} cy={chairY} r="4" fill="rgba(148, 163, 184, 0.4)" stroke="#475569" strokeWidth="0.8"/>
+                              );
+                            })}
+                            <text x={cx} y={cy + 4} fill="#e2e8f0" fontSize="9" fontWeight="bold" textAnchor="middle">T-{idx + 1}</text>
+                          </g>
+                        );
+                      })}
+                    </svg>
+                  </div>
+                  <div style={{ color: '#94a3b8', fontSize: '12px', textAlign: 'center' }}>
+                    Configure scene details in the left inspector and click <strong>"Render Photorealistic Scene"</strong> to generate the 4K RTX 4090 spatial view.
+                  </div>
                 </div>
               )}
 

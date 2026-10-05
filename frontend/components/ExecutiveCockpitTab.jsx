@@ -17,7 +17,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const [chatMessages, setChatMessages] = useState([
     {
       role: 'assistant',
-      content: "⚡ **Sovereign Executive Command Cockpit Online (v5.299.0)**\n\nDirectorial Voice HUD & Autonomous Sentinel Engine active. 100% Sovereign Local RTX 4090 execution enforced (Zero Cloud Spend: $0.00).\n\nSpeak or issue directives across Media Studio, Broadcast Kernel, Crypto Swarm, Knowledge Vault (305k records), and Local Ollama Swarm.",
+      content: "⚡ **Sovereign Executive Command Cockpit Online (v5.305.0)**\n\nDirectorial Voice HUD & Autonomous Sentinel Engine active. 100% Sovereign Local RTX 4090 execution enforced (Zero Cloud Spend: $0.00).\n\nSpeak or issue directives across Media Studio, Broadcast Kernel, Crypto Swarm, Knowledge Vault (305k records), and Local Ollama Swarm.",
       tool_calls: []
     }
   ]);
@@ -507,7 +507,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                 fontWeight: 700,
                 border: '1px solid rgba(88, 166, 255, 0.3)'
               }}>
-                v5.299.0
+                v5.305.0
               </span>
               <span style={{
                 background: 'rgba(63, 185, 80, 0.15)',

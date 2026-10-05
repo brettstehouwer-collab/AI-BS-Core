@@ -1,50 +1,77 @@
-# Implementation Plan: Real-Time User Presence, Dynamic Firebase Roster Synchronization & Session Audit Telemetry (v5.295.0)
+# Implementation Plan: Sovereign Agent Apps Hub & Mixture-of-Specialists (MoE) Routing Architecture
 
-Dynamic user session presence, dwell time tracking, and session audit telemetry across all authorized Firebase users in the AI-BS ecosystem.
-
----
-
-## User Review Required
-
-> [!IMPORTANT]
-> **Dynamic Authorized Firebase Roster:**
-> Removes all hardcoded restrictions in the user session audit ledger. Any user saved and authenticated via Firebase Authentication or Firestore is dynamically registered, displayed in live online operator cards and last-seen cards, and provided in the filter dropdown.
+## Overview
+Based on the forensic audit of your local 29-model Ollama fleet (Port 11434/11435) and the 14-tool agent launcher matrix (Claude Code, Codex CLI, OpenClaw, OpenCode, Hermes Agent, Hermes Desktop, Droid, Pi, Cline, Copilot CLI, Oh My Pi, DeepSeek Harness, Qwen Code, Terminal), this implementation plan unites these capabilities into a **native, 100% sovereign Agentic Suite** directly inside AI-BS.
 
 ---
 
-## Proposed Architectural Changes
+## Architectural Blueprint
 
-### 1. SQLite Dynamic User Presence & Session Audit Engine
-- `backend/modules/user_session_telemetry.py`:
-  - `registered_users` table in `data/user_sessions.db` storing `user_email`, `user_name`, `user_avatar`, `user_role`, `user_color`, `is_authorized`, `updated_at`.
-  - `sync_authorized_users(users_list)`: Ingests Firebase Firestore user rosters into SQLite.
-  - `record_heartbeat()`: Auto-registers and upserts any user emitting a heartbeat.
-  - `get_summary()`: Reads all registered users from SQLite and joins with active session metrics.
+```
+                     ┌──────────────────────────────────────────────────────────┐
+                     │     SOVEREIGN AGENT APPS HUB (14-TOOL LAUNCHER)          │
+                     │  (Claude Code, Codex, OpenCode, Hermes, Cline, Terminal) │
+                     └────────────────────────────┬─────────────────────────────┘
+                                                  │
+                                                  ▼
+                     ┌──────────────────────────────────────────────────────────┐
+                     │      SOVEREIGN MoE SPECIALIST ROUTER (Port 8080)         │
+                     │         (backend/core/moe_specialist_router.py)          │
+                     └──────┬─────────────────────┬──────────────────────┬──────┘
+                            │                     │                      │
+         [Deterministic Code / Tools]   [Unrestricted Dialogue]   [Vision / Perception]
+                    ▼                             ▼                      ▼
+         qwen2.5-coder:latest          stehouwer_dolphin:8b         qwen3.6 / gemma4
+              (32.8B Q5_K_M)                 (8.0B Q8_0)             (262k Context)
+```
 
-### 2. REST API Roster Sync Endpoint
-- `backend/modules/telemetry_matrix_router.py`:
-  - Added `POST /api/telemetry/user-sessions/sync-users` accepting `SyncUsersRequest(users: List[Dict[str, Any]])`.
-  - Connected to Port 8080.
+---
 
-### 3. Dynamic Client Telemetry Widget
-- `frontend/src/components/UserSessionTelemetryWidget.jsx`:
-  - Real-time Firestore snapshot listener on `collection(db, 'users')`.
-  - Continuous synchronization with backend `/api/telemetry/user-sessions/sync-users`.
-  - Manual `☁️ Sync Firebase Roster` button for on-demand sync.
-  - Dynamic `All Operators (N)` select dropdown populated from all discovered operators.
-  - Section 1: Live online operator cards with dwell time, active tool, platform, and last ping.
-  - Section 2: Last-seen cards and total time spent for every registered user.
-  - Section 3: Chronological session audit ledger with search and operator filters.
+## Proposed Changes
 
-### 4. Dynamic Authentication Authorization
-- `frontend/App.jsx` & `frontend/src/components/accessControl.js`:
-  - `onAuthStateChanged` updated so any user authenticated through Firebase Auth is granted authorized access.
-  - Saves user profile with role in Firestore `users/{uid}`.
-  - Added executive aliases to `ADMIN_EMAILS`.
-  - `TeamChatDrawer.jsx` updated to merge all Firestore users dynamically.
+### Phase 1: Sovereign MoE (Mixture of Specialists) Routing Engine
+#### [backend/core/sovereign_reasoning/moe_specialist_router.py](file:///C:/AI-BS/backend/core/sovereign_reasoning/moe_specialist_router.py)
+- Create dynamic task-classifier and multi-model router:
+  - **Code, Polyglot, Refactoring & AST Tasks** ➔ Dispatches to `qwen2.5-coder:latest` / `stehouwer_llm:latest` (32.8B).
+  - **Creative Writing, Narrative Prose, Dialogue & Fire Writing** ➔ Dispatches to `stehouwer_dolphin:latest` (8.0B unfiltered).
+  - **Tool-Use, JSON Schema & Function Calling** ➔ Dispatches to `stehouwer-hermes:latest` (8.0B ChatML).
+  - **Vision, Layout Analysis & Image Multimodal Tasks** ➔ Dispatches to `qwen3.6:latest` / `gemma4:12b` (262k context).
+  - **Deep Philosophical Verification & Reasoning** ➔ Dispatches to `llama3.3:70b` (70.6B).
+  - **Vector Embedding & RAG Context** ➔ Dispatches to `nomic-embed-text:latest`.
+- Mount REST endpoints in `backend/AI_BS_Backend.py` under `/api/v1/moe/route` and `/api/v1/moe/models`.
 
-### 5. Multi-Mirror Parity & Cloud Deployment
-- Verified 100% SHA256 mirror parity across all 430 files in all 4 frontend mirrors (`scripts/sync_mirrors.py`).
-- Bumped version authority to `v5.295.0` in `package.json`, `version.txt`, `public/version.json`, `public/sw.js`, and UI badges.
-- Production Vite bundle compiled.
-- Deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app`).
+### Phase 2: Sovereign Agent Tools & Harness Runner
+#### [backend/modules/agent_harness_runner.py](file:///C:/AI-BS/backend/modules/agent_harness_runner.py)
+- Create execution adapters for the 14 agent types:
+  1. **Claude Code / Codex CLI / Qwen Code / DeepSeek Harness**: Terminal-based autonomous coding harness streaming diffs and terminal commands.
+  2. **OpenClaw / OpenCode**: Autonomous Python/Shell sandbox execution engine with live stdio streaming.
+  3. **Hermes Agent / Hermes Desktop**: Structured JSON tool-calling agent loop.
+  4. **Droid / Pi / Oh My Pi**: Lightweight persona & task assistants.
+  5. **Cline / Copilot CLI**: In-browser split-pane diff editor and file tree inspector.
+  6. **Terminal**: Direct interactive PowerShell host shell with execution policy bypass.
+
+### Phase 3: High-Aesthetic 14-App Launcher Tab
+#### [frontend/src/components/SovereignAgentAppsTab.jsx](file:///C:/AI-BS/frontend/src/components/SovereignAgentAppsTab.jsx)
+- Build high-aesthetic dark-mode interactive workspace tab:
+  - **14-App Visual Grid**: Direct launcher cards matching the Ollama Apps matrix with custom icons, operational status indicators, and active model tags.
+  - **Active Session Workspace**: Split-view panel displaying live session chat, terminal runner, and file patch inspector.
+  - **Specialist Router Switcher**: Live HUD showing which model is handling the active task with real-time VRAM allocation and token streaming stats.
+- **Rule 1 Multi-Mirror Law**: Synchronize across all 4 frontend mirrors with 100% SHA-256 byte parity.
+- Register `sovereign_apps` tab in `frontend/App.jsx`.
+
+### Phase 4: Verification & Production Release
+- Verify Python AST syntax with `py_compile`.
+- Test MoE endpoint classification and model streaming over Port 11434.
+- Assert 100% SHA-256 byte parity across all 4 mirrors (`verify-mirror-parity.ps1`).
+- Compile Vite production bundle and deploy live to Firebase Hosting.
+- Bump version to `v5.309.0` and synchronize master ledgers.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **MoE Router Classification Test**: Verify query "Write a binary search tree in C++" routes to `qwen2.5-coder`, and "Write an emotional dialogue" routes to `stehouwer_dolphin`.
+2. **Mirror Parity**: Run `verify-mirror-parity.ps1` to assert 100% byte match.
+3. **Pytest Suite**: Execute `pytest tests` to guarantee zero regressions.
+4. **Vite Production Build**: `npm run build` cleanly in `frontend`.

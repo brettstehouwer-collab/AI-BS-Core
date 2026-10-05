@@ -128,7 +128,8 @@ def heal_ecosystem():
     """
     Executes non-destructive self-healing routines:
     1. Removes stale locks where the corresponding daemon is offline.
-    2. Runs passive WAL checkpoint on all databases.
+    2. Auto-spawns offline core daemons (ChromaDB 8002, etc.).
+    3. Runs passive WAL checkpoint on master database.
     """
     actions_taken = []
 
@@ -145,7 +146,98 @@ def heal_ecosystem():
             except Exception as e:
                 actions_taken.append(f"Failed to clear {os.path.basename(lock_path)}: {e}")
 
-    # 2. Re-probe ecosystem
+    # 2. Auto-spawn offline core daemons
+    creation_flag = getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == 'nt' else 0
+    python_exe = r"C:\AI-BS\pyppeteer_env\Scripts\python.exe"
+    if not os.path.exists(python_exe):
+        python_exe = sys.executable
+
+    # 2a. ChromaDB on Port 8002
+    if not check_port(8002):
+        chroma_exe = r"C:\AI-BS\pyppeteer_env\Scripts\chroma.exe"
+        chroma_db_path = r"E:\AI_BS_Resources\ChromaDB"
+        if os.path.exists(chroma_exe):
+            try:
+                os.makedirs(chroma_db_path, exist_ok=True)
+                subprocess.Popen(
+                    [chroma_exe, "run", "--path", chroma_db_path, "--port", "8002", "--host", "127.0.0.1"],
+                    creationflags=creation_flag
+                )
+                actions_taken.append("Auto-spawned ChromaDB Vector Store daemon on Port 8002")
+                log_doctor("Auto-spawned ChromaDB on Port 8002")
+            except Exception as e:
+                actions_taken.append(f"Failed to spawn ChromaDB 8002: {e}")
+
+    # 2b. VST3 Audio Bridge on Port 8013
+    if not check_port(8013):
+        vst_daemon = os.path.join(WORKSPACE_ROOT, "backend", "aibs_vst_daemon.py")
+        if os.path.exists(vst_daemon):
+            try:
+                subprocess.Popen(
+                    [python_exe, vst_daemon],
+                    cwd=os.path.join(WORKSPACE_ROOT, "backend"),
+                    creationflags=creation_flag
+                )
+                actions_taken.append("Auto-spawned VST3 Audio Bridge on Port 8013")
+                log_doctor("Auto-spawned VST3 Audio Bridge on Port 8013")
+            except Exception as e:
+                actions_taken.append(f"Failed to spawn VST3 Bridge 8013: {e}")
+
+    # 2c. Broadcast Daemon on Port 8005
+    if not check_port(8005):
+        bcast_daemon = os.path.join(WORKSPACE_ROOT, "backend", "aibs_broadcast_daemon.py")
+        if os.path.exists(bcast_daemon):
+            try:
+                subprocess.Popen(
+                    [python_exe, bcast_daemon],
+                    cwd=os.path.join(WORKSPACE_ROOT, "backend"),
+                    creationflags=creation_flag
+                )
+                actions_taken.append("Auto-spawned Broadcast Daemon on Port 8005")
+                log_doctor("Auto-spawned Broadcast Daemon on Port 8005")
+            except Exception as e:
+                actions_taken.append(f"Failed to spawn Broadcast Daemon 8005: {e}")
+
+    # 2d. Social Hub Daemon on Port 8006
+    if not check_port(8006):
+        social_daemon = os.path.join(WORKSPACE_ROOT, "backend", "aibs_social_daemon.py")
+        if os.path.exists(social_daemon):
+            try:
+                subprocess.Popen(
+                    [python_exe, social_daemon],
+                    cwd=os.path.join(WORKSPACE_ROOT, "backend"),
+                    creationflags=creation_flag
+                )
+                actions_taken.append("Auto-spawned Social Hub Daemon on Port 8006")
+                log_doctor("Auto-spawned Social Hub Daemon on Port 8006")
+            except Exception as e:
+                actions_taken.append(f"Failed to spawn Social Hub 8006: {e}")
+
+    # 2e. GPU Thermal Safety Check & Fan Thermal Lock
+    try:
+        from modules.gpu_hardware_telemetry import gpu_telemetry_engine
+        telemetry = gpu_telemetry_engine.query_nvml_telemetry()
+        if telemetry.get("core_temp_c", 0) >= 75:
+            gpu_telemetry_engine.set_fan_speed(100)
+            actions_taken.append(f"GPU Core Temp high ({telemetry['core_temp_c']}°C): Enforced 100% Fan Lock")
+            log_doctor(f"GPU Core Temp high ({telemetry['core_temp_c']}°C): Enforced 100% Fan Lock")
+    except Exception as e:
+        pass
+
+    time.sleep(1.0)
+
+    # 3. Passive WAL checkpoint
+    master_db = os.path.join(WORKSPACE_ROOT, "backend", "aibs_master.db")
+    if os.path.exists(master_db):
+        try:
+            conn = sqlite3.connect(master_db)
+            conn.execute("PRAGMA wal_checkpoint(PASSIVE);")
+            conn.close()
+            actions_taken.append("Executed PASSIVE WAL checkpoint on aibs_master.db")
+        except Exception:
+            pass
+
+    # 4. Re-probe ecosystem
     post_diag = diagnose_ecosystem()
 
     return {

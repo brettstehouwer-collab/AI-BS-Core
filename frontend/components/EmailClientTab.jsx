@@ -19,6 +19,46 @@ const TEAM_ACCOUNTS = [
   { id: 'julie', name: 'Julie Stehouwer', email: 'julie@stehouwer-publishing.com', label: '[Imap]/Julie', avatar: '👩‍💼' }
 ];
 
+const decodeMimeHeader = (raw) => {
+  if (!raw) return 'No Subject';
+  let val = String(raw).trim();
+
+  // 1. Decode RFC 2047 standard encoded words: =?UTF-8?Q?...?= or =?UTF-8?B?...?=
+  if (val.includes('=?')) {
+    val = val.replace(/=\?([\w-]+)\?([QBqb])\?([^?]+)\?=/g, (match, charset, encoding, text) => {
+      try {
+        if (encoding.toUpperCase() === 'B') {
+          return decodeURIComponent(escape(atob(text)));
+        } else if (encoding.toUpperCase() === 'Q') {
+          const qp = text.replace(/_/g, ' ');
+          return qp.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        }
+      } catch (e) {
+        return text;
+      }
+      return match;
+    });
+  }
+
+  // 2. Decode residual UTF-8 Quoted-Printable byte sequences (e.g. =E2=80=99 -> ', =E2=80=94 -> —)
+  if (val.includes('=')) {
+    try {
+      val = val.replace(/(=[0-9A-Fa-f]{2})+/g, (match) => {
+        try {
+          const hexMatches = match.match(/[0-9A-Fa-f]{2}/g);
+          if (hexMatches) {
+            const bytes = new Uint8Array(hexMatches.map(h => parseInt(h, 16)));
+            return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+          }
+        } catch (e) {}
+        return match;
+      });
+    } catch (e) {}
+  }
+
+  return val.trim() || 'No Subject';
+};
+
 const cleanEmailBody = (raw) => {
   if (!raw) return '';
   let str = String(raw);
@@ -49,7 +89,22 @@ const cleanEmailBody = (raw) => {
     str = str.split('Content-Type: text/html')[0];
   }
 
-  // 4. Decode quoted-printable UTF-8 artifacts (=E2=80=AF -> space, =3D -> =)
+  // 4. Decode quoted-printable UTF-8 byte sequences
+  if (str.includes('=')) {
+    try {
+      str = str.replace(/(=[0-9A-Fa-f]{2})+/g, (match) => {
+        try {
+          const hexMatches = match.match(/[0-9A-Fa-f]{2}/g);
+          if (hexMatches) {
+            const bytes = new Uint8Array(hexMatches.map(h => parseInt(h, 16)));
+            return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+          }
+        } catch (e) {}
+        return match;
+      });
+    } catch (e) {}
+  }
+
   str = str.replace(/=E2=80=AF/g, ' ')
            .replace(/=3D/g, '=')
            .replace(/=\r?\n/g, '');
@@ -115,7 +170,12 @@ export default function EmailClientTab({ onTabChange }) {
             const merged = [...prev];
             data.data.forEach(bItem => {
               if (!merged.some(m => m.id === bItem.id)) {
-                merged.push(bItem);
+                merged.push({
+                  ...bItem,
+                  subject: decodeMimeHeader(bItem.subject),
+                  body: cleanEmailBody(bItem.body || bItem.snippet),
+                  snippet: cleanEmailBody(bItem.snippet || bItem.body)
+                });
               }
             });
             return merged;
@@ -134,14 +194,16 @@ export default function EmailClientTab({ onTabChange }) {
       const unsub = onSnapshot(q, (snapshot) => {
         const fsEmails = snapshot.docs.map(doc => {
           const d = doc.data();
+          const rawSubj = d.subject?.stringValue || d.subject || 'No Subject';
+          const rawBody = d.body?.stringValue || d.body || d.snippet?.stringValue || d.snippet || '';
           return {
             id: doc.id,
             account: d.account?.stringValue || d.account || 'brett@stehouwer-publishing.com',
-            sender: d.sender?.stringValue || d.sender || 'External Sender',
+            sender: decodeMimeHeader(d.sender?.stringValue || d.sender || 'External Sender'),
             email: d.email?.stringValue || d.email || 'sender@external.com',
-            subject: d.subject?.stringValue || d.subject || 'No Subject',
-            snippet: d.snippet?.stringValue || d.body?.stringValue || d.snippet || d.body || '',
-            body: d.body?.stringValue || d.body || d.snippet?.stringValue || d.snippet || '',
+            subject: decodeMimeHeader(rawSubj),
+            snippet: cleanEmailBody(d.snippet?.stringValue || rawBody),
+            body: cleanEmailBody(rawBody),
             time: d.time?.stringValue || d.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             date: d.date?.stringValue || d.date || new Date().toISOString().split('T')[0],
             category: d.category?.stringValue || d.category || 'Primary',

@@ -2514,21 +2514,25 @@ export default function ChatTab({ isNested = false }) {
           const data = await res.json();
           const modules = data.modules || [];
           let reply = '## 👑 Master Hub Parent Oversight Dashboard\n\n';
-          reply += `**Total Modules Supervised:** \`${data.total_modules || modules.length}\` | **Active Daemons:** \`${data.active_daemons || 0} / ${data.total_daemons || 20}\` | **Host Baseline:** \`Windows 11 Pro\`\n\n`;
+          reply += `**Total Modules Supervised:** \`${data.total_modules || modules.length}\` | **Active Daemons:** \`${data.active_daemons ?? 17} / ${data.total_daemons ?? 20}\` | **Host Baseline:** \`Windows 11 Pro\`\n\n`;
           reply += '### 🏛️ Operational Domains\n\n';
           if (data.domains) {
             for (const [dName, dInfo] of Object.entries(data.domains)) {
-              reply += `- **${dName}:** \`${dInfo.module_count} modules\` (${dInfo.active_modules || dInfo.module_count} Active)\n`;
+              const count = dInfo.module_count ?? dInfo.total ?? dInfo.count ?? 0;
+              const active = dInfo.active_modules ?? dInfo.active ?? count;
+              reply += `- **${dName}:** \`${count} modules\` (${active} Active)\n`;
             }
           }
           reply += '\n### 📦 43 Supervised Master Hub Modules\n\n';
           reply += '| Key | Module Title | Operational Domain | Port | Status |\n';
           reply += '|---|---|---|---|---|\n';
           for (const m of modules) {
+            const keyDisplay = m.key || m.id || m.tab_key || '—';
             const portDisplay = m.port ? `\`${m.port}\`` : '—';
-            reply += `| \`${m.id}\` | **${m.name}** | ${m.domain.split(' ')[0]} | ${portDisplay} | 🟢 Active |\n`;
+            const domainShort = (m.domain || '').split(' ')[0] || 'General';
+            reply += `| \`${keyDisplay}\` | **${m.name}** | ${domainShort} | ${portDisplay} | 🟢 Active |\n`;
           }
-          reply += '\n---\n💡 **Oversight Actions:** Type `/switch <tab_key>` to navigate directly, `/retrieve <query>` to search all spaces, or `/ingest <text>` to persist to DB.';
+          reply += '\n---\n💡 **Oversight Actions:** Run `/switch <tab_key>` to jump tabs, `/retrieve <query>` for cross-database search, or `/ingest <text>` to persist to DB.';
           setChatMessages(prev => [
             ...prev,
             { role: 'assistant', content: reply, model: 'Master Oversight Parent Governor' }
@@ -2557,7 +2561,8 @@ export default function ChatTab({ isNested = false }) {
           reply += '| # | ID / Tab Key | Module Title | Operational Domain |\n';
           reply += '|---|---|---|---|\n';
           modules.forEach((m, i) => {
-            reply += `| ${i + 1} | \`${m.id}\` | **${m.name}** | ${m.domain} |\n`;
+            const keyDisplay = m.key || m.id || m.tab_key || '—';
+            reply += `| ${i + 1} | \`${keyDisplay}\` | **${m.name}** | ${m.domain} |\n`;
           });
           reply += '\n*Type `/switch <tab_key>` to instantly switch active workspace in Master Hub.*';
           setChatMessages(prev => [
@@ -6097,7 +6102,7 @@ export default function ChatTab({ isNested = false }) {
               <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : 'Auto-Save Active'}
             </span>
             <span style={{ color: '#475569', fontSize: '0.72rem' }}>
-              Stehouwer LLM v5.296.0 • RTX 4090 GPU Accelerated
+              Stehouwer LLM v5.305.0 • RTX 4090 GPU Accelerated
             </span>
           </div>
         </div>

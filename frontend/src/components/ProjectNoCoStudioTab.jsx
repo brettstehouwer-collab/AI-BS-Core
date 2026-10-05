@@ -1008,24 +1008,64 @@ const ProjectNoCoStudioTab = () => {
 
       {/* SUB-TAB: CEA FARMING & LIVESTOCK */}
       {activeSubTab === 'cea_farming' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
-            <h3 style={{ color: theme.accentCyan, marginTop: 0 }}>🌿 4,000 sq ft CEA Greenhouse Operations</h3>
-            <ul style={{ color: theme.textMuted, fontSize: '0.85rem', lineHeight: 1.6, paddingLeft: '18px', margin: 0 }}>
-              <li><strong>2,400 sq ft NFT Channels:</strong> ~9,600 plant sites for leafy greens & herbs</li>
-              <li><strong>1,200 sq ft DWC Tanks:</strong> Deep water culture for heavy feeders & hemp</li>
-              <li><strong>400 sq ft Propagation Suite:</strong> Automated seedling misting & cloning</li>
-            </ul>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+            <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+              <h3 style={{ color: theme.accentCyan, marginTop: 0 }}>🌿 4,000 sq ft CEA Greenhouse Operations</h3>
+              <ul style={{ color: theme.textMuted, fontSize: '0.85rem', lineHeight: 1.6, paddingLeft: '18px', margin: 0 }}>
+                <li><strong>2,400 sq ft NFT Channels:</strong> ~9,600 plant sites for leafy greens & herbs</li>
+                <li><strong>1,200 sq ft DWC Tanks:</strong> Deep water culture for heavy feeders & hemp</li>
+                <li><strong>400 sq ft Propagation Suite:</strong> Automated seedling misting & cloning</li>
+              </ul>
+            </div>
+
+            <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+              <h3 style={{ color: theme.accentGreen, marginTop: 0 }}>🐑 Livestock Husbandry Sectors</h3>
+              <ul style={{ color: theme.textMuted, fontSize: '0.85rem', lineHeight: 1.6, paddingLeft: '18px', margin: 0 }}>
+                <li><strong>Valais Blacknose Sheep (15 ewes):</strong> 1.5 acres pasture, 1,200 sq ft barn with lambing pens & radiant floor heating</li>
+                <li><strong>Vicuña Alpacas (6 females):</strong> 1.0 acre paddock, 800 sq ft fiber shelter</li>
+                <li><strong>Chickens & Ducks (30 birds):</strong> Free-range orchard rotational grazing for IPM pest control</li>
+                <li><strong>Closed-Loop Co-Digestion:</strong> Livestock manure collected for anaerobic methane biogas generators</li>
+              </ul>
+            </div>
           </div>
 
-          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
-            <h3 style={{ color: theme.accentGreen, marginTop: 0 }}>🐑 Livestock Husbandry Sectors</h3>
-            <ul style={{ color: theme.textMuted, fontSize: '0.85rem', lineHeight: 1.6, paddingLeft: '18px', margin: 0 }}>
-              <li><strong>Valais Blacknose Sheep (15 ewes):</strong> 1.5 acres pasture, 1,200 sq ft barn with lambing pens & radiant floor heating</li>
-              <li><strong>Vicuña Alpacas (6 females):</strong> 1.0 acre paddock, 800 sq ft fiber shelter</li>
-              <li><strong>Chickens & Ducks (30 birds):</strong> Free-range orchard rotational grazing for IPM pest control</li>
-              <li><strong>Closed-Loop Co-Digestion:</strong> Livestock manure collected for anaerobic methane biogas generators</li>
-            </ul>
+          {/* Environmental Sensor Telemetry HUD */}
+          <div style={{ background: theme.cardBg, border: theme.border, borderRadius: '12px', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h4 style={{ margin: 0, color: '#f0f6fc', fontSize: '14px', fontWeight: '700' }}>
+                🌱 Real-Time CEA Climate & Rootzone Telemetry
+              </h4>
+              <span style={{ fontSize: '11px', color: '#10b981', fontWeight: '700', padding: '4px 8px', borderRadius: '4px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981' }}>
+                ● CLOSED-LOOP SENSORS ACTIVE
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
+              <div style={{ background: '#0b1120', border: '1px solid #1e293b', borderRadius: '8px', padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>Vapor Pressure Deficit (VPD)</div>
+                <div style={{ fontSize: '22px', fontWeight: '800', color: '#38bdf8', marginTop: '4px', fontFamily: 'monospace' }}>1.15 kPa</div>
+                <div style={{ fontSize: '10px', color: '#10b981', marginTop: '2px' }}>Optimal Transpiration Zone</div>
+              </div>
+
+              <div style={{ background: '#0b1120', border: '1px solid #1e293b', borderRadius: '8px', padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>Canopy Temp & Humidity</div>
+                <div style={{ fontSize: '22px', fontWeight: '800', color: '#fbbf24', marginTop: '4px', fontFamily: 'monospace' }}>22.4°C / 68%</div>
+                <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>Smart Glass 85% Diffusion</div>
+              </div>
+
+              <div style={{ background: '#0b1120', border: '1px solid #1e293b', borderRadius: '8px', padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>Rootzone Dissolved Oxygen</div>
+                <div style={{ fontSize: '22px', fontWeight: '800', color: '#34d399', marginTop: '4px', fontFamily: 'monospace' }}>8.8 mg/L</div>
+                <div style={{ fontSize: '10px', color: '#10b981', marginTop: '2px' }}>Micro-Bubble Oxygenator ON</div>
+              </div>
+
+              <div style={{ background: '#0b1120', border: '1px solid #1e293b', borderRadius: '8px', padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>Nutrient EC & pH Level</div>
+                <div style={{ fontSize: '22px', fontWeight: '800', color: '#a78bfa', marginTop: '4px', fontFamily: 'monospace' }}>1.65 mS / 5.85</div>
+                <div style={{ fontSize: '10px', color: '#10b981', marginTop: '2px' }}>Koi Waste Re-Bonding: 85%</div>
+              </div>
+            </div>
           </div>
         </div>
       )}

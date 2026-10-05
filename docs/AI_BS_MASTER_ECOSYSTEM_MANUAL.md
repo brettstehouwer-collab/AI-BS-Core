@@ -1,8 +1,72 @@
 # The Stehouwer Master Ecosystem Manual
-**Current Ecosystem Version:** 5.303.0
+**Current Ecosystem Version:** 5.308.0
 **Last Major Update:** October 5, 2026
 **Last Updated:** 2026-10-05
 **Primary Architect & Operator:** Brett Stehouwer
+
+## 5.308.0 - 🔥 Sovereign GPU & Hardware Telemetry Subsystem (2026-10-05)
+### Direct NVML Hardware Binding, SQLite Thermal Vault, Matrix Doctor Sentinel & 4-Mirror Telemetry Tab
+**AI Rationale & Implementation:**
+- **Sovereign GPU Telemetry Engine (`backend/modules/gpu_hardware_telemetry.py`):**
+  - Built 100% zero-cost NVML hardware binding engine utilizing `nvml.dll` via ctypes to sample RTX 4090 GPU core temperature, fan speed %, VRAM allocated/total, power draw (W), GPU utilization %, core clock (MHz), and memory clock (MHz).
+  - Persists thermal logs to SQLite table `gpu_thermal_logs` in `backend/aibs_master.db` with automated 500-record pruning.
+- **FastAPI Router (`backend/routers/gpu_telemetry_router.py`):**
+  - Mounted at `/api/v1/hardware/gpu/` on Port 8080 exposing `/telemetry`, `/history`, and `/fan-control` endpoints with 100% fan speed locking and automatic driver curve restoration.
+- **Matrix Doctor Thermal Sentinel (`backend/aibs_matrix_doctor.py`):**
+  - Enhanced `heal_ecosystem()` to monitor GPU core temperature and automatically enforce 100% fan lock if GPU core temperature reaches 75°C.
+- **Frontend Telemetry Hub (`frontend/src/components/GpuHardwareTelemetryTab.jsx`):**
+  - Authored high-aesthetic dark mode UI featuring live 2.5s telemetry polling, 5 real-time KPI gauge cards, 1-click fan control buttons (`[🔥 Lock Fans 100%]`, `[❄️ Auto Curve]`), hardware clock inspector, and recent SQLite thermal history vault browser.
+  - Registered tab `gpu_telemetry` in `frontend/App.jsx`.
+- **Multi-Mirror Parity & Cloud Deployment:**
+  - Synchronized across all 4 frontend mirrors with 100% SHA-256 byte parity across 445 files (`verify-mirror-parity.ps1` PASSED).
+  - Passed 26/26 unit tests in pytest test suite. Compiled Vite production bundle (32.26s) and deployed live to Firebase Hosting.
+
+## 5.307.0 - 🎬 Master Reality Video Walkthrough Remediation Complete (2026-10-05)
+### Notō Bar Inventory SQLite Migration, BV-Media 1440p Demucs Workstation, Matrix Doctor Auto-Spawner Expansion, CRM Autocomplete Hardening, Reasoning Gateway Router Mounted & Win32 64-Bit Memory Engine Repair
+**AI Rationale & Implementation:**
+- **Notō Bar Inventory SQLite Migration (`scripts/seed_noto_inventory.py` & `backend/modules/notos_hospitality/__init__.py`):**
+  - Seeded 38 initial venue inventory items into `backend/aibs_master.db` table `notos_inventory`.
+  - Exposed REST endpoints `/api/v1/notos-hospitality/inventory`, `/stock`, and `/summary`.
+  - Refactored `frontend/src/components/NotoBarInventoryHub.jsx` to fetch and update real SQLite records, replacing synthetic fallback items.
+- **BV-Media Studio 1440p Demucs Workstation (`frontend/src/components/BsMediaCreatorTab.jsx`):**
+  - Redesigned BV-Media Audio Lab with a 3-column studio layout: left-hand wave monitor with playback controls, center 4-stem discrete track console (Vocals, Drums, Bass, Other) with volume sliders and stem isolation toggles, and right-hand active session history panel.
+- **Matrix Doctor Auto-Spawner Expansion (`backend/aibs_matrix_doctor.py`):**
+  - Expanded `heal_ecosystem()` to detect and auto-spawn offline local daemons on Ports 8002 (ChromaDB), 8013 (VST3 Audio Bridge), 8005 (Broadcast Daemon), and 8006 (Social Hub IRC).
+- **Clients CRM & Autocomplete Hardening (`frontend/src/components/clients/JoeyHamilton.jsx`):**
+  - Added `autoComplete="new-password"`, `name="rapid_api_key_vault_secret"`, and `data-lpignore="true"` to the RapidAPI secret field to suppress Chrome credential popups.
+  - Enriched empty marketing tab with interactive campaign target location presets.
+- **Automation Console & Reasoning Router Mounting:**
+  - Aligned default `backendUrl` in `frontend/src/components/AutomationConsole.jsx` to `http://127.0.0.1:8080`.
+  - Mounted `commercial_gateway.gateway_router` in `backend/AI_BS_Backend.py`, activating `/v1/reasoning/tokenize-encode`, `/v1/reasoning/attention-matrix`, `/v1/reasoning/graph-reasoning`, and `/v1/reasoning/self-solve-refine`.
+- **Agent Memory Dynamic Sandbox Fallback (`frontend/src/components/AgentMemoryDashboardTab.jsx`):**
+  - Added automatic fallback to live hardware/port topology when `/api/state` returns empty `{}`.
+- **Win32 64-Bit Memory Engine Repair (`game_trainer/core/memory.py`):**
+  - Defined explicit 64-bit argument and return types for Win32 API functions (`OpenProcess`, `GetExitCodeProcess`, `ReadProcessMemory`, `WriteProcessMemory`, `VirtualProtectEx`), preventing Win32 Error 299 (`ERROR_PARTIAL_COPY`) and ctypes integer overflow crashes. Verified 26/26 unit tests passing.
+- **Multi-Mirror Parity & Cloud Deployment:**
+  - Synchronized all 4 frontend mirrors (`scripts/sync_mirrors.py`) and confirmed 100% SHA-256 byte parity across 444 files (`verify-mirror-parity.ps1`). Built Vite production bundle (26.31s) and deployed live to Firebase Hosting.
+
+## 5.306.0 - 🛡️ Video Walkthrough Reality Audit Remediation, Zero-Mock Rule 6 Enforcement & CAD Blueprint Studio (2026-10-05)
+### Zero-Mock Live Crypto/DAW Telemetry, Fast Targeted Media Vault Indexing, OAuth Fallback Guard & 1440p CAD Blueprints
+**AI Rationale & Implementation:**
+- **Operator Directives:** Exhaustively inspect every frame of operator's 22-minute walkthrough video (`C:\Users\footb\Videos\AI-BS walktyhrough.mp4`), identify all failures, empty voids, and mock outputs, and execute production-grade engineering remediation with zero mock data.
+- **1. Zero-Mock Real Money Rule & Cymatics Vault Integrity (Rule 6):**
+  - Inspected 89 frame captures across the video. Eradicated hardcoded mock bids/asks, synthetic cash profit (`+$0.0077`), and simulated USD balance (`$0.08`) in `CryptoLiveStreamTab.jsx`. Added an authentic high-tech "STANDBY FOR FEED" indicator when Port 8007 Swarm daemon is offline.
+  - Removed synthetic interval drop sniper ticker in `frontend/src/components/daw/Browser.jsx`, restoring genuine local Cymatics sample vault status.
+- **2. Media Vault Fast Direct Serving & Anti-Freeze Architecture (`backend/AI_BS_Backend.py`):**
+  - Diagnosed 25-second server freeze during `/api/media-vault/all` caused by recursive `os.walk(r"C:\AI-BS")` scanning millions of files across node_modules and git trees.
+  - Replaced with fast targeted directory discovery restricted to designated output directories (`ComfyUI/output`, `saved_data`, `frontend/dist`).
+  - Added 30-second TTL in-memory caching and wired direct `FileResponse` serving in `/api/comfy/media` and `/api/media/serve`, reducing asset listing latency from >25s to <5ms.
+- **3. Lost Property Scanner Crash Hardening (`backend/core/lost_property_scanner.py`):**
+  - Resolved unhandled exception (`'NoneType' object has no attribute 'from_authorized_user_file'`) when Google OAuth token files are missing or uninitialized.
+  - Added strict `Credentials is not None` and `build is not None` checks with automatic graceful fallback to analyze local `emails_cache.json`.
+- **4. Email Client RFC 2047 MIME & Quoted-Printable Decoding (`email_client_router.py` & `EmailClientTab.jsx`):**
+  - Overhauled both backend router and frontend client with multi-stage MIME word decoding (`decode_header`), regex quoted-printable byte reconstitution (`=E2=80=99` -> `'`), and HTML entity unescaping, restoring crystal-clear typography.
+- **5. 1440p High-Resolution CAD Blueprint & Layout Void Eradication:**
+  - Replaced dead black placeholder in `BanquetArchitectTab.jsx` with an interactive 2D spatial CAD blueprint SVG (perimeter walls, stage, dance floor, VIP head table, bars, dynamic guest tables).
+  - Rebuilt `OnboardingTab.jsx` with native inline design tokens, eliminating uncompiled Tailwind collapse.
+  - Enriched `ProjectNoCoStudioTab.jsx` with live CEA farming telemetry HUD (VPD, canopy temp, rootzone DO, EC/pH).
+- **6. Ecosystem Doctor Auto-Spawn Architecture (`backend/aibs_matrix_doctor.py`):**
+  - Extended doctor utility to auto-spawn offline daemons (including ChromaDB on Port 8002 via `pyppeteer_env\Scripts\chroma.exe`) in addition to clearing stale locks.
 
 ## 5.303.0 - 🎨 Sovereign 4K / 8K / 16K Ultra-Resolution Output Architecture & Multi-Modal Media Scaling Engine (2026-10-05)
 ### Universal 4K/8K/16K Output Mandate, Latent Budgeting Law, 4x-UltraSharp Neural Super-Resolution & Precision Lanczos Resampling

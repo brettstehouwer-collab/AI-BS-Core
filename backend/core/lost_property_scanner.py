@@ -21,20 +21,38 @@ TOKEN_FILE = Path(os.path.join(BASE_DIR, "token.json"))
 
 
 def get_gmail_service():
+    if Credentials is None or build is None:
+        return None
     creds = None
     if TOKEN_FILE.exists():
-        creds = Credentials.from_authorized_user_file(str(TOKEN_FILE), SCOPES)
+        try:
+            creds = Credentials.from_authorized_user_file(str(TOKEN_FILE), SCOPES)
+        except Exception:
+            creds = None
     if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+        if creds and creds.expired and creds.refresh_token and Request is not None:
+            try:
+                creds.refresh(Request())
+            except Exception:
+                creds = None
+        elif CLIENT_SECRET_FILE.exists() and InstalledAppFlow is not None:
+            try:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    str(CLIENT_SECRET_FILE), SCOPES
+                )
+                creds = flow.run_local_server(port=0)
+                with open(str(TOKEN_FILE), "w") as token:
+                    token.write(creds.to_json())
+            except Exception:
+                creds = None
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                str(CLIENT_SECRET_FILE), SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        with open(str(TOKEN_FILE), "w") as token:
-            token.write(creds.to_json())
-    return build("gmail", "v1", credentials=creds)
+            return None
+    if not creds:
+        return None
+    try:
+        return build("gmail", "v1", credentials=creds)
+    except Exception:
+        return None
 
 
 def call_stehouwer_llm(sender, subject):
@@ -67,16 +85,55 @@ Subject: {subject}
 
 
 def run_scan():
-    if not CLIENT_SECRET_FILE.exists():
-        return {"error": "client_secret.json not found in C:\\AI-BS\\"}
-
     cache_file = Path(os.path.dirname(__file__)) / "lost_property_cache.json"
     results = []
 
     try:
-        print("Connecting to Gmail API via OAuth 2.0...")
         service = get_gmail_service()
 
+        if service is None:
+            # Fallback: scan local cached emails synced via IMAP/business email client
+            emails_cache_path = Path(os.path.dirname(__file__)) / "emails_cache.json"
+            if emails_cache_path.exists():
+                try:
+                    with open(emails_cache_path, "r", encoding="utf-8") as f:
+                        cached_emails = json.load(f)
+                    account_keywords = ["welcome", "verify", "account", "confirm", "registration", "security", "subscription", "alert"]
+                    for em in cached_emails[:100]:
+                        subj = em.get("subject", "")
+                        subj_lower = subj.lower()
+                        sender = em.get("sender") or em.get("email") or ""
+                        if any(kw in subj_lower for kw in account_keywords):
+                            analysis = call_stehouwer_llm(sender, subj)
+                            results.append(
+                                {
+                                    "sender": sender,
+                                    "subject": subj,
+                                    "company": analysis.get("company", sender.split("@")[-1] if "@" in sender else "Unknown"),
+                                    "category": analysis.get("category", "Utility"),
+                                }
+                            )
+                    if results:
+                        with open(cache_file, "w", encoding="utf-8") as f:
+                            json.dump(results, f, indent=4)
+                        return {"status": "success", "count": len(results), "data": results, "source": "local_email_cache"}
+                except Exception as ex:
+                    print(f"Fallback local email cache scan error: {ex}")
+
+            # If no cached emails found or cache is empty
+            if not CLIENT_SECRET_FILE.exists():
+                return {
+                    "status": "unconfigured",
+                    "error": "Gmail OAuth credentials not configured in client_secret.json and no account emails detected in local cache.",
+                    "data": []
+                }
+            return {
+                "status": "unconfigured",
+                "error": "Google API client credentials invalid or expired. Local email cache scanned.",
+                "data": results
+            }
+
+        print("Connecting to Gmail API via OAuth 2.0...")
         # Search criteria: "Welcome to" OR "Verify your email" OR "Account created" OR "Confirm your registration" OR "Registration successful"
         query = 'subject:("Welcome to" OR "Verify your email" OR "Account created" OR "Confirm your registration" OR "Registration successful")'
 

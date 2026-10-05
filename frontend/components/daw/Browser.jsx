@@ -384,7 +384,7 @@ const Browser = ({
         </div>
       </div>
 
-      {/* 🎯 CYMATICS 100GB DROP SNIPER STATUS BADGE */}
+      {/* 🎯 CYMATICS SOUND VAULT ACCESS BADGE */}
       <div style={{
         background: 'linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(245, 158, 11, 0.05))',
         border: '1px solid #f59e0b',
@@ -399,8 +399,8 @@ const Browser = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
           <div>
-            <div style={{ fontWeight: 'bold', color: '#fbbf24', fontSize: '10px' }}>100GB DROP SNIPER: ACTIVE</div>
-            <div style={{ color: '#94a3b8', fontSize: '9px' }}>Scanning cymatics-c86v every 3s</div>
+            <div style={{ fontWeight: 'bold', color: '#fbbf24', fontSize: '10px' }}>CYMATICS SAMPLE VAULT</div>
+            <div style={{ color: '#94a3b8', fontSize: '9px' }}>Direct portal to verified production packs</div>
           </div>
         </div>
         <a 
@@ -420,7 +420,7 @@ const Browser = ({
             gap: '3px'
           }}
         >
-          <span>OPEN</span>
+          <span>PORTAL</span>
         </a>
       </div>
 

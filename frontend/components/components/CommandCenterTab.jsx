@@ -5,6 +5,7 @@ import DroppableContainer from './dnd/DroppableContainer.jsx';
 import DraggableItem from './dnd/DraggableItem.jsx';
 import SimpleDashboardPortal from './SimpleDashboardPortal.jsx';
 import MemoryBankSupervisor from './MemoryBankSupervisor.jsx';
+import SovereignMatrixWidget from './SovereignMatrixWidget.jsx';
 import './CommandCenterTab.css';
 
 const DEFAULT_LAYOUT = [
@@ -13,8 +14,9 @@ const DEFAULT_LAYOUT = [
   { i: 'agent_launcher', x: 0, y: 10, w: 12, h: 11 },
   { i: 'model_registry', x: 12, y: 10, w: 12, h: 6 },
   { i: 'active_sessions', x: 12, y: 16, w: 12, h: 5 },
-  { i: 'ssd_ram', x: 0, y: 21, w: 24, h: 7 },
-  { i: 'cmd_library', x: 0, y: 28, w: 24, h: 12 },
+  { i: 'sovereign_matrix', x: 0, y: 21, w: 24, h: 12 },
+  { i: 'ssd_ram', x: 0, y: 33, w: 24, h: 7 },
+  { i: 'cmd_library', x: 0, y: 40, w: 24, h: 12 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -526,6 +528,11 @@ export default function CommandCenterTab({
               ))}
             </DroppableContainer>
           )}
+        </div>
+
+        {/* SOVEREIGN OPEN-SOURCE MATRIX WIDGET */}
+        <div key="sovereign_matrix" style={{ height: '100%' }}>
+          <SovereignMatrixWidget onLaunchAgent={handleLaunchAgent} />
         </div>
 
         {/* SSD VIRTUAL RAM WIDGET */}

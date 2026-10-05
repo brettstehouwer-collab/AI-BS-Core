@@ -386,39 +386,52 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
             "sql": "SELECT * FROM system_telemetry ORDER BY id DESC LIMIT 5;"
         }
 
-    # 8. Universal Space Retrieval Intent across 11 SQLite DBs
-    if any(kw in p_lower for kw in [
-        "retrieve from all spaces", "retrieve from spaces", "retrieve info from all spaces",
-        "retrieve information from all spaces", "search all spaces", "search spaces",
-        "query all spaces", "find in all spaces", "search 11 databases", "search 11 spaces",
-        "retrieve from database", "/retrieve"
-    ]):
-        return "retrieve_from_all_spaces", {"query": prompt}
+    # Guard: If prompt is a multi-line pasted log, transcript, or already contains report output, DO NOT trigger space search or monitor
+    is_multi_line_log = len(prompt.splitlines()) > 4
+    has_report_artifacts = any(marker in prompt for marker in [
+        "Universal Space Retrieval Report",
+        "Searching across all 11 memory-mapped",
+        "Master Hub Parent Oversight Dashboard",
+        "AI-BS Sovereign Parent Oversight Console",
+        "Total Modules Supervised:"
+    ])
 
-    # 9. On-Demand Database Ingestion Intent
-    if any(kw in p_lower for kw in [
-        "store this in the database", "store this info to db", "store info to db", "store in db",
-        "store to db", "save to db", "save this to db", "ingest on demand", "ingest into database",
-        "ingest to database", "ingest to db", "ingest into db", "save to database", "save this to database",
-        "save note to vault", "save this note to the vault", "store note in db", "record this transaction",
-        "/ingest"
-    ]):
-        return "ingest_on_demand_to_db", {"content": prompt}
+    if not (is_multi_line_log or has_report_artifacts):
+        p_trimmed = prompt.strip().lower()
 
-    # 10. 43-Module Oversight Parent Intent
-    if any(kw in p_lower for kw in [
-        "monitor all 43", "monitor all 43 modules", "monitor modules", "monitor systems",
-        "43 modules", "43 master hub", "oversight parent", "system oversight", "master oversight",
-        "oversight dashboard", "module overview", "/monitor", "/oversight", "/modules"
-    ]):
-        return "monitor_43_modules", {"prompt": prompt}
+        # 8. Universal Space Retrieval Intent across 11 SQLite DBs
+        is_explicit_retrieve = (
+            p_trimmed.startswith(("/retrieve", "/spacesearch", "retrieve from all spaces", "retrieve from spaces", "search all spaces", "query all spaces", "find in all spaces", "search 11 databases", "search 11 spaces"))
+            or bool(re.search(r'^(?:please\s+|can\s+you\s+)?(retrieve|search|find|query)\s+(?:from|in|across)?\s*(?:all\s+)?(?:11\s+)?(?:spaces|databases|db\s+spaces)\b', p_lower))
+        )
+        if is_explicit_retrieve:
+            clean_q = prompt.strip()
+            for prefix in ["/retrieve", "/spacesearch", "retrieve from all spaces", "retrieve from spaces", "search all spaces", "query all spaces", "find in all spaces", "search 11 databases", "search 11 spaces"]:
+                if clean_q.lower().startswith(prefix):
+                    clean_q = clean_q[len(prefix):].strip(" :,-")
+                    break
+            return "retrieve_from_all_spaces", {"query": clean_q or prompt.strip()}
 
-    # 11. Spaces Overview Intent
-    if any(kw in p_lower for kw in [
-        "spaces overview", "all 11 spaces", "11 database spaces", "list spaces", "show spaces",
-        "storage spaces", "database spaces", "/spaces"
-    ]):
-        return "spaces_overview", {}
+        # 9. On-Demand Database Ingestion Intent
+        is_explicit_ingest = (
+            p_trimmed.startswith(("/ingest", "store this in the database", "store info to db", "store in db", "save to db", "ingest on demand", "ingest into database", "save to database"))
+            or bool(re.search(r'^(?:please\s+|can\s+you\s+)?(store|save|ingest|record)\s+(?:this\s+)?(?:data|note|info|transaction)?\s*(?:in|into|to)\s+(?:the\s+)?(?:database|db|vault)\b', p_lower))
+        )
+        if is_explicit_ingest:
+            return "ingest_on_demand_to_db", {"content": prompt}
+
+        # 10. 43-Module Oversight Parent Intent
+        is_explicit_monitor = (
+            p_trimmed in ["/monitor", "/oversight", "/modules", "monitor", "oversight", "modules"]
+            or p_trimmed.startswith(("/monitor", "/oversight", "/modules", "monitor modules", "monitor systems", "43 modules"))
+            or (any(kw in p_lower for kw in ["monitor all 43", "oversight parent", "master oversight", "oversight dashboard"]) and len(p_trimmed) < 60)
+        )
+        if is_explicit_monitor:
+            return "monitor_43_modules", {"prompt": prompt}
+
+        # 11. Spaces Overview Intent
+        if p_trimmed.startswith(("/spaces", "spaces overview")) or (p_trimmed in ["all 11 spaces", "11 database spaces", "list spaces", "show spaces"]):
+            return "spaces_overview", {}
 
     return None, None
 

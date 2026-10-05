@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ComfyWorkspaceTab.css';
+import ComfyStation from './ComfyStation';
 
 const STEPS = [
   { id: 1, label: 'Media Type' },
@@ -35,6 +36,7 @@ const RESOLUTION_PRESETS = {
 };
 
 export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000' }) {
+  const [workspaceMode, setWorkspaceMode] = useState('wizard'); // 'wizard' | 'station'
   const [currentStep, setCurrentStep] = useState(1);
   const [capabilities, setCapabilities] = useState(null);
   const [styles, setStyles] = useState([]);
@@ -291,6 +293,43 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
           <div className="comfy-subtitle">Multi-Modal Media Generation &amp; 2-Stage Ultra-HD Pipeline</div>
         </div>
         
+        <div className="comfy-mode-toggle" style={{ display: 'flex', gap: '6px', background: '#0f172a', padding: '4px', borderRadius: '6px', border: '1px solid #1e293b' }}>
+          <button
+            type="button"
+            className={`comfy-mode-btn ${workspaceMode === 'wizard' ? 'active' : ''}`}
+            onClick={() => setWorkspaceMode('wizard')}
+            style={{
+              background: workspaceMode === 'wizard' ? '#2563eb' : 'transparent',
+              color: '#ffffff',
+              border: 'none',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            🪄 Directorial Wizard
+          </button>
+          <button
+            type="button"
+            className={`comfy-mode-btn ${workspaceMode === 'station' ? 'active' : ''}`}
+            onClick={() => setWorkspaceMode('station')}
+            style={{
+              background: workspaceMode === 'station' ? '#0284c7' : 'transparent',
+              color: '#ffffff',
+              border: 'none',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            ⚡ Interactive Workstation (1,365 Nodes)
+          </button>
+        </div>
+
         <div className={`comfy-gpu-badge ${capabilities?.online ? '' : 'offline'}`}>
           <span>{capabilities?.online ? '● RTX 4090 ONLINE (Port 8189)' : '○ ComfyUI Offline'}</span>
           <button className="btn-free-vram" onClick={handleFreeVram} title="Flush GPU VRAM">
@@ -299,8 +338,14 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
         </div>
       </div>
 
-      {/* Stepper Bar */}
-      <div className="comfy-stepper">
+      {workspaceMode === 'station' ? (
+        <div style={{ marginTop: '12px' }}>
+          <ComfyStation />
+        </div>
+      ) : (
+        <>
+          {/* Stepper Bar */}
+          <div className="comfy-stepper">
         {STEPS.map((s) => (
           <button
             key={s.id}
@@ -884,6 +929,8 @@ export default function ComfyWorkspaceTab({ backendUrl = 'http://127.0.0.1:8000'
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

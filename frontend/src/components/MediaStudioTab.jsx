@@ -831,7 +831,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
               fontSize: '0.68rem',
               fontWeight: '700'
             }}>
-              v5.296.0
+              v5.305.0
             </span>
           </div>
 

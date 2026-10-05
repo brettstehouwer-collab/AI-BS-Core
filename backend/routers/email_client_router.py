@@ -79,28 +79,52 @@ def _load_env_credentials():
 
 
 def _decode_mime_str(header_val):
-    """Safely decodes RFC 2047 encoded MIME strings."""
+    """Safely decodes RFC 2047 encoded MIME strings, quoted-printable entities, and HTML entities."""
     if not header_val:
         return ""
-    decoded_fragments = decode_header(header_val)
-    parts = []
-    for fragment, charset in decoded_fragments:
-        if isinstance(fragment, bytes):
-            try:
-                parts.append(fragment.decode(charset or "utf-8", errors="replace"))
-            except Exception:
-                parts.append(fragment.decode("latin1", errors="replace"))
-        else:
-            parts.append(str(fragment))
-    return "".join(parts).strip()
+    import html
+    try:
+        decoded_fragments = decode_header(header_val)
+        parts = []
+        for fragment, charset in decoded_fragments:
+            if isinstance(fragment, bytes):
+                try:
+                    parts.append(fragment.decode(charset or "utf-8", errors="replace"))
+                except Exception:
+                    parts.append(fragment.decode("latin1", errors="replace"))
+            else:
+                parts.append(str(fragment))
+        res = " ".join(parts).strip()
+    except Exception:
+        res = str(header_val)
+
+    # Decode residual quoted-printable hex patterns like =E2=80=99 or =20
+    if "=?" in res or re.search(r"(=[0-9A-Fa-f]{2})+", res):
+        try:
+            res = re.sub(
+                r'(=[0-9A-Fa-f]{2})+',
+                lambda m: bytes.fromhex(m.group(0).replace('=', '')).decode('utf-8', errors='replace'),
+                res
+            )
+        except Exception:
+            pass
+
+    return html.unescape(res).strip()
 
 
 def _get_cached_emails() -> List[Dict[str, Any]]:
-    """Loads all emails from disk cache."""
+    """Loads all emails from disk cache and ensures decoded subjects and content."""
     if os.path.exists(CACHE_FILE):
         try:
             with open(CACHE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                items = json.load(f)
+                if isinstance(items, list):
+                    for item in items:
+                        if "subject" in item and ("=?" in str(item["subject"]) or "=" in str(item["subject"])):
+                            item["subject"] = _decode_mime_str(item["subject"])
+                        if "sender" in item and "=?" in str(item["sender"]):
+                            item["sender"] = _decode_mime_str(item["sender"])
+                return items
         except Exception:
             return []
     return []

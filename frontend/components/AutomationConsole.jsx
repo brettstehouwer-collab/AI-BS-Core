@@ -46,7 +46,9 @@ function getStatusTone(status) {
   }
 }
 
-export default function AutomationConsole({ backendUrl = 'http://127.0.0.1:8000' }) {
+const defaultBackendUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://127.0.0.1:8080' : '';
+
+export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
   const isElectron = typeof window !== 'undefined' && !!window.aibsAutomation;
   const currentUserEmail = (() => {
     try {

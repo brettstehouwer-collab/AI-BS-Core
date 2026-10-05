@@ -7,6 +7,7 @@ import SubTabBar from './components/SubTabBar.jsx';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase.js';
+import { SYSTEM_VERSION } from './version.js';
 import { useBackendHealth } from './components/useBackendHealth.js';
 import { useAppStore } from './components/useAppStore.js';
 import { getUserTier, canAccessTab, ADMIN_EMAILS, USER_TIERS } from './components/accessControl.js';
@@ -132,6 +133,7 @@ const MediaStudioTab = safeLazy(() => import('./components/MediaStudioTab.jsx'))
 const BsMediaCreatorTab = safeLazy(() => import('./components/BsMediaCreatorTab.jsx'));
 const ExecutiveCockpitTab = safeLazy(() => import('./components/ExecutiveCockpitTab.jsx'));
 const ComfyWorkspaceTab = safeLazy(() => import('./components/ComfyWorkspaceTab.jsx'));
+const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardwareTelemetryTab.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -190,6 +192,7 @@ const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
+  { key: 'gpu_telemetry', label: '🔥 GPU Hardware Telemetry Hub', description: 'NVIDIA GeForce RTX 4090 NVML Hardware Telemetry, Fan Speed Lock & SQLite Thermal Vault', Component: GpuHardwareTelemetryTab },
   { key: 'central_gaming_hub', label: '🎮 Central Gaming Hub', description: 'Unified Ludic Nexus: 2-Player P2P Dyadic Hub, Steam Game Library & Win32 Memory Trainer', Component: CentralGamingHubTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
@@ -803,7 +806,7 @@ export default function App() {
                   </button>
                   <div className="brand-menu">
                     <div className="brand-block">
-                      <h1>Stehouwer Publishing AI <span className="version-pill">v5.302.0</span></h1>
+                      <h1>Stehouwer Publishing AI <span className="version-pill">{SYSTEM_VERSION}</span></h1>
                     </div>
                   </div>
                   <div className="status-pill-group">

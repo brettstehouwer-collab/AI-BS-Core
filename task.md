@@ -1,9 +1,26 @@
-# Master Task Plan: Real-Time User Presence, Dynamic Firebase Roster Sync & Session Audit Telemetry
+# Master Task: Sovereign Agent Apps Hub & Mixture-of-Specialists (MoE) Architecture
 
-## Status: ACTIVE & COMPLETED (v5.295.0)
+## Status: IN PROGRESS (v5.309.0-dev)
 
-- [x] **Dynamic SQLite User Presence Engine (`backend/modules/user_session_telemetry.py`)**: Persistent SQLite storage in `data/user_sessions.db` with `registered_users`, `user_sessions`, and `session_activity_events` tables; automatic heartbeat auto-registration and Firebase roster sync (`sync_authorized_users`).
-- [x] **REST Roster Sync Endpoint (`backend/modules/telemetry_matrix_router.py`)**: Mounted `POST /api/telemetry/user-sessions/sync-users` and `GET /api/telemetry/user-sessions/summary` on Port 8080.
-- [x] **Real-Time Client Telemetry Widget (`UserSessionTelemetryWidget.jsx`)**: Active Firestore snapshot listener on `collection(db, 'users')`, dynamic operator filter dropdown (`All Operators (N)`), Section 1 live online operators, Section 2 last-seen & total time spent cards for all authorized users, and Section 3 full session audit ledger.
-- [x] **Authentication Whitelist Hardening (`App.jsx` & `accessControl.js`)**: Updated `onAuthStateChanged` so any authenticated Firebase user is recognized as an authorized operator; added executive aliases to `ADMIN_EMAILS`; merged all Firestore users in `TeamChatDrawer.jsx`.
-- [x] **Mirror Parity & Cloud Deployment**: 100% SHA256 parity verified across all 430 files in all 4 frontend mirrors (`scripts/sync_mirrors.py`), built Vite production bundle, and deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app`).
+- [ ] **Stage 1: Sovereign MoE (Mixture-of-Specialists) Backend Engine**
+  - [ ] Implement `backend/core/sovereign_reasoning/moe_specialist_router.py` with intent classification across code, prose, tool, and vision domains.
+  - [ ] Map domains to local Ollama weights on Port 11434 (`qwen2.5-coder:latest`, `stehouwer_dolphin:latest`, `stehouwer-hermes:latest`, `qwen3.6:latest`, `llama3.3:70b`).
+  - [ ] Mount REST router `/api/v1/moe` in `backend/AI_BS_Backend.py`.
+  - [ ] Validate Python AST syntax and route classification accuracy.
+
+- [ ] **Stage 2: Sovereign Agent Harness Execution Adapters**
+  - [ ] Implement `backend/modules/agent_harness_runner.py` providing session management and adapters for Terminal coding agents (Aider/Claude Code style), code execution interpreters (OpenCode), and function calling loops (Hermes).
+  - [ ] Wire live PowerShell bypass subprocess execution and diff streaming.
+
+- [ ] **Stage 3: 14-App Visual Launcher Workspace & Multi-Mirror Sync**
+  - [ ] Author high-aesthetic dark-mode React component `frontend/src/components/SovereignAgentAppsTab.jsx` mirroring the Ollama Apps matrix.
+  - [ ] Include active session drawer, terminal console, and specialist model router HUD.
+  - [ ] Mount tab `sovereign_apps` into `frontend/App.jsx`.
+  - [ ] Synchronize across all 4 mirrors (`frontend/src/components/`, `frontend/components/`, `frontend/src/components/components/`, `frontend/components/components/`) maintaining 100% SHA-256 byte parity.
+
+- [ ] **Stage 4: Automated Verification, Production Build & Cloud Sync**
+  - [ ] Run `pytest tests` to assert 0 regressions.
+  - [ ] Run `verify-mirror-parity.ps1` to assert 100% SHA-256 byte parity across all mirror files.
+  - [ ] Execute Vite production build in `frontend`.
+  - [ ] Deploy live to Firebase Hosting (`https://ai-bs-dashboard.web.app`).
+  - [ ] Perform Milestone Commit Standard: bump version to `v5.309.0` and update master architectural ledgers.

@@ -455,6 +455,9 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
              <span style={{ fontSize: '12px', color: '#999' }}>RapidAPI:</span>
              <input 
               type="password"
+              name="rapid_api_key_vault_secret"
+              autoComplete="new-password"
+              data-lpignore="true"
               value={rapidApiKey}
               onChange={(e) => setRapidApiKey(e.target.value)}
               placeholder="API Key..."
@@ -574,8 +577,20 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
                 ))}
               </div>
             ) : (
-              <div style={{ backgroundColor: '#fff', padding: '40px', borderRadius: '10px', textAlign: 'center', color: '#999', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-                Results will appear here.
+              <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', color: '#666', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                <h3 style={{ margin: '0 0 10px 0', color: '#1a1a2e', fontSize: '16px' }}>🚀 Launch Marketing Campaign</h3>
+                <p style={{ fontSize: '13px', color: '#666', marginBottom: '20px' }}>Select a quick location preset or enter a custom city to run automated property discovery and AI collateral generation.</p>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  {['Grand Rapids, MI', 'Ada, MI', 'Rockford, MI', 'East Grand Rapids, MI'].map((loc) => (
+                    <button
+                      key={loc}
+                      onClick={() => setBulkMarketingLocation(loc)}
+                      style={{ padding: '8px 12px', backgroundColor: bulkMarketingLocation === loc ? '#D4AF37' : '#f0f2f5', color: bulkMarketingLocation === loc ? '#000' : '#1a1a2e', border: '1px solid #ccc', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                      📍 {loc}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

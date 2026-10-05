@@ -285,7 +285,9 @@ class OmniSpaceManager:
 
     def format_retrieval_card(self, results: Dict[str, Any]) -> str:
         """Renders search results into an executive Markdown card for BS-Chat."""
-        q = results.get("query", "")
+        q_raw = results.get("query", "")
+        # Protect against unbounded query echoing in markdown card header
+        q = (q_raw[:117] + "...") if len(q_raw) > 120 else q_raw
         total = results.get("total_matches", 0)
         elapsed = results.get("execution_time_ms", 0)
         by_space = results.get("matches_by_space", {})
