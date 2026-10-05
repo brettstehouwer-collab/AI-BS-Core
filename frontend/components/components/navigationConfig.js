@@ -45,6 +45,7 @@ export const masterHubs = [
     defaultTab: 'bv_media_creator',
     subTabs: [
       { key: 'bv_media_creator', label: 'BV-Media Creator Studio', icon: '🎨', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault' },
+      { key: 'comfy_workspace', label: 'ComfyUI Creative Studio', icon: '🧩', description: 'Interactive Local Diffusion & Video Studio, AST Graph Generator, FaceDetailer & Real-Time Presets' },
       { key: 'media_studio', label: 'Autonomous Media Studio', icon: '🎬', description: 'Autonomous Headless Media Production Studio across 13 Domains' },
       { key: 'unified_creation', label: 'Universal Screenwriting Studio', icon: '✍️', description: 'Hollywood AST Screenplay Editor, Book Adaptation & Story Bible' },
       { key: 'music_daw', label: 'FL Music Studio (DAW)', icon: '🎵', description: 'Pattern-Based DAW, Synthesizer & Beat Maker' },

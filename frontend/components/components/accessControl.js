@@ -107,6 +107,7 @@ export const TAB_PERMISSIONS = {
   digital_storefront: ['admin', 'enterprise_all_access', 'creator_media'],
 
   // --- Creator & Media Studio ---
+  comfy_workspace: ['admin', 'enterprise_all_access', 'creator_media'],
   public_playground: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'free_demo'],
   personal_brand: ['admin', 'enterprise_all_access', 'creator_media', 'b2b_growth'],
   unified_media_gallery: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting'],

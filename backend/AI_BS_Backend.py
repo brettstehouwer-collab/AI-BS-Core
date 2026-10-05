@@ -867,6 +867,8 @@ app.include_router(unreal_bridge_new_router, prefix="/api")
 
 from routers.comfyui_router import router as comfyui_router
 app.include_router(comfyui_router)
+from routers.comfyui_workspace_router import router as comfyui_workspace_router
+app.include_router(comfyui_workspace_router)
 
 from routers.screenwriting_router import router as screenwriting_router
 app.include_router(screenwriting_router)

@@ -160,6 +160,8 @@ def start_fastapi_server():
         # Import and include the ComfyUI router
         from routers.comfyui_router import router as comfyui_router
         app.include_router(comfyui_router)
+        from routers.comfyui_workspace_router import router as comfyui_workspace_router
+        app.include_router(comfyui_workspace_router)
 
         # Import and include the Wan Media router (Wan-Dancer & WanSong)
         try:

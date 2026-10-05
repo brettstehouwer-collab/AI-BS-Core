@@ -131,6 +131,7 @@ const NdaModuleTab = safeLazy(() => import('./components/NdaModuleTab.jsx'));
 const MediaStudioTab = safeLazy(() => import('./components/MediaStudioTab.jsx'));
 const BsMediaCreatorTab = safeLazy(() => import('./components/BsMediaCreatorTab.jsx'));
 const ExecutiveCockpitTab = safeLazy(() => import('./components/ExecutiveCockpitTab.jsx'));
+const ComfyWorkspaceTab = safeLazy(() => import('./components/ComfyWorkspaceTab.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -247,6 +248,7 @@ const tabs = [
   { key: 'project_noco', label: 'Project NoCo & Living Stage Studio', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio', Component: ProjectNoCoStudioTab },
   { key: 'universal_studio', label: 'Universal AV Studio', description: 'Master Broadcast, Video WebRTC, DAW & Neural Voice Engine', Component: OmniStudioTab },
   { key: 'bv_media_creator', label: '🎨 BV-Media Creator & BsMedia-Chat', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault', Component: BsMediaCreatorTab },
+  { key: 'comfy_workspace', label: '🧩 ComfyUI Creative Studio', description: 'Interactive Local Diffusion & Video Studio, AST Graph Generator, FaceDetailer & Real-Time Presets', Component: ComfyWorkspaceTab },
   { key: 'media_studio', label: '🎬 Autonomous Media Studio', description: 'Autonomous Headless Media Production Studio, 13-Domain NLE & Visual Editor', Component: MediaStudioTab },
   { key: 'music_daw', label: 'FL Music Studio (DAW)', description: 'Pattern-based Digital Audio Workspace & FL Studio-Style Beat Maker', Component: MusicDAWStudioTab },
   { key: 'ecosystem_blueprint', label: 'Matrix Blueprint & ROI', description: 'Interactive Ecosystem Architecture, 5-Pillar Matrix & Financial ROI Simulator', Component: EcosystemBlueprintTab },
@@ -801,7 +803,7 @@ export default function App() {
                   </button>
                   <div className="brand-menu">
                     <div className="brand-block">
-                      <h1>Stehouwer Publishing AI <span className="version-pill">v5.259.0</span></h1>
+                      <h1>Stehouwer Publishing AI <span className="version-pill">v5.302.0</span></h1>
                     </div>
                   </div>
                   <div className="status-pill-group">
