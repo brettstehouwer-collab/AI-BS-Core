@@ -30,6 +30,7 @@ export const masterHubs = [
       { key: 'workflow_dag', label: 'Multi-Agent DAG Builder', icon: '⚡', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder' },
       { key: 'terminal', label: 'Host Terminal Shell', icon: '⌨️', description: 'Interactive Windows 11 PowerShell Virtual Terminal' },
       { key: 'deep_learning_studio', label: 'Deep Learning Studio', icon: '🧠', description: '17-Model Fleet Topology & Dynamic Graph Visualizer' },
+      { key: 'nutrition_subsystem', label: 'Clinical Nutrition & Detox Engine', icon: '🥗', description: 'Hybrid Cold-Press Mechanical Extraction, Fiber Suspension & Ketogenic Shift Subsystem' },
       { key: 'agent_memory', label: 'Agent Vector Memory', icon: '💾', description: 'ChromaDB Vector Store Explorer & Memory Bank' },
       { key: 'reasoning_attention', label: 'Self-Refinement & Attention', icon: '⚡', description: 'Contextual Encodings & Attention Heatmaps' },
       { key: 'system_health', label: 'System Health & Audit Logs', icon: '🏥', description: 'Real-time Server Telemetry, Lifespan Logs & DB Status' },

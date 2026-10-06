@@ -4364,8 +4364,13 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
     # Dynamic Unlimited Token Input Calculation & Memory Offloading
     total_input_chars = sum(len(str(m.get("content", ""))) for m in formatted_messages)
     estimated_input_tokens = int(total_input_chars / 3.2)
-    # Dynamically allocate num_ctx - never truncate or clamp!
-    target_num_ctx = max(16384, ((estimated_input_tokens + 4096) // 4096 + 1) * 4096)
+    # Dynamic Context Tuning: allocate what is needed so 32B models don't unnecessarily spill to CPU RAM
+    if estimated_input_tokens <= 1500:
+        target_num_ctx = 4096
+    elif estimated_input_tokens <= 3500:
+        target_num_ctx = 8192
+    else:
+        target_num_ctx = max(16384, ((estimated_input_tokens + 4096) // 4096 + 1) * 4096)
     target_num_ctx = min(131072, target_num_ctx)
 
     # Disk Staging & Memory Offloading for Large Jobs
@@ -4418,10 +4423,12 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
     async def generate_token_stream():
         streamed_any = False
 
-        # If large job, yield notification badge
+        # If large job, yield notification badge; otherwise yield instant invisible heartbeat to lock HTTP stream open
         if job_id and job_output_path:
             badge = f"> 💾 **[Large Job Offloaded & Staged]** Input persisted to disk (`{os.path.basename(job_input_path)}`). Allocated context: **{target_num_ctx:,} tokens**. Stream auto-saving to `{os.path.basename(job_output_path)}`.\n\n"
             yield badge
+        else:
+            yield "\u200B"
 
         for host in ollama_hosts:
             try:
@@ -4442,9 +4449,29 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
                                 except Exception:
                                     pass
 
+                            queue = asyncio.Queue()
+                            stop_event = asyncio.Event()
+
+                            async def reader_worker():
+                                try:
+                                    async for line in resp.aiter_lines():
+                                        if stop_event.is_set():
+                                            break
+                                        if line:
+                                            await queue.put(line)
+                                except Exception as r_err:
+                                    logger.warning(f"Ollama reader stream interrupted: {r_err}")
+                                finally:
+                                    await queue.put(None)
+
+                            reader_task = asyncio.create_task(reader_worker())
                             try:
-                                async for line in resp.aiter_lines():
-                                    if line:
+                                while True:
+                                    try:
+                                        # Poll with 4-second timeout to emit invisible keep-alive heartbeats during deep model thinking
+                                        line = await asyncio.wait_for(queue.get(), timeout=4.0)
+                                        if line is None:
+                                            break
                                         try:
                                             chunk = json.loads(line)
                                             token = chunk.get("message", {}).get("content", "")
@@ -4458,7 +4485,12 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
                                                 break
                                         except Exception:
                                             pass
+                                    except asyncio.TimeoutError:
+                                        # Keep-alive heartbeat token prevents Cloudflare 524 and mobile fetch timeouts
+                                        yield "\u200B"
                             finally:
+                                stop_event.set()
+                                reader_task.cancel()
                                 if out_file_handle:
                                     try:
                                         out_file_handle.close()

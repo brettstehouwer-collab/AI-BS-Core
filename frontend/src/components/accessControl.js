@@ -70,6 +70,7 @@ export const TAB_PERMISSIONS = {
   deep_learning_studio: ['admin'],
   reasoning_attention: ['admin'],
   system_health: ['admin'],
+  nutrition_subsystem: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
   system_economics: ['admin'],
   brett_data_hub: ['admin'],
   agent_memory: ['admin'],

@@ -135,6 +135,7 @@ const ExecutiveCockpitTab = safeLazy(() => import('./components/ExecutiveCockpit
 const ComfyWorkspaceTab = safeLazy(() => import('./components/ComfyWorkspaceTab.jsx'));
 const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardwareTelemetryTab.jsx'));
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
+const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -193,6 +194,7 @@ const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
+  { key: 'nutrition_subsystem', label: '🥗 Clinical Nutrition & Detox Engine', description: 'Hybrid Cold-Press Mechanical Extraction, Fiber Suspension & 4-Day Stepped Keto Refeeding Protocol', Component: NutritionSubsystemLedger },
   { key: 'sovereign_apps', label: '🤖 Sovereign Agent Apps Hub', description: '14-Tool Sovereign Agent Suite (Claude Code, Codex, OpenClaw, OpenCode, Hermes, Droid, Pi, Cline, Copilot) & MoE Specialist Router', Component: SovereignAgentAppsTab },
   { key: 'gpu_telemetry', label: '🔥 GPU Hardware Telemetry Hub', description: 'NVIDIA GeForce RTX 4090 NVML Hardware Telemetry, Fan Speed Lock & SQLite Thermal Vault', Component: GpuHardwareTelemetryTab },
   { key: 'central_gaming_hub', label: '🎮 Central Gaming Hub', description: 'Unified Ludic Nexus: 2-Player P2P Dyadic Hub, Steam Game Library & Win32 Memory Trainer', Component: CentralGamingHubTab },

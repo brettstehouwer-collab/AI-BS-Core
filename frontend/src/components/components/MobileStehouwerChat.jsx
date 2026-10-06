@@ -613,7 +613,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
         BACKEND_URL,
         'http://192.168.4.92:8080',
         'http://100.104.31.50:8080'
-      ].filter((u, idx, arr) => u && arr.indexOf(u) === idx && (!isMobileClient || (!u.includes('127.0.0.1') && !u.includes('localhost'))));
+      ].filter((u, idx, arr) => u && arr.indexOf(u) === idx && (!isMobileClient || (!u.includes('127.0.0.1') && !u.includes('localhost') && !u.includes('192.168.'))));
 
       const pLower = (formattedPrompt || '').toLowerCase().trim();
       const isVisualOrMediaIntent = (
@@ -631,7 +631,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           { role: 'assistant', content: '', model: isVisualOrMediaIntent ? 'Stehouwer Vision • ComfyUI' : 'Stehouwer LLM' }
         ]);
 
-        const mediaTimeout = isVisualOrMediaIntent ? 900000 : 180000;
+        const mediaTimeout = isVisualOrMediaIntent ? 900000 : 600000;
         let accumulated = '';
         const recentHistory = (updatedHistory || []).slice(-8).map(m => ({
           role: m.role,
@@ -656,24 +656,27 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                 const chunk = decoder.decode(value, { stream: true });
                 accumulated += chunk;
 
+                const displayAccumulated = accumulated.replace(/^[\u200B\s]+/, '');
                 setChatMessages(prev => {
                   const arr = [...prev];
                   if (arr.length > 0 && arr[arr.length - 1].role === 'assistant') {
-                    arr[arr.length - 1].content = accumulated;
+                    arr[arr.length - 1].content = displayAccumulated;
                   }
                   return arr;
                 });
               }
 
-              if (accumulated.trim().length > 0) {
+              const finalTrimmed = accumulated.replace(/^[\u200B\s]+/, '').trim();
+              if (finalTrimmed.length > 0) {
                 streamingSucceeded = true;
-                if (autoSpeak) speakText(accumulated);
+                if (autoSpeak) speakText(finalTrimmed);
                 break;
               }
             }
           } catch (streamErr) {
             console.warn(`Streaming attempt on ${targetBase} failed:`, streamErr);
-            if (accumulated.trim().length > 0) {
+            const partialTrimmed = accumulated.replace(/^[\u200B\s]+/, '').trim();
+            if (partialTrimmed.length > 0) {
               streamingSucceeded = true;
               break;
             }
@@ -696,7 +699,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           model: selectedModel
         });
 
-        const fallbackTimeout = isVisualOrMediaIntent ? 600000 : 60000;
+        const fallbackTimeout = isVisualOrMediaIntent ? 600000 : 300000;
         let res = null;
         for (const targetBase of candidateBases) {
           try {
