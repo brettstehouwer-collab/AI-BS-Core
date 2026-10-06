@@ -1,12 +1,30 @@
 # AI-BS Active State Recovery Checkpoint
 
 **Last Updated:** 2026-10-05
-**Active Ecosystem Version:** v5.308.0
-**Active Resume Keyword:** `RESUME_GPU_TELEMETRY_SUBSYSTEM_COMPLETE`
+**Active Ecosystem Version:** v5.309.0
+**Active Resume Keyword:** `RESUME_SOVEREIGN_AGENT_SUITE_COMPLETE`
 
 ---
 
-## 0. Executive Summary: Sovereign GPU & Hardware Telemetry Subsystem (v5.308.0)
+## 0. Executive Summary: Sovereign Agent Apps Hub & Mixture-of-Specialists (MoE) Architecture (v5.309.0)
+* **Operator Directives & Architectural Enhancements Completed:**
+  1. **Sovereign MoE Specialist Router (`backend/core/sovereign_reasoning/moe_specialist_router.py`):**
+     - Engineered dynamic intent classification and token dispatching across 6 specialist domains: Code (`qwen2.5-coder:latest`, 32.8B Q5_K_M, 32k context), Creative & Fire Writing (`stehouwer_dolphin:latest`, 8.0B Q8_0, 128k context), Tool & Function Calling (`stehouwer-hermes:latest`, 8.0B Q8_0, 128k context), Vision (`qwen3.6:latest` / `gemma4:12b`, 262k context), Symbolic Reasoning (`llama3.3:70b`, 70.6B Q4_K_M, 128k context), and Dense Embedding (`nomic-embed-text:latest`).
+     - Implemented `RoutingDecision` dataclass, `discover_fleet()` on Port 11434, and async `dispatch()` / `stream_dispatch()`.
+  2. **FastAPI Endpoints (`backend/routers/moe_specialist_router_api.py`):**
+     - Mounted at `/api/v1/moe` on Port 8080 exposing `/matrix`, `/fleet`, `/classify`, `/route`, and SSE `/stream` endpoints with 100% zero-cost local Ollama inference.
+  3. **Sovereign Agent Harness Runner (`backend/modules/agent_harness_runner.py` & `backend/routers/agent_harness_router.py`):**
+     - Built session lifecycle and adapter orchestration for the 14-tool sovereign agent suite (Claude Code, Codex CLI, OpenClaw, OpenCode, Hermes Agent, Hermes Desktop, Droid, Pi, Cline, Copilot CLI, Oh My Pi, DeepSeek Harness, Qwen Code, and Terminal).
+     - Maintained persistent SQLite session registry (`saved_data/agent_harness_sessions.db`) and REST endpoints at `/api/v1/agent-harness`.
+  4. **Frontend Sovereign Agent Apps Hub (`frontend/src/components/SovereignAgentAppsTab.jsx`):**
+     - Authored high-aesthetic dark-mode workspace tab featuring 14-app launcher grid with custom glowing iconography, category filters, real-time fleet health monitor, active session terminal drawer with turn-by-turn history, and an interactive MoE Specialist Router classifier & dispatch sandbox.
+     - Registered tab `sovereign_apps` into `frontend/App.jsx`.
+  5. **Multi-Mirror Parity, Verification & Cloud Deployment:**
+     - Synchronized across all 4 frontend mirrors with 100% SHA-256 byte parity across 446 files (`verify-mirror-parity.ps1` PASSED).
+     - Passed 17/17 pytest tests (4 MoE/Harness + 13 Sandbox unit tests).
+     - Compiled Vite production bundle (24.13s) and deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app`).
+
+## 0.1 Previous Milestone: Sovereign GPU & Hardware Telemetry Subsystem (v5.308.0)
 * **Operator Directives & Architectural Enhancements Completed:**
   1. **Sovereign GPU Telemetry Engine (`backend/modules/gpu_hardware_telemetry.py`):**
      - Built 100% zero-cost NVML hardware binding engine utilizing `nvml.dll` via ctypes to sample RTX 4090 GPU core temperature, fan speed %, VRAM allocated/total, power draw (W), GPU utilization %, core clock (MHz), and memory clock (MHz).

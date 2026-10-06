@@ -524,6 +524,18 @@ except ImportError as e:
     print(f"Warning: Could not load gpu_telemetry_router: {e}")
 
 try:
+    from routers.moe_specialist_router_api import router as moe_specialist_router
+    app.include_router(moe_specialist_router)
+except ImportError as e:
+    print(f"Warning: Could not load moe_specialist_router: {e}")
+
+try:
+    from routers.agent_harness_router import router as agent_harness_router
+    app.include_router(agent_harness_router)
+except ImportError as e:
+    print(f"Warning: Could not load agent_harness_router: {e}")
+
+try:
     from routers.wan_media_router import router as wan_media_router, set_telemetry_broadcaster as set_wan_broadcaster
     app.include_router(wan_media_router)
     set_wan_broadcaster(telemetry_hub.broadcast)
