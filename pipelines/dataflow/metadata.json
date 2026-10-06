@@ -1,0 +1,39 @@
+{
+  "name": "AI-BS Genomic & Telemetry Processing Flex Template",
+  "description": "High-throughput Apache Beam Dataflow pipeline for cleaning, validating, and aggregating genomic variants and inference telemetry.",
+  "parameters": [
+    {
+      "name": "input_pattern",
+      "label": "Input File Pattern",
+      "helpText": "GCS path pattern for raw genomic or telemetry JSONL files (e.g., gs://aibs-vault-data/genomics/*.jsonl)",
+      "isOptional": false,
+      "regexes": [
+        "^gs://.*"
+      ]
+    },
+    {
+      "name": "output_table",
+      "label": "Output BigQuery Table",
+      "helpText": "BigQuery destination table in PROJECT:DATASET.TABLE format",
+      "isOptional": true
+    },
+    {
+      "name": "output_gcs_prefix",
+      "label": "Output GCS Prefix",
+      "helpText": "GCS prefix for aggregated gene summary JSONL reports (e.g., gs://aibs-vault-data/summaries/gene_run)",
+      "isOptional": true,
+      "regexes": [
+        "^gs://.*"
+      ]
+    },
+    {
+      "name": "dead_letter_path",
+      "label": "Dead Letter GCS Path",
+      "helpText": "GCS path for recording malformed or unparseable variant records",
+      "isOptional": true,
+      "regexes": [
+        "^gs://.*"
+      ]
+    }
+  ]
+}
