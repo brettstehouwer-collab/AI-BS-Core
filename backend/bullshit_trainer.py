@@ -15,6 +15,7 @@ from watchdog.events import FileSystemEventHandler
 
 from bullshit_auditor import audit_code
 from bullshit_builder import UIGenerator
+from bio_ai_training_engine import SFTDatasetSynthesizer, HardwareVRAMManager
 
 app = FastAPI(title="AI-BS Bullshit Trainer (ML & Self-Correction)")
 
@@ -40,10 +41,23 @@ class DatasetCompiler:
 
     def compile_from_chroma(self):
         print(
-            f"[Bullshit Trainer] Connecting to ChromaDB for Vault: {self.vault_name}..."
+            f"[Bullshit Trainer] Connecting to Knowledge Vault: {self.vault_name}..."
         )
+        bio_curriculum_path = os.path.join(DATASETS_DIR, "bio_training_curriculum.jsonl")
+        # Check if vault is bio/genomics/stehouwer related or if bio curriculum is requested
+        if any(k in self.vault_name.lower() for k in ["bio", "stehouwer", "genom", "protein", "pharma"]):
+            if not os.path.exists(bio_curriculum_path):
+                print("[Bullshit Trainer] Synthesizing live scientific intelligence via BioAITrainingEngine...")
+                synthesizer = SFTDatasetSynthesizer()
+                synthesizer.build_complete_bio_curriculum()
+
+            if os.path.exists(bio_curriculum_path):
+                shutil.copy(bio_curriculum_path, self.dataset_path)
+                print(f"[Bullshit Trainer] Successfully loaded authenticated Bio-AI SFT dataset: {self.dataset_path}")
+                return self.dataset_path
+
         chunks = [
-            "Disease RGS5 is characterized by... [simulated text]",
+            "Disease RGS5 is characterized by regulator of G-protein signaling alteration and vascular remodeling.",
             "The OEIS sequence A000045 represents the Fibonacci numbers.",
         ]
         print(
@@ -263,6 +277,48 @@ async def start_finetuning(payload: TuningPayload, background_tasks: BackgroundT
     return {
         "status": "success",
         "message": f"Training job queued for {payload.vault}. Allocating RTX 4090 VRAM...",
+    }
+
+
+# --- Bio-AI Intelligence & Curation Endpoints ---
+@app.get("/bio/hardware")
+async def get_hardware_status():
+    """Queries real-time NVIDIA RTX 4090 VRAM and thermals."""
+    return HardwareVRAMManager.get_gpu_headroom()
+
+
+@app.get("/bio/datasets")
+async def list_bio_datasets():
+    """Lists available instruction-tuning datasets in C:\\AI-BS\\datasets."""
+    datasets = []
+    for f in glob.glob(os.path.join(DATASETS_DIR, "*.jsonl")):
+        size_bytes = os.path.getsize(f)
+        line_count = 0
+        try:
+            with open(f, "r", encoding="utf-8") as jf:
+                line_count = sum(1 for _ in jf)
+        except Exception:
+            pass
+        datasets.append({
+            "filename": os.path.basename(f),
+            "size_bytes": size_bytes,
+            "sample_count": line_count,
+            "path": f,
+        })
+    return {"status": "success", "datasets": datasets}
+
+
+@app.post("/bio/curate")
+async def trigger_bio_curation(background_tasks: BackgroundTasks):
+    """Asynchronously curates live scientific intelligence across 10 biological skills."""
+    def _curate():
+        syn = SFTDatasetSynthesizer()
+        syn.build_complete_bio_curriculum()
+
+    background_tasks.add_task(_curate)
+    return {
+        "status": "success",
+        "message": "Autonomous multi-modal scientific curation started across AlphaFold, ClinVar, dbSNP, ENCODE, and ClinicalTrials.",
     }
 
 

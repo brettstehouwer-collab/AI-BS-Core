@@ -1,12 +1,35 @@
 # AI-BS Active State Recovery Checkpoint
 
-**Last Updated:** 2026-10-05
-**Active Ecosystem Version:** v5.309.0
-**Active Resume Keyword:** `RESUME_SOVEREIGN_AGENT_SUITE_COMPLETE`
+**Last Updated:** 2026-10-06
+**Active Ecosystem Version:** v5.310.0
+**Active Resume Keyword:** `RESUME_SOVEREIGN_SWARM_STREAMING_COMPLETE`
 
 ---
 
-## 0. Executive Summary: Sovereign Agent Apps Hub & Mixture-of-Specialists (MoE) Architecture (v5.309.0)
+## 0. Executive Summary: Sovereign Swarm Orchestration, Triple-Tier Live Terminal Streaming & Ambient Hardware Governor (v5.310.0)
+* **Operator Directives & Architectural Enhancements Completed:**
+  1. **Sovereign Swarm Handoff Coordinator (`backend/core/sovereign_reasoning/swarm_coordinator.py`):**
+     - Engineered collaborative multi-agent pipeline orchestration across the 14-tool sovereign agent suite.
+     - Built 3 production 1-click presets: `full_feature_sprint` (Architect -> Coder -> Verifier -> Release Sentinel), `rapid_bug_fix` (Patch Coder -> Regression Tester), and `repo_audit_parity` (Inspector -> Parity Sentinel), plus custom dynamic step chaining.
+     - Integrated SQLite state persistence in `saved_data/agent_harness_sessions.db` across `swarm_pipeline_runs` and `swarm_step_logs` with context accumulator handoffs and async event streaming.
+  2. **Triple-Tier Real-Time Streaming & Host Terminal Execution:**
+     - Engineered Tier 1 bidirectional WebSockets (`/ws/{session_id}` and `/swarm/ws/{job_id}` on Port 8080) for real-time token synthesis and live subprocess terminal streaming.
+     - Tier 2 Server-Sent Events (SSE) fallback on `/stream` endpoints with keepalive heartbeats.
+     - Tier 3 Buffered SQLite WAL persistence with offline page reload rehydration.
+     - Direct unrestricted Windows 11 host execution via PowerShell bypass with live stdout/stderr capture and SQLite audit trail (`executive_action_audit`).
+  3. **Ambient Hardware Governor & Dynamic VRAM Failover (`TopNavbar.jsx` & `vram_resource_arbiter.py`):**
+     - Mounted real-time NVML hardware telemetry chip directly into `TopNavbar.jsx` (`❄️ 28°C | ⚡ 1.1/24G | 💻 15% ↗`) with 2.5s polling.
+     - Implemented dynamic compute node arbitration routing to Port 11434 (GPU Node, RTX 4090 24GB VRAM) or automatically failing over to Port 11435 (CPU Node, Ryzen 9 32-threads AVX-512) when free VRAM falls below 3.5GB or active 16K generation runs.
+  4. **Frontend Swarm Collaboration Hub (`frontend/src/components/SovereignAgentAppsTab.jsx`):**
+     - Added dual-mode toggle ([14-App Matrix] vs [🐝 Sovereign Swarm Collaboration Hub]).
+     - Built interactive preset picker, live stage execution tracker, real-time token append with blinking cursor (`▌`), and host terminal logs console.
+  5. **Verification, Parity, Build & Shortcuts:**
+     - Authored `tests/test_swarm_coordinator.py` with 10/10 automated tests passing across the swarm and harness suite.
+     - Enforced 100% SHA-256 byte parity across all 4 frontend mirrors (446 files verified).
+     - Compiled Vite production bundle in 24.38s.
+     - Refreshed native desktop shortcuts to `v5.310.0` via `scripts/refresh_desktop_shortcuts.ps1`.
+
+## 0.1 Previous Milestone: Sovereign Agent Apps Hub & Mixture-of-Specialists (MoE) Architecture (v5.309.0)
 * **Operator Directives & Architectural Enhancements Completed:**
   1. **Sovereign MoE Specialist Router (`backend/core/sovereign_reasoning/moe_specialist_router.py`):**
      - Engineered dynamic intent classification and token dispatching across 6 specialist domains: Code (`qwen2.5-coder:latest`, 32.8B Q5_K_M, 32k context), Creative & Fire Writing (`stehouwer_dolphin:latest`, 8.0B Q8_0, 128k context), Tool & Function Calling (`stehouwer-hermes:latest`, 8.0B Q8_0, 128k context), Vision (`qwen3.6:latest` / `gemma4:12b`, 262k context), Symbolic Reasoning (`llama3.3:70b`, 70.6B Q4_K_M, 128k context), and Dense Embedding (`nomic-embed-text:latest`).

@@ -110,6 +110,34 @@ class VRAMResourceArbiter:
             "utilization_pct": 16.67
         }
 
+    @classmethod
+    def check_compute_target(cls, min_free_mb: float = 3500.0) -> Dict[str, Any]:
+        """
+        Determines optimal local compute node:
+        Port 11434 (GPU Node, RTX 4090) when free VRAM >= 3500 MB and no active 16K render stage.
+        Port 11435 (CPU Node, Ryzen 9 AVX-512) when VRAM pressure exceeds 21GB or heavy stage is active.
+        """
+        arbiter = cls()
+        tel = cls.get_vram_telemetry()
+        free_mb = tel.get("free_mb", 20480.0)
+        heavy_stage_active = arbiter._active_stage is not None and "16k" in str(arbiter._active_stage).lower()
+        
+        if free_mb < min_free_mb or heavy_stage_active:
+            return {
+                "node": "cpu",
+                "port": 11435,
+                "url": "http://127.0.0.1:11435",
+                "reason": f"VRAM pressure ({round(free_mb, 1)}MB free) or heavy stage '{arbiter._active_stage}' active",
+                "failover_active": True
+            }
+        return {
+            "node": "gpu",
+            "port": 11434,
+            "url": "http://127.0.0.1:11434",
+            "reason": "GPU headroom healthy",
+            "failover_active": False
+        }
+
     @staticmethod
     def flush_vram_cache() -> Dict[str, Any]:
         """Explicitly flushes PyTorch CUDA cache and triggers garbage collection."""

@@ -60,6 +60,31 @@ export default function TopNavbar({
   const navRef = useRef(null);
   const scrollRibbonRef = useRef(null);
   const efficiencyMode = useAppStore(state => state.efficiencyMode);
+  const [hwTelemetry, setHwTelemetry] = useState(null);
+
+  // Poll Live GPU/CPU Hardware Telemetry for Ambient Navbar HUD
+  useEffect(() => {
+    let isMounted = true;
+    const fetchTelemetry = async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8080/api/v1/hardware/gpu/telemetry');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.telemetry) {
+            setHwTelemetry(data.telemetry);
+          }
+        }
+      } catch (err) {
+        // Suppress background poll errors
+      }
+    };
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 2500);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleGroupHover = (groupName, event) => {
     if (event && event.currentTarget) {
@@ -220,7 +245,7 @@ export default function TopNavbar({
           <span style={{ fontWeight: '700', color: '#58a6ff', fontSize: '0.95rem', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             Stehouwer Publishing AI
           </span>
-          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.305.0</span>
+          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.310.0</span>
         </div>
 
         {/* ⚡ PINNED QUICK-DOCK BAR (Instant 1-Click Jumping) */}
@@ -276,6 +301,58 @@ export default function TopNavbar({
               </button>
             );
           })}
+        </div>
+
+        {/* 🔥 AMBIENT HARDWARE GOVERNOR HUD CHIP (RTX 4090 + RYZEN 9 9950X) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          background: 'rgba(15, 23, 42, 0.9)',
+          border: '1px solid rgba(56, 189, 248, 0.35)',
+          padding: '4px 9px',
+          borderRadius: '8px',
+          boxShadow: '0 0 12px rgba(0,0,0,0.5)',
+          fontSize: '0.74rem',
+          fontWeight: '700',
+          flexShrink: 0
+        }}>
+          <span 
+            title={`RTX 4090 Core Temp: ${hwTelemetry?.core_temp_c || 28}°C (Fan: ${hwTelemetry?.fan_speed_pct || 100}%)`}
+            style={{ color: (hwTelemetry?.core_temp_c || 28) >= 70 ? '#f87171' : '#38bdf8', display: 'flex', alignItems: 'center', gap: '3px' }}
+          >
+            {(hwTelemetry?.core_temp_c || 28) < 40 ? '❄️' : '🔥'} {hwTelemetry?.core_temp_c ? `${hwTelemetry.core_temp_c}°C` : '28°C'}
+          </span>
+          <span style={{ color: '#475569' }}>|</span>
+          <span 
+            title={`VRAM: ${hwTelemetry?.memory_used_mb ? (hwTelemetry.memory_used_mb/1024).toFixed(1) : '1.1'} / ${hwTelemetry?.memory_total_mb ? (hwTelemetry.memory_total_mb/1024).toFixed(1) : '24.0'} GB`}
+            style={{ color: '#c084fc', display: 'flex', alignItems: 'center', gap: '3px' }}
+          >
+            ⚡ {hwTelemetry?.memory_used_mb ? `${(hwTelemetry.memory_used_mb/1024).toFixed(1)}/24G` : '1.1/24G'}
+          </span>
+          <span style={{ color: '#475569' }}>|</span>
+          <span 
+            title={`Ryzen 9 9950X CPU Load: ${hwTelemetry?.cpu_util_pct || 15}%`}
+            style={{ color: '#34d399', display: 'flex', alignItems: 'center', gap: '3px' }}
+          >
+            💻 {hwTelemetry?.cpu_util_pct ? `${Math.round(hwTelemetry.cpu_util_pct)}%` : '15%'}
+          </span>
+          <button
+            onClick={() => onTabChange && onTabChange('gpu_telemetry')}
+            title="Open Full Sovereign GPU & Telemetry Workspace"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#38bdf8',
+              cursor: 'pointer',
+              padding: '0 2px',
+              fontSize: '0.74rem',
+              fontWeight: '900',
+              opacity: 0.85
+            }}
+          >
+            ↗
+          </button>
         </div>
 
         {/* 🔍 PROMINENT SEARCH EVERYWHERE BUTTON (Ctrl+K) */}

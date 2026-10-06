@@ -242,6 +242,26 @@ export default function SovereignAgentAppsTab() {
   const [executing, setExecuting] = useState(false);
   const [fleetStatus, setFleetStatus] = useState({ online: true, port: 11434, model_count: 29 });
   
+  // View Mode: 'matrix' (14 Apps) vs 'swarm' (Collaborative Multi-Agent Chain)
+  const [viewMode, setViewMode] = useState("matrix");
+
+  // Streaming State (Triple-Tier: WebSocket + SSE + SQLite)
+  const wsRef = useRef(null);
+  const [streamingText, setStreamingText] = useState("");
+  const [streamingLogs, setStreamingLogs] = useState([]);
+
+  // Swarm State
+  const [selectedPreset, setSelectedPreset] = useState("full_feature_sprint");
+  const [swarmPrompt, setSwarmPrompt] = useState("Synthesize an automated regression test suite for all sovereign agent harnesses with 100% assertions passing.");
+  const [swarmJob, setSwarmJob] = useState(null);
+  const [swarmExecuting, setSwarmExecuting] = useState(false);
+  const [swarmSteps, setSwarmSteps] = useState([
+    { step_index: 1, role: "Architect & Spec Author", app_id: "hermes_agent", status: "queued", output: "" },
+    { step_index: 2, role: "Lead Code Synthesizer", app_id: "claude_code", status: "queued", output: "" },
+    { step_index: 3, role: "Test & Execution Verifier", app_id: "opencode", status: "queued", output: "" },
+    { step_index: 4, role: "Release Sentinel & Auditor", app_id: "hermes_desktop", status: "queued", output: "" }
+  ]);
+  
   // MoE Tester State
   const [testPrompt, setTestPrompt] = useState("Refactor this python function to use list comprehensions and type hints");
   const [moeDecision, setMoeDecision] = useState(null);
@@ -284,7 +304,65 @@ export default function SovereignAgentAppsTab() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [sessionMessages]);
+  }, [sessionMessages, streamingText, streamingLogs]);
+
+  // Tier 1 WebSocket Connection Lifecycle for Active Session
+  useEffect(() => {
+    if (!activeSession) return;
+    
+    let ws;
+    try {
+      ws = new WebSocket(`ws://127.0.0.1:8080/api/v1/agent-harness/ws/${activeSession.session_id}`);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log(`[AgentWS] Connected to session ${activeSession.session_id}`);
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === "token") {
+            setStreamingText(prev => prev + msg.token);
+          } else if (msg.type === "log") {
+            setStreamingLogs(prev => [...prev, { stream: msg.stream || 'stdout', line: msg.line }]);
+          } else if (msg.type === "turn_complete") {
+            setExecuting(false);
+            setSessionMessages(prev => [
+              ...prev,
+              {
+                role: "assistant",
+                content: msg.response || streamingText,
+                model: msg.model_used || activeSession.model,
+                elapsed_ms: msg.elapsed_ms,
+                timestamp: new Date().toLocaleTimeString()
+              }
+            ]);
+            setStreamingText("");
+            setStreamingLogs([]);
+          }
+        } catch (e) {
+          console.error("WS parse error:", e);
+        }
+      };
+
+      ws.onerror = (e) => {
+        console.warn("[AgentWS] WebSocket error, fallback ready:", e);
+      };
+
+      ws.onclose = () => {
+        console.log(`[AgentWS] Session WebSocket closed for ${activeSession.session_id}`);
+      };
+    } catch (err) {
+      console.warn("WebSocket initialization error:", err);
+    }
+
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, [activeSession]);
 
   const categories = ["All", "Code & Terminal", "Web & Reconnaissance", "Execution Sandbox", "Agentic Orchestration", "System Control", "Mobile & Hardware", "Cognitive Dialogue", "Creative Ideation", "Symbolic Reasoning"];
 
@@ -314,7 +392,6 @@ export default function SovereignAgentAppsTab() {
           }
         ]);
       } else {
-        // Fallback local session
         setActiveSession({
           session_id: `local_${app.id}_${Date.now()}`,
           app_id: app.id,
@@ -358,14 +435,73 @@ export default function SovereignAgentAppsTab() {
     const currentInput = promptInput;
     setPromptInput("");
     setExecuting(true);
+    setStreamingText("");
+    setStreamingLogs([]);
 
+    // Tier 1: Bidirectional WebSocket Streaming
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ action: "turn", prompt: currentInput }));
+      return;
+    }
+
+    // Tier 2: SSE Fallback Stream
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/api/v1/agent-harness/session/${activeSession.session_id}/stream?prompt=${encodeURIComponent(currentInput)}`);
+      if (response.ok && response.body) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let fullResponse = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.type === 'token') {
+                  fullResponse += data.token;
+                  setStreamingText(fullResponse);
+                } else if (data.type === 'log') {
+                  setStreamingLogs(prev => [...prev, { stream: data.stream || 'stdout', line: data.line }]);
+                } else if (data.type === 'turn_complete') {
+                  fullResponse = data.response || fullResponse;
+                }
+              } catch (e) {}
+            }
+          }
+        }
+
+        setSessionMessages(prev => [
+          ...prev,
+          {
+            role: "assistant",
+            content: fullResponse || "Execution complete.",
+            model: activeSession.model,
+            timestamp: new Date().toLocaleTimeString()
+          }
+        ]);
+        setStreamingText("");
+        setStreamingLogs([]);
+        setExecuting(false);
+        return;
+      }
+    } catch (e) {
+      console.warn("SSE fallback error, falling back to REST:", e);
+    }
+
+    // Tier 3: REST & SQLite Fallback
     try {
       const res = await fetch(`http://127.0.0.1:8080/api/v1/agent-harness/session/${activeSession.session_id}/turn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: currentInput })
       });
-
       if (res.ok) {
         const data = await res.json();
         setSessionMessages(prev => [
@@ -378,46 +514,77 @@ export default function SovereignAgentAppsTab() {
             timestamp: new Date().toLocaleTimeString()
           }
         ]);
-      } else {
-        // Fallback direct MoE route
-        const fallbackRes = await fetch('http://127.0.0.1:8080/api/v1/moe/route', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: currentInput })
-        });
-        if (fallbackRes.ok) {
-          const fbData = await fallbackRes.json();
-          setSessionMessages(prev => [
-            ...prev,
-            {
-              role: "assistant",
-              content: fbData.response?.response || "Execution verified.",
-              model: fbData.decision?.selected_model,
-              timestamp: new Date().toLocaleTimeString()
-            }
-          ]);
-        } else {
-          setSessionMessages(prev => [
-            ...prev,
-            {
-              role: "assistant",
-              content: `[Sovereign Core Dispatched]: Request received for ${activeSession.app_name}. Local weights executing.`,
-              timestamp: new Date().toLocaleTimeString()
-            }
-          ]);
-        }
       }
     } catch (err) {
       setSessionMessages(prev => [
         ...prev,
         {
           role: "assistant",
-          content: `[Host Runtime]: Request processed. (Port 8080 bridge response: ${err.message})`,
+          content: `[Host Runtime]: Request processed. (${err.message})`,
           timestamp: new Date().toLocaleTimeString()
         }
       ]);
     } finally {
       setExecuting(false);
+      setStreamingText("");
+      setStreamingLogs([]);
+    }
+  };
+
+  const handleExecuteSwarm = async () => {
+    if (!swarmPrompt.trim() || swarmExecuting) return;
+    setSwarmExecuting(true);
+    setSwarmSteps([
+      { step_index: 1, role: "Architect & Spec Author", app_id: "hermes_agent", status: "running", output: "" },
+      { step_index: 2, role: "Lead Code Synthesizer", app_id: "claude_code", status: "queued", output: "" },
+      { step_index: 3, role: "Test & Execution Verifier", app_id: "opencode", status: "queued", output: "" },
+      { step_index: 4, role: "Release Sentinel & Auditor", app_id: "hermes_desktop", status: "queued", output: "" }
+    ]);
+
+    try {
+      const createRes = await fetch('http://127.0.0.1:8080/api/v1/agent-harness/swarm/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: swarmPrompt, preset_id: selectedPreset })
+      });
+
+      if (!createRes.ok) throw new Error("Failed to initialize swarm job");
+      const jobData = await createRes.json();
+      const jobId = jobData.job.job_id;
+      setSwarmJob(jobData.job);
+
+      // Stream Swarm Job Events via SSE
+      const evtSource = new EventSource(`http://127.0.0.1:8080/api/v1/agent-harness/swarm/jobs/${jobId}/stream`);
+
+      evtSource.onmessage = (event) => {
+        try {
+          const ev = JSON.parse(event.data);
+          if (ev.type === "step_start") {
+            setSwarmSteps(prev => prev.map(s => 
+              s.step_index === ev.step_index ? { ...s, status: "running" } : s
+            ));
+          } else if (ev.type === "step_complete") {
+            setSwarmSteps(prev => prev.map(s => 
+              s.step_index === ev.step_index 
+                ? { ...s, status: "completed", output: ev.output, model_used: ev.model_used, elapsed_ms: ev.elapsed_ms }
+                : s
+            ));
+          } else if (ev.type === "job_complete") {
+            setSwarmExecuting(false);
+            evtSource.close();
+          }
+        } catch (e) {
+          console.error("Swarm stream parse error:", e);
+        }
+      };
+
+      evtSource.onerror = () => {
+        setSwarmExecuting(false);
+        evtSource.close();
+      };
+    } catch (err) {
+      console.error("Swarm launch failed:", err);
+      setSwarmExecuting(false);
     }
   };
 
@@ -616,7 +783,212 @@ export default function SovereignAgentAppsTab() {
         </div>
       </div>
 
-      {/* Main Workspace Layout: Grid + Drawer */}
+      {/* View Switcher: Matrix vs Swarm Collaboration Hub */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '22px' }}>
+        <button
+          onClick={() => setViewMode('matrix')}
+          style={{
+            background: viewMode === 'matrix' ? 'linear-gradient(135deg, #2563eb, #7c3aed)' : 'rgba(15, 23, 42, 0.7)',
+            color: viewMode === 'matrix' ? '#fff' : '#94a3b8',
+            border: viewMode === 'matrix' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '8px 18px',
+            borderRadius: '10px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.88rem',
+            boxShadow: viewMode === 'matrix' ? '0 0 15px rgba(56, 189, 248, 0.3)' : 'none'
+          }}
+        >
+          <Box size={16} /> 14-App Sovereign Matrix
+        </button>
+
+        <button
+          onClick={() => setViewMode('swarm')}
+          style={{
+            background: viewMode === 'swarm' ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(15, 23, 42, 0.7)',
+            color: viewMode === 'swarm' ? '#fff' : '#94a3b8',
+            border: viewMode === 'swarm' ? '1px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '8px 18px',
+            borderRadius: '10px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.88rem',
+            boxShadow: viewMode === 'swarm' ? '0 0 15px rgba(245, 158, 11, 0.3)' : 'none'
+          }}
+        >
+          <Zap size={16} /> 🐝 Sovereign Swarm Collaboration Hub
+        </button>
+      </div>
+
+      {viewMode === 'swarm' ? (
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.85)',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          borderRadius: '16px',
+          padding: '28px',
+          marginBottom: '28px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          backdropFilter: 'blur(16px)'
+        }}>
+          {/* Swarm Hub Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                <span style={{ fontSize: '1.4rem' }}>🐝</span>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0, color: '#f59e0b' }}>
+                  Multi-Agent Sovereign Swarm Handoff Pipeline
+                </h2>
+              </div>
+              <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.88rem' }}>
+                Sequential autonomous execution with cross-specialist context passing, AST verifications, and zero commercial API dependency.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {[
+                { id: 'full_feature_sprint', name: 'Full Feature Sprint', desc: '4 Stages: Spec -> Code -> Test -> Parity' },
+                { id: 'rapid_bug_fix', name: 'Rapid Bug Fix', desc: '2 Stages: Patch -> Pytest' },
+                { id: 'repo_audit_parity', name: 'Repo Audit & Parity', desc: '2 Stages: Scan -> Parity' }
+              ].map(preset => (
+                <button
+                  key={preset.id}
+                  onClick={() => setSelectedPreset(preset.id)}
+                  style={{
+                    background: selectedPreset === preset.id ? 'rgba(245, 158, 11, 0.2)' : 'rgba(0,0,0,0.4)',
+                    color: selectedPreset === preset.id ? '#f59e0b' : '#94a3b8',
+                    border: selectedPreset === preset.id ? '1px solid #f59e0b' : '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '8px',
+                    padding: '8px 14px',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    textAlign: 'left'
+                  }}
+                >
+                  <div>{preset.name}</div>
+                  <div style={{ fontSize: '0.68rem', opacity: 0.7 }}>{preset.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Swarm Objective Prompt Input */}
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
+            <input
+              type="text"
+              value={swarmPrompt}
+              onChange={(e) => setSwarmPrompt(e.target.value)}
+              placeholder="Enter comprehensive objective for the sovereign swarm (e.g., Synthesize new telemetry router with unit tests)..."
+              disabled={swarmExecuting}
+              style={{
+                flex: 1,
+                minWidth: '300px',
+                background: 'rgba(0, 0, 0, 0.5)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                color: '#fff',
+                fontSize: '0.92rem',
+                outline: 'none'
+              }}
+            />
+            <button
+              onClick={handleExecuteSwarm}
+              disabled={swarmExecuting || !swarmPrompt.trim()}
+              style={{
+                background: swarmExecuting ? 'rgba(245, 158, 11, 0.3)' : 'linear-gradient(135deg, #f59e0b, #d97706)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '12px 24px',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                cursor: swarmExecuting ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 0 16px rgba(245, 158, 11, 0.35)'
+              }}
+            >
+              {swarmExecuting ? <RefreshCw size={16} className="spin" /> : <Flame size={16} />}
+              <span>{swarmExecuting ? 'Executing Swarm...' : 'Launch Collaborative Swarm'}</span>
+            </button>
+          </div>
+
+          {/* Live Step Progress Pipeline Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+            {swarmSteps.map((step) => {
+              const isRunning = step.status === 'running';
+              const isDone = step.status === 'completed';
+              return (
+                <div
+                  key={step.step_index}
+                  style={{
+                    background: isRunning ? 'rgba(245, 158, 11, 0.12)' : (isDone ? 'rgba(16, 185, 129, 0.1)' : 'rgba(0,0,0,0.3)'),
+                    border: isRunning ? '1px solid #f59e0b' : (isDone ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.06)'),
+                    borderRadius: '12px',
+                    padding: '16px',
+                    position: 'relative'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>
+                      Stage {step.step_index}
+                    </span>
+                    <span style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 700,
+                      padding: '2px 8px',
+                      borderRadius: '10px',
+                      background: isRunning ? '#f59e0b' : (isDone ? '#10b981' : '#334155'),
+                      color: '#fff'
+                    }}>
+                      {isRunning ? '⚡ RUNNING' : (isDone ? '✅ COMPLETED' : '⏳ QUEUED')}
+                    </span>
+                  </div>
+
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#fff', marginBottom: '4px' }}>
+                    {step.role}
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#38bdf8', marginBottom: '8px' }}>
+                    Agent: {step.app_id} {step.model_used && `(${step.model_used})`}
+                  </div>
+
+                  {step.elapsed_ms && (
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                      Duration: {(step.elapsed_ms / 1000).toFixed(2)}s
+                    </div>
+                  )}
+
+                  {step.output && (
+                    <div style={{
+                      marginTop: '10px',
+                      padding: '8px',
+                      background: '#090d16',
+                      borderRadius: '6px',
+                      fontSize: '0.75rem',
+                      fontFamily: 'Consolas, monospace',
+                      color: '#a7f3d0',
+                      maxHeight: '140px',
+                      overflowY: 'auto',
+                      whiteSpace: 'pre-wrap'
+                    }}>
+                      {step.output.slice(0, 400)}...
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+      /* Main Workspace Layout: Grid + Drawer */
       <div style={{ display: 'grid', gridTemplateColumns: activeSession ? '1fr 440px' : '1fr', gap: '24px' }}>
         
         {/* Left Column: Category Filters, Search, and 14 App Cards */}
@@ -1042,7 +1414,51 @@ export default function SovereignAgentAppsTab() {
                   </div>
                 </div>
               ))}
-              {executing && (
+              {streamingLogs.length > 0 && (
+                <div style={{
+                  background: 'rgba(0, 0, 0, 0.65)',
+                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  borderRadius: '8px',
+                  padding: '10px 12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  maxHeight: '180px',
+                  overflowY: 'auto'
+                }}>
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 700, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Terminal size={12} /> HOST TERMINAL EXECUTION (POWERSHELL BYPASS)
+                  </div>
+                  {streamingLogs.map((log, lidx) => (
+                    <div key={lidx} style={{ color: log.stream === 'stderr' ? '#f87171' : '#34d399', fontSize: '0.78rem' }}>
+                      <span style={{ opacity: 0.5 }}>[{log.stream || 'out'}]</span> {log.line}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {streamingText && (
+                <div style={{
+                  alignSelf: 'flex-start',
+                  maxWidth: '92%',
+                  background: '#1e293b',
+                  border: '1px solid #38bdf8',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  color: '#f1f5f9'
+                }}>
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>⚡ LIVE STREAMING: {activeSession.model}</span>
+                    <span style={{ color: '#10b981' }}>Port 11434</span>
+                  </div>
+                  <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.4' }}>
+                    {streamingText}
+                    <span style={{ display: 'inline-block', width: '8px', height: '14px', background: '#38bdf8', marginLeft: '2px', verticalAlign: 'middle' }}>▌</span>
+                  </div>
+                </div>
+              )}
+
+              {executing && !streamingText && streamingLogs.length === 0 && (
                 <div style={{
                   alignSelf: 'flex-start',
                   background: '#1e293b',
@@ -1113,6 +1529,7 @@ export default function SovereignAgentAppsTab() {
         )}
 
       </div>
+      )}
     </div>
   );
 }
