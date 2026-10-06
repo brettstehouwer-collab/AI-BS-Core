@@ -63,6 +63,24 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     { id: 'sess_demucs_02', name: 'the_bad_side_theme.wav', time: '12:05:44', stems: ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'], status: 'READY' }
   ]);
 
+  // ── UNREAL ENGINE 5.8 MCP STATE ─────────────────────────────────────────
+  const [unrealStatus, setUnrealStatus] = useState({
+    unreal_editor_running: false,
+    mcp_server_online: false,
+    mcp_url: 'http://127.0.0.1:8000/mcp',
+    engine_version: 'Unreal Engine 5.8',
+    recommended_action: 'launch_required'
+  });
+  const [isLaunchingUnreal, setIsLaunchingUnreal] = useState(false);
+  const [unrealAssets, setUnrealAssets] = useState([]);
+  const [unrealAssetQuery, setUnrealAssetQuery] = useState('');
+  const [unrealCategory, setUnrealCategory] = useState('');
+  const [unrealCategories, setUnrealCategories] = useState([]);
+  const [isLoadingAssets, setIsLoadingAssets] = useState(false);
+  const [cameraFocalLength, setCameraFocalLength] = useState(35);
+  const [sequencerAction, setSequencerAction] = useState('play');
+  const [unrealLog, setUnrealLog] = useState('');
+
   const handleSeparateStems = async () => {
     if (!audioInputPath.trim()) return;
     setIsProcessingAudio(true);
@@ -116,10 +134,12 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // Fetch initial vault stats and telemetry
+  // Fetch initial vault stats, telemetry, and Unreal MCP status
   useEffect(() => {
     fetchVaultStats();
     fetchTelemetry();
+    fetchUnrealStatus();
+    fetchUnrealAssets();
   }, [activeBackend]);
 
   const fetchTelemetry = async () => {
@@ -143,6 +163,87 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
       }
     } catch {
       setVaultStats({ count: 44, status: 'online' });
+    }
+  };
+
+  const fetchUnrealStatus = async () => {
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/unreal/status`);
+      if (res.ok) {
+        const data = await res.json();
+        setUnrealStatus(data);
+      }
+    } catch {
+      // Offline fallback resilience
+    }
+  };
+
+  const fetchUnrealAssets = async (q = '', cat = '') => {
+    setIsLoadingAssets(true);
+    try {
+      const url = new URL(`${activeBackend}/api/v1/unreal/assets`);
+      if (q) url.searchParams.append('query', q);
+      if (cat) url.searchParams.append('category', cat);
+      url.searchParams.append('limit', '40');
+      const res = await fetch(url.toString());
+      if (res.ok) {
+        const data = await res.json();
+        setUnrealAssets(data.results || []);
+        if (data.categories) setUnrealCategories(data.categories);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch unreal assets:', e);
+    } finally {
+      setIsLoadingAssets(false);
+    }
+  };
+
+  const handleLaunchUnreal = async () => {
+    setIsLaunchingUnreal(true);
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/unreal/launch`, { method: 'POST' });
+      const data = await res.json();
+      setUnrealLog(`[Launch Trigger]: ${data.message || 'Launched'}`);
+      setTimeout(fetchUnrealStatus, 3000);
+    } catch (e) {
+      setUnrealLog(`[Launch Error]: ${e.message}`);
+    } finally {
+      setIsLaunchingUnreal(false);
+    }
+  };
+
+  const handleSpawnCamera = async () => {
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/unreal/camera/spawn`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          camera_name: `CineCam_${Date.now().toString().slice(-4)}`,
+          location: [0.0, 0.0, 150.0],
+          rotation: [0.0, 0.0, 0.0],
+          focal_length: parseFloat(cameraFocalLength)
+        })
+      });
+      const data = await res.json();
+      setUnrealLog(`[CineCamera]: ${data.success ? 'Camera spawned in Unreal World' : (data.error || 'Fallback logged')}`);
+    } catch (e) {
+      setUnrealLog(`[Camera Error]: ${e.message}`);
+    }
+  };
+
+  const handleTriggerSequencer = async () => {
+    try {
+      const res = await fetch(`${activeBackend}/api/v1/unreal/sequencer/trigger`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: sequencerAction
+        })
+      });
+      const data = await res.json();
+      setUnrealLog(`[Sequencer]: Action '${sequencerAction}' ${data.success ? 'dispatched to Sequencer' : (data.error || 'logged')}`);
+    } catch (e) {
+      setUnrealLog(`[Sequencer Error]: ${e.message}`);
     }
   };
 
@@ -320,6 +421,12 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
             <span style={{ color: '#94a3b8' }}>Media ChromaDB: </span>
             <span style={{ color: '#f59e0b', fontWeight: '700' }}>{vaultStats.count} Vectors</span>
           </div>
+          <div style={{ background: 'rgba(0,0,0,0.4)', padding: '5px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <span style={{ color: '#94a3b8' }}>Unreal MCP: </span>
+            <span style={{ color: unrealStatus.mcp_server_online ? '#10b981' : '#f59e0b', fontWeight: '700' }}>
+              {unrealStatus.mcp_server_online ? 'Port 8000 LIVE' : (unrealStatus.unreal_editor_running ? 'Editor Active' : 'Standby')}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -328,14 +435,16 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
         display: 'flex',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         backgroundColor: '#0b1120',
-        padding: '0 16px'
+        padding: '0 16px',
+        overflowX: 'auto'
       }}>
         {[
           { id: 'chat', label: '💬 BsMedia-Chat Guide', badge: 'VLM Active' },
           { id: 'canvas', label: '🖼️ Photo Canvas & Matting', badge: 'BiRefNet' },
           { id: 'video', label: '🎬 Video Studio & 9:16 Shorts', badge: 'Wan 2.1 / LTX' },
           { id: 'audio', label: '🎵 Audio & Stems Lab', badge: 'Demucs / F5' },
-          { id: 'vault', label: '📚 Media ChromaDB Vault', badge: `${vaultStats.count} Items` }
+          { id: 'vault', label: '📚 Media ChromaDB Vault', badge: `${vaultStats.count} Items` },
+          { id: 'unreal', label: '🎮 Unreal Engine 5.8 Studio', badge: unrealStatus.mcp_server_online ? 'Port 8000 LIVE' : 'On-Demand' }
         ].map(tab => (
           <button
             key={tab.id}
@@ -948,6 +1057,399 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── UNREAL ENGINE 5.8 MCP STUDIO ──────────────────────────── */}
+        {activeTab === 'unreal' && (
+          <div style={{ flex: 1, padding: '24px 32px', overflowY: 'auto' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '22px' }}>
+              
+              {/* Header Banner & Bridge Status */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9))',
+                borderRadius: '12px',
+                padding: '20px 24px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '16px'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'white' }}>
+                      🎮 Unreal Engine 5.8 Virtual Production Studio
+                    </span>
+                    <span style={{
+                      fontSize: '0.72rem',
+                      fontWeight: '700',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      backgroundColor: unrealStatus.mcp_server_online ? '#065f46' : (unrealStatus.unreal_editor_running ? '#854d0e' : '#7f1d1d'),
+                      color: unrealStatus.mcp_server_online ? '#34d399' : (unrealStatus.unreal_editor_running ? '#fde047' : '#fca5a5')
+                    }}>
+                      {unrealStatus.mcp_server_online ? 'MCP SERVER ONLINE (Port 8000)' : (unrealStatus.unreal_editor_running ? 'EDITOR RUNNING (MCP Standby)' : 'STANDBY')}
+                    </span>
+                  </div>
+                  <p style={{ margin: '6px 0 0', fontSize: '0.82rem', color: '#94a3b8', lineHeight: '1.4' }}>
+                    Programmatic control bridge connecting Google Antigravity & AI-BS to local Unreal Engine 5.8 on-demand.
+                    Project: <code style={{ color: '#38bdf8' }}>AI_BS_Hub.uproject</code>
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button
+                    onClick={fetchUnrealStatus}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      background: 'rgba(255,255,255,0.05)',
+                      color: '#cbd5e1',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🔄 Refresh Status
+                  </button>
+
+                  <button
+                    onClick={handleLaunchUnreal}
+                    disabled={isLaunchingUnreal || unrealStatus.unreal_editor_running}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: unrealStatus.unreal_editor_running
+                        ? 'rgba(100, 116, 139, 0.4)'
+                        : 'linear-gradient(135deg, #0284c7, #2563eb)',
+                      color: 'white',
+                      fontSize: '0.82rem',
+                      fontWeight: '700',
+                      cursor: unrealStatus.unreal_editor_running ? 'not-allowed' : 'pointer',
+                      boxShadow: unrealStatus.unreal_editor_running ? 'none' : '0 0 12px rgba(37, 99, 235, 0.4)'
+                    }}
+                  >
+                    {isLaunchingUnreal ? 'Launching...' : (unrealStatus.unreal_editor_running ? '✅ Editor Active' : '🚀 Launch Unreal Engine 5.8')}
+                  </button>
+                </div>
+              </div>
+
+              {/* Virtual Production & Cinema Control Deck */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '18px' }}>
+                
+                {/* Panel 1: Cine Camera Actor */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  borderRadius: '10px',
+                  padding: '18px',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '700', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    📹 Virtual Cine Camera Actor
+                  </div>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>
+                    Spawns and aims an Unreal CineCameraActor with configurable cinematic lenses.
+                  </p>
+
+                  <div>
+                    <label style={{ fontSize: '0.75rem', color: '#cbd5e1', display: 'block', marginBottom: '4px' }}>
+                      Focal Length: <strong style={{ color: '#38bdf8' }}>{cameraFocalLength}mm</strong>
+                    </label>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {[18, 24, 35, 50, 85].map(fl => (
+                        <button
+                          key={fl}
+                          onClick={() => setCameraFocalLength(fl)}
+                          style={{
+                            flex: 1,
+                            padding: '6px',
+                            borderRadius: '6px',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            background: cameraFocalLength === fl ? '#0284c7' : 'rgba(255,255,255,0.04)',
+                            color: 'white',
+                            fontSize: '0.75rem',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {fl}mm
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleSpawnCamera}
+                    style={{
+                      padding: '10px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #0ea5e9, #3b82f6)',
+                      color: 'white',
+                      fontWeight: '700',
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      marginTop: '6px'
+                    }}
+                  >
+                    🎬 Spawn CineCamera in Scene
+                  </button>
+                </div>
+
+                {/* Panel 2: Sequencer Action Deck */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  borderRadius: '10px',
+                  padding: '18px',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '700', color: '#a855f7', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🎞️ Sequencer & Take Recorder Deck
+                  </div>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>
+                    Dispatches timeline capture commands and camera cut triggers via MCP JSON-RPC.
+                  </p>
+
+                  <div>
+                    <label style={{ fontSize: '0.75rem', color: '#cbd5e1', display: 'block', marginBottom: '4px' }}>
+                      Playback / Record Command
+                    </label>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {['play', 'pause', 'record', 'stop'].map(act => (
+                        <button
+                          key={act}
+                          onClick={() => setSequencerAction(act)}
+                          style={{
+                            flex: 1,
+                            padding: '6px',
+                            borderRadius: '6px',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            background: sequencerAction === act ? '#9333ea' : 'rgba(255,255,255,0.04)',
+                            color: 'white',
+                            fontSize: '0.75rem',
+                            fontWeight: '700',
+                            textTransform: 'uppercase',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {act}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleTriggerSequencer}
+                    style={{
+                      padding: '10px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #a855f7, #6366f1)',
+                      color: 'white',
+                      fontWeight: '700',
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      marginTop: '6px'
+                    }}
+                  >
+                    ⚡ Trigger Sequencer ({sequencerAction.toUpperCase()})
+                  </button>
+                </div>
+
+                {/* Panel 3: Live RPC Log */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  borderRadius: '10px',
+                  padding: '18px',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '700', color: '#10b981' }}>
+                    📡 MCP Command & Event Log
+                  </div>
+                  <div style={{
+                    flex: 1,
+                    minHeight: '90px',
+                    backgroundColor: '#020617',
+                    borderRadius: '6px',
+                    padding: '10px',
+                    fontFamily: 'Consolas, monospace',
+                    fontSize: '0.75rem',
+                    color: '#34d399',
+                    overflowY: 'auto',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                  }}>
+                    {unrealLog || `[System]: Unreal Native MCP ready at ${unrealStatus.mcp_url}`}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* 3D Asset Browser Panel (5,267 Assets Catalog) */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.6)',
+                borderRadius: '12px',
+                padding: '20px 24px',
+                border: '1px solid rgba(255,255,255,0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div>
+                    <div style={{ fontSize: '0.98rem', fontWeight: '700', color: 'white' }}>
+                      📦 Unreal Asset Catalog (5,267 Local Assets)
+                    </div>
+                    <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                      Search Blueprints, Animation assets, Skeletal Meshes, and Materials indexed from your Unreal project
+                    </span>
+                  </div>
+
+                  {/* Category Pills */}
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => { setUnrealCategory(''); fetchUnrealAssets(unrealAssetQuery, ''); }}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '20px',
+                        border: 'none',
+                        background: unrealCategory === '' ? '#2563eb' : 'rgba(255,255,255,0.06)',
+                        color: 'white',
+                        fontSize: '0.72rem',
+                        fontWeight: '600',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      All
+                    </button>
+                    {unrealCategories.map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => { setUnrealCategory(cat); fetchUnrealAssets(unrealAssetQuery, cat); }}
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: '20px',
+                          border: 'none',
+                          background: unrealCategory === cat ? '#2563eb' : 'rgba(255,255,255,0.06)',
+                          color: 'white',
+                          fontSize: '0.72rem',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Search Bar */}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <input
+                    type="text"
+                    value={unrealAssetQuery}
+                    onChange={(e) => setUnrealAssetQuery(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') fetchUnrealAssets(unrealAssetQuery, unrealCategory); }}
+                    placeholder="Search Unreal assets (e.g., character, rig, camera, sequence, metahuman)..."
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'rgba(2, 6, 23, 0.7)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '8px',
+                      padding: '10px 14px',
+                      color: 'white',
+                      fontSize: '0.82rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    onClick={() => fetchUnrealAssets(unrealAssetQuery, unrealCategory)}
+                    style={{
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: '#0284c7',
+                      color: 'white',
+                      fontSize: '0.82rem',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {isLoadingAssets ? 'Filtering...' : 'Search Assets'}
+                  </button>
+                </div>
+
+                {/* Asset Cards Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px', maxHeight: '380px', overflowY: 'auto' }}>
+                  {unrealAssets.map((asset, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        background: 'rgba(2, 6, 23, 0.6)',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{
+                          fontSize: '0.68rem',
+                          fontWeight: '700',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          backgroundColor: 'rgba(14, 165, 233, 0.15)',
+                          color: '#38bdf8'
+                        }}>
+                          {asset.category}
+                        </span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(asset.full_path);
+                            setUnrealLog(`[Copied]: ${asset.asset_name}`);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#94a3b8',
+                            fontSize: '0.72rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          📋 Copy Path
+                        </button>
+                      </div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: '700', color: 'white', wordBreak: 'break-all' }}>
+                        {asset.asset_name}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#64748b', wordBreak: 'break-all' }}>
+                        {asset.full_path}
+                      </div>
+                    </div>
+                  ))}
+                  {unrealAssets.length === 0 && (
+                    <div style={{ color: '#94a3b8', fontSize: '0.82rem', padding: '16px', gridColumn: '1 / -1', textAlign: 'center' }}>
+                      No Unreal assets matched your query.
+                    </div>
+                  )}
+                </div>
+              </div>
+
             </div>
           </div>
         )}

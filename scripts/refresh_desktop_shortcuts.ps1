@@ -1,4 +1,4 @@
-# AI-BS Desktop Shortcut Refresher (v5.310.0)
+# AI-BS Desktop Shortcut Refresher (v5.311.0)
 $ErrorActionPreference = "SilentlyContinue"
 
 $targetVbs = "C:\AI-BS\Launch_Desktop_Studio.vbs"
@@ -27,7 +27,7 @@ foreach ($desk in $desktopPaths) {
         $shortcut.TargetPath = "wscript.exe"
         $shortcut.Arguments = '"' + $targetVbs + '"'
         $shortcut.WorkingDirectory = $workingDir
-        $shortcut.Description = "AI-BS Sovereign Executive Command Studio (v5.310.0)"
+        $shortcut.Description = "AI-BS Sovereign Executive Command Studio (v5.311.0)"
         if (Test-Path $iconPath) {
             $shortcut.IconLocation = $iconPath
         }

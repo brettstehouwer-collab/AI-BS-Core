@@ -543,6 +543,19 @@ except ImportError as e:
     print(f"Warning: Could not load wan_media_router: {e}")
 
 try:
+    from routers.unreal_mcp_router import router as unreal_mcp_router
+    app.include_router(unreal_mcp_router)
+except ImportError as e:
+    print(f"Warning: Could not load unreal_mcp_router: {e}")
+
+try:
+    from routers.bioinformatics_router import router as bioinformatics_router
+    app.include_router(bioinformatics_router)
+except ImportError as e:
+    # Router may still be authored by active worker subagent
+    pass
+
+try:
     from aibs_audio_router import router as audio_catalog_router
     app.include_router(audio_catalog_router)
 except ImportError:
