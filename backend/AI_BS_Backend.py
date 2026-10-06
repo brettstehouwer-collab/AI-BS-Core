@@ -4347,6 +4347,20 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
     if not any(m.get("role") == "system" for m in formatted_messages):
         formatted_messages.insert(0, {"role": "system", "content": system_persona})
 
+    # Batch mode: big multi-part prompts are split, checkpointed, memory-carried and auto-continued
+    try:
+        from batch_job_runner import is_batchable, run_batch_job
+        _last_user = next((m.get("content", "") for m in reversed(formatted_messages) if m.get("role") == "user"), "")
+        if is_batchable(_last_user):
+            from fastapi.responses import StreamingResponse as _SR
+            return _SR(
+                run_batch_job(_last_user, model_name, system_persona, ["http://127.0.0.1:11434", "http://127.0.0.1:11435"], logger),
+                media_type="text/plain; charset=utf-8",
+                headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "X-Accel-Buffering": "no"},
+            )
+    except Exception as _batch_err:
+        logger.warning(f"[BatchJob] batch routing unavailable, falling back to single pass: {_batch_err}")
+
     # Dynamic Unlimited Token Input Calculation & Memory Offloading
     total_input_chars = sum(len(str(m.get("content", ""))) for m in formatted_messages)
     estimated_input_tokens = int(total_input_chars / 3.2)
