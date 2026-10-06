@@ -4368,7 +4368,7 @@ export default function ChatTab({ isNested = false }) {
     try {
       const isPlanMode = activeTools?.plan_and_review;
       const targetModel = selectedModel || 'stehouwer_llm';
-      const useHybridStream = !isPlanMode && targetModel === 'stehouwer_llm';
+      const useHybridStream = !isPlanMode;
 
       const reqHeaders = {
         'Content-Type': 'application/json',
@@ -4386,7 +4386,7 @@ export default function ChatTab({ isNested = false }) {
           {
             role: 'assistant',
             content: '',
-            model: 'stehouwer_llm (Hybrid)',
+            model: `${targetModel} (Hybrid Stream)`,
             execution_time_ms: 0
           }
         ]);
@@ -4401,7 +4401,7 @@ export default function ChatTab({ isNested = false }) {
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, stream: true }),
+            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true }),
             signal: controller.signal,
           });
 

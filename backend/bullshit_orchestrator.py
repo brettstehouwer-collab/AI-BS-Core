@@ -41,11 +41,11 @@ except ImportError:
 
     class OrchestratorConfig:
         LOG_LEVEL = "INFO"
-        TOKEN_TARGET_LIMIT = 4096
-        TOKEN_MAX_LIMIT = 8192
+        TOKEN_TARGET_LIMIT = 65536
+        TOKEN_MAX_LIMIT = 131072
         EMBEDDING_MODEL = "nomic-embed-text"
-        EMBEDDER_TIMEOUT_SEC = 10.0
-        STAGE_TIMEOUT_SEC = 60.0
+        EMBEDDER_TIMEOUT_SEC = 15.0
+        STAGE_TIMEOUT_SEC = 3600.0
 
         @staticmethod
         def get_embedder_url():
@@ -319,14 +319,41 @@ class NeuralRouter:
             # 5. Append User Message
             self.history_list.append({"role": "user", "content": inbound_prompt})
 
+            # 6. Dynamic Context Window Allocation (Uncapped up to 131,072)
+            total_prompt_chars = len(inbound_prompt)
+            dynamic_ctx = max(16384, min(131072, ((inbound_tokens + 4096) // 4096 + 1) * 4096))
+
+            # Disk Staging for Big Jobs
+            if total_prompt_chars > 3000 or inbound_tokens > 1000:
+                try:
+                    big_jobs_dir = os.path.join(r"C:\AI-BS\saved_data", "big_jobs")
+                    os.makedirs(big_jobs_dir, exist_ok=True)
+                    from datetime import datetime
+                    from uuid import uuid4
+                    bj_id = f"job_orchestrator_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid4())[:6]}"
+                    with open(os.path.join(big_jobs_dir, f"{bj_id}_prompt.json"), "w", encoding="utf-8") as f:
+                        json.dump({
+                            "job_id": bj_id,
+                            "timestamp": datetime.now().isoformat(),
+                            "model": selected_expert,
+                            "allocated_num_ctx": dynamic_ctx,
+                            "inbound_tokens": inbound_tokens,
+                            "prompt": inbound_prompt[:500]
+                        }, f, indent=2)
+                    with open(os.path.join(big_jobs_dir, f"{bj_id}_raw_prompt.txt"), "w", encoding="utf-8") as f:
+                        f.write(inbound_prompt)
+                    logger.info(f"[NeuralRouter] Offloaded and staged big job to disk ({bj_id}, {inbound_tokens} tokens)")
+                except Exception as bje:
+                    logger.warning(f"[NeuralRouter] Staging big job failed: {bje}")
+
             outbound_payload: Dict[str, Any] = {
                 "model": selected_expert,
                 "messages": self.history_list,
-                "options": {"temperature": 0.0, "num_ctx": 4096},
+                "options": {"temperature": 0.0, "num_ctx": dynamic_ctx, "num_predict": -1},
                 "stream": False,
             }
 
-            logger.debug(f"Generated payload with {len(self.history_list)} messages")
+            logger.debug(f"Generated payload with {len(self.history_list)} messages (allocated ctx: {dynamic_ctx})")
             return outbound_payload
 
     async def append_assistant_turn(self, resolution_text: str):

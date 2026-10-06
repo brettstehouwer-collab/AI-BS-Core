@@ -11,7 +11,7 @@ except ImportError:
 
 
 class TokenBudgetEstimator:
-    def __init__(self, target_limit=3700, max_limit=4000):
+    def __init__(self, target_limit=65536, max_limit=131072):
         self.target_limit = target_limit
         self.max_limit = max_limit
         # Use workspace-relative path with env override
@@ -41,7 +41,7 @@ class TokenBudgetEstimator:
     def execute_eviction_matrix(
         self, history_list: list, inbound_prompt_tokens: int, chroma_client=None
     ) -> list:
-        """Evict oldest messages when budget is exceeded."""
+        """Evict oldest intermediate messages when budget is exceeded, preserving system instructions and active prompt."""
         if (
             self.estimate_history_tokens(history_list) + inbound_prompt_tokens
             <= self.target_limit
@@ -49,12 +49,14 @@ class TokenBudgetEstimator:
             return history_list
 
         evicted = []
+        # Keep system prompt intact at index 0 if present
+        start_idx = 1 if history_list and history_list[0].get("role") == "system" else 0
         while (
             self.estimate_history_tokens(history_list) + inbound_prompt_tokens
         ) > self.target_limit:
-            if not history_list:
+            if len(history_list) <= (1 if start_idx == 1 else 0):
                 break
-            evicted.append(history_list.pop(0))
+            evicted.append(history_list.pop(start_idx))
 
         if evicted:
             self._write_to_archive_json(evicted)

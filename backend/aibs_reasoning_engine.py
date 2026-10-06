@@ -258,14 +258,17 @@ class AIBSSelfProblemSolver:
         return models
 
     @classmethod
-    async def call_single_model(cls, client: httpx.AsyncClient, model: str, prompt: str, max_tokens: int = 140, timeout: float = 75.0, preferred_base: str = None) -> str:
+    async def call_single_model(cls, client: httpx.AsyncClient, model: str, prompt: str, max_tokens: int = 4096, timeout: float = 300.0, preferred_base: str = None) -> str:
+        prompt_tokens = int(len(prompt) / 3.2)
+        dyn_ctx = max(16384, min(131072, ((prompt_tokens + 4096) // 4096 + 1) * 4096))
         payload = {
             "model": model,
             "prompt": prompt,
             "stream": False,
-            "keep_alive": "5m",
+            "keep_alive": "10m",
             "options": {
-                "num_predict": max_tokens,
+                "num_ctx": dyn_ctx,
+                "num_predict": max_tokens if max_tokens > 0 else -1,
                 "temperature": 0.4
             }
         }
@@ -751,13 +754,38 @@ class AIBSSelfProblemSolver:
                 "Conclude with '\n\n---\n*Executed multi-model swarm backpropagation and verified 100% convergence across all local engines.*'"
             )
             
+            synthesis_tokens = int(len(synthesis_prompt) / 3.2)
+            dyn_ctx = max(16384, min(131072, ((synthesis_tokens + 4096) // 4096 + 1) * 4096))
+
+            # Disk Staging for Big Jobs in Reasoning Engine
+            bj_out_path = None
+            if len(prompt) > 3000 or synthesis_tokens > 1000:
+                try:
+                    big_jobs_dir = r"C:\AI-BS\saved_data\big_jobs"
+                    os.makedirs(big_jobs_dir, exist_ok=True)
+                    from uuid import uuid4
+                    bj_id = f"job_reasoning_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid4())[:6]}"
+                    with open(os.path.join(big_jobs_dir, f"{bj_id}_prompt.json"), "w", encoding="utf-8") as f:
+                        json.dump({
+                            "job_id": bj_id,
+                            "timestamp": datetime.datetime.now().isoformat(),
+                            "prompt": prompt,
+                            "allocated_num_ctx": dyn_ctx,
+                            "synthesis_tokens": synthesis_tokens
+                        }, f, indent=2)
+                    bj_out_path = os.path.join(big_jobs_dir, f"{bj_id}_streamed_output.md")
+                    yield f"> 💾 **[Large Job Offloaded & Staged]** Reasoning prompt saved to disk. Allocated context: **{dyn_ctx:,} tokens**.\n\n"
+                except Exception as bje:
+                    logger.warning(f"Failed to stage reasoning big job: {bje}")
+
             payload = {
                 "model": "stehouwer_llm:latest",
                 "prompt": synthesis_prompt,
                 "stream": True,
-                "keep_alive": "5m",
+                "keep_alive": "10m",
                 "options": {
-                    "num_predict": 320,
+                    "num_ctx": dyn_ctx,
+                    "num_predict": -1,
                     "temperature": 0.5
                 }
             }
@@ -771,9 +799,16 @@ class AIBSSelfProblemSolver:
                     stream_urls.append(u)
 
             streamed = False
+            bj_file_handle = None
+            if bj_out_path:
+                try:
+                    bj_file_handle = open(bj_out_path, "a", encoding="utf-8")
+                except Exception:
+                    pass
+
             for s_url in stream_urls:
                 try:
-                    async with client.stream("POST", s_url, json=payload, timeout=60.0) as response:
+                    async with client.stream("POST", s_url, json=payload, timeout=600.0) as response:
                         if response.status_code == 200:
                             async for line in response.aiter_lines():
                                 if line:
@@ -781,6 +816,9 @@ class AIBSSelfProblemSolver:
                                         chunk = json.loads(line)
                                         txt = chunk.get("response", "")
                                         if txt:
+                                            if bj_file_handle:
+                                                bj_file_handle.write(txt)
+                                                bj_file_handle.flush()
                                             yield txt
                                     except json.JSONDecodeError:
                                         continue
@@ -789,9 +827,15 @@ class AIBSSelfProblemSolver:
                 except Exception as e:
                     logger.warning(f"Synthesis stream failed on {s_url}: {e}")
                     continue
+                finally:
+                    if bj_file_handle:
+                        try:
+                            bj_file_handle.close()
+                        except Exception:
+                            pass
 
             if not streamed:
-                fallback_ans = await cls.call_single_model(client, "stehouwer_llm:latest", synthesis_prompt, max_tokens=320, timeout=60.0, preferred_base=preferred_base)
+                fallback_ans = await cls.call_single_model(client, "stehouwer_llm:latest", synthesis_prompt, max_tokens=4096, timeout=120.0, preferred_base=preferred_base)
                 yield fallback_ans
 
             log_to_ledger("stehouwer_llm:latest (Synthesis)", synthesis_prompt, "Streamed Final Response", 98.5)

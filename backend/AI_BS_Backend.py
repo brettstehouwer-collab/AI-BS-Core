@@ -4303,17 +4303,29 @@ async def execute_ide_plan(request: Request):
         return {"status": "error", "message": str(e)}
 
 
+class HybridStreamPayload(BaseModel):
+    prompt: Optional[str] = ""
+    messages: Optional[List[Any]] = []
+    model: Optional[str] = "stehouwer_llm"
+    stream: Optional[bool] = True
+
+
 @app.post("/api/v1/hybrid-chat/stream")
-async def hybrid_chat_stream_endpoint(request: Request):
+async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[HybridStreamPayload] = None):
     """Real-time token streaming endpoint for BS-CHAT Stehouwer LLM."""
-    try:
-        body = await request.json()
-    except Exception:
-        body = {}
+    body = {}
+    if payload:
+        body = payload.model_dump() if hasattr(payload, "model_dump") else payload.dict()
+    else:
+        try:
+            body = await request.json()
+        except Exception as parse_err:
+            logger.warning(f"Failed to parse body in hybrid_chat_stream_endpoint: {parse_err}")
+            body = {}
 
     prompt = body.get("prompt", "")
     messages_in = body.get("messages", [])
-    model_name = body.get("model", "stehouwer_llm")
+    model_name = resolve_ollama_model(body.get("model", "stehouwer_llm"))
 
     formatted_messages = []
     if messages_in:
@@ -4335,6 +4347,48 @@ async def hybrid_chat_stream_endpoint(request: Request):
     if not any(m.get("role") == "system" for m in formatted_messages):
         formatted_messages.insert(0, {"role": "system", "content": system_persona})
 
+    # Dynamic Unlimited Token Input Calculation & Memory Offloading
+    total_input_chars = sum(len(str(m.get("content", ""))) for m in formatted_messages)
+    estimated_input_tokens = int(total_input_chars / 3.2)
+    # Dynamically allocate num_ctx - never truncate or clamp!
+    target_num_ctx = max(16384, ((estimated_input_tokens + 4096) // 4096 + 1) * 4096)
+    target_num_ctx = min(131072, target_num_ctx)
+
+    # Disk Staging & Memory Offloading for Large Jobs
+    big_jobs_dir = os.path.join(r"C:\AI-BS\saved_data", "big_jobs")
+    job_id = None
+    job_input_path = None
+    job_raw_path = None
+    job_output_path = None
+    if total_input_chars > 3000 or estimated_input_tokens > 1000:
+        try:
+            os.makedirs(big_jobs_dir, exist_ok=True)
+            job_id = f"job_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid4())[:6]}"
+            job_input_path = os.path.join(big_jobs_dir, f"{job_id}_prompt.json")
+            job_raw_path = os.path.join(big_jobs_dir, f"{job_id}_raw_prompt.txt")
+            job_output_path = os.path.join(big_jobs_dir, f"{job_id}_streamed_output.md")
+
+            job_meta = {
+                "job_id": job_id,
+                "timestamp": datetime.now().isoformat(),
+                "total_input_chars": total_input_chars,
+                "estimated_input_tokens": estimated_input_tokens,
+                "allocated_num_ctx": target_num_ctx,
+                "model": model_name,
+                "input_file": job_input_path,
+                "raw_file": job_raw_path,
+                "output_file": job_output_path,
+                "prompt_preview": prompt[:300] if prompt else "",
+                "messages": formatted_messages
+            }
+            with open(job_input_path, "w", encoding="utf-8") as f:
+                json.dump(job_meta, f, indent=2)
+            with open(job_raw_path, "w", encoding="utf-8") as f:
+                f.write(prompt or json.dumps(formatted_messages, indent=2))
+            logger.info(f"[BigJob Offload] Staged large prompt ({total_input_chars} chars, ~{estimated_input_tokens} tokens) to {job_input_path}")
+        except Exception as e:
+            logger.warning(f"[BigJob Offload] Failed to stage prompt: {e}")
+
     ollama_hosts = ["http://127.0.0.1:11434", "http://127.0.0.1:11435"]
     payload = {
         "model": model_name,
@@ -4342,29 +4396,61 @@ async def hybrid_chat_stream_endpoint(request: Request):
         "stream": True,
         "options": {
             "temperature": 0.5,
-            "num_ctx": 8192
+            "num_ctx": target_num_ctx,
+            "num_predict": -1
         }
     }
 
     async def generate_token_stream():
         streamed_any = False
+
+        # If large job, yield notification badge
+        if job_id and job_output_path:
+            badge = f"> 💾 **[Large Job Offloaded & Staged]** Input persisted to disk (`{os.path.basename(job_input_path)}`). Allocated context: **{target_num_ctx:,} tokens**. Stream auto-saving to `{os.path.basename(job_output_path)}`.\n\n"
+            yield badge
+
         for host in ollama_hosts:
             try:
-                async with httpx.AsyncClient(timeout=httpx.Timeout(600.0, connect=5.0, read=600.0)) as client:
+                # Generous timeout for massive token prompts (3600s / 1 hour)
+                async with httpx.AsyncClient(timeout=httpx.Timeout(3600.0, connect=15.0, read=3600.0)) as client:
                     async with client.stream("POST", f"{host}/api/chat", json=payload) as resp:
                         if resp.status_code == 200:
-                            async for line in resp.aiter_lines():
-                                if line:
+                            out_file_handle = None
+                            if job_output_path:
+                                try:
+                                    out_file_handle = open(job_output_path, "a", encoding="utf-8")
+                                    out_file_handle.write(f"# AI-BS Big Job Streamed Output - {job_id}\n\n")
+                                    out_file_handle.write(f"- **Timestamp:** {datetime.now().isoformat()}\n")
+                                    out_file_handle.write(f"- **Model:** {model_name}\n")
+                                    out_file_handle.write(f"- **Input Tokens:** ~{estimated_input_tokens:,}\n")
+                                    out_file_handle.write(f"- **Context Window:** {target_num_ctx:,}\n\n---\n\n")
+                                    out_file_handle.flush()
+                                except Exception:
+                                    pass
+
+                            try:
+                                async for line in resp.aiter_lines():
+                                    if line:
+                                        try:
+                                            chunk = json.loads(line)
+                                            token = chunk.get("message", {}).get("content", "")
+                                            if token:
+                                                streamed_any = True
+                                                if out_file_handle:
+                                                    out_file_handle.write(token)
+                                                    out_file_handle.flush()
+                                                yield token
+                                            if chunk.get("done", False):
+                                                break
+                                        except Exception:
+                                            pass
+                            finally:
+                                if out_file_handle:
                                     try:
-                                        chunk = json.loads(line)
-                                        token = chunk.get("message", {}).get("content", "")
-                                        if token:
-                                            streamed_any = True
-                                            yield token
-                                        if chunk.get("done", False):
-                                            break
+                                        out_file_handle.close()
                                     except Exception:
                                         pass
+
                             if streamed_any:
                                 return
             except Exception as e:
@@ -4478,11 +4564,12 @@ async def chat_endpoint(request: Request):
             elif hasattr(m, "content"):
                 total_chars += len(str(m.content))
         
-        estimated_tokens = total_chars / 4
+        estimated_tokens = int(total_chars / 3.2)
+        target_num_ctx = max(16384, min(131072, ((estimated_tokens + 4096) // 4096 + 1) * 4096))
         
-        # If payload exceeds 32k tokens, force switch to Nemotron 3.5 Lightning for 1M context
-        if estimated_tokens > 32000:
-            print(f"[HYBRID ROUTER] Massive payload detected ({int(estimated_tokens)} tokens). Offloading from {ollama_model} to nemotron-3.5-lightning for 1-Million Context Window.", flush=True)
+        # Only switch to Nemotron 1M context if genuinely exceeding 131,072 context tokens
+        if estimated_tokens > 131072 and "nemotron" not in ollama_model.lower():
+            print(f"[HYBRID ROUTER] Ultra-massive payload detected ({estimated_tokens} tokens). Offloading from {ollama_model} to nemotron-3.5-lightning for 1-Million Context Window.", flush=True)
             ollama_model = "nemotron-3.5-lightning"
 
         # --- Omni-Drive Pre-Flight Interceptor (Moved to very first line logic) ---
@@ -4892,14 +4979,50 @@ async def chat_endpoint(request: Request):
             res_data = {}
             content_text = ""
 
-            async with httpx.AsyncClient(timeout=httpx.Timeout(180.0, connect=15.0, read=120.0)) as client:
+            # Disk Staging & Memory Offloading for Large Jobs in Non-Streaming Route
+            big_jobs_dir = os.path.join(r"C:\AI-BS\saved_data", "big_jobs")
+            job_id = None
+            job_input_path = None
+            job_raw_path = None
+            job_output_path = None
+            if total_chars > 3000 or estimated_tokens > 1000:
+                try:
+                    os.makedirs(big_jobs_dir, exist_ok=True)
+                    job_id = f"job_sync_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{str(uuid4())[:6]}"
+                    job_input_path = os.path.join(big_jobs_dir, f"{job_id}_prompt.json")
+                    job_raw_path = os.path.join(big_jobs_dir, f"{job_id}_raw_prompt.txt")
+                    job_output_path = os.path.join(big_jobs_dir, f"{job_id}_output.md")
+
+                    job_meta = {
+                        "job_id": job_id,
+                        "timestamp": datetime.now().isoformat(),
+                        "total_input_chars": total_chars,
+                        "estimated_input_tokens": int(estimated_tokens),
+                        "allocated_num_ctx": target_num_ctx,
+                        "model": ollama_model,
+                        "input_file": job_input_path,
+                        "raw_file": job_raw_path,
+                        "output_file": job_output_path,
+                        "prompt_preview": last_user_msg[:300] if last_user_msg else "",
+                        "messages": formatted_messages
+                    }
+                    with open(job_input_path, "w", encoding="utf-8") as f:
+                        json.dump(job_meta, f, indent=2)
+                    with open(job_raw_path, "w", encoding="utf-8") as f:
+                        f.write(last_user_msg or json.dumps(formatted_messages, indent=2))
+                    logger.info(f"[BigJob Offload] Staged non-streaming large prompt ({total_chars} chars, ~{int(estimated_tokens)} tokens) to {job_input_path}")
+                except Exception as e:
+                    logger.warning(f"[BigJob Offload] Failed to stage prompt: {e}")
+
+            async with httpx.AsyncClient(timeout=httpx.Timeout(3600.0, connect=15.0, read=3600.0)) as client:
                 for target_model in models_to_try:
                     ollama_req = {
                         "model": target_model,
                         "messages": formatted_messages,
                         "stream": False,
                         "options": {
-                            "num_ctx": max(8192, min(16384, int(estimated_tokens) + 2048)),
+                            "num_ctx": target_num_ctx,
+                            "num_predict": -1,
                             "temperature": 0.3
                         }
                     }
@@ -4937,6 +5060,21 @@ async def chat_endpoint(request: Request):
                     "Your prompt has been acknowledged and recorded in system memory. "
                     "Local GPU throughput is active under Sean's governance directives."
                 )
+
+            # Persist output if big job was staged
+            if job_output_path and content_text:
+                try:
+                    with open(job_output_path, "w", encoding="utf-8") as f:
+                        f.write(f"# AI-BS Big Job Output - {job_id}\n\n")
+                        f.write(f"- **Timestamp:** {datetime.now().isoformat()}\n")
+                        f.write(f"- **Model:** {ollama_model}\n")
+                        f.write(f"- **Input Tokens:** ~{int(estimated_tokens):,}\n")
+                        f.write(f"- **Allocated Context:** {target_num_ctx:,}\n\n---\n\n")
+                        f.write(content_text)
+                    badge = f"> 💾 **[Large Job Offloaded & Staged]** Input persisted to disk (`{os.path.basename(job_input_path)}`). Allocated context: **{target_num_ctx:,} tokens**. Complete response saved to `{os.path.basename(job_output_path)}`.\n\n"
+                    content_text = badge + content_text
+                except Exception as e:
+                    logger.warning(f"[BigJob Offload] Failed to write non-streaming output: {e}")
 
             # Extract tool call if present in LLM response
             t_name, t_args = extract_and_parse_tool_call(content_text)
@@ -5222,6 +5360,9 @@ async def chat_endpoint(request: Request):
                 "model": ollama_model,
                 "execution_time_ms": execution_time_ms,
                 "tool_trace": tool_trace_data,
+                "big_job_id": job_id if 'job_id' in locals() else None,
+                "input_file": job_input_path if 'job_input_path' in locals() else None,
+                "output_file": job_output_path if 'job_output_path' in locals() else None,
             }
 
     except Exception as e:
