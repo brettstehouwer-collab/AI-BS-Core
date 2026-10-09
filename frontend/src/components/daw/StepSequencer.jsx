@@ -11,7 +11,7 @@ const StepSequencer = ({ channel }) => {
   return (
     <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
       {channel.steps.slice(0, stepCount).map((stepActive, index) => {
-        // FL Studio groups steps in 4s (Beats 1, 2, 3, 4)
+        // Pattern DAW groups steps in 4s (Beats 1, 2, 3, 4)
         const isBeatStart = index % 4 === 0;
         const isEvenBar = Math.floor(index / 4) % 2 === 0;
         const isCurrent = isPlaying && currentStep === index;

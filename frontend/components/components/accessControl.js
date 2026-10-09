@@ -93,6 +93,7 @@ export const TAB_PERMISSIONS = {
   api_recon: ['admin', 'enterprise_all_access', 'b2b_growth'],
   email_client: ['admin', 'enterprise_all_access', 'b2b_growth', 'screenwriting'],
   clients: ['admin', 'enterprise_all_access', 'b2b_growth'],
+  rec_debut: ['admin', 'enterprise_all_access', 'b2b_growth'],
   client_directory: ['admin', 'enterprise_all_access', 'b2b_growth'],
   advertising: ['admin', 'enterprise_all_access', 'b2b_growth', 'creator_media'],
 

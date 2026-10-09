@@ -13,6 +13,9 @@ import VideoPreviewMonitor from './VideoPreviewMonitor';
 import ThematicVstVisualizer from '../ThematicVstVisualizer';
 import StehouwerWaveStudio from './StehouwerWaveStudio';
 import AiVocalStemSuite from './AiVocalStemSuite';
+import { LatencyMonitorHUD } from './LatencyMonitorHUD';
+import MusicAssistantChat from './MusicAssistantChat';
+import { Bot, MessageSquare } from 'lucide-react';
 
 function audioBufferToWavBlob(buffer) {
   const numOfChan = buffer.numberOfChannels;
@@ -85,6 +88,9 @@ const MusicDAWStudioTab = () => {
   const setActiveView = useDawStore(state => state.setActiveView);
   const currentStep = useDawStore(state => state.currentStep);
   const currentBar = useDawStore(state => state.currentBar);
+  const assistantDrawerOpen = useDawStore(state => state.assistantDrawerOpen);
+  const setAssistantDrawerOpen = useDawStore(state => state.setAssistantDrawerOpen);
+  const toggleAssistantDrawer = useDawStore(state => state.toggleAssistantDrawer);
 
   const [isExporting, setIsExporting] = useState(false);
   const [exportType, setExportType] = useState('wav'); // 'wav' or 'mp4'
@@ -280,16 +286,32 @@ const MusicDAWStudioTab = () => {
         </div>
 
         {/* Tempo Controller */}
-        <div style={{ display: 'flex', alignItems: 'center', background: '#000', padding: '4px 10px', borderRadius: '4px', border: '1px solid #30363d' }}>
-          <span style={{ fontSize: '9px', color: '#888', marginRight: '8px', fontWeight: 'bold' }}>BPM</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#000', padding: '3px 8px', borderRadius: '4px', border: '1px solid #30363d' }}>
+          <span style={{ fontSize: '9px', color: '#888', fontWeight: 'bold' }}>BPM</span>
           <input 
             type="number" 
-            min="60"
-            max="220"
+            min="40"
+            max="240"
             value={bpm} 
             onChange={(e) => setBpm(Number(e.target.value))}
-            style={{ background: 'transparent', border: 'none', color: theme.colors.accent, width: '42px', fontSize: '14px', fontFamily: 'monospace', outline: 'none', fontWeight: 'bold' }}
+            style={{ background: 'transparent', border: 'none', color: theme.colors.accent, width: '38px', fontSize: '13px', fontFamily: 'monospace', outline: 'none', fontWeight: 'bold', textAlign: 'center' }}
           />
+          <button
+            onClick={() => setBpm(85)}
+            title="Lock project tempo to 85 BPM (Suno October 7v2 Native Timing)"
+            style={{
+              background: bpm === 85 ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255,255,255,0.06)',
+              border: bpm === 85 ? '1px solid #00f0ff' : '1px solid rgba(255,255,255,0.12)',
+              color: bpm === 85 ? '#00f0ff' : '#888',
+              borderRadius: '3px',
+              padding: '2px 5px',
+              fontSize: '9px',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            85 Suno
+          </button>
         </div>
 
         {/* Metronome */}
@@ -321,6 +343,9 @@ const MusicDAWStudioTab = () => {
         }}>
           BAR: <b style={{ color: '#fff' }}>{currentBar + 1}</b> • STEP: <b style={{ color: '#fff' }}>{currentStep + 1}</b>
         </div>
+
+        {/* Live DSP Latency & Clock Drift Telemetry Monitor */}
+        <LatencyMonitorHUD />
 
         {/* Live Theatrical VST Theme Badge & Broadcast Sync */}
         <ThematicVstVisualizer compact={true} />
@@ -364,6 +389,30 @@ const MusicDAWStudioTab = () => {
           title="Switch to Stehouwer Multi-Track Linear Waveform Studio & Recorder"
         >
           🎙️ Wave Studio
+        </button>
+
+        {/* AI Audio Assistant Chat Co-Producer Quick Drawer Button */}
+        <button
+          onClick={toggleAssistantDrawer}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            background: assistantDrawerOpen ? 'rgba(168, 85, 247, 0.35)' : 'rgba(168, 85, 247, 0.15)',
+            border: assistantDrawerOpen ? '1px solid #c084fc' : '1px solid rgba(168, 85, 247, 0.4)',
+            color: assistantDrawerOpen ? '#fff' : '#c084fc',
+            borderRadius: '4px',
+            padding: '4px 10px',
+            fontSize: '11px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            boxShadow: assistantDrawerOpen ? '0 0 12px rgba(168, 85, 247, 0.5)' : 'none',
+            transition: 'all 0.15s ease'
+          }}
+          title="Open Natural Language AI Music Audio Assistant & Co-Producer"
+        >
+          <Bot size={13} />
+          <span>💬 AI Copilot</span>
         </button>
 
         {/* Master Volume */}
@@ -444,7 +493,8 @@ const MusicDAWStudioTab = () => {
           { key: 'channel_rack', label: '🥁 Channel Rack & Piano Roll' },
           { key: 'playlist', label: '🎼 Arranger Playlist' },
           { key: 'mixer', label: '🎚 Mixer & FX Rack' },
-          { key: 'vst_thematic', label: '🎹 Theatrical VST3 DSP Telemetry' }
+          { key: 'vst_thematic', label: '🎹 Theatrical VST3 DSP Telemetry' },
+          { key: 'ai_assistant', label: '🤖 Audio AI Assistant Chat' }
         ].map(v => (
           <button
             key={v.key}
@@ -576,8 +626,12 @@ const MusicDAWStudioTab = () => {
           {activeView === 'ai_stems' && (
             <div style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
               <AiVocalStemSuite 
-                onSendStemToPlaylist={(buffer, name) => {
-                  useDawStore.getState().addPlaylistClip?.({ name, buffer, startBar: 0, lengthBars: 4 });
+                onSendStemToPlaylist={(urlOrBuffer, name) => {
+                  useDawStore.getState().addPlaylistClip?.({ name, url: urlOrBuffer, startBar: 0, lengthBars: 32 });
+                  setActiveView('playlist');
+                }}
+                onSendAllStemsToPlaylist={(stemsArray, projectName) => {
+                  useDawStore.getState().addStemTracksToPlaylist?.(stemsArray, projectName);
                   setActiveView('playlist');
                 }}
               />
@@ -603,7 +657,34 @@ const MusicDAWStudioTab = () => {
             </div>
           )}
 
+          {/* DEDICATED FULL-VIEW AUDIO AI ASSISTANT CHAT */}
+          {activeView === 'ai_assistant' && (
+            <div style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <MusicAssistantChat drawerMode={false} />
+            </div>
+          )}
+
         </div>
+
+        {/* SLIDE-OUT AI MUSIC ASSISTANT COPILOT DRAWER */}
+        {assistantDrawerOpen && (
+          <div style={{
+            width: '420px',
+            height: '100%',
+            flexShrink: 0,
+            borderLeft: '1px solid #30363d',
+            display: 'flex',
+            flexDirection: 'column',
+            background: '#090c10',
+            zIndex: 20,
+            boxShadow: '-4px 0 20px rgba(0,0,0,0.6)'
+          }}>
+            <MusicAssistantChat 
+              drawerMode={true} 
+              onClose={() => setAssistantDrawerOpen(false)} 
+            />
+          </div>
+        )}
       </div>
 
     </div>

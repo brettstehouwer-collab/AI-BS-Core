@@ -650,6 +650,18 @@ except ImportError as e:
     print(f"Warning: Could not load audio_demucs_router: {e}")
 
 try:
+    from routers.music_assistant_router import router as music_assistant_router
+    app.include_router(music_assistant_router)
+except ImportError as e:
+    print(f"Warning: Could not load music_assistant_router: {e}")
+
+try:
+    from routers.rec_debut_router import router as rec_debut_router
+    app.include_router(rec_debut_router)
+except ImportError as e:
+    print(f"Warning: Could not load rec_debut_router: {e}")
+
+try:
     from routers.powershell_process_router import router as powershell_process_router
     app.include_router(powershell_process_router)
 except ImportError as e:

@@ -93,7 +93,7 @@ const DEFAULT_GAMES = [
   'Valorant (VALORANT-Win64-Shipping.exe)',
   'Counter-Strike 2 (cs2.exe)',
   'Apex Legends (r5apex.exe)',
-  'FL Studio 21 (FL64.exe)',
+  'Sovereign Music Studio (DAW)',
   'Ableton Live 12 (Ableton Live 12 Suite.exe)',
   'Unreal Engine 5 Editor (UnrealEditor.exe)',
   'OBS Studio (obs64.exe)',
@@ -2025,7 +2025,7 @@ const BroadcastStudio = () => {
                       <div>• <strong>Track 1:</strong> Master Stream Mix (All audio)</div>
                       <div>• <strong>Track 2:</strong> Clean Microphone Stems</div>
                       <div>• <strong>Track 3:</strong> Desktop / Game WASAPI Audio</div>
-                      <div>• <strong>Track 4:</strong> In-App FL Studio DAW Stems</div>
+                      <div>• <strong>Track 4:</strong> In-App Music Studio DAW Stems</div>
                       <div>• <strong>Track 5:</strong> Discord / Remote WebRTC Guests</div>
                       <div>• <strong>Track 6:</strong> AI Sidekick Co-Host Voice Output</div>
                     </div>
@@ -2472,7 +2472,7 @@ const BroadcastStudio = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <span style={{ color: '#a855f7', fontWeight: 'bold' }}>• Track 4: DAW Synthesizer Stems</span>
-                          <span style={{ color: '#94a3b8' }}>Isolated in-app FL Studio & Tone.js instruments</span>
+                          <span style={{ color: '#94a3b8' }}>Isolated in-app Music Studio & Tone.js instruments</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <span style={{ color: '#ec4899', fontWeight: 'bold' }}>• Track 5: WebRTC / Discord Guests</span>

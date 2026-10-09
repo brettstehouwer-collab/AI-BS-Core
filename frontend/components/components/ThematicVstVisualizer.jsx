@@ -19,8 +19,11 @@ export const ThematicVstVisualizer = ({ compact = false }) => {
 
   const fetchState = async () => {
     try {
-      const res = await fetch(`${BACKEND_VST_URL}/api/vst/theme-state`);
-      if (res.ok) {
+      let res = await fetch(`${BACKEND_VST_URL}/api/vst/theme-state`, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+      if (!res || !res.ok) {
+        res = await fetch(`http://127.0.0.1:8080/api/vst/theme-state`).catch(() => null);
+      }
+      if (res && res.ok) {
         const data = await res.json();
         setVstState(data);
         setIsOnline(true);

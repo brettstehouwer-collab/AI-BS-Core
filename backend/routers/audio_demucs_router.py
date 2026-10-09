@@ -1,9 +1,14 @@
 import os
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+import shutil
+import time
+from fastapi import APIRouter, HTTPException, BackgroundTasks, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from core.demucs_audio_engine import DemucsAudioEngine, STEMS_DIR
+
+UPLOAD_DIR = r"C:\AI-BS\saved_data\audio_uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 router = APIRouter(prefix="/api/v1/audio/demucs", tags=["Demucs Audio Stem Separator"])
 
@@ -26,6 +31,31 @@ async def separate_audio_endpoint(req: SeparateRequest):
             output_dir=req.output_dir,
             model_name=req.model_name or "htdemucs",
             two_stems=req.two_stems
+        )
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/upload_and_separate")
+async def upload_and_separate_endpoint(
+    file: UploadFile = File(...),
+    model_name: Optional[str] = Form("htdemucs"),
+    two_stems: Optional[str] = Form(None)
+):
+    """
+    Accepts drag-and-drop audio file upload, saves to vault, and isolates stems on RTX 4090 CUDA.
+    """
+    try:
+        dest_filename = f"{int(time.time())}_{file.filename}"
+        dest_path = os.path.join(UPLOAD_DIR, dest_filename)
+        with open(dest_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        res = DemucsAudioEngine.separate_stems(
+            audio_file_path=dest_path,
+            model_name=model_name or "htdemucs",
+            two_stems=two_stems
         )
         return res
     except Exception as e:

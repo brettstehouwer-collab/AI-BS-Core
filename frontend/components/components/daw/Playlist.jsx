@@ -3,7 +3,8 @@ import { theme } from '../../styles/theme';
 import { 
   LayoutGrid, Layers, Film, Video, Plus, Music2, Scissors, 
   MoveHorizontal, VolumeX, Trash2, Edit3, Paintbrush, ZoomIn, 
-  ZoomOut, Sparkles, MoreVertical, Sliders, Check
+  ZoomOut, Sparkles, MoreVertical, Sliders, Check,
+  UploadCloud, Play, Square, HardDrive, RefreshCw
 } from 'lucide-react';
 import { useDawStore } from './dawStore';
 import EdisonAudioEditorModal from './EdisonAudioEditorModal';
@@ -19,6 +20,18 @@ export default function Playlist() {
   const playlistTracks = useDawStore(state => state.playlistTracks);
   const setPlaylistTracks = useDawStore(state => state.setPlaylistTracks);
   const addPlaylistClip = useDawStore(state => state.addPlaylistClip);
+  const addStemTracksToPlaylist = useDawStore(state => state.addStemTracksToPlaylist);
+
+  // AI Stem Ingestion & Drag-Drop State
+  const [showStemDrawer, setShowStemDrawer] = useState(false);
+  const [isDragOverArranger, setIsDragOverArranger] = useState(false);
+  const [isDragOverStemBox, setIsDragOverStemBox] = useState(false);
+  const [isStemExtracting, setIsStemExtracting] = useState(false);
+  const [stemProgress, setStemProgress] = useState(0);
+  const [stemStatusMsg, setStemStatusMsg] = useState('Demucs v4 CUDA Engine Ready on RTX 4090');
+  const [auditioningClipId, setAuditioningClipId] = useState(null);
+  const stemFileInputRef = useRef(null);
+  const auditionAudioRef = useRef(null);
   const activePatternId = useDawStore(state => state.activePatternId);
   const isPlaying = useDawStore(state => state.isPlaying);
   const currentBar = useDawStore(state => state.currentBar);
@@ -236,6 +249,114 @@ export default function Playlist() {
     ]);
   };
 
+  // Audition clip audio directly from timeline
+  const handleAuditionClip = (clip) => {
+    const url = clip.audioUrl || clip.url;
+    if (!url) return;
+    if (auditioningClipId === clip.id) {
+      if (auditionAudioRef.current) {
+        auditionAudioRef.current.pause();
+        auditionAudioRef.current = null;
+      }
+      setAuditioningClipId(null);
+      return;
+    }
+
+    if (auditionAudioRef.current) {
+      auditionAudioRef.current.pause();
+    }
+    const audio = new Audio(url);
+    auditionAudioRef.current = audio;
+    setAuditioningClipId(clip.id);
+    audio.play().catch(e => console.warn('Audition error:', e));
+    audio.onended = () => {
+      setAuditioningClipId(null);
+      auditionAudioRef.current = null;
+    };
+  };
+
+  // Upload and isolate stems directly from the Arranger Playlist
+  const handleUploadAndSeparateInArranger = async (file) => {
+    if (!file) return;
+    setIsStemExtracting(true);
+    setStemProgress(10);
+    setShowStemDrawer(true);
+    setStemStatusMsg(`Uploading "${file.name}" to RTX 4090 CUDA Demucs Engine...`);
+
+    const progressInterval = setInterval(() => {
+      setStemProgress(prev => (prev < 90 ? prev + 15 : prev));
+    }, 500);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('model_name', 'htdemucs');
+
+      const res = await fetch('http://127.0.0.1:8080/api/v1/audio/demucs/upload_and_separate', {
+        method: 'POST',
+        body: formData
+      });
+
+      clearInterval(progressInterval);
+      setStemProgress(100);
+
+      if (res.ok) {
+        const data = await res.json();
+        setStemStatusMsg(`✨ Separation Complete! All stems arranged into tracks for ${data.project_name || file.name}`);
+        
+        if (data.stems) {
+          const stemColors = {
+            vocals: '#00f0ff',
+            drums: '#10b981',
+            bass: '#f59e0b',
+            other: '#a855f7',
+            master_repaired: '#f43f5e'
+          };
+          const stemLabels = {
+            vocals: 'Vocals',
+            drums: 'Drums',
+            bass: 'Bassline',
+            other: 'Instruments / Synths',
+            master_repaired: 'Master Repaired'
+          };
+
+          const stemTracksToAdd = Object.entries(data.stems).map(([key, stem]) => ({
+            name: stemLabels[key] || key.toUpperCase(),
+            url: stem.url ? `http://127.0.0.1:8080${stem.url}` : '',
+            color: stemColors[key] || '#00f0ff',
+            length: 32
+          }));
+
+          addStemTracksToPlaylist(stemTracksToAdd, data.project_name || file.name.replace(/\.[^/.]+$/, ''));
+        }
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setStemStatusMsg(`⚠️ Demucs Error: ${err.detail || 'Backend error'}`);
+      }
+    } catch (err) {
+      clearInterval(progressInterval);
+      setStemStatusMsg(`⚠️ Error connecting to Demucs backend: ${err.message}`);
+    } finally {
+      setIsStemExtracting(false);
+      setTimeout(() => {
+        setStemProgress(0);
+      }, 4000);
+    }
+  };
+
+  // Quick 1-click Insert October 7v2 Remastered Stems into Arranger
+  const handleInsertOctoberStems = () => {
+    const octoberStems = [
+      { name: 'Vocals', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/vocals.wav', color: '#00f0ff', length: 32 },
+      { name: 'Drums', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/drums.wav', color: '#10b981', length: 32 },
+      { name: 'Bassline', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/bass.wav', color: '#f59e0b', length: 32 },
+      { name: 'Instruments / Synths', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/other.wav', color: '#a855f7', length: 32 },
+      { name: 'Repaired Master (Auto-Tune Harmonic Fix)', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/October_7v2_Master_Repaired.wav', color: '#f43f5e', length: 32 }
+    ];
+    addStemTracksToPlaylist(octoberStems, 'October 7v2 Remastered');
+    setStemStatusMsg('✨ Inserted all 5 October 7v2 stems directly into Arranger Playlist tracks!');
+  };
+
   // Timeline File Drop (Drag whole song or audio onto tracks)
   const handleTimelineDrop = (trackId, e) => {
     e.preventDefault();
@@ -261,15 +382,72 @@ export default function Playlist() {
   };
 
   return (
-    <div style={{
-      background: 'rgba(12, 15, 20, 0.98)',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      position: 'relative'
-    }}>
+    <div 
+      onDragOver={(e) => {
+        e.preventDefault();
+        if (e.dataTransfer.types && Array.from(e.dataTransfer.types).includes('Files')) {
+          setIsDragOverArranger(true);
+        }
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setIsDragOverArranger(false);
+        }
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragOverArranger(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file && (file.type.startsWith('audio/') || /\.(mp3|wav|flac|ogg|m4a)$/i.test(file.name))) {
+          handleUploadAndSeparateInArranger(file);
+        }
+      }}
+      style={{
+        background: 'rgba(12, 15, 20, 0.98)',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        position: 'relative'
+      }}
+    >
+      {/* Global Drag-and-Drop Stem Overlay */}
+      {isDragOverArranger && (
+        <div
+          onDragLeave={() => setIsDragOverArranger(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragOverArranger(false);
+            const file = e.dataTransfer.files?.[0];
+            if (file) handleUploadAndSeparateInArranger(file);
+          }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(5, 10, 20, 0.92)',
+            zIndex: 100,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px dashed #00f0ff',
+            boxShadow: 'inset 0 0 50px rgba(0, 240, 255, 0.35)',
+            backdropFilter: 'blur(5px)'
+          }}
+        >
+          <Sparkles size={52} color="#00f0ff" />
+          <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold', marginTop: '14px', letterSpacing: '0.5px' }}>
+            DROP AUDIO TO STEM OUT ONTO ARRANGER TRACKS
+          </h2>
+          <p style={{ color: '#00f0ff', fontSize: '13px', margin: '6px 0', fontWeight: '500' }}>
+            Local Demucs v4 on NVIDIA RTX 4090 will isolate Vocals, Drums, Bass & Instruments into discrete Arranger lanes!
+          </p>
+          <span style={{ fontSize: '11px', color: '#888' }}>
+            Supports .mp3, .wav, .flac, .ogg, .m4a
+          </span>
+        </div>
+      )}
       {/* Top Header & Pro Tools Toolbar */}
       <div style={{
         padding: '6px 12px',
@@ -291,7 +469,7 @@ export default function Playlist() {
           </span>
         </div>
 
-        {/* FL Studio Style Arrangement Tools Ribbon */}
+        {/* Pattern DAW Style Arrangement Tools Ribbon */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#0a0d14', padding: '2px 6px', borderRadius: '4px', border: '1px solid #30363d' }}>
           {[
             { id: 'draw', key: 'P', icon: <Edit3 size={12} />, label: 'Draw' },
@@ -389,8 +567,180 @@ export default function Playlist() {
           >
             🎙️ Wave Studio
           </button>
+
+          {/* Quick AI Stem Ingestion Drawer Button */}
+          <button
+            onClick={() => setShowStemDrawer(prev => !prev)}
+            title="Open Drag & Drop AI Stem Extractor (Demucs v4 CUDA on RTX 4090)"
+            style={{
+              background: showStemDrawer ? 'rgba(0, 240, 255, 0.25)' : 'rgba(0, 240, 255, 0.12)',
+              border: '1px solid #00f0ff',
+              color: '#00f0ff',
+              borderRadius: '3px',
+              padding: '3px 8px',
+              fontSize: '10px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: showStemDrawer ? '0 0 10px rgba(0, 240, 255, 0.3)' : 'none'
+            }}
+          >
+            <Sparkles size={11} color="#00f0ff" />
+            🎛️ Stem Ingestion
+          </button>
         </div>
       </div>
+
+      {/* AI Stem Ingestion Drawer */}
+      {showStemDrawer && (
+        <div style={{
+          background: 'linear-gradient(180deg, rgba(13, 17, 23, 0.98), rgba(22, 27, 34, 0.98))',
+          borderBottom: '1px solid #30363d',
+          padding: '10px 14px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'inset 0 -2px 10px rgba(0,0,0,0.5)',
+          zIndex: 20
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sparkles size={14} color="#00f0ff" />
+              <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>
+                AI STEM EXTRACTOR & MULTI-TRACK ARRANGER
+              </span>
+              <span style={{ fontSize: '9px', background: 'rgba(0, 240, 255, 0.15)', color: '#00f0ff', padding: '1px 6px', borderRadius: '3px', border: '1px solid rgba(0, 240, 255, 0.3)' }}>
+                RTX 4090 CUDA (Demucs v4)
+              </span>
+            </div>
+            <button
+              onClick={() => setShowStemDrawer(false)}
+              style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', fontSize: '13px', padding: '2px 6px' }}
+              title="Close Drawer"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch', flexWrap: 'wrap' }}>
+            {/* Drag & Drop Box */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setIsDragOverStemBox(true); }}
+              onDragLeave={() => setIsDragOverStemBox(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragOverStemBox(false);
+                const file = e.dataTransfer.files?.[0];
+                if (file) handleUploadAndSeparateInArranger(file);
+              }}
+              onClick={() => !isStemExtracting && stemFileInputRef.current?.click()}
+              style={{
+                flex: '1 1 360px',
+                border: isDragOverStemBox ? '2px dashed #00f0ff' : '1px dashed #444c56',
+                background: isDragOverStemBox ? 'rgba(0, 240, 255, 0.1)' : 'rgba(10, 13, 18, 0.7)',
+                borderRadius: '6px',
+                padding: '12px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: '6px',
+                cursor: isStemExtracting ? 'not-allowed' : 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <input
+                ref={stemFileInputRef}
+                type="file"
+                accept="audio/*,.mp3,.wav,.flac,.ogg,.m4a"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleUploadAndSeparateInArranger(file);
+                }}
+              />
+              {isStemExtracting ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', width: '100%', maxWidth: '320px' }}>
+                  <span style={{ fontSize: '11px', color: '#00f0ff', fontWeight: 'bold' }}>
+                    ⚡ Isolating Stems on RTX 4090... ({stemProgress}%)
+                  </span>
+                  <div style={{ width: '100%', height: '5px', background: '#21262d', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: `${stemProgress}%`, height: '100%', background: 'linear-gradient(90deg, #00f0ff, #a855f7)', transition: 'width 0.25s ease' }} />
+                  </div>
+                  <span style={{ fontSize: '9px', color: '#888' }}>
+                    Splitting Vocals, Drums, Bass, Instruments directly into Arranger Tracks...
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <UploadCloud size={16} color="#00f0ff" />
+                    <span style={{ fontSize: '11px', color: '#fff', fontWeight: 'bold' }}>
+                      Drag & Drop Audio File to Stem Out
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '9px', color: '#888' }}>
+                    Drop .mp3, .wav, or .flac to isolate and automatically layout onto Arranger tracks
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Quick Insert from Vault Card */}
+            <div style={{
+              flex: '0 0 320px',
+              background: 'rgba(10, 13, 18, 0.7)',
+              borderRadius: '6px',
+              border: '1px solid #30363d',
+              padding: '10px 14px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: '6px'
+            }}>
+              <div>
+                <div style={{ fontSize: '10px', color: '#888', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>RECENT VAULT STEMS</span>
+                  <span style={{ color: '#56d364' }}>● Ready</span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#f0f6fc', fontWeight: 600, marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  October 7v2 (Add Vocal) (Remastered)
+                </div>
+                <div style={{ fontSize: '9px', color: '#8b949e' }}>
+                  Includes 4 Stems + Repaired Master Track
+                </div>
+              </div>
+              <button
+                onClick={handleInsertOctoberStems}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2))',
+                  border: '1px solid #00f0ff',
+                  color: '#00f0ff',
+                  borderRadius: '4px',
+                  padding: '5px 10px',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Plus size={11} /> ➕ Insert All 5 Stems into Arranger Tracks
+              </button>
+            </div>
+          </div>
+
+          {stemStatusMsg && (
+            <div style={{ fontSize: '10px', color: stemStatusMsg.includes('⚠️') ? '#ff7b72' : '#8b949e', marginTop: '2px' }}>
+              {stemStatusMsg}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Main Arranger Timeline Canvas */}
       <div style={{ display: 'flex', flex: 1, overflow: 'auto', position: 'relative' }}>
@@ -621,18 +971,42 @@ export default function Playlist() {
                       ) : null}
                     </div>
 
-                    {/* Clip Quick Action Trigger */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveEditingClip(clip);
-                        setShowClipSettingsModal(true);
-                      }}
-                      style={{ background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', padding: '2px' }}
-                      title="Clip Settings"
-                    >
-                      <Sliders size={11} />
-                    </button>
+                    {/* Right: Audition Play + Clip Quick Action Trigger */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                      {(clip.audioUrl || clip.url) && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAuditionClip(clip);
+                          }}
+                          style={{
+                            background: auditioningClipId === clip.id ? '#5eff7b' : 'rgba(255,255,255,0.1)',
+                            border: 'none',
+                            color: auditioningClipId === clip.id ? '#000' : '#fff',
+                            borderRadius: '2px',
+                            cursor: 'pointer',
+                            padding: '2px 4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          title={auditioningClipId === clip.id ? "Stop Audition" : "Audition Stem Audio"}
+                        >
+                          {auditioningClipId === clip.id ? <Square size={9} fill="#000" /> : <Play size={9} fill="#fff" />}
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveEditingClip(clip);
+                          setShowClipSettingsModal(true);
+                        }}
+                        style={{ background: 'transparent', border: 'none', color: '#aaa', cursor: 'pointer', padding: '2px' }}
+                        title="Clip Settings"
+                      >
+                        <Sliders size={11} />
+                      </button>
+                    </div>
 
                     {/* Clip Dropdown Context Menu */}
                     {clipMenuOpenId === clip.id && (
@@ -695,6 +1069,24 @@ export default function Playlist() {
                         >
                           <Sparkles size={10} /> Slice in Slicex
                         </button>
+
+                        {(clip.audioUrl || clip.url) && (
+                          <button
+                            onClick={() => {
+                              fetch(clip.audioUrl || clip.url)
+                                .then(res => res.blob())
+                                .then(blob => {
+                                  const file = new File([blob], `${clip.title || 'audio'}.wav`, { type: 'audio/wav' });
+                                  handleUploadAndSeparateInArranger(file);
+                                })
+                                .catch(err => console.warn('Could not extract from clip blob:', err));
+                              setClipMenuOpenId(null);
+                            }}
+                            style={{ background: 'transparent', border: 'none', color: '#00f0ff', fontSize: '10px', textAlign: 'left', padding: '4px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                          >
+                            <Sparkles size={10} color="#00f0ff" /> Demucs Stem Split into Tracks
+                          </button>
+                        )}
 
                         <button
                           onClick={() => {

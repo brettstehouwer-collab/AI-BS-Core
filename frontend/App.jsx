@@ -83,6 +83,7 @@ const AdminSecurityMonitorTab = safeLazy(() => import('./components/AdminSecurit
 const MasterAccountingTab = safeLazy(() => import('./components/MasterAccountingTab.jsx'));
 const PublicCheckoutTab = safeLazy(() => import('./components/PublicCheckoutTab.jsx'));
 const PublicPlaygroundTab = safeLazy(() => import('./components/PublicPlaygroundTab.jsx'));
+const DennisBellPortal = safeLazy(() => import('./src/components/clients/DennisBellPortal.jsx'));
 const PersonalBrandStudioTab = safeLazy(() => import('./components/PersonalBrandStudioTab.jsx'));
 const AutomatedClientSchedulerTab = safeLazy(() => import('./components/AutomatedClientSchedulerTab.jsx'));
 const DeepLearningStudioTab = safeLazy(() => import('./components/DeepLearningStudioTab.jsx'));
@@ -136,6 +137,7 @@ const ComfyWorkspaceTab = safeLazy(() => import('./components/ComfyWorkspaceTab.
 const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardwareTelemetryTab.jsx'));
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
 const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
+const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
 
 class TabErrorBoundary extends React.Component {
   constructor(props) {
@@ -220,6 +222,7 @@ const tabs = [
   { key: 'advertising', label: 'Advertising', description: 'Local business lead management and AI ad copy', Component: AdvertisingTab },
   { key: 'syndication', label: '🌐 Automated Syndication', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite', Component: SyndicationTab },
   { key: 'clients', label: 'Clients Hub', description: 'Master Workspace for all clients', Component: ClientsModuleTab },
+  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite', Component: RecreationalDebutTab },
   { key: 'nda_module', label: '📜 Sovereign NDA & Anti-Tamper', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal', Component: NdaModuleTab },
   { key: 'moneytrack', label: 'Money Track', description: 'Financial dashboard for revenue, expenses, and invoices', Component: MoneyTrackTab },
   { key: 'definitions', label: 'Definitions & Lore', description: 'Interactive AI-BS dictionary and architectural timeline', Component: DefinitionsModuleTab },
@@ -648,6 +651,25 @@ export default function App() {
   const isNoCoStandaloneRoute = currentPath.includes('/nocovision/teleprompter') || currentPath.includes('/nocovision/projector');
   const isOverlayRoute = currentPath.includes('/overlay');
   const isMobileWriterRoute = typeof window !== 'undefined' && window.location.search.includes('standalone_writer=true');
+  const isRecDebutStandaloneRoute = 
+    currentPath.includes('/recdebut') || 
+    (typeof window !== 'undefined' && (
+      window.location.search.includes('portal=recdebut') || 
+      window.location.search.includes('client=dennisbell') ||
+      window.location.search.includes('page=recdebut')
+    ));
+
+  if (isRecDebutStandaloneRoute) {
+    return (
+      <div style={{ width: '100vw', height: '100vh', overflowY: 'auto', background: '#07101e' }}>
+        <TabErrorBoundary key="recdebut-portal">
+          <Suspense fallback={<TabLoader />}>
+            <DennisBellPortal backendUrl={backendUrl} />
+          </Suspense>
+        </TabErrorBoundary>
+      </div>
+    );
+  }
 
   if (isMobileWriterRoute) {
     return (

@@ -987,7 +987,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                           </td>
                           <td style={{ padding: '10px 12px', textAlign: 'right' }}>
                             <button
-                              onClick={() => alert(`Exporting ${sess.id} stems directly to FL Studio DAW & VST3 Host...`)}
+                              onClick={() => alert(`Exporting ${sess.id} stems directly to Sovereign DAW & VST3 Host...`)}
                               style={{ background: 'rgba(217, 119, 6, 0.2)', border: '1px solid #d97706', color: '#f59e0b', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: '700', cursor: 'pointer' }}
                             >
                               🎹 Export to DAW

@@ -45,6 +45,26 @@ const ChannelRack = () => {
         {/* Action Controls */}
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
           <button
+            onClick={() => generateAIBeat('random')}
+            title="Roll a Clean Random Beat (Organic, Rock, Boom-Bap, R&B, Lo-Fi - Zero Cyberpunk)"
+            style={{
+              background: 'rgba(255, 193, 7, 0.15)',
+              border: '1px solid #ffc107',
+              borderRadius: '4px',
+              color: '#ffc107',
+              padding: '3px 8px',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <Sparkles size={11} /> 🎲 Random Beat
+          </button>
+
+          <button
             onClick={() => generateAIBeat('trap')}
             title="Generate AI Trap Groove"
             style={{

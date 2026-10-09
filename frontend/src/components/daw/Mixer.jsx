@@ -3,6 +3,8 @@ import { theme } from '../../styles/theme';
 import { SlidersHorizontal, Activity, Zap, Radio } from 'lucide-react';
 import { useDawStore } from './dawStore';
 
+import { LatencyMonitorHUD } from './LatencyMonitorHUD';
+
 const Mixer = () => {
   const channels = useDawStore(state => state.channels);
   const masterVolume = useDawStore(state => state.masterVolume);
@@ -24,22 +26,22 @@ const Mixer = () => {
     fetchAvailableVstPlugins();
   }, []);
 
-  // Meter Animation Level Simulation
+  // Meter Animation Level Simulation (Throttled to 16 FPS to prevent main-thread garbage collection stutter)
   const [meterLevels, setMeterLevels] = useState({});
 
   useEffect(() => {
     let animId;
-    const updateMeters = () => {
+    let lastUpdate = 0;
+    const updateMeters = (time) => {
       if (isPlaying) {
-        const levels = { master: Math.random() * 0.7 + 0.2 };
-        channels.forEach(ch => {
-          if (!ch.mute) {
-            levels[ch.id] = Math.random() * 0.6 + 0.1;
-          } else {
-            levels[ch.id] = 0;
-          }
-        });
-        setMeterLevels(levels);
+        if (time - lastUpdate >= 60) {
+          lastUpdate = time;
+          const levels = { master: Math.random() * 0.7 + 0.2 };
+          channels.forEach(ch => {
+            levels[ch.id] = ch.mute ? 0 : Math.random() * 0.6 + 0.1;
+          });
+          setMeterLevels(levels);
+        }
       } else {
         setMeterLevels({});
       }
@@ -68,6 +70,7 @@ const Mixer = () => {
             MIXER & MASTER EFFECTS RACK
           </h3>
         </div>
+        <LatencyMonitorHUD compact={true} />
       </div>
 
       <div style={{ display: 'flex', gap: '12px', flex: 1, overflow: 'hidden' }}>

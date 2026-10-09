@@ -31,7 +31,7 @@ const HUBS_DATA = [
     desc: 'Full-spectrum creative studio generating industry-standard scripts, beats, and 4K video.',
     entities: [
       { name: 'Universal Screenwriting AST', desc: 'Hollywood screenplays, FDX serializer & Book-to-Script matrix', tab: 'unified_creation' },
-      { name: 'FL Music Studio (DAW)', desc: '16/32-step drum sequencer, MIDI piano roll, 8-track mixer & Tone.js', tab: 'music_daw' },
+      { name: 'AI Music Studio (DAW)', desc: '16/32-step drum sequencer, MIDI piano roll, 8-track mixer & Tone.js', tab: 'music_daw' },
       { name: 'Multimedia Video Studio', desc: 'ComfyUI Wan2.1 generative video & RTX 4090 NVENC 4K master MP4 export', tab: 'video_agent' },
       { name: 'Neural Voice & Audio Studio', desc: 'ElevenLabs zero-shot voice cloning & AI song generation', tab: 'neural_audio' }
     ]

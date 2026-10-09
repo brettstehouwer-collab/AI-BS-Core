@@ -91,6 +91,23 @@ class VSTBridgeNode {
       this.ws = new WebSocket(`ws://localhost:8013/ws/vst/${pluginId}`);
       this.ws.binaryType = "arraybuffer";
       
+      this.ws.onerror = () => {
+        // Fail-safe: Revert to dry pass-through immediately so audio never cuts out
+        if (this.workletNode) {
+          this.workletNode.disconnect();
+          this.input.disconnect(this.workletNode);
+        }
+        this.input.connect(this.dryNode);
+      };
+
+      this.ws.onclose = () => {
+        if (this.workletNode) {
+          this.workletNode.disconnect();
+          this.input.disconnect(this.workletNode);
+        }
+        this.input.connect(this.dryNode);
+      };
+
       this.workletNode.port.onmessage = (event) => {
         if (this.ws && this.ws.readyState === 1) { // OPEN
           this.ws.send(event.data);
@@ -492,7 +509,7 @@ export const useDawStore = create((set, get) => ({
   // App state
   isPlaying: false,
   playMode: 'PAT', // 'PAT' or 'SONG'
-  bpm: 130,
+  bpm: 85,
   currentStep: 0,
   currentBar: 0,
   stepCount: 16, // 16 or 32
@@ -521,9 +538,13 @@ export const useDawStore = create((set, get) => ({
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 1500);
-      const res = await fetch('http://localhost:8013/api/vst/scan', { signal: controller.signal });
+      let res = await fetch('http://localhost:8013/api/vst/scan', { signal: controller.signal }).catch(() => null);
       clearTimeout(timeoutId);
-      if (!res.ok) return;
+      if (!res || !res.ok) {
+        // Fallback to FastAPI Port 8080 VST scan endpoint
+        res = await fetch('http://127.0.0.1:8080/api/vst/scan').catch(() => null);
+      }
+      if (!res || !res.ok) return;
       const data = await res.json();
       if (data && data.status === 'success') {
         set(state => ({ fxState: { ...state.fxState, vst: { ...state.fxState.vst, availablePlugins: data.plugins || [] } } }));
@@ -572,17 +593,69 @@ export const useDawStore = create((set, get) => ({
     playlistTracks: typeof tracksOrFn === 'function' ? tracksOrFn(state.playlistTracks) : tracksOrFn
   })),
 
-  addPlaylistClip: (trackId, clip) => set(state => {
-    const exists = state.playlistTracks.some(t => t.id === trackId);
-    if (!exists) {
-      return {
-        playlistTracks: [...state.playlistTracks, { id: trackId, name: clip.title || 'Audio Clip', clips: [clip] }]
-      };
+  addPlaylistClip: (trackIdOrClip, maybeClip) => set(state => {
+    let targetTrackId = trackIdOrClip;
+    let clipData = maybeClip;
+
+    if (typeof trackIdOrClip === 'object' && !maybeClip) {
+      clipData = trackIdOrClip;
+      targetTrackId = clipData.trackId || null;
     }
+
+    if (!clipData) return {};
+
+    const formattedClip = {
+      id: clipData.id || `clip_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      bar: clipData.bar ?? clipData.startBar ?? 0,
+      length: clipData.length ?? clipData.lengthBars ?? 8,
+      title: clipData.title || clipData.name || 'Audio Clip',
+      color: clipData.color || '#00f0ff',
+      audioUrl: clipData.audioUrl || clipData.url || clipData.buffer || null,
+      audioBuffer: clipData.audioBuffer || clipData.buffer || null,
+      slipOffset: clipData.slipOffset || 0,
+      muted: !!clipData.muted
+    };
+
+    if (targetTrackId) {
+      const exists = state.playlistTracks.some(t => t.id === targetTrackId);
+      if (exists) {
+        return {
+          playlistTracks: state.playlistTracks.map(t => 
+            t.id === targetTrackId ? { ...t, clips: [...t.clips, formattedClip] } : t
+          )
+        };
+      }
+    }
+
+    const newTrackId = Date.now();
     return {
-      playlistTracks: state.playlistTracks.map(t => 
-        t.id === trackId ? { ...t, clips: [...t.clips, clip] } : t
-      )
+      playlistTracks: [
+        ...state.playlistTracks,
+        { id: newTrackId, name: formattedClip.title, clips: [formattedClip] }
+      ]
+    };
+  }),
+
+  // Add multi-track stems directly onto Arranger tracks
+  addStemTracksToPlaylist: (stemsArray, projectName = 'Stems') => set(state => {
+    const timestamp = Date.now();
+    const baseTracks = state.playlistTracks.filter(t => !String(t.id).startsWith('stem_track_'));
+    const newTracks = stemsArray.map((stem, idx) => ({
+      id: `stem_track_${timestamp}_${idx}`,
+      name: `${stem.name || 'Stem'} [${projectName}]`,
+      clips: [{
+        id: `stem_clip_${timestamp}_${idx}`,
+        bar: 0,
+        length: stem.length || 32,
+        title: stem.name || `Stem ${idx + 1}`,
+        color: stem.color || (idx === 0 ? '#00f0ff' : idx === 1 ? '#10b981' : idx === 2 ? '#f59e0b' : idx === 3 ? '#a855f7' : '#f43f5e'),
+        audioUrl: stem.url || null,
+        slipOffset: 0,
+        muted: false
+      }]
+    }));
+    return {
+      playlistTracks: [...baseTracks, ...newTracks]
     };
   }),
 
@@ -601,6 +674,9 @@ export const useDawStore = create((set, get) => ({
       if (Tone.context.state !== 'running') {
         await Tone.start();
       }
+      // Rock-solid 45ms scheduling buffer to prevent thread starvation & playback slowdown
+      Tone.context.lookAhead = 0.045;
+      Tone.context.updateInterval = 0.025;
     } catch (e) {
       console.warn("Tone.start() waiting for user gesture:", e);
     }
@@ -621,7 +697,7 @@ export const useDawStore = create((set, get) => ({
         const isMetronome = state.isMetronomeOn;
 
         const currentStepTick = transportStepIndex % stepCount;
-        const currentBarTick = Math.floor(transportStepIndex / stepCount) % 16;
+        const currentBarTick = Math.floor(transportStepIndex / stepCount);
         transportStepIndex++;
 
         // Metronome Click on every beat (every 4 steps in 16th time)
@@ -931,10 +1007,69 @@ export const useDawStore = create((set, get) => ({
     });
   },
 
-  // AI Beat Assistant Preset Generator
-  generateAIBeat: (genre = 'trap') => {
+  // AI Beat Assistant Preset Generator (Supports Clean Random Grooves - Zero Cyberpunk)
+  generateAIBeat: (genre = 'random') => {
     set(state => {
-      if (genre === 'trap') {
+      let g = (genre || 'random').toLowerCase();
+      const cleanPool = ['suno_rock', 'boombap', 'lofi', 'rnb', 'funk_pop', 'acoustic_ballad', 'melodic_trap', 'synthwave'];
+      if (g.includes('random') || g === 'shuffle' || g === 'roll') {
+        const randIdx = Math.floor(Math.random() * cleanPool.length);
+        g = cleanPool[randIdx];
+      }
+
+      if (g.includes('boombap') || g.includes('hiphop') || g.includes('hip hop')) {
+        // 90s Boom-Bap (90 BPM) - Punchy kick, snappy acoustic snare, swinging hats
+        return {
+          bpm: 90,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false] };
+            if (ch.type === 'snare' || ch.type === 'clap') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, false, true, true, true, false, true, true, true, false, true, true, true, false, true, true] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'G1', duration: 2 }, { step: 6, note: 'Bb1', duration: 2 }, { step: 9, note: 'C2', duration: 2 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'G3', duration: 4 }, { step: 8, note: 'F3', duration: 4 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('rnb') || g.includes('soul')) {
+        // Smooth R&B Soul (78 BPM) - Laid-back kick, emotional progression
+        return {
+          bpm: 78,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false] };
+            if (ch.type === 'snare' || ch.type === 'clap') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, true, false, true, true, true, false, true, true, true, false, true, true, true, false, true] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'Eb1', duration: 3 }, { step: 7, note: 'Ab1', duration: 3 }, { step: 12, note: 'Bb1', duration: 2 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'Eb3', duration: 4 }, { step: 6, note: 'G3', duration: 4 }, { step: 12, note: 'Bb3', duration: 4 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('funk') || g.includes('pop')) {
+        // Upbeat Funk-Pop (108 BPM) - Energetic syncopation
+        return {
+          bpm: 108,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, true, false, false, true, false, false, true, false, false, false, true, false] };
+            if (ch.type === 'snare' || ch.type === 'clap') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'E1', duration: 1 }, { step: 3, note: 'G1', duration: 1 }, { step: 7, note: 'A1', duration: 1 }, { step: 10, note: 'D2', duration: 1 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 4, note: 'E3', duration: 2 }, { step: 12, note: 'G3', duration: 2 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('acoustic') || g.includes('ballad')) {
+        // Organic Acoustic Ballad (76 BPM) - Natural pulse, resonant acoustic piano
+        return {
+          bpm: 76,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false] };
+            if (ch.type === 'snare' || ch.type === 'clap') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'C2', duration: 4 }, { step: 8, note: 'G1', duration: 4 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'E3', duration: 4 }, { step: 8, note: 'D3', duration: 4 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('trap') || g.includes('drill')) {
         return {
           bpm: 140,
           channels: state.channels.map(ch => {
@@ -946,20 +1081,145 @@ export const useDawStore = create((set, get) => ({
             return ch;
           })
         };
-      } else if (genre === 'synthwave') {
+      } else if (g.includes('synthwave') || g.includes('80s') || g.includes('retro')) {
         return {
-          bpm: 120,
+          bpm: 115,
           channels: state.channels.map(ch => {
             if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false] };
             if (ch.type === 'snare') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
             if (ch.type === 'hihat') return { ...ch, steps: [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false] };
-            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'A1', duration: 1 }, { step: 2, note: 'A1', duration: 1 }, { step: 4, note: 'A1', duration: 1 }, { step: 6, note: 'A1', duration: 1 }, { step: 8, note: 'F1', duration: 1 }, { step: 10, note: 'F1', duration: 1 }, { step: 12, note: 'G1', duration: 1 }, { step: 14, note: 'G1', duration: 1 }] };
-            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'A3', duration: 4 }, { step: 8, note: 'F3', duration: 4 }, { step: 12, note: 'G3', duration: 4 }] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'D2', duration: 1 }, { step: 2, note: 'D2', duration: 1 }, { step: 4, note: 'D2', duration: 1 }, { step: 6, note: 'D2', duration: 1 }, { step: 8, note: 'Bb1', duration: 1 }, { step: 10, note: 'Bb1', duration: 1 }, { step: 12, note: 'C2', duration: 1 }, { step: 14, note: 'A1', duration: 1 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'D4', duration: 4 }, { step: 8, note: 'F4', duration: 4 }, { step: 12, note: 'G4', duration: 4 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('lofi') || g.includes('lo-fi') || g.includes('chill')) {
+        return {
+          bpm: 82,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false] };
+            if (ch.type === 'snare' || ch.type === 'clap') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, false, true, false, true, false, true, true, true, false, true, false, true, false, true, false] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'Eb2', duration: 3 }, { step: 6, note: 'C2', duration: 2 }, { step: 10, note: 'F2', duration: 3 }, { step: 14, note: 'Bb1', duration: 2 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'G4', duration: 4 }, { step: 6, note: 'Eb4', duration: 4 }, { step: 10, note: 'C4', duration: 4 }] };
+            return ch;
+          })
+        };
+      } else if (g.includes('cyberpunk') || g.includes('industrial') || g.includes('dark')) {
+        return {
+          bpm: 130,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, true, false, false, true, false, true, false, false, true, false, false, true, false] };
+            if (ch.type === 'snare') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'C1', duration: 2 }, { step: 4, note: 'C1', duration: 2 }, { step: 8, note: 'Ab0', duration: 2 }, { step: 12, note: 'G0', duration: 2 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'C3', duration: 2 }, { step: 4, note: 'Eb3', duration: 2 }, { step: 8, note: 'G3', duration: 2 }, { step: 12, note: 'B2', duration: 2 }] };
+            return ch;
+          })
+        };
+      } else {
+        // Rock / Suno 85 BPM Anthem
+        return {
+          bpm: 85,
+          channels: state.channels.map(ch => {
+            if (ch.type === 'kick') return { ...ch, steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false] };
+            if (ch.type === 'snare') return { ...ch, steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false] };
+            if (ch.type === 'hihat') return { ...ch, steps: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false] };
+            if (ch.type === 'bass') return { ...ch, midiNotes: [{ step: 0, note: 'A1', duration: 2 }, { step: 4, note: 'F1', duration: 2 }, { step: 8, note: 'C2', duration: 2 }, { step: 12, note: 'G1', duration: 2 }] };
+            if (ch.type === 'lead') return { ...ch, midiNotes: [{ step: 0, note: 'A3', duration: 4 }, { step: 8, note: 'C4', duration: 4 }] };
             return ch;
           })
         };
       }
-      return state;
+    });
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // NATURAL LANGUAGE AI MUSIC ASSISTANT DISPATCHER & STATE
+  // ═══════════════════════════════════════════════════════════════════════════
+  assistantDrawerOpen: false,
+  setAssistantDrawerOpen: (open) => set({ assistantDrawerOpen: open }),
+  toggleAssistantDrawer: () => set(state => ({ assistantDrawerOpen: !state.assistantDrawerOpen })),
+
+  assistantHistory: [
+    {
+      role: 'assistant',
+      content: "👋 Welcome to your **AI-BS Sovereign Music & Audio Assistant**, running live on your RTX 4090.\n\nYou can collaborate with me in natural language:\n- *'Set tempo to 120 and make a synthwave beat'*\n- *'Play track'*, *'Stop playback'*, *'Turn master down 3dB'*\n- *'Open Wave Studio'*, *'Separate stems'*, *'Show Mixer'*\n- *'Suggest chord progression for emotional minor'*",
+      suggestions: ["🎼 Make Song With Assets", "⏱ Set Tempo to 85 BPM", "🥁 Compose Synthwave Beat", "✨ Open AI Stem Suite"],
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  ],
+
+  addAssistantMessage: (msg) => set(state => ({
+    assistantHistory: [
+      ...state.assistantHistory,
+      {
+        ...msg,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ]
+  })),
+
+  clearAssistantHistory: () => set({ assistantHistory: [] }),
+
+  executeAssistantActions: (actions = []) => {
+    if (!Array.isArray(actions) || actions.length === 0) return;
+    const store = get();
+    actions.forEach(act => {
+      try {
+        switch (act.type) {
+          case 'SET_BPM':
+            if (act.bpm) store.setBpm(Number(act.bpm));
+            break;
+          case 'TOGGLE_PLAY':
+            store.togglePlay();
+            break;
+          case 'STOP_PLAYBACK':
+            if (store.isPlaying) store.togglePlay();
+            break;
+          case 'SET_VOLUME':
+            if (act.volume !== undefined) store.setMasterVolume(Number(act.volume));
+            break;
+          case 'SET_VIEW':
+            if (act.view) store.setActiveView(act.view);
+            break;
+          case 'GENERATE_BEAT':
+            if (act.genre) store.generateAIBeat(act.genre);
+            break;
+          case 'MUTE_CHANNEL':
+            if (act.channelId) store.toggleChannelMute(act.channelId);
+            break;
+          case 'SET_FX':
+            if (act.fx && store.fxState && store.fxState[act.fx]) {
+              set(s => ({
+                fxState: {
+                  ...s.fxState,
+                  [act.fx]: { ...s.fxState[act.fx], enabled: true, ...(act.params || {}) }
+                }
+              }));
+            }
+            break;
+          case 'SEND_TO_STUDIO':
+          case 'LOAD_TO_STUDIO': {
+            const octStems = [
+              { name: 'Vocals', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/vocals.wav', color: '#00f0ff', length: 64 },
+              { name: 'Drums', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/drums.wav', color: '#10b981', length: 64 },
+              { name: 'Bass', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/bass.wav', color: '#f59e0b', length: 64 },
+              { name: 'Instrumental Bed (Repaired)', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/other_repaired.wav', color: '#a855f7', length: 64 },
+              { name: 'Master Repaired', url: 'http://127.0.0.1:8080/api/v1/audio/demucs/file/october_7v2_remastered/October_7v2_Master_Repaired.wav', color: '#f43f5e', length: 64 }
+            ];
+            store.addStemTracksToPlaylist(octStems, 'October 7v2 Repaired');
+            store.setBpm(85);
+            store.setPlayMode('SONG');
+            store.setActiveView('playlist');
+            break;
+          }
+          default:
+            break;
+        }
+      } catch (err) {
+        console.warn('[Assistant Action Dispatch Error]:', err);
+      }
     });
   },
 
