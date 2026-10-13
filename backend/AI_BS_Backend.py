@@ -620,6 +620,14 @@ except ImportError as e:
     print(f"Warning: Could not load nda_signer_router: {e}")
 
 try:
+    from routers.rec_debut_router import router as rec_debut_router, legacy_router as rec_debut_legacy_router
+    app.include_router(rec_debut_router)
+    app.include_router(rec_debut_legacy_router)
+except ImportError as e:
+    print(f"Warning: Could not load rec_debut_router: {e}")
+
+
+try:
     from routers.chef_orders_router import router as chef_orders_router
     app.include_router(chef_orders_router)
 except ImportError as e:

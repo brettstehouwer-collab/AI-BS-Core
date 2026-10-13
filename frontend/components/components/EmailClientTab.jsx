@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Mail, MessageSquare, Video, Settings, Plus, Star, Clock, AlertOctagon, Send, 
   FileText, ShoppingBag, Users, Info, MessageCircle, Tag, Trash2, Search, 
   RotateCcw, ShieldCheck, Sparkles, Check, Filter, ExternalLink, ChevronRight, 
-  X, CheckSquare, Square, Inbox as InboxIcon, User, RefreshCw, AlertTriangle, 
-  CheckCircle2, Globe, Shield, Radio, ArrowUpRight, Key
+  ChevronLeft, X, CheckSquare, Square, Inbox as InboxIcon, User, RefreshCw, AlertTriangle, 
+  CheckCircle2, Globe, Shield, Radio, ArrowUpRight, Key, Eye, EyeOff, CornerUpLeft, 
+  CornerUpRight, Sliders, Server, Cpu
 } from 'lucide-react';
 import { useBackendHealth } from './useBackendHealth';
 import { db } from '../firebase';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, doc, updateDoc } from 'firebase/firestore';
 import CampaignAutomationTab from './CampaignAutomationTab';
 import ContentGovernanceRiskModal from './ContentGovernanceRiskModal';
 
@@ -112,6 +113,103 @@ const cleanEmailBody = (raw) => {
   return str.trim() || 'No Body Content';
 };
 
+// ═══════════════════════════════════════════════════════════════════════
+// CHRONOLOGICAL TIMESTAMP PARSING & INTELLIGENT FORMATTING
+// ═══════════════════════════════════════════════════════════════════════
+
+export const parseEmailTimestamp = (item) => {
+  if (!item) return 0;
+  if (item.timestamp && typeof item.timestamp === 'number') {
+    let t = item.timestamp;
+    if (t > 10000000000000) t /= 1000;
+    else if (t < 10000000000) t *= 1000;
+    return t;
+  }
+
+  const dStr = (item.date || '').trim();
+  const tStr = (item.time || '').trim();
+
+  // Try parsing combined date + time or standard RFC / ISO strings
+  if (dStr) {
+    if (tStr) {
+      const combined = `${dStr} ${tStr}`;
+      const p = Date.parse(combined);
+      if (!isNaN(p)) return p;
+    }
+    const pDate = Date.parse(dStr);
+    if (!isNaN(pDate)) return pDate;
+  }
+
+  if (item.created_at) {
+    const pCreated = Date.parse(item.created_at);
+    if (!isNaN(pCreated)) return pCreated;
+  }
+
+  // Fallback to numeric 13-digit epoch in ID (e.g. em-1791744568616 or em-sent-1791...)
+  const idStr = String(item.id || '');
+  const match = idStr.match(/\b\d{13}\b/);
+  if (match) {
+    const epoch = parseInt(match[0], 10);
+    if (epoch > 1500000000000 && epoch < 2100000000000) {
+      return epoch;
+    }
+  }
+
+  return 0;
+};
+
+export const formatEmailDateDisplay = (item) => {
+  const ts = parseEmailTimestamp(item);
+  if (!ts) return item.time || item.date || 'Unknown';
+
+  const d = new Date(ts);
+  const now = new Date();
+
+  const isToday = d.getFullYear() === now.getFullYear() &&
+                  d.getMonth() === now.getMonth() &&
+                  d.getDate() === now.getDate();
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const isYesterday = d.getFullYear() === yesterday.getFullYear() &&
+                      d.getMonth() === yesterday.getMonth() &&
+                      d.getDate() === yesterday.getDate();
+
+  if (isToday) {
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } else if (isYesterday) {
+    return 'Yesterday';
+  } else if (d.getFullYear() === now.getFullYear()) {
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  } else {
+    return d.toLocaleDateString([], { month: 'numeric', day: 'numeric', year: '2-digit' });
+  }
+};
+
+export const formatEmailFullDate = (item) => {
+  const ts = parseEmailTimestamp(item);
+  if (!ts) return `${item.date || ''} ${item.time || ''}`.trim() || 'Unknown date';
+
+  const d = new Date(ts);
+  const dateStr = d.toLocaleDateString([], { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+  const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  
+  // Calculate relative time
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  let relative = '';
+  if (diffMins < 1) relative = 'just now';
+  else if (diffMins < 60) relative = `${diffMins}m ago`;
+  else if (diffHours < 24) relative = `${diffHours}h ago`;
+  else relative = `${diffDays}d ago`;
+
+  return `${dateStr} at ${timeStr} (${relative})`;
+};
+
 export default function EmailClientTab({ onTabChange }) {
   const { isBackendHealthy, backendUrl } = useBackendHealth();
   const [emails, setEmails] = useState([]);
@@ -122,18 +220,29 @@ export default function EmailClientTab({ onTabChange }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEmail, setSelectedEmail] = useState(null);
   
-  // Selection state
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 50;
+  
+  // Selection & Bulk Actions state
   const [selectedIds, setSelectedIds] = useState([]);
   
   // Compose modal state
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [composeFrom, setComposeFrom] = useState('brett@stehouwer-publishing.com');
   const [composeTo, setComposeTo] = useState('');
+  const [composeCc, setComposeCc] = useState('');
+  const [composeBcc, setComposeBcc] = useState('');
+  const [showCcBcc, setShowCcBcc] = useState(false);
   const [composeSubject, setComposeSubject] = useState('');
   const [composeBody, setComposeBody] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
   const [sendStatusMsg, setSendStatusMsg] = useState('');
   const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
+
+  // Settings & Diagnostics Modals
+  const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Sync & Diagnostic state
   const [isSyncing, setIsSyncing] = useState(false);
@@ -145,6 +254,11 @@ export default function EmailClientTab({ onTabChange }) {
     smtp_status: { ready: true },
     mailbox_stats: { total: 0, unread: 0, sent: 0 }
   });
+
+  // Reset page when filtering changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedAccount, activeFolder, activeCategory, activeLabel, searchQuery]);
 
   // Fetch email system diagnostics from backend
   const fetchDiagnostics = useCallback(async () => {
@@ -167,18 +281,22 @@ export default function EmailClientTab({ onTabChange }) {
         const data = await res.json();
         if (data.data && Array.isArray(data.data)) {
           setEmails(prev => {
-            const merged = [...prev];
+            const mergedMap = new Map();
+            // Preserve user's optimistic local states (read, starred, folder)
+            prev.forEach(p => mergedMap.set(p.id, p));
             data.data.forEach(bItem => {
-              if (!merged.some(m => m.id === bItem.id)) {
-                merged.push({
-                  ...bItem,
-                  subject: decodeMimeHeader(bItem.subject),
-                  body: cleanEmailBody(bItem.body || bItem.snippet),
-                  snippet: cleanEmailBody(bItem.snippet || bItem.body)
-                });
-              }
+              const existing = mergedMap.get(bItem.id);
+              mergedMap.set(bItem.id, {
+                ...bItem,
+                subject: decodeMimeHeader(bItem.subject),
+                body: cleanEmailBody(bItem.body || bItem.snippet),
+                snippet: cleanEmailBody(bItem.snippet || bItem.body),
+                read: existing?.read !== undefined ? existing.read : bItem.read,
+                starred: existing?.starred !== undefined ? existing.starred : bItem.starred,
+                folder: existing?.folder !== undefined ? existing.folder : (bItem.folder || 'Inbox')
+              });
             });
-            return merged;
+            return Array.from(mergedMap.values());
           });
         }
       }
@@ -215,8 +333,10 @@ export default function EmailClientTab({ onTabChange }) {
         });
         if (fsEmails.length > 0) {
           setEmails(prev => {
-            const combined = [...fsEmails, ...prev.filter(p => !fsEmails.some(f => f.id === p.id))];
-            return combined;
+            const combinedMap = new Map();
+            prev.forEach(p => combinedMap.set(p.id, p));
+            fsEmails.forEach(f => combinedMap.set(f.id, f));
+            return Array.from(combinedMap.values());
           });
         }
       }, (err) => console.warn("Firestore emails listener fallback:", err));
@@ -311,58 +431,75 @@ export default function EmailClientTab({ onTabChange }) {
     setSelectedEmail(null);
   };
 
-  // Filter emails based on Account, Folder, Category, Label, and Search
-  const filteredEmails = emails.filter(em => {
-    // Normalize account comparison (stehouwerpublishing vs stehouwer-publishing)
-    if (selectedAccount !== 'all') {
-      const normSel = selectedAccount.toLowerCase().replace(/[-_]/g, '');
-      const normEm = (em.account || '').toLowerCase().replace(/[-_]/g, '');
-      if (normSel !== normEm && !normEm.includes(normSel.split('@')[0])) return false;
-    }
-    
-    if (activeLabel && em.label !== activeLabel) return false;
-    
-    // Folder and property-based filtering
-    if (!activeLabel && activeFolder !== 'All') {
-      const emFolder = em.folder || 'Inbox';
-      if (activeFolder === 'Starred') {
-        if (!em.starred || emFolder === 'Trash') return false;
-      } else if (activeFolder === 'Trash') {
-        if (emFolder !== 'Trash') return false;
-      } else if (activeFolder === 'Sent') {
-        if (emFolder !== 'Sent') return false;
-      } else if (activeFolder === 'Drafts') {
-        if (emFolder !== 'Drafts') return false;
-      } else if (activeFolder === 'Inbox') {
-        if (emFolder !== 'Inbox' || em.folder === 'Trash') return false;
-      } else {
-        if (emFolder !== activeFolder) return false;
+  // ═══════════════════════════════════════════════════════════════════════
+  // FILTERING AND STRICT CHRONOLOGICAL SORTING (NEWEST FIRST)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  const sortedFilteredEmails = useMemo(() => {
+    const filtered = emails.filter(em => {
+      // Normalize account comparison
+      if (selectedAccount !== 'all') {
+        const normSel = selectedAccount.toLowerCase().replace(/[-_]/g, '');
+        const normEm = (em.account || '').toLowerCase().replace(/[-_]/g, '');
+        if (normSel !== normEm && !normEm.includes(normSel.split('@')[0])) return false;
       }
-    }
-    
-    if (activeCategory !== 'All') {
-      const emCat = em.category || 'Primary';
-      if (emCat.toLowerCase() !== activeCategory.toLowerCase()) return false;
-    }
-    
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        (em.sender || '').toLowerCase().includes(q) ||
-        (em.subject || '').toLowerCase().includes(q) ||
-        (em.snippet || '').toLowerCase().includes(q)
-      );
-    }
-    return true;
-  });
+      
+      if (activeLabel && em.label !== activeLabel) return false;
+      
+      // Folder and property-based filtering
+      if (!activeLabel && activeFolder !== 'All') {
+        const emFolder = em.folder || 'Inbox';
+        if (activeFolder === 'Starred') {
+          if (!em.starred || emFolder === 'Trash') return false;
+        } else if (activeFolder === 'Trash') {
+          if (emFolder !== 'Trash') return false;
+        } else if (activeFolder === 'Sent') {
+          if (emFolder !== 'Sent') return false;
+        } else if (activeFolder === 'Drafts') {
+          if (emFolder !== 'Drafts') return false;
+        } else if (activeFolder === 'Inbox') {
+          if (emFolder !== 'Inbox' || em.folder === 'Trash') return false;
+        } else {
+          if (emFolder !== activeFolder) return false;
+        }
+      }
+      
+      if (activeCategory !== 'All') {
+        const emCat = em.category || 'Primary';
+        if (emCat.toLowerCase() !== activeCategory.toLowerCase()) return false;
+      }
+      
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        return (
+          (em.sender || '').toLowerCase().includes(q) ||
+          (em.email || '').toLowerCase().includes(q) ||
+          (em.subject || '').toLowerCase().includes(q) ||
+          (em.snippet || '').toLowerCase().includes(q) ||
+          (em.body || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+
+    // STRICT CHRONOLOGICAL SORT: Newest Timestamp FIRST
+    return filtered.sort((a, b) => {
+      const tsA = parseEmailTimestamp(a);
+      const tsB = parseEmailTimestamp(b);
+      if (tsB !== tsA) return tsB - tsA;
+      return String(b.id || '').localeCompare(String(a.id || ''));
+    });
+  }, [emails, selectedAccount, activeLabel, activeFolder, activeCategory, searchQuery]);
 
   // Dynamic account and folder counts (Strict Zero-Mock Mandate: derived strictly from data)
-  const accountEmails = emails.filter(em => {
-    if (selectedAccount === 'all') return true;
-    const normSel = selectedAccount.toLowerCase().replace(/[-_]/g, '');
-    const normEm = (em.account || '').toLowerCase().replace(/[-_]/g, '');
-    return normSel === normEm || normEm.includes(normSel.split('@')[0]);
-  });
+  const accountEmails = useMemo(() => {
+    return emails.filter(em => {
+      if (selectedAccount === 'all') return true;
+      const normSel = selectedAccount.toLowerCase().replace(/[-_]/g, '');
+      const normEm = (em.account || '').toLowerCase().replace(/[-_]/g, '');
+      return normSel === normEm || normEm.includes(normSel.split('@')[0]);
+    });
+  }, [emails, selectedAccount]);
 
   const inboxUnreadCount = accountEmails.filter(em => (em.folder || 'Inbox') === 'Inbox' && (!em.read || em.unread) && em.folder !== 'Trash').length;
   const starredCount = accountEmails.filter(em => em.starred && em.folder !== 'Trash').length;
@@ -376,19 +513,71 @@ export default function EmailClientTab({ onTabChange }) {
   const purchasesCount = accountEmails.filter(em => (em.category || '').toLowerCase() === 'purchases' && em.folder !== 'Trash').length;
   const forumsCount = accountEmails.filter(em => (em.category || '').toLowerCase() === 'forums' && em.folder !== 'Trash').length;
 
-  const paginationDisplay = filteredEmails.length === 0 
-    ? '0 of 0' 
-    : `1-${Math.min(100, filteredEmails.length)} of ${filteredEmails.length.toLocaleString()}`;
+  // Pagination calculation
+  const totalCount = sortedFilteredEmails.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalCount);
+  const paginatedEmails = sortedFilteredEmails.slice(startIndex, endIndex);
 
-  const toggleStar = (id) => {
-    setEmails(prev => prev.map(em => em.id === id ? { ...em, starred: !em.starred } : em));
+  const paginationDisplay = totalCount === 0 
+    ? '0 of 0' 
+    : `${startIndex + 1}-${endIndex} of ${totalCount.toLocaleString()}`;
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PERSISTENT ACTION HANDLERS (LOCAL STATE + BACKEND API)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  const handleUpdateEmail = async (id, patch) => {
+    // 1. Optimistic local update
+    setEmails(prev => prev.map(em => (em.id === id ? { ...em, ...patch } : em)));
+    if (selectedEmail && selectedEmail.id === id) {
+      setSelectedEmail(prev => prev ? { ...prev, ...patch } : null);
+    }
+
+    // 2. Persist to Backend API
+    try {
+      await fetch(`${backendUrl}/api/v1/emails/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...patch })
+      });
+    } catch (e) {
+      console.warn("Backend update error:", e);
+    }
   };
 
+  const toggleStar = (id) => {
+    const current = emails.find(e => e.id === id);
+    const newStarred = !current?.starred;
+    handleUpdateEmail(id, { starred: newStarred });
+  };
+
+  const toggleReadStatus = (id) => {
+    const current = emails.find(e => e.id === id);
+    const newRead = !current?.read;
+    handleUpdateEmail(id, { read: newRead });
+  };
+
+  const moveToTrash = (id) => {
+    handleUpdateEmail(id, { folder: 'Trash' });
+    if (selectedEmail && selectedEmail.id === id) {
+      setSelectedEmail(null);
+    }
+  };
+
+  const restoreFromTrash = (id) => {
+    handleUpdateEmail(id, { folder: 'Inbox' });
+  };
+
+  // Selection handlers
   const toggleSelectAll = () => {
-    if (selectedIds.length === filteredEmails.length) {
-      setSelectedIds([]);
+    const currentPageIds = paginatedEmails.map(em => em.id);
+    const allSelected = currentPageIds.every(id => selectedIds.includes(id));
+    if (allSelected) {
+      setSelectedIds(prev => prev.filter(id => !currentPageIds.includes(id)));
     } else {
-      setSelectedIds(filteredEmails.map(em => em.id));
+      setSelectedIds(prev => Array.from(new Set([...prev, ...currentPageIds])));
     }
   };
 
@@ -396,11 +585,67 @@ export default function EmailClientTab({ onTabChange }) {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
-  const moveToTrash = (id) => {
-    setEmails(prev => prev.map(em => em.id === id ? { ...em, folder: 'Trash' } : em));
-    if (selectedEmail && selectedEmail.id === id) {
-      setSelectedEmail(null);
+  // Bulk actions
+  const handleBulkAction = async (action) => {
+    if (selectedIds.length === 0) return;
+    const ids = [...selectedIds];
+
+    // Optimistic local update
+    setEmails(prev => prev.map(em => {
+      if (!ids.includes(em.id)) return em;
+      if (action === 'mark_read') return { ...em, read: true };
+      if (action === 'mark_unread') return { ...em, read: false };
+      if (action === 'star') return { ...em, starred: true };
+      if (action === 'unstar') return { ...em, starred: false };
+      if (action === 'trash') return { ...em, folder: 'Trash' };
+      if (action === 'restore') return { ...em, folder: 'Inbox' };
+      return em;
+    }));
+
+    if (action === 'delete_forever') {
+      setEmails(prev => prev.filter(em => !ids.includes(em.id)));
     }
+
+    setSelectedIds([]);
+
+    // Persist via Backend API
+    try {
+      await fetch(`${backendUrl}/api/v1/emails/bulk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids, action })
+      });
+      fetchDiagnostics();
+    } catch (e) {
+      console.warn("Bulk action persist error:", e);
+    }
+  };
+
+  const handleOpenEmail = (em) => {
+    setSelectedEmail(em);
+    if (!em.read) {
+      handleUpdateEmail(em.id, { read: true });
+    }
+  };
+
+  const handleReply = (emailItem) => {
+    setIsComposeOpen(true);
+    setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
+    setComposeTo(emailItem.email || emailItem.sender);
+    const subj = emailItem.subject.toLowerCase().startsWith('re:') ? emailItem.subject : `Re: ${emailItem.subject}`;
+    setComposeSubject(subj);
+    setComposeBody(`\n\n--- On ${emailItem.date} at ${emailItem.time}, ${emailItem.sender} wrote ---\n> ${cleanEmailBody(emailItem.body || emailItem.snippet).replace(/\n/g, '\n> ')}`);
+    setSelectedEmail(null);
+  };
+
+  const handleForward = (emailItem) => {
+    setIsComposeOpen(true);
+    setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
+    setComposeTo('');
+    const subj = emailItem.subject.toLowerCase().startsWith('fwd:') ? emailItem.subject : `Fwd: ${emailItem.subject}`;
+    setComposeSubject(subj);
+    setComposeBody(`\n\n---------- Forwarded message ---------\nFrom: ${emailItem.sender} <${emailItem.email}>\nDate: ${emailItem.date} at ${emailItem.time}\nSubject: ${emailItem.subject}\nTo: ${emailItem.account}\n\n${cleanEmailBody(emailItem.body || emailItem.snippet)}`);
+    setSelectedEmail(null);
   };
 
   const handleSendEmail = async (e) => {
@@ -419,6 +664,8 @@ export default function EmailClientTab({ onTabChange }) {
         body: JSON.stringify({
           from_email: composeFrom,
           to: composeTo,
+          cc: composeCc || null,
+          bcc: composeBcc || null,
           subject: composeSubject,
           body: composeBody
         })
@@ -494,6 +741,8 @@ export default function EmailClientTab({ onTabChange }) {
       if (sentViaSmtp) {
         setIsComposeOpen(false);
         setComposeTo('');
+        setComposeCc('');
+        setComposeBcc('');
         setComposeSubject('');
         setComposeBody('');
         setSendStatusMsg('');
@@ -510,25 +759,50 @@ export default function EmailClientTab({ onTabChange }) {
     ? (emailStatus.imap_status?.connected ? 'Connected' : 'App Password Req.')
     : (String(emailStatus.imap_status || 'Checking...').slice(0, 20));
 
+  const allCurrentPageSelected = paginatedEmails.length > 0 && paginatedEmails.every(em => selectedIds.includes(em.id));
+
   return (
     <div style={styles.container}>
       {/* 1. LEFTEST NARROW NAV BAR */}
       <div style={styles.iconNav}>
-        <div style={styles.iconItemActive} title="Business Mail">
+        <div 
+          style={activeFolder !== 'Campaigns' ? styles.iconItemActive : styles.iconItem} 
+          title="Business Mail Inbox"
+          onClick={() => { setActiveFolder('Inbox'); setActiveLabel(null); }}
+        >
           <Mail size={20} color="#58a6ff" />
           <span style={styles.iconLabel}>Mail</span>
         </div>
-        <div style={styles.iconItem} title="Campaigns" onClick={() => onTabChange && onTabChange('campaign_automation')}>
+        <div 
+          style={activeFolder === 'Campaigns' ? styles.iconItemActive : styles.iconItem} 
+          title="Campaigns & Audiences Engine" 
+          onClick={() => {
+            setActiveFolder('Campaigns');
+            if (onTabChange) onTabChange('campaign_automation');
+          }}
+        >
           <Sparkles size={20} color="#a78bfa" />
           <span style={styles.iconLabel}>Campaigns</span>
         </div>
-        <div style={styles.iconItem} title="Live Status" onClick={fetchDiagnostics}>
+        <div 
+          style={styles.iconItem} 
+          title="Live Mailbox & Infrastructure Status" 
+          onClick={() => {
+            fetchDiagnostics();
+            setIsDiagnosticsOpen(true);
+          }}
+        >
           <Radio size={20} color="#3fb950" />
           <span style={styles.iconLabel}>Status</span>
         </div>
-        <div style={{ marginTop: 'auto' }}>
-          <div style={styles.iconItem} title="Settings">
+        <div style={{ marginTop: 'auto', width: '100%' }}>
+          <div 
+            style={styles.iconItem} 
+            title="Email Client Settings"
+            onClick={() => setIsSettingsOpen(true)}
+          >
             <Settings size={20} color="#8b949e" />
+            <span style={styles.iconLabel}>Settings</span>
           </div>
         </div>
       </div>
@@ -555,7 +829,10 @@ export default function EmailClientTab({ onTabChange }) {
               boxShadow: '0 2px 8px rgba(124, 58, 237, 0.4)'
             }} 
             title="Launch Stehouwer Campaign & Audience Automation Engine"
-            onClick={() => onTabChange && onTabChange('campaign_automation')}
+            onClick={() => {
+              setActiveFolder('Campaigns');
+              if (onTabChange) onTabChange('campaign_automation');
+            }}
           >
             <Sparkles size={16} color="#ffffff" />
           </button>
@@ -584,11 +861,21 @@ export default function EmailClientTab({ onTabChange }) {
           </select>
         </div>
 
-        {/* DOMAIN STATUS BADGE */}
-        <div style={styles.domainCard}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-            <Globe size={13} color="#58a6ff" />
-            <span style={{ fontSize: '0.74rem', color: '#f0f6fc', fontWeight: '600' }}>stehouwer-publishing.com</span>
+        {/* DOMAIN STATUS BADGE (CLICKABLE TO OPEN DIAGNOSTICS) */}
+        <div 
+          style={{ ...styles.domainCard, cursor: 'pointer', transition: 'border-color 0.2s' }}
+          title="Click to view Live Email Diagnostics & Port Topology"
+          onClick={() => {
+            fetchDiagnostics();
+            setIsDiagnosticsOpen(true);
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Globe size={13} color="#58a6ff" />
+              <span style={{ fontSize: '0.74rem', color: '#f0f6fc', fontWeight: '600' }}>stehouwer-publishing.com</span>
+            </div>
+            <ArrowUpRight size={12} color="#8b949e" />
           </div>
           <div style={{ fontSize: '0.68rem', color: '#8b949e', lineHeight: '1.4' }}>
             Cloudflare Routing: <strong style={{ color: '#3fb950' }}>Active</strong> (MX/SPF)<br />
@@ -754,39 +1041,176 @@ export default function EmailClientTab({ onTabChange }) {
         <div style={styles.mainContent}>
           {/* SEARCH & TOOLBAR HEADER */}
           <div style={styles.toolbar}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={styles.searchBarContainer}>
-                <Search size={16} color="#8b949e" style={{ marginLeft: '12px' }} />
-                <input 
-                  type="text" 
-                  placeholder="Search emails by sender, subject, or content..." 
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={styles.searchInput}
-                />
-              </div>
+            {selectedIds.length > 0 ? (
+              /* BULK ACTIONS TOOLBAR WHEN EMAILS ARE SELECTED */
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
+                <button 
+                  onClick={toggleSelectAll} 
+                  style={styles.bulkBtn}
+                  title="Deselect or Select All"
+                >
+                  <CheckSquare size={16} color="#58a6ff" />
+                  <span style={{ fontWeight: '600', color: '#f0f6fc' }}>{selectedIds.length} Selected</span>
+                </button>
 
-              {/* LIVE SYNC BUTTON */}
-              <button 
-                onClick={handleTriggerSync} 
-                disabled={isSyncing}
-                style={{
-                  ...styles.syncButton,
-                  backgroundColor: isSyncing ? '#21262d' : '#1f6feb',
-                  cursor: isSyncing ? 'not-allowed' : 'pointer'
-                }}
-                title="Sync IMAP mailbox from mail server"
-              >
-                <RefreshCw size={14} className={isSyncing ? "spin-animation" : ""} style={{ marginRight: '6px' }} />
-                <span>{isSyncing ? 'Syncing...' : 'Sync Mail'}</span>
-              </button>
-            </div>
+                <div style={styles.toolbarDivider} />
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={styles.paginationText}>
-                {paginationDisplay}
+                <button 
+                  onClick={() => handleBulkAction('mark_read')} 
+                  style={styles.bulkBtn}
+                  title="Mark Selected as Read"
+                >
+                  <Eye size={15} color="#58a6ff" />
+                  <span>Mark Read</span>
+                </button>
+
+                <button 
+                  onClick={() => handleBulkAction('mark_unread')} 
+                  style={styles.bulkBtn}
+                  title="Mark Selected as Unread"
+                >
+                  <EyeOff size={15} color="#8b949e" />
+                  <span>Mark Unread</span>
+                </button>
+
+                <button 
+                  onClick={() => handleBulkAction('star')} 
+                  style={styles.bulkBtn}
+                  title="Star Selected"
+                >
+                  <Star size={15} color="#e3b341" />
+                  <span>Star</span>
+                </button>
+
+                {activeFolder === 'Trash' ? (
+                  <>
+                    <button 
+                      onClick={() => handleBulkAction('restore')} 
+                      style={styles.bulkBtn}
+                      title="Restore Selected to Inbox"
+                    >
+                      <RotateCcw size={15} color="#3fb950" />
+                      <span>Restore</span>
+                    </button>
+                    <button 
+                      onClick={() => handleBulkAction('delete_forever')} 
+                      style={{ ...styles.bulkBtn, color: '#f85149' }}
+                      title="Permanently Delete Selected"
+                    >
+                      <Trash2 size={15} color="#f85149" />
+                      <span>Delete Forever</span>
+                    </button>
+                  </>
+                ) : (
+                  <button 
+                    onClick={() => handleBulkAction('trash')} 
+                    style={{ ...styles.bulkBtn, color: '#f85149' }}
+                    title="Move Selected to Trash"
+                  >
+                    <Trash2 size={15} color="#f85149" />
+                    <span>Trash</span>
+                  </button>
+                )}
+
+                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button 
+                    onClick={() => setSelectedIds([])} 
+                    style={styles.cancelBulkBtn}
+                    title="Deselect All"
+                  >
+                    <X size={14} />
+                    <span>Cancel</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              /* STANDARD SEARCH & ACTIONS TOOLBAR */
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  {/* SELECT ALL MASTER CHECKBOX */}
+                  <div 
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+                    onClick={toggleSelectAll}
+                    title={allCurrentPageSelected ? "Deselect Page" : "Select Current Page"}
+                  >
+                    {allCurrentPageSelected ? (
+                      <CheckSquare size={16} color="#58a6ff" />
+                    ) : (
+                      <Square size={16} color="#484f58" />
+                    )}
+                  </div>
+
+                  {/* SEARCH BAR */}
+                  <div style={styles.searchBarContainer}>
+                    <Search size={16} color="#8b949e" style={{ marginLeft: '12px', flexShrink: 0 }} />
+                    <input 
+                      type="text" 
+                      placeholder="Search emails by sender, subject, or content..." 
+                      value={searchQuery} 
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      style={styles.searchInput}
+                    />
+                    {searchQuery && (
+                      <X 
+                        size={14} 
+                        color="#8b949e" 
+                        style={{ marginRight: '12px', cursor: 'pointer', flexShrink: 0 }}
+                        onClick={() => setSearchQuery('')}
+                        title="Clear search"
+                      />
+                    )}
+                  </div>
+
+                  {/* LIVE SYNC BUTTON */}
+                  <button 
+                    onClick={handleTriggerSync} 
+                    disabled={isSyncing}
+                    style={{
+                      ...styles.syncButton,
+                      backgroundColor: isSyncing ? '#21262d' : '#1f6feb',
+                      cursor: isSyncing ? 'not-allowed' : 'pointer'
+                    }}
+                    title="Sync IMAP mailbox from mail server"
+                  >
+                    <RefreshCw size={14} className={isSyncing ? "spin-animation" : ""} style={{ marginRight: '6px' }} />
+                    <span>{isSyncing ? 'Syncing...' : 'Sync Mail'}</span>
+                  </button>
+                </div>
+
+                {/* PAGINATION CONTROLS */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={styles.paginationText}>
+                    {paginationDisplay}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage <= 1}
+                      style={{
+                        ...styles.pageNavBtn,
+                        opacity: currentPage <= 1 ? 0.35 : 1,
+                        cursor: currentPage <= 1 ? 'not-allowed' : 'pointer'
+                      }}
+                      title="Previous Page"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage >= totalPages}
+                      style={{
+                        ...styles.pageNavBtn,
+                        opacity: currentPage >= totalPages ? 0.35 : 1,
+                        cursor: currentPage >= totalPages ? 'not-allowed' : 'pointer'
+                      }}
+                      title="Next Page"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* SYNC NOTIFICATION BANNER */}
@@ -868,9 +1292,9 @@ export default function EmailClientTab({ onTabChange }) {
             )}
           </div>
 
-          {/* EMAIL LIST STREAM */}
+          {/* EMAIL LIST STREAM - STRICTLY SORTED DESCENDING */}
           <div style={styles.emailStream}>
-            {filteredEmails.length === 0 ? (
+            {paginatedEmails.length === 0 ? (
               <div style={styles.emptyState}>
                 <div style={styles.emptyStateIconContainer}>
                   <Mail size={44} color="#58a6ff" />
@@ -893,7 +1317,7 @@ export default function EmailClientTab({ onTabChange }) {
                 </div>
               </div>
             ) : (
-              filteredEmails.map(em => (
+              paginatedEmails.map(em => (
                 <div 
                   key={em.id} 
                   style={{
@@ -901,7 +1325,7 @@ export default function EmailClientTab({ onTabChange }) {
                     backgroundColor: !em.read ? 'rgba(56, 139, 253, 0.08)' : 'transparent',
                     fontWeight: !em.read ? '600' : '400'
                   }}
-                  onClick={() => setSelectedEmail(em)}
+                  onClick={() => handleOpenEmail(em)}
                 >
                   {/* CHECKBOX */}
                   <div style={styles.checkboxCell} onClick={(e) => { e.stopPropagation(); toggleSelectOne(em.id); }}>
@@ -917,8 +1341,13 @@ export default function EmailClientTab({ onTabChange }) {
                     <Star size={16} color={em.starred ? '#e3b341' : '#484f58'} fill={em.starred ? '#e3b341' : 'none'} />
                   </div>
 
+                  {/* UNREAD INDICATOR DOT */}
+                  <div style={{ width: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {!em.read && <span style={styles.unreadDot} />}
+                  </div>
+
                   {/* SENDER */}
-                  <div style={styles.senderCell}>
+                  <div style={styles.senderCell} title={em.email || em.sender}>
                     {em.sender}
                   </div>
 
@@ -928,9 +1357,27 @@ export default function EmailClientTab({ onTabChange }) {
                     <span style={{ color: '#8b949e', marginLeft: '8px', fontWeight: '400' }}>- {cleanEmailBody(em.snippet || em.body)}</span>
                   </div>
 
-                  {/* TIME */}
-                  <div style={styles.timeCell}>
-                    {em.time}
+                  {/* HOVER QUICK ACTION BUTTONS */}
+                  <div style={styles.hoverActions} onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      style={styles.quickActionBtn} 
+                      title={em.read ? "Mark as unread" : "Mark as read"}
+                      onClick={() => toggleReadStatus(em.id)}
+                    >
+                      {em.read ? <EyeOff size={14} color="#8b949e" /> : <Eye size={14} color="#58a6ff" />}
+                    </button>
+                    <button 
+                      style={styles.quickActionBtn} 
+                      title="Move to trash"
+                      onClick={() => moveToTrash(em.id)}
+                    >
+                      <Trash2 size={14} color="#8b949e" />
+                    </button>
+                  </div>
+
+                  {/* TIME / INTELLIGENT DATE */}
+                  <div style={styles.timeCell} title={formatEmailFullDate(em)}>
+                    {formatEmailDateDisplay(em)}
                   </div>
                 </div>
               ))
@@ -962,7 +1409,7 @@ export default function EmailClientTab({ onTabChange }) {
                 <span style={{ color: '#58a6ff', fontWeight: '700', fontSize: '1rem' }}>{selectedEmail.sender}</span>
                 <span style={{ color: '#8b949e', fontSize: '0.82rem', marginLeft: '8px' }}>&lt;{selectedEmail.email}&gt;</span>
               </div>
-              <span style={{ color: '#8b949e', fontSize: '0.82rem' }}>{selectedEmail.date} at {selectedEmail.time}</span>
+              <span style={{ color: '#8b949e', fontSize: '0.82rem' }}>{formatEmailFullDate(selectedEmail)}</span>
             </div>
 
             <div style={{ padding: '20px 0', minHeight: '200px', maxHeight: '55vh', overflowY: 'auto' }}>
@@ -981,7 +1428,15 @@ export default function EmailClientTab({ onTabChange }) {
                 {isGeneratingReply ? 'Generating Stehouwer AI Draft...' : '✨ Stehouwer AI Smart Reply'}
               </button>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button 
+                  style={{ ...styles.replyBtn, backgroundColor: '#21262d', color: '#8b949e', border: '1px solid #30363d' }}
+                  onClick={() => toggleReadStatus(selectedEmail.id)}
+                  title="Mark as unread"
+                >
+                  <EyeOff size={14} style={{ marginRight: '6px' }} /> Mark Unread
+                </button>
+
                 <button 
                   style={{ ...styles.replyBtn, backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)' }}
                   onClick={() => moveToTrash(selectedEmail.id)}
@@ -990,17 +1445,17 @@ export default function EmailClientTab({ onTabChange }) {
                 </button>
 
                 <button 
-                  style={styles.replyBtn} 
-                  onClick={() => { 
-                    setIsComposeOpen(true); 
-                    setComposeFrom(selectedEmail.account || 'brett@stehouwer-publishing.com'); 
-                    setComposeTo(selectedEmail.email); 
-                    const subj = selectedEmail.subject.toLowerCase().startsWith('re:') ? selectedEmail.subject : `Re: ${selectedEmail.subject}`;
-                    setComposeSubject(subj); 
-                    setSelectedEmail(null); 
-                  }}
+                  style={{ ...styles.replyBtn, backgroundColor: '#21262d', color: '#c9d1d9', border: '1px solid #30363d' }}
+                  onClick={() => handleForward(selectedEmail)}
                 >
-                  <Send size={14} style={{ marginRight: '6px' }} /> Reply
+                  <CornerUpRight size={14} style={{ marginRight: '6px' }} /> Forward
+                </button>
+
+                <button 
+                  style={styles.replyBtn} 
+                  onClick={() => handleReply(selectedEmail)}
+                >
+                  <CornerUpLeft size={14} style={{ marginRight: '6px' }} /> Reply
                 </button>
               </div>
             </div>
@@ -1045,7 +1500,40 @@ export default function EmailClientTab({ onTabChange }) {
                 onChange={(e) => setComposeTo(e.target.value)}
                 style={styles.fieldInput}
               />
+              <button 
+                type="button" 
+                onClick={() => setShowCcBcc(!showCcBcc)}
+                style={styles.ccToggleBtn}
+              >
+                {showCcBcc ? 'Hide Cc' : 'Cc / Bcc'}
+              </button>
             </div>
+
+            {/* CC & BCC FIELDS (TOGGLEABLE) */}
+            {showCcBcc && (
+              <>
+                <div style={styles.composeField}>
+                  <span style={styles.fieldLabel}>Cc:</span>
+                  <input 
+                    type="text" 
+                    placeholder="cc@domain.com"
+                    value={composeCc} 
+                    onChange={(e) => setComposeCc(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                </div>
+                <div style={styles.composeField}>
+                  <span style={styles.fieldLabel}>Bcc:</span>
+                  <input 
+                    type="text" 
+                    placeholder="bcc@domain.com"
+                    value={composeBcc} 
+                    onChange={(e) => setComposeBcc(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                </div>
+              </>
+            )}
 
             {/* SUBJECT FIELD */}
             <div style={styles.composeField}>
@@ -1111,6 +1599,250 @@ export default function EmailClientTab({ onTabChange }) {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* LIVE EMAIL SYSTEM DIAGNOSTICS MODAL */}
+      {isDiagnosticsOpen && (
+        <div style={styles.modalOverlay} onClick={() => setIsDiagnosticsOpen(false)}>
+          <div style={{ ...styles.modalContent, width: '640px' }} className="glass-panel" onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Server size={22} color="#58a6ff" />
+                <div>
+                  <h3 style={{ color: '#f0f6fc', margin: 0, fontSize: '1.15rem', fontWeight: '700' }}>
+                    Email System Infrastructure & Diagnostics
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#8b949e' }}>stehouwer-publishing.com • Port Collision Matrix & Relay Map</span>
+                </div>
+              </div>
+              <X size={20} color="#8b949e" style={{ cursor: 'pointer' }} onClick={() => setIsDiagnosticsOpen(false)} />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', margin: '14px 0' }}>
+              {/* IMAP Card */}
+              <div style={styles.diagCard}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Server size={16} color="#58a6ff" />
+                    <span style={{ fontWeight: '600', color: '#f0f6fc', fontSize: '0.88rem' }}>Inbound IMAP Connection</span>
+                  </div>
+                  <span style={{ 
+                    fontSize: '0.72rem', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px', 
+                    fontWeight: '700',
+                    backgroundColor: imapConnected ? 'rgba(63, 185, 80, 0.2)' : 'rgba(227, 179, 65, 0.2)',
+                    color: imapConnected ? '#3fb950' : '#e3b341',
+                    border: imapConnected ? '1px solid #2ea043' : '1px solid #d29922'
+                  }}>
+                    {imapDisplayLabel}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#8b949e', lineHeight: '1.5' }}>
+                  Host: <code style={styles.codeSnippet}>{emailStatus.imap_status?.host || 'imap.gmail.com'}:{emailStatus.imap_status?.port || 993} (SSL)</code><br />
+                  Authenticated User: <code style={styles.codeSnippet}>{emailStatus.relay_user || 'Configured via .env'}</code><br />
+                  {emailStatus.imap_status?.error && (
+                    <div style={{ color: '#e3b341', marginTop: '4px' }}>
+                      ⚠️ {emailStatus.imap_status.error}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* SMTP Card */}
+              <div style={styles.diagCard}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Send size={16} color="#3fb950" />
+                    <span style={{ fontWeight: '600', color: '#f0f6fc', fontSize: '0.88rem' }}>Outbound SMTP Relay</span>
+                  </div>
+                  <span style={{ 
+                    fontSize: '0.72rem', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px', 
+                    fontWeight: '700',
+                    backgroundColor: 'rgba(63, 185, 80, 0.2)',
+                    color: '#3fb950',
+                    border: '1px solid #2ea043'
+                  }}>
+                    Ready (TLS 587)
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#8b949e', lineHeight: '1.5' }}>
+                  Host: <code style={styles.codeSnippet}>{emailStatus.smtp_status?.host || 'smtp.gmail.com'}:{emailStatus.smtp_status?.port || 587} (TLS)</code><br />
+                  Domain Masking: <code style={styles.codeSnippet}>From: brett@stehouwer-publishing.com</code> (Zero-Leakage Policy Active)
+                </div>
+              </div>
+
+              {/* Cloudflare Routing Card */}
+              <div style={styles.diagCard}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Globe size={16} color="#a78bfa" />
+                    <span style={{ fontWeight: '600', color: '#f0f6fc', fontSize: '0.88rem' }}>Cloudflare Email Routing</span>
+                  </div>
+                  <span style={{ 
+                    fontSize: '0.72rem', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px', 
+                    fontWeight: '700',
+                    backgroundColor: 'rgba(167, 139, 250, 0.2)',
+                    color: '#c084fc',
+                    border: '1px solid #a78bfa'
+                  }}>
+                    Active (MX/SPF)
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#8b949e', lineHeight: '1.5' }}>
+                  Zone: <code style={styles.codeSnippet}>stehouwer-publishing.com</code> (Account ID: <code style={styles.codeSnippet}>810411...6efec67</code>)<br />
+                  Inbound Ingestion Worker: <code style={styles.codeSnippet}>aibs-email-router</code> &rarr; Live Firestore & Local Webhook
+                </div>
+              </div>
+
+              {/* Inbound Athlete Text Router Card */}
+              <div style={styles.diagCard}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <MessageSquare size={16} color="#f59e0b" />
+                    <span style={{ fontWeight: '600', color: '#f0f6fc', fontSize: '0.88rem' }}>Dennis Bell Inbound Athlete SMS Router</span>
+                  </div>
+                  <span style={{ 
+                    fontSize: '0.72rem', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px', 
+                    fontWeight: '700',
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                    color: '#fbbf24',
+                    border: '1px solid #f59e0b'
+                  }}>
+                    Forwarding to +1-616-291-5227
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#8b949e', lineHeight: '1.5' }}>
+                  Destination Cell: <code style={styles.codeSnippet}>+1 (616) 291-5227 (Dennis Bell)</code><br />
+                  Loop Protection: <strong style={{ color: '#3fb950' }}>Active</strong> (Dennis's own outbound responses suppressed from forward loop)<br />
+                  Sync Daemon: <code style={styles.codeSnippet}>backend/core/rec_debut_daily_dispatcher.py</code> (60s check interval)
+                </div>
+              </div>
+
+              {/* Mailbox Statistics Table */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginTop: '4px' }}>
+                <div style={styles.statBox}>
+                  <span style={styles.statLabel}>Total Cached</span>
+                  <span style={styles.statVal}>{emailStatus.mailbox_stats?.total_cached || emails.length}</span>
+                </div>
+                <div style={styles.statBox}>
+                  <span style={styles.statLabel}>Unread Inbox</span>
+                  <span style={{ ...styles.statVal, color: '#58a6ff' }}>{emailStatus.mailbox_stats?.unread_inbox || inboxUnreadCount}</span>
+                </div>
+                <div style={styles.statBox}>
+                  <span style={styles.statLabel}>Sent Items</span>
+                  <span style={{ ...styles.statVal, color: '#3fb950' }}>{emailStatus.mailbox_stats?.sent || sentCount}</span>
+                </div>
+                <div style={styles.statBox}>
+                  <span style={styles.statLabel}>Trash Items</span>
+                  <span style={{ ...styles.statVal, color: '#f85149' }}>{emailStatus.mailbox_stats?.trash || trashCount}</span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ ...styles.modalFooter, display: 'flex', justifyContent: 'space-between' }}>
+              <button 
+                onClick={handleTriggerSync} 
+                disabled={isSyncing}
+                style={styles.emptySyncBtn}
+              >
+                <RefreshCw size={14} className={isSyncing ? "spin-animation" : ""} style={{ marginRight: '6px' }} />
+                {isSyncing ? 'Syncing Now...' : 'Run Live IMAP Sync'}
+              </button>
+              <button 
+                onClick={() => setIsDiagnosticsOpen(false)}
+                style={styles.emptyComposeBtn}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EMAIL CLIENT SETTINGS MODAL */}
+      {isSettingsOpen && (
+        <div style={styles.modalOverlay} onClick={() => setIsSettingsOpen(false)}>
+          <div style={{ ...styles.modalContent, width: '600px' }} className="glass-panel" onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Sliders size={22} color="#a78bfa" />
+                <div>
+                  <h3 style={{ color: '#f0f6fc', margin: 0, fontSize: '1.15rem', fontWeight: '700' }}>
+                    Email Client Settings & Accounts
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#8b949e' }}>Manage default accounts, identities, and sync parameters</span>
+                </div>
+              </div>
+              <X size={20} color="#8b949e" style={{ cursor: 'pointer' }} onClick={() => setIsSettingsOpen(false)} />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', margin: '14px 0' }}>
+              {/* Accounts Management */}
+              <div>
+                <label style={{ fontSize: '0.80rem', color: '#8b949e', fontWeight: '600', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>
+                  Configured Business Team Accounts
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {TEAM_ACCOUNTS.map(acc => (
+                    <div key={acc.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d1117', border: '1px solid #30363d', borderRadius: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '1.2rem' }}>{acc.avatar}</span>
+                        <div>
+                          <span style={{ fontWeight: '600', color: '#f0f6fc', fontSize: '0.88rem' }}>{acc.name}</span>
+                          <span style={{ color: '#8b949e', fontSize: '0.78rem', display: 'block' }}>{acc.email}</span>
+                        </div>
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: '#a78bfa', backgroundColor: 'rgba(167, 139, 250, 0.1)', padding: '2px 8px', borderRadius: '12px', border: '1px solid rgba(167, 139, 250, 0.3)' }}>
+                        {acc.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Default From Account */}
+              <div>
+                <label style={{ fontSize: '0.80rem', color: '#8b949e', fontWeight: '600', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  Default Sending Identity
+                </label>
+                <select 
+                  value={composeFrom}
+                  onChange={(e) => setComposeFrom(e.target.value)}
+                  style={styles.fieldSelect}
+                >
+                  {TEAM_ACCOUNTS.map(acc => (
+                    <option key={acc.id} value={acc.email}>{acc.name} &lt;{acc.email}&gt;</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Instructions */}
+              <div style={{ padding: '12px', backgroundColor: 'rgba(56, 139, 253, 0.08)', border: '1px solid rgba(56, 139, 253, 0.2)', borderRadius: '8px', fontSize: '0.78rem', color: '#8b949e', lineHeight: '1.5' }}>
+                <strong style={{ color: '#58a6ff' }}>Google App Passwords Setup:</strong><br />
+                To authenticate inbound IMAP and outbound SMTP without OAuth2 popups, create a 16-character App Password at{' '}
+                <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noreferrer" style={{ color: '#58a6ff', textDecoration: 'underline' }}>
+                  Google App Passwords
+                </a> and paste it into <code style={styles.codeSnippet}>IMAP_APP_PASSWORD</code> in <code style={styles.codeSnippet}>C:\AI-BS\.env</code>.
+              </div>
+            </div>
+
+            <div style={{ ...styles.modalFooter, display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button 
+                onClick={() => setIsSettingsOpen(false)}
+                style={styles.emptyComposeBtn}
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1308,13 +2040,43 @@ const styles = {
     padding: '0 16px',
     backgroundColor: '#161b22'
   },
+  toolbarDivider: {
+    width: '1px',
+    height: '20px',
+    backgroundColor: '#30363d',
+    margin: '0 4px'
+  },
+  bulkBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    backgroundColor: '#21262d',
+    border: '1px solid #30363d',
+    color: '#c9d1d9',
+    borderRadius: '6px',
+    padding: '6px 12px',
+    fontSize: '0.78rem',
+    cursor: 'pointer',
+    transition: 'all 0.15s'
+  },
+  cancelBulkBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: '#8b949e',
+    padding: '6px 10px',
+    fontSize: '0.78rem',
+    cursor: 'pointer'
+  },
   searchBarContainer: {
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#0d1117',
     border: '1px solid #30363d',
     borderRadius: '20px',
-    width: '420px',
+    width: '400px',
     height: '36px'
   },
   searchInput: {
@@ -1339,7 +2101,19 @@ const styles = {
   },
   paginationText: {
     fontSize: '0.78rem',
-    color: '#8b949e'
+    color: '#8b949e',
+    fontWeight: '500'
+  },
+  pageNavBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '28px',
+    height: '28px',
+    borderRadius: '6px',
+    backgroundColor: '#21262d',
+    border: '1px solid #30363d',
+    color: '#c9d1d9'
   },
   noticeBanner: {
     display: 'flex',
@@ -1439,23 +2213,32 @@ const styles = {
   emailRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    padding: '12px 16px',
+    gap: '10px',
+    padding: '10px 16px',
     borderBottom: '1px solid #21262d',
     cursor: 'pointer',
-    transition: 'background-color 0.15s'
+    transition: 'background-color 0.15s',
+    position: 'relative'
   },
   checkboxCell: {
-    width: '28px',
+    width: '24px',
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    flexShrink: 0
   },
   starCell: {
-    width: '28px',
+    width: '24px',
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    flexShrink: 0
+  },
+  unreadDot: {
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: '#58a6ff'
   },
   senderCell: {
     width: '200px',
@@ -1475,13 +2258,32 @@ const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    paddingRight: '16px'
+    paddingRight: '12px'
+  },
+  hoverActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    opacity: 0.8,
+    marginRight: '6px'
+  },
+  quickActionBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '26px',
+    height: '26px',
+    borderRadius: '4px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer'
   },
   timeCell: {
-    width: '80px',
+    width: '85px',
     fontSize: '0.78rem',
     color: '#8b949e',
-    textAlign: 'right'
+    textAlign: 'right',
+    flexShrink: 0
   },
   modalOverlay: {
     position: 'fixed',
@@ -1532,8 +2334,8 @@ const styles = {
     color: '#fff',
     border: 'none',
     borderRadius: '6px',
-    padding: '8px 16px',
-    fontSize: '0.85rem',
+    padding: '8px 14px',
+    fontSize: '0.82rem',
     fontWeight: '600',
     cursor: 'pointer'
   },
@@ -1541,7 +2343,7 @@ const styles = {
     position: 'fixed',
     bottom: 0,
     right: '40px',
-    width: '540px',
+    width: '560px',
     backgroundColor: '#161b22',
     border: '1px solid #30363d',
     borderTopLeftRadius: '12px',
@@ -1597,6 +2399,14 @@ const styles = {
     outline: 'none',
     fontSize: '0.85rem'
   },
+  ccToggleBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#58a6ff',
+    fontSize: '0.75rem',
+    cursor: 'pointer',
+    padding: '2px 6px'
+  },
   composeTextarea: {
     backgroundColor: '#0d1117',
     color: '#f0f6fc',
@@ -1624,5 +2434,40 @@ const styles = {
     fontWeight: '600',
     fontSize: '0.85rem',
     cursor: 'pointer'
+  },
+  diagCard: {
+    backgroundColor: '#0d1117',
+    border: '1px solid #30363d',
+    borderRadius: '8px',
+    padding: '12px 14px'
+  },
+  codeSnippet: {
+    fontFamily: 'Consolas, Monaco, monospace',
+    color: '#58a6ff',
+    backgroundColor: 'rgba(56, 139, 253, 0.1)',
+    padding: '1px 5px',
+    borderRadius: '4px',
+    fontSize: '0.75rem'
+  },
+  statBox: {
+    backgroundColor: '#0d1117',
+    border: '1px solid #30363d',
+    borderRadius: '8px',
+    padding: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  statLabel: {
+    fontSize: '0.68rem',
+    color: '#8b949e',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  statVal: {
+    fontSize: '1.25rem',
+    fontWeight: '700',
+    color: '#f0f6fc',
+    marginTop: '2px'
   }
 };

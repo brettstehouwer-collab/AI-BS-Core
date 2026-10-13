@@ -47,12 +47,13 @@ AUDIENCE_CATEGORIES = [
 
 COLUMN_ALIASES: Dict[str, List[str]] = {
     "email":      ["email", "e-mail", "mail", "email_address", "emailaddress", "contact_email", "mail_addr"],
+    "name":       ["name", "full_name", "fullname", "contact_name", "athlete_name", "athlete", "student", "student_name"],
     "first_name": ["first_name", "firstname", "first", "given_name", "fname", "givenname"],
     "last_name":  ["last_name", "lastname", "last", "surname", "family_name", "lname"],
-    "company":    ["company", "organization", "org", "business", "biz", "employer", "company_name"],
-    "job_title":  ["job_title", "title", "role", "position", "jobtitle", "job_role"],
-    "tags":       ["tags", "tag", "labels", "groups", "segments", "audience", "category"],
-    "notes":      ["notes", "note", "comments", "comment", "description", "memo"],
+    "company":    ["company", "organization", "org", "business", "biz", "employer", "company_name", "highschool", "high_school", "school", "team", "team_name", "club"],
+    "job_title":  ["job_title", "title", "role", "position", "jobtitle", "job_role", "sport", "sport_position"],
+    "tags":       ["tags", "tag", "labels", "groups", "segments", "audience", "category", "gradyear", "grad_year", "class"],
+    "notes":      ["notes", "note", "comments", "comment", "description", "memo", "citystate", "city_state"],
 }
 
 
@@ -124,7 +125,17 @@ class AISchemaMapper:
         result: Dict[str, str] = {}
         already_mapped: set = set()
 
+        # Pass 1: Exact canonical matches (case-insensitive)
         for raw in raw_columns:
+            clean = raw.lower().strip()
+            if clean in COLUMN_ALIASES and clean not in already_mapped:
+                result[raw] = clean
+                already_mapped.add(clean)
+
+        # Pass 2: Cleaned exact alias matches
+        for raw in raw_columns:
+            if raw in result:
+                continue
             clean = raw.lower().replace("_", "").replace("-", "").replace(" ", "")
             for canonical, aliases in COLUMN_ALIASES.items():
                 if canonical in already_mapped:
@@ -138,7 +149,7 @@ class AISchemaMapper:
                     continue
                 break
 
-        # Fuzzy fallback
+        # Pass 3: Fuzzy fallback
         for raw in raw_columns:
             if raw in result:
                 continue
@@ -159,8 +170,12 @@ class AISchemaMapper:
 # ---------------------------------------------------------------------------
 class EmailValidator:
     def clean(self, df: pd.DataFrame) -> pd.DataFrame:
-        df["email"] = df["email"].astype(str).str.strip().str.lower()
-        valid_mask = df["email"].apply(lambda x: bool(EMAIL_REGEX.match(x)))
+        email_series = df["email"]
+        if isinstance(email_series, pd.DataFrame):
+            email_series = email_series.iloc[:, 0]
+        # Fill missing values and ensure string type, preventing float TypeError
+        df["email"] = email_series.fillna("").astype(str).str.strip().str.lower()
+        valid_mask = df["email"].apply(lambda x: bool(isinstance(x, str) and x not in ("", "nan", "none", "null") and EMAIL_REGEX.match(x)))
         before = len(df)
         df = df[valid_mask].copy()
         dropped = before - len(df)
@@ -203,7 +218,14 @@ class AIAudienceTagger:
             df["ai_segment"] = "General Subscriber"
             return df
 
-        context_series = df[context_cols].fillna("").agg(" ".join, axis=1).str.strip()
+        # Ensure all context columns are strings, no NaNs/floats
+        for col in context_cols:
+            col_series = df[col]
+            if isinstance(col_series, pd.DataFrame):
+                col_series = col_series.iloc[:, 0]
+            df[col] = col_series.fillna("").astype(str).str.strip()
+
+        context_series = df[context_cols].agg(" ".join, axis=1).str.strip()
         context_series = context_series.replace("", "subscriber")
 
         embeddings = AIAudienceTagger._model.encode(
@@ -304,6 +326,20 @@ class StehouwerCampaignIngestionEngine:
         col_map = self.mapper.map_columns(df.columns.tolist())
         df = df.rename(columns=col_map)
 
+        # Deduplicate column names if any exist
+        if df.columns.duplicated().any():
+            df = df.loc[:, ~df.columns.duplicated(keep="first")]
+
+        # If a single "name" column was mapped, split into first_name and last_name
+        if "name" in df.columns and "first_name" not in df.columns:
+            name_series = df["name"]
+            if isinstance(name_series, pd.DataFrame):
+                name_series = name_series.iloc[:, 0]
+            name_series = name_series.fillna("").astype(str).str.strip()
+            split_names = name_series.str.split(" ", n=1, expand=True)
+            df["first_name"] = split_names[0]
+            df["last_name"] = split_names[1] if split_names.shape[1] > 1 else ""
+
         if "email" not in df.columns:
             raise ValueError(
                 "Could not locate an email column. Detected headers: "
@@ -333,12 +369,15 @@ class StehouwerCampaignIngestionEngine:
             segment_counts[ai_seg] = segment_counts.get(ai_seg, 0) + 1
 
             def _s(col: str) -> str:
-                v = str(row.get(col, "") or "").strip()
-                return "" if v.lower() == "nan" else v
+                v = row.get(col, "")
+                if pd.isna(v) or v is None:
+                    return ""
+                v_str = str(v).strip()
+                return "" if v_str.lower() in ("nan", "none", "null") else v_str
 
             records.append({
                 "id":         f"sub-{uuid.uuid4().hex[:8]}",
-                "email":      row["email"],
+                "email":      str(row["email"]).strip(),
                 "first_name": _s("first_name"),
                 "last_name":  _s("last_name"),
                 "company":    _s("company"),

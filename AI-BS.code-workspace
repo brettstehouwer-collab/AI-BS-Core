@@ -3,6 +3,10 @@
 		{
 			"name": "AI-BS",
 			"path": "."
+		},
+		{
+			"name": "Recreational-Debut",
+			"path": "C:\\Recreational-Debut"
 		}
 	],
 	"settings": {

@@ -130,8 +130,54 @@ def _get_cached_emails() -> List[Dict[str, Any]]:
     return []
 
 
+def _email_sort_key(item: Dict[str, Any]) -> float:
+    """Calculates a numeric Unix timestamp for an email for strict chronological ordering."""
+    if "timestamp" in item and isinstance(item["timestamp"], (int, float)):
+        ts = float(item["timestamp"])
+        if ts > 10000000000:
+            ts /= 1000.0
+        if 1500000000 <= ts <= 2100000000:
+            return ts
+    
+    d_str = str(item.get("date") or "").strip()
+    t_str = str(item.get("time") or "").strip()
+    if d_str:
+        # Try RFC 2822 standard email date header
+        try:
+            return email.utils.parsedate_to_datetime(d_str).timestamp()
+        except Exception:
+            pass
+        # Try standard YYYY-MM-DD formats
+        for fmt in ("%Y-%m-%d %I:%M %p", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
+            try:
+                comb = f"{d_str} {t_str}".strip() if ("%I" in fmt or "%H" in fmt) else d_str
+                return datetime.strptime(comb, fmt).timestamp()
+            except Exception:
+                continue
+                
+    created_at = str(item.get("created_at") or "").strip()
+    if created_at:
+        try:
+            return datetime.fromisoformat(created_at.replace("Z", "+00:00")).timestamp()
+        except Exception:
+            pass
+
+    eid = str(item.get("id") or "")
+    m = re.search(r"(\d{13})", eid)
+    if m:
+        ts = int(m.group(1)) / 1000.0
+        if 1500000000 <= ts <= 2100000000:
+            return ts
+        
+    return 0.0
+
+
 def _save_cached_emails(emails: List[Dict[str, Any]]):
-    """Persists emails list to disk cache atomically."""
+    """Persists emails list to disk cache atomically, sorted newest first."""
+    try:
+        emails.sort(key=_email_sort_key, reverse=True)
+    except Exception:
+        pass
     temp_file = f"{CACHE_FILE}.tmp"
     with open(temp_file, "w", encoding="utf-8") as f:
         json.dump(emails, f, indent=2, ensure_ascii=False)
@@ -170,6 +216,20 @@ class IncomingEmailPayload(BaseModel):
     subject: Optional[str] = "No Subject"
     body: Optional[str] = ""
     category: Optional[str] = "Primary"
+
+
+class UpdateEmailPayload(BaseModel):
+    id: Optional[str] = None
+    read: Optional[bool] = None
+    starred: Optional[bool] = None
+    folder: Optional[str] = None
+    category: Optional[str] = None
+    label: Optional[str] = None
+
+
+class BulkEmailActionPayload(BaseModel):
+    ids: List[str]
+    action: str  # "mark_read", "mark_unread", "star", "unstar", "trash", "restore", "delete_forever"
 
 
 # ==============================================================================
@@ -246,7 +306,7 @@ async def get_email_status():
 @router.get("")
 @router.get("/")
 async def get_emails(account: Optional[str] = None, folder: Optional[str] = None):
-    """Returns stored emails with normalized accounts and folder filtering."""
+    """Returns stored emails with normalized accounts and folder filtering, sorted strictly newest first."""
     emails = _get_cached_emails()
     
     # Normalize legacy "unknown" account tags to brett@stehouwer-publishing.com
@@ -268,7 +328,80 @@ async def get_emails(account: Optional[str] = None, folder: Optional[str] = None
     if folder and folder != "All":
         emails = [e for e in emails if (e.get("folder") or "Inbox").lower() == folder.lower()]
 
+    # Sort strictly newest first
+    emails.sort(key=_email_sort_key, reverse=True)
+
     return {"status": "success", "data": emails, "count": len(emails)}
+
+
+@router.post("/update")
+@router.patch("/{email_id}")
+async def update_email_state(payload: UpdateEmailPayload, email_id: Optional[str] = None):
+    """Updates an email's read, starred, folder, category, or label state persistently."""
+    target_id = email_id or payload.id
+    if not target_id:
+        raise HTTPException(status_code=400, detail="Email ID is required")
+        
+    emails = _get_cached_emails()
+    updated = False
+    target_email = None
+    
+    for em in emails:
+        if em.get("id") == target_id or em.get("imap_uid") == target_id:
+            if payload.read is not None:
+                em["read"] = payload.read
+            if payload.starred is not None:
+                em["starred"] = payload.starred
+            if payload.folder is not None:
+                em["folder"] = payload.folder
+            if payload.category is not None:
+                em["category"] = payload.category
+            if payload.label is not None:
+                em["label"] = payload.label
+            updated = True
+            target_email = em
+            break
+            
+    if updated:
+        _save_cached_emails(emails)
+        return {"status": "success", "message": f"Email {target_id} updated", "data": target_email}
+    else:
+        return JSONResponse(status_code=404, content={"status": "error", "message": f"Email {target_id} not found"})
+
+
+@router.post("/bulk")
+async def bulk_email_action(payload: BulkEmailActionPayload):
+    """Performs bulk state transitions across multiple emails atomically."""
+    emails = _get_cached_emails()
+    action = payload.action.lower()
+    target_ids = set(payload.ids)
+    affected_count = 0
+    
+    if action == "delete_forever":
+        emails = [e for e in emails if e.get("id") not in target_ids and e.get("imap_uid") not in target_ids]
+        _save_cached_emails(emails)
+        return {"status": "success", "message": f"Permanently deleted {len(target_ids)} emails", "count": len(target_ids)}
+        
+    for em in emails:
+        if em.get("id") in target_ids or em.get("imap_uid") in target_ids:
+            if action == "mark_read":
+                em["read"] = True
+            elif action == "mark_unread":
+                em["read"] = False
+            elif action == "star":
+                em["starred"] = True
+            elif action == "unstar":
+                em["starred"] = False
+            elif action == "trash":
+                em["folder"] = "Trash"
+            elif action == "restore":
+                em["folder"] = "Inbox"
+            affected_count += 1
+            
+    if affected_count > 0:
+        _save_cached_emails(emails)
+        
+    return {"status": "success", "message": f"Applied '{action}' to {affected_count} emails", "count": affected_count}
 
 
 @router.post("/incoming")

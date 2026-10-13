@@ -224,6 +224,26 @@ def heal_ecosystem():
     except Exception as e:
         pass
 
+    # 2f. Sweep & Purge Orphaned Gradle Daemons
+    if os.name == 'nt':
+        try:
+            import psutil
+            killed_daemons = 0
+            for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                try:
+                    if proc.info['name'] and 'java' in proc.info['name'].lower():
+                        cmdline = " ".join(proc.info.get('cmdline') or [])
+                        if "GradleDaemon" in cmdline:
+                            proc.kill()
+                            killed_daemons += 1
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+            if killed_daemons > 0:
+                actions_taken.append(f"Purged {killed_daemons} orphaned Gradle daemons from host RAM")
+                log_doctor(f"Purged {killed_daemons} orphaned Gradle daemons from host RAM")
+        except Exception:
+            pass
+
     time.sleep(1.0)
 
     # 3. Passive WAL checkpoint

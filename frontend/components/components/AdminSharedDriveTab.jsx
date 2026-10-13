@@ -12,10 +12,111 @@ const DEFAULT_FOLDERS = [
   '07_AI_Models_and_Backups'
 ];
 
+export const OCTOBER7_STEMS = [
+  {
+    id: 'saxophone',
+    title: 'Isolated Saxophone',
+    tag: 'Solo Wind & Brass',
+    meta: 'Soulful Lead Saxophone Melody Isolated on RTX 4090',
+    icon: '🎷',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Saxophone_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Saxophone_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'instrumental',
+    title: 'Isolated Instrumental',
+    tag: 'Composite Backing',
+    meta: 'Drums + Bass + Harmonics (Vocals Removed)',
+    icon: '🎵',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Instrumental_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Instrumental_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'vocals',
+    title: 'Lead & Backing Vocals',
+    tag: 'Acappella',
+    meta: 'Clean Isolated Vocal Performance',
+    icon: '🎤',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Vocals_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Vocals_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'guitar',
+    title: 'Isolated Acoustic Guitar',
+    tag: 'Acoustic Strings',
+    meta: 'Fingerpicked Acoustic & Rhythm Guitar Harmonics',
+    icon: '🎸',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Guitar_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Guitar_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'piano',
+    title: 'Isolated Piano & Keys',
+    tag: 'Keyboard Harmonics',
+    meta: 'Grand Piano Chords & Electric Keys',
+    icon: '🎹',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Piano_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Piano_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'drums',
+    title: 'Isolated Drums',
+    tag: 'Rhythm Section',
+    meta: 'Kicks, Snares, Hi-Hats & Percussion',
+    icon: '🥁',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Drums_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Drums_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'bass',
+    title: 'Isolated Bass',
+    tag: 'Low-End Foundation',
+    meta: '808s, Sub-Bass & Bass Harmonics',
+    icon: '🎸',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Bass_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Bass_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'other',
+    title: 'Harmonics & Melodics',
+    tag: 'Accompaniment',
+    meta: 'Acoustic/Electric Guitars, Piano, Ambient Synths',
+    icon: '🎹',
+    wav: '/October_7_Stems_Ultra_HQ/October_7_Other_24bit.wav',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Other_320k.mp3',
+    wavSize: '84.7 MB (2,116 kbps)',
+    mp3Size: '12.8 MB (320 kbps)'
+  },
+  {
+    id: 'original',
+    title: 'Original Mix Reference',
+    tag: 'Full Master',
+    meta: 'Complete Studio Reference Track (05:20)',
+    icon: '💿',
+    mp3: '/October_7_Stems_Ultra_HQ/October_7_Original.mp3',
+    mp3Size: '7.5 MB'
+  }
+];
+
 export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNavigateTab }) {
   // Navigation & Folder State
   const [currentPath, setCurrentPath] = useState('/');
   const [breadcrumbs, setBreadcrumbs] = useState([{ name: 'Shared Cloud Drive', path: '/' }]);
+  const [showOctober7Section, setShowOctober7Section] = useState(true);
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -817,6 +918,16 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
           </div>
 
           <div className="drive-sidebar-section">
+            <div className="drive-sidebar-title">SOVEREIGN STEM DRIVES</div>
+            <button
+              className={`drive-nav-item ${currentPath === '/October_7_Stems_Ultra_HQ' ? 'active' : ''}`}
+              onClick={() => { setCurrentPath('/October_7_Stems_Ultra_HQ'); setSearchQuery(''); setShowOctober7Section(true); }}
+            >
+              <span>🎵</span> October 7 (Ultra-HQ Stems)
+            </button>
+          </div>
+
+          <div className="drive-sidebar-section">
             <div className="drive-sidebar-title">ENTERPRISE FOLDERS</div>
             {DEFAULT_FOLDERS.map((f) => (
               <button
@@ -847,6 +958,17 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
                 </React.Fragment>
               ))}
             </div>
+
+            {/* Folder-level Download as ZIP */}
+            {currentPath !== '/' && (
+              <button
+                onClick={() => handleDownload({ path: currentPath, name: breadcrumbs[breadcrumbs.length - 1]?.name || 'folder', is_dir: true })}
+                className="drive-action-btn drive-action-dl-folder"
+                title="Download entire current folder as a streaming ZIP archive"
+              >
+                <span>📥</span> Download Folder (ZIP)
+              </button>
+            )}
 
             {/* Selection Actions */}
             {selectedItems.length > 0 && (
@@ -883,6 +1005,113 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
           {uploadProgress && (
             <div className="drive-upload-notification">
               <span>⏳ {uploadProgress}</span>
+            </div>
+          )}
+
+          {/* ── OCTOBER 7 SOVEREIGN STEM CLOUD DRIVE SECTION ── */}
+          {showOctober7Section && (currentPath === '/' || currentPath.toLowerCase().includes('october_7')) && (
+            <div className="october7-drive-section">
+              <div className="october7-drive-header">
+                <div className="october7-header-left">
+                  <div className="october7-badge-row">
+                    <span className="october7-pill-badge">🎵 SOVEREIGN STEM DRIVE</span>
+                    <span className="october7-tech-badge">⚡ RTX 4090 HTDEMUCS_FT</span>
+                    <span className="october7-tech-badge">🎛️ 24-BIT PCM & 320K MP3</span>
+                    <span className="october7-tech-badge">🕊️ ADAM STEHOUWER TRIBUTE</span>
+                  </div>
+                  <h2 className="october7-drive-title">October 7 — Sovereign Stem Drive</h2>
+                  <p className="october7-drive-subtitle">
+                    Studio isolated stems & instrumental in ultra-high bitrate mastering quality. Click to stream, audition, or download any stem directly.
+                  </p>
+                </div>
+                <div className="october7-header-actions">
+                  <a
+                    href={`${backendUrl}/api/drive/download?path=${encodeURIComponent('/October_7_Stems_Ultra_HQ/October_7_All_Stems_Ultra_HQ.zip')}`}
+                    className="october7-download-all-btn"
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Download complete stems package as a single ZIP archive"
+                  >
+                    <span>📦</span> Download All Stems (ZIP 432.9 MB)
+                  </a>
+                  <button
+                    onClick={() => { setCurrentPath('/October_7_Stems_Ultra_HQ'); setSearchQuery(''); }}
+                    className="october7-explore-folder-btn"
+                    title="Explore files in directory view"
+                  >
+                    <span>📁</span> Open Folder
+                  </button>
+                  {onNavigateTab && (
+                    <button
+                      onClick={() => onNavigateTab('music_daw')}
+                      className="october7-explore-folder-btn"
+                      title="Open in AI Music Studio DAW"
+                    >
+                      <span>🎵</span> Open in DAW
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowOctober7Section(false)}
+                    className="drive-card-action-btn"
+                    title="Collapse October 7 Stem Section"
+                    style={{ padding: '6px 10px', fontSize: '0.85rem' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Stems Deck */}
+              <div className="october7-stems-grid">
+                {OCTOBER7_STEMS.map((st) => (
+                  <div key={st.id} className="october7-stem-card">
+                    <div className="october7-stem-card-top">
+                      <div className="october7-stem-info">
+                        <span className="october7-stem-icon">{st.icon}</span>
+                        <div className="october7-stem-title-wrap">
+                          <span className="october7-stem-name">{st.title}</span>
+                          <span className="october7-stem-meta">{st.meta}</span>
+                        </div>
+                      </div>
+                      <span className="october7-stem-tag">{st.tag}</span>
+                    </div>
+
+                    {/* Inline Audio Preview Player */}
+                    <audio
+                      controls
+                      className="october7-audio-player"
+                      preload="none"
+                      src={`${backendUrl}/api/drive/preview?path=${encodeURIComponent(st.mp3 || st.wav)}`}
+                    />
+
+                    {/* Stem Download Action Buttons */}
+                    <div className="october7-stem-downloads">
+                      {st.wav && (
+                        <a
+                          href={`${backendUrl}/api/drive/download?path=${encodeURIComponent(st.wav)}`}
+                          className="october7-dl-btn-wav"
+                          target="_blank"
+                          rel="noreferrer"
+                          title={`Download Studio Master 24-bit WAV (${st.wavSize})`}
+                        >
+                          <span>⬇️</span> WAV (24-bit)
+                        </a>
+                      )}
+                      {st.mp3 && (
+                        <a
+                          href={`${backendUrl}/api/drive/download?path=${encodeURIComponent(st.mp3)}`}
+                          className="october7-dl-btn-mp3"
+                          target="_blank"
+                          rel="noreferrer"
+                          title={`Download High Bitrate 320 kbps MP3 (${st.mp3Size})`}
+                        >
+                          <span>⬇️</span> MP3 (320k)
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -923,7 +1152,15 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
                     <div className="drive-card-header">
                       <span className="drive-card-icon">{item.icon}</span>
                       <div className="drive-card-actions">
-                        {!item.is_dir && (
+                        {item.is_dir ? (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDownload(item); }}
+                            className="drive-card-action-btn drive-folder-dl-btn"
+                            title="Download entire folder as ZIP"
+                          >
+                            📥 ZIP
+                          </button>
+                        ) : (
                           <button
                             onClick={(e) => { e.stopPropagation(); handleDownload(item); }}
                             className="drive-card-action-btn"
@@ -1007,7 +1244,15 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
                         <td className="drive-table-size">{item.size_formatted}</td>
                         <td className="drive-table-modified">{item.modified_formatted}</td>
                         <td className="drive-table-actions" onClick={(e) => e.stopPropagation()}>
-                          {!item.is_dir && (
+                          {item.is_dir ? (
+                            <button
+                              onClick={() => handleDownload(item)}
+                              className="drive-btn-sm drive-folder-dl-btn"
+                              title="Download entire folder as ZIP"
+                            >
+                              📥 Download ZIP
+                            </button>
+                          ) : (
                             <>
                               <button onClick={() => handleOpenPreviewOrEdit(item)} className="drive-btn-sm" title="View / Edit">
                                 👁️ Open

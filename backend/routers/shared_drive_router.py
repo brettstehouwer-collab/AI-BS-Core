@@ -543,10 +543,26 @@ async def delete_items(req: DeleteItemsRequest):
 
 @router.get("/download")
 async def download_file(path: str = Query(..., description="Relative file path")):
-    """Streams a file for download with Content-Disposition."""
+    """Streams a file for download or bundles a directory into an on-the-fly streaming ZIP with Content-Disposition."""
     target = resolve_safe_path(path)
-    if not target.exists() or target.is_dir():
-        raise HTTPException(status_code=404, detail="File not found.")
+    if not target.exists():
+        raise HTTPException(status_code=404, detail="File or directory not found.")
+
+    if target.is_dir():
+        memory_zip = io.BytesIO()
+        with zipfile.ZipFile(memory_zip, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+            for root, _, files in os.walk(target):
+                for file in files:
+                    full_p = Path(root) / file
+                    arcname = full_p.relative_to(target)
+                    zf.write(full_p, arcname=str(arcname))
+        memory_zip.seek(0)
+        archive_name = f"{target.name}.zip"
+        return StreamingResponse(
+            memory_zip,
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="{archive_name}"'}
+        )
 
     mime_type, _ = mimetypes.guess_type(target.name)
     return FileResponse(

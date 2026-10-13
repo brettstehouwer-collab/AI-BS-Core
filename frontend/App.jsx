@@ -653,10 +653,13 @@ export default function App() {
   const isMobileWriterRoute = typeof window !== 'undefined' && window.location.search.includes('standalone_writer=true');
   const isRecDebutStandaloneRoute = 
     currentPath.includes('/recdebut') || 
+    currentPath.includes('/remote') || 
     (typeof window !== 'undefined' && (
       window.location.search.includes('portal=recdebut') || 
       window.location.search.includes('client=dennisbell') ||
-      window.location.search.includes('page=recdebut')
+      window.location.search.includes('page=recdebut') ||
+      window.location.search.includes('remote=true') ||
+      window.location.search.includes('view=mobile')
     ));
 
   if (isRecDebutStandaloneRoute) {

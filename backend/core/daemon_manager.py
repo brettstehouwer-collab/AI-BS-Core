@@ -179,7 +179,7 @@ class DaemonManager:
         terminated_count = 0
         try:
             for conn in psutil.net_connections(kind="inet"):
-                if conn.laddr and conn.laddr.port in ports and conn.pid:
+                if conn.laddr and conn.laddr.port in ports and conn.pid and getattr(conn, 'status', None) == 'LISTEN':
                     try:
                         p = psutil.Process(conn.pid)
                         if p.pid == os.getpid():

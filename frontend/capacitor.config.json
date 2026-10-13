@@ -1,6 +1,6 @@
 {
   "appId": "com.stehouwerpublishing.digitalstorefront",
-  "appName": "Stehouwer Digital Storefront",
+  "appName": "Dennis Bell Remote",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "server": {
