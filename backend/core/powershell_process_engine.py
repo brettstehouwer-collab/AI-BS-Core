@@ -49,7 +49,9 @@ class PowerShellProcessEngine:
             return {
                 "status": "success" if res.returncode == 0 else "error",
                 "returncode": res.returncode,
+                "exit_code": res.returncode,
                 "stdout": res.stdout,
+                "output": res.stdout,
                 "stderr": res.stderr,
                 "elapsed_ms": elapsed_ms,
                 "execution_policy": execution_policy
@@ -58,12 +60,20 @@ class PowerShellProcessEngine:
             return {
                 "status": "timeout",
                 "returncode": -1,
+                "exit_code": -1,
+                "stdout": "",
+                "output": "",
+                "stderr": f"Execution timed out after {timeout_seconds} seconds.",
                 "error": f"Execution timed out after {timeout_seconds} seconds."
             }
         except Exception as e:
             return {
                 "status": "error",
                 "returncode": -1,
+                "exit_code": -1,
+                "stdout": "",
+                "output": "",
+                "stderr": str(e),
                 "error": str(e)
             }
 

@@ -14,7 +14,7 @@
     "category": "Primary",
     "folder": "Inbox",
     "starred": true,
-    "read": false,
+    "read": true,
     "label": "[Imap]/Brett"
   },
   {
@@ -32,7 +32,7 @@
     "category": "Primary",
     "folder": "Inbox",
     "starred": false,
-    "read": false,
+    "read": true,
     "label": "[Imap]/Brett"
   },
   {

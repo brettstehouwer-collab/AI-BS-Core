@@ -24,25 +24,33 @@ WORKSPACE_ROOT = r"C:\AI-BS"
 LOG_PATH = os.path.join(WORKSPACE_ROOT, "logs", "matrix_doctor.log")
 
 ECOSYSTEM_PORTS = {
-    8080: {"name": "FastAPI Master Hub", "category": "Backend Core", "critical": True},
+    80: {"name": "Nginx Gateway", "category": "Edge Proxy", "critical": False},
+    3001: {"name": "Node.js Backend Server", "category": "Legacy Services", "critical": False},
+    4455: {"name": "OBS Studio WebSocket", "category": "OBS Orchestration", "critical": False},
+    5173: {"name": "Primary React Dashboard", "category": "Web Frontend", "critical": True},
+    5174: {"name": "BroadcastStudioApp Vite", "category": "Native Desktop App", "critical": False},
     8000: {"name": "Go Matrix Gateway", "category": "IPC Gateway", "critical": True},
     8001: {"name": "Theatrical Gateway", "category": "Virtual Production", "critical": False},
     8002: {"name": "ChromaDB Vector Store", "category": "Vector Memory", "critical": True},
     8005: {"name": "Broadcast Studio Daemon", "category": "Media & Streaming", "critical": False},
     8006: {"name": "Twitch/IRC Social Hub", "category": "Social Automation", "critical": False},
+    8007: {"name": "Crypto Swarm & Scalp Bot", "category": "Financial Engine", "critical": False},
     8008: {"name": "Supabase Kong Gateway", "category": "Database Gateway", "critical": False},
     8010: {"name": "SHM Telemetry Gateway", "category": "Shared Memory IPC", "critical": True},
     8013: {"name": "VST3 Audio Bridge", "category": "Audio Engineering", "critical": False},
+    8055: {"name": "Directus Backend", "category": "Bio-Sensor Bridge", "critical": False},
+    8080: {"name": "FastAPI Master Hub", "category": "Backend Core", "critical": True},
+    8085: {"name": "Ubuntu-Bio Bridge", "category": "WSL2 Biocompute", "critical": False},
+    8088: {"name": "Broadcast Kernel & NVENC", "category": "Hardware Encoding", "critical": False},
+    8089: {"name": "WSL HLS Ingest", "category": "Stream Ingest", "critical": False},
     8099: {"name": "Gemini MCP Server", "category": "MCP Infrastructure", "critical": False},
+    8188: {"name": "ComfyUI Primary Default", "category": "Generative Media", "critical": False},
     8189: {"name": "ComfyUI Diffusion Studio", "category": "Generative Media", "critical": False},
     8888: {"name": "Unreal Engine Signaling", "category": "3D Virtual Production", "critical": False},
-    4455: {"name": "OBS Studio WebSocket", "category": "OBS Orchestration", "critical": False},
-    3001: {"name": "Node.js Backend Server", "category": "Legacy Services", "critical": False},
-    5173: {"name": "Primary React Dashboard", "category": "Web Frontend", "critical": True},
-    5174: {"name": "BroadcastStudioApp Vite", "category": "Native Desktop App", "critical": False},
     11434: {"name": "Ollama Primary LLM", "category": "Local LLM Core", "critical": True},
     11435: {"name": "Ollama E-Drive LLM", "category": "Local LLM Secondary", "critical": False},
 }
+
 
 LOCK_FILES_TO_AUDIT = [
     os.path.join(WORKSPACE_ROOT, "Crypto-Swarm", "crypto_daemon_manager.lock"),
@@ -109,6 +117,15 @@ def diagnose_ecosystem():
         if os.path.exists(lock_path):
             orphan_locks.append(os.path.basename(lock_path))
 
+    # Audit zombie nodes
+    zombie_count = 0
+    try:
+        from zombie_node_cleaner import audit_zombie_nodes
+        z_audit = audit_zombie_nodes()
+        zombie_count = z_audit.get("count", 0)
+    except Exception:
+        pass
+
     # Health score (out of 100)
     health_score = int((online_count / len(ECOSYSTEM_PORTS)) * 100)
 
@@ -121,6 +138,7 @@ def diagnose_ecosystem():
         "total_critical": total_critical,
         "ports": port_results,
         "orphan_locks": orphan_locks,
+        "zombie_nodes_count": zombie_count,
         "system_status": "OPTIMAL" if health_score >= 80 else ("DEGRADED" if health_score >= 40 else "CRITICAL")
     }
 
@@ -243,6 +261,16 @@ def heal_ecosystem():
                 log_doctor(f"Purged {killed_daemons} orphaned Gradle daemons from host RAM")
         except Exception:
             pass
+
+    # 2g. Sweep & Purge Zombie / Orphan Process Nodes
+    try:
+        from zombie_node_cleaner import sweep_zombie_nodes
+        z_res = sweep_zombie_nodes(dry_run=False)
+        if z_res.get("terminated_count", 0) > 0:
+            actions_taken.append(f"Purged {z_res['terminated_count']} zombie nodes (Freed {z_res['freed_mb']} MB RAM)")
+            log_doctor(f"Purged {z_res['terminated_count']} zombie nodes (Freed {z_res['freed_mb']} MB RAM)")
+    except Exception as e:
+        pass
 
     time.sleep(1.0)
 

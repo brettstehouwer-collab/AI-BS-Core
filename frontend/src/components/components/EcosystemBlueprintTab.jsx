@@ -692,7 +692,7 @@ export default function EcosystemBlueprintTab() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 8px #00f0ff' }} />
               <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#ffffff' }}>
-                🩺 MATRIX DOCTOR: 18-PORT DIAGNOSTIC & SELF-HEALING SUITE
+                🩺 MATRIX DOCTOR: 25-PORT DIAGNOSTIC & SELF-HEALING SUITE
               </h2>
             </div>
 
@@ -711,7 +711,7 @@ export default function EcosystemBlueprintTab() {
                   cursor: 'pointer'
                 }}
               >
-                {isDoctorProbing ? 'Probing...' : '🔄 Probe 18 Ports'}
+                {isDoctorProbing ? 'Probing...' : '🔄 Probe 25 Ports'}
               </button>
 
               <button

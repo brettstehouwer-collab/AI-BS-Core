@@ -737,6 +737,100 @@ class ToolRegistry:
                 }
             },
             {
+                "name": "execute_powershell",
+                "description": "Executes elevated PowerShell scripts or commands on the Windows 11 host with ExecutionPolicy Bypass, sub-process capture, and timeout protection.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "command": {
+                            "type": "string",
+                            "description": "The PowerShell command or script string to execute"
+                        },
+                        "execution_policy": {
+                            "type": "string",
+                            "description": "PowerShell execution policy: 'Bypass' (default), 'RemoteSigned', or 'Unrestricted'"
+                        },
+                        "timeout_seconds": {
+                            "type": "integer",
+                            "description": "Timeout in seconds (default 180)"
+                        },
+                        "working_directory": {
+                            "type": "string",
+                            "description": "Working directory (default C:\\AI-BS)"
+                        }
+                    },
+                    "required": ["command"]
+                }
+            },
+            {
+                "name": "build_program",
+                "description": "Autonomously scaffolds, generates multi-file software projects, verifies syntax, executes build or test commands in PowerShell, and archives the program into a zip in saved_data/built_programs.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "project_name": {
+                            "type": "string",
+                            "description": "Identifier for the project / directory name"
+                        },
+                        "language": {
+                            "type": "string",
+                            "description": "Primary language: 'python', 'powershell', 'javascript', 'batch', etc."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description of the program being built"
+                        },
+                        "files": {
+                            "type": "array",
+                            "description": "List of files to write: [{'path': 'main.py', 'content': '...'}]",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "path": {"type": "string"},
+                                    "content": {"type": "string"}
+                                },
+                                "required": ["path", "content"]
+                            }
+                        },
+                        "entrypoint": {
+                            "type": "string",
+                            "description": "Main entrypoint file to run (default: 'main.py' or 'run.ps1')"
+                        },
+                        "powershell_command": {
+                            "type": "string",
+                            "description": "Optional PowerShell command to execute after files are written"
+                        },
+                        "run_immediately": {
+                            "type": "boolean",
+                            "description": "Whether to immediately execute entrypoint/command (default: True)"
+                        }
+                    },
+                    "required": ["project_name", "files"]
+                }
+            },
+            {
+                "name": "run_program",
+                "description": "Executes an existing program built by AI-BS in saved_data/built_programs using Python or PowerShell.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "project_name": {
+                            "type": "string",
+                            "description": "Name of the existing project"
+                        },
+                        "entrypoint": {
+                            "type": "string",
+                            "description": "Optional entrypoint file (defaults to manifest entrypoint)"
+                        },
+                        "powershell_command": {
+                            "type": "string",
+                            "description": "Optional custom PowerShell command to execute in the program's directory"
+                        }
+                    },
+                    "required": ["project_name"]
+                }
+            },
+            {
                 "name": "write_mirror_component",
                 "description": "Automatically writes a frontend component across all 4 mirror trees simultaneously with 100% hash parity enforcement and .bak backups.",
                 "parameters": {
@@ -5562,6 +5656,49 @@ class ToolRegistry:
                     job_id=arguments.get("job_id", ""),
                     recipe=arguments.get("recipe")
                 )
+
+            elif tool_name in ["execute_powershell", "run_powershell", "powershell_command", "exec_powershell", "powershell"]:
+                cmd = (
+                    arguments.get("command", "")
+                    or arguments.get("command_or_script", "")
+                    or arguments.get("script", "")
+                    or arguments.get("cmd", "")
+                ).strip()
+                if not cmd:
+                    return {"status": "error", "message": "Missing required argument 'command'."}
+                timeout = int(arguments.get("timeout_seconds", 180))
+                cwd = arguments.get("working_directory", r"C:\AI-BS")
+                from core.powershell_process_engine import PowerShellProcessEngine
+                return PowerShellProcessEngine.execute_powershell(
+                    command_or_script=cmd,
+                    execution_policy=arguments.get("execution_policy", "Bypass"),
+                    timeout_seconds=timeout,
+                    working_directory=cwd
+                )
+
+            elif tool_name in ["build_program", "scaffold_program", "create_program"]:
+                from core.program_builder_engine import AutonomousProgramBuilder
+                return AutonomousProgramBuilder.build_program(
+                    project_name=arguments.get("project_name", "aibs_app"),
+                    language=arguments.get("language", "python"),
+                    description=arguments.get("description", "AI-BS Built Program"),
+                    files=arguments.get("files", []),
+                    entrypoint=arguments.get("entrypoint", "main.py"),
+                    run_immediately=arguments.get("run_immediately", True),
+                    powershell_command=arguments.get("powershell_command")
+                )
+
+            elif tool_name in ["run_program", "execute_program"]:
+                from core.program_builder_engine import AutonomousProgramBuilder
+                return AutonomousProgramBuilder.run_existing_program(
+                    project_name=arguments.get("project_name", ""),
+                    entrypoint=arguments.get("entrypoint"),
+                    powershell_command=arguments.get("powershell_command")
+                )
+
+            elif tool_name in ["list_programs", "get_built_programs"]:
+                from core.program_builder_engine import AutonomousProgramBuilder
+                return AutonomousProgramBuilder.list_programs()
 
             else:
                 return {"status": "error", "message": f"Unknown tool name: {tool_name}"}

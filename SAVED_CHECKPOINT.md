@@ -1,12 +1,63 @@
 # AI-BS Active State Recovery Checkpoint
 
 **Last Updated:** 2026-10-14
-**Active Ecosystem Version:** v5.313.0
-**Active Resume Keyword:** `RESUME_UNIVERSAL_CLICK_AUDIT_V5_313_0`
+**Active Ecosystem Version:** v5.315.0
+**Active Resume Keyword:** `RESUME_UNIVERSAL_CREATION_SUITE_WEB_PARITY_25_PORTS_V5_315_0`
 
 ---
 
-## 0. Executive Summary: Pure Native Windows Studio 59-Subtab 100% Button Parity, Universal Click-Test Audit (380 Buttons, 0 Unhandled Exceptions), Hollywood Screenwriting 48-Button Dedicated Slots & Demucs Subprocess Hardening (v5.313.0)
+## 0. Executive Summary: Universal Creation Suite 1:1 Web Parity, 25-Port Ecosystem Collision Matrix Expansion, Theatrical Film Hub & Matrix Doctor (v5.315.0)
+* **Universal Creation Suite 1:1 Web Parity (`native_studio/creation_suite_subtools.py` & `native_studio/screenwriting_view.py`):**
+  - **Inline Sub-Tool Switcher & Header:** Header navigation bar matching `UniversalCreationSuite.jsx` with subtool pills: `✍️ Writing Studio`, `🎬 Video Studio`, `❇️ ComfyUI Studio`, `🔀 Visual Scripting`. Includes `🔗 Share Sub-Tool` (copies direct URL `http://localhost:5173/?tab=unified_creation&subtool=...` to clipboard), `💡 Studio Guide` (`StudioGuideDialog` comprehensive modal), and `🔒 Lock Studio` (`LockScreenPage` requiring password `jssdbdAS2631` or operator bypass).
+  - **Video Studio Page (`VideoStudioPage`):** Wan2.1 hardware-accelerated diffusion generator running on RTX 4090 (24GB VRAM), 7 engine model selections, 6 style modifiers, real-time execution telemetry console, Direct2D video preview monitor with transport slider and playback HUD, and recent clips reel.
+  - **ComfyUI Studio Page (`ComfyUIStudioPage`):** Workflow selector (Wan2.1, FaceID IP-Adapter, AnimateDiff, Screenplay chunk render), chunk duration slider (2s-60s), Hollywood script upload/parser (standard 130 WPM pacing), multi-scene chunk timeline cards, and GPU queue button.
+  - **Visual Scripting Page (`VisualScriptingPage`):** GPU Direct2D `QGraphicsScene` node flow canvas with draggable custom logic nodes (`🚀 Event: On Start`, `🖨️ Action: Print`, `➕ Math Operation`, `🔀 Branch If/Else`, `🧊 Spawn 3D Object`, `📡 Telemetry Matrix`), connection wires, AST compilation (Python, Node.js, Direct2D), and live execution runner.
+  - **Cross-Tool Pipeline Dispatch:** Added `🎬 Send Scene to Video` and `❇️ Chunk in ComfyUI` directly in the Hollywood writing toolbar and ComfyUI `🔄 Parse Active Screenplay` for instant cross-tool ingestion.
+* **25-Port Ecosystem Collision Matrix Expansion:**
+  - Expanded `PORT_MATRIX` (`native_studio/engine.py`), `PORT_ORDER` (`native_studio/telemetry_shm.py`), `ECOSYSTEM_PORTS` (`backend/aibs_matrix_doctor.py`), and `comprehensive_interactive_audit.py` to all 25 active ports:
+    `80`, `3001`, `4455`, `5173`, `5174`, `8000`, `8001`, `8002`, `8005`, `8006`, `8007`, `8008`, `8010`, `8013`, `8055`, `8080`, `8085`, `8088`, `8089`, `8099`, `8188`, `8189`, `8888`, `11434`, `11435`.
+* **Ecosystem Blueprint & Matrix Doctor 24/25-Port Diagnostic Suite (`native_studio/ecosystem_blueprint_view.py`):**
+  - Section 5: Theatrical Film Hub & Virtual Production (with ChromaDB script list, `JuliesPlace_S1E1`, and `ENABLE THEATRICAL OVERRIDE (PAUSE ECO)`).
+  - Section 6: `MATRIX DOCTOR: 24-PORT DIAGNOSTIC & SELF-HEALING SUITE` matching web `frame_048.jpg` with `🔄 Probe 24 Ports` and `⚡ Run Automated Self-Heal` buttons, metric cards, and 25-port live socket grid.
+  - Section 7: "INVEST IN AI-BS: ONE PLATFORM. ZERO SUBSCRIPTIONS" banner.
+* **Automated Verification:**
+  - `native_studio/test_native_studio.py`: 17/17 tests passing (100% pass rate).
+  - `native_studio/comprehensive_interactive_audit.py`: 557 clicks exercised across all 46 subtabs with 0 unhandled exceptions; VERDICT: PASS.
+* **Standalone Windows Binaries & Authenticode Code Signing:**
+  - Recompiled `AI_BS_Studio.exe` and signed with Authenticode SHA-256 certificate (`CN=Stehouwer Advertising`).
+
+---
+
+## 1. Executive Summary: Universal PowerShell Execution & Program Building Integration across BS-Chat and Sovereign Native Studio (v5.314.0)
+* **Universal BS-Chat PowerShell Execution Protocol:**
+  - **Native Studio BS-Chat (`native_studio/bs_chat_ide_full.py`):** Fully integrated elevated Windows 11 host PowerShell execution (`-ExecutionPolicy Bypass`) directly into BS-Chat across all interactive tiers:
+    - **Prompt Input Interception:** Automatically intercepts direct `@powershell` / `@ps` mentions, all 37+ standard PowerShell cmdlet verbs (`Get-`, `Set-`, `Start-`, `Stop-`, `New-`, `Invoke-`, etc.), and direct developer CLI tools (`python`, `pip`, `pytest`, `npm`, `npx`, `git`, `cargo`, `dotnet`, `firebase`, `node`, `wsl`).
+    - **Quick Action Toolbar (Chat Transcript Header):** Added `⚡ Run Last Code (PowerShell)` (`_run_last_code_in_powershell`), `📋 Code ➔ Scratchpad` (`_load_last_code_to_scratchpad`), `💾 Save Code to File` (`_save_last_code_to_file`), `🖥️ Interactive PowerShell Window` (`_spawn_powershell_terminal`), and `🧹 Clear Transcript`.
+    - **Active Scratchpad Actions:** Integrated `⚡ Run Script (PowerShell)` (`_run_scratchpad_in_powershell`), `🖥️ Open Terminal` (`_spawn_powershell_terminal`), `💾 Save File` (`_save_scratchpad_to_file`), `💾 Vault` (`_save_scratchpad_to_vault`), `🔍 Syntax` (`_validate_syntax`), and `🧹 Clear`.
+    - **Tier 3 Tools & Tier 4 Slash Commands:** Added `⚡ Run in PowerShell`, `🔨 PowerShell Build`, `🧪 Pytest Runner`, `🖥️ Terminal Window`, `⚡ Run Last Code`, `📋 Code to Scratchpad`, `🐍 Run Python`, `📦 NPM Script`, `/program list`, and `/program run <name>`.
+  - **Autonomous Program Builder Engine (`backend/core/program_builder_engine.py`):**
+    - Enhanced `AutonomousProgramBuilder.build_program` and `run_existing_program` to natively execute PowerShell scripts (`.ps1`), batch files (`.bat`/`.cmd`), and custom `powershell_command` build tasks with real-time stdout/stderr capture and timeout protection.
+    - Repaired `display_name` logging in personal intelligence memory events.
+  - **Universal Tool Registry & Hybrid Reasoning (`tool_registry.py` & `hybrid_reasoning_engine.py`):**
+    - Added `execute_powershell`, `build_program`, `run_program`, and `list_programs` to `ToolRegistry.get_all_tools()` and implemented execution routing in `execute_tool()`.
+    - Expanded `detect_tool_intent` to catch `/ps`, `/powershell`, `/cmd`, `/sh`, `/exec`, `/run`, cmdlets, and direct developer CLI commands, streaming live output into the chat response.
+  - **Verification Suite & Pytest Parity:**
+    - Authored `backend/test_powershell_bs_chat_e2e.py` verifying all 6 integration pillars (100% passed).
+    - Executed `pytest native_studio/test_native_studio.py -v` (16/16 passed in 5.45s).
+    - Executed `unittest` suite (`backend/test_executive_tools.py` & `test_executive_router.py`) (11/11 passed in 2.34s).
+  - **Recompiled & Authenticode Signed Standalone Binaries:**
+    - Recompiled `AI_BS_Studio.exe` (96.79 MB) and `AI_BS_Studio_Setup.exe` (35.09 MB) via PyInstaller.
+    - Signed both binaries with Authenticode SHA-256 certificate (`CN=Stehouwer Advertising`).
+
+---
+
+## 1. Executive Summary: Universal Web-to-Native Visual & Interactive Parity (BS-CHAT 1:1 Port, Non-Clipping Scrollable Quick Dock, InteractiveLaunchCard & FilterPillBar, v5.313.0)
+* **Web-to-Native Parity Architecture Rollout:**
+  - **`widgets_web_parity.py` & `widgets.py`:** Engineered `InteractiveLaunchCard` with Direct2D hover border glow (`#38bdf8`), pointing-hand cursor, and `⚡ Click to Launch →` trigger. Engineered `FilterPillBar` with category filtering pills.
+  - **`app.py` Top Navbar:** Wrapped Pinned Quick Dock (`PINNED_QUICK_TABS`) in a horizontally scrollable ribbon with ◀ / ▶ scroll controls (`_scroll_quick_dock_left`, `_scroll_quick_dock_right`), ensuring zero text clipping on 1080p and 1440p displays.
+  - **`bs_chat_ide_full.py` 1:1 Web Port:** Integrated top sub-header (`⚡ AI-BS Autonomous Agentic IDE Chat`), Stehouwer LLM Assistant empty-state hero with 3×3 interactive launch cards and 9 category filter pills, `QStackedWidget` transition to live chat, collapsible scratchpad (`↔ Toggle Split View`), and 5-tier bottom command deck.
+  - **Verification:** Exercised all 59 subtabs and 387 buttons (0 unhandled exceptions); 16/16 pytest suite passed in 4.19s.
+  - **Standalone Binaries:** Recompiled `AI_BS_Studio.exe` (96.77 MB) and `AI_BS_Studio_Setup.exe` (35.09 MB) via PyInstaller; signed both with Authenticode SHA-256 certificate (`CN=Stehouwer Advertising`).
 * **Micro-Change Sequential Version Audit & Causal Trace (`v5.312.1` -> `v5.313.0`):**
   - **`v5.312.1` [Scope: `native_studio/screenwriting_view.py`]:** 48 buttons across 6 functional rows in Hollywood Screenwriting Studio lacked active slot assignments (`receivers == 0`). Implemented 48 dedicated native slot methods (`_on_generate_draft`, `_export_fdx`, `_export_pdf`, etc.) bound via `.clicked.connect(...)`; verified via AST introspection (`receivers == 1` across all 48 buttons) and `click_test_all_subtabs.py` (0 unhandled exceptions).
   - **`v5.312.2` [Scope: `native_studio/creative_suite_views.py`]:** Creative Suite action buttons lacked connections for Stripe/crypto checkout, D3D11 stage projection, and headless Unreal Engine staging. Connected `btn_buy` to `_open_checkout`, `btn_proj` to `_launch_stage_projector()`, and `btn_launch` to `_launch_unreal_staging()`. Verified via `click_test_all_subtabs.py`.

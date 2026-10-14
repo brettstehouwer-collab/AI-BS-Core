@@ -33,13 +33,15 @@ class AutonomousProgramBuilder:
         description: str,
         files: List[Dict[str, str]],
         entrypoint: str = "main.py",
-        run_immediately: bool = True
+        run_immediately: bool = True,
+        powershell_command: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Builds a complete multi-file software program.
         files: [{"path": "main.py", "content": "..."}, ...]
         """
         cls.ensure_dir()
+        display_name = project_name
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         if not clean_name:
             clean_name = f"program_{int(time.time())}"
@@ -86,29 +88,23 @@ class AutonomousProgramBuilder:
         # Live execution if requested and syntax passed
         if run_immediately and not syntax_errors:
             entry_full = os.path.join(project_dir, entrypoint)
-            if os.path.exists(entry_full) and entrypoint.endswith(".py"):
+            
+            # Check for custom PowerShell command first
+            if powershell_command:
                 try:
-                    res = subprocess.run(
-                        [PYTHON_EXE, entry_full],
-                        cwd=project_dir,
-                        capture_output=True,
-                        text=True,
-                        timeout=15.0
+                    from core.powershell_process_engine import PowerShellProcessEngine
+                    ps_res = PowerShellProcessEngine.execute_powershell(
+                        command_or_script=powershell_command,
+                        execution_policy="Bypass",
+                        timeout_seconds=60,
+                        working_directory=project_dir
                     )
                     execution_output = {
                         "executed": True,
-                        "status": "success" if res.returncode == 0 else "error",
-                        "stdout": res.stdout,
-                        "stderr": res.stderr,
-                        "exit_code": res.returncode
-                    }
-                except subprocess.TimeoutExpired:
-                    execution_output = {
-                        "executed": True,
-                        "status": "timeout",
-                        "stdout": "",
-                        "stderr": "Execution timed out (15s limit reached).",
-                        "exit_code": -1
+                        "status": ps_res.get("status", "error"),
+                        "stdout": ps_res.get("stdout", ""),
+                        "stderr": ps_res.get("stderr", ""),
+                        "exit_code": ps_res.get("exit_code", 0)
                     }
                 except Exception as e:
                     execution_output = {
@@ -118,6 +114,87 @@ class AutonomousProgramBuilder:
                         "stderr": str(e),
                         "exit_code": 1
                     }
+            elif os.path.exists(entry_full):
+                if entrypoint.endswith(".ps1") or language.lower() in ("powershell", "ps1"):
+                    try:
+                        from core.powershell_process_engine import PowerShellProcessEngine
+                        ps_res = PowerShellProcessEngine.execute_powershell(
+                            command_or_script=f"& '{entry_full}'",
+                            execution_policy="Bypass",
+                            timeout_seconds=60,
+                            working_directory=project_dir
+                        )
+                        execution_output = {
+                            "executed": True,
+                            "status": ps_res.get("status", "error"),
+                            "stdout": ps_res.get("stdout", ""),
+                            "stderr": ps_res.get("stderr", ""),
+                            "exit_code": ps_res.get("exit_code", 0)
+                        }
+                    except Exception as e:
+                        execution_output = {
+                            "executed": True,
+                            "status": "error",
+                            "stdout": "",
+                            "stderr": str(e),
+                            "exit_code": 1
+                        }
+                elif entrypoint.endswith((".bat", ".cmd")):
+                    try:
+                        from core.powershell_process_engine import PowerShellProcessEngine
+                        ps_res = PowerShellProcessEngine.execute_powershell(
+                            command_or_script=f"cmd.exe /c '{entry_full}'",
+                            execution_policy="Bypass",
+                            timeout_seconds=60,
+                            working_directory=project_dir
+                        )
+                        execution_output = {
+                            "executed": True,
+                            "status": ps_res.get("status", "error"),
+                            "stdout": ps_res.get("stdout", ""),
+                            "stderr": ps_res.get("stderr", ""),
+                            "exit_code": ps_res.get("exit_code", 0)
+                        }
+                    except Exception as e:
+                        execution_output = {
+                            "executed": True,
+                            "status": "error",
+                            "stdout": "",
+                            "stderr": str(e),
+                            "exit_code": 1
+                        }
+                elif entrypoint.endswith(".py"):
+                    try:
+                        res = subprocess.run(
+                            [PYTHON_EXE, entry_full],
+                            cwd=project_dir,
+                            capture_output=True,
+                            text=True,
+                            timeout=20.0
+                        )
+                        execution_output = {
+                            "executed": True,
+                            "status": "success" if res.returncode == 0 else "error",
+                            "stdout": res.stdout,
+                            "stderr": res.stderr,
+                            "exit_code": res.returncode
+                        }
+                    except subprocess.TimeoutExpired:
+                        execution_output = {
+                            "executed": True,
+                            "status": "timeout",
+                            "stdout": "",
+                            "stderr": "Execution timed out (20s limit reached).",
+                            "exit_code": -1
+                        }
+                    except Exception as e:
+                        execution_output = {
+                            "executed": True,
+                            "status": "error",
+                            "stdout": "",
+                            "stderr": str(e),
+                            "exit_code": 1
+                        }
 
         # Package as ZIP archive
         zip_filename = f"{clean_name}.zip"
@@ -162,8 +239,8 @@ class AutonomousProgramBuilder:
         return manifest
 
     @classmethod
-    def run_existing_program(cls, project_name: str, entrypoint: Optional[str] = None) -> Dict[str, Any]:
-        """Runs an existing built program and captures output."""
+    def run_existing_program(cls, project_name: str, entrypoint: Optional[str] = None, powershell_command: Optional[str] = None) -> Dict[str, Any]:
+        """Runs an existing built program and captures output via Python or PowerShell."""
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         project_dir = os.path.join(PROGRAMS_DIR, clean_name)
         if not os.path.exists(project_dir):
@@ -175,10 +252,47 @@ class AutonomousProgramBuilder:
                 manifest = json.load(f)
                 entrypoint = manifest.get("entrypoint", "main.py")
 
+        # Custom PowerShell command execution
+        if powershell_command:
+            try:
+                from core.powershell_process_engine import PowerShellProcessEngine
+                return PowerShellProcessEngine.execute_powershell(
+                    command_or_script=powershell_command,
+                    execution_policy="Bypass",
+                    timeout_seconds=60,
+                    working_directory=project_dir
+                )
+            except Exception as e:
+                return {"status": "error", "stderr": str(e), "stdout": ""}
+
         entrypoint = entrypoint or "main.py"
         entry_full = os.path.join(project_dir, entrypoint)
         if not os.path.exists(entry_full):
             return {"status": "error", "message": f"Entrypoint '{entrypoint}' not found in {project_dir}."}
+
+        if entrypoint.endswith(".ps1"):
+            try:
+                from core.powershell_process_engine import PowerShellProcessEngine
+                return PowerShellProcessEngine.execute_powershell(
+                    command_or_script=f"& '{entry_full}'",
+                    execution_policy="Bypass",
+                    timeout_seconds=60,
+                    working_directory=project_dir
+                )
+            except Exception as e:
+                return {"status": "error", "stderr": str(e), "stdout": ""}
+
+        if entrypoint.endswith((".bat", ".cmd")):
+            try:
+                from core.powershell_process_engine import PowerShellProcessEngine
+                return PowerShellProcessEngine.execute_powershell(
+                    command_or_script=f"cmd.exe /c '{entry_full}'",
+                    execution_policy="Bypass",
+                    timeout_seconds=60,
+                    working_directory=project_dir
+                )
+            except Exception as e:
+                return {"status": "error", "stderr": str(e), "stdout": ""}
 
         try:
             res = subprocess.run(

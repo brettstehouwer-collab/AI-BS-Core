@@ -87,6 +87,31 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
     """Inspects the prompt for explicit tool calls or visual/database generation intents across multiple directives."""
     p_lower = prompt.lower().strip()
     
+    # -10. PowerShell Execution Intent (/ps, /powershell, /cmd, /sh, /exec, /run, cmdlets, developer CLI)
+    if p_lower.startswith(("/ps ", "/powershell ", "/cmd ", "/sh ", "/exec ", "/run ", "powershell ", "pwsh ")):
+        parts = prompt.strip().split(maxsplit=1)
+        ps_cmd = parts[1].strip() if len(parts) > 1 else ""
+        return "execute_powershell", {"command": ps_cmd}
+
+    if p_lower in ["/ps", "/powershell", "powershell", "pwsh"]:
+        return "execute_powershell", {"command": "Get-Location"}
+
+    if any(prompt.strip().startswith(cmdlet) for cmdlet in [
+        "Get-", "Set-", "Start-", "Stop-", "Restart-", "Test-", "New-", "Remove-",
+        "Invoke-", "Write-", "Read-", "Select-", "Where-", "Clear-", "Copy-", "Move-",
+        "Install-", "Update-", "Out-", "Export-", "Import-", "Convert-", "Add-",
+        "Enable-", "Disable-", "Format-", "Measure-", "Wait-", "Push-", "Pop-",
+        "Join-", "Split-", "Show-", "Hide-", "Find-", "Search-"
+    ]):
+        return "execute_powershell", {"command": prompt.strip()}
+
+    # Developer CLI tooling commands dispatched directly to elevated PowerShell
+    if p_lower.startswith((
+        "python ", "py ", "pip ", "pytest ", "npm ", "npx ", "cargo ",
+        "dotnet ", "git ", "node ", "wsl ", "tsc ", "firebase "
+    )):
+        return "execute_powershell", {"command": prompt.strip()}
+
     # -9. Kraken Sovereign Exchange & Trading Intent (/kraken)
     if p_lower.startswith(("/kraken", "kraken ")):
         parts = prompt.strip().split()
@@ -1054,6 +1079,31 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 - **Sentinel Recommendation:** *{res.get('recommendation')}*
 """
             yield md
+            return
+
+        elif t_name == "execute_powershell":
+            cmd = t_args.get("command", "").strip()
+            if not cmd:
+                yield "⚠️ **PowerShell Engine:** No command specified.\n\n**Usage:** `/ps <command>`\n*Example:* `/ps Get-Process | Select-Object -First 10`\n"
+                return
+            yield f"⚡ **Executing PowerShell with ExecutionPolicy Bypass...**\n\n```powershell\n{cmd}\n```\n\n"
+            from tools.tool_registry import ToolRegistry
+            tool_result = await asyncio.to_thread(ToolRegistry.execute_tool, "execute_powershell", t_args)
+            status = tool_result.get("status", "error")
+            rc = tool_result.get("returncode", -1)
+            stdout = (tool_result.get("stdout") or "").strip()
+            stderr = (tool_result.get("stderr") or "").strip()
+            elapsed = tool_result.get("elapsed_ms", 0)
+
+            badge = "✅ **PowerShell Executed Successfully**" if rc == 0 else f"❌ **PowerShell Execution Failed (Exit Code {rc})**"
+            out = f"{badge} *(in {elapsed}ms | CWD: C:\\AI-BS)*\n\n"
+            if stdout:
+                out += f"```powershell\n{stdout}\n```\n\n"
+            if stderr:
+                out += f"⚠️ **Stderr:**\n```powershell\n{stderr}\n```\n\n"
+            if not stdout and not stderr:
+                out += "*(Command produced no standard output)*\n\n"
+            yield out
             return
 
 
