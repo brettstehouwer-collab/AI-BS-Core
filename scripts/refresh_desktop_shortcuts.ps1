@@ -1,8 +1,8 @@
-# AI-BS Desktop Shortcut Refresher (v5.311.0)
+# AI-BS Desktop Shortcut Refresher (v5.313.0)
 $ErrorActionPreference = "SilentlyContinue"
 
-$targetVbs = "C:\AI-BS\Launch_Desktop_Studio.vbs"
-$workingDir = "C:\AI-BS"
+$targetExe = "C:\AI-BS\native_studio\dist\AI_BS_Studio\AI_BS_Studio.exe"
+$workingDir = "C:\AI-BS\native_studio\dist\AI_BS_Studio"
 $shortcutName = "AI-BS Executive Studio.lnk"
 $iconPath = "C:\AI-BS\public\favicon.ico"
 
@@ -13,6 +13,7 @@ $desktopPaths = @(
 
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host " AI-BS EXECUTIVE STUDIO -- DESKTOP SHORTCUT DEPLOYER" -ForegroundColor Cyan
+Write-Host " Target: Direct2D Pure Native Standalone Executable" -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 $wsh = New-Object -ComObject WScript.Shell
@@ -24,12 +25,13 @@ foreach ($desk in $desktopPaths) {
         Write-Host "Deploying shortcut to: $linkPath" -ForegroundColor Yellow
         
         $shortcut = $wsh.CreateShortcut($linkPath)
-        $shortcut.TargetPath = "wscript.exe"
-        $shortcut.Arguments = '"' + $targetVbs + '"'
+        $shortcut.TargetPath = $targetExe
         $shortcut.WorkingDirectory = $workingDir
-        $shortcut.Description = "AI-BS Sovereign Executive Command Studio (v5.311.0)"
+        $shortcut.Description = "AI-BS Sovereign Executive Command Studio (Direct2D Win32, v5.313.0)"
         if (Test-Path $iconPath) {
             $shortcut.IconLocation = $iconPath
+        } elseif (Test-Path $targetExe) {
+            $shortcut.IconLocation = $targetExe
         }
         $shortcut.Save()
         $deployedCount++
@@ -39,3 +41,4 @@ foreach ($desk in $desktopPaths) {
 
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "Summary: $deployedCount desktop shortcut(s) active and verified." -ForegroundColor Green
+

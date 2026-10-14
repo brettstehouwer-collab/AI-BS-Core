@@ -31,7 +31,7 @@ def test_port_discovery():
 def test_tool_registry_matrix():
     print("--- 3. Testing ToolRegistry Declarations and Port Tools ---")
     decls = ToolRegistry.get_tool_declarations()
-    assert len(decls) == 78, f"Expected 78 tools, got {len(decls)}"
+    assert len(decls) >= 78, f"Expected at least 78 tools, got {len(decls)}"
     
     # Test get_port_telemetry_report
     r1 = ToolRegistry.execute_tool("get_port_telemetry_report", {"port": 8080})

@@ -1,58 +1,51 @@
-# AI-BS Mission Specification: Interactive ComfyUI Workstation & Node Inspector
+# AI-BS Native Desktop Interaction, Services & Hardware Verification Specification (`mission_spec.md`)
 
-**Mission ID:** MISSION-COMFYUI-WORKSTATION-8189  
-**Status:** LOCKED & APPROVED  
-**Target Subsystem:** Frontend Workspace & ComfyUI Runtime Interface  
-**Ecosystem Baseline:** AI-BS v5.305.0 | Windows 11 Pro | RTX 4090 (24GB VRAM)  
-**Port Reservation:** Port 8189 (ComfyUI RTX 4090 Native)  
-
----
-
-## 1. Executive Summary & Intent
-Deliver a fully interactive, locally hosted ComfyUI workstation featuring:
-1. One-click tool and workflow execution.
-2. Dynamic workflow preset catalog pre-loaded with verified local RTX 4090 pipelines.
-3. Live WebSocket execution telemetry, active node tracking, and step progress.
-4. Searchable node registry inspector parsing all 1,365 installed nodes from `/object_info`.
-5. Dual display bridging an embedded native canvas iframe and a live output gallery.
-6. Seamless integration within `ComfyWorkspaceTab.jsx` as a top-level Dual-Engine mode toggle.
+## 1. Mission Overview
+- **Target Application:** AI-BS Sovereign Native Studio (Windows 10/11 x64 Pure Native Win32 Direct2D / DirectX GUI).
+- **Goal:** Exhaustive interactive audit and verification of every page, tab, subtab, button, input, slider, dropdown, and interactive object across all 46 subsystems, accompanied by live validation of all 20 background daemons and complete hardware telemetry (RTX 4090 GPU, Ryzen CPU, NVMe Disks, RAM, and WASAPI audio).
+- **Zero-Browser Directive:** Pure native Win32/Direct2D Qt engine; zero Chromium, Electron, CEF, or WebView2.
 
 ---
 
-## 2. Architectural Decisions (Grill Session Resolution)
+## 2. Locked Architectural Decisions (From /grill-me Session)
 
-### Branch 1: Data Schemas & State Persistence
-- **Node Registry Schema:** Caches full `/object_info` dictionary containing node inputs, outputs, types, and categories.
-- **Workflow DAG Format:** Standard ComfyUI prompt API JSON format.
-- **Output Gallery Persistence:** Captured image/video URLs streamed via WebSocket (`executed` event) and rendered into the gallery grid with direct download capabilities.
+### Decision 1: Interactive Verification Strategy
+- **Method:** Exhaustive headless Qt Click & Signal Audit with Safe-Guard Filter.
+- **Execution:** Programmatically enumerate and test all 366+ interactive buttons, dropdowns, inputs, and tabs offscreen using `QTest` and Qt introspection.
+- **Assertions:**
+  1. Verify signal-to-slot connectivity (zero orphaned clickable controls).
+  2. Programmatically simulate clicks/triggers on all safe controls.
+  3. Safe-guard gating: Protect destructive operations (e.g. database purge or live crypto orders) to ensure zero unintended side-effects or mock money violations.
+  4. Capture and log all runtime exceptions or widget state errors.
 
-### Branch 2: Concurrency, Locking & Resource Limits
-- **Port Authority:** Bound strictly to `http://127.0.0.1:8189` and `ws://127.0.0.1:8189/ws` (Port 8189 static reservation).
-- **GPU Compute Allocation:** Operates on the NVIDIA RTX 4090 (24GB VRAM). VRAM resource arbiter coordination prevents contention with local Ollama models on Port 11434.
+### Decision 2: Hardware & Services Validation Scope
+- **Method:** Comprehensive Telemetry & Live Payload Handshake.
+- **Execution:**
+  1. Real-time NVML hardware query (GPU core temp, VRAM usage, clocks, power draw).
+  2. CPU utilization, RAM usage, NVMe disk volume capacities.
+  3. Audio hardware probe (WASAPI Exclusive audio device enumeration).
+  4. Live HTTP/JSON payload health checks against core daemons:
+     - FastAPI Core Engine (Port 8080)
+     - ComfyUI Ultra-HD Studio (Port 8189)
+     - Ollama Sovereign Fleet (Port 11434 / 11435)
+     - ChromaDB Vector Vault (Port 8002)
+     - 18-Port Collision Matrix TCP connectivity (Ports 80, 3001, 4455, 5173, 8000, 8002, 8005, 8006, 8007, 8010, 8013, 8080, 8085, 8088, 8089, 8099, 8189, 8888, 11434, 11435).
 
-### Branch 3: Error Handling & Boundary Recovery
-- **Dynamic Hybrid Endpoint Resolver:** Automatically detects execution context (localhost vs remote dashboard). Allows operator endpoint override in the top control bar with Go Gateway fallback (`/api/comfyui`).
-- **WebSocket Reconnection:** Graceful disconnect handling and state tracking (`isConnected` boolean indicator).
-
-### Branch 4: Preset Catalog Matrix (RTX 4090 Verified)
-Pre-loads 5 sovereign workflows grounded in active disk models and installed nodes:
-1. **SDXL 4K Master Cinema + 4x-UltraSharp:** `sd_xl_base_1.0.safetensors` + `4x-UltraSharp.pth` (28 steps, CFG 7.5, DPM++ 2M SDE GPU / Karras).
-2. **Wan2.1 Neural Motion Video:** `WanVideoWrapper` + `Wan2_1_VAE_bf16.safetensors` + `qwen3vl_4b_fp8_scaled.safetensors` + `Video Helper Suite` (VHS VideoCombine).
-3. **LTX-Video 2B Real-Time Motion:** `ltx-video-2b-v0.9.1.safetensors`.
-4. **ImpactPack FaceDetailer & ControlNet Depth:** `ImpactPack` + `ControlNet Preprocessors` + `v1-5-pruned-emaonly-fp16.safetensors`.
-5. **4x-UltraSharp Direct Super-Resolution:** Direct model-based image upscaling.
+### Decision 3: Error Handling & Remediation Protocol
+- **Method:** Zero-Defect Auto-Remediation.
+- **Execution:** If any button is found to lack a slot connection, throw an unhandled exception, or display broken state, immediately patch the native view code, wire clean handlers to the `EngineBus`, database vaults, or service orchestrator, and re-verify until 100% of interactive elements pass.
 
 ---
 
-## 3. Implementation Targets & Multi-Mirror Parity
-- Hook: `frontend/src/components/useComfyWorkspace.js`
-- Component: `frontend/src/components/ComfyStation.jsx`
-- Styling: `frontend/src/components/ComfyStation.css`
-- Integration: `frontend/src/components/ComfyWorkspaceTab.jsx`
-- Mirror Synchronization: Synchronize all 4 frontend directory trees:
-  1. `frontend/src/components/`
-  2. `frontend/components/`
-  3. `frontend/src/components/components/`
-  4. `frontend/components/components/`
-- Verification: 100% SHA-256 byte parity confirmed via `scripts/verify-mirror-parity.ps1`.
-- Deployment: Production build (`npm run build`) and Firebase Hosting release.
+## 3. Scope of Subsystems & Views (46 Subtabs)
+1. **Intelligence & Code (15 Subtabs):** Executive Cockpit, BS-CHAT IDE, Sovereign Swarm, Workflow DAG, Host Terminal, Deep Learning Studio, Clinical Nutrition, Agent Memory, Reasoning Attention, System Health, Virtual Machines, Automation Console, Lexicon Dashboard, Definitions Lore, Educational Modules.
+2. **Creative Media Studio (16 Subtabs):** BV-Media Creator, ComfyUI Studio, Autonomous Media Studio, Universal Screenwriting Studio, AI Music DAW, Personal Brand, Advertising Studio, Automated Syndication, Stehouwer CMS, Media & Asset Vault, Theatrical Teleprompter, Theatrical Projector, Neon Lounge Studio, Universal AV Omni-Studio, Digital Storefront, Public Playground.
+3. **Business & Operations (16 Subtabs):** Command Center Dashboard, Shared Cloud Drive, Omni Operations Audit, Master Accounting, Money Track, Clients Hub CRM, Lead Matrix, OSINT Recon, Recreational Debut, Client Onboarding, Sovereign NDA, Business Email Client, Lost Property Vault, Master Calendar, Web Traffic & Telemetry (Wire), Matrix Blueprint & ROI.
+4. **Engineering & Specialized Labs (12 Subtabs):** Phone Repair Lab, Prestige Mobile Power Washing, Banquet Architect CAD, Noto's Enterprise OS, Notō Multi-Bar Stock, Project NoCo Living Stage, NoCo Vision & Acoustic Engine, Crypto Swarm, Gaming Lab Memory Trainer, Steam Gaming Hub, Sovereign Bible Hub.
+
+---
+
+## 4. Verification Deliverables
+- `comprehensive_interaction_audit_suite.py`: Automated deep-test runner exercising all widgets, recording click results, slot activations, and exceptions.
+- `interactive_audit_report.md`: Complete audit report detailing every button, view, service, and hardware metric.
+- Pytest integration and updated `SAVED_CHECKPOINT.md` upon completion.

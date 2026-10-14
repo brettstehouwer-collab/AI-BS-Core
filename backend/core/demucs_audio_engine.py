@@ -35,7 +35,10 @@ def get_cuda_python() -> str:
         if os.path.exists(cand):
             try:
                 cmd = [cand, "-c", "import demucs, torch; print('OK' if torch.cuda.is_available() else 'CPU')"]
-                out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=5).decode().strip()
+                out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=5)
+                if isinstance(out, bytes):
+                    out = out.decode("utf-8", errors="replace")
+                out = str(out).strip()
                 if "OK" in out:
                     _CUDA_PYTHON_CACHE = cand
                     return cand
@@ -65,7 +68,10 @@ class DemucsAudioEngine:
                 py_exe, "-c",
                 "import torch, json; print(json.dumps({'cuda': torch.cuda.is_available(), 'name': torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU', 'vram': round(torch.cuda.get_device_properties(0).total_memory / (1024**3), 2) if torch.cuda.is_available() else 0.0}))"
             ]
-            out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=6).decode().strip()
+            out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=6)
+            if isinstance(out, bytes):
+                out = out.decode("utf-8", errors="replace")
+            out = str(out).strip()
             data = json.loads(out)
             status = {
                 "cuda_available": data.get("cuda", False),
