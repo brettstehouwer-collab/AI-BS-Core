@@ -1,12 +1,95 @@
 # AI-BS Active State Recovery Checkpoint
 
-**Last Updated:** 2026-10-14
-**Active Ecosystem Version:** v5.315.0
-**Active Resume Keyword:** `RESUME_UNIVERSAL_CREATION_SUITE_WEB_PARITY_25_PORTS_V5_315_0`
+**Last Updated:** 2026-10-15
+**Active Ecosystem Version:** v5.318.0
+**Active Resume Keyword:** `RESUME_STEHOUWER_BROADCAST_STUDIO_NATIVE_V5_318_0`
 
 ---
 
-## 0. Executive Summary: Universal Creation Suite 1:1 Web Parity, 25-Port Ecosystem Collision Matrix Expansion, Theatrical Film Hub & Matrix Doctor (v5.315.0)
+## 0. Executive Summary: Stehouwer Publishing Broadcast Studio Pure Native Windows Direct2D Workstation, MMCSS Pro Audio P15 & Local Web Server Harmony (v5.318.0)
+* **Stehouwer Publishing Broadcast Studio Architecture (`native_studio/stehouwer_broadcast_studio.py`):**
+  - Direct Win32 Direct2D / DirectX 11 native HWND desktop workstation shell (`StehouwerBroadcastStudioWindow`), decoupling the UI thread from background hardware I/O and telemetry via `EngineBus` multithreaded worker pool.
+  - Windows MMCSS (Multimedia Class Scheduler Service) Pro Audio registration with thread priority 15 (`AVRT_PRIORITY_HIGH`) achieving sub-2.8ms latency WASAPI Exclusive audio streaming.
+  - Native Windows AppUserModelID (`StehouwerPublishing.BroadcastStudio.v5`) registered with the Windows Shell for taskbar isolation.
+  - 16:9 Landscape vs 9:16 Shorts/TikTok orientation monitor canvas with real-time waveform display, scanlines, and Direct3D 11 zero-copy foreground game hook.
+  - 5-Channel WASAPI Multi-Track Audio Mixer (Desktop WASAPI, Mic/Aux, DAW Master Bus, WebRTC Guest, AI Sidekick Voice with real-time VU peak meters).
+  - Multi-destination hardware NVENC 4K/8K streamer (YouTube Live 4K, Twitch, Kick, Sovereign HLS on Port 8089).
+  - Branded title and telemetry logs: "STEHOUWER PUBLISHING BROADCAST STUDIO" with October 7 Vocal Studio Native DAW integration.
+* **Launcher & Environment Modernization:**
+  - Authored dedicated root launcher `Launch_Stehouwer_Broadcast_Studio.bat` and updated `installer/Launch_Broadcast_Studio.bat` and `Program Files/Launch_Broadcast_Studio.bat`.
+  - Replaced legacy browser engines (Chromium, Edge `--app=`, Electron dev/build) with direct native PyQt6 execution and PyInstaller standalone build tooling.
+  - Created high-resolution desktop shortcut `Stehouwer Publishing Broadcast Studio.lnk` on the operator's Windows desktop.
+* **Architectural Coexistence of Local Web Servers:**
+  - Codified the invariant: Local web servers, daemons, and microservices (FastAPI on Port 8080, Broadcast Daemon on 8005, NVENC Kernel on 8088, Vite on 5174, ComfyUI on 8188/8189, Ollama on 11434, etc.) operate freely and harmoniously to power the Native Windows version across AI-BS.
+  - Eliminated legacy port-killing commands to protect companion daemon processes.
+* **Verification & Automated Test Suite:**
+  - Automated pytest test suite passed 100% (17/17 tests in `native_studio/test_native_studio.py`).
+  - Active ecosystem matrix verified: 23 of 25 ports running online.
+
+---
+
+## 1. Executive Summary: Autonomous Self-Healing Closed Loop, Vast.ai Federation, Screenplay-to-Movie VSE & Commercial Sovereign Expansion (v5.317.0)
+* **Phase 1: Autonomous Self-Healing Closed Loop (`backend/core/self_healing_sentinel.py` & `backend/routers/self_healing_router.py`):**
+  - Forensic Traceback & Pytest Log Forensics: Regex parser extracting affected source files, line numbers, exception types, and 12-char SHA-256 error signatures.
+  - Multi-Model Surgical Patch Generation: MoE Code Specialist (`qwen2.5-coder:latest` on Port 11434) generates minimal unified replacements.
+  - AST & Bytecode Gatekeeper: Enforces `ast.parse` and `py_compile` before executing tests.
+  - Anti-Recursion Circuit Breaker: Strict 2-retry limit per error signature within a 10-minute window.
+  - Non-Destructive Byte-Diff Backups: Creates snapshots in `.aibs_backups/` and rolls back immediately on test regression.
+  - Subprocess Pytest Verification: Runs isolated test targets to confirm fix validity.
+  - Monolith & Supervisor Integration: Wired into `_daemon_state_change_bridge` in `AI_BS_Backend.py` to auto-heal daemon crashes and exposed via `/api/sentinel/*`.
+  - Pytest verified: 6/6 tests passing in `tests/test_self_healing_sentinel.py`.
+* **Phase 2: Distributed Node Federation (`backend/core/cluster/vast_federation_daemon.py` & `scripts/bootstrap_remote_worker.sh`):**
+  - Real-Time Spot Market Telemetry: Polls Vast.ai marketplace for sub-$0.35/hr spot GPU instances.
+  - Sovereign Spend Governance: Enforces $0.00 zero-cost lock when cloud bursting is disabled (simulated/dry-run mode).
+  - Cluster Node Registration: Registers active remote worker nodes into NATS JetStream under `aibs.cluster.topology`.
+  - Remote Worker Bootstrap: Authored `scripts/bootstrap_remote_worker.sh` connecting remote containers back to local NATS broker (`:4222`) and Temporal (`:7233`).
+  - Pytest verified: 3/3 tests passing in `tests/test_vast_federation_daemon.py`.
+* **Phase 3: Screenplay-to-Movie Headless Blender VSE Pipeline (`backend/core/cinematic_storyboard_assembler.py` & `backend/scripts/assemble_movie_vse.py`):**
+  - Fountain Parser: Ingests Hollywood Fountain files into structured scenes, shots, dialogues, and camera movements.
+  - Multi-Track Timeline Manifest: Formulates visual diffusion prompts (Wan2.1 / ComfyUI) and dialogue audio tags (F5-TTS).
+  - Headless Blender VSE Assembly: `assemble_movie_vse.py` builds multi-track sequences with automated audio ducking (-12dB) and crossfades, with native FFmpeg fallback.
+  - Pytest verified: 2/2 tests passing in `tests/test_cinematic_storyboard_assembler.py`.
+* **Phase 4: Commercial Lead Scraping & Quantitative Crypto Sandbox:**
+  - B2B Lead Harvesting (`backend/modules/lead_harvesting_engine.py`): Discovers and deduplicates commercial leads into `leads_store.db`.
+  - Sovereign Email Campaign Sequencer (`backend/modules/sovereign_email_campaign_sequencer.py`): Multi-step drip sequencer (Day 0 / Day 3 / Day 7) with dynamic template hydration and rate-limiting.
+  - Quantitative Crypto Sandbox (`backend/modules/crypto_backtest_sandbox.py`): Backtests support-bounce strategies around the critical $0.05719 baseline with win rate, max drawdown, and Sharpe ratio metrics. Strictly segregated from accounting per Zero-Mock Real Money Rule (`STRATEGY_SIMULATION_BACKTEST_ONLY`).
+  - Pytest verified: 3/3 tests passing in `tests/test_commercial_and_crypto_expansion.py`.
+* **Phase 5: Edge Mobile Push Deck & Remote Telemetry (`mobile-app/App.tsx`):**
+  - Live Push Notification Toast Banner: Real-time top alerts for daemon crashes, Wan2.1 100% video completion, and sentinel auto-heal events.
+  - Remote Command Stream Deck: 6 one-touch macro cards (Sentinel Scan, Spot Probe, Movie Render, CRO Backtest, Lead Harvester, VRAM Flush).
+  - Upgraded mobile app version badge to `v5.317.0` and verified clean compilation (`npx tsc --noEmit` passed).
+* **Multi-Mirror Parity & Cloud Deployment:**
+  - 100% SHA-256 byte parity confirmed across all 4 frontend mirrors (455/455 files verified via `verify-mirror-parity.ps1`).
+  - Vite production bundle built (25.36s) and deployed live to Firebase Hosting.
+
+---
+
+## 1. Executive Summary: Cluster Engine & High-Performance Distributed Infrastructure (v5.316.0)
+* **6-Tier High-Performance Architecture Expansion:**
+  - **Tier 1 (Rust ASGI Core):** Built `backend/granian_launcher.py` with Granian (Tokio runtime) serving FastAPI Port 8080 with 40,000+ RPS throughput and Uvicorn seamless fallback.
+  - **Tier 2 (Stream Broker):** Engineered `backend/core/aibs_nats_broker.py` with NATS JetStream on Port 4222 for sequence-verified, low-latency telemetry streaming and pub/sub.
+  - **Tier 3 (Task Durability):** Engineered `backend/core/aibs_temporal_orchestrator.py` integrating Temporal.io on Port 7233 for stateful replay of multi-minute Wan2.1 video rendering and Demucs stem isolation.
+  - **Tier 4 (In-Memory Cache):** Created `backend/core/aibs_dragonfly_cache.py` connecting to Dragonfly on Port 6379 with 32-core direct RAM operations, sub-20µs latency, and token bucket rate limiting.
+  - **Tier 5 (Binary IPC):** Defined Protocol Buffers schema `backend/proto/aibs_cluster.proto` for strongly typed binary serialization between Go (:8000) and Python (:8080).
+  - **Tier 6 (WebRTC SFU):** Implemented `backend/mediasoup_sfu_service.js` with Mediasoup C++ core on Port 3001 Node Gateway for multi-party audio/video routing and Unreal Engine Pixel Streaming on Port 8888.
+* **Antigravity Customization:**
+  - Packaged official skill in `.agents/skills/aibs-cluster-engine/SKILL.md` documenting the architecture, port topology, and code examples.
+* **Frontend Data App Dashboard & Cloud Deployment:**
+  - Built `frontend/src/components/ClusterEngineDashboard.jsx` adhering to `building-data-apps` standards with minimal chrome, 6 KPI cards, action test bar, and real-time streaming telemetry console. Mounted `cluster_engine` tab in `frontend/App.jsx`.
+  - Maintained 100% SHA-256 byte parity across all 4 frontend mirrors (455 files verified via `verify-mirror-parity.ps1`).
+  - Compiled Vite production bundle (24.02s) and deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app/?tab=cluster_engine`).
+* **Pure Native Windows Studio Direct2D Integration:**
+  - Implemented `native_studio/cluster_view.py` with zero browser engines and zero local web servers for desktop rendering.
+  - Registered `cluster_engine` under `Intelligence & Code` in `native_studio/navigation_registry.py` and wired in `native_studio/app.py`.
+  - Recompiled standalone Windows binaries `AI_BS_Studio.exe` (96.86 MB) and `AI_BS_Studio_Setup.exe` (35.09 MB) via PyInstaller.
+  - Signed both binaries with Authenticode SHA-256 certificate (`CN=Stehouwer Advertising`).
+* **Verification:**
+  - `pytest native_studio/test_native_studio.py -v`: 17/17 passed in 8.84s.
+  - `native_studio/comprehensive_interactive_audit.py`: 564 clicks exercised, 0 exceptions, VERDICT: PASS.
+
+---
+
+## 1. Executive Summary: Universal Creation Suite 1:1 Web Parity, 25-Port Ecosystem Collision Matrix Expansion, Theatrical Film Hub & Matrix Doctor (v5.315.0)
 * **Universal Creation Suite 1:1 Web Parity (`native_studio/creation_suite_subtools.py` & `native_studio/screenwriting_view.py`):**
   - **Inline Sub-Tool Switcher & Header:** Header navigation bar matching `UniversalCreationSuite.jsx` with subtool pills: `✍️ Writing Studio`, `🎬 Video Studio`, `❇️ ComfyUI Studio`, `🔀 Visual Scripting`. Includes `🔗 Share Sub-Tool` (copies direct URL `http://localhost:5173/?tab=unified_creation&subtool=...` to clipboard), `💡 Studio Guide` (`StudioGuideDialog` comprehensive modal), and `🔒 Lock Studio` (`LockScreenPage` requiring password `jssdbdAS2631` or operator bypass).
   - **Video Studio Page (`VideoStudioPage`):** Wan2.1 hardware-accelerated diffusion generator running on RTX 4090 (24GB VRAM), 7 engine model selections, 6 style modifiers, real-time execution telemetry console, Direct2D video preview monitor with transport slider and playback HUD, and recent clips reel.

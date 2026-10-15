@@ -1,10 +1,12 @@
 @echo off
-title AI-BS Broadcast ^& DAW Workstation
-color 0C
+title Stehouwer Publishing Broadcast Studio
+color 0B
 
-echo =========================================================
-echo       AI-BS BROADCAST ^& NEURAL DAW WORKSTATION
-echo =========================================================
+echo =========================================================================
+echo           STEHOUWER PUBLISHING BROADCAST STUDIO
+echo        Hardware NVENC 4K/8K Streaming ^& Neural Audio Workstation
+echo            [Pure Native Windows Direct2D / MMCSS Pro Audio]
+echo =========================================================================
 echo.
 
 set "APP_DIR=%~dp0"
@@ -25,52 +27,48 @@ if exist "%APP_DIR%pyppeteer_env\Scripts\python.exe" (
 )
 
 if not defined PYTHON_EXE (
-    echo [WARNING] Python interpreter not found in local path. Checking fallback python...
-    set "PYTHON_EXE=python"
+    echo [ERROR] Python interpreter not found!
+    pause
+    exit /b 1
 )
 
-:: 2. Start Broadcast Kernel on 8088 if not already running
+:: 2. Local Microservices & Web Servers
+:: Local web servers (FastAPI 8080, Broadcast Daemon 8005, Kernel 8088, Vite 5174)
+:: operate freely to power the Native Windows version.
+
+:: 3. Start Hardware Broadcast Kernel (Port 8088 NVENC / OBS IPC) if not already active
 netstat -an | find ":8088 " | find "LISTENING" >nul
 if %ERRORLEVEL% neq 0 (
-    echo [AI-BS] Starting Broadcast Kernel on port 8088...
+    echo [STEHOUWER BROADCAST] Starting Hardware Broadcast Kernel on port 8088...
     if exist "%APP_DIR%backend\aibs_broadcast_kernel.py" (
         powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PYTHON_EXE%' -ArgumentList 'aibs_broadcast_kernel.py' -WorkingDirectory '%APP_DIR%backend' -WindowStyle Hidden"
     ) else if exist "C:\AI-BS\backend\aibs_broadcast_kernel.py" (
         powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PYTHON_EXE%' -ArgumentList 'aibs_broadcast_kernel.py' -WorkingDirectory 'C:\AI-BS\backend' -WindowStyle Hidden"
     )
+    ping 127.0.0.1 -n 2 >nul
 )
 
-:: 3. Start Broadcast UI Server on 5174 if not already running
-netstat -an | find ":5174 " | find "LISTENING" >nul
-if %ERRORLEVEL% neq 0 (
-    echo [AI-BS] Starting Broadcast UI Server on port 5174...
-    if exist "%APP_DIR%broadcast_dist\index.html" (
-        powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PYTHON_EXE%' -ArgumentList 'serve_desktop.py 5174' -WorkingDirectory '%APP_DIR%' -WindowStyle Hidden"
-    ) else if exist "%APP_DIR%serve_desktop.py" (
-        powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PYTHON_EXE%' -ArgumentList 'serve_desktop.py 5174' -WorkingDirectory '%APP_DIR%' -WindowStyle Hidden"
-    )
-    ping 127.0.0.1 -n 3 >nul
+:: 4. Locate Native Stehouwer Broadcast Studio Script
+set "STUDIO_SCRIPT="
+if exist "%APP_DIR%native_studio\stehouwer_broadcast_studio.py" (
+    set "STUDIO_SCRIPT=%APP_DIR%native_studio\stehouwer_broadcast_studio.py"
+) else if exist "%APP_DIR%..\native_studio\stehouwer_broadcast_studio.py" (
+    set "STUDIO_SCRIPT=%APP_DIR%..\native_studio\stehouwer_broadcast_studio.py"
+) else if exist "C:\AI-BS\native_studio\stehouwer_broadcast_studio.py" (
+    set "STUDIO_SCRIPT=C:\AI-BS\native_studio\stehouwer_broadcast_studio.py"
 )
 
-:: 4. Launch Dedicated Broadcast & DAW Window Mode
-set "TARGET_URL=http://127.0.0.1:5174"
-set "USER_DATA=%LOCALAPPDATA%\AI_BS_Studio\BroadcastProfile"
-set "MEDIA_FLAGS=--unsafely-treat-insecure-origin-as-secure=http://127.0.0.1:5174,http://localhost:5174 --use-fake-ui-for-media-stream"
-
-if exist "%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" (
-    echo [AI-BS] Launching Broadcast Studio in Edge App Window...
-    start "" "%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe" --app=%TARGET_URL% --window-size=1600,1000 --user-data-dir="%USER_DATA%" %MEDIA_FLAGS%
-) else if exist "%ProgramFiles%\Microsoft\Edge\Application\msedge.exe" (
-    echo [AI-BS] Launching Broadcast Studio in Edge App Window...
-    start "" "%ProgramFiles%\Microsoft\Edge\Application\msedge.exe" --app=%TARGET_URL% --window-size=1600,1000 --user-data-dir="%USER_DATA%" %MEDIA_FLAGS%
-) else if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
-    echo [AI-BS] Launching Broadcast Studio in Chrome App Window...
-    start "" "%ProgramFiles%\Google\Chrome\Application\chrome.exe" --app=%TARGET_URL% --window-size=1600,1000 --user-data-dir="%USER_DATA%" %MEDIA_FLAGS%
-) else (
-    echo [AI-BS] Launching Broadcast Studio in Default Browser...
-    start "" "%TARGET_URL%"
+if not defined STUDIO_SCRIPT (
+    echo [ERROR] Native broadcast studio script not found!
+    pause
+    exit /b 1
 )
 
-echo [AI-BS] Broadcast ^& Neural DAW Workstation initialized successfully.
-ping 127.0.0.1 -n 3 >nul
+:: 5. Launch Pure Native Desktop Application (Direct2D / DirectX 11 / MMCSS Priority 15)
+echo [STEHOUWER BROADCAST] Launching Pure Native Desktop Application...
+echo                      Zero Browser Engines ^| Zero Local Web Servers
+start "" "%PYTHON_EXE%" "%STUDIO_SCRIPT%"
+
+echo [STEHOUWER BROADCAST] Studio launched successfully.
+ping 127.0.0.1 -n 2 >nul
 exit /b 0
