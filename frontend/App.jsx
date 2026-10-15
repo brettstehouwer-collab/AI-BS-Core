@@ -138,8 +138,10 @@ const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardw
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
 const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
 const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
+const ClusterEngineDashboard = safeLazy(() => import('./src/components/ClusterEngineDashboard.jsx'));
 
 class TabErrorBoundary extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -262,8 +264,10 @@ const tabs = [
   { key: 'media_studio', label: '🎬 Autonomous Media Studio', description: 'Autonomous Headless Media Production Studio, 13-Domain NLE & Visual Editor', Component: MediaStudioTab },
   { key: 'music_daw', label: 'FL Music Studio (DAW)', description: 'Pattern-based Digital Audio Workspace & FL Studio-Style Beat Maker', Component: MusicDAWStudioTab },
   { key: 'ecosystem_blueprint', label: 'Matrix Blueprint & ROI', description: 'Interactive Ecosystem Architecture, 5-Pillar Matrix & Financial ROI Simulator', Component: EcosystemBlueprintTab },
-  { key: 'lexicon_dashboard', label: '🎭 Lexicon Engine Dashboard', description: 'Real-time semantic expansion and Persona trigger visualization', Component: LexiconTheatricalDashboard }
+  { key: 'lexicon_dashboard', label: '🎭 Lexicon Engine Dashboard', description: 'Real-time semantic expansion and Persona trigger visualization', Component: LexiconTheatricalDashboard },
+  { key: 'cluster_engine', label: '⚡ Cluster Engine', description: 'Granian Rust ASGI, NATS JetStream, Temporal Durability, Dragonfly Cache & gRPC IPC', Component: ClusterEngineDashboard }
 ];
+
 
 export default function App() {
   const selectedModel = useAppStore(state => state.selectedModel);

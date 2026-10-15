@@ -502,6 +502,21 @@ class BroadcastKernel:
         self.active_game = None
         self.open_windows = []
 
+        self.telemetry = {
+            "fps": 60.0,
+            "render_time_ms": 1.4,
+            "cpu_usage_pct": 8.5,
+            "gpu_usage_pct": 14.2,
+            "vram_mb": 24576,
+            "dropped_frames": 0,
+            "total_frames": 0,
+            "bitrate_kbps": 8500,
+            "active_encoder": self.hardware_info.get("selected_encoder", "nvenc"),
+            "encoder_chip": self.hardware_info.get("gpu_name", "NVIDIA GeForce RTX 4090"),
+            "game_name": "Desktop",
+            "stream_duration_sec": 0
+        }
+
         # Start Continuous Windows & Game Auto-Detector Daemon Thread (2s interval)
         threading.Thread(target=self._game_detector_loop, daemon=True).start()
 
@@ -832,13 +847,15 @@ def get_live_game_scan(tenant: str = Depends(get_tenant)):
     }
 
 class SceneSwitchRequest(BaseModel):
-    scene_id: str
+    scene_id: Optional[str] = None
+    scene: Optional[str] = None
     target: str = "program"
 
 @app.post("/api/kernel/scene/switch")
 def switch_scene_api(req: SceneSwitchRequest, tenant: str = Depends(get_tenant)):
-    kernel.switch_scene(req.scene_id, req.target)
-    return {"tenant": tenant, "status": "OK", "target": req.target, "scene_id": req.scene_id}
+    target_scene = req.scene_id or req.scene or "scene_main"
+    kernel.switch_scene(target_scene, req.target)
+    return {"tenant": tenant, "status": "OK", "target": req.target, "scene_id": target_scene}
 
 class TransitionRequest(BaseModel):
     transition_type: str = "Fade"

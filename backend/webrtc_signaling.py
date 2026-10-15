@@ -11,6 +11,12 @@ app = FastAPI()
 # In-memory store for active connections and rooms
 connections = {}
 
+@app.get("/")
+@app.get("/health")
+@app.get("/api/social/status")
+def health():
+    return {"status": "ONLINE", "service": "WebRTC Signaling & Social Hub", "active_peers": len(connections)}
+
 @app.websocket("/ws/webrtc/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await websocket.accept()

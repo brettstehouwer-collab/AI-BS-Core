@@ -192,6 +192,23 @@ def _daemon_state_change_bridge(event_type: str, daemon_name: str, payload: dict
     except Exception:
         pass
 
+    # Autonomous Self-Healing Closed Loop: Trigger Sentinel on daemon crash/restart
+    if event_type in ("crash", "restart"):
+        def _trigger_sentinel_recovery(d_name: str):
+            try:
+                log_file = Path("logs") / f"{d_name}.log"
+                if log_file.exists():
+                    lines = log_file.read_text(encoding="utf-8", errors="replace").splitlines()
+                    recent_tail = "\n".join(lines[-120:])
+                    if "Traceback (most recent call last):" in recent_tail:
+                        from core.self_healing_sentinel import get_self_healing_sentinel
+                        sentinel = get_self_healing_sentinel()
+                        asyncio.run(sentinel.heal_incident(recent_tail))
+            except Exception:
+                pass
+        import threading
+        threading.Thread(target=_trigger_sentinel_recovery, args=(daemon_name,), daemon=True).start()
+
 daemon_supervisor.register_listener(_daemon_state_change_bridge)
 
 from core.tool_schemas import ShellCommand
@@ -554,6 +571,12 @@ try:
 except ImportError as e:
     # Router may still be authored by active worker subagent
     pass
+
+try:
+    from routers.self_healing_router import router as self_healing_router
+    app.include_router(self_healing_router)
+except ImportError as e:
+    print(f"Warning: Could not load self_healing_router: {e}")
 
 try:
     from aibs_audio_router import router as audio_catalog_router

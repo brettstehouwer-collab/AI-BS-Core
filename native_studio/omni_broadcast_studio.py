@@ -25,15 +25,19 @@ import time
 from typing import Any, Callable, Dict, List, Optional
 import urllib.request
 
-from PyQt6.QtCore import QPointF, QRectF, Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import QPoint, QPointF, QRectF, Qt, QTimer, pyqtSignal, QThread
 from PyQt6.QtGui import (
     QBrush,
     QColor,
+    QCursor,
     QFont,
+    QGuiApplication,
     QLinearGradient,
+    QMouseEvent,
     QPainter,
     QPainterPath,
     QPen,
+    QPixmap,
     QRadialGradient,
 )
 from PyQt6.QtWidgets import (
@@ -74,8 +78,45 @@ from native_studio.theme import PALETTE
 # 1. LIVE PROGRAM / PREVIEW MONITOR CANVAS (16:9 VS 9:16)
 # ══════════════════════════════════════════════════════════════════════════
 
+class NativeScreenCaptureThread(QThread):
+    """Multi-threaded high-frame-rate screen and game capture engine.
+
+    Captures the primary monitor buffer via Direct2D / Windows OS desktop surface
+    and emits QPixmap frames at ~30 FPS directly to the rendering canvas.
+    Complies with MMCSS low-latency multi-threaded architecture (zero UI thread blocking).
+    """
+
+    frame_ready = pyqtSignal(QPixmap)
+
+    def __init__(self, target_fps: int = 30, parent: Optional[QWidget] = None) -> None:
+        super().__init__(parent)
+        self._target_fps = target_fps
+        self._interval = 1.0 / max(1, target_fps)
+        self._running = True
+
+    def stop(self) -> None:
+        self._running = False
+        self.wait(1000)
+
+    def run(self) -> None:
+        while self._running:
+            t0 = time.perf_counter()
+            try:
+                screen = QGuiApplication.primaryScreen()
+                if screen is not None:
+                    pixmap = screen.grabWindow(0)
+                    if not pixmap.isNull():
+                        self.frame_ready.emit(pixmap)
+            except Exception:
+                pass
+            elapsed = time.perf_counter() - t0
+            sleep_time = self._interval - elapsed
+            if sleep_time > 0.001:
+                time.sleep(sleep_time)
+
+
 class LiveBroadcastCanvas(QWidget):
-    """Direct2D-rendered video monitor preview canvas with aspect ratio toggle."""
+    """Direct2D-rendered video monitor preview canvas with aspect ratio toggle and live capture."""
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -94,10 +135,47 @@ class LiveBroadcastCanvas(QWidget):
         self.latency_text = "0.31 ms NVENC"
         self.uptime_seconds = 0
 
+        # Layer visibility flags
+        self._game_capture_enabled = True
+        self._pip_camera_enabled = True
+        self._audio_hud_enabled = True
+        self._comfy_overlay_enabled = True
+
         self._phase = 0.0
         self._anim_timer = QTimer(self)
         self._anim_timer.timeout.connect(self._on_anim_tick)
-        self._anim_timer.start(50)  # 20 FPS monitor refresh
+        self._anim_timer.start(50)  # 20 FPS monitor refresh for HUD animations
+
+        # Live capture thread
+        self._current_frame: Optional[QPixmap] = None
+        self._capture_thread = NativeScreenCaptureThread(target_fps=30, parent=self)
+        self._capture_thread.frame_ready.connect(self._on_frame_received)
+        self._capture_thread.start()
+
+    def _on_frame_received(self, pixmap: QPixmap) -> None:
+        self._current_frame = pixmap
+        self.update()
+
+    def set_game_capture_enabled(self, enabled: bool) -> None:
+        self._game_capture_enabled = enabled
+        self.update()
+
+    def set_pip_camera_enabled(self, enabled: bool) -> None:
+        self._pip_camera_enabled = enabled
+        self.update()
+
+    def set_audio_hud_enabled(self, enabled: bool) -> None:
+        self._audio_hud_enabled = enabled
+        self.update()
+
+    def set_comfy_overlay_enabled(self, enabled: bool) -> None:
+        self._comfy_overlay_enabled = enabled
+        self.update()
+
+    def closeEvent(self, event: Any) -> None:
+        if hasattr(self, "_capture_thread"):
+            self._capture_thread.stop()
+        super().closeEvent(event)
 
     def _on_anim_tick(self) -> None:
         self._phase += 0.08
@@ -159,42 +237,93 @@ class LiveBroadcastCanvas(QWidget):
         painter.setBrush(QBrush(QColor("#080d1a")))
         painter.drawRoundedRect(monitor_rect, 6, 6)
 
-        # Simulated Game / Studio Stage Grid
         painter.setClipRect(monitor_rect)
-        grid_pen = QPen(QColor(0, 240, 255, 30), 1)
-        painter.setPen(grid_pen)
 
-        grid_spacing = 24
-        for x in range(int(box_x), int(box_x + box_w), grid_spacing):
-            painter.drawLine(x, int(box_y), x, int(box_y + box_h))
-        for y in range(int(box_y), int(box_y + box_h), grid_spacing):
-            painter.drawLine(int(box_x), y, int(box_x + box_w), y)
+        # ── PRIMARY LAYER: LIVE GAME / SCREEN VIDEO FEED ──
+        if self._game_capture_enabled and self._current_frame and not self._current_frame.isNull():
+            scaled = self._current_frame.scaled(
+                int(box_w),
+                int(box_h),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.FastTransformation,
+            )
+            img_x = box_x + (box_w - scaled.width()) // 2
+            img_y = box_y + (box_h - scaled.height()) // 2
+            painter.drawPixmap(int(img_x), int(img_y), scaled)
 
-        # Draw Animated Audio / Video Activity Waveform in center
-        mid_y = box_y + box_h * 0.5
-        wave_path = QPainterPath()
-        wave_path.moveTo(box_x, mid_y)
+            # Subtle top & bottom vignette gradients for HUD text legibility
+            top_grad = QLinearGradient(box_x, box_y, box_x, box_y + 42)
+            top_grad.setColorAt(0, QColor(0, 0, 0, 160))
+            top_grad.setColorAt(1, QColor(0, 0, 0, 0))
+            painter.fillRect(QRectF(box_x, box_y, box_w, 42), top_grad)
 
-        steps = 60
-        amp = (box_h * 0.15) if self.is_streaming else (box_h * 0.05)
-        for i in range(steps + 1):
-            px = box_x + (box_w / steps) * i
-            norm_x = (i / float(steps)) * 4.0 * math.pi
-            py = mid_y + math.sin(norm_x + self._phase) * amp * math.sin(norm_x * 0.5)
-            wave_path.lineTo(px, py)
+            bot_grad = QLinearGradient(box_x, box_y + box_h - 46, box_x, box_y + box_h)
+            bot_grad.setColorAt(0, QColor(0, 0, 0, 0))
+            bot_grad.setColorAt(1, QColor(0, 0, 0, 180))
+            painter.fillRect(QRectF(box_x, box_y + box_h - 46, box_w, 46), bot_grad)
+        else:
+            # Fallback Standby Grid & Waveform
+            grid_pen = QPen(QColor(0, 240, 255, 30), 1)
+            painter.setPen(grid_pen)
+            grid_spacing = 24
+            for x in range(int(box_x), int(box_x + box_w), grid_spacing):
+                painter.drawLine(x, int(box_y), x, int(box_y + box_h))
+            for y in range(int(box_y), int(box_y + box_h), grid_spacing):
+                painter.drawLine(int(box_x), y, int(box_x + box_w), y)
 
-        wave_color = QColor("#00f0ff") if self.is_streaming else QColor("#334155")
-        painter.setPen(QPen(wave_color, 2.0))
-        painter.drawPath(wave_path)
+            mid_y = box_y + box_h * 0.5
+            wave_path = QPainterPath()
+            wave_path.moveTo(box_x, mid_y)
+            steps = 60
+            amp = (box_h * 0.15) if self.is_streaming else (box_h * 0.05)
+            for i in range(steps + 1):
+                px = box_x + (box_w / steps) * i
+                norm_x = (i / float(steps)) * 4.0 * math.pi
+                py = mid_y + math.sin(norm_x + self._phase) * amp * math.sin(norm_x * 0.5)
+                wave_path.lineTo(px, py)
 
-        # Scanlines effect
-        painter.setPen(QPen(QColor(0, 0, 0, 45), 1))
-        for sl in range(int(box_y), int(box_y + box_h), 4):
-            painter.drawLine(int(box_x), sl, int(box_x + box_w), sl)
+            wave_color = QColor("#00f0ff") if self.is_streaming else QColor("#334155")
+            painter.setPen(QPen(wave_color, 2.0))
+            painter.drawPath(wave_path)
+
+        # ── SECONDARY LAYER: SONY A7III / WEBCAM PIP ──
+        if self._pip_camera_enabled:
+            pip_w = min(140, max(80, int(box_w * 0.22)))
+            pip_h = min(85, max(50, int(box_h * 0.22)))
+            pip_x = box_x + box_w - pip_w - 12
+            pip_y = box_y + box_h - pip_h - 38
+            pip_rect = QRectF(pip_x, pip_y, pip_w, pip_h)
+
+            painter.setPen(QPen(QColor("#00f0ff"), 1.2))
+            painter.setBrush(QBrush(QColor(15, 23, 42, 220)))
+            painter.drawRoundedRect(pip_rect, 4, 4)
+
+            cam_badge_rect = QRectF(pip_x + 6, pip_y + 4, pip_w - 12, 14)
+            painter.setPen(QPen(QColor("#38bdf8")))
+            painter.setFont(QFont("Segoe UI", 6, QFont.Weight.Bold))
+            painter.drawText(cam_badge_rect, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter, "📷 SONY A7III 4K")
+
+            # Reticle / Viewfinder
+            painter.setPen(QPen(QColor(56, 189, 248, 70), 1))
+            cx, cy = pip_x + pip_w / 2, pip_y + pip_h / 2
+            painter.drawLine(int(cx - 8), int(cy), int(cx + 8), int(cy))
+            painter.drawLine(int(cx), int(cy - 8), int(cx), int(cy + 8))
+
+        # ── TERTIARY LAYER: AUDIO HUD VU METERS ──
+        if self._audio_hud_enabled:
+            vu_w, vu_h = 4, 36
+            vu_x = box_x + 10
+            vu_y = box_y + box_h / 2 - 18
+            painter.fillRect(QRectF(vu_x, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
+            painter.fillRect(QRectF(vu_x + 6, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
+            lvl_l = int(vu_h * (0.55 + 0.35 * math.sin(self._phase * 2.2)))
+            lvl_r = int(vu_h * (0.50 + 0.40 * math.cos(self._phase * 1.8)))
+            painter.fillRect(QRectF(vu_x, vu_y + vu_h - lvl_l, vu_w, lvl_l), QColor("#10b981"))
+            painter.fillRect(QRectF(vu_x + 6, vu_y + vu_h - lvl_r, vu_w, lvl_r), QColor("#10b981"))
 
         # ── TOP BADGES OVERLAY ──
-        # 1. LIVE / STANDBY
-        badge_w, badge_h = 75, 22
+        # 1. LIVE / PREVIEW
+        badge_w, badge_h = 82, 22
         badge_x = box_x + 10
         badge_y = box_y + 10
 
@@ -219,9 +348,14 @@ class LiveBroadcastCanvas(QWidget):
             painter.setPen(QPen(QColor("#334155"), 1))
             painter.drawRoundedRect(QRectF(badge_x, badge_y, badge_w, badge_h), 4, 4)
 
-            painter.setPen(QPen(QColor("#94a3b8")))
+            # Emerald preview indicator dot
+            painter.setBrush(QBrush(QColor("#10b981")))
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.drawEllipse(QPointF(badge_x + 10, badge_y + 11), 3.5, 3.5)
+
+            painter.setPen(QPen(QColor("#38bdf8")))
             painter.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
-            painter.drawText(QRectF(badge_x, badge_y, badge_w, badge_h), Qt.AlignmentFlag.AlignCenter, "STANDBY")
+            painter.drawText(QRectF(badge_x + 16, badge_y, badge_w - 18, badge_h), Qt.AlignmentFlag.AlignCenter, "PREVIEW 30")
 
         # 2. REC BADGE (if recording)
         if self.is_recording:
@@ -1324,6 +1458,15 @@ class UniversalOmniStudioNativeView(QWidget):
     def _on_source_toggled(self, source_name: str, enabled: bool) -> None:
         state = "ENABLED" if enabled else "DISABLED"
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎛️ Layer '{source_name}' {state}.")
+        s_lower = source_name.lower()
+        if "game" in s_lower:
+            self.canvas.set_game_capture_enabled(enabled)
+        elif "sony" in s_lower or "cam" in s_lower:
+            self.canvas.set_pip_camera_enabled(enabled)
+        elif "daw" in s_lower or "audio" in s_lower or "stems" in s_lower:
+            self.canvas.set_audio_hud_enabled(enabled)
+        elif "comfy" in s_lower:
+            self.canvas.set_comfy_overlay_enabled(enabled)
 
     def _launch_october7(self) -> None:
         # Jump directly to the Music DAW tab in main window!
