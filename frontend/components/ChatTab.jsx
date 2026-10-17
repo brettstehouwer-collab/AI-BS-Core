@@ -2999,8 +2999,8 @@ export default function ChatTab({ isNested = false }) {
   // Auto-scroll on new messages
   const messagesEndRef = useRef(null);
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current && chatMessages.length > 0) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [chatMessages, isLoading]);
 
@@ -5972,10 +5972,11 @@ export default function ChatTab({ isNested = false }) {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100vh - 170px)',
-      minHeight: '600px',
+      flex: isNested ? 1 : undefined,
+      height: isNested ? '100%' : 'calc(100vh - 170px)',
+      minHeight: isNested ? 0 : '600px',
       background: 'linear-gradient(180deg, #0d0f14 0%, #07090e 100%)',
-      borderRadius: '12px',
+      borderRadius: isNested ? '6px' : '12px',
       border: dpiScaleProfile !== 'desktop_native' ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
       boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
       overflow: 'hidden',
@@ -7395,6 +7396,78 @@ export default function ChatTab({ isNested = false }) {
             >
               📊 Context Stress Test
             </button>
+
+            <button
+              onClick={() => handleSendMessage('/blast ChatTab.jsx')}
+              style={{
+                background: 'rgba(239, 68, 68, 0.14)',
+                color: '#fca5a5',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
+                borderRadius: '6px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                fontWeight: '700'
+              }}
+              title="Stage 2: Compute AST Blast-Radius Dependency Impact"
+            >
+              💥 /blast AST Impact
+            </button>
+
+            <button
+              onClick={() => handleSendMessage('/graph')}
+              style={{
+                background: 'rgba(56, 189, 248, 0.14)',
+                color: '#7dd3fc',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '6px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                fontWeight: '700'
+              }}
+              title="Stage 2: Rebuild 491-Node SQLite AST Dependency Graph"
+            >
+              🕸️ /graph (491 Nodes)
+            </button>
+
+            <button
+              onClick={() => handleSendMessage('/distill')}
+              style={{
+                background: 'rgba(168, 85, 247, 0.14)',
+                color: '#d8b4fe',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                borderRadius: '6px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                fontWeight: '700'
+              }}
+              title="Stage 3: Build Sovereign Nightly QLoRA Dataset on RTX 4090"
+            >
+              🧬 /distill QLoRA
+            </button>
+
+            <button
+              onClick={() => {
+                const next = !mobileSynergyMode;
+                setMobileSynergyMode(next);
+                try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
+              }}
+              style={{
+                background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(245, 158, 11, 0.14)',
+                color: mobileSynergyMode ? '#ffffff' : '#fcd34d',
+                border: '1px solid rgba(245, 158, 11, 0.45)',
+                borderRadius: '6px',
+                padding: '3px 8px',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                fontWeight: '700'
+              }}
+              title="Toggle Mobile Workstation DPI & Bluetooth Trackpad Synergy Dock"
+            >
+              📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile DPI Dock'}
+            </button>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -7412,8 +7485,8 @@ export default function ChatTab({ isNested = false }) {
             }}>
               <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : 'Auto-Save Active'}
             </span>
-            <span style={{ color: '#475569', fontSize: '0.72rem' }}>
-              Stehouwer LLM v5.305.0 • RTX 4090 GPU Accelerated
+            <span style={{ color: '#60a5fa', fontSize: '0.72rem', fontWeight: 700 }}>
+              Stehouwer LLM v5.323.0 • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active
             </span>
           </div>
         </div>

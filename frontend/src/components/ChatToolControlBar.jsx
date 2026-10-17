@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ChatToolControlBar({ onToolToggle }) {
+export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
   const [tools, setTools] = useState({
     plan_and_review: false,
     shadow_coder: true,
@@ -9,9 +9,23 @@ export default function ChatToolControlBar({ onToolToggle }) {
     search_local_files: true,
     polyglot_runner: true,
     vector_vault: true,
-    ast_shredder: true,
+    ast_blast_graph: true,
+    qlora_distiller: true,
     auto_healer: true
   });
+
+  const TOOL_LABELS = {
+    plan_and_review: '📋 Mode: Plan & Review',
+    shadow_coder: '⚡ Shadow Coder',
+    media_studio: '🎬 Media Studio (v5.323.0)',
+    unreal_3d_engine: '🎮 Unreal 3D Engine',
+    search_local_files: '🔍 Search Local Files',
+    polyglot_runner: '🐚 Polyglot Runner (/ps /wsl /cmd)',
+    vector_vault: '🧠 1M+ Vector Vault',
+    ast_blast_graph: '🕸️ AST Blast Graph (/blast)',
+    qlora_distiller: '🧬 QLoRA Distiller (/distill)',
+    auto_healer: '🩺 Stage 1 Auto-Healer (3x)'
+  };
 
   const toggleTool = (name) => {
     const next = { ...tools, [name]: !tools[name] };
@@ -23,7 +37,8 @@ export default function ChatToolControlBar({ onToolToggle }) {
     <div style={{
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      gap: '6px',
+      flexWrap: 'wrap',
       backgroundColor: '#161b22',
       border: '1px solid #30363d',
       borderRadius: '6px',
@@ -49,7 +64,7 @@ export default function ChatToolControlBar({ onToolToggle }) {
             fontWeight: enabled ? 600 : 400
           }}
         >
-          {enabled ? '●' : '○'} {key === 'plan_and_review' ? '📋 Mode: Plan & Review' : (key === 'shadow_coder' ? '⚡ Shadow Coder' : (key === 'media_studio' ? '🎬 Media Studio (v5.305.0)' : key.replace('_', ' ')))}
+          {enabled ? '●' : '○'} {TOOL_LABELS[key] || key.replace(/_/g, ' ')}
         </button>
       ))}
     </div>
