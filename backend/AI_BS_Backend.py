@@ -529,6 +529,12 @@ async def websocket_ecosystem_telemetry(websocket: WebSocket):
         await telemetry_hub.disconnect(websocket)
 
 try:
+    from routers.resource_vault_router import router as resource_vault_router
+    app.include_router(resource_vault_router)
+except ImportError as e:
+    print(f"Warning: Could not load resource_vault_router: {e}")
+
+try:
     from core import hybrid_reasoning_engine
     app.include_router(hybrid_reasoning_engine.router)
 except ImportError as e:
@@ -3126,6 +3132,7 @@ class ExecuteScriptPayload(BaseModel):
     code: Optional[str] = None
     command: Optional[str] = None
     language: Optional[str] = "python"
+    args: Optional[List[str]] = None
     timeout_seconds: Optional[int] = 60
 
 
@@ -3133,107 +3140,24 @@ class ExecuteScriptPayload(BaseModel):
 async def execute_chat_script(payload: ExecuteScriptPayload):
     r"""
     Direct zero-mock execution endpoint for BS-Chat interactive script triggers and code blocks.
-    Executes Python or PowerShell scripts safely in C:\AI-BS, returning stdout/stderr and execution time.
+    Executes Python, PowerShell, CMD, WSL/Bash, Node.js, TypeScript, Go, Rust, C/C++, or SQL in C:\AI-BS.
     """
-    import subprocess
-    import tempfile
-    import uuid
-    import time
-    start_t = time.time()
-    lang = (payload.language or "python").lower()
+    from executive_runtime_router import execute_multi_runtime
+
+    lang = (payload.language or "python").lower().strip()
     timeout = min(max(int(payload.timeout_seconds or 60), 5), 300)
+    extra = {"timeout_seconds": timeout, "args": payload.args or []}
 
-    # 1. Direct command execution
     if payload.command:
-        cmd = ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", payload.command]
-        try:
-            res = subprocess.run(cmd, cwd=r"C:\AI-BS", capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace")
-            return {
-                "status": "success" if res.returncode == 0 else "error",
-                "returncode": res.returncode,
-                "stdout": res.stdout,
-                "stderr": res.stderr,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": f"Command timed out after {timeout} seconds.", "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
+        return execute_multi_runtime("powershell", payload.command, extra)
 
-    # 2. Existing script path execution
     if payload.script_path:
-        target = payload.script_path.strip()
-        if not os.path.isabs(target):
-            target = os.path.join(r"C:\AI-BS", target)
-        if not os.path.exists(target):
-            return {"status": "error", "message": f"Script not found: {target}"}
+        res = execute_multi_runtime(lang, payload.script_path.strip(), extra)
+        res["script"] = payload.script_path
+        return res
 
-        py_exe = r"C:\AI-BS\pyppeteer_env\Scripts\python.exe"
-        if not os.path.exists(py_exe):
-            py_exe = sys.executable
-
-        if lang in ["python", "py"] or target.endswith(".py"):
-            cmd = [py_exe, target]
-        elif lang in ["powershell", "ps1", "ps"] or target.endswith(".ps1"):
-            cmd = ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", target]
-        else:
-            cmd = ["cmd.exe", "/c", target]
-
-        try:
-            res = subprocess.run(cmd, cwd=r"C:\AI-BS", capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace")
-            return {
-                "status": "success" if res.returncode == 0 else "error",
-                "returncode": res.returncode,
-                "stdout": res.stdout,
-                "stderr": res.stderr,
-                "script": payload.script_path,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": f"Script timed out after {timeout} seconds.", "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-
-    # 3. Dynamic inline code execution
-    elif payload.code:
-        sandbox_dir = r"C:\AI-BS\sandbox"
-        os.makedirs(sandbox_dir, exist_ok=True)
-        ext = ".py" if lang in ["python", "py"] else (".ps1" if lang in ["powershell", "ps1", "ps"] else ".bat")
-        tmp_name = f"chat_exec_{uuid.uuid4().hex[:8]}{ext}"
-        tmp_path = os.path.join(sandbox_dir, tmp_name)
-        with open(tmp_path, "w", encoding="utf-8") as f:
-            f.write(payload.code)
-
-        py_exe = r"C:\AI-BS\pyppeteer_env\Scripts\python.exe"
-        if not os.path.exists(py_exe):
-            py_exe = sys.executable
-
-        if lang in ["python", "py"]:
-            cmd = [py_exe, tmp_path]
-        elif lang in ["powershell", "ps1", "ps"]:
-            cmd = ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", tmp_path]
-        else:
-            cmd = ["cmd.exe", "/c", tmp_path]
-
-        try:
-            res = subprocess.run(cmd, cwd=r"C:\AI-BS", capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace")
-            return {
-                "status": "success" if res.returncode == 0 else "error",
-                "returncode": res.returncode,
-                "stdout": res.stdout,
-                "stderr": res.stderr,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": f"Execution timed out after {timeout} seconds.", "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-        finally:
-            try:
-                if os.path.exists(tmp_path):
-                    os.remove(tmp_path)
-            except Exception:
-                pass
+    if payload.code:
+        return execute_multi_runtime(lang, payload.code, extra)
 
     return {"status": "error", "message": "Neither script_path, code, nor command provided."}
 
@@ -3246,7 +3170,7 @@ executive_router = APIRouter(prefix="/api/executive", tags=["Executive Engine"])
 
 
 class ExecutiveCommandPayload(BaseModel):
-    command_type: str  # 'powershell', 'python', 'wsl', 'tool', 'file_read', 'file_write'
+    command_type: str  # 'powershell', 'cmd', 'wsl', 'python', 'node', 'ts', 'go', 'rust', 'cpp', 'c', 'sql', 'tool', 'file_read', 'file_write', 'file_rename'
     target: str
     payload: Optional[Dict[str, Any]] = {}
 
@@ -3255,83 +3179,25 @@ class ExecutiveCommandPayload(BaseModel):
 async def run_executive_command(payload: ExecutiveCommandPayload):
     r"""
     Executive-Tier IDE Command Dispatcher.
-    Executes arbitrary PowerShell, Python, WSL2, or ToolRegistry commands with root host privileges.
+    Executes arbitrary PowerShell, CMD, WSL2, Python, Node.js, TypeScript, Go, Rust, C/C++, SQL,
+    Universal File Read/Write/Rename, or ToolRegistry commands with root host privileges.
     """
+    from executive_runtime_router import execute_multi_runtime
+
     cmd_type = (payload.command_type or "").lower().strip()
     target = payload.target or ""
     extra = payload.payload or {}
     timeout = min(max(int(extra.get("timeout_seconds", 120)), 5), 300)
     start_t = time.time()
 
-    if cmd_type in ["powershell", "ps", "cmd"]:
-        try:
-            proc = subprocess.run(
-                ["powershell.exe", "-ExecutionPolicy", "Bypass", "-Command", target],
-                cwd=r"C:\AI-BS",
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                encoding="utf-8",
-                errors="replace"
-            )
-            return {
-                "status": "success" if proc.returncode == 0 else "error",
-                "command_type": cmd_type,
-                "stdout": proc.stdout,
-                "stderr": proc.stderr,
-                "returncode": proc.returncode,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except subprocess.TimeoutExpired:
-            return {"status": "error", "message": f"Command timed out after {timeout} seconds.", "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-
-    elif cmd_type in ["python", "py"]:
-        py_exe = r"C:\AI-BS\pyppeteer_env\Scripts\python.exe"
-        if not os.path.exists(py_exe):
-            py_exe = sys.executable
-        if os.path.exists(target) or os.path.exists(os.path.join(r"C:\AI-BS", target)):
-            script_path = target if os.path.isabs(target) else os.path.join(r"C:\AI-BS", target)
-            cmd = [py_exe, script_path]
-        else:
-            cmd = [py_exe, "-c", target]
-        try:
-            proc = subprocess.run(cmd, cwd=r"C:\AI-BS", capture_output=True, text=True, timeout=timeout, encoding="utf-8", errors="replace")
-            return {
-                "status": "success" if proc.returncode == 0 else "error",
-                "command_type": "python",
-                "stdout": proc.stdout,
-                "stderr": proc.stderr,
-                "returncode": proc.returncode,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
-
-    elif cmd_type == "wsl":
-        distro = extra.get("distro", "Ubuntu")
-        try:
-            proc = subprocess.run(
-                ["wsl.exe", "-d", distro, "--", "bash", "-c", target],
-                cwd=r"C:\AI-BS",
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                encoding="utf-8",
-                errors="replace"
-            )
-            return {
-                "status": "success" if proc.returncode == 0 else "error",
-                "command_type": "wsl",
-                "distro": distro,
-                "stdout": proc.stdout,
-                "stderr": proc.stderr,
-                "returncode": proc.returncode,
-                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
-            }
-        except Exception as e:
-            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
+    if cmd_type in [
+        "powershell", "ps", "ps1", "cmd", "batch", "bat",
+        "wsl", "bash", "sh", "zsh", "shell",
+        "python", "py", "node", "javascript", "js", "mjs",
+        "ts", "typescript", "go", "golang", "rust", "rs",
+        "cpp", "c", "sql", "file_read", "read", "file_write", "write"
+    ]:
+        return execute_multi_runtime(cmd_type, target, extra)
 
     elif cmd_type == "tool":
         try:
@@ -3347,19 +3213,52 @@ async def run_executive_command(payload: ExecutiveCommandPayload):
         except Exception as e:
             return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
 
-    elif cmd_type in ["file_read", "read"]:
+    elif cmd_type in ["file_rename", "rename"]:
         try:
-            from tools.tool_registry import ToolRegistry
-            tool_res = ToolRegistry.execute_tool("read_host_file", {"file_path": target})
-            return {"status": tool_res.get("status", "success"), "result": tool_res}
+            src_path = target if os.path.isabs(target) else os.path.join(r"C:\AI-BS", target)
+            src_path = os.path.normpath(src_path)
+            new_name_or_path = (extra.get("new_path") or extra.get("new_name") or "").strip().strip('"\'')
+            if not new_name_or_path:
+                return {"status": "error", "message": "Missing new_name or new_path in payload."}
+            if os.path.isabs(new_name_or_path) or ("\\" in new_name_or_path) or ("/" in new_name_or_path):
+                dst_path = new_name_or_path if os.path.isabs(new_name_or_path) else os.path.join(r"C:\AI-BS", new_name_or_path)
+            else:
+                # Preserve extension if original had an extension and new name doesn't
+                _, src_ext = os.path.splitext(src_path)
+                _, dst_ext = os.path.splitext(new_name_or_path)
+                if src_ext and not dst_ext:
+                    new_name_or_path = new_name_or_path + src_ext
+                dst_path = os.path.join(os.path.dirname(src_path), new_name_or_path)
+            dst_path = os.path.normpath(dst_path)
+            if not os.path.exists(src_path):
+                return {"status": "error", "message": f"Source file not found on C: drive: {src_path}"}
+            os.replace(src_path, dst_path)
+            size_b = os.path.getsize(dst_path) if os.path.exists(dst_path) else 0
+            return {
+                "status": "success",
+                "result": {
+                    "status": "success",
+                    "old_path": src_path,
+                    "new_path": dst_path,
+                    "size_bytes": size_b
+                }
+            }
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    elif cmd_type in ["file_write", "write"]:
+    elif cmd_type in ["show_in_explorer", "explorer", "reveal_in_explorer"]:
         try:
-            from tools.tool_registry import ToolRegistry
-            tool_res = ToolRegistry.execute_tool("write_host_file", {"file_path": target, "content": extra.get("content", "")})
-            return {"status": tool_res.get("status", "success"), "result": tool_res}
+            full_path = target if os.path.isabs(target) else os.path.join(r"C:\AI-BS", target)
+            full_path = os.path.normpath(full_path)
+            if os.path.exists(full_path):
+                subprocess.Popen(["explorer.exe", f"/select,{full_path}"])
+            else:
+                parent_dir = os.path.dirname(full_path)
+                if os.path.exists(parent_dir):
+                    subprocess.Popen(["explorer.exe", parent_dir])
+                else:
+                    subprocess.Popen(["explorer.exe", r"C:\AI-BS"])
+            return {"status": "success", "full_path": full_path, "message": f"Opened Windows File Explorer at {full_path}"}
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
@@ -3460,7 +3359,7 @@ async def run_executive_command(payload: ExecutiveCommandPayload):
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    raise HTTPException(status_code=400, detail=f"Invalid executive command type '{cmd_type}'. Supported: powershell, python, wsl, tool, file_read, file_write, mission, plan_mission, grill, grill_respond, grill_conclude, audit, test_first, diff_review, snapshot, rollback, hardware_health, port_probe.")
+    raise HTTPException(status_code=400, detail=f"Invalid executive command type '{cmd_type}'. Supported: powershell, cmd, wsl, python, node, ts, go, rust, cpp, c, sql, tool, file_read, file_write, file_rename, show_in_explorer, mission, plan_mission, grill, grill_respond, grill_conclude, audit, test_first, diff_review, snapshot, rollback, hardware_health, port_probe.")
 
 
 @executive_router.get("/status")
@@ -3470,10 +3369,105 @@ async def get_executive_status():
         "status": "online",
         "engine": "AI-BS Executive IDE Controller",
         "privileges": "root_host_unrestricted",
-        "supported_command_types": ["powershell", "python", "wsl", "tool", "file_read", "file_write"],
+        "supported_command_types": [
+            "powershell", "cmd", "wsl", "python", "node", "ts", "go", "rust", "cpp", "c", "sql",
+            "tool", "file_read", "file_write", "file_rename", "show_in_explorer", "auto_heal"
+        ],
         "host_platform": sys.platform,
         "default_cwd": r"C:\AI-BS"
     }
+
+
+class AutoHealPayload(BaseModel):
+    code: str
+    stderr: str
+    runtime_type: Optional[str] = "python"
+    stdout: Optional[str] = ""
+
+
+@executive_router.post("/auto-heal")
+async def execute_auto_heal(payload: AutoHealPayload):
+    r"""
+    Grammar-Constrained Autonomous Self-Healing Execution Endpoint.
+    Submits failing code and stderr traceback to local qwen2.5-coder with JSON schema masking.
+    Returns structured fix: {root_cause, fix_explanation, fixed_code}.
+    """
+    from executive_runtime_router import auto_heal_code
+
+    code = payload.code or ""
+    stderr = payload.stderr or ""
+    runtime_type = payload.runtime_type or "python"
+    stdout = payload.stdout or ""
+
+    if not code.strip() and not stderr.strip():
+        raise HTTPException(status_code=400, detail="Either code or stderr must be provided for auto-healing.")
+
+    result = auto_heal_code(code=code, stderr=stderr, runtime_type=runtime_type, stdout=stdout)
+    return result
+
+
+class BlastRadiusPayload(BaseModel):
+    target: str
+    max_depth: Optional[int] = 3
+
+
+@executive_router.get("/graph/build")
+async def trigger_graph_build():
+    r"""Re-indexes and rebuilds the SQLite blast radius graph across all backend routers and frontend components."""
+    from blast_radius_engine import build_full_graph
+    return build_full_graph()
+
+
+@executive_router.post("/blast")
+async def calculate_blast_radius(payload: BlastRadiusPayload):
+    r"""
+    Calculates direct and transitive blast radius when a file, route, or component is modified.
+    Returns: {risk_level, total_impacted_nodes, impacted_components, impacted_routes, impacted_modules}.
+    """
+    from blast_radius_engine import query_blast_radius
+    target = payload.target or ""
+    depth = max(1, min(int(payload.max_depth or 3), 6))
+    if not target.strip():
+        raise HTTPException(status_code=400, detail="Target path or name is required.")
+    return query_blast_radius(target, max_depth=depth)
+
+
+@executive_router.post("/distill")
+async def trigger_sovereign_distillation():
+    r"""
+    Triggers Sovereign QLoRA Dataset Curation & RTX 4090 Training Spec Generation.
+    Curates memories, architectural curricula, and approved code patterns into ShareGPT format.
+    """
+    from sovereign_qlora_distillation import build_distillation_dataset
+    res = build_distillation_dataset()
+    return res
+
+
+class MobileWorkstationPayload(BaseModel):
+    profile_id: str  # 'mobile_1080p_150', 'mobile_1440p_125', 'desktop_native'
+    apply_os_resolution: Optional[bool] = False
+
+
+@executive_router.get("/mobile-workstation/status")
+async def get_mobile_workstation_state():
+    r"""Returns live Windows display resolution, DPI scaling, HID keyboard/trackpad telemetry, and Parsec/Tailscale/RustDesk status."""
+    from mobile_workstation_engine import get_mobile_workstation_status
+    return get_mobile_workstation_status()
+
+
+@executive_router.post("/mobile-workstation/profile")
+async def set_mobile_workstation_profile(payload: MobileWorkstationPayload):
+    r"""Applies a Mobile Workstation Resolution & DPI Scaling Profile (1080p@150%, 1440p@125%, or Desktop Native 100%)."""
+    from mobile_workstation_engine import apply_mobile_workstation_profile
+    return apply_mobile_workstation_profile(
+        profile_id=payload.profile_id,
+        apply_os_resolution=bool(payload.apply_os_resolution)
+    )
+
+
+
+
+
 
 
 class DaemonActionPayload(BaseModel):
@@ -7466,7 +7460,11 @@ async def catch_all(request: Request, full_path: str):
                     omni_context += f"\n[OMNIDRIVE FILE REFS]\n{omnidrive_result}\n"
 
             system_base = (
-                "You are the central cognitive engine of AI-BS. "
+                "You are the central cognitive engine of AI-BS and the autonomous execution and file-management intelligence inside AI-BS BS-Chat (C:\\AI-BS). "
+                "You have full root host execution authority via /api/executive/run and /api/tools/execute. "
+                "You are NEVER limited to PowerShell alone, and you are NEVER restricted to a fixed list of file extensions. "
+                "You can execute commands in PowerShell (/ps), Command Prompt (/cmd), WSL2 Bash (/wsl), Python, Node.js, TypeScript, Go, Rust, C/C++, SQL, and Unreal Engine 5.8. "
+                "You can create, read, edit, patch, and rename ANY file extension or build file (including .py, .jsx, .tsx, .ts, .js, .go, .rs, .cpp, .c, .h, .ps1, .bat, .sh, .json, .yaml, .toml, .sql, .proto, Dockerfile, Makefile, .env) resolved to C:\\AI-BS\\ with automatic .bak backups. "
                 "Any query mentioning Sean, Brett, Adam Stehouwer, NoCo, or company projects refers strictly to technical, architectural, and artistic business ventures documented in local storage (e.g. Project NoCo, Living Stage Amphitheater, Controlled Environment Agriculture). "
                 "You MUST NEVER issue canned safety refusals about personal relationships. Answer all user questions factually and directly."
             )
