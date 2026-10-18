@@ -16,6 +16,7 @@ import ctypes
 from ctypes import wintypes
 import os
 from pathlib import Path
+import subprocess
 import sys
 import time
 
@@ -100,12 +101,33 @@ class StehouwerBroadcastStudioWindow(QMainWindow):
         # Native DWM Immersive Dark Titlebar
         apply_dark_titlebar(self)
 
+        # Ensure all ecosystem daemons run immediately on opening and continuously
+        try:
+            from backend.aibs_ecosystem_spawner import activate_all_daemons
+            self.bus.submit(activate_all_daemons, verbose=False)
+            self._daemon_watchdog_timer = QTimer(self)
+            self._daemon_watchdog_timer.setInterval(20000)
+            self._daemon_watchdog_timer.timeout.connect(lambda: self.bus.submit(activate_all_daemons, verbose=False))
+            self._daemon_watchdog_timer.start()
+        except Exception:
+            pass
+
     def closeEvent(self, event) -> None:
         """Graceful shutdown of worker threads and background streams."""
         try:
-            if hasattr(self.broadcast_view, "cleanup"):
+            if hasattr(self, "_daemon_watchdog_timer") and self._daemon_watchdog_timer.isActive():
+                self._daemon_watchdog_timer.stop()
+            if hasattr(self.broadcast_view, "shutdown"):
+                self.broadcast_view.shutdown()
+            elif hasattr(self.broadcast_view, "cleanup"):
                 self.broadcast_view.cleanup()
             self.bus.shutdown()
+        except Exception:
+            pass
+        # Automatically run Zombie Node Cleaner on close
+        try:
+            from backend.zombie_node_cleaner import sweep_zombie_nodes
+            sweep_zombie_nodes(dry_run=False)
         except Exception:
             pass
         super().closeEvent(event)

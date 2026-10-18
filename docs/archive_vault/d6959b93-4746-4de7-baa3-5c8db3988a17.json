@@ -1,0 +1,1 @@
+{"id":"d6959b93-4746-4de7-baa3-5c8db3988a17","recipient":"f50eab29-ea98-4380-85ae-959a32043abf","sender":"f50eab29-ea98-4380-85ae-959a32043abf/task-930","priority":"MESSAGE_PRIORITY_HIGH","timestamp":"2026-07-19T19:55:38.212060Z","renderDetails":{"messageTitle":"Wait for commit: Timer has expired"},"content":"Check if git commit succeeded"}

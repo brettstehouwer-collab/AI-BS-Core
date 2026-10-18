@@ -12,7 +12,7 @@ export const PINNED_QUICK_TABS = [
   { key: 'steam_gaming', label: 'Steam Gaming Hub', icon: '🎮', badge: 'GAMING' },
   { key: 'ide', label: 'BS-CHAT', icon: '💻', badge: 'AI CORE' },
   { key: 'bv_media_creator', label: 'BV-Media Studio', icon: '🎨', badge: 'CREATOR' },
-  { key: 'dashboard', label: 'Command Center', icon: '📊', badge: 'HQ' },
+  { key: 'screen_mirror', label: 'Wireless Screen Mirror', icon: '📺', badge: 'MIRACAST' },
   { key: 'shared_cloud_drive', label: 'Cloud Drive', icon: '☁️', badge: 'STORAGE' },
   { key: 'workflow_dag', label: 'DAG Builder', icon: '⚡', badge: 'AGENTS' },
   { key: 'terminal', label: 'Host Terminal', icon: '⌨️', badge: 'SHELL' }
@@ -45,15 +45,13 @@ export const masterHubs = [
     icon: '🎨',
     defaultTab: 'bv_media_creator',
     subTabs: [
-      { key: 'bv_media_creator', label: 'BV-Media Creator Studio', icon: '🎨', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault' },
+      { key: 'bv_media_creator', label: 'BV-Media Creator & Production Suite', icon: '🎨', description: 'Unified Media Creator Studio, Dedicated BsMedia-Chat & ChromaDB Media Vault' },
       { key: 'comfy_workspace', label: 'ComfyUI Creative Studio', icon: '🧩', description: 'Interactive Local Diffusion & Video Studio, AST Graph Generator, FaceDetailer & Real-Time Presets' },
-      { key: 'media_studio', label: 'Autonomous Media Studio', icon: '🎬', description: 'Autonomous Headless Media Production Studio across 13 Domains' },
-      { key: 'unified_creation', label: 'Universal Screenwriting Studio', icon: '✍️', description: 'Hollywood AST Screenplay Editor, Book Adaptation & Story Bible' },
+      { key: 'unified_creation', label: 'Screenwriting & Publications Studio', icon: '✍️', description: 'Hollywood AST Screenplay Editor, Book Adaptation, CMS & Story Bible' },
       { key: 'music_daw', label: 'AI Music Studio (DAW)', icon: '🎵', description: 'Pattern-Based DAW, Synthesizer & Beat Maker' },
       { key: 'personal_brand', label: 'Personal Brand Studio', icon: '🔥', description: 'AI Ghostwriter & Multi-Channel Social Content Matrix' },
       { key: 'advertising', label: 'Advertising Studio', icon: '📢', description: 'Targeted Ad Copy, Campaign Funnels & Creative Variants' },
       { key: 'syndication', label: 'Automated Syndication', icon: '🌐', description: '1-Click Multi-Channel Broadcaster & Ad Distribution' },
-      { key: 'stehouwer_cms', label: 'Stehouwer Publications & CMS', icon: '📖', description: 'Headless Publishing, Character Bibles & KDP Stream' },
       { key: 'unified_media_gallery', label: 'Media & Asset Vault', icon: '🖼️', description: 'Asset Archive, Visual Renders & Audio Stems' },
       { key: 'digital_storefront', label: 'Digital Storefront & Pricing', icon: '🏪', description: 'Monetize Local Compute, Passes & Crypto Checkout' }
     ]
@@ -87,8 +85,7 @@ export const masterHubs = [
       { key: 'phone_repair', label: 'Phone & Tablet Repair Lab', icon: '🔧', description: 'Master Teardowns, Face ID Diagnostics & Diode Values' },
       { key: 'power_washing', label: 'Prestige Mobile Wash', icon: '💦', description: 'Commercial Pressure Washing CRM, Chemical Estimator & Fleet' },
       { key: 'banquet_architect', label: 'Banquet Architect Studio', icon: '💒', description: '2D/3D Floor Plans, Seating Charts & BEO Generator' },
-      { key: 'notos_enterprise', label: "Noto's Enterprise OS", icon: '🍷', description: 'Internal Hospitality Operating Platform for GR & GH' },
-      { key: 'noto_inventory', label: 'Notō Multi-Bar Stock', icon: '🍸', description: 'Live Inventory, Barback Dispatch & Distributor POs' },
+      { key: 'notos_enterprise', label: "Noto's Enterprise & Bar Stock OS", icon: '🍷', description: 'Internal Hospitality Operating Platform for GR & GH' },
       { key: 'project_noco', label: 'Project NoCo Living Stage', icon: '🏛️', description: 'Autonomous Acoustic-Agricultural Enclave & Studio' },
       { key: 'unified_crypto', label: 'Crypto Swarm & Mining', icon: '⚡', description: 'Clore/Vast Node Telemetry & Fast-Scalping Bot' },
       { key: 'gaming_lab', label: 'Gaming & Process Memory Lab', icon: '🎮', description: 'Win32 Runtime Memory Manipulation & Trainer Suite' },

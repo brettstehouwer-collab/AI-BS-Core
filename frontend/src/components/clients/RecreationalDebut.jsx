@@ -55,8 +55,8 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Campaign Mode: 'sms' (Carrier MMS to Phones) vs 'email' (Direct to Inboxes)
-  const [campaignType, setCampaignType] = useState('sms');
-  const [emailSubject, setEmailSubject] = useState('Dennis Bell (Former New York Knick) - College Athletic Recruitment Opportunity');
+  const [campaignType, setCampaignType] = useState('email');
+  const [emailSubject, setEmailSubject] = useState('YOUR ELIGIBILITY IS A MUST! — NCAA Academic Requirements Breakdown');
   const [useSwarm, setUseSwarm] = useState(true);
 
   // SMTP Swarm State
@@ -106,8 +106,40 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [testResult, setTestResult] = useState(null);
 
-  // Custom Message Box State (Pre-populated with Dennis's text)
-  const DEFAULT_MESSAGE = `Hey {first_name}, this is Dennis Bell, former New York Knick and President of Recreational Debut.
+  // Custom Message Box State (Pre-populated with Dennis's updated NCAA Eligibility Email Draft)
+  const NCAA_ELIGIBILITY_DRAFT = `YOUR ELIGIBILITY IS A MUST!
+Hi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.
+
+I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process.
+
+🏀 NCAA DIVISION I ELIGIBILITY REQUIREMENTS
+
+16 NCAA-approved core courses
+• Minimum 2.3 core-course GPA
+https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-i/
+
+🏀 NCAA DIVISION II ELIGIBILITY REQUIREMENTS
+• 16 NCAA-approved core courses
+• Minimum 2.2 core-course GPA
+https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-ii/
+
+🏀 NCAA DIVISION III ELIGIBILITY REQUIREMENTS
+https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-iii/
+
+Remember, being eligible is only part of the process — college coaches also need to know who you are!
+
+Recreational Debut can help get your athletic portfolio in front of 850 college coaches nationwide. Get your information out before October 31, 2026, while coaches are putting together their number 1 recruiting lists.
+
+✅ REGISTER FREE:
+http://www.recdebut.com
+
+Dennis Bell
+Former NY Knick
+President, Recreational Debut
+616-291-5227 
+Dbell002@sbcglobal.net`;
+
+  const LAS_VEGAS_TALENT_SCRIPT = `Hey {first_name}, this is Dennis Bell, former New York Knick and President of Recreational Debut.
 
 Your talent caught our attention in Las Vegas, and we believe you have the potential to play at the college level.
 
@@ -125,7 +157,9 @@ Dennis Bell
 Former New York Knicks
 President, Recreational Debut`;
 
-  const [messageScript, setMessageScript] = useState(DEFAULT_MESSAGE);
+  const DEFAULT_MESSAGE = NCAA_ELIGIBILITY_DRAFT;
+
+  const [messageScript, setMessageScript] = useState(NCAA_ELIGIBILITY_DRAFT);
   const [isStaging, setIsStaging] = useState(false);
   const [stagedResult, setStagedResult] = useState(null);
   const [scrubberReport, setScrubberReport] = useState(null);
@@ -2060,14 +2094,39 @@ President, Recreational Debut`;
                   <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#ffffff' }}>
                     📝 Recruitment Outreach Script
                   </h3>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px' }}>
-                    Caller ID / Callback: <strong style={{ color: '#10b981' }}>Dennis Bell (616-291-5227)</strong> • dbell002@sbcglobal.net • Full Multi-Paragraph Delivery
+                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span>Caller ID / Callback: <strong style={{ color: '#10b981' }}>Dennis Bell (616-291-5227)</strong> • dbell002@sbcglobal.net</span>
+                    <span style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '2px 8px', borderRadius: '4px', fontWeight: '700', fontSize: '11px' }}>
+                      📎 Official NCAA Eligibility Poster Attached
+                    </span>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <button
-                    onClick={() => setMessageScript(DEFAULT_MESSAGE)}
+                    onClick={() => {
+                      setMessageScript(NCAA_ELIGIBILITY_DRAFT);
+                      setEmailSubject('YOUR ELIGIBILITY IS A MUST! — NCAA Academic Requirements Breakdown');
+                      setCampaignType('email');
+                    }}
+                    style={{
+                      background: 'rgba(245, 132, 38, 0.15)',
+                      border: '1px solid rgba(245, 132, 38, 0.4)',
+                      color: '#f58426',
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🏀 NCAA Eligibility Draft
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMessageScript(LAS_VEGAS_TALENT_SCRIPT);
+                      setCampaignType('sms');
+                    }}
                     style={{
                       background: 'rgba(255, 255, 255, 0.06)',
                       border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -2078,7 +2137,7 @@ President, Recreational Debut`;
                       cursor: 'pointer'
                     }}
                   >
-                    Reset to Dennis Bell Official Script
+                    Las Vegas Talent Script
                   </button>
                   <button
                     onClick={() => setMessageScript('')}

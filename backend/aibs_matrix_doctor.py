@@ -30,8 +30,8 @@ ECOSYSTEM_PORTS = {
     5173: {"name": "Primary React Dashboard", "category": "Web Frontend", "critical": True},
     5174: {"name": "BroadcastStudioApp Vite", "category": "Native Desktop App", "critical": False},
     8000: {"name": "Go Matrix Gateway", "category": "IPC Gateway", "critical": True},
-    8001: {"name": "Theatrical Gateway", "category": "Virtual Production", "critical": False},
-    8002: {"name": "ChromaDB Vector Store", "category": "Vector Memory", "critical": True},
+    8001: {"name": "ChromaDB Primary Vector Store", "category": "Vector Memory", "critical": True},
+    8002: {"name": "ChromaDB Secondary Mirror Store", "category": "Vector Memory", "critical": True},
     8005: {"name": "Broadcast Studio Daemon", "category": "Media & Streaming", "critical": False},
     8006: {"name": "Twitch/IRC Social Hub", "category": "Social Automation", "critical": False},
     8007: {"name": "Crypto Swarm & Scalp Bot", "category": "Financial Engine", "critical": False},
@@ -47,8 +47,8 @@ ECOSYSTEM_PORTS = {
     8188: {"name": "ComfyUI Primary Default", "category": "Generative Media", "critical": False},
     8189: {"name": "ComfyUI Diffusion Studio", "category": "Generative Media", "critical": False},
     8888: {"name": "Unreal Engine Signaling", "category": "3D Virtual Production", "critical": False},
-    11434: {"name": "Ollama Primary LLM", "category": "Local LLM Core", "critical": True},
-    11435: {"name": "Ollama E-Drive LLM", "category": "Local LLM Secondary", "critical": False},
+    11434: {"name": "Ollama GPU Swarm (RTX 4090)", "category": "Local LLM Core", "critical": True},
+    11435: {"name": "Ollama CPU Embeddings Swarm (Ryzen 9 9950X AVX-512)", "category": "Neural Embeddings Core", "critical": True},
 }
 
 

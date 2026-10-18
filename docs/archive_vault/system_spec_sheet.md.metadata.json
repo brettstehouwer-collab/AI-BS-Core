@@ -1,0 +1,5 @@
+{
+  "summary": "A much deeper hardware topology scan including BIOS, Motherboard, mismatched RAM detection, monitor refresh rates, and exact physical disk models (NVMe vs HDD).",
+  "updatedAt": "2026-07-20T16:25:42.339575400Z",
+  "userFacing": true
+}

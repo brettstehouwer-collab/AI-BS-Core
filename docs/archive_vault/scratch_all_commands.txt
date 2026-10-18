@@ -1,0 +1,85 @@
+Line 1583: if (command === '/monitor' || command === '/oversight') {
+    try {
+    const res = await fetch(`${BACKEND_URL}/api/oversight/modules`, {
+    method: 'GET',
+    headers: reqHeaders
+Line 1623: if (command === '/modules') {
+    try {
+    const res = await fetch(`${BACKEND_URL}/api/oversight/modules`, {
+    method: 'GET',
+    headers: reqHeaders
+Line 1654: if (command === '/switch') {
+    const targetTab = rest.trim();
+    if (!targetTab) {
+    setChatMessages(prev => [
+    ...prev,
+Line 1686: if (command === '/spaces') {
+    try {
+    const res = await fetch(`${BACKEND_URL}/api/spaces/overview`, {
+    method: 'GET',
+    headers: reqHeaders
+Line 1718: if (command === '/retrieve' || command === '/spacesearch') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/retrieve <search_query>`\n*Exampl
+Line 1763: if (command === '/ingest') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/ingest <text_to_persist>`\n*Examp
+Line 1803: if (command === '/coder' || command === '/code') {
+    const coderPrompt = rest.trim() || 'Please write a production-ready script or co
+    handleSendMessage(`/coder ${coderPrompt}`);
+    return;
+    }
+Line 1810: if (command === '/syntax' || command === '/validate') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/syntax <language> <code>`\n*Examp
+Line 1845: if (command === '/symbol') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/symbol <query>`\n*Example:* `/sym
+Line 1876: if (command === '/run') {
+    const scriptName = parts[1] || '';
+    if (!scriptName) {
+    setChatMessages(prev => [
+    ...prev,
+Line 1923: if (command === '/edit') {
+    const targetPath = rest.trim();
+    if (!targetPath) {
+    setChatMessages(prev => [
+    ...prev,
+Line 1973: if (command === '/ps' || command === '/cmd') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/ps <powershell_command>`\n*Exampl
+Line 2019: if (command === '/wsl') {
+    if (!rest) {
+    setChatMessages(prev => [
+    ...prev,
+    { role: 'assistant', content: '⚠️ **Usage:** `/wsl [distro] <bash_command>`\n*Ex
+Line 2077: if (command === '/deploy') {
+    setChatMessages(prev => [
+    ...prev,
+    {
+    role: 'assistant',
+Line 2127: if (command === '/kill') {
+    const portNum = parseInt(parts[1], 10);
+    if (isNaN(portNum)) {
+    setChatMessages(prev => [
+    ...prev,
+Line 2176: if (command === '/health' || command === '/doctor') {
+    try {
+    const res = await fetch(`${BACKEND_URL}/api/tools/execute`, {
+    method: 'POST',
+    headers: reqHeaders,
+Line 2208: if (command === '/service') {
+    const action = parts[1] || 'status';
+    const serviceName = parts[2] || 'all';
+    
+    try {

@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppStore } from './useAppStore';
+import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 import { 
   Menu, Plus, Send, Mic, MicOff, Image, Paperclip, Volume2, VolumeX, 
   ChevronDown, Check, Copy, ExternalLink, Download, Monitor, Trash2, 
@@ -125,182 +126,214 @@ function MobileFormattedContent({ content, role, onImageClick }) {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  return (
-    <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          code({ node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || '');
-            const codeString = String(children).replace(/\n$/, '');
-            const isMultiLine = codeString.includes('\n');
+  const hasRunToken = typeof content === 'string' && /\[Run\s+([^\]]+)\]/.test(content);
+  const stagedPayloads = hasRunToken ? extractStagedPayloads(content) : null;
 
-            if (!inline && (match || isMultiLine)) {
-              return (
-                <MobileCodeBlock
-                  language={match ? match[1] : ''}
-                  code={codeString}
-                />
-              );
-            }
+  const renderMarkdownBlock = (markdownText, key) => (
+    <ReactMarkdown
+      key={key}
+      remarkPlugins={[remarkGfm]}
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          const match = /language-(\w+)/.exec(className || '');
+          const codeString = String(children).replace(/\n$/, '');
+          const isMultiLine = codeString.includes('\n');
+
+          if (!inline && (match || isMultiLine)) {
             return (
-              <code
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#93c5fd',
-                  padding: '2px 5px',
-                  borderRadius: '4px',
-                  fontSize: '0.82em',
-                  fontFamily: 'monospace'
-                }}
-                {...props}
-              >
-                {children}
-              </code>
+              <MobileCodeBlock
+                language={match ? match[1] : ''}
+                code={codeString}
+              />
             );
-          },
-          img({ node, src, alt, ...props }) {
-            let finalSrc = src || '';
-            const isLocalHost = typeof window !== 'undefined' && 
-              (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          }
+          return (
+            <code
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#93c5fd',
+                padding: '2px 5px',
+                borderRadius: '4px',
+                fontSize: '0.82em',
+                fontFamily: 'monospace'
+              }}
+              {...props}
+            >
+              {children}
+            </code>
+          );
+        },
+        img({ node, src, alt, ...props }) {
+          let finalSrc = src || '';
+          const isLocalHost = typeof window !== 'undefined' && 
+            (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-            if (finalSrc.includes('127.0.0.1:8188') || finalSrc.includes('localhost:8188') || 
-                finalSrc.includes('127.0.0.1:8189') || finalSrc.includes('localhost:8189')) {
-              if (!isLocalHost) {
-                try {
-                  const urlObj = new URL(finalSrc);
-                  finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
-                } catch (e) {
-                  finalSrc = src;
-                }
+          if (finalSrc.includes('127.0.0.1:8188') || finalSrc.includes('localhost:8188') || 
+              finalSrc.includes('127.0.0.1:8189') || finalSrc.includes('localhost:8189')) {
+            if (!isLocalHost) {
+              try {
+                const urlObj = new URL(finalSrc);
+                finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
+              } catch (e) {
+                finalSrc = src;
               }
-            } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
-              finalSrc = finalSrc.startsWith('/') ? `${BACKEND_URL}${finalSrc}` : `${BACKEND_URL}/${finalSrc}`;
             }
+          } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
+            finalSrc = finalSrc.startsWith('/') ? `${BACKEND_URL}${finalSrc}` : `${BACKEND_URL}/${finalSrc}`;
+          }
 
-            // Automatic Cloudflare tunnel upgrade for mobile/PWA environments
-            const isMobileEnv = typeof window !== 'undefined' && (
-              /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-              window.location.protocol === 'capacitor:' ||
-              window.location.protocol === 'https:' ||
-              !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
-            );
+          // Automatic Cloudflare tunnel upgrade for mobile/PWA environments
+          const isMobileEnv = typeof window !== 'undefined' && (
+            /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+            window.location.protocol === 'capacitor:' ||
+            window.location.protocol === 'https:' ||
+            !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+          );
 
-            if (isMobileEnv && (finalSrc.startsWith('http://127.0.0.1') || finalSrc.startsWith('http://localhost'))) {
-              finalSrc = finalSrc.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-            }
+          if (isMobileEnv && (finalSrc.startsWith('http://127.0.0.1') || finalSrc.startsWith('http://localhost'))) {
+            finalSrc = finalSrc.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
+          }
 
-            if (finalSrc && (finalSrc.includes('.mp4') || finalSrc.includes('.webm') || finalSrc.includes('.mov'))) {
-              return (
-                <div style={{ margin: '12px 0' }}>
-                  <video
-                    src={finalSrc}
-                    controls
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    style={{
-                      width: '100%',
-                      maxHeight: '400px',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(66, 133, 244, 0.4)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                      display: 'block',
-                      background: '#000'
-                    }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: '6px' }}>
-                    <span>🎬 Wan2.1 HD Video</span>
-                    <a
-                      href={finalSrc}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
-                    >
-                      Open Video ↗
-                    </a>
-                  </div>
-                </div>
-              );
-            }
-
+          if (finalSrc && (finalSrc.includes('.mp4') || finalSrc.includes('.webm') || finalSrc.includes('.mov'))) {
             return (
               <div style={{ margin: '12px 0' }}>
-                <img
+                <video
                   src={finalSrc}
-                  alt={alt || 'Generated Image'}
-                  onError={(e) => {
-                    const cur = e.currentTarget.src;
-                    if (cur.includes('127.0.0.1') || cur.includes('localhost')) {
-                      e.currentTarget.src = cur.replace(/http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-                    } else if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && !cur.includes('192.168.4.92')) {
-                      e.currentTarget.src = cur.replace(/http:\/\/[^/]+:(?:8000|8080)/, 'http://192.168.4.92:8080');
-                    }
-                  }}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
                   style={{
                     width: '100%',
-                    maxHeight: '420px',
-                    objectFit: 'cover',
+                    maxHeight: '400px',
                     borderRadius: '12px',
                     border: '1px solid rgba(66, 133, 244, 0.4)',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                    cursor: 'pointer',
-                    display: 'block'
+                    display: 'block',
+                    background: '#000'
                   }}
-                  onClick={() => onImageClick ? onImageClick(finalSrc) : window.open(finalSrc, '_blank')}
-                  {...props}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: '6px' }}>
-                  <span>🎨 SDXL / Wan Render</span>
+                  <span>🎬 Wan2.1 HD Video</span>
                   <a
                     href={finalSrc}
                     target="_blank"
                     rel="noreferrer"
                     style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
                   >
-                    View Full HD ↗
+                    Open Video ↗
                   </a>
                 </div>
               </div>
             );
-          },
-          table({ children }) {
-            return (
-              <div style={{ overflowX: 'auto', margin: '10px 0', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
-                  {children}
-                </table>
+          }
+
+          return (
+            <div style={{ margin: '12px 0' }}>
+              <img
+                src={finalSrc}
+                alt={alt || 'Generated Image'}
+                onError={(e) => {
+                  const cur = e.currentTarget.src;
+                  if (cur.includes('127.0.0.1') || cur.includes('localhost')) {
+                    e.currentTarget.src = cur.replace(/http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
+                  } else if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && !cur.includes('192.168.4.92')) {
+                    e.currentTarget.src = cur.replace(/http:\/\/[^/]+:(?:8000|8080)/, 'http://192.168.4.92:8080');
+                  }
+                }}
+                style={{
+                  width: '100%',
+                  maxHeight: '420px',
+                  objectFit: 'cover',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(66, 133, 244, 0.4)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                  cursor: 'pointer',
+                  display: 'block'
+                }}
+                onClick={() => onImageClick ? onImageClick(finalSrc) : window.open(finalSrc, '_blank')}
+                {...props}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: '6px' }}>
+                <span>🎨 SDXL / Wan Render</span>
+                <a
+                  href={finalSrc}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
+                >
+                  View Full HD ↗
+                </a>
               </div>
-            );
-          },
-          th({ children }) {
-            return <th style={{ padding: '6px 10px', textAlign: 'left', fontWeight: '600', background: 'rgba(255,255,255,0.05)', color: '#93c5fd' }}>{children}</th>;
-          },
-          td({ children }) {
-            return <td style={{ padding: '6px 10px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
-          },
-          p({ children }) {
-            return <p style={{ margin: '6px 0', lineHeight: '1.55' }}>{children}</p>;
-          },
-          a({ href, children }) {
-            let finalHref = href;
-            if (finalHref && finalHref.startsWith('/')) {
-              finalHref = `${BACKEND_URL}${finalHref}`;
-            }
-            if (finalHref && (finalHref.startsWith('http://127.0.0.1') || finalHref.startsWith('http://localhost'))) {
-              finalHref = finalHref.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-            }
-            return (
-              <a href={finalHref} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', textDecoration: 'underline' }}>
+            </div>
+          );
+        },
+        table({ children }) {
+          return (
+            <div style={{ overflowX: 'auto', margin: '10px 0', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
                 {children}
-              </a>
+              </table>
+            </div>
+          );
+        },
+        th({ children }) {
+          return <th style={{ padding: '6px 10px', textAlign: 'left', fontWeight: '600', background: 'rgba(255,255,255,0.05)', color: '#93c5fd' }}>{children}</th>;
+        },
+        td({ children }) {
+          return <td style={{ padding: '6px 10px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
+        },
+        p({ children }) {
+          return <p style={{ margin: '6px 0', lineHeight: '1.55' }}>{children}</p>;
+        },
+        a({ href, children }) {
+          let finalHref = href;
+          if (finalHref && finalHref.startsWith('/')) {
+            finalHref = `${BACKEND_URL}${finalHref}`;
+          }
+          if (finalHref && (finalHref.startsWith('http://127.0.0.1') || finalHref.startsWith('http://localhost'))) {
+            finalHref = finalHref.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
+          }
+          return (
+            <a href={finalHref} target="_blank" rel="noreferrer" style={{ color: '#60a5fa', textDecoration: 'underline' }}>
+              {children}
+            </a>
+          );
+        }
+      }}
+    >
+      {markdownText}
+    </ReactMarkdown>
+  );
+
+  if (hasRunToken) {
+    const parts = content.split(/(\[Run\s+[^\]]+\])/g);
+    return (
+      <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
+        {parts.map((part, idx) => {
+          const runMatch = /\[Run\s+([^\]]+)\]/.exec(part);
+          if (runMatch) {
+            const label = runMatch[1] || 'Interactive Canvas';
+            return (
+              <TapToRunCanvas
+                key={`canvas-${idx}`}
+                label={label}
+                stagedPayloads={stagedPayloads}
+                backendUrl={BACKEND_URL}
+              />
             );
           }
-        }}
-      >
-        {content}
-      </ReactMarkdown>
+          if (!part || !part.trim()) return null;
+          return renderMarkdownBlock(part, `md-${idx}`);
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
+      {renderMarkdownBlock(content, 'single-md')}
     </div>
   );
 }
@@ -642,7 +675,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             const streamRes = await fetch(`${targetBase}/api/v1/hybrid-chat/stream`, {
               method: 'POST',
               headers: reqHeaders,
-              body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, stream: true }),
+              body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, stream: true, enable_rag: true }),
               signal: AbortSignal.timeout ? AbortSignal.timeout(mediaTimeout) : undefined
             });
 
@@ -816,10 +849,12 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const displayName = rawName.replace(/\s*\(.*?\)/g, '').trim().split(' ')[0] || 'Brett';
 
   const suggestionChips = [
-    { title: '🎨 Create 8K Photo', prompt: 'Create a photorealistic 8k photograph of a futuristic cybernetic warrior in neon lighting' },
-    { title: '🎬 Wan2.1 Video', prompt: 'Generate a cinematic 1080p Wan2.1 video of a hyper-speed flight through a cyberpunk matrix' },
+    { title: '🧠 1M+ RAG Search', prompt: 'search rag for sovereign intelligence and cognitive architecture' },
+    { title: '📑 1M Map-Reduce', prompt: 'summarize 1m file C:\\AI-BS\\workspace\\pasted_1m_buffer.txt' },
+    { title: '🧹 Reclaim RAM', prompt: 'Run the Zombie Node Cleaner to sweep orphaned background processes and reclaim host DDR5 RAM.' },
     { title: '⚡ Check RTX 4090', prompt: 'Check RTX 4090 GPU status, VRAM telemetry, and ComfyUI Port 8189 connection.' },
-    { title: '✍️ Creative Script', prompt: 'Brainstorm a high-intensity film treatment scene with dialogue.' }
+    { title: '🎨 Create 8K Photo', prompt: 'Create a photorealistic 8k photograph of a futuristic cybernetic warrior in neon lighting' },
+    { title: '🎬 Wan2.1 Video', prompt: 'Generate a cinematic 1080p Wan2.1 video of a hyper-speed flight through a cyberpunk matrix' }
   ];
 
   return (
@@ -1821,6 +1856,64 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                   <Sparkles size={22} />
                 </div>
                 <span style={{ fontSize: '0.72rem', color: '#c4c7c5' }}>Video</span>
+              </div>
+
+              {/* 1M+ RAG Search Action */}
+              <div
+                onClick={() => {
+                  handleSendMessage('search rag for key system parameters and memory');
+                  setActionSheetOpen(false);
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '6px',
+                  cursor: 'pointer'
+                }}
+              >
+                <div style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '16px',
+                  background: '#282a2c',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#60a5fa'
+                }}>
+                  <Sparkles size={22} />
+                </div>
+                <span style={{ fontSize: '0.72rem', color: '#c4c7c5' }}>1M+ RAG</span>
+              </div>
+
+              {/* Zombie Node RAM Sweep */}
+              <div
+                onClick={() => {
+                  handleSendMessage('Run the Zombie Node Cleaner to sweep orphaned background processes and reclaim host DDR5 RAM.');
+                  setActionSheetOpen(false);
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '6px',
+                  cursor: 'pointer'
+                }}
+              >
+                <div style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '16px',
+                  background: '#282a2c',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fbbf24'
+                }}>
+                  <Cpu size={22} />
+                </div>
+                <span style={{ fontSize: '0.72rem', color: '#c4c7c5' }}>Sweep RAM</span>
               </div>
 
               {/* Hardware GPU Check */}

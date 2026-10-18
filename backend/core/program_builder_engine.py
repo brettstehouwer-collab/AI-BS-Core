@@ -26,6 +26,55 @@ class AutonomousProgramBuilder:
         os.makedirs(PROGRAMS_DIR, exist_ok=True)
 
     @classmethod
+    def detect_build_command(cls, project_dir: str, language: Optional[str] = None) -> Optional[str]:
+        """Inspects a project directory to auto-detect its primary build/compilation command."""
+        if not os.path.isdir(project_dir):
+            return None
+
+        # Priority 1: Explicit build script files in the project
+        if os.path.exists(os.path.join(project_dir, "build.ps1")):
+            return f'powershell -ExecutionPolicy Bypass -File "{os.path.join(project_dir, "build.ps1")}"'
+        if os.path.exists(os.path.join(project_dir, "build.bat")):
+            return f'cmd.exe /c "{os.path.join(project_dir, "build.bat")}"'
+        if os.path.exists(os.path.join(project_dir, "build.cmd")):
+            return f'cmd.exe /c "{os.path.join(project_dir, "build.cmd")}"'
+        if os.path.exists(os.path.join(project_dir, "build.sh")):
+            return f'bash "{os.path.join(project_dir, "build.sh")}"'
+
+        # Priority 2: Standard ecosystem package & compilation manifests
+        if os.path.exists(os.path.join(project_dir, "package.json")):
+            if not os.path.exists(os.path.join(project_dir, "node_modules")):
+                return "npm install && npm run build"
+            return "npm run build"
+
+        if os.path.exists(os.path.join(project_dir, "Cargo.toml")):
+            return "cargo build"
+
+        if os.path.exists(os.path.join(project_dir, "go.mod")):
+            return "go build ./..."
+
+        if os.path.exists(os.path.join(project_dir, "CMakeLists.txt")):
+            return "cmake -B build && cmake --build build"
+
+        if os.path.exists(os.path.join(project_dir, "Makefile")) or os.path.exists(os.path.join(project_dir, "makefile")):
+            return "make"
+
+        if os.path.exists(os.path.join(project_dir, "requirements.txt")):
+            return f'& "{PYTHON_EXE}" -m pip install -r requirements.txt'
+
+        if os.path.exists(os.path.join(project_dir, "setup.py")) or os.path.exists(os.path.join(project_dir, "pyproject.toml")):
+            return f'& "{PYTHON_EXE}" -m pip install -e .'
+
+        try:
+            for f in os.listdir(project_dir):
+                if f.endswith((".csproj", ".sln", ".fsproj")):
+                    return "dotnet build"
+        except Exception:
+            pass
+
+        return None
+
+    @classmethod
     def build_program(
         cls,
         project_name: str,
@@ -34,10 +83,12 @@ class AutonomousProgramBuilder:
         files: List[Dict[str, str]],
         entrypoint: str = "main.py",
         run_immediately: bool = True,
-        powershell_command: Optional[str] = None
+        powershell_command: Optional[str] = None,
+        build_command: Optional[str] = None,
+        execute_build: bool = True
     ) -> Dict[str, Any]:
         """
-        Builds a complete multi-file software program.
+        Builds a complete multi-file software program and executes build steps.
         files: [{"path": "main.py", "content": "..."}, ...]
         """
         cls.ensure_dir()
@@ -77,6 +128,49 @@ class AutonomousProgramBuilder:
                 except py_compile.PyCompileError as e:
                     syntax_errors.append(f"{wf['name']}: {str(e)}")
 
+        # Project Build Execution Step
+        build_output = {
+            "executed": False,
+            "status": "not_run",
+            "command": "",
+            "stdout": "",
+            "stderr": "",
+            "exit_code": 0
+        }
+
+        active_build_cmd = build_command
+        if not active_build_cmd and execute_build:
+            active_build_cmd = cls.detect_build_command(project_dir, language)
+
+        if execute_build and active_build_cmd:
+            try:
+                from core.powershell_process_engine import PowerShellProcessEngine
+                b_res = PowerShellProcessEngine.execute_powershell(
+                    command_or_script=active_build_cmd,
+                    execution_policy="Bypass",
+                    timeout_seconds=180,
+                    working_directory=project_dir
+                )
+                build_output = {
+                    "executed": True,
+                    "status": b_res.get("status", "error"),
+                    "command": active_build_cmd,
+                    "stdout": b_res.get("stdout", ""),
+                    "stderr": b_res.get("stderr", ""),
+                    "exit_code": b_res.get("exit_code", 0)
+                }
+            except Exception as e:
+                build_output = {
+                    "executed": True,
+                    "status": "error",
+                    "command": active_build_cmd,
+                    "stdout": "",
+                    "stderr": str(e),
+                    "exit_code": 1
+                }
+
+        build_failed = build_output["executed"] and build_output["exit_code"] != 0
+
         execution_output = {
             "executed": False,
             "status": "not_run",
@@ -85,8 +179,16 @@ class AutonomousProgramBuilder:
             "exit_code": 0
         }
 
-        # Live execution if requested and syntax passed
-        if run_immediately and not syntax_errors:
+        # Live execution if requested, syntax passed, and build succeeded
+        if build_failed:
+            execution_output = {
+                "executed": False,
+                "status": "blocked_by_build_failure",
+                "stdout": "",
+                "stderr": f"Execution halted: Project build failed with exit code {build_output['exit_code']}.",
+                "exit_code": build_output["exit_code"]
+            }
+        elif run_immediately and not syntax_errors:
             entry_full = os.path.join(project_dir, entrypoint)
             
             # Check for custom PowerShell command first
@@ -215,6 +317,7 @@ class AutonomousProgramBuilder:
             "project_dir": project_dir,
             "files": written_files,
             "syntax_errors": syntax_errors,
+            "build": build_output,
             "execution": execution_output,
             "zip_path": zip_path,
             "zip_name": zip_filename,
@@ -341,3 +444,117 @@ class AutonomousProgramBuilder:
                         "created_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(os.path.getctime(item_path)))
                     })
         return sorted(programs, key=lambda x: x.get("created_at", ""), reverse=True)
+
+    @classmethod
+    def resolve_project_dir(cls, project_name_or_dir: str) -> Optional[str]:
+        """Resolves a project name or path to an absolute existing directory."""
+        if not project_name_or_dir:
+            return None
+        candidate = os.path.abspath(project_name_or_dir)
+        if os.path.isdir(candidate):
+            return candidate
+        # Try relative to WORKSPACE_ROOT
+        candidate_aibs = os.path.abspath(os.path.join(WORKSPACE_ROOT, project_name_or_dir))
+        if os.path.isdir(candidate_aibs):
+            return candidate_aibs
+        # Try in PROGRAMS_DIR by clean name
+        clean_name = "".join(c for c in project_name_or_dir if c.isalnum() or c in ("-", "_")).lower()
+        prog_path = os.path.join(PROGRAMS_DIR, clean_name)
+        if os.path.isdir(prog_path):
+            return prog_path
+        # Try in PROGRAMS_DIR direct
+        prog_direct = os.path.join(PROGRAMS_DIR, project_name_or_dir)
+        if os.path.isdir(prog_direct):
+            return prog_direct
+        return None
+
+    @classmethod
+    def build_project(cls, project_name_or_dir: str, build_command: Optional[str] = None, timeout_seconds: int = 300) -> Dict[str, Any]:
+        """Executes a build in a project directory, auto-detecting build tools if build_command is omitted."""
+        cls.ensure_dir()
+        target_dir = cls.resolve_project_dir(project_name_or_dir)
+        if not target_dir:
+            return {
+                "status": "error",
+                "message": f"Project directory not found for identifier: '{project_name_or_dir}'",
+                "project_name_or_dir": project_name_or_dir,
+                "stdout": "",
+                "stderr": f"Target directory could not be resolved from '{project_name_or_dir}'",
+                "exit_code": 1
+            }
+
+        cmd = build_command
+        if not cmd:
+            cmd = cls.detect_build_command(target_dir)
+
+        if not cmd:
+            return {
+                "status": "error",
+                "message": f"No build configuration or build script detected in {target_dir}. Specify a custom build command.",
+                "project_dir": target_dir,
+                "stdout": "",
+                "stderr": "No package.json, Cargo.toml, go.mod, CMakeLists.txt, Makefile, requirements.txt, or build script found.",
+                "exit_code": 1
+            }
+
+        try:
+            from core.powershell_process_engine import PowerShellProcessEngine
+            b_res = PowerShellProcessEngine.execute_powershell(
+                command_or_script=cmd,
+                execution_policy="Bypass",
+                timeout_seconds=timeout_seconds,
+                working_directory=target_dir
+            )
+            result = {
+                "status": "success" if b_res.get("exit_code", 0) == 0 else "error",
+                "project_dir": target_dir,
+                "command": cmd,
+                "stdout": b_res.get("stdout", ""),
+                "stderr": b_res.get("stderr", ""),
+                "exit_code": b_res.get("exit_code", 0),
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        except Exception as e:
+            result = {
+                "status": "error",
+                "project_dir": target_dir,
+                "command": cmd,
+                "stdout": "",
+                "stderr": str(e),
+                "exit_code": 1,
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+        # Update program_manifest.json if it exists in the project dir
+        manifest_path = os.path.join(target_dir, "program_manifest.json")
+        if os.path.exists(manifest_path):
+            try:
+                with open(manifest_path, "r", encoding="utf-8") as f:
+                    manifest = json.load(f)
+                manifest["build"] = {
+                    "executed": True,
+                    "status": result["status"],
+                    "command": cmd,
+                    "stdout": result["stdout"],
+                    "stderr": result["stderr"],
+                    "exit_code": result["exit_code"],
+                    "timestamp": result["timestamp"]
+                }
+                with open(manifest_path, "w", encoding="utf-8") as f:
+                    json.dump(manifest, f, indent=2)
+            except Exception:
+                pass
+
+        # Record in Personal Intelligence Memory Vault
+        try:
+            from core.personal_intelligence_memory import personal_memory
+            personal_memory.record_ecosystem_event(
+                event_type="project_built",
+                summary=f"Executed Build in {os.path.basename(target_dir)}: {cmd} (Exit: {result['exit_code']})",
+                metadata={"project_dir": target_dir, "command": cmd, "exit_code": result["exit_code"], "status": result["status"]}
+            )
+        except Exception:
+            pass
+
+        return result
+

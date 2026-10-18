@@ -803,9 +803,39 @@ class ToolRegistry:
                         "run_immediately": {
                             "type": "boolean",
                             "description": "Whether to immediately execute entrypoint/command (default: True)"
+                        },
+                        "build_command": {
+                            "type": "string",
+                            "description": "Optional custom build command. If omitted and execute_build is true, auto-detects build systems."
+                        },
+                        "execute_build": {
+                            "type": "boolean",
+                            "description": "Whether to run build/compilation before executing program (default: True)"
                         }
                     },
                     "required": ["project_name", "files"]
+                }
+            },
+            {
+                "name": "build_project",
+                "description": "Executes builds (compilation, package installs, and build scripts) on a software project directory or program. Supports npm, cargo, go, cmake, make, pip, dotnet, build.ps1/bat/sh.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "project_name_or_dir": {
+                            "type": "string",
+                            "description": "Directory path or registered program name to build"
+                        },
+                        "build_command": {
+                            "type": "string",
+                            "description": "Optional custom build command. If omitted, auto-detects build tools from directory files."
+                        },
+                        "timeout_seconds": {
+                            "type": "integer",
+                            "description": "Build timeout in seconds (default: 300)"
+                        }
+                    },
+                    "required": ["project_name_or_dir"]
                 }
             },
             {
@@ -5676,6 +5706,30 @@ class ToolRegistry:
                     working_directory=cwd
                 )
 
+            elif tool_name in ["execute_bash", "run_bash", "bash_command", "bash", "execute_sh", "sh"]:
+                cmd = (
+                    arguments.get("command", "")
+                    or arguments.get("cmd", "")
+                    or arguments.get("script", "")
+                ).strip()
+                if not cmd:
+                    return {"status": "error", "message": "Missing required argument 'command'."}
+                timeout = int(arguments.get("timeout_seconds", 300))
+                distro = arguments.get("distro", "Ubuntu")
+                env_type = arguments.get("environment", "auto")
+                from executive_runtime_router import execute_multi_runtime
+                return execute_multi_runtime("bash", cmd, {"distro": distro, "timeout_seconds": timeout, "environment": env_type})
+
+            elif tool_name in ["execute_pip", "pip_install", "run_pip", "pip", "execute_pip3", "pip3"]:
+                cmd = (
+                    arguments.get("command", "")
+                    or arguments.get("package", "")
+                    or arguments.get("args", "")
+                ).strip()
+                timeout = int(arguments.get("timeout_seconds", 600))
+                from executive_runtime_router import execute_multi_runtime
+                return execute_multi_runtime("pip", cmd, {"timeout_seconds": timeout})
+
             elif tool_name in ["build_program", "scaffold_program", "create_program"]:
                 from core.program_builder_engine import AutonomousProgramBuilder
                 return AutonomousProgramBuilder.build_program(
@@ -5685,7 +5739,17 @@ class ToolRegistry:
                     files=arguments.get("files", []),
                     entrypoint=arguments.get("entrypoint", "main.py"),
                     run_immediately=arguments.get("run_immediately", True),
-                    powershell_command=arguments.get("powershell_command")
+                    powershell_command=arguments.get("powershell_command"),
+                    build_command=arguments.get("build_command"),
+                    execute_build=arguments.get("execute_build", True)
+                )
+
+            elif tool_name in ["build_project", "execute_build", "run_build", "project_build"]:
+                from core.program_builder_engine import AutonomousProgramBuilder
+                return AutonomousProgramBuilder.build_project(
+                    project_name_or_dir=arguments.get("project_name_or_dir", arguments.get("project_name", arguments.get("project_dir", ""))),
+                    build_command=arguments.get("build_command"),
+                    timeout_seconds=int(arguments.get("timeout_seconds", 300))
                 )
 
             elif tool_name in ["run_program", "execute_program"]:

@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppStore } from './useAppStore';
+import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 import { 
   Menu, Plus, Send, Mic, MicOff, Image, Paperclip, Volume2, VolumeX, 
   ChevronDown, Check, Copy, ExternalLink, Download, Monitor, Trash2, 
@@ -125,11 +126,14 @@ function MobileFormattedContent({ content, role, onImageClick }) {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  return (
-    <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
+  const hasRunToken = typeof content === 'string' && /\[Run\s+([^\]]+)\]/.test(content);
+  const stagedPayloads = hasRunToken ? extractStagedPayloads(content) : null;
+
+  const renderMarkdownBlock = (markdownText, key) => (
+    <ReactMarkdown
+      key={key}
+      remarkPlugins={[remarkGfm]}
+      components={{
           code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             const codeString = String(children).replace(/\n$/, '');
@@ -286,11 +290,40 @@ function MobileFormattedContent({ content, role, onImageClick }) {
           }
         }}
       >
-        {content}
+        {markdownText}
       </ReactMarkdown>
-    </div>
-  );
-}
+    );
+
+    if (hasRunToken) {
+      const parts = content.split(/(\[Run\s+[^\]]+\])/g);
+      return (
+        <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
+          {parts.map((part, idx) => {
+            const runMatch = /\[Run\s+([^\]]+)\]/.exec(part);
+            if (runMatch) {
+              const label = runMatch[1] || 'Interactive Canvas';
+              return (
+                <TapToRunCanvas
+                  key={`canvas-${idx}`}
+                  label={label}
+                  stagedPayloads={stagedPayloads}
+                  backendUrl={BACKEND_URL}
+                />
+              );
+            }
+            if (!part || !part.trim()) return null;
+            return renderMarkdownBlock(part, `md-${idx}`);
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ wordBreak: 'break-word', fontSize: '0.92rem', lineHeight: '1.6' }}>
+        {renderMarkdownBlock(content, 'single-md')}
+      </div>
+    );
+  }
 
 // ─── Main MobileStehouwerChat Component ───────────────────────────────────────
 export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) {

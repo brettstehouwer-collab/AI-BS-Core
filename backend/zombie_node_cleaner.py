@@ -24,10 +24,16 @@ PROTECTED_CMDLINE_TOKENS = [
     "shm_websocket_gateway",
     "ollama",
     "comfyui",
+    "comfy_primary_proxy",
     "aibs_broadcast",
     "aibs_social",
     "aibs_vst",
     "aibs_matrix",
+    "aibs_supabase_gateway",
+    "crypto_trader_bot",
+    "unified_crypto_pearl_watchdog",
+    "pearl_payout_watcher",
+    "chroma",
     "antigravity",
     "gemini",
     "pytest",
@@ -36,6 +42,8 @@ PROTECTED_CMDLINE_TOKENS = [
     "compute_monetization_daemon",
     "telemetry_hub",
     "aibs_engine",
+    "ai_bs_unreal_signaling_server",
+    "ecosystem_supervisor_daemon",
 ]
 
 TARGET_PROCESS_NAMES = {
@@ -109,14 +117,18 @@ def audit_zombie_nodes() -> Dict[str, Any]:
             except Exception:
                 pass
 
-            if any(token in cmdline_str for token in PROTECTED_CMDLINE_TOKENS):
-                continue
-
             ppid = None
             try:
                 ppid = p.ppid()
             except Exception:
                 pass
+
+            is_dead_parent = (ppid is not None and ppid not in all_pids and ppid != 0)
+
+            # Protected tokens check (do not protect orphaned llama-servers whose parent is dead)
+            if any(token in cmdline_str for token in PROTECTED_CMDLINE_TOKENS):
+                if not (pname == "llama-server.exe" and is_dead_parent):
+                    continue
 
             mem = 0
             try:

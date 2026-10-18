@@ -8,12 +8,19 @@ import time
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(r"C:\AI-BS")
-SCRATCH_DIR = WORKSPACE_ROOT / "scratch"
+SCRATCH_DIR = WORKSPACE_ROOT / ".temp_executor"
 SCRATCH_DIR.mkdir(parents=True, exist_ok=True)
+(WORKSPACE_ROOT / "scratch").mkdir(parents=True, exist_ok=True)
+(WORKSPACE_ROOT / "Stehouwer_Server" / "Projects" / ".temp_executor").mkdir(parents=True, exist_ok=True)
 
 
 def resolve_host_path(raw_path: str) -> Path:
     p = str(raw_path or "").strip().replace("file:///", "").replace("file://", "")
+    # Seamless G:\Stehouwer_Server -> C:\AI-BS\Stehouwer_Server fallback when G: is unmounted
+    if p.lower().startswith("g:\\stehouwer_server") or p.lower().startswith("g:/stehouwer_server"):
+        if not Path("G:\\").exists():
+            rel = p[len("g:\\stehouwer_server"):].lstrip("/\\")
+            return WORKSPACE_ROOT / "Stehouwer_Server" / rel
     if len(p) >= 2 and p[1] == ":":
         return Path(p)
     p = p.lstrip("/\\")
@@ -22,8 +29,24 @@ def resolve_host_path(raw_path: str) -> Path:
     return WORKSPACE_ROOT / p
 
 
-def execute_multi_runtime(command_type: str, target: str, payload: dict = None) -> dict:
-    payload = payload or {}
+def execute_multi_runtime(command_type: str = "powershell", target: str = "", payload: dict = None, **kwargs) -> dict:
+    # Normalize kwargs from callers (e.g. if called as execute_multi_runtime(command=..., runtime=..., cwd=..., file_path=...))
+    if "runtime" in kwargs and kwargs["runtime"]:
+        command_type = kwargs["runtime"]
+    elif "command_type" in kwargs and kwargs["command_type"]:
+        command_type = kwargs["command_type"]
+
+    if "command" in kwargs and kwargs["command"]:
+        target = kwargs["command"]
+    elif "target" in kwargs and kwargs["target"]:
+        target = kwargs["target"]
+
+    payload = payload or kwargs.get("payload") or {}
+    if "file_path" in kwargs and kwargs["file_path"]:
+        payload["file_path"] = kwargs["file_path"]
+    if "cwd" in kwargs and kwargs["cwd"]:
+        payload["cwd"] = kwargs["cwd"]
+
     timeout = int(payload.get("timeout_seconds", 120))
     t0 = time.perf_counter()
 
@@ -43,7 +66,8 @@ def execute_multi_runtime(command_type: str, target: str, payload: dict = None) 
                     "lines": len(content.splitlines()),
                     "size_bytes": fpath.stat().st_size
                 },
-                "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2)
+                "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "elapsed_ms": round((time.perf_counter() - t0) * 1000, 2)
             }
 
         # 2. UNIVERSAL FILE WRITE (ANY EXTENSION + AUTO .BAK BACKUP)
@@ -65,10 +89,11 @@ def execute_multi_runtime(command_type: str, target: str, payload: dict = None) 
                     "backup_created": bool(backup_file),
                     "backup_file": backup_file
                 },
-                "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2)
+                "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "elapsed_ms": round((time.perf_counter() - t0) * 1000, 2)
             }
 
-        # 3. MULTI-SHELL & MULTI-LANGUAGE SUBPROCESS EXECUTION
+        # 3. MULTI-SHELL & MULTI-LANGUAGE SUBPROCESS EXECUTION (AIBS-DIR-000 Compliant)
         cmd_list = []
         temp_file = None
         extra_args = payload.get("args") or []
@@ -81,14 +106,45 @@ def execute_multi_runtime(command_type: str, target: str, payload: dict = None) 
 
         if command_type in ("powershell", "ps", "ps1"):
             if os.path.exists(resolve_host_path(target)) and "\n" not in target and str(target).lower().endswith(".ps1"):
-                cmd_list = ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(resolve_host_path(target))] + extra_args
+                cmd_list = ["powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", str(resolve_host_path(target))] + extra_args
             else:
-                cmd_list = ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", target]
+                cmd_list = ["powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", target]
         elif command_type in ("cmd", "batch", "bat"):
             cmd_list = ["cmd.exe", "/d", "/s", "/c", target]
+        elif command_type in ("pip", "pip3"):
+            import shlex
+            clean_cmd = target.strip()
+            if clean_cmd.startswith("pip3 "):
+                clean_cmd = clean_cmd[5:].strip()
+            elif clean_cmd.startswith("pip "):
+                clean_cmd = clean_cmd[4:].strip()
+            elif clean_cmd.startswith("python -m pip "):
+                clean_cmd = clean_cmd[14:].strip()
+            elif clean_cmd.startswith("py -m pip "):
+                clean_cmd = clean_cmd[10:].strip()
+
+            if clean_cmd in ("install pip", "get-pip", "ensurepip", "setup pip"):
+                cmd_list = [py_exe, "-m", "ensurepip", "--upgrade"]
+            elif not clean_cmd or clean_cmd in ("list", "--version", "-V"):
+                cmd_list = [py_exe, "-m", "pip", "list"] if not clean_cmd else [py_exe, "-m", "pip", clean_cmd]
+            else:
+                first_arg = clean_cmd.split()[0].lower()
+                if first_arg not in ("install", "uninstall", "list", "show", "freeze", "check", "config", "search", "cache", "wheel", "download"):
+                    cmd_list = [py_exe, "-m", "pip", "install"] + shlex.split(clean_cmd) + extra_args
+                else:
+                    cmd_list = [py_exe, "-m", "pip"] + shlex.split(clean_cmd) + extra_args
         elif command_type in ("wsl", "bash", "sh", "zsh", "shell"):
             distro = payload.get("distro", "Ubuntu")
-            cmd_list = ["wsl.exe", "-d", distro, "--", "bash", "-lc", target]
+            git_bash = r"C:\Program Files\Git\bin\bash.exe"
+            env_mode = payload.get("environment", "auto").lower()
+
+            if command_type == "wsl" or env_mode == "wsl":
+                cmd_list = ["wsl.exe", "-d", distro, "--", "bash", "-lc", target]
+            elif os.path.exists(git_bash):
+                bash_script = f'export PATH="/c/AI-BS/pyppeteer_env/Scripts:/c/AI-BS/pyppeteer_env:/usr/bin:/bin:$PATH"; {target}'
+                cmd_list = [git_bash, "-c", bash_script]
+            else:
+                cmd_list = ["wsl.exe", "-d", distro, "--", "bash", "-lc", target]
         elif command_type in ("python", "py"):
             if os.path.exists(resolve_host_path(target)) and "\n" not in target:
                 cmd_list = [py_exe, str(resolve_host_path(target))] + extra_args
@@ -161,13 +217,31 @@ def execute_multi_runtime(command_type: str, target: str, payload: dict = None) 
             encoding="utf-8",
             errors="replace"
         )
+
+        # Record outcome under AIBS-DIR-000 Section 2.3 (Two-Strike Diagnostic Halt Rule)
+        two_strike_info = {}
+        try:
+            from sovereign_privilege_engine import record_command_execution_outcome
+            two_strike_info = record_command_execution_outcome(
+                command_type=command_type,
+                target=target,
+                returncode=proc.returncode,
+                stderr=proc.stderr
+            )
+        except Exception:
+            pass
+
         return {
             "status": "success" if proc.returncode == 0 else "error",
             "command_type": command_type,
+            "runtime_used": command_type,
             "stdout": proc.stdout,
             "stderr": proc.stderr,
             "returncode": proc.returncode,
-            "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2)
+            "two_strike_governance": two_strike_info,
+            "sandbox_dir": str(SCRATCH_DIR),
+            "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2),
+            "elapsed_ms": round((time.perf_counter() - t0) * 1000, 2)
         }
     except Exception as e:
         return {

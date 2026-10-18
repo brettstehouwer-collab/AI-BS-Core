@@ -359,6 +359,7 @@ class DaemonManager:
             except Exception as e:
                 logger.debug("DaemonManager net_connections sweep warning: %s", e)
 
+        import socket
         ports_status = []
         online_count = 0
         for ep in ECOSYSTEM_PORTS:
@@ -369,14 +370,26 @@ class DaemonManager:
             is_online = False
 
             if pid and psutil and psutil.pid_exists(pid):
+                is_online = True
                 try:
                     p = psutil.Process(pid)
                     proc_name = p.name()
                     mem_mb = round(p.memory_info().rss / (1024 * 1024), 1)
-                    is_online = True
-                    online_count += 1
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    proc_name = "System/WSL2"
+
+            if not is_online:
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                        s.settimeout(0.15)
+                        if s.connect_ex(("127.0.0.1", port)) == 0:
+                            is_online = True
+                            proc_name = proc_name or "WSL2/Service"
+                except Exception:
                     pass
+
+            if is_online:
+                online_count += 1
 
             # Check if this port is supervised in registered daemons
             supervised = False
@@ -408,10 +421,27 @@ class DaemonManager:
             "timestamp": time.time(),
             "online_ports": online_count,
             "total_ports": len(ECOSYSTEM_PORTS),
+            "online_count": online_count,
+            "total_services": len(ECOSYSTEM_PORTS),
+            "active_count": online_count,
+            "total_count": len(ECOSYSTEM_PORTS),
             "ports": ports_status,
+            "daemons": [
+                {
+                    "port": p["port"],
+                    "name": p["name"],
+                    "status": "running" if p["status"] == "ONLINE" else "standby",
+                }
+                for p in ports_status
+            ],
             "hardware": hw_metrics,
             "registered_daemons_count": len(self._daemons),
         }
+
+    def get_supervisor_status(self) -> dict:
+        """Alias used by OversightParentEngine for real-time 20-daemon status."""
+        return self.get_full_ecosystem_status()
+
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -902,6 +932,10 @@ def build_default_manager(base_dir: str | None = None) -> DaemonManager:
     )
 
     return manager
+
+
+daemon_supervisor = DaemonManager()
+
 
 
 # ---------------------------------------------------------------------------

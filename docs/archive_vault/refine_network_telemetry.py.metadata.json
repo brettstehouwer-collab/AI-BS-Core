@@ -1,0 +1,4 @@
+{
+  "summary": "Script to update backend/modules/network_telemetry.py with canonical flow_id, captured_overhead_bytes, flow lifecycle expiration, 12-char hex collision-resistant IDs, and enhanced flows summary namespace.",
+  "updatedAt": "2026-09-10T07:35:36.538110400Z"
+}

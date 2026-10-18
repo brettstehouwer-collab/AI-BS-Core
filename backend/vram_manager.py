@@ -54,9 +54,10 @@ class VRAMOrchestrator:
         """Publishes live VRAM metrics across Matrix Event Bus."""
         if EVENT_BUS_AVAILABLE:
             try:
+                loop = asyncio.get_running_loop()
                 data = self.get_detailed_telemetry()
-                asyncio.create_task(matrix_event_bus.publish("vram", event_name, data, source="vram_manager"))
-            except Exception:
+                loop.create_task(matrix_event_bus.publish("vram", event_name, data, source="vram_manager"))
+            except (RuntimeError, Exception):
                 pass
 
     def get_detailed_telemetry(self) -> Dict[str, Any]:

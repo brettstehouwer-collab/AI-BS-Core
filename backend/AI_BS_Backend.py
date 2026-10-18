@@ -12,20 +12,30 @@ if sys.platform == "win32":
     _orig_popen = subprocess.Popen
     _orig_check_output = subprocess.check_output
 
+    _hidden_startupinfo = subprocess.STARTUPINFO()
+    _hidden_startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    _hidden_startupinfo.wShowWindow = 0
+
     def _silent_run(*args, **kwargs):
         if "creationflags" not in kwargs:
             kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        if "startupinfo" not in kwargs:
+            kwargs["startupinfo"] = _hidden_startupinfo
         return _orig_run(*args, **kwargs)
 
     class _SilentPopen(_orig_popen):
         def __init__(self, *args, **kwargs):
             if "creationflags" not in kwargs:
                 kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+            if "startupinfo" not in kwargs:
+                kwargs["startupinfo"] = _hidden_startupinfo
             super().__init__(*args, **kwargs)
 
     def _silent_check_output(*args, **kwargs):
         if "creationflags" not in kwargs:
             kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        if "startupinfo" not in kwargs:
+            kwargs["startupinfo"] = _hidden_startupinfo
         return _orig_check_output(*args, **kwargs)
 
     subprocess.run = _silent_run
@@ -407,18 +417,18 @@ daemon_supervisor.register(
         cwd=Path(_backend_dir).parent,
         args=[
             "-c",
-            "import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'E:\\AI_BS_Resources\\ChromaDB', '--port', '8002']; chromadb.cli.cli.app()",
+            "import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'C:\\AI-BS\\chroma_db_8002', '--port', '8002']; chromadb.cli.cli.app()",
         ],
         sandbox=False
-    )
+    ),
+    auto_start=True
 )
-# On-demand daemons (decoupled from startup)
-daemon_supervisor.register("crypto_trader_bot", _make_cmd("crypto_trader_bot.py"), auto_start=False)
-# auto_healer_daemon permanently excised — placeholder script not needed
+# Unified Master Supervision: Automatically managed and monitored by AI_BS_Backend
+daemon_supervisor.register("crypto_trader_bot", _make_cmd("crypto_trader_bot.py"), auto_start=True)
+daemon_supervisor.register("broadcast_daemon", _make_cmd("aibs_broadcast_daemon.py"), auto_start=True)
 daemon_supervisor.register(
     "bullshit_writer_daemon", _make_cmd("bullshit_writer_daemon.py"), auto_start=False
 )
-daemon_supervisor.register("broadcast_daemon", _make_cmd("aibs_broadcast_daemon.py"), auto_start=False)
 daemon_supervisor.register("bullshit_senses", _make_cmd("bullshit_senses.py"), auto_start=False)
 daemon_supervisor.register("bullshit_medic", _make_cmd("bullshit_medic.py"), auto_start=False)
 daemon_supervisor.register("bullshit_memory", _make_cmd("bullshit_memory.py"), auto_start=False)
@@ -623,6 +633,12 @@ try:
     app.include_router(updater_router)
 except ImportError as e:
     print(f"Warning: Could not load updater_router: {e}")
+
+try:
+    from canvas_daemon import router as canvas_router
+    app.include_router(canvas_router)
+except ImportError as e:
+    print(f"Warning: Could not load canvas_router: {e}")
 
 try:
     from routers.operations_audit_router import router as operations_audit_router
@@ -3193,7 +3209,7 @@ async def run_executive_command(payload: ExecutiveCommandPayload):
     if cmd_type in [
         "powershell", "ps", "ps1", "cmd", "batch", "bat",
         "wsl", "bash", "sh", "zsh", "shell",
-        "python", "py", "node", "javascript", "js", "mjs",
+        "pip", "pip3", "python", "py", "node", "javascript", "js", "mjs",
         "ts", "typescript", "go", "golang", "rust", "rs",
         "cpp", "c", "sql", "file_read", "read", "file_write", "write"
     ]:
@@ -3261,6 +3277,26 @@ async def run_executive_command(payload: ExecutiveCommandPayload):
             return {"status": "success", "full_path": full_path, "message": f"Opened Windows File Explorer at {full_path}"}
         except Exception as e:
             return {"status": "error", "message": str(e)}
+
+    elif cmd_type in ["build", "build_project", "project_build", "execute_build"]:
+        try:
+            from core.program_builder_engine import AutonomousProgramBuilder
+            build_cmd = extra.get("build_command") or extra.get("command")
+            target_proj = target or extra.get("project_dir") or extra.get("project_name", "")
+            b_res = AutonomousProgramBuilder.build_project(
+                project_name_or_dir=target_proj,
+                build_command=build_cmd,
+                timeout_seconds=int(extra.get("timeout_seconds", 300))
+            )
+            return {
+                "status": b_res.get("status", "error"),
+                "command_type": "build_project",
+                "target": target_proj,
+                "result": b_res,
+                "execution_time_ms": round((time.time() - start_t) * 1000, 2)
+            }
+        except Exception as e:
+            return {"status": "error", "message": str(e), "execution_time_ms": round((time.time() - start_t) * 1000, 2)}
 
     elif cmd_type in ["mission", "mission_run", "run_mission"]:
         try:
@@ -3359,7 +3395,7 @@ async def run_executive_command(payload: ExecutiveCommandPayload):
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-    raise HTTPException(status_code=400, detail=f"Invalid executive command type '{cmd_type}'. Supported: powershell, cmd, wsl, python, node, ts, go, rust, cpp, c, sql, tool, file_read, file_write, file_rename, show_in_explorer, mission, plan_mission, grill, grill_respond, grill_conclude, audit, test_first, diff_review, snapshot, rollback, hardware_health, port_probe.")
+    raise HTTPException(status_code=400, detail=f"Invalid executive command type '{cmd_type}'. Supported: powershell, cmd, wsl, python, node, ts, go, rust, cpp, c, sql, tool, build_project, file_read, file_write, file_rename, show_in_explorer, mission, plan_mission, grill, grill_respond, grill_conclude, audit, test_first, diff_review, snapshot, rollback, hardware_health, port_probe.")
 
 
 @executive_router.get("/status")
@@ -3371,7 +3407,7 @@ async def get_executive_status():
         "privileges": "root_host_unrestricted",
         "supported_command_types": [
             "powershell", "cmd", "wsl", "python", "node", "ts", "go", "rust", "cpp", "c", "sql",
-            "tool", "file_read", "file_write", "file_rename", "show_in_explorer", "auto_heal"
+            "tool", "build_project", "file_read", "file_write", "file_rename", "show_in_explorer", "auto_heal"
         ],
         "host_platform": sys.platform,
         "default_cwd": r"C:\AI-BS"
@@ -3463,6 +3499,86 @@ async def set_mobile_workstation_profile(payload: MobileWorkstationPayload):
         profile_id=payload.profile_id,
         apply_os_resolution=bool(payload.apply_os_resolution)
     )
+
+
+class WirelessCastActionPayload(BaseModel):
+    action: str  # 'win_k', 'display_mode', 'project_to_pc_settings', 'connected_devices', 'phone_to_pc_scrcpy', 'adb_tcpip_auto', 'scan_nearby'
+    mode: Optional[str] = "extend"  # 'clone', 'extend', 'external', 'internal'
+    phone_ip: Optional[str] = ""
+    pair_port: Optional[str] = ""
+    pair_code: Optional[str] = ""
+    bitrate: Optional[str] = "8M"
+    max_fps: Optional[int] = 60
+    stay_awake: Optional[bool] = True
+
+
+class WirelessCastFramePayload(BaseModel):
+    data_url: str
+    width: Optional[int] = 1920
+    height: Optional[int] = 1080
+
+
+@executive_router.get("/wireless-cast/status")
+async def get_wireless_cast_state():
+    r"""Returns live 3-Way Wireless Screen Mirror & Display Cast telemetry (PC->Wireless Display, PC->Phone, Phone->PC Scrcpy/ADB)."""
+    from mobile_workstation_engine import get_wireless_cast_status
+    return get_wireless_cast_status()
+
+
+@executive_router.post("/wireless-cast/action")
+async def trigger_wireless_cast_action(payload: WirelessCastActionPayload):
+    r"""Executes a 3-Way Wireless Screen Mirror / Cast action (Win+K Miracast flyout, DisplaySwitch Clone/Extend, Scrcpy Phone->PC mirror, Wireless ADB, or LAN scan)."""
+    from mobile_workstation_engine import execute_wireless_cast_action
+    return execute_wireless_cast_action(
+        action=payload.action,
+        mode=payload.mode or "extend",
+        phone_ip=payload.phone_ip or "",
+        pair_port=payload.pair_port or "",
+        pair_code=payload.pair_code or "",
+        bitrate=payload.bitrate or "8M",
+        max_fps=int(payload.max_fps or 60),
+        stay_awake=bool(payload.stay_awake),
+    )
+
+
+@executive_router.post("/wireless-cast/frame")
+async def push_wireless_cast_frame(payload: WirelessCastFramePayload):
+    r"""Stores the latest captured PC screen/workspace frame for zero-install phone/TV web viewing."""
+    from mobile_workstation_engine import store_cast_frame
+    return store_cast_frame(
+        data_url=payload.data_url,
+        width=int(payload.width or 1920),
+        height=int(payload.height or 1080),
+    )
+
+
+@executive_router.get("/wireless-cast/frame")
+async def pull_wireless_cast_frame():
+    r"""Returns the latest captured PC screen/workspace frame for connected wireless phone/TV viewers."""
+    from mobile_workstation_engine import get_latest_cast_frame
+    return get_latest_cast_frame()
+
+
+@executive_router.get("/wireless-cast/viewer")
+async def serve_wireless_cast_viewer():
+    r"""Serves the mobile- and Smart-TV-optimized HTML5 Live Screen Mirror Receiver page."""
+    from fastapi.responses import HTMLResponse
+    from mobile_workstation_engine import get_cast_viewer_html
+    return HTMLResponse(content=get_cast_viewer_html())
+
+
+@executive_router.get("/privilege-directive/status")
+async def get_privilege_directive_state():
+    r"""Returns live AIBS-DIR-000-ROOT-AUTHORITY 5-Tier Privilege, VTL 1 HVCI, X.509 Certificate, ReAct Sandbox, and Two-Strike Fault Heuristic telemetry."""
+    from sovereign_privilege_engine import get_sovereign_privilege_status
+    return get_sovereign_privilege_status()
+
+
+@executive_router.post("/privilege-directive/enforce")
+async def enforce_privilege_directive_endpoint():
+    r"""Executes Enable-AIBSSovereignMode.ps1 on the Windows 11 host and returns updated telemetry."""
+    from sovereign_privilege_engine import enforce_sovereign_privilege_directive
+    return enforce_sovereign_privilege_directive()
 
 
 
@@ -6066,12 +6182,90 @@ def memory_stats():
     size = (
         os.path.getsize(MASTER_MEMORY_PATH) if os.path.exists(MASTER_MEMORY_PATH) else 0
     )
+    sqlite_entries = 0
+    chroma_count = 0
+    try:
+        import sqlite3
+        conn = sqlite3.connect(r"C:\AI-BS\backend\aibs_master.db")
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM sovereign_reasoning_vault")
+        sqlite_entries = cur.fetchone()[0]
+        conn.close()
+    except Exception:
+        pass
+    try:
+        import chromadb
+        client = chromadb.HttpClient(host="127.0.0.1", port=8001)
+        col = client.get_collection("antigravity_reasoning_memory")
+        chroma_count = col.count()
+    except Exception:
+        pass
+
     return {
         "status": "success",
         "ssdRamSize": size,
+        "ssdRamSizeKB": round(size / 1024, 2),
         "ssdRamPath": MASTER_MEMORY_PATH,
-        "dbEntries": 0,  # Would be chroma count
+        "sovereignVaultEntries": sqlite_entries,
+        "chromaVectors": chroma_count,
+        "dbEntries": sqlite_entries + chroma_count,
     }
+
+
+class MemoryRecallPayload(BaseModel):
+    query: str
+    limit: Optional[int] = 5
+
+
+@app.get("/api/memory/recall")
+@app.post("/api/memory/recall")
+def memory_recall(query: Optional[str] = None, limit: int = 5, payload: Optional[MemoryRecallPayload] = None):
+    q = (payload.query if payload else query) or ""
+    lim = (payload.limit if payload else limit) or 5
+    if not q.strip():
+        return {"status": "error", "message": "query parameter required", "results": []}
+
+    try:
+        from sovereign_memory_ingestor import search_memory
+        hits = search_memory(q, n_results=lim)
+        if hits:
+            return {"status": "success", "source": "chromadb_vector", "query": q, "results": hits}
+    except Exception:
+        pass
+
+    # Fallback to SQLite sovereign_reasoning_vault
+    try:
+        import sqlite3
+        conn = sqlite3.connect(r"C:\AI-BS\backend\aibs_master.db")
+        cur = conn.cursor()
+        like_q = f"%{q}%"
+        cur.execute("""
+            SELECT id, title, category, memory_type, prompt, thinking_summary, content, source
+            FROM sovereign_reasoning_vault
+            WHERE content LIKE ? OR prompt LIKE ? OR title LIKE ?
+            ORDER BY created_at DESC
+            LIMIT ?
+        """, (like_q, like_q, like_q, lim))
+        rows = cur.fetchall()
+        conn.close()
+        hits = [
+            {
+                "id": r[0],
+                "title": r[1],
+                "category": r[2],
+                "type": r[3],
+                "prompt": r[4],
+                "thinking": r[5],
+                "document": r[6],
+                "source": r[7],
+                "distance": 0.0
+            }
+            for r in rows
+        ]
+        return {"status": "success", "source": "sqlite_vault", "query": q, "results": hits}
+    except Exception as e:
+        return {"status": "error", "message": str(e), "results": []}
+
 
 
 VAULT_DOCS_DIR = os.path.join(get_base_dir(), "AI-BS_Knowledge_Vaults", "Docs")
@@ -6117,6 +6311,59 @@ async def upload_document(file: UploadFile = File(...), vault: str = Form(defaul
         "status": "success",
         "message": f"Saved {safe_filename} to Vault: {vault if vault else 'Root'}.",
     }
+
+
+# --- Workspace Screen Mirroring & Wireless Casting Endpoints ---
+@app.get("/api/workspace/cast/info")
+def workspace_cast_info():
+    """Returns local network IP, Miracast capability, and streaming URLs."""
+    import socket
+    local_ip = "127.0.0.1"
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        pass
+
+    return {
+        "status": "success",
+        "local_ip": local_ip,
+        "miracast_supported": True,
+        "instructions": {
+            "pc_to_display": "Press Win + K or call /api/workspace/cast/miracast to project to wireless monitors/TVs.",
+            "phone_to_pc": "Launch Wireless Display on PC, then tap 'Smart View' or 'Cast' on your Android device.",
+            "phone_stream_url": f"http://{local_ip}:8005/stream/probe"
+        }
+    }
+
+
+@app.post("/api/workspace/cast/miracast")
+def workspace_trigger_miracast():
+    """Invokes the native Windows Cast flyout (Win + K) to connect to nearby wireless displays."""
+    try:
+        import subprocess
+        subprocess.Popen(["explorer.exe", "ms-settings-connectabledevices:devicename"])
+        return {"status": "success", "message": "Windows Cast flyout triggered."}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/api/workspace/cast/receiver")
+def workspace_trigger_receiver():
+    """Launches the Windows Wireless Display receiver for incoming phone projections."""
+    try:
+        import subprocess
+        subprocess.Popen(["explorer.exe", r"shell:AppsFolder\Microsoft.PPIProjection_cw5n1h2txyewy!Microsoft.PPIProjection"])
+        return {"status": "success", "message": "Wireless Display Receiver launched."}
+    except Exception:
+        try:
+            import subprocess
+            subprocess.Popen(["explorer.exe", "ms-settings:project"])
+            return {"status": "success", "message": "Project settings opened."}
+        except Exception as e2:
+            return {"status": "error", "message": str(e2)}
 
 
 # --- Chat File Attachment Endpoint (GPT-Style Analysis) ---
@@ -7447,9 +7694,82 @@ async def catch_all(request: Request, full_path: str):
                         pass
                     return o_ctx
 
-                # Execute all 3 retrievals concurrently
-                web_result, vault_result, omnidrive_result = await asyncio.gather(
-                    fetch_web(), fetch_vault(), fetch_omnidrive()
+                # 4. Thread: Sovereign Reasoning & Component Memory (ChromaDB + SQLite Vault)
+                async def fetch_sovereign_memory():
+                    mem_ctx = ""
+                    try:
+                        import asyncio
+                        loop = asyncio.get_running_loop()
+
+                        def _query_chroma():
+                            output_parts = []
+                            try:
+                                import chromadb
+                                client = chromadb.HttpClient(host="127.0.0.1", port=8001)
+
+                                # Query antigravity_reasoning_memory (top 3)
+                                try:
+                                    col_reasoning = client.get_collection("antigravity_reasoning_memory")
+                                    r_results = col_reasoning.query(query_texts=[last_user_msg], n_results=3)
+                                    if r_results and r_results.get("documents") and r_results["documents"][0]:
+                                        docs = r_results["documents"][0]
+                                        metas = r_results.get("metadatas", [[]])[0]
+                                        dists = r_results.get("distances", [[]])[0] if "distances" in r_results else [1.0] * len(docs)
+                                        for doc, meta, dist in zip(docs, metas, dists):
+                                            if dist < 1.15:
+                                                title = (meta.get("title", "Reasoning Memory") if meta else "Reasoning Memory")
+                                                output_parts.append(f"- [REASONING] {title}: {doc[:300]}...")
+                                except Exception:
+                                    pass
+
+                                # Query components_codebase_memory (top 2)
+                                try:
+                                    col_components = client.get_collection("components_codebase_memory")
+                                    c_results = col_components.query(query_texts=[last_user_msg], n_results=2)
+                                    if c_results and c_results.get("documents") and c_results["documents"][0]:
+                                        docs = c_results["documents"][0]
+                                        metas = c_results.get("metadatas", [[]])[0]
+                                        dists = c_results.get("distances", [[]])[0] if "distances" in c_results else [1.0] * len(docs)
+                                        for doc, meta, dist in zip(docs, metas, dists):
+                                            if dist < 1.15:
+                                                comp_name = (meta.get("component_name", "Component") if meta else "Component")
+                                                output_parts.append(f"- [COMPONENT] {comp_name}: {doc[:300]}...")
+                                except Exception:
+                                    pass
+
+                            except Exception:
+                                pass
+
+                            # If Chroma had no results or was offline, fallback to SQLite sovereign_reasoning_vault
+                            if not output_parts:
+                                try:
+                                    import sqlite3
+                                    conn = sqlite3.connect(r"C:\AI-BS\backend\aibs_master.db")
+                                    cur = conn.cursor()
+                                    like_q = f"%{last_user_msg[:30]}%"
+                                    cur.execute("""
+                                        SELECT title, content, memory_type
+                                        FROM sovereign_reasoning_vault
+                                        WHERE content LIKE ? OR prompt LIKE ? OR title LIKE ?
+                                        ORDER BY created_at DESC LIMIT 3
+                                    """, (like_q, like_q, like_q))
+                                    for row in cur.fetchall():
+                                        m_type = (row[2] or "MEMORY").upper()
+                                        output_parts.append(f"- [{m_type}] {row[0]}: {row[1][:300]}...")
+                                    conn.close()
+                                except Exception:
+                                    pass
+
+                            return "\n".join(output_parts)
+
+                        mem_ctx = await loop.run_in_executor(None, _query_chroma)
+                    except Exception as e:
+                        print(f"[Sovereign Memory Error] {e}")
+                    return mem_ctx
+
+                # Execute all 4 retrievals concurrently
+                web_result, vault_result, omnidrive_result, memory_result = await asyncio.gather(
+                    fetch_web(), fetch_vault(), fetch_omnidrive(), fetch_sovereign_memory()
                 )
 
                 if web_result:
@@ -7458,6 +7778,8 @@ async def catch_all(request: Request, full_path: str):
                     omni_context += f"\n[LOCAL VAULT CONTEXT]\n{vault_result}\n"
                 if omnidrive_result:
                     omni_context += f"\n[OMNIDRIVE FILE REFS]\n{omnidrive_result}\n"
+                if memory_result:
+                    omni_context += f"\n[SOVEREIGN REASONING & COMPONENT MEMORY]\n{memory_result}\n"
 
             system_base = (
                 "You are the central cognitive engine of AI-BS and the autonomous execution and file-management intelligence inside AI-BS BS-Chat (C:\\AI-BS). "

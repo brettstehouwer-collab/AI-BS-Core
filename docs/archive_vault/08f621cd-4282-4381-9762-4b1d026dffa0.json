@@ -1,0 +1,1 @@
+{"id":"08f621cd-4282-4381-9762-4b1d026dffa0","recipient":"78f5ce7a-713d-4140-8cf5-205e480db080","sender":"78f5ce7a-713d-4140-8cf5-205e480db080/task-988","priority":"MESSAGE_PRIORITY_HIGH","timestamp":"2026-09-09T22:38:27.945474800Z","renderDetails":{"messageTitle":"Wait for test_solver_ollama to finish: Timer has expired"},"content":"Check test_solver_ollama status"}

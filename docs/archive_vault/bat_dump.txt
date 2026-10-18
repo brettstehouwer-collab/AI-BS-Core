@@ -1,0 +1,426 @@
+
+========================================
+FILE: Launch_AI_BS.bat
+========================================
+@echo off
+title AI-BS Matrix Launcher
+color 0A
+
+echo ===================================================
+echo             AI-BS MATRIX BOOT SEQUENCE
+echo ===================================================
+echo.
+
+set "BASE_DIR=%~dp0"
+
+echo [1/9] Executing Smart Zombie Node Sweep to reclaim RAM...
+python "%BASE_DIR%backend\zombie_node_cleaner.py"
+echo.
+
+echo [2/9] Starting All Core Engines Silently in Background...
+set CUDA_VISIBLE_DEVICES=0
+set OLLAMA_IGPU_ENABLE=0
+set OLLAMA_MODELS=C:\AI-BS\.ollama\models
+set OLLAMA_HOST=0.0.0.0
+
+:: Launch background daemons silently without opening multiple cmd windows
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%LOCALAPPDATA%\Programs\Ollama\ollama.exe' -ArgumentList 'serve' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%ComfyUI && run_nvidia_gpu.bat' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'node.exe' -ArgumentList 'server.js' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'python.exe' -ArgumentList 'AI_BS_Backend.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'python.exe' -ArgumentList 'shm_websocket_gateway.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%go-core\aibs_engine.exe' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'C:\Users\footb\AppData\Local\Microsoft\WinGet\Packages\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\nginx-1.31.3\nginx.exe' -ArgumentList '-p C:\StehouwerPublishing.com -c nginx.conf' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%vnc_bridge.exe' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- systemctl start clore-hosting.service' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%cloudflared.exe' -ArgumentList 'tunnel run ai-bs' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%frontend && npm run dev' -WindowStyle Hidden"
+
+echo.
+echo [3/9] Instant UI Launch...
+call :WaitForPort 5173 "Vite Frontend" 10
+
+:: Immediately open browser tabs
+start "" "http://localhost:5173"
+start "" "https://polygonscan.com/address/0xD6277C501465CFc329D8dd429908769718aa49FA"
+start "" "https://clore.ai/my-servers/detail?name=LINUX_d5d4b81e2bc648be85e47ee0a745969c"
+
+echo.
+echo ===================================================
+echo   BACKGROUND ENGINE MONITOR (PARALLEL LOADING)
+echo ===================================================
+call :WaitForPort 8080 "FastAPI Engine" 15
+call :WaitForPort 8000 "Go Gateway" 15
+call :WaitForPort 8010 "SHM Telemetry Gateway" 15
+call :WaitForPort 3001 "Node Backend" 15
+call :WaitForPort 11434 "Ollama AI" 15
+call :WaitForPort 8189 "ComfyUI Renderer" 25
+echo.
+
+echo [Final] Pre-warming Stehouwer LLM Model in VRAM...
+start /b "" "%LOCALAPPDATA%\Programs\Ollama\ollama.exe" run stehouwer_llm "ping" >nul 2>&1
+
+echo.
+echo ===================================================
+echo  All systems go! Stehouwer LLM ^& AI-BS Online.
+echo ===================================================
+timeout /t 2 /nobreak > nul
+exit
+
+:: ---------------------------------------------------
+:: Subroutine: WaitForPort
+:: Polls a specific local TCP port until it becomes active or times out.
+:: Usage: call :WaitForPort <Port> <ServiceName> <TimeoutSeconds>
+:: ---------------------------------------------------
+:WaitForPort
+set "PORT=%~1"
+set "NAME=%~2"
+set "MAXWAIT=%~3"
+powershell -Command "$p=%PORT%; $t=%MAXWAIT%; $sw=[Diagnostics.Stopwatch]::StartNew(); while (-not (Test-NetConnection 127.0.0.1 -Port $p -WarningAction SilentlyContinue).TcpTestSucceeded -and $sw.Elapsed.TotalSeconds -lt $t) { Start-Sleep -s 1 }; if ($sw.Elapsed.TotalSeconds -ge $t) { Write-Host '[WARNING] %NAME% (%PORT%) failed to bind within %MAXWAIT%s. Continuing...' -ForegroundColor Yellow } else { Write-Host '[OK] %NAME% (%PORT%) is online!' -ForegroundColor Green }"
+exit /b
+
+========================================
+FILE: Launch_Mobile_Tunnel.bat
+========================================
+@echo off
+title AI-BS Mobile ADB Tunnel Initialization
+color 0B
+
+echo ========================================================
+echo Booting AI-BS Mobile ADB Tunnel...
+echo Establishing secure USB connection to Android Device...
+echo ========================================================
+echo.
+
+set ADB_PATH="%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe"
+
+echo [INFO] Checking for ADB executable...
+if not exist %ADB_PATH% (
+    echo [ERROR] ADB not found at %LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe
+    echo Please install Android SDK Platform Tools or update your path.
+    pause
+    exit /b 1
+)
+
+echo [INFO] Restarting ADB server (just in case)...
+%ADB_PATH% kill-server
+%ADB_PATH% start-server
+
+echo.
+echo [INFO] Waiting for device...
+%ADB_PATH% wait-for-device
+
+echo [INFO] Device connected. Establishing reverse tunnels...
+
+:: Reverse React Frontend
+%ADB_PATH% reverse tcp:5173 tcp:5173
+echo [SUCCESS] Reversed port 5173 (React Dashboard)
+
+:: Reverse AI-BS API Backend
+%ADB_PATH% reverse tcp:8000 tcp:8000
+echo [SUCCESS] Reversed port 8000 (Backend API)
+
+:: Reverse Crypto Swarm Bot
+%ADB_PATH% reverse tcp:8003 tcp:8003
+echo [SUCCESS] Reversed port 8003 (Crypto Bot Telemetry)
+
+:: Reverse ComfyUI (optional, but useful)
+%ADB_PATH% reverse tcp:8188 tcp:8188
+echo [SUCCESS] Reversed port 8188 (ComfyUI)
+
+echo.
+echo ========================================================
+echo TUNNEL ESTABLISHED SUCCESSFULLY!
+echo ========================================================
+echo Open Chrome on your Android device and navigate to:
+echo http://localhost:5173
+echo.
+echo You can now use the Chat interface directly on your phone!
+echo Press any key to exit this window...
+pause >nul
+
+========================================
+FILE: rebuild_frontend.bat
+========================================
+@echo off
+ECHO =================================================
+ECHO " CLEANING & REBUILDING AI-BS FRONTEND"
+ECHO =================================================
+
+REM Set the frontend directory. Assumes this script is run from the project root.
+set "FRONTEND_DIR=%~dp0frontend"
+
+ECHO Navigating to frontend directory: %FRONTEND_DIR%
+cd /D "%FRONTEND_DIR%"
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] Could not navigate to the frontend directory.
+    pause
+    exit /b
+)
+
+ECHO [1/3] Cleaning old build artifacts...
+
+IF EXIST "build-output" (
+    ECHO      - Removing 'build-output' directory...
+    rmdir /s /q "build-output"
+)
+IF EXIST "release" (
+    ECHO      - Removing 'release' directory...
+    rmdir /s /q "release"
+)
+ECHO [SUCCESS] Old artifacts cleaned.
+
+ECHO.
+ECHO [2/3] Installing npm dependencies to ensure freshness...
+call npm install
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] 'npm install' failed. Please check the logs above for errors.
+    pause
+    exit /b
+)
+
+ECHO.
+ECHO [3/4] Building React frontend (Vite)...
+call npm run build
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] 'npm run build' failed.
+    pause
+    exit /b
+)
+
+ECHO.
+ECHO [4/4] Packaging new Electron application...
+ECHO Running build without code signing to prevent resource lock...
+ECHO Disabling compression to prevent CPU hang on large package...
+call npx electron-builder --win --publish never --config.win.compression=store --config electron-builder.json
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] 'electron-builder' failed. The build process was unsuccessful.
+    pause
+    exit /b
+)
+
+ECHO.
+ECHO =================================================
+ECHO  FRONTEND REBUILD COMPLETE!
+ECHO =================================================
+pause
+========================================
+FILE: run_ecosystem.bat
+========================================
+@echo off
+echo ===================================================
+echo           AI-BS MATRIX LIVE BOOTLOADER
+echo ===================================================
+echo.
+echo Starting FastAPI Backend Server...
+start "FastAPI Backend" cmd /k "start.bat"
+
+echo Starting Daemon Manager...
+start "Daemon Manager" cmd /k "pyppeteer_env\Scripts\python.exe daemon_manager.py C:\AI-BS"
+
+echo Starting Clore.ai Hosting Agent Server...
+start "Clore Hosting Server" cmd /k "Start_Clore_Server.bat"
+
+echo Starting Vite Frontend...
+start "Vite Frontend" cmd /k "cd /d C:\AI-BS\frontend && npm run dev"
+
+echo.
+echo All systems launched! You can monitor them in their respective windows.
+exit
+
+========================================
+FILE: Shutdown_AI_BS.bat
+========================================
+@echo off
+title AI-BS Save & Shutdown Sequence
+color 0C
+
+echo ===================================================
+echo           AI-BS SAVE ^& SHUTDOWN SEQUENCE
+echo ===================================================
+echo.
+
+:: Ensure script executes in the directory it resides in
+cd /d "%~dp0"
+
+echo [1/3] Saving all workspace changes in Git...
+git add .
+git commit -m "Auto-saved workspace before shutdown"
+echo.
+
+echo [2/3] Terminating background server processes...
+taskkill /F /IM node.exe /T >nul 2>&1
+taskkill /F /IM python.exe /T >nul 2>&1
+taskkill /F /IM brain_backend.exe /T >nul 2>&1
+taskkill /F /IM ollama.exe /T >nul 2>&1
+taskkill /F /IM daemon_manager.exe /T >nul 2>&1
+taskkill /F /IM vnc_bridge.exe /T >nul 2>&1
+:: --> New additions for updated Matrix architecture <--
+taskkill /F /IM aibs_engine.exe /T >nul 2>&1
+taskkill /F /IM cloudflared.exe /T >nul 2>&1
+:: --> Addition based on Launch_AI_BS.bat <--
+taskkill /F /IM nginx.exe /T >nul 2>&1
+echo.
+
+echo [3/3] Clearing daemon logs and temporary media files...
+:: --> Paths fixed to map to the correct C:\AI-BS\ directory <--
+del /F /Q "C:\AI-BS\chroma_daemon.pid" >nul 2>&1
+del /F /Q "C:\AI-BS\media_ingest_daemon.pid" >nul 2>&1
+del /F /Q "C:\AI-BS\memory_daemon.pid" >nul 2>&1
+del /F /Q "C:\AI-BS\trainer_daemon.pid" >nul 2>&1
+echo.
+
+echo ===================================================
+echo  All systems shut down and saved successfully.
+echo ===================================================
+ping 127.0.0.1 -n 3 > nul
+exit
+
+========================================
+FILE: start.bat
+========================================
+@echo off
+ECHO =================================================
+ECHO  INITIALIZING AI-BS BACKEND SERVER
+ECHO =================================================
+
+REM Get the directory of this script to run from anywhere
+set "SCRIPT_DIR=%~dp0"
+
+REM Activate the virtual environment
+ECHO [1/2] Activating Python virtual environment...
+call "%SCRIPT_DIR%pyppeteer_env\Scripts\activate.bat"
+
+IF %ERRORLEVEL% NEQ 0 (
+    ECHO [ERROR] Failed to activate virtual environment. Make sure it exists at '%SCRIPT_DIR%pyppeteer_env'.
+    pause
+    exit /b
+)
+
+ECHO [SUCCESS] Virtual environment activated.
+
+REM Start the Clore.ai Hosting Agent Server (WSL2)
+ECHO [2/3] Starting Clore.ai Hosting Agent Server in WSL2...
+wsl.exe -d Ubuntu -u root systemctl start clore-hosting.service >nul 2>&1
+IF %ERRORLEVEL% EQU 0 (
+    ECHO [SUCCESS] Clore.ai hosting agent server is running.
+) ELSE (
+    ECHO [WARNING] Could not start clore-hosting.service in WSL2. Continuing...
+)
+
+REM Start the FastAPI server using uvicorn
+ECHO [3/3] Starting FastAPI server on localhost:8000...
+ECHO Launching AI_BS_Backend:app from backend directory...
+cd /d "%SCRIPT_DIR%backend"
+"%SCRIPT_DIR%pyppeteer_env\Scripts\python.exe" -m uvicorn AI_BS_Backend:app --host 0.0.0.0 --port 8000
+
+echo.
+ECHO Server stopped.
+pause
+========================================
+FILE: start_chia_plotting.bat
+========================================
+python unified_stehouwer_launcher.py
+
+========================================
+FILE: Start_Clore_Server.bat
+========================================
+@echo off
+title AI-BS Clore.ai Hosting Agent Server
+color 0B
+
+echo ===================================================
+echo       AI-BS CLORE.AI HOSTING SERVER BOOT
+echo ===================================================
+echo.
+
+set "SCRIPT_DIR=%~dp0"
+
+echo [1/3] Verifying WSL2 Ubuntu environment...
+wsl.exe -d Ubuntu -u root id >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] WSL2 Ubuntu instance is not running or accessible.
+    echo Please ensure WSL2 is enabled and the Ubuntu distribution is installed.
+    pause
+    exit /b 1
+)
+
+echo [2/3] Starting clore-hosting.service in WSL2...
+wsl.exe -d Ubuntu -u root systemctl start clore-hosting.service
+
+echo [3/3] Verifying Clore Server Status...
+wsl.exe -d Ubuntu -u root systemctl is-active clore-hosting.service >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo.
+    echo ===================================================
+    echo  [SUCCESS] Clore.ai Hosting Agent Server is ACTIVE!
+    echo ===================================================
+    echo.
+    echo Service logs (last 10 lines):
+    wsl.exe -d Ubuntu -u root journalctl -u clore-hosting.service -n 10 --no-pager
+) else (
+    echo.
+    echo [WARNING] clore-hosting.service is not active via systemd.
+    echo Attempting direct execution fallback via /opt/clore-hosting/service.sh...
+    wsl.exe -d Ubuntu -u root bash /opt/clore-hosting/service.sh
+)
+
+echo.
+echo Clore Server execution complete.
+pause
+
+========================================
+FILE: Start_Crypto_Swarm.bat
+========================================
+@echo off
+title AI-BS Crypto Swarm Daemon (Diamond Hand)
+cd C:\AI-BS\backend
+echo ========================================================
+echo Booting Unified HFT Crypto Trader (Diamond Hand Logic)
+echo Target Asset: SOL/USD
+echo ========================================================
+python crypto_trader_bot.py
+pause
+
+========================================
+FILE: Start_Vast_Server.bat
+========================================
+@echo off
+title AI-BS Vast.ai Hosting Agent Server
+color 0D
+
+echo ===================================================
+echo       AI-BS VAST.AI HOSTING SERVER BOOT
+echo ===================================================
+echo.
+
+set "SCRIPT_DIR=%~dp0"
+
+echo [1/3] Verifying WSL2 Ubuntu-24.04 environment...
+wsl.exe -d Ubuntu-24.04 -u root id >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] WSL2 Ubuntu-24.04 instance is not running or accessible.
+    echo Please ensure WSL2 is enabled and the Ubuntu-24.04 distribution is installed.
+    pause
+    exit /b 1
+)
+
+echo [2/3] Ensuring Docker is running in WSL2 Ubuntu-24.04...
+wsl.exe -d Ubuntu-24.04 -u root service docker start >nul 2>&1
+
+echo [3/3] Starting Vast.ai Daemon in WSL2...
+echo.
+echo ===================================================
+echo  [SUCCESS] Vast.ai Hosting Agent Server is ACTIVE!
+echo ===================================================
+echo.
+echo Executing Vast.ai python host...
+wsl.exe -d Ubuntu-24.04 -u root bash -c "python3 /mnt/c/AI-BS/vast.py > /var/log/vast.log 2>&1 & tail -f /var/log/vast.log"
+
+echo.
+echo Vast Server execution complete.
+pause

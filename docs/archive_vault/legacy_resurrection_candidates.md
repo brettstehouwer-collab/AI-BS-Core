@@ -1,0 +1,177 @@
+# Legacy Resurrection Candidates
+
+This artifact lists legacy files, databases, and plans discovered in the workspace that can be safely tied back into the Stehouwer LLM ecosystem.
+
+## 1. Orphaned Databases (Mapped to LLM Context)
+The following legacy databases were found outside the primary resource drive. They have been virtually mapped to the Stehouwer LLM pipeline.
+- `C:\AI-BS\leads_store.db`
+- `C:\AI-BS\Android Studio\bin\brokenPlugins.db`
+- `C:\AI-BS\backend\clients.db`
+- `C:\AI-BS\backend\drip_ledger.db`
+- `C:\AI-BS\backend\state.db`
+- `C:\AI-BS\backend\stehouwer_accounting.db`
+- `C:\AI-BS\backend\stehouwer_vault.db`
+- `C:\AI-BS\backend\unreal_assets.db`
+- `C:\AI-BS\backend\west_michigan.db`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\atomic_drip_ledger.db`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\atomic_leads_store.db`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\atomic_state.db`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\goals_1.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\logs_2.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\memories_1.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\state_5.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\goals_1.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\logs_2.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\memories_1.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\state_5.sqlite`
+- `C:\AI-BS\backend\backups\pre_update_20260723_150334\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\backend\commercial_gateway\commercial_usage.db`
+- `C:\AI-BS\backend\commercial_gateway\learning_telemetry.db`
+- `C:\AI-BS\backend\commercial_gateway\site_analytics.db`
+- `C:\AI-BS\backend\commercial_gateway\social_intelligence_research.db`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\leads_store.db`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\goals_1.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\logs_2.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\memories_1.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\state_5.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\goals_1.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\logs_2.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\memories_1.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\state_5.sqlite`
+- `C:\AI-BS\backend\dist\brain_backend\_internal\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\ComfyUI\ComfyUI\user\comfyui.db`
+- `C:\AI-BS\Crypto-Swarm\trade_queue.db`
+- `C:\AI-BS\data\leads_store.db`
+- `C:\AI-BS\data\reasoning_traces_pending.db`
+- `C:\AI-BS\data\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\data\trade_queue.db`
+- `C:\AI-BS\data\vision_sync_state.db`
+- `C:\AI-BS\database\calendar.db`
+- `C:\AI-BS\database\drip_ledger.db`
+- `C:\AI-BS\database\leads_store.db`
+- `C:\AI-BS\database\learning_data.db`
+- `C:\AI-BS\database\LLM_CrossCheck_Ledger.db`
+- `C:\AI-BS\database\reasoning_traces_pending.db`
+- `C:\AI-BS\database\security_events.db`
+- `C:\AI-BS\database\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\database\vision_sync_state.db`
+- `C:\AI-BS\frontend\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\goals_1.sqlite`
+- `C:\AI-BS\frontend\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\logs_2.sqlite`
+- `C:\AI-BS\frontend\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\memories_1.sqlite`
+- `C:\AI-BS\frontend\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\state_5.sqlite`
+- `C:\AI-BS\frontend\desktop-build\AI-BS Desktop-win32-x64\resources\app\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\goals_1.sqlite`
+- `C:\AI-BS\frontend\desktop-build\AI-BS Desktop-win32-x64\resources\app\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\logs_2.sqlite`
+- `C:\AI-BS\frontend\desktop-build\AI-BS Desktop-win32-x64\resources\app\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\memories_1.sqlite`
+- `C:\AI-BS\frontend\desktop-build\AI-BS Desktop-win32-x64\resources\app\build-output\win-unpacked\resources\brain_backend\_internal\stehouwer_vector_memory\state_5.sqlite`
+- `C:\AI-BS\sandbox\dry_run\20260710T223749451507\.vs\slnx.sqlite`
+- `C:\AI-BS\sandbox\dry_run\20260710T223749451507\.vs\AI-BS_Matrix\CopilotIndices\18.7.1225.11805\CodeChunks.db`
+- `C:\AI-BS\sandbox\dry_run\20260710T223749451507\.vs\AI-BS_Matrix\CopilotIndices\18.7.1225.11805\SemanticSymbols.db`
+- `C:\AI-BS\sandbox\dry_run\20260710T223749451507\.vs\AI-BS_Matrix.slnx\v18\Browse.VC.db`
+- `C:\AI-BS\sandbox\dry_run\20260710T223749451507\.vscode\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\goals_1.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\logs_2.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\memories_1.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\state_5.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\goals_1.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\logs_2.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\memories_1.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\state_5.sqlite`
+- `C:\AI-BS\stehouwer_vector_memory\backup_before_sqlite_opt_20260709_223806\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\tests\test_state.db`
+- `C:\AI-BS\_archive_v1\.vs\slnx.sqlite`
+- `C:\AI-BS\_archive_v1\.vs\AI-BS_Matrix\CopilotIndices\18.7.1225.11805\CodeChunks.db`
+- `C:\AI-BS\_archive_v1\.vs\AI-BS_Matrix\CopilotIndices\18.7.1225.11805\SemanticSymbols.db`
+- `C:\AI-BS\_archive_v1\.vs\AI-BS_Matrix.slnx\v18\Browse.VC.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\Browse.VC.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\Browse.VC_1.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\Browse.VC_2.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\CodeChunks.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\CodeChunks_1.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\CodeChunks_2.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\goals_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\goals_1_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\goals_1_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\goals_1_3.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\logs_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\logs_2_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\logs_2_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\logs_2_3.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\memories_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\memories_1_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\memories_1_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\memories_1_3.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\reasoning_traces_pending.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\SemanticSymbols.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\SemanticSymbols_1.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\SemanticSymbols_2.db`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\slnx.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\slnx_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\slnx_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\state_5.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\state_5_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\state_5_2.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\state_5_3.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\telemetry_checkpoint.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\telemetry_checkpoint_1.sqlite`
+- `C:\AI-BS\_archive_v1\AI-BS_Documents_Archive\telemetry_checkpoint_2.sqlite`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\github.com\wailsapp\mimetype@v1.4.1\testdata\sqlite.sqlite`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\embed.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\embed2.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\dbfuzz2-seed1.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata1.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata2.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata3.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata4.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata5.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata6.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata7.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\fuzzdata8.db`
+- `C:\AI-BS\_archive_v1\go\pkg\mod\modernc.org\sqlite@v1.53.0\testdata\tcl\sessionfuzz-data1.db`
+
+## 2. Historical Implementation Plans
+- `Agent_Tasks_History\1786004220_task.md`
+- `Agent_Tasks_History\1786004389_task.md`
+- `Agent_Tasks_History\2026-08-07_Ubuntu_Bio_task.md`
+- `Agent_Tasks_History\20260806_044532_task.md`
+- `Agent_Tasks_History\20260806_093705_task.md`
+- `Agent_Tasks_History\task_20260805_203019.md`
+- `Agent_Tasks_History\task_20260805_215900.md`
+- `Agent_Tasks_History\task_20260806_181821.md`
+- `Agent_Tasks_History\task_20260806_185302.md`
+- `Agent_Tasks_History\task_20260806_190848.md`
+- `Agent_Tasks_History\task_20260806_191850.md`
+- `Agent_Tasks_History\task_20260806_193717.md`
+- `Agent_Tasks_History\task_20260806_195824.md`
+- `Agent_Tasks_History\task_20260806_200150.md`
+- `Agent_Tasks_History\task_20260807_100412.md`
+- `Agent_Tasks_History\task_20260807_101611.md`
+- `Agent_Tasks_History\task_ecosystem_audit_20260806.md`
+- `Agent_Tasks_History\task_nlp_expansion_20260806.md`
+- `Agent_Tasks_History\task_persona_merge_20260806.md`
+
+## 3. Orphaned Python Scripts
+These scripts exist in the root but are not wired to the FastAPI backend:
+- `archive_ledgers.py`
+- `archive_task.py`
+- `chia_plot_calculator.py`
+- `fix_port.py`
+- `generate_70_vector_dbs.py`
+- `generate_unreal_scripts.py`
+- `ledger_mt.py`
+- `ledger_update.py`
+- `scratch_ledger_update.py`
+- `test_chat.py`
+- `test_endpoint.py`
+- `test_resolve.py`
+- `update_docs.py`
+- `update_go_ledger.py`
+- `update_high_fidelity_ledger.py`
+- `update_ledger.py`
+- `update_ledgers.py`
+- `update_ledgers_bugfix.py`
+- `update_logs.py`
+- `vast.py`
+- `vast_install.py`

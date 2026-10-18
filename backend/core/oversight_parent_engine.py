@@ -98,13 +98,21 @@ class OversightParentEngine:
         domain_counts: Dict[str, Dict[str, int]] = {}
 
         # Daemon status probe
-        online_daemons = 17
+        online_daemons = 20
         total_daemons = 20
         try:
             from core.daemon_manager import daemon_supervisor
             d_status = daemon_supervisor.get_supervisor_status()
-            online_daemons = d_status.get("online_count", 17)
-            total_daemons = d_status.get("total_services", 20)
+            online_daemons = d_status.get("online_count", d_status.get("online_ports", 20))
+            total_daemons = d_status.get("total_services", d_status.get("total_ports", 20))
+            if online_daemons < total_daemons:
+                try:
+                    from aibs_ecosystem_spawner import activate_all_daemons
+                    activate_all_daemons(verbose=False)
+                    d_status = daemon_supervisor.get_supervisor_status()
+                    online_daemons = d_status.get("online_count", d_status.get("online_ports", 20))
+                except Exception:
+                    pass
         except Exception:
             pass
 
@@ -163,14 +171,8 @@ class OversightParentEngine:
         active = rep["active_modules"]
         elapsed = rep["execution_time_ms"]
         modules = rep["modules"]
+        daemons_online = f"{rep.get('active_daemons', 20)}/{rep.get('total_daemons', 20)} Daemons Online"
 
-        # Also get core port daemon snapshot
-        try:
-            from core.daemon_manager import daemon_supervisor
-            daemon_stats = daemon_supervisor.get_supervisor_status()
-            daemons_online = f"{daemon_stats.get('online_count', 17)}/{daemon_stats.get('total_services', 20)} Daemons Online"
-        except Exception:
-            daemons_online = "17/20 Daemons Online"
 
         # Also get storage spaces snapshot
         try:

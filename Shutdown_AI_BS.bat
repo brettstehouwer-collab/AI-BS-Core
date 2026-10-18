@@ -42,9 +42,15 @@ taskkill /F /IM nginx.exe /T >nul 2>&1
 taskkill /F /IM "AI-BS Sovereign Studio.exe" /T >nul 2>&1
 taskkill /F /IM AI_BS_Hub.exe /T >nul 2>&1
 taskkill /F /IM UnrealEditor.exe /T >nul 2>&1
-:: Clore.ai Hosting Agent is kept sovereign & running to prevent dropping active GPU rentals
-:: To intentionally stop Clore, use Start_Clore_Server.bat or systemctl stop clore-hosting.service directly.
-wsl.exe -d Ubuntu -u root -- pkill -f "uvicorn main:app" >nul 2>&1
+taskkill /F /IM llama-server.exe /T >nul 2>&1
+taskkill /F /IM pythonw.exe /T >nul 2>&1
+taskkill /F /IM AI_BS_Studio.exe /T >nul 2>&1
+:: Run Zombie Node Cleaner to sweep any lingering orphaned processes and reclaim RAM
+if exist "%~dp0pyppeteer_env\Scripts\python.exe" (
+    "%~dp0pyppeteer_env\Scripts\python.exe" "%~dp0backend\zombie_node_cleaner.py" >nul 2>&1
+) else (
+    python "C:\AI-BS\backend\zombie_node_cleaner.py" >nul 2>&1
+)
 echo.
 
 echo [3/3] Clearing daemon logs and temporary media files...

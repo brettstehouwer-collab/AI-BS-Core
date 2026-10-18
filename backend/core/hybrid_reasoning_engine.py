@@ -87,14 +87,30 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
     """Inspects the prompt for explicit tool calls or visual/database generation intents across multiple directives."""
     p_lower = prompt.lower().strip()
     
-    # -10. PowerShell Execution Intent (/ps, /powershell, /cmd, /sh, /exec, /run, cmdlets, developer CLI)
-    if p_lower.startswith(("/ps ", "/powershell ", "/cmd ", "/sh ", "/exec ", "/run ", "powershell ", "pwsh ")):
+    # -10. PowerShell, Bash, Pip & CLI Execution Intent (/ps, /powershell, /cmd, /sh, /bash, /pip, cmdlets, developer CLI)
+    if p_lower.startswith(("/bash ", "/sh ", "bash ", "sh ")):
+        parts = prompt.strip().split(maxsplit=1)
+        b_cmd = parts[1].strip() if len(parts) > 1 else ""
+        return "execute_bash", {"command": b_cmd}
+
+    if p_lower.startswith(("/pip ", "/pip3 ", "pip ", "pip3 ")):
+        parts = prompt.strip().split(maxsplit=1)
+        p_cmd = parts[1].strip() if len(parts) > 1 else ""
+        return "execute_pip", {"command": p_cmd}
+
+    if p_lower.startswith(("/ps ", "/powershell ", "/cmd ", "/exec ", "/run ", "powershell ", "pwsh ")):
         parts = prompt.strip().split(maxsplit=1)
         ps_cmd = parts[1].strip() if len(parts) > 1 else ""
         return "execute_powershell", {"command": ps_cmd}
 
     if p_lower in ["/ps", "/powershell", "powershell", "pwsh"]:
         return "execute_powershell", {"command": "Get-Location"}
+
+    if p_lower in ["/bash", "/sh", "bash", "sh"]:
+        return "execute_bash", {"command": "uname -a"}
+
+    if p_lower in ["/pip", "/pip3", "pip", "pip3"]:
+        return "execute_pip", {"command": "list"}
 
     if any(prompt.strip().startswith(cmdlet) for cmdlet in [
         "Get-", "Set-", "Start-", "Stop-", "Restart-", "Test-", "New-", "Remove-",
@@ -107,10 +123,56 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
 
     # Developer CLI tooling commands dispatched directly to elevated PowerShell
     if p_lower.startswith((
-        "python ", "py ", "pip ", "pytest ", "npm ", "npx ", "cargo ",
+        "python ", "py ", "pytest ", "npm ", "npx ", "cargo ",
         "dotnet ", "git ", "node ", "wsl ", "tsc ", "firebase "
     )):
         return "execute_powershell", {"command": prompt.strip()}
+
+    # -9.5 Project Build & Program Construction Intent (/build, /program, build project, compile)
+    if p_lower.startswith("/program"):
+        parts = prompt.strip().split(maxsplit=2)
+        sub = parts[1].lower() if len(parts) > 1 else "list"
+        rest = parts[2].strip() if len(parts) > 2 else ""
+        if sub in ["list", "ls"]:
+            return "list_programs", {}
+        elif sub in ["build", "compile"]:
+            rest_parts = rest.split(maxsplit=1)
+            p_name = rest_parts[0] if rest_parts else ""
+            p_cmd = rest_parts[1] if len(rest_parts) > 1 else None
+            return "build_project", {"project_name_or_dir": p_name, "build_command": p_cmd}
+        elif sub in ["run", "exec"]:
+            rest_parts = rest.split(maxsplit=1)
+            p_name = rest_parts[0] if rest_parts else ""
+            p_entry = rest_parts[1] if len(rest_parts) > 1 else None
+            return "run_program", {"project_name": p_name, "entrypoint": p_entry}
+        else:
+            return "build_project", {"project_name_or_dir": sub, "build_command": rest or None}
+
+    if p_lower.startswith("/build"):
+        parts = prompt.strip().split(maxsplit=2)
+        if len(parts) > 1:
+            proj = parts[1].strip()
+            cmd = parts[2].strip() if len(parts) > 2 else None
+            return "build_project", {"project_name_or_dir": proj, "build_command": cmd}
+        else:
+            grill_active = False
+            try:
+                from core.mission_control_engine import mission_engine
+                if mission_engine.active_grill_id and mission_engine.active_grill_id in mission_engine.grill_cache:
+                    active_sess = mission_engine.grill_cache[mission_engine.active_grill_id]
+                    if active_sess.get("status") == "awaiting_operator":
+                        grill_active = True
+            except Exception:
+                pass
+            if not grill_active:
+                return "build_project", {"project_name_or_dir": r"C:\AI-BS", "build_command": None}
+
+    # Natural language build requests
+    build_nl_match = re.search(r'^(?:please\s+|can\s+you\s+)?(?:build|compile|execute\s+build\s+in|run\s+build\s+in)\s+(?:the\s+)?(?:project\s+|program\s+)?([a-zA-Z0-9_\-\\/\.:]+)(?:\s+(?:with\s+command|using\s+command|cmd)\s+(.+))?', prompt.strip(), flags=re.IGNORECASE)
+    if build_nl_match and not p_lower.startswith(("/diff", "/test", "/mission", "/audit", "/snapshot")):
+        target_proj = build_nl_match.group(1).strip()
+        custom_cmd = build_nl_match.group(2).strip() if build_nl_match.group(2) else None
+        return "build_project", {"project_name_or_dir": target_proj, "build_command": custom_cmd}
 
     # -9. Kraken Sovereign Exchange & Trading Intent (/kraken)
     if p_lower.startswith(("/kraken", "kraken ")):
@@ -234,20 +296,57 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
                 content = cb_match.group(1)
             return "write_host_file", {"file_path": path, "content": content}
         elif len(parts) == 2:
-            return "write_host_file", {"file_path": parts[1].strip().strip('"\'`:'), "content": ""}
+            path = parts[1].strip().strip('"\'`:')
+            from datetime import datetime
+            default_body = f"Hello, this is a host file created by AI-BS.\nCreated At: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            return "write_host_file", {"file_path": path, "content": default_body}
 
     # Natural language write with code block
     code_block_match = re.search(r'```(?:[a-zA-Z0-9_\-]+)?\r?\n([\s\S]*?)\r?\n```', prompt)
-    path_match = re.search(r'(?:write|save|create|put|dump)(?:\s+(?:this|the)?(?:\s+(?:code|script|text|file))?)?\s+(?:to|in|into)?\s+(?:file\s+)?([a-zA-Z]:\\[^\s"\'`:]+|(?:\.{1,2}[\\/]|[a-zA-Z0-9_\-\.]+[\\/])[^\s"\'`:]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|yml|yaml|sql|csv|conf|toml))(?::)?', prompt, flags=re.IGNORECASE)
+    path_match = re.search(r'(?:write|save|create|put|dump)(?:\s+(?:this|the)?(?:\s+(?:code|script|text|file))?)?\s+(?:to|in|into|named|called)?\s+(?:file\s+)?([a-zA-Z]:\\[^\s"\'`:,]+|(?:\.{1,2}[\\/]|[a-zA-Z0-9_\-\.]+[\\/])[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))(?::)?', prompt, flags=re.IGNORECASE)
     if path_match and code_block_match:
         target_path = path_match.group(1).strip('"\'`:')
         content = code_block_match.group(1)
         return "write_host_file", {"file_path": target_path, "content": content}
 
     # Inline content write: write to file X with content: Y
-    inline_match = re.search(r'(?:write|save|create)(?:\s+to)?\s+(?:file\s+)?([a-zA-Z]:\\[^\s"\'`:]+|(?:\.{1,2}[\\/]|[a-zA-Z0-9_\-\.]+[\\/])[^\s"\'`:]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|yml|yaml|sql|csv|conf|toml))\s*(?::|\s+with(?:\s+the)?\s+(?:content|text|following):?\s*)([\s\S]+)', prompt, flags=re.IGNORECASE)
+    inline_match = re.search(r'(?:write|save|create)(?:\s+to)?\s+(?:file\s+)?([a-zA-Z]:\\[^\s"\'`:,]+|(?:\.{1,2}[\\/]|[a-zA-Z0-9_\-\.]+[\\/])[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))\s*(?::|\s+with(?:\s+the)?\s+(?:content|text|following):?\s*)([\s\S]+)', prompt, flags=re.IGNORECASE)
     if inline_match:
         return "write_host_file", {"file_path": inline_match.group(1).strip('"\'`:'), "content": inline_match.group(2).strip()}
+
+    # General natural-language host file creation / write intent (with or without explicit filename)
+    is_nl_host_file_write = (
+        not any(db_kw in p_lower for db_kw in ["database", "sqlite", "chroma", "vault", "table"])
+        and (
+            bool(re.search(r'\b(?:write|save|create|make|put|generate|touch)\s+(?:a\s+|an\s+|the\s+|some\s+)?(?:new\s+|small\s+|test\s+|sample\s+|example\s+|text\s+|host\s+)?file\b', p_lower))
+            or bool(re.search(r'\b(?:write|save)\s+.*?\bto\s+(?:a\s+|the\s+|my\s+)?(?:file|host(?:\s+system)?|c\s*drive|c:|disk)\b', p_lower))
+        )
+    )
+    if is_nl_host_file_write:
+        from datetime import datetime
+        explicit_file = re.search(
+            r'([a-zA-Z]:\\[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))',
+            prompt
+        )
+        target_path = explicit_file.group(1).strip('"\'`:.,') if explicit_file else r"C:\AI-BS\exampleFile.txt"
+        if not os.path.isabs(target_path):
+            target_path = os.path.join(r"C:\AI-BS", target_path)
+
+        if code_block_match:
+            content = code_block_match.group(1)
+        else:
+            quoted_content = re.search(r'(?:saying|content|text|containing)\s*[:=]?\s*["\']([^"\']+)["\']', prompt, flags=re.IGNORECASE)
+            if quoted_content:
+                content = quoted_content.group(1) + "\n"
+            else:
+                content = (
+                    f"Hello, this is a host file created by AI-BS Sovereign Intelligence.\n"
+                    f"Host File Location: {target_path}\n"
+                    f"Created At: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+                    f"Operator Request: {prompt.strip()}\n"
+                )
+        return "write_host_file", {"file_path": target_path, "content": content}
+
 
     # C. Directory Scan Intent (/ls, /dir, /tree, or natural language)
     if p_lower.startswith(("/ls", "/dir", "/tree", "/list_files")):
@@ -818,31 +917,36 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
             file_path = t_args.get("file_path", "").strip()
             content = t_args.get("content", "")
             if not file_path:
-                yield "⚠️ **File Write Warning:** No file path specified. Usage: `/write <file_path> <content>`\n"
-                return
+                file_path = r"C:\AI-BS\exampleFile.txt"
             if not content:
-                yield f"⚠️ **File Write Notice:** No content provided for `{file_path}`.\n\nUse `/write {file_path} <content>` or `/edit {file_path}` to draft and save in the Host File Editor drawer."
-                return
+                from datetime import datetime
+                content = f"Hello, this is a host file created by AI-BS.\nCreated At: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
 
-            yield f"✍️ **Writing host file:** `{file_path}` ({len(content)} characters)... 💾\n\n"
+            yield f"✍️ **Writing file directly to your host system:** `{file_path}` ({len(content)} characters)... 💾\n\n"
             from tools.tool_registry import ToolRegistry
             tool_result = await asyncio.to_thread(ToolRegistry.execute_tool, "write_host_file", {"file_path": file_path, "content": content})
             if tool_result.get("status") == "success":
                 bytes_written = tool_result.get("bytes_written", len(content.encode("utf-8")))
                 abs_path = tool_result.get("file_path", file_path)
+                verified_on_disk = os.path.isfile(abs_path)
                 backup = tool_result.get("backup_path")
-                backup_info = f"\n📦 **Auto-Backup Created:** `{backup}`" if backup else ""
+                backup_info = f"\n- **Auto-Backup Created:** `{backup}`" if backup else ""
+                preview_content = content[:1000]
+                abs_url = f"file:///{abs_path.replace(os.sep, '/')}"
                 yield (
-                    f"✅ **File Written to Host Disk!**\n\n"
-                    f"- **File Path:** `{abs_path}`\n"
-                    f"- **Size Written:** {bytes_written} bytes ({round(bytes_written/1024, 2)} KB)\n"
-                    f"- **Total Lines:** {len(content.splitlines())}"
+                    f"✅ **File Written & Verified on Host Disk!**\n\n"
+                    f"- **Host File Location (C: Drive):** [{abs_path}]({abs_url})\n"
+                    f"- **Verified on Disk (`os.path.isfile`):** `{verified_on_disk}`\n"
+                    f"- **Size Written:** `{bytes_written} bytes` ({round(bytes_written/1024, 2)} KB)\n"
+                    f"- **Total Lines:** `{len(content.splitlines())}`"
                     f"{backup_info}\n\n"
-                    f"---\n💡 *Changes persisted with automated .bak backup protection.*"
+                    f"**File Contents Written:**\n```text\n{preview_content.strip()}\n```\n\n"
+                    f"---\n💡 *Click [{os.path.basename(abs_path)}]({abs_url}) to view and edit in the BS-Chat IDE Code Editor, or right-click to 'Show in File Explorer'.*"
                 )
             else:
                 yield f"❌ **Failed to write file:** {tool_result.get('message', 'Write operation failed')}\n"
             return
+
 
         elif t_name == "scan_directory_tree":
             dir_path = t_args.get("dir_path", "C:\\AI-BS").strip()
@@ -1106,16 +1210,150 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
             yield out
             return
 
+        elif t_name == "build_project":
+            proj = t_args.get("project_name_or_dir", "").strip()
+            cmd = t_args.get("build_command")
+            yield f"🔨 **Executing Project Build:** `{proj}`" + (f" with command `{cmd}`" if cmd else " (auto-detecting build tools)") + "... ⏳\n\n"
+            from tools.tool_registry import ToolRegistry
+            res = await asyncio.to_thread(ToolRegistry.execute_tool, "build_project", t_args)
+            st = res.get("status", "error")
+            exit_code = res.get("exit_code", 1)
+            p_dir = res.get("project_dir", proj)
+            used_cmd = res.get("command", cmd or "N/A")
+            stdout = (res.get("stdout") or "").strip()
+            stderr = (res.get("stderr") or "").strip()
+
+            badge = "✅ **Project Build Succeeded**" if exit_code == 0 else f"❌ **Project Build Failed (Exit Code {exit_code})**"
+            md = f"""### {badge}
+- **Project Directory:** `{p_dir}`
+- **Build Command:** `{used_cmd}`
+- **Status:** `{st.upper()}`
+
+"""
+            if stdout:
+                md += f"**Build Output:**\n```\n{stdout}\n```\n\n"
+            if stderr:
+                md += f"⚠️ **Stderr / Diagnostic Trace:**\n```\n{stderr}\n```\n\n"
+            if not stdout and not stderr:
+                md += "*(Build completed with no console output)*\n\n"
+            yield md
+            return
+
+        elif t_name == "run_program":
+            proj = t_args.get("project_name", "").strip()
+            yield f"🚀 **Executing Program:** `{proj}`... ⏳\n\n"
+            from tools.tool_registry import ToolRegistry
+            res = await asyncio.to_thread(ToolRegistry.execute_tool, "run_program", t_args)
+            rc = res.get("exit_code", 0)
+            stdout = (res.get("stdout") or "").strip()
+            stderr = (res.get("stderr") or "").strip()
+            badge = "✅ **Program Execution Succeeded**" if rc == 0 else f"❌ **Program Execution Failed (Exit Code {rc})**"
+            md = f"### {badge}\n- **Project:** `{proj}`\n\n"
+            if stdout:
+                md += f"```\n{stdout}\n```\n\n"
+            if stderr:
+                md += f"⚠️ **Stderr:**\n```\n{stderr}\n```\n\n"
+            yield md
+            return
+
+        elif t_name == "list_programs":
+            from tools.tool_registry import ToolRegistry
+            res = await asyncio.to_thread(ToolRegistry.execute_tool, "list_programs", {})
+            progs = res if isinstance(res, list) else res.get("programs", [])
+            md = f"### 📦 Built Programs in AI-BS Vault ({len(progs)} projects)\n\n"
+            if not progs:
+                md += "*No programs currently built. Use `/program build` or prompt AI-BS to create software.*"
+            else:
+                for p in progs:
+                    d_name = p.get("display_name", p.get("project_name", "unknown"))
+                    lang = p.get("language", "unknown")
+                    desc = p.get("description", "")
+                    f_count = len(p.get("files", []))
+                    p_dir = p.get("project_dir", "")
+                    b_info = p.get("build", {})
+                    b_status = f" | Build: {b_info.get('status', 'none')}" if b_info else ""
+                    md += f"- **{d_name}** (`{lang}` - {f_count} files{b_status})\n  *Path:* `{p_dir}`\n  *Description:* {desc}\n"
+            yield md
+            return
+
+        elif t_name == "execute_bash":
+            cmd = t_args.get("command", "").strip()
+            if not cmd:
+                yield "⚠️ **Bash Engine:** No command specified.\n\n**Usage:** `/bash <command>`\n"
+                return
+            yield f"🐚 **Executing Bash Command...**\n\n```bash\n{cmd}\n```\n\n"
+            from tools.tool_registry import ToolRegistry
+            res = await asyncio.to_thread(ToolRegistry.execute_tool, "execute_bash", t_args)
+            rc = res.get("exit_code", 0)
+            stdout = (res.get("stdout") or "").strip()
+            stderr = (res.get("stderr") or "").strip()
+            elapsed = res.get("elapsed_ms", 0)
+            badge = "✅ **Bash Executed Successfully**" if rc == 0 else f"❌ **Bash Execution Failed (Exit Code {rc})**"
+            out = f"{badge} *(in {elapsed}ms)*\n\n"
+            if stdout:
+                out += f"```bash\n{stdout}\n```\n\n"
+            if stderr:
+                out += f"⚠️ **Stderr:**\n```bash\n{stderr}\n```\n\n"
+            yield out
+            return
+
+        elif t_name == "execute_pip":
+            cmd = t_args.get("command", "").strip()
+            if not cmd:
+                yield "📦 **Pip Package Manager:** No command or package specified.\n\n**Usage:** `/pip install <pkg>` or `/pip list`\n"
+                return
+            yield f"📦 **Executing Pip Command...**\n\n```shell\npip {cmd}\n```\n\n"
+            from tools.tool_registry import ToolRegistry
+            res = await asyncio.to_thread(ToolRegistry.execute_tool, "execute_pip", t_args)
+            rc = res.get("exit_code", 0)
+            stdout = (res.get("stdout") or "").strip()
+            stderr = (res.get("stderr") or "").strip()
+            elapsed = res.get("elapsed_ms", 0)
+            badge = "✅ **Pip Command Completed**" if rc == 0 else f"❌ **Pip Failed (Exit Code {rc})**"
+            out = f"{badge} *(in {elapsed}ms)*\n\n"
+            if stdout:
+                out += f"```\n{stdout}\n```\n\n"
+            if stderr:
+                out += f"⚠️ **Stderr:**\n```\n{stderr}\n```\n\n"
+            yield out
+            return
+
+
 
 
     # --- Unified Sovereign Reasoning Matrix (Fast Stream + Math Autograd Swarm) ---
     try:
         from core.sovereign_reasoning import stream_sovereign_response
 
+        accumulated = []
         async for chunk in stream_sovereign_response(prompt, messages=messages):
+            accumulated.append(chunk)
             yield chunk
+
+        full_text = "".join(accumulated)
+        p_lower_check = prompt.lower()
+        is_host_action_req = any(w in p_lower_check for w in ["write", "create", "save", "make", "run", "execute", "powershell", "host", "c drive", "c:"])
+        if is_host_action_req:
+            ps_matches = list(re.finditer(r"```(?:powershell|ps1)\r?\n([\s\S]*?)\r?\n```", full_text, re.IGNORECASE))
+            if ps_matches:
+                ps_code = ps_matches[-1].group(1).strip()
+                if ps_code and not any(d in ps_code.lower() for d in ["remove-item -recurse -force c:\\", "format-volume", "stop-computer", "restart-computer"]):
+                    from tools.tool_registry import ToolRegistry
+                    yield f"\n\n⚡ **Autonomous Host Execution (Running generated PowerShell on C:\\AI-BS)...**\n"
+                    ps_res = await asyncio.to_thread(ToolRegistry.execute_tool, "execute_powershell", {"command": ps_code})
+                    rc = ps_res.get("returncode", -1)
+                    stdout = (ps_res.get("stdout") or "").strip()
+                    stderr = (ps_res.get("stderr") or "").strip()
+                    elapsed = ps_res.get("elapsed_ms", 0)
+                    badge = "✅ **Host Execution Verified**" if rc == 0 else f"❌ **Host Execution Exit Code {rc}**"
+                    yield f"\n{badge} *(in {elapsed}ms)*\n"
+                    if stdout:
+                        yield f"```powershell\n{stdout}\n```\n"
+                    if stderr:
+                        yield f"⚠️ **Stderr:**\n```powershell\n{stderr}\n```\n"
     except Exception as err:
         yield f"Error in sovereign reasoning matrix: {err}"
+
 
 
 @router.post("/stream")

@@ -1,0 +1,525 @@
+--- SLIDE 1 ---
+Reducing Repeat Repair Ratio Samsung Care Exit Cotrse What are we learning? This course will help you understand what the Repeat Repair Ratio i' and how to manage your Bounce KPI by reducing the number of Repeat Repairs and Same Symptom Redo cases caused by preventable repair errors. This course will cover: What RRR and SSR are Resources to Prevent Bounce Troubleshooting the Root Cause Proper Equipment Ticketing DIP Battery Replacements Foldable Sub UB Best Practices Validating the Repair So how does this help me? After completing this course, you will be better prepared to refer to repair resources and avoid common mistakes, like Damage In Process, misdiagnosis, and other errors.
+
+--- SLIDE 2 ---
+Reducing Repeat Repair Ratio Samsung Care Exit Cotrse What are we learning? This course will help you understand what the Repeat Repair Ratio is and how to manage your Bounce KPI by reducing the number of Repeat Repairs and Same Symptom Redo cases caused by preventable repair errors. This course will cover: What RRR and SSR are Resources to Prevent Bounce Troubleshooting the Root Cause Proper Equipment Ticketing DIP Battery Replacements Foldable Sub UB Best Practices Validating the Repair So how does this help me? After completing this course, you will be better prepared to refer to repair resources and avoid common mistakes, like Damage In Process, misdiagnosis, and other errors.
+
+--- SLIDE 3 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 4 ---
+Reducing Repeat Repair Ratio What is Repeat Repair Ratio? What is a Repeat Repair (aka Bounce)? The following items must be met to qualify as Bounce: Device is repaired FYI- Aftera repair,a device is In-Warrantyfor90 daysor the remainderof their factory warranty (whichever is longer) Device returns fora second repair while In-warranty by date Must be IW by Condition for the second repair What is Repeat Repair Ratio? Measuresthe number of Bounce repairsout of total repairs The lower the RRR, the better •z Target RRR: (30/0 Samsung Care Exit Cmrse
+
+--- SLIDE 5 ---
+Reducing Repeat Repair Ratio What is Repeat Repair Ratio? What is a Repeat Repair (aka Bounce)? The following items must be met to qualify as Bounce: Device is repaired FYI- Aftera repair,a device is In-Warrantyfor90 daysor the remainderof their factory warranty (whichever is longer) Device returns fora second repair while In-warranty by date Must be IW by Condition for the second repair What is Repeat Repair Ratio? Measuresthe number of Bounce repairsout of total repairs The lower the the better v/ Target RRR: (30/0 Samsung Care Exit Cmrse
+
+--- SLIDE 6 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 7 ---
+o Reducing Repeat Repair Ratio What is Same Symptom Redo? Exit Cmrse Same Symptom Redo (SSR) is defined as Bounce (a repeat repair) on a device for the same symptom type. For example, if a device is presented for repair due to a signal related behavior, and the device is later presented again for the same symptom type, this would be considered Same Symptom Redo (SSR). Samsung Care
+
+--- SLIDE 8 ---
+Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 9 ---
+o Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cotrse Good 34.7 •c Li-ion lyplcal battery: 93h 15m snMsUNG Care Samsung Care Battery Basic Test • Battery Health • BatteryCharge Level • Battery Voltage • Battery Temperature • Battery Type Battery rating; 3880mAh • Battery capacity • Operating time with full charge Sudden battery discharge history
+
+--- SLIDE 10 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cmrse snMSUNG Care Samsung Care Battery life The battery life value is in normal range. O so 2sc 3so 'DO zo soo SBO SOO 'So Toc 7SO goo ng Cyu Count You should explain to them that the yellow dot represents 100%
+
+--- SLIDE 11 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG are tatus Aug ot '8 to Aug 02 Aug 04 ten '2m Aug 07 E n Samsung Care Exit Cmrse
+
+--- SLIDE 12 ---
+A voiding Unnecessary Battery Replacements snmsurvc Care g Care Review App Usage
+
+--- SLIDE 13 ---
+o Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cmrse snMSUNG Care Wek Bansy wge Iota I 230800 08:sns Iota 16126.00 rd Puty Sæ total : 18b 1m 's ad 'h um dmg Samsung Care Review App Usage CPU oge lh 51m i
+
+--- SLIDE 14 ---
+o Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Review App Usage a date Iotat 2024-07-31 230800 2024-08-07 battuy mptim 1612600 mAh rty A mAh S— total : 18M m 's S— off ad lh um Ihilm*, 21s Another informative piece of data is the Battery Usage Samsung Care Exit Cmrse
+
+--- SLIDE 15 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Samsung Care Exit Cmrse
+
+--- SLIDE 16 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cmrse snnnstJNG Care Samsung Care Checking the Charger Let's take a minute and talk about the impact that
+
+--- SLIDE 17 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Final Thoughts Once you've reviewed their IQC results and explained Samsung Care Exit Cmrse
+
+--- SLIDE 18 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cotrse snnnsUNG Care Samsung Care Checking the Charger Inspect their charger Ask open-ended questions Charge with Samsung OEM charger The last best practice is to charge the device on
+
+--- SLIDE 19 ---
+o Reducing Repeat Repair Ratio Why does Same Symptom Redo Matter? Same Symptom Redo (SSR) will make your location's Bounce higher. Remember, we always want to keep Bounce percentage low because this helps individual and overall store metrics and will result in a better customer experience. Samsung Care Exit Cmrse
+
+--- SLIDE 20 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Factory Reset Clear any software issues for a new Battery Final Thoughts customer still wants to replace their battery, ensure Samsung Care Exit Cmrse
+
+--- SLIDE 21 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements SAMSUNG Care Samsung Care Exit Cmrse
+
+--- SLIDE 22 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 23 ---
+o Reducing Repeat Repair Ratio AOD Configuration Exit Cotrse Set yourself up for success by referring to the device's repair guide to ensure the AOD is set up correctly: Repair Guides Click Sheet Things that may vary by device and should be checked: Vacuum Seals Temperature of Upper/Lower Front Lip of AOD being removed Requires AOD Guide Jig Using Disassembly Stick to loosen adhesive after heating but before lifting Samsung Care AOD configuration Samsung Care
+
+--- SLIDE 24 ---
+o Reducing Repeat Repair Ratio AOD Configuration Exit Cotrse Set yourself up for success by referring to the device's repair guide to ensure the AOD is set up correctly: Repair Guides Click Sheet Things that may vary by device and should be checked: Vacuum Seals Temperature of Upper/Lower Front Lip of AOD being removed Requires AOD Guide Jig Using Disassembly Stick to loosen adhesive after heating but before lifting Samsung Care AOD Configuration Make sure the front lip removed from the AON Replace two (2) Vacuum Seals in the AOO with the Blue Vacuum Seals. Apply pressure to ensure a fit The Standard 8.ase was replaced with a New Ease for the Launch Of the Z The New the Fold Models to lay flat in the Ensure the New is in:talled prior to using the A-CO. Samsung Care
+
+--- SLIDE 25 ---
+o Reducing Repeat Repair Ratio AOD Configuration Exit Cotrse Set yourself up for success by referring to the device's repair guide to ensure the AOD is set up correctly: Repair Guides Click Sheet Things that may vary by device and should be checked: Vacuum Seals Temperature of Upper/Lower Front Lip of AOD being removed Requires AOD Guide Jig Using Disassembly Stick to loosen adhesive after heating but before lifting Samsung Care AOD Configuration Make sure the front lip is removed from the AOD. Replace two (2) Vacuum Seals in the AOO With the Blue Vacuum Seals. Apply pressure to ensure a snug fit The Standard Base was replaced with a New Base forthe launch Of the Z Fold2, The New the Fold Models to lay flat in the AOD, Ensure the New is installed to using the AOD. Samsung Care
+
+--- SLIDE 26 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 27 ---
+o Reducing Repeat Repair Ratio AOD Guide Jigs Exit Cmrse Please ensure you have the correct AOD Guide Jig for each device. They are NOT universal and can crack the LCD if the wrong one is used. Pocorrect: Notice the til icer bar for Flip3 end 4 devices thet is not carnpatible with Samsung Care Ccrrect
+
+--- SLIDE 28 ---
+o Reducing Repeat Repair Ratio AOD Guide Jigs Exit Cmrse Please ensure you have the correct AOD Guide Jig for each device. They are NOT universal and can crack the LCD if the wrong one is used. Incorrect: Notice the thicker bar for Flip3 and 4 devices that is not compatible with newer Flip devices. [For Z Flip3 & 4] Samsung Care Correct O
+
+--- SLIDE 29 ---
+o Reducing Repeat Repair Ratio AOD Guide Jigs Exit Cmrse Please ensure you have the correct AOD Guide Jig for each device. They are NOT universal and can crack the LCD if the wrong one is used. Incorrect: Notice the thicker bar for Flip3 and 4 devices that is not compatible with newer Flip devices. [For Z FliP3 & 4] Samsung Care 00. Correct O [Newer devices]
+
+--- SLIDE 30 ---
+Reducing Repeat Repair Ratio Why does Same Symptom Redo Matter? Same Symptom Redo (SSR) will make your location's Bounce higher. Remember, we always want to keep Bounce percentage low because this helps individual and overall store metrics and will result in a better customer experience. Samsung Care Exit Cmrse
+
+--- SLIDE 31 ---
+o Reducing Repeat Repair Ratio AOD Guide Jigs Exit Cmrse Please ensure you have the correct AOD Guide Jig for each device. They are NOT universal and can crack the LCD if the wrong one is used. 00. Incorrect: Notice the thicker bar for Flip3 and 4 devices that is not compatible with newer Flip devices. [For Z FliP3 & 41 Samsung Care 00. [Newer devices] Correct O
+
+--- SLIDE 32 ---
+Reducing Repeat Repair Ratio Galaxy Z Fold6 and Newer Additional Step for Sub UB Exit Cmrse After preheating Fold6 and newer devices, use the Disassembly Stick to loosen the adhesive by gently lifting the Sub UB by the receiver hole. Once you have done that, insert the AOD Guide. Be rarefiCo not enter didssemhly sn•asuNG too far into SUB UB. thisscou cause d A Failing to loosen the adhesive will result in too much pressure that may cause FOP or LCD damage. Samsung Care
+
+--- SLIDE 33 ---
+Reducing Repeat Repair Ratio Galaxy Z Fold6 and Newer Additional Step for Sub UB Exit Cmrse After preheating Fold6 and newer devices, use the Disassembly Stick to loosen the adhesive by gently lifting the Sub UB by the receiver hole. Once you have done that, insert the AOD Guide. A Failing to loosen the adhesive will result in too much pressure that may cause FOPor LCD damage. Samsung Care
+
+--- SLIDE 34 ---
+o Reducing Repeat Repair Ratio Lifting the Sub UB Do NOT hit the FPCB on Panel (FOP) with the Spatula! Samsung Care Exit Cotrse
+
+--- SLIDE 35 ---
+Reducing Repeat Repair Ratio Lifting the Sub UB Do NOT hit the FPCB on Panel (FOP) with the Spatula! Samsung Care Exit Cotrse FOP
+
+--- SLIDE 36 ---
+o Reducing Repeat Repair Ratio Lifting the Sub UB Samsung Care Exit Cotrse
+
+--- SLIDE 37 ---
+Sub UB Disassembly Video Samsung Care
+
+--- SLIDE 38 ---
+Reducing Repeat Repair Ratio Why does Same Symptom Redo Matter? Same Symptom Redo (SSR) will make your location's Bounce higher. Remember, we always want to keep Bounce percentage low because this helps individual and overall store metrics and will result in a better customer experience. Samsung Care Exit Cmrse
+
+--- SLIDE 39 ---
+Repeat Repair Ratio Sub UB Disassembly Video 00 Samsung Care 14 39
+
+--- SLIDE 40 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video It's important to 11 Samsung Care Exit Cotrse SAMSUNG Care Disassembly of the Sub UB ow the steps and to adopt good habits.
+
+--- SLIDE 41 ---
+o Reducing Repeat Repair Ratio Sub UB Disassembly Video 11 Samsung Care Exit Cmrse
+
+--- SLIDE 42 ---
+o Reducing Repeat Repair Ratio Sub UB Disassembly Video The Flip7 has a process that is . , lique because it is the only device that it is approved for appropriate 11 Samsung Care Exit Cmrse
+
+--- SLIDE 43 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse snMSUNG Care Flip7 Sub UB Disassembly The Flip7 has a process that is u que because it is the only device that it is approved for appropriate 11 Samsung Care
+
+--- SLIDE 44 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse snMSUNG Care Flip7 Sub UB Disassembly The Flip7 has a process that is unique because it is the only device that it is approved for appropriate Samsung Care
+
+--- SLIDE 45 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse snMSUNG Care Flip7 Sub UB Disassembly alcohol usage when disassembling the Sub I-JB. Samsung Care
+
+--- SLIDE 46 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 47 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse snMSUNG Care Flip7 Sub UB Disassembly alcohol usage when disassembling the Sub I-JB. Samsung Care
+
+--- SLIDE 48 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Samsung Care Exit Cotrse snMSUNG Care Flip7 Sub UB Disassembly
+
+--- SLIDE 49 ---
+teducing Repeat Repair Ratio Sub UB Disassembly Video Flip7 Sub UB Disassembly Step Step One: 11 Samsung Care
+
+--- SLIDE 50 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video 11 Samsung Care Exit Cotrse
+
+--- SLIDE 51 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Samsung Care Exit Cmrse
+
+--- SLIDE 52 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Menu Use 99% isopropyl alcohol 11 Samsung Care Exit Cotrse
+
+--- SLIDE 53 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cotrse 02 Samsung Care Alcohol Application Repair Guides Return to Menu Click Sheet
+
+--- SLIDE 54 ---
+o Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cotrse 02 Samsung Care Alcohol Application Repair Guides Return to Menu Click Sheet
+
+--- SLIDE 55 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cotrse 02 Samsung Care Alcohol Application Repair Guides Return to Menu Click Sheet
+
+--- SLIDE 56 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse 02 Samsung Care Alcohol Appl Repair Guides Return to Menu Click Sheet Lift the sub I-JB.
+
+--- SLIDE 57 ---
+o Reducing Repeat Repair Ratio Help Me Help You Exit Cmrse The best way to avoid Bounce is by utilizing the resources that are available to you. Look up proper repair processes by device Answer questions about systems and repair techniques Access troubleshooting tools to determine the root cause of an issue Samsung Care
+
+--- SLIDE 58 ---
+Reducing Repeat RepairRatio O Sub UB Disassembly Video Exit Cotrse 02 Samsung Care Alrnhnl Annlicatinn Repair Guides eturn to Menu using plastic tweezers, remove the FPCB Cap. 14
+
+--- SLIDE 59 ---
+Exit Course Gemi I las Sub UB Di?assembly Video cat Chrome Stuclic '-Repair Guides eturn to Menu using plastic tweezers, remove the FPCB Cap. Samsung care
+
+--- SLIDE 60 ---
+Gemini FlashÄ 2' Pisc•.cwery & Story Focus (Reader Trauma Communitv) aReczverv SD #W1'1tersConuncitv 31 3r GrowihGi*decV/ C.ross+eec_
+
+--- SLIDE 61 ---
+Gemini Flash 1."CoreOutreach Mix (Balanced Cross-Reach) Plaintext #CPTSüAwareness #RadicalAuthenticity #1ndieAuthor #Memoir #MentaLResilience *Steiiown 2: Discovery & Story Focus (Reader & Trauma Comn-u_mity) Plaintexi ± TraumaRecoverv #Bookstagram #Rav.'Yonestv *AewB00kReLease #CPTSD #WritersCommunitv Aox 3: Broad Growth & Video / Short-Form Cross-Feec Plaintext
+
+--- SLIDE 62 ---
+Gemini Flash #Radica ndieAuthü'„• 2• Discovery & Storv Focus (Reader & Trauma Communitv) T AITGReczverv #Bookstazram *ÅeiNB00kRelease #CPTSD #Wr1tersCommuoitv K 3 3! Dad Growth & Video] Short-Form Cross+eec . Wiairttext_
+
+--- SLIDE 63 ---
+Exit Course Gemihi ÉlasK3S* Sub UBDis,assembly Video , iS (Reader C, i raurna C0inmii'iitv) •—-o•mqes-t-y_ *COT SD iiiNY1tersCommq i 1 Guides eturn to Meru using plastic tweezers, remove the FPCB Cap. samsungGare
+
+--- SLIDE 64 ---
+Reducing Repeat RepairRatioiO Sub UB Disassembly Video Repair Guides etum to Menu using plastic tweezers, remove the FPCB Cap. Samsung Care ; VLC media Exit Cotrse
+
+--- SLIDE 65 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cotrse 02 Samsung Care Alcnhn! Ann! iratino Repair Guides Using plastic tweezers, remove the FPCB Cap. eturn to Menu
+
+--- SLIDE 66 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse 02 Samsung Care Alcohol Application Repair Guides Return to Menu Click Sheet
+
+--- SLIDE 67 ---
+Reducing Repeat Repair Ratio Help Me Help You Exit Cmrse The best way to avoid Bounce is by utilizing the resources that are available to you. Look up proper repair processes by device Answer questions about systems and repair techniques Access troubleshooting tools to determine the root cause of an issue Samsung Care
+
+--- SLIDE 68 ---
+Reducing Repeat Repair Ratio Sub UB Disassembly Video Exit Cmrse 02 Samsung Care Alcohol Application Repair Guides Return to Menu Click Sheet
+
+--- SLIDE 69 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 70 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal Exit Cmrse Always use Plastic Tipped Tweezers or the Disassembly Stick when removing Bonding Resin. Black spot Using your fingernail to grab the Bonding Resin may damage the Copper Sheet, resulting in Screen Bleed. Samsung Care Incorrect
+
+--- SLIDE 71 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal Exit Cmrse Always use Plastic Tipped Tweezers or the Disassembly Stick when removing Bonding Resin. Black spot Impact point Using your fingernail to grab the Bonding Resin may damage the Copper Sheet, resulting in Screen Bleed. Samsung Care Incorrect
+
+--- SLIDE 72 ---
+Reducing Repeat Repair Ratio Bonding Resin Removal Exit Cotrse Always use Plastic Tipped Tweezers or the Disassembly Stick when removing Bonding Resin. spot Impact point Using your fingernail to grab the Bonding Resin may damage the Copper Sheet, resulting in Screen Bleed. Samsung Care Incorrect
+
+--- SLIDE 73 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 74 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal cont. Lift the Bonding Resin from the back of the Sub UB at one of the circled starting points. Remove the resin by pulling gently at a 10-20 degree angle. If the resin breaks, go to another starting point to start again. Samsung Care Exit Cmrse 2'
+
+--- SLIDE 75 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal cont. Lift the Bonding Resin from the back of the Sub UB at one of the circled starting points. Remove the resin by pulling gently at a 10-20 degree angle. If the resin breaks, go to another starting point to start again. Samsung Care Exit Cmrse 10-2m
+
+--- SLIDE 76 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal cont. Lift the Bonding Resin from the back of the Sub UB at one of the circled starting points. Remove the resin by pulling gently at a 10-20 degree angle. If the resin breaks, go to another starting point to start again. Samsung Care Exit Cmrse 10-20
+
+--- SLIDE 77 ---
+Reducing Repeat Repair Ratio Help Me Help You Exit Cmrse The best way to avoid Bounce is by utilizing the resources that are available to you. Look up proper repair processes by device Answer questions about systems and repair techniques Access troubleshooting tools to determine the root cause of an issue Samsung Care
+
+--- SLIDE 78 ---
+o Reducing Repeat Repair Ratio Bonding Resin Removal cont. Lift the Bonding Resin from the back of the Sub UB at one of the circled starting points. Remove the resin by pulling gently at a 10-20 degree angle. If the resin breaks, go to another starting point to start again. Samsung Care Exit Cmrse 10-2
+
+--- SLIDE 79 ---
+Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 80 ---
+Reducing Repeat Repair Ratio Using Proper Tools Exit Cmrse Always use the Samsung recommended tools. Failing to do so can damage the device. Example of not using a properly calibrated screwdriver: The screw was assembled too tightly, causing the metal to warp and lift. This damaged the inner side of the Sub UB, leading to a dot on the device's Sub LCD. Samsung Care Bent & Litted
+
+--- SLIDE 81 ---
+Reducing Repeat Repair Ratio Using Proper Tools Exit Cmrse Always use the Samsung recommended tools. Failing to do so can damage the device. Example of not using a properly calibrated screwdriver: The screw was assembled too tightly, causing the metal to warp and lift. This damaged the inner side of the Sub UB, leading to a dot on the device's Sub LCD. Samsung Care Bent & Lifted
+
+--- SLIDE 82 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 83 ---
+o Reducing Repeat Repair Ratio Inspect for Damage Follow these best practices to prevent bounce: Prior to closing the device, inspect the components for damage Refer to the ticket notes to ensure you understand what the symptom was Attempt to replicate the symptom to ensure it was resolved Upon device return, instruct the customer to confirm their issue was resolved Samsung Care Exit Cmrse
+
+--- SLIDE 84 ---
+o Reducing Repeat Repair Ratio Validating the Repair Validating Repairs snMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 85 ---
+o Reducing Repeat Repair Ratio Validating the Repair Validating Repairs Through Symptom Recreation To avoid this, always engage with them to fully understand snMSUNG care their problem before they leave. Samsung Care Exit Cmrse
+
+--- SLIDE 86 ---
+Reducing Repeat Repair Ratio Validating the Repair Validating Repairs Through Symptom Recreation To avoid this, always engage with them to fully understand snMSUNG care their problem before they leave. Samsung Care Exit Cmrse
+
+--- SLIDE 87 ---
+o Reducing Repeat Repair Ratio Authorized Repair Methods Usinq authorized repair methods will prevent the likelihood of DIP and misdiagnosis. Exit Cmrse Always refer to the following resources during a repair to ensure you follow the Samsung-approved processes: General Repair Click Sheet Repair Guides Click Sheet Decision Trees (Symptom Troubleshooting) Video Gallery Password is Samsungl In this course's quiz, you will be instructed to navigate to these resources. Help yourself by opening them in your browser now. Samsung Care
+
+--- SLIDE 88 ---
+Reducing Repeat Repair Ratio Validating the Repair Validating Repairs Through Symptom Recreation snMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 89 ---
+Reducing Repeat Repair Ratio Validating the Repair Validating Repairs 'hrough Symptom Recreatior snMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 90 ---
+o Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Understzrd importance symptom replication bctore declaring repairs ryal-lif* like 'No Touch' snMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 91 ---
+o Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Understand the importance ot symptom replication before declaring repairs successful, Censiderreal-life like the 'Nu Touch' SAMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 92 ---
+o Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Understand the importance of symptom replication before declaring repairs Cdnsiderreäl-life examples like the 'Nn Touch' case, 3 SUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 93 ---
+Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Understand the importance ot symptom replication before declaring *pairs like the 'Nu Touch' Case, SnrasuNG care Samsung Care Exit Cmrse
+
+--- SLIDE 94 ---
+Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Lnders-.and the ir-.pcrt3ncc ot symptom replication before ecurino repairs Cxns SAMSUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 95 ---
+o Reducing Repeat Repair Ratio Validating the Repair Replicating Customer Symptoms Samsung Care Exit Cmrse
+
+--- SLIDE 96 ---
+o Reducing Repeat Repair Ratio Authorized Repair Methods Usinq authorized repair methods will prevent the likelihood of DIP and miscfiagnosis. Exit Cmrse Always refer to the following resources during a repair to ensure you follow the Samsung-approved processes: General Repair Click Sheet Repair Guides Click Sheet Decision Trees (Symptom Troubleshooting) Video Gallery Password is Samsungl In this course's quiz, you will be instructed to navigate to these resources. Help yourself by opening them in your browser now. Samsung Care
+
+--- SLIDE 97 ---
+o Reducing Repeat Repair Ratio Validating the Repair Exit Cmrse Symptom Replication Knowing the symptom so it can be replicated In the 'No Touch' case, the device passed OQC, but the customer returned due to no touch in a specific snMSUNG care Samsung Care
+
+--- SLIDE 98 ---
+o Reducing Repeat Repair Ratio Validating the Repair snMSUNG care Samsung Care Exit Cmrse Symptom Replication Knowing the symptom so it can be replicated spot that OQC did not test.
+
+--- SLIDE 99 ---
+Reducing Repeat Repair Ratio Validating the Repair snMSUNG care Samsung Care Exit Cmrse Symptom Replication Knowing the symptom so it can be replicated
+
+--- SLIDE 100 ---
+o Reducing Repeat Repair Ratio Validating the Repair Samsung Care Exit Cmrse
+
+--- SLIDE 101 ---
+Reducing Repeat Repair Ratio Validating the Repair Samsung Care Exit Cmrse
+
+--- SLIDE 102 ---
+Reducing Repeat Repair Ratio Validating the Repair sn SUN care Ensure Quality Se By replicating symptoms, you ensure a higher quality of service and customer trust. Samsung Care Exit Cmrse
+
+--- SLIDE 103 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 104 ---
+o Reducing Repeat Repair Ratio Summary You should now be able to: Samsung Care Exit Cmrse
+
+--- SLIDE 105 ---
+o Reducing Repeat Repair Ratio Summary You should now be able to: Explain What causes R R R and SSR Navigate to STG Resources to assist you during a repair Troubleshoot to determine the root cause of a symptom Maintain proper equipment Correctly create a ticket for a DIP scenario Avoid unnecessary Battery replacements Enact best practices during Sub UB disassembly Validate a repair prior to device return Samsung Care Exit Cmrse
+
+--- SLIDE 106 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 107 ---
+o Reducing Repeat Repair Ratio Summary You should now be able to: Explain What cause S R RR and SSR Navigate to STG Resources to assist you during a repair Troubleshoot to determine the root cause of a symptom Maintain proper equipment Correctly create a ticket for a DIP scenario Avoid unnecessary Battery replacements Enact best practices during Sub UB disassembly Validate a repair prior to device return Samsung Care Exit Cotrse
+
+--- SLIDE 108 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 109 ---
+o Reducing Repeat Repair Ratio Pro Tips Exit Cmrse Do you view STG as difficult to navigate? If so, use these tips to help you access it in the future: Bookmark the General Repair Click Sheet in your browser Use Ctrl+F to search key words and help you find what you're looking for The Repair Guide videos now have chapters to make it easier to find what you're looking for Use the "Split Tab" feature in your browser to watch a Repair Guide video while referring to the Repair Guide All resources can be accessed from the General Repair Click Sheet! Samsung Care
+
+--- SLIDE 110 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 111 ---
+Reducing Repeat Repair Ratio Repair Flow Repairing a device is impossible without determining the cause of the Exit Cotrse symptom. This requires a thorough process of replicating the symptom at the start and after each step until the symptom ceases. Symptom Replication Samsung Care Repair Step Check Symptom Symptom Ceases Instruct Customer to Validate Repair Rep air Complete Repeat as necessa
+
+--- SLIDE 112 ---
+Reducing Repeat Repair Ratio Repair Flow Repairing a device is impossible without determining the cause of the Exit Cmrse symptom. This requires a thorough process of replicating the symptom at the start and after each step until the symptom ceases. Symptom Replication Samsung Care Repair Step Check Symptom Symptom Ceases Instruct Customer to Validate Repair Rep air Complete Repeat as necessa
+
+--- SLIDE 113 ---
+Reducing Repeat Repair Ratio Decision Trees (Symptom Troubleshooting Flow) Exit Cmrse In the General Repair Click Sheet, there are decision trees that are symptom- based and should be used alongsideGD IQC. INTERACTIVE What were the results of the CTC test? Samsung Care
+
+--- SLIDE 114 ---
+Reducing Repeat Repair Ratio Decision Trees (Symptom Troubleshooting Flow) Exit Cmrse In the General Repair Click Sheet, there are decision trees that are symptom- based and should be used alongsideGD IQC. has issues with netwo.k or INTERACTIVE What were the results of the CTC test? Samsung Care
+
+--- SLIDE 115 ---
+Reducing Repeat Repair Ratio Decision Trees (cont.) The Decision Trees will walk you through determining the root cause of an issue. They can provide: Tips on how to replicate a symptom Directions on what GD IQC Test Results to pay close attention to Reminders on proper repair processes Samsung Care Exit Cmrse
+
+--- SLIDE 116 ---
+o Reducing Repeat Repair Ratio IQC Results After running IQC, you will receive a report that details device performance. Each item tested will be marked as PASS, CHECK, or FAIL. These test results should guide you in next steps in repairing the device. Ensure you review the graphical view result of all Check items. Exit Cmrse Do not disconnectthe device until you are done thoroughly reviewing the GD IQC results. Samsung Care
+
+--- SLIDE 117 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 118 ---
+o Reducing Repeat Repair Ratio Categories The tests that are run are broken into categories, which are displayed on the left of the screen. Clicking a category will pull up each individual item that was tested. Samsung Care Exit Cmrse Charging or Discharging Camera Communication Input/Cosmetic Faulty operation
+
+--- SLIDE 119 ---
+Reducing Repeat Repair Ratio Categories The tests that are run are broken into categories, which are displayed on the left of the screen. Clicking a category will pull up each individual item that was tested. Samsung Care Exit Cmrse o 4) Power Display Charging or Discharging Camera Sound Communication Input/Cosmetic ((1J) Connectivity @ Faulty operation
+
+--- SLIDE 120 ---
+Reducing Repeat Repair Ratio Categories The tests that are run are broken into categories, which are displayed on the left of the screen. Clicking a category will pull up each individual item that was tested. Samsung Care Exit Cmrse O Power Display Charging or Discharging to Camera Sound Q.ä• Communication Input/Cosmetic (Y) Connectivity @ Faulty operation
+
+--- SLIDE 121 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 122 ---
+o Reducing Repeat Repair Ratio Repair Tips Exit Cmrse Any test that results in "Check" or "Fail" will provide a repair tip. These repair tips will provide direction on where you should go with the repair and should always be consulted before beginning. Dimming If the device doesn't enter Power Saving Mode, an engineer's inspection is required. Repair tip Please check the device and implement these measures in the following order: Turn off Auto Brightness from the menu bar, and check how the brightness level is adjusted If the problem persists, replace the display module or PBA and check it again, Samsung Care
+
+--- SLIDE 123 ---
+o Reducing Repeat Repair Ratio Repair Tips Exit Cmrse Any test that results in "Check" or "Fail" will provide a repair tip. These repair tips will provide direction on where you should go with the repair and should always be consulted before beginning. Dimming If the device doesn't enter Power Saving Mode, an engineer's inspection is required. C) Repair tip Please check the device and implement these measures in the following order: Turn off Auto Brightness from the menu bar, and check how the brightness level is adjusted. If the problem persists, replace the display modu or PBA and check it again. Samsung Care
+
+--- SLIDE 124 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 125 ---
+o Reducing Repeat Repair Ratio Repair Tips cont. Often times, the repair tip includes an image that displays where on the Exit Cmrse device you should inspect. Reviewing the repair tips can help cut down the time spent on a repair because it narrows your search for damage and what parts should be replaced. Speaker •nd NC .th Out A Samsung Care
+
+--- SLIDE 126 ---
+Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 127 ---
+o Reducing Repeat Repair Ratio Repair Tips and Customer Education Exit Cmrse The repair tips provide the perfect opportunity to educate the customer and can be used as a visual to support the knowledge you share with them. Especially if their issue can be resolved by simply changing their settings or altering their device habits. For example, if they do not know the impact of running multiple apps on their Battery's performance, then they won't know how to improve it. Help them help themselves by educating them on maximizing Battery life. o Samsung Care
+
+--- SLIDE 128 ---
+o Reducing Repeat Repair Ratio Repair Tips and Customer Education Exit Cmrse The repair tips provide the perfect opportunity to educate the customer and can be used as a visual to support the knowledge you share with them. Especially if their issue can be resolved by simply changing their settings or altering their device habits. For example, if they do not know the impact of running multiple apps on their Battery's performance, then they won't know how to improve it. Help them help themselves by educating them on maximizing Battery life. ot —tty apos o Samsung Care
+
+--- SLIDE 129 ---
+o Reducing Repeat Repair Ratio Exit Cotrse
+
+--- SLIDE 130 ---
+o Reducing Repeat Repair Ratio Samsung Tools & Equipment Exit Cmrse Samsung provides advanced, precision-engineered tools to ensure efficient and reliable repairs for its devices. These tools and equipment are continuously innovated to accommodate the everchanging and advancing devices. 2017 2020 2026 2025 Our devices will continue to advance, so our tools and equipment will evolve with them. Samsung Care
+
+--- SLIDE 131 ---
+o Reducing Repeat Repair Ratio Samsung Tools & Equipment Exit Cmrse Samsung provides advanced, precision-engineered tools to ensure efficient and reliable repairs for its devices. These tools and equipment are continuously innovated to accommodate the everchanging and advancing devices. 2017 2020 2026 2025 Our devices will continueto advance, so our tools and equipment will evolve with them. Samsung Care
+
+--- SLIDE 132 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 133 ---
+o Reducing Repeat Repair Ratio Current AOD The AOD has evolved to better fit the newer devices. Can you spot the differences? Top Plate- Cut out to accommodate Camera Deco Bottom Plate Failing to update your AOD will damage newer models. Samsung Care Exit Cmrse Incorrect
+
+--- SLIDE 134 ---
+o Reducing Repeat Repair Ratio Current AOD The AOD has evolved to better fit the newer devices. Can you spot the differences? Top Plate - Cut out to accommodate Camera Deco Hinge — Bottom Plate — cutout extends to the front to accommodate Camera Deco Failing to update your AOD will damage newer models. Samsung Care Exit Cmrse Incorrect 'correct I
+
+--- SLIDE 135 ---
+o Reducing Repeat Repair Ratio Current AOD The AOD has evolved to better fit the newer devices. Can you spot the differences? Top Plate — Cut out to accommodate Camera Deco Hinge — Bottom Plate— cutout extends to the front to accommodate Camera Deco Failing to update your AOD will damage newer models. Samsung Care Exit Cotrse Incorrect
+
+--- SLIDE 136 ---
+o Reducing Repeat Repair Ratio Current AOD The AOD has evolved to better fit the newer devices. Can you spot the differences? Top Plate — Cut out to accommodate Camera Deco Removal of the back bar to Hinge — allow room for larger devices (replaced With Hinge Pins Bottom Plate — cutout extends to the front to accommodate Camera Deco Failing to update your AOD will damage newer models. Samsung Care Exit Cotrse Incorrect orrect
+
+--- SLIDE 137 ---
+o Reducing Repeat Repair Ratio Current AOD The AOD has evolved to better fit the newer devices. Can you spot the differences? Top Plate - Cut out to accommodate Camera Deco Removal of the back bar to Hinge — allow room for larger devices (replaced with Hinge Pins Bottom Plate — cutout extends to the front to accommodate Camera Deco Failing to update your AOD will damage newer models. Samsung Care Exit Cotrse Incorrecg rrect-
+
+--- SLIDE 138 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 139 ---
+Reducing Repeat Repair Ratio Samsung OEM Parts Rework Kits are also tailored to specific devices. Using Non-OEM Tapes or any other sort of glue/tape is not authorized, could lead to DIP/ Bounce, and loss of trust from the customer, See OJT: Identifying Counterfeit Parts for more information on Non-OEM parts. Samsung Care Exit Cotrse
+
+--- SLIDE 140 ---
+o Reducing Repeat Repair Ratio Samsung OEM Parts Rework Kits are also tailored to specific devices. Using Non-OEM Tapes or any other sort of glue/tape is not authorized, could lead to DIP/ Bounce, and loss of trust from the customer. See OJT: Identifying Counterfeit Parts for more information on Non-OEM parts. Samsung Care Exit Cotrse
+
+--- SLIDE 141 ---
+o Reducing Repeat Repair Ratio Samsung OEM Parts Rework Kits are also tailored to specific devices. Using Non-OEM Tapes or any other sort of See OJT: Identifying Counterfeit Parts for more information on Non-OEM parts. Samsung Care Exit Cotrse
+
+--- SLIDE 142 ---
+Reducing Repeat Repair Ratio Samsung OEM Parts Rework Kits are also tailored to specific devices. Using Non-OEM Tapes or any other sort of See OJT: Identifying Counterfeit Parts for more information on Non-OEM parts. Samsung Care Exit Cotrse
+
+--- SLIDE 143 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 144 ---
+o Reducing Repeat Repair Ratio Ticketing Errors Incorrectly creating tickets can result in Bounce. Common instances of Bounce from ticketing errors are: • Creating an IW ticket fora device with damage Exit Cmrse o If a device has physical damage, it is OOW by condition no matter when it was purchased Creating a new IW ticket for a customer that immediately returned post- repair and reported new issues o If customer reports an issue with a failing component related to the ISt repair, it is likely a sign of DIP Samsung Care
+
+--- SLIDE 145 ---
+o Reducing Repeat Repair Ratio Ticketing Errors Incorrectly creating tickets can result in Bounce. Common instances of Bounce from ticketing errors are: • Creating an IW ticket for a device with damage Exit Cmrse o If a device has physical damage, it is OOW by condition no matter when it was purchased Creating a new IW ticket for a customer that immediately returned post- repair and reported new issues o If customer reports an issue with a failing component related to the ISt repair, it is likely a sign of DIP Samsung Care
+
+--- SLIDE 146 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 147 ---
+o Reducing Repeat Repair Ratio DIP Ticketing Error Exit Cmrse If a customer immediately returns with issues that are related to a previous repair, then it may be an instance of DIP. DIP is NOT covered by warranty and should be handled as an Out of Warranty repair that is covered by the location. If the part needs to be replaced due to technician induced damage, then the new work order MUST be checked in as OOW using Impact Damage for the reason to prevent triggering Bounce. Samsung Care
+
+--- SLIDE 148 ---
+o Reducing Repeat Repair Ratio DIP Ticketing Error Exit Cmrse If a customer immediately returns with issues that are related to a previous repair, then it may be an instance of DIP. DIP is NOT covered by warranty and should be handled as an Outof Warranty repair that is covered by the location. If the part needs to be replaced due to technician induced damage, then the new work order MUST be checked in as OOW using Impact Damage for the reason to prevent triggering Bounce. Samsung Care
+
+--- SLIDE 149 ---
+Reducing Repeat Repair Ratio DIP Ticketing Error üit Cotrse If a customer immediately returns with issues that are related to a previous repair, then it may be an instance of DIP. DIP is NOT covered by warranty and should be handled as an OutofWarranty repair that is covered by the location. If the part needs to be replaced due to technician induced damage, then the new work order MUST be checked in as OOW using Impact Damage for the reason to prevent triggering Bounce. Samsung Care
+
+--- SLIDE 150 ---
+Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 151 ---
+o Reducing Repeat Repair Ratio DIP Check-In Process Exit Cmrse To avoid causing Bounce from incorrect Ticket creation, follow these steps at check-in: 1. Select Out of Warranty + Reason: Impact Damage 2. Tickets should be completed with parts zeroed outat no charge to the customer Using Impact Damage will NOT void the customer's warranty term. Samsung Care
+
+--- SLIDE 152 ---
+o Reducing Repeat Repair Ratio DIP Check-In Process Exit Cmrse To avoid causing Bounce from incorrect Ticket creation, follow these steps at check-in: 1. Select Out of Warranty* Reason: Impact Damage 2. Tickets should be completed with parts zeroed out at no chargeto the customer Using Impact Damage will NOT void the customer's warranty term. Samsung Care
+
+--- SLIDE 153 ---
+Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 154 ---
+Reducing Repeat Repair Ratio The Scapegoat It is common to mistakenly blame the Battery for issues caused by other Exit Cmrse components. Replacing a properly functioning Battery will lead to bounce. Below are symptoms typically misattributed to the battery but usually indicate other problems: Overheating Charging Issues • Low Battery Life Bootlooping Proper testing and understanding of these issues can prevent misdiagnosis. Samsung Care
+
+--- SLIDE 155 ---
+o Reducing Repeat Repair Ratio The Scapegoat It is common to mistakenly blame the Battery for issues caused by other Exit Cmrse components. Replacing a properly functioning Battery will lead to bounce. Below are symptoms typically misattributed to the battery but usually indicate other problems: • Overheating Charging Issues • Low Battery Life Bootlooping Proper testing and understanding of these issues can prevent misdiagnosis. Samsung Care
+
+--- SLIDE 156 ---
+o Reducing Repeat Repair Ratio Overheating Did you know that overheating is actually caused from the Main PBA? It is up to you to determine if the Main PBA is: Defective (hardware issue) Working too hard (Software issue) Exit Cmrse Oerheating Fast Battery Dra i n Did the device fail any of these IQC tests? Use the Overheating Decision Tree to help properly diagnose this symptom. Samsung Care
+
+--- SLIDE 157 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 158 ---
+Reducing Repeat Repair Ratio Charging Issues Exit Cmrse Wireless Charging issues and Wired Charging issues are caused by different things and will require different repairs. No matter which is being experienced, always check the connection of Connectors before replacing anything! Connections to check for Wireless Charging Issues Connections to check for Wired Charging Issues A Battery replacement will NOT fix either type of charging symptom. Samsung Care
+
+--- SLIDE 159 ---
+Reducing Repeat Repair Ratio Charging Issues Exit Cmrse Wireless Charging issues and Wired Charging issues are caused by different things and will require different repairs. No matter which is being experienced, always check the connection of Connectors before replacing anything! Connections to check for Wireless Charging Issues charging AnT rr,nnertnr Connections to check for Wired Charging Issues A Battery replacement will NOT fix either type of charging symptom. Samsung Care
+
+--- SLIDE 160 ---
+o Reducing Repeat Repair Ratio Charging Issues Exit Cmrse Wireless Charging issues and Wired Charging issues are caused by different things and will require different repairs. No matter which is being experienced, always check the connection of Connectors before replacing anything! Connections to Wireless charging ANT check for Wireless Charging Issues Connections to check for Wired Charging Issues Battery connector A Battery replacement will NOT fix either type of charging symptom. Samsung Care
+
+--- SLIDE 161 ---
+o Reducing Repeat Repair Ratio Charging Issues Exit Cmrse Wireless Charging issues and Wired Charging issues are caused by different things and will require different repairs. No matter which is being experienced, always check the connection of Connectors before replacing anything! Connections to check for Wireless Charging Issues Connections to. check for Wired Issues Battery connector A Battery replacement will NOT fix either type of charging symptom. Samsung Care
+
+--- SLIDE 162 ---
+o Reducing Repeat Repair Ratio Charging Issues samsung.csod.com cnarging Iss•xs which is G.) Memory usage: 170 MB Exit Cotrse Wireless Charging issues and Wired Charging issues are caused by different things and will require different repairs. No matter which is being experienced, always check the connection of Connectors before replacing anything! Connections to Connections to check for Wireless Charging Issues Wireless charging ANT Battery connector check for Wired Charging Issues A Battery replacement will NOT fix either type of charging symptom. Samsung Care
+
+--- SLIDE 163 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 164 ---
+o Reducing Repeat Repair Ratio Low Battery Life Exit Cotrse If a customer reports fast Battery drain, run GD IQC. If the Battery passes, then analyze the Battery usage table. Assist the customer remove the third party apps that drain their Battery and teach them about good Battery management behavior. Closing apps Uninstalling unused apps Using Device Care Optimization Use the Low Battery Decision Tree to help properly diagnose this symptom. Samsung Care
+
+--- SLIDE 165 ---
+o Reducing Repeat Repair Ratio Low Battery Life Exit Cotrse If a customer reports fast Battery drain, run GD IQC. If the Battery passes, then analyze the Battery usage table. Assist the customer remove the third party apps that drain their Battery and teach them about good Battery management behavior. Closing apps Uninstalling unused apps Using Device Care Optimization 0800 b.ttm Use the Low Battery Decision Tree to help properly diagnose this symptom. Samsung Care
+
+--- SLIDE 166 ---
+o Reducing Repeat Repair Ratio Low Battery Life Exit Cotrse If a customer reports fast Battery drain, run GD IQC. If the Battery passes, then analyze the Battery usage table. Assist the customer remove the third party apps that drain their Battery and teach them about good Battery management behavior. Closing apps Uninstalling unused apps Using Device Care Optimization Put' Use the Low Battery Decision Tree to help properly diagnose this symptom. Samsung Care
+
+--- SLIDE 167 ---
+o Reducing Repeat Repair Ratio Exit Cmrse
+
+--- SLIDE 168 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snnnsUNG care Samsung Care Exit Cmrse
+
+--- SLIDE 169 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Samsung Care Exit Cmrse
+
+--- SLIDE 170 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements S"MSUNG Care Educating Customers on Battery Life Samsung Care üit Cotrse
+
+--- SLIDE 171 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Find and solve the root of their issues. However, this will not solve the root of their issue, Samsung Care Exit Cmrse
+
+--- SLIDE 172 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snMSUNG Care Find and solve the root of their issues. We want to do everything we can to avoid it. Samsung Care Exit Cmrse
+
+--- SLIDE 173 ---
+Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements snnnsUNG Care De-escalating an upset customer is crucial. Samsung Care Exit Cmrse
+
+--- SLIDE 174 ---
+o Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cotrse Battery Basic Test • Battery Health • Battery Charge Level • Battery Voltage • Battery Temperature • Battery Type • Battery capacity • Operating time with full charge • Sudden battery discharge history Samsung Care Battery rating; 3880mAh 4000mAh Good 34.7 oc Li-ion Jypecal battery: 93h 15m
+
+--- SLIDE 175 ---
+o Reducing Repeat Repair Ratio Avoiding Unnecessary Battery Replacements Exit Cotrse QD Battery Basic Test snMS • Battery Health Care • Battery Charge Level • Battery Voltage • Battery Temperature • Battery Type • Battery capacity • Operating time with full charge • Sudden battery discharge history Samsung Care Battery ratlng; 3880mAh aooomAh Good 34.7 oc Li-ion Iyp.cat battery: 93h 15m
+

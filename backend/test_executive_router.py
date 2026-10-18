@@ -23,7 +23,8 @@ class TestExecutiveRouter(unittest.TestCase):
         data = resp.json()
         self.assertEqual(data.get("status"), "online")
         self.assertEqual(data.get("privileges"), "root_host_unrestricted")
-        self.assertIn("powershell", data.get("supported_command_types", []))
+        for rt in ["powershell", "cmd", "wsl", "python", "node", "ts", "go", "rust", "file_read", "file_write"]:
+            self.assertIn(rt, data.get("supported_command_types", []))
 
     def test_run_powershell(self):
         resp = self.client.post("/api/executive/run", json={
@@ -34,6 +35,64 @@ class TestExecutiveRouter(unittest.TestCase):
         data = resp.json()
         self.assertEqual(data.get("status"), "success")
         self.assertIn("EXECUTIVE_TEST_OK", data.get("stdout", ""))
+
+    def test_run_cmd(self):
+        resp = self.client.post("/api/executive/run", json={
+            "command_type": "cmd",
+            "target": "echo CMD_TEST_OK"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data.get("status"), "success")
+        self.assertIn("CMD_TEST_OK", data.get("stdout", ""))
+
+    def test_run_python(self):
+        resp = self.client.post("/api/executive/run", json={
+            "command_type": "python",
+            "target": "print('PY_MULTI_OK', 21 * 2)"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data.get("status"), "success")
+        self.assertIn("PY_MULTI_OK 42", data.get("stdout", ""))
+
+    def test_run_node(self):
+        resp = self.client.post("/api/executive/run", json={
+            "command_type": "node",
+            "target": "console.log('NODE_MULTI_OK', 100 + 23)"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data.get("status"), "success")
+        self.assertIn("NODE_MULTI_OK 123", data.get("stdout", ""))
+
+    def test_universal_file_write_and_read(self):
+        resp1 = self.client.post("/api/executive/run", json={
+            "command_type": "file_write",
+            "target": "scratch/test_universal.proto",
+            "payload": {"content": "syntax = 'proto3';"}
+        })
+        self.assertEqual(resp1.status_code, 200)
+        self.assertEqual(resp1.json().get("status"), "success")
+
+        resp2 = self.client.post("/api/executive/run", json={
+            "command_type": "file_write",
+            "target": "scratch/test_universal.proto",
+            "payload": {"content": "syntax = 'proto3'; // v2"}
+        })
+        self.assertEqual(resp2.status_code, 200)
+        d2 = resp2.json()
+        self.assertEqual(d2.get("status"), "success")
+        self.assertTrue(d2.get("result", {}).get("backup_created"))
+
+        resp_r = self.client.post("/api/executive/run", json={
+            "command_type": "file_read",
+            "target": "scratch/test_universal.proto"
+        })
+        self.assertEqual(resp_r.status_code, 200)
+        dr = resp_r.json()
+        self.assertEqual(dr.get("status"), "success")
+        self.assertIn("// v2", dr.get("result", {}).get("content", ""))
 
     def test_run_file_read(self):
         resp = self.client.post("/api/executive/run", json={

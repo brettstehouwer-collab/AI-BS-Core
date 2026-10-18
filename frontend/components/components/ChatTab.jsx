@@ -13,6 +13,7 @@ import UnrealPixelStreamBridge from './UnrealPixelStreamBridge';
 import ContentGovernanceRiskModal from './ContentGovernanceRiskModal';
 import ArtifactsAndToolsModal from './ArtifactsAndToolsModal';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
+import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 
 const CodeBlock = React.memo(function CodeBlock({ language, code }) {
   const [activeCode, setActiveCode] = useState(code);
@@ -1047,223 +1048,254 @@ function FormattedMessageContent({ content, role }) {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  return (
-    <div className="chat-markdown-content" style={{ wordBreak: 'break-word' }}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          code({ node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || '');
-            const codeString = String(children).replace(/\n$/, '');
-            const isMultiLine = codeString.includes('\n');
+  const hasRunToken = typeof content === 'string' && /\[Run\s+([^\]]+)\]/.test(content);
+  const stagedPayloads = hasRunToken ? extractStagedPayloads(content) : null;
 
-            if (!inline && (match || isMultiLine)) {
-              return (
-                <CodeBlock
-                  language={match ? match[1] : ''}
-                  code={codeString}
-                />
-              );
-            }
-            if (isLikelyHostFilePath(codeString)) {
-              return (
-                <InteractiveFileLinkPill
-                  targetPath={codeString}
-                  displayLabel={codeString}
-                  backendUrl={BACKEND_URL}
-                />
-              );
-            }
+  const renderMarkdownBlock = (markdownText, key) => (
+    <ReactMarkdown
+      key={key}
+      remarkPlugins={[remarkGfm]}
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          const match = /language-(\w+)/.exec(className || '');
+          const codeString = String(children).replace(/\n$/, '');
+          const isMultiLine = codeString.includes('\n');
+
+          if (!inline && (match || isMultiLine)) {
             return (
-              <code
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#93c5fd',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  fontSize: '0.85em',
-                  fontFamily: 'monospace'
-                }}
-                {...props}
-              >
-                {children}
-              </code>
+              <CodeBlock
+                language={match ? match[1] : ''}
+                code={codeString}
+              />
             );
-          },
-          img({ node, src, alt, ...props }) {
-            let finalSrc = src || '';
-            const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          }
+          if (isLikelyHostFilePath(codeString)) {
+            return (
+              <InteractiveFileLinkPill
+                targetPath={codeString}
+                displayLabel={codeString}
+                backendUrl={BACKEND_URL}
+              />
+            );
+          }
+          return (
+            <code
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#93c5fd',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                fontSize: '0.85em',
+                fontFamily: 'monospace'
+              }}
+              {...props}
+            >
+              {children}
+            </code>
+          );
+        },
+        img({ node, src, alt, ...props }) {
+          let finalSrc = src || '';
+          const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-            if (finalSrc.includes('127.0.0.1:8188') || finalSrc.includes('localhost:8188') || finalSrc.includes('127.0.0.1:8189') || finalSrc.includes('localhost:8189')) {
-              if (!isLocalHost) {
-                try {
-                  const urlObj = new URL(finalSrc);
-                  finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
-                } catch (e) {
-                  finalSrc = src;
-                }
+          if (finalSrc.includes('127.0.0.1:8188') || finalSrc.includes('localhost:8188') || finalSrc.includes('127.0.0.1:8189') || finalSrc.includes('localhost:8189')) {
+            if (!isLocalHost) {
+              try {
+                const urlObj = new URL(finalSrc);
+                finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
+              } catch (e) {
+                finalSrc = src;
               }
-            } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
-              finalSrc = finalSrc.startsWith('/') ? `${BACKEND_URL}${finalSrc}` : `${BACKEND_URL}/${finalSrc}`;
             }
+          } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
+            finalSrc = finalSrc.startsWith('/') ? `${BACKEND_URL}${finalSrc}` : `${BACKEND_URL}/${finalSrc}`;
+          }
 
-            // Automatic HTTPS upgrade for mobile/PWA environments on Firebase
-            if (typeof window !== 'undefined' && window.location.protocol === 'https:' && (finalSrc.startsWith('http://127.0.0.1') || finalSrc.startsWith('http://localhost'))) {
-              finalSrc = finalSrc.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-            }
+          if (typeof window !== 'undefined' && window.location.protocol === 'https:' && (finalSrc.startsWith('http://127.0.0.1') || finalSrc.startsWith('http://localhost'))) {
+            finalSrc = finalSrc.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
+          }
 
-            if (finalSrc && (finalSrc.includes('.mp4') || finalSrc.includes('.webm') || finalSrc.includes('.mov'))) {
-              return (
-                <div style={{ marginTop: '12px', marginBottom: '12px' }}>
-                  <video
-                    src={finalSrc}
-                    controls
-                    autoPlay
-                    loop
-                    muted
-                    style={{
-                      maxWidth: '100%',
-                      maxHeight: '600px',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(59, 130, 246, 0.4)',
-                      boxShadow: '0 8px 25px rgba(0,0,0,0.5)',
-                      display: 'block'
-                    }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px' }}>
-                    <span>🔍 HD Video Rendered via AI-BS Backend</span>
-                    <a
-                      href={finalSrc}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
-                    >
-                      📥 Open / Save Video
-                    </a>
-                  </div>
-                </div>
-              );
-            }
-
+          if (finalSrc && (finalSrc.includes('.mp4') || finalSrc.includes('.webm') || finalSrc.includes('.mov'))) {
             return (
               <div style={{ marginTop: '12px', marginBottom: '12px' }}>
-                <img
+                <video
                   src={finalSrc}
-                  alt={alt || 'Generated Image'}
-                  onError={(e) => {
-                    const cur = e.currentTarget.src;
-                    if (cur.includes('127.0.0.1') || cur.includes('localhost')) {
-                      e.currentTarget.src = cur.replace(/http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-                    } else if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && !cur.includes('192.168.4.92')) {
-                      e.currentTarget.src = cur.replace(/http:\/\/[^/]+:(?:8000|8080)/, 'http://192.168.4.92:8000');
-                    } else if (src && e.currentTarget.src !== src && !src.startsWith('/')) {
-                      e.currentTarget.src = src;
-                    }
-                  }}
+                  controls
+                  autoPlay
+                  loop
+                  muted
                   style={{
                     maxWidth: '100%',
                     maxHeight: '600px',
                     borderRadius: '12px',
                     border: '1px solid rgba(59, 130, 246, 0.4)',
                     boxShadow: '0 8px 25px rgba(0,0,0,0.5)',
-                    cursor: 'pointer',
-                    display: 'block',
+                    display: 'block'
                   }}
-                  onClick={() => window.open(finalSrc, '_blank')}
-                  title="Click to view full HD render"
-                  {...props}
                 />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px' }}>
-                  <span>🔍 Click photo for full HD view</span>
+                  <span>🔍 HD Video Rendered via AI-BS Backend</span>
                   <a
                     href={finalSrc}
                     target="_blank"
                     rel="noreferrer"
                     style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
                   >
-                    📥 Open / Save Photo
+                    📥 Open / Save Video
                   </a>
                 </div>
               </div>
             );
-          },
-          table({ children }) {
-            return (
-              <div style={{ overflowX: 'auto', margin: '14px 0', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                  {children}
-                </table>
+          }
+
+          return (
+            <div style={{ marginTop: '12px', marginBottom: '12px' }}>
+              <img
+                src={finalSrc}
+                alt={alt || 'Generated Image'}
+                onError={(e) => {
+                  const cur = e.currentTarget.src;
+                  if (cur.includes('127.0.0.1') || cur.includes('localhost')) {
+                    e.currentTarget.src = cur.replace(/http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
+                  } else if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && !cur.includes('192.168.4.92')) {
+                    e.currentTarget.src = cur.replace(/http:\/\/[^/]+:(?:8000|8080)/, 'http://192.168.4.92:8000');
+                  } else if (src && e.currentTarget.src !== src && !src.startsWith('/')) {
+                    e.currentTarget.src = src;
+                  }
+                }}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '600px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.5)',
+                  cursor: 'pointer',
+                  display: 'block',
+                }}
+                onClick={() => window.open(finalSrc, '_blank')}
+                title="Click to view full HD render"
+                {...props}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#94a3b8', marginTop: '6px' }}>
+                <span>🔍 Click photo for full HD view</span>
+                <a
+                  href={finalSrc}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
+                >
+                  📥 Open / Save Photo
+                </a>
               </div>
-            );
-          },
-          thead({ children }) {
-            return <thead style={{ background: 'rgba(30, 41, 59, 0.8)', color: '#93c5fd', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>{children}</thead>;
-          },
-          th({ children }) {
-            return <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: '600' }}>{children}</th>;
-          },
-          td({ children }) {
-            return <td style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
-          },
-          blockquote({ node, children }) {
-            const isThoughtTrace = node?.children?.[0]?.children?.[0]?.value?.includes('THOUGHT:') || 
-                                   node?.children?.[0]?.children?.[0]?.value?.includes('💭') ||
-                                   node?.children?.[0]?.children?.[0]?.value?.includes('SWARM PASS');
-            return (
-              <blockquote style={{
-                borderLeft: isThoughtTrace ? '4px solid #c084fc' : '4px solid #60a5fa',
-                background: isThoughtTrace ? 'rgba(192, 132, 252, 0.08)' : 'rgba(59, 130, 246, 0.08)',
-                margin: '12px 0',
-                padding: '10px 16px',
-                borderRadius: '0 8px 8px 0',
-                color: isThoughtTrace ? '#e879f9' : '#cbd5e1',
-                fontSize: isThoughtTrace ? '0.82rem' : '0.88rem',
-                fontFamily: isThoughtTrace ? "'JetBrains Mono', 'Fira Code', monospace" : "inherit",
-                boxShadow: isThoughtTrace ? 'inset 0 0 10px rgba(192, 132, 252, 0.05)' : 'none'
-              }}>
+            </div>
+          );
+        },
+        table({ children }) {
+          return (
+            <div style={{ overflowX: 'auto', margin: '14px 0', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 {children}
-              </blockquote>
-            );
-          },
-          ul({ children }) {
-            return <ul style={{ paddingLeft: '20px', margin: '8px 0' }}>{children}</ul>;
-          },
-          ol({ children }) {
-            return <ol style={{ paddingLeft: '20px', margin: '8px 0' }}>{children}</ol>;
-          },
-          li({ children }) {
-            return <li style={{ marginBottom: '4px' }}>{children}</li>;
-          },
-          p({ node, ...props }) {
-            return <div style={{ margin: '6px 0', lineHeight: '1.6' }} {...props} />;
-          },
-          a({ href, children }) {
-            const childStr = String(children || '').trim();
-            if ((href && href.startsWith('file:')) || isLikelyHostFilePath(href) || isLikelyHostFilePath(childStr)) {
-              const target = (href && href.startsWith('file:')) ? href.replace(/^file:\/\/\/?/i, '') : (isLikelyHostFilePath(childStr) ? childStr : href);
-              return (
-                <InteractiveFileLinkPill
-                  targetPath={target}
-                  displayLabel={childStr || target}
-                  backendUrl={BACKEND_URL}
-                />
-              );
-            }
+              </table>
+            </div>
+          );
+        },
+        thead({ children }) {
+          return <thead style={{ background: 'rgba(30, 41, 59, 0.8)', color: '#93c5fd', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>{children}</thead>;
+        },
+        th({ children }) {
+          return <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: '600' }}>{children}</th>;
+        },
+        td({ children }) {
+          return <td style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
+        },
+        blockquote({ node, children }) {
+          const isThoughtTrace = node?.children?.[0]?.children?.[0]?.value?.includes('THOUGHT:') || 
+                                 node?.children?.[0]?.children?.[0]?.value?.includes('💭') ||
+                                 node?.children?.[0]?.children?.[0]?.value?.includes('SWARM PASS');
+          return (
+            <blockquote style={{
+              borderLeft: isThoughtTrace ? '4px solid #c084fc' : '4px solid #60a5fa',
+              background: isThoughtTrace ? 'rgba(192, 132, 252, 0.08)' : 'rgba(59, 130, 246, 0.08)',
+              margin: '12px 0',
+              padding: '10px 16px',
+              borderRadius: '0 8px 8px 0',
+              color: isThoughtTrace ? '#e879f9' : '#cbd5e1',
+              fontSize: isThoughtTrace ? '0.82rem' : '0.88rem',
+              fontFamily: isThoughtTrace ? "'JetBrains Mono', 'Fira Code', monospace" : "inherit",
+              boxShadow: isThoughtTrace ? 'inset 0 0 10px rgba(192, 132, 252, 0.05)' : 'none'
+            }}>
+              {children}
+            </blockquote>
+          );
+        },
+        ul({ children }) {
+          return <ul style={{ paddingLeft: '20px', margin: '8px 0' }}>{children}</ul>;
+        },
+        ol({ children }) {
+          return <ol style={{ paddingLeft: '20px', margin: '8px 0' }}>{children}</ol>;
+        },
+        li({ children }) {
+          return <li style={{ marginBottom: '4px' }}>{children}</li>;
+        },
+        p({ node, ...props }) {
+          return <div style={{ margin: '6px 0', lineHeight: '1.6' }} {...props} />;
+        },
+        a({ href, children }) {
+          const childStr = String(children || '').trim();
+          if ((href && href.startsWith('file:')) || isLikelyHostFilePath(href) || isLikelyHostFilePath(childStr)) {
+            const target = (href && href.startsWith('file:')) ? href.replace(/^file:\/\/\/?/i, '') : (isLikelyHostFilePath(childStr) ? childStr : href);
             return (
-              <a
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: '#60a5fa', textDecoration: 'underline', fontWeight: '500' }}
-              >
-                {children}
-              </a>
+              <InteractiveFileLinkPill
+                targetPath={target}
+                displayLabel={childStr || target}
+                backendUrl={BACKEND_URL}
+              />
             );
           }
-        }}
-      >
-        {content}
-      </ReactMarkdown>
+          return (
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: '#60a5fa', textDecoration: 'underline', fontWeight: '500' }}
+            >
+              {children}
+            </a>
+          );
+        }
+      }}
+    >
+      {markdownText}
+    </ReactMarkdown>
+  );
+
+  if (hasRunToken) {
+    const parts = content.split(/(\[Run\s+[^\]]+\])/g);
+    return (
+      <div className="chat-markdown-content" style={{ wordBreak: 'break-word' }}>
+        {parts.map((part, idx) => {
+          const runMatch = /\[Run\s+([^\]]+)\]/.exec(part);
+          if (runMatch) {
+            const label = runMatch[1] || 'Interactive Canvas';
+            return (
+              <TapToRunCanvas
+                key={`canvas-${idx}`}
+                label={label}
+                stagedPayloads={stagedPayloads}
+                backendUrl={BACKEND_URL}
+              />
+            );
+          }
+          if (!part || !part.trim()) return null;
+          return renderMarkdownBlock(part, `md-${idx}`);
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div className="chat-markdown-content" style={{ wordBreak: 'break-word' }}>
+      {renderMarkdownBlock(content, 'single-md')}
     </div>
   );
 }
@@ -2247,6 +2279,28 @@ const SLASH_COMMANDS = [
     example: '/wsl [distro] <command>'
   },
   {
+    cmd: '/bash',
+    aliases: ['/sh'],
+    title: 'Execute Bash / Shell Command',
+    desc: 'Run Bash scripts and commands via Git Bash or WSL with pyppeteer_env pip in PATH.',
+    category: '💻 Host IDE',
+    zeroArg: false,
+    badge: 'Bash / Git / WSL',
+    template: '/bash ',
+    example: '/bash pip install requests'
+  },
+  {
+    cmd: '/pip',
+    aliases: ['/pip3'],
+    title: 'Execute Pip Package Manager',
+    desc: 'Install, upgrade, or inspect Python packages in pyppeteer_env with root host authority.',
+    category: '💻 Host IDE',
+    zeroArg: false,
+    badge: 'Pip Environment',
+    template: '/pip ',
+    example: '/pip install <package>'
+  },
+  {
     cmd: '/read',
     title: 'Read Host File Content',
     desc: 'Display syntax-highlighted host file content with lines, size, and copy tools.',
@@ -2327,6 +2381,39 @@ const SLASH_COMMANDS = [
     badge: 'Mobile DPI & Trackpad',
     template: '/dpi ',
     example: '/dpi [1080p|1440p|reset|status]'
+  },
+  {
+    cmd: '/cast',
+    aliases: ['/mirror', '/wireless-display', '/screen-mirror'],
+    title: '3-Way Wireless Screen Mirror & Display Cast Hub',
+    desc: 'Cast PC to Wireless Display (Win+K Miracast / Extend / Clone), PC to Phone (Wi-Fi Live Stream), or Phone to PC (Scrcpy 60FPS Wireless ADB).',
+    category: '💻 Host IDE',
+    zeroArg: true,
+    badge: '3-Way Wireless Cast',
+    template: '/cast ',
+    example: '/cast [status|display|clone|extend|phone|scan]'
+  },
+  {
+    cmd: '/directive',
+    aliases: ['/privilege', '/ring0', '/aibs-dir-000'],
+    title: 'Sovereign Execution & Privilege Directive (AIBS-DIR-000)',
+    desc: 'Inspect & enforce 5-Tier Privilege Matrix, Ring 0 VTL 1 HVCI de-clamping, 4096-bit X.509 Code Signing, and Two-Strike Diagnostic Halt telemetry.',
+    category: '💻 Host IDE',
+    zeroArg: true,
+    badge: 'AIBS-DIR-000 Root',
+    template: '/directive ',
+    example: '/directive [status|enforce]'
+  },
+  {
+    cmd: '/recall',
+    aliases: ['/memory', '/thinking'],
+    title: 'Sovereign Memory & Chain-of-Thought Recall',
+    desc: 'Query ingested thoughts, user goals, architectural blueprints, and resolutions from ChromaDB & SQLite.',
+    category: '💻 Host IDE',
+    zeroArg: false,
+    badge: 'Vector Vault',
+    template: '/recall ',
+    example: '/recall <query>'
   },
   {
     cmd: '/deploy',
@@ -2816,6 +2903,170 @@ export default function ChatTab({ isNested = false }) {
     } catch (err) {
       setMemoryToast(`📱 Local UI Scaled to ${profileId}`);
       setTimeout(() => setMemoryToast(''), 3000);
+    }
+  };
+
+  // --- 3-Way Wireless Screen Mirror & Display Cast State & Handlers ---
+  const [showWirelessCastHub, setShowWirelessCastHub] = useState(false);
+  const [wirelessCastStatus, setWirelessCastStatus] = useState(null);
+  const [wirelessCastFeedback, setWirelessCastFeedback] = useState('');
+  const [phoneIpInput, setPhoneIpInput] = useState(() => {
+    try { return localStorage.getItem('aibs_phone_ip') || ''; } catch (e) { return ''; }
+  });
+  const [pairPortInput, setPairPortInput] = useState('');
+  const [pairCodeInput, setPairCodeInput] = useState('');
+  const [nearbyScanResult, setNearbyScanResult] = useState(null);
+  const [isScanningNearby, setIsScanningNearby] = useState(false);
+  const [isLiveScreenCasting, setIsLiveScreenCasting] = useState(false);
+  const screenCastIntervalRef = useRef(null);
+  const screenCastStreamRef = useRef(null);
+
+  const refreshWirelessCastStatus = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/executive/wireless-cast/status`, {
+        headers: {
+          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          'X-Client-ID': 'stehouwer_publishing'
+        }
+      });
+      const data = await res.json();
+      if (data && data.status === 'success') {
+        setWirelessCastStatus(data);
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (showWirelessCastHub) {
+      refreshWirelessCastStatus();
+    }
+  }, [showWirelessCastHub, BACKEND_URL]);
+
+  useEffect(() => {
+    const onToggleCast = () => {
+      setShowWirelessCastHub(prev => !prev);
+    };
+    window.addEventListener('aibs-toggle-wireless-cast', onToggleCast);
+    return () => window.removeEventListener('aibs-toggle-wireless-cast', onToggleCast);
+  }, []);
+
+  const handleWirelessCastAction = async (action, extra = {}) => {
+    if (action === 'scan_nearby') setIsScanningNearby(true);
+    setWirelessCastFeedback(`⏳ Executing ${action}...`);
+    try {
+      if (phoneIpInput) {
+        try { localStorage.setItem('aibs_phone_ip', phoneIpInput.trim()); } catch (e) {}
+      }
+      const res = await fetch(`${BACKEND_URL}/api/executive/wireless-cast/action`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          'X-Client-ID': 'stehouwer_publishing'
+        },
+        body: JSON.stringify({
+          action,
+          mode: extra.mode || 'extend',
+          phone_ip: extra.phone_ip !== undefined ? extra.phone_ip : phoneIpInput.trim(),
+          pair_port: extra.pair_port !== undefined ? extra.pair_port : pairPortInput.trim(),
+          pair_code: extra.pair_code !== undefined ? extra.pair_code : pairCodeInput.trim(),
+          bitrate: extra.bitrate || '8M',
+          max_fps: extra.max_fps || 60,
+          stay_awake: true
+        })
+      });
+      const data = await res.json();
+      if (action === 'scan_nearby' && data.scan) {
+        setNearbyScanResult(data.scan);
+      }
+      if (data.phone_ip && !phoneIpInput) {
+        setPhoneIpInput(data.phone_ip);
+      }
+      const msg = data.message || `Executed ${action}`;
+      setWirelessCastFeedback(`${data.status === 'success' ? '✅' : '⚠️'} ${msg}`);
+      setMemoryToast(`📡 ${msg}`);
+      setTimeout(() => setMemoryToast(''), 4500);
+      await refreshWirelessCastStatus();
+      return data;
+    } catch (err) {
+      setWirelessCastFeedback(`❌ Error: ${err.message}`);
+      return { status: 'error', message: err.message };
+    } finally {
+      if (action === 'scan_nearby') setIsScanningNearby(false);
+    }
+  };
+
+  const handleStartStopLiveScreenCast = async () => {
+    if (isLiveScreenCasting) {
+      if (screenCastIntervalRef.current) {
+        clearInterval(screenCastIntervalRef.current);
+        screenCastIntervalRef.current = null;
+      }
+      if (screenCastStreamRef.current) {
+        screenCastStreamRef.current.getTracks().forEach(t => t.stop());
+        screenCastStreamRef.current = null;
+      }
+      setIsLiveScreenCasting(false);
+      setWirelessCastFeedback('⏹️ Stopped live PC screen stream to Phone/TV.');
+      return;
+    }
+
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        setWirelessCastFeedback('⚠️ Screen capture API requires localhost or HTTPS.');
+        return;
+      }
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 15, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        audio: false
+      });
+      screenCastStreamRef.current = stream;
+      setIsLiveScreenCasting(true);
+
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.muted = true;
+      await video.play();
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      stream.getVideoTracks()[0].onended = () => {
+        if (screenCastIntervalRef.current) clearInterval(screenCastIntervalRef.current);
+        screenCastIntervalRef.current = null;
+        screenCastStreamRef.current = null;
+        setIsLiveScreenCasting(false);
+        setWirelessCastFeedback('⏹️ Screen sharing ended.');
+      };
+
+      screenCastIntervalRef.current = setInterval(async () => {
+        if (!video.videoWidth || !video.videoHeight) return;
+        const targetW = Math.min(1600, video.videoWidth);
+        const targetH = Math.round((video.videoHeight / video.videoWidth) * targetW);
+        canvas.width = targetW;
+        canvas.height = targetH;
+        ctx.drawImage(video, 0, 0, targetW, targetH);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+        try {
+          await fetch(`${BACKEND_URL}/api/executive/wireless-cast/frame`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+              'X-Client-ID': 'stehouwer_publishing'
+            },
+            body: JSON.stringify({ data_url: dataUrl, width: targetW, height: targetH })
+          });
+        } catch (e) {}
+      }, 220);
+
+      const lanIp = wirelessCastStatus?.primary_lan_ip || '192.168.4.26';
+      setWirelessCastFeedback(`🟢 LIVE STREAMING PC Screen! Open http://${lanIp}:8000/api/executive/wireless-cast/viewer on your Phone or Smart TV!`);
+    } catch (err) {
+      setWirelessCastFeedback(`⚠️ Screen capture cancelled or blocked: ${err.message}`);
     }
   };
 
@@ -4766,6 +5017,285 @@ export default function ChatTab({ isNested = false }) {
         return;
       }
 
+      if (command === '/bash' || command === '/sh') {
+        if (!rest) {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'assistant', content: '⚠️ **Usage:** `/bash <bash_command>`\n*Examples:* `/bash pip install requests` or `/bash uname -a`' }
+          ]);
+          setIsLoading(false);
+          return;
+        }
+
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              command_type: 'bash',
+              target: rest
+            })
+          });
+          const data = await res.json();
+          const out = data.stdout || data.message || 'Bash command executed without stdout.';
+          const errText = data.stderr ? `\n\n**Stderr:**\n\`\`\`\n${data.stderr}\n\`\`\`` : '';
+          const statusIcon = data.status === 'success' ? '🐚' : '⚠️';
+          const reply = `${statusIcon} **Bash Output** (Exit Code: \`${data.returncode ?? 0}\`, \`${data.execution_time_ms || 0} ms\`):\n\n\`\`\`\n${out}\n\`\`\`${errText}`;
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Executive Bash Engine',
+              execution_time_ms: data.execution_time_ms
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Bash command error:** ${err.message}`,
+              model: 'Executive Bash Engine'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (command === '/pip' || command === '/pip3') {
+        const pipArgs = rest.trim() || 'list';
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              command_type: 'pip',
+              target: pipArgs
+            })
+          });
+          const data = await res.json();
+          const out = data.stdout || data.message || 'Pip executed without stdout.';
+          const errText = data.stderr ? `\n\n**Stderr:**\n\`\`\`\n${data.stderr}\n\`\`\`` : '';
+          const statusIcon = data.status === 'success' ? '📦' : '⚠️';
+          const reply = `${statusIcon} **Pip Package Manager Output** (Exit Code: \`${data.returncode ?? 0}\`, \`${data.execution_time_ms || 0} ms\`):\n\n\`\`\`\n${out}\n\`\`\`${errText}`;
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Executive Pip Engine',
+              execution_time_ms: data.execution_time_ms
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Pip command error:** ${err.message}`,
+              model: 'Executive Pip Engine'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (command === '/build') {
+        const buildTarget = rest.trim() || 'C:\\AI-BS';
+        const parts = buildTarget.split(/\s+/);
+        const projDir = parts[0];
+        const customCmd = parts.length > 1 ? parts.slice(1).join(' ') : null;
+
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              command_type: 'build_project',
+              target: projDir,
+              payload: {
+                build_command: customCmd,
+                timeout_seconds: 300
+              }
+            })
+          });
+          const data = await res.json();
+          const bRes = data.result || data;
+          const statusIcon = bRes.status === 'success' ? '✅' : '❌';
+          const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
+          const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
+          const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
+          const reply = `${statusIcon} **Project Build Output: \`${bRes.project_dir || projDir}\`**\n- **Command:** \`${bRes.command || customCmd || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Executive Build Engine',
+              execution_time_ms: data.execution_time_ms
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Project build error:** ${err.message}`,
+              model: 'Executive Build Engine'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (command === '/program' || command === '/app') {
+        const parts = rest.trim().split(/\s+/);
+        const sub = (parts[0] || 'list').toLowerCase();
+        const progName = parts[1] || '';
+        const extraArg = parts.slice(2).join(' ') || null;
+
+        if (sub === 'list') {
+          try {
+            const res = await fetch(`${BACKEND_URL}/api/tools/execute`, {
+              method: 'POST',
+              headers: reqHeaders,
+              body: JSON.stringify({
+                tool_name: 'list_programs',
+                arguments: {}
+              })
+            });
+            const data = await res.json();
+            const progs = Array.isArray(data) ? data : (data.programs || []);
+            let reply = `### 📦 Built Programs in AI-BS Vault (${progs.length} projects)\n\n`;
+            if (progs.length === 0) {
+              reply += '*No programs found in `saved_data/built_programs`. Build one with `/program build <name>`.*';
+            } else {
+              progs.forEach(p => {
+                const bStr = p.build ? ` [Build: ${p.build.status}]` : '';
+                reply += `- **${p.display_name || p.project_name}** (\`${p.language}\`${bStr}) — *${p.description || 'No description'}*\n  *Path:* \`${p.project_dir}\`\n`;
+              });
+            }
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: reply, model: 'Autonomous Program Builder' }
+            ]);
+          } catch (err) {
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: `❌ **Failed to list programs:** ${err.message}`, model: 'Autonomous Program Builder' }
+            ]);
+          } finally {
+            setIsLoading(false);
+          }
+          return;
+        } else if (sub === 'build' || sub === 'compile') {
+          if (!progName) {
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: '⚠️ **Usage:** `/program build <project_name_or_dir> [build_cmd]`\n*Example:* `/program build my_app` or `/program build frontend npm run build`' }
+            ]);
+            setIsLoading(false);
+            return;
+          }
+          try {
+            const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+              method: 'POST',
+              headers: reqHeaders,
+              body: JSON.stringify({
+                command_type: 'build_project',
+                target: progName,
+                payload: {
+                  build_command: extraArg,
+                  timeout_seconds: 300
+                }
+              })
+            });
+            const data = await res.json();
+            const bRes = data.result || data;
+            const statusIcon = bRes.status === 'success' ? '✅' : '❌';
+            const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
+            const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
+            const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
+            const reply = `${statusIcon} **Program Build: \`${bRes.project_dir || progName}\`**\n- **Command:** \`${bRes.command || extraArg || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: reply,
+                model: 'Autonomous Program Builder',
+                execution_time_ms: data.execution_time_ms
+              }
+            ]);
+          } catch (err) {
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: `❌ **Program build error:** ${err.message}`, model: 'Autonomous Program Builder' }
+            ]);
+          } finally {
+            setIsLoading(false);
+          }
+          return;
+        } else if (sub === 'run' || sub === 'exec') {
+          if (!progName) {
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: '⚠️ **Usage:** `/program run <project_name> [entrypoint]`' }
+            ]);
+            setIsLoading(false);
+            return;
+          }
+          try {
+            const res = await fetch(`${BACKEND_URL}/api/tools/execute`, {
+              method: 'POST',
+              headers: reqHeaders,
+              body: JSON.stringify({
+                tool_name: 'run_program',
+                arguments: {
+                  project_name: progName,
+                  entrypoint: extraArg || undefined
+                }
+              })
+            });
+            const data = await res.json();
+            const statusIcon = data.exit_code === 0 || data.status === 'success' ? '✅' : '❌';
+            const out = data.stdout ? `\`\`\`\n${data.stdout}\n\`\`\`` : '';
+            const errText = data.stderr ? `\n\n**Stderr:**\n\`\`\`\n${data.stderr}\n\`\`\`` : '';
+            const reply = `${statusIcon} **Program Execution: \`${progName}\`** (Exit Code: \`${data.exit_code ?? 0}\`):\n\n${out}${errText}`;
+
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: reply, model: 'Autonomous Program Builder' }
+            ]);
+          } catch (err) {
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: `❌ **Execution error:** ${err.message}`, model: 'Autonomous Program Builder' }
+            ]);
+          } finally {
+            setIsLoading(false);
+          }
+          return;
+        } else {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'assistant', content: '⚠️ **Usage:** `/program [list | build <name> [cmd] | run <name>]`' }
+          ]);
+          setIsLoading(false);
+          return;
+        }
+      }
+
       if (command === '/blast') {
         const target = rest.trim();
         if (!target) {
@@ -4990,6 +5520,218 @@ export default function ChatTab({ isNested = false }) {
           setChatMessages(prev => [
             ...prev,
             { role: 'assistant', content: `❌ **Mobile DPI Engine Error:** ${err.message}`, model: 'Mobile Workstation Engine' }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (['/cast', '/mirror', '/wireless-display', '/screen-mirror'].includes(command)) {
+        const sub = (parts[1] || 'status').toLowerCase().trim();
+        const arg2 = (parts[2] || '').trim();
+        setShowWirelessCastHub(true);
+
+        try {
+          if (['display', 'tv', 'miracast', 'win-k', 'wink'].includes(sub)) {
+            const data = await handleWirelessCastAction('win_k');
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `📡 **PC ➔ Wireless Display Cast Triggered (Win + K):**\n\n${data.message || 'Opened Windows 11 Wireless Display flyout on host desktop.'}`,
+                model: '3-Way Wireless Cast Engine'
+              }
+            ]);
+          } else if (['clone', 'duplicate', 'extend', 'external', 'second', 'internal', 'pc'].includes(sub)) {
+            const data = await handleWirelessCastAction('display_mode', { mode: sub });
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `🖥️ **Windows Projection Mode Switched:**\n\n${data.message || `Applied ${sub} projection mode.`}`,
+                model: '3-Way Wireless Cast Engine'
+              }
+            ]);
+          } else if (['phone', 'scrcpy', 'phone-to-pc', 'android'].includes(sub)) {
+            const data = await handleWirelessCastAction('phone_to_pc_scrcpy', { phone_ip: arg2 || phoneIpInput });
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `📱 **Phone ➔ PC Wireless Mirror (Scrcpy v4.1):**\n\n${data.message}`,
+                model: '3-Way Wireless Cast Engine'
+              }
+            ]);
+          } else if (['adb', 'tcpip', 'wireless-adb'].includes(sub)) {
+            const data = await handleWirelessCastAction('adb_tcpip_auto', { phone_ip: arg2 || phoneIpInput });
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `🔌 **Wireless ADB Setup (:5555):**\n\n${data.message}`,
+                model: '3-Way Wireless Cast Engine'
+              }
+            ]);
+          } else if (['scan', 'nearby', 'devices'].includes(sub)) {
+            const data = await handleWirelessCastAction('scan_nearby');
+            const pnp = (data.scan?.pnp_displays_and_endpoints || []).map(d => `- **[${d.class}]** \`${d.name}\``).join('\n') || '- *(None)*';
+            const peers = (data.scan?.wifi_lan_peers || []).map(p => `- \`${p.ip}\` (MAC: \`${p.mac}\`)`).join('\n') || '- *(None)*';
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `### 🔍 Nearby Wireless Displays & Wi-Fi LAN Devices\n\n#### 📺 Windows Display & Wireless Endpoints:\n${pnp}\n\n#### 📶 Active Wi-Fi Subnet Peers (\`192.168.x.x\`):\n${peers}`,
+                model: '3-Way Wireless Cast Engine'
+              }
+            ]);
+          } else {
+            const st = await refreshWirelessCastStatus();
+            const lanIp = st?.primary_lan_ip || '192.168.4.26';
+            const ideUrl = st?.urls?.pc_to_phone_workspace_lan || `http://${lanIp}:5173/?tab=ide`;
+            const viewerUrl = st?.urls?.pc_to_phone_live_screen_viewer || `http://${lanIp}:8000/api/executive/wireless-cast/viewer`;
+            const adbDevs = (st?.phone_to_pc?.adb_devices || []).map(d => `\`${d.serial}\` (${d.model} - ${d.state})`).join(', ') || 'None connected yet';
+
+            const reply =
+              `### 📡 3-Way Wireless Screen Mirror & Display Cast Hub\n\n` +
+              `#### 1️⃣ 🖥️ PC ➔ Nearby Wireless Display (Smart TV / Wireless Monitor / Miracast)\n` +
+              `- **1-Click Wireless Display Flyout:** Run \`/cast display\` (or click **📡 Connect Wireless Display (Win + K)** in the Cast Hub below)\n` +
+              `- **Projection Modes:** \`/cast clone\` (Duplicate Screen) | \`/cast extend\` (Extend Desktop) | \`/cast second\` (Second Screen Only)\n\n` +
+              `#### 2️⃣ 📲 PC ➔ Phone / Tablet (Cast Workspace or Live PC Screen)\n` +
+              `- **Interactive Wi-Fi Workspace URL:** [\`${ideUrl}\`](${ideUrl}) *(Open on your phone/tablet browser over Wi-Fi)*\n` +
+              `- **Zero-Install Live PC Screen Viewer:** [\`${viewerUrl}\`](${viewerUrl}) *(Click **🔴 Start Live PC Screen Cast** in the Cast Hub to stream your full Windows desktop to any phone/TV)*\n\n` +
+              `#### 3️⃣ 📱 Phone ➔ PC (Mirror Phone Screen onto PC Desktop)\n` +
+              `- **Engine:** \`Scrcpy v4.1\` (${st?.phone_to_pc?.scrcpy_installed ? '🟢 Installed & Ready' : '⚪ Not Found'}) + \`Android SDK ADB\`\n` +
+              `- **Connected ADB Devices:** ${adbDevs}\n` +
+              `- **Quick Launch:** Run \`/cast adb\` (with USB plugged in once to enable Wi-Fi port 5555) then \`/cast phone [phone_ip]\` to pop up a 60FPS interactive phone window on your PC!`;
+
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: reply, model: '3-Way Wireless Cast Engine' }
+            ]);
+          }
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'assistant', content: `❌ **Wireless Cast Error:** ${err.message}`, model: '3-Way Wireless Cast Engine' }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (['/directive', '/privilege', '/ring0', '/aibs-dir-000'].includes(command)) {
+        const sub = (parts[1] || 'status').toLowerCase().trim();
+        try {
+          if (sub === 'enforce' || sub === 'apply') {
+            const res = await fetch(`${BACKEND_URL}/api/executive/privilege-directive/enforce`, {
+              method: 'POST',
+              headers: reqHeaders
+            });
+            const data = await res.json();
+            const ls = data.live_state || {};
+            const reply =
+              `### 🛡️ AIBS-DIR-000-ROOT-AUTHORITY Enforced on Host\n\n` +
+              `- **Bootstrap Script:** \`C:\\AI-BS\\scripts\\Enable-AIBSSovereignMode.ps1\` (Exit Code: \`${data.returncode}\`, \`${data.execution_time_ms} ms\`)\n` +
+              `- **Tier 1 Elevated Admin:** \`${ls.tier1_elevated_admin_active ? '🟢 ACTIVE (Ring 3 High Integrity)' : '⚪ Standard'}\`\n` +
+              `- **Ring 0 MSR & VTL 1 HVCI De-Clamping:** \`${ls.ring0_msr_telemetry_unblocked ? '🟢 UNBLOCKED (HVCI Enabled=0)' : '⚠️ Locked'}\`\n` +
+              `- **4096-Bit X.509 Code-Signing Cert:** \`${ls.sovereign_x509_thumbprint || 'Enrolled'}\`\n` +
+              `- **ReAct Sandbox Directory:** \`${ls.react_sandbox_dir}\`\n\n` +
+              `\`\`\`\n${data.stdout || 'Host environment configured.'}\n\`\`\``;
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: reply, model: 'Sovereign Privilege Engine (AIBS-DIR-000)' }
+            ]);
+          } else {
+            const res = await fetch(`${BACKEND_URL}/api/executive/privilege-directive/status`, {
+              method: 'GET',
+              headers: reqHeaders
+            });
+            const data = await res.json();
+            const ls = data.live_state || {};
+            const ts = data.two_strike_governance || {};
+            const arch = data.archival_payload || {};
+            const tiers = (arch.privilege_tiers_mapped || []).map(t => `- **${t}**`).join('\n');
+            const reply =
+              `### 🛡️ AI-BS Sovereign Execution & Privilege Directive (\`AIBS-DIR-000-ROOT-AUTHORITY\`)\n\n` +
+              `- **Spec File:** [\`${data.directive_file}\`](file:///C:/AI-BS/directives/AIBS_SOVEREIGN_PRIVILEGE_DIRECTIVE.md)\n` +
+              `- **Hardware Profile:** \`${arch.hardware_profile?.cpu}\` | \`${arch.hardware_profile?.gpu}\` | \`${arch.hardware_profile?.motherboard}\`\n` +
+              `- **Tier 1 Ring 3 Admin Elevation:** ${ls.tier1_elevated_admin_active ? '🟢 **ACTIVE (High Integrity Admin)**' : '⚪ Standard'}\n` +
+              `- **Tier 4 Ring 0 / VTL 1 HVCI De-Clamping:** ${ls.ring0_msr_telemetry_unblocked ? '🟢 **UNBLOCKED (HVCI Enabled = 0, WSL2 Coexistence Active)**' : '⚠️ HVCI Active'}\n` +
+              `- **Sovereign 4096-Bit RSA SHA-256 Certificate:** ${ls.sovereign_x509_cert_enrolled ? `🟢 **ENROLLED** (\`${ls.sovereign_x509_thumbprint}\`)` : '⚪ Not Enrolled'}\n` +
+              `- **ReAct Isolated Sandbox:** \`${ls.react_sandbox_dir}\` *(Auto-resolves \`G:\\Stehouwer_Server\\Projects\\.temp_executor\`)*\n` +
+              `- **Two-Strike Fault Heuristics (\`ai_bs_error_heuristics\`):** \`${ts.total_logged_fault_vectors || 0} logged fault vectors\`\n\n` +
+              `#### 🏛️ 5-Tier Privilege Stratification Matrix:\n${tiers}\n\n` +
+              `💡 *Run \`/directive enforce\` anytime to re-verify Defender exclusions, HVCI registry state, and Authenticode binary signatures.*`;
+            setChatMessages(prev => [
+              ...prev,
+              { role: 'assistant', content: reply, model: 'Sovereign Privilege Engine (AIBS-DIR-000)' }
+            ]);
+          }
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            { role: 'assistant', content: `❌ **Directive Engine Error:** ${err.message}`, model: 'Sovereign Privilege Engine' }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (['/recall', '/memory', '/thinking'].includes(command)) {
+        const queryText = (rawTarget || '').trim();
+        if (!queryText) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: 'ℹ️ **Usage:** `/recall <query>`\n*Example:* `/recall window respawn bug closeEvent` or `/recall 3-way wireless screen mirror`',
+              model: 'Sovereign Memory Recall'
+            }
+          ]);
+          setIsLoading(false);
+          return;
+        }
+
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/memory/recall?query=${encodeURIComponent(queryText)}&limit=4`);
+          const data = await res.json();
+          if (data.status === 'success' && data.results && data.results.length > 0) {
+            const list = data.results.map((r, i) => {
+              const snippet = (r.document || r.thinking || r.content || r.prompt || '').substring(0, 240).replace(/\n/g, ' ');
+              const cat = r.category || r.type || r.source || 'memory';
+              const dist = r.distance !== undefined && r.distance > 0 ? `*(Sim: ${(1 - r.distance).toFixed(3)})*` : '';
+              return `**[${i + 1}] ${r.title || r.id}** \`${cat}\` ${dist}\n> ${snippet}...`;
+            }).join('\n\n');
+
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `### 🧠 Sovereign Memory Recall for: "${queryText}"\n*Source Engine: \`${data.source}\`*\n\n${list}`,
+                model: 'Sovereign Memory Recall'
+              }
+            ]);
+          } else {
+            setChatMessages(prev => [
+              ...prev,
+              {
+                role: 'assistant',
+                content: `🔍 **No memory nodes matched:** "${queryText}"\nTry broadening your query keywords.`,
+                model: 'Sovereign Memory Recall'
+              }
+            ]);
+          }
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Memory Recall Error:** ${err.message}`,
+              model: 'Sovereign Memory Recall'
+            }
           ]);
         } finally {
           setIsLoading(false);
@@ -5301,6 +6043,92 @@ export default function ChatTab({ isNested = false }) {
     {
       const nlText = rawText.trim();
       const nlLower = nlText.toLowerCase();
+
+      // Direct Developer CLI Execution (Zero Slash Commands Required)
+      const cliTokens = nlText.split(/\s+/);
+      const firstCliToken = cliTokens[0]?.toLowerCase();
+
+      if (['pip', 'pip3'].includes(firstCliToken)) {
+        const pipArgs = nlText.substring(firstCliToken.length).trim() || 'list';
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              command_type: 'pip',
+              target: pipArgs
+            })
+          });
+          const data = await res.json();
+          const out = data.stdout || data.message || 'Pip executed without stdout.';
+          const errText = data.stderr ? `\n\n**Stderr:**\n\`\`\`\n${data.stderr}\n\`\`\`` : '';
+          const statusIcon = data.status === 'success' ? '📦' : '⚠️';
+          const reply = `${statusIcon} **Pip Package Manager Output** (Exit Code: \`${data.returncode ?? 0}\`, \`${data.execution_time_ms || 0} ms\`):\n\n\`\`\`\n${out}\n\`\`\`${errText}`;
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Executive Pip Engine',
+              execution_time_ms: data.execution_time_ms
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Pip command error:** ${err.message}`,
+              model: 'Executive Pip Engine'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      if (['bash', 'sh'].includes(firstCliToken)) {
+        const bashCmd = nlText.substring(firstCliToken.length).trim();
+        try {
+          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
+            method: 'POST',
+            headers: reqHeaders,
+            body: JSON.stringify({
+              command_type: 'bash',
+              target: bashCmd
+            })
+          });
+          const data = await res.json();
+          const out = data.stdout || data.message || 'Bash command executed without stdout.';
+          const errText = data.stderr ? `\n\n**Stderr:**\n\`\`\`\n${data.stderr}\n\`\`\`` : '';
+          const statusIcon = data.status === 'success' ? '🐚' : '⚠️';
+          const reply = `${statusIcon} **Bash Output** (Exit Code: \`${data.returncode ?? 0}\`, \`${data.execution_time_ms || 0} ms\`):\n\n\`\`\`\n${out}\n\`\`\`${errText}`;
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: reply,
+              model: 'Executive Bash Engine',
+              execution_time_ms: data.execution_time_ms
+            }
+          ]);
+        } catch (err) {
+          setChatMessages(prev => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: `❌ **Bash command error:** ${err.message}`,
+              model: 'Executive Bash Engine'
+            }
+          ]);
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
 
       // 1. Direct Large Pasted Context Buffer (>16,000 chars / up to 1,000,000 tokens) -> Auto-Stage to 1M+ RAG
       if (nlText.length > 16000) {
@@ -6111,6 +6939,26 @@ export default function ChatTab({ isNested = false }) {
             >
               <span>📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile Dock'}</span>
             </button>
+            <button
+              onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+              title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Wireless Display, PC➔Phone, Phone➔PC)"
+              style={{
+                background: showWirelessCastHub ? 'linear-gradient(135deg, #0284c7, #2563eb)' : 'rgba(56, 189, 248, 0.14)',
+                color: showWirelessCastHub ? '#ffffff' : '#38bdf8',
+                border: `1px solid ${showWirelessCastHub ? '#60a5fa' : 'rgba(56, 189, 248, 0.45)'}`,
+                padding: '4px 10px',
+                borderRadius: '8px',
+                fontSize: '0.73rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                boxShadow: showWirelessCastHub ? '0 0 12px rgba(56, 189, 248, 0.4)' : 'none'
+              }}
+            >
+              <span>📡 {showWirelessCastHub ? 'Wireless Cast: OPEN' : 'Wireless Cast & Mirror'}</span>
+            </button>
           </div>
         </div>
 
@@ -6622,6 +7470,368 @@ export default function ChatTab({ isNested = false }) {
         <ChatToolControlBar onToolToggle={setActiveTools} />
         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
 
+        {/* 3-Way Wireless Screen Mirror & Display Cast Hub */}
+        {showWirelessCastHub && (
+          <div style={{
+            marginBottom: '10px',
+            padding: '12px 14px',
+            background: 'linear-gradient(135deg, rgba(8, 20, 38, 0.98), rgba(15, 23, 42, 0.96))',
+            border: '1px solid rgba(56, 189, 248, 0.55)',
+            borderRadius: '10px',
+            boxShadow: '0 10px 28px rgba(0, 0, 0, 0.6)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            maxHeight: '340px',
+            overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '0.4px' }}>
+                  📡 3-WAY WIRELESS SCREEN MIRROR & DISPLAY CAST HUB
+                </span>
+                <span style={{ fontSize: '0.68rem', background: 'rgba(16, 185, 129, 0.16)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#34d399', padding: '2px 7px', borderRadius: '6px', fontWeight: 700 }}>
+                  📶 Wi-Fi Host IP: {wirelessCastStatus?.primary_lan_ip || '192.168.4.26'}
+                </span>
+                <span style={{ fontSize: '0.68rem', background: 'rgba(168, 85, 247, 0.16)', border: '1px solid rgba(168, 85, 247, 0.4)', color: '#c084fc', padding: '2px 7px', borderRadius: '6px', fontWeight: 700 }}>
+                  📱 Scrcpy v4.1: {wirelessCastStatus?.phone_to_pc?.scrcpy_installed !== false ? '🟢 Ready (60FPS)' : '⚪ Standby'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <button
+                  onClick={() => handleWirelessCastAction('scan_nearby')}
+                  disabled={isScanningNearby}
+                  style={{
+                    background: 'rgba(56, 189, 248, 0.15)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.4)',
+                    borderRadius: '6px', padding: '3px 9px', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer'
+                  }}
+                >
+                  {isScanningNearby ? '⏳ Scanning...' : '🔍 Scan Nearby Devices'}
+                </button>
+                <button
+                  onClick={() => setShowWirelessCastHub(false)}
+                  style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.9rem' }}
+                  title="Close Wireless Cast Hub"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {wirelessCastFeedback && (
+              <div style={{
+                padding: '6px 10px',
+                borderRadius: '6px',
+                background: 'rgba(30, 58, 138, 0.45)',
+                border: '1px solid rgba(96, 165, 250, 0.4)',
+                color: '#bfdbfe',
+                fontSize: '0.73rem',
+                fontWeight: 600,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span>{wirelessCastFeedback}</span>
+                <button onClick={() => setWirelessCastFeedback('')} style={{ background: 'none', border: 'none', color: '#93c5fd', cursor: 'pointer' }}>✕</button>
+              </div>
+            )}
+
+            {/* 3-Column Grid for the 3 Cast Directions */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(265px, 1fr))',
+              gap: '10px'
+            }}>
+              {/* 1. PC -> Nearby Wireless Display (Miracast / TV / Monitor) */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '8px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '7px'
+              }}>
+                <div style={{ fontSize: '0.76rem', fontWeight: 800, color: '#38bdf8' }}>
+                  1️⃣ 🖥️ PC ➔ Wireless Display (TV / Monitor)
+                </div>
+                <div style={{ fontSize: '0.69rem', color: '#94a3b8', lineHeight: 1.35 }}>
+                  Cast or extend your Windows 11 desktop to any nearby Miracast Smart TV, Roku, Samsung/LG TV, or wireless monitor.
+                </div>
+                <button
+                  onClick={() => handleWirelessCastAction('win_k')}
+                  style={{
+                    background: 'linear-gradient(135deg, #0284c7, #2563eb)',
+                    color: '#fff',
+                    border: '1px solid #60a5fa',
+                    borderRadius: '6px',
+                    padding: '6px 10px',
+                    fontSize: '0.73rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  📡 Connect Wireless Display (Win + K)
+                </button>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
+                  <button
+                    onClick={() => handleWirelessCastAction('display_mode', { mode: 'clone' })}
+                    style={{
+                      background: 'rgba(255,255,255,0.06)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '5px', padding: '4px 6px', fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer'
+                    }}
+                  >
+                    🖥️ Duplicate (Mirror)
+                  </button>
+                  <button
+                    onClick={() => handleWirelessCastAction('display_mode', { mode: 'extend' })}
+                    style={{
+                      background: 'rgba(255,255,255,0.06)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '5px', padding: '4px 6px', fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer'
+                    }}
+                  >
+                    ↔️ Extend Desktop
+                  </button>
+                  <button
+                    onClick={() => handleWirelessCastAction('display_mode', { mode: 'external' })}
+                    style={{
+                      background: 'rgba(255,255,255,0.06)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '5px', padding: '4px 6px', fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer'
+                    }}
+                  >
+                    📺 2nd Screen Only
+                  </button>
+                  <button
+                    onClick={() => handleWirelessCastAction('display_mode', { mode: 'internal' })}
+                    style={{
+                      background: 'rgba(255,255,255,0.06)', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '5px', padding: '4px 6px', fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer'
+                    }}
+                  >
+                    💻 PC Screen Only
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. PC -> Phone / Tablet (Cast Workspace or Live Desktop) */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                border: '1px solid rgba(16, 185, 129, 0.35)',
+                borderRadius: '8px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '7px'
+              }}>
+                <div style={{ fontSize: '0.76rem', fontWeight: 800, color: '#34d399' }}>
+                  2️⃣ 📲 PC ➔ Phone / Tablet (Wi-Fi Cast)
+                </div>
+                <div style={{ fontSize: '0.69rem', color: '#94a3b8', lineHeight: 1.35 }}>
+                  Open your live IDE workspace or full PC screen stream on any Phone/Tablet on the same Wi-Fi network:
+                </div>
+                <div style={{
+                  background: '#050811',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '5px',
+                  padding: '5px 8px',
+                  fontFamily: 'monospace',
+                  fontSize: '0.69rem',
+                  color: '#6ee7b7',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {wirelessCastStatus?.urls?.pc_to_phone_workspace_lan || 'http://192.168.4.26:5173/?tab=ide'}
+                  </span>
+                  <button
+                    onClick={() => {
+                      const u = wirelessCastStatus?.urls?.pc_to_phone_workspace_lan || 'http://192.168.4.26:5173/?tab=ide';
+                      navigator.clipboard.writeText(u);
+                      setWirelessCastFeedback(`📋 Copied Phone Wi-Fi IDE URL: ${u}`);
+                    }}
+                    style={{
+                      background: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid rgba(16,185,129,0.4)',
+                      borderRadius: '4px', padding: '2px 6px', fontSize: '0.65rem', cursor: 'pointer', flexShrink: 0
+                    }}
+                  >
+                    📋 Copy
+                  </button>
+                </div>
+                <button
+                  onClick={handleStartStopLiveScreenCast}
+                  style={{
+                    background: isLiveScreenCasting ? 'linear-gradient(135deg, #dc2626, #991b1b)' : 'linear-gradient(135deg, #059669, #10b981)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '6px 10px',
+                    fontSize: '0.73rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {isLiveScreenCasting ? '⏹️ Stop Live PC Screen Cast' : '🔴 Start Live PC Screen Cast to Phone/TV'}
+                </button>
+                <div style={{ fontSize: '0.66rem', color: '#94a3b8' }}>
+                  Live Screen Receiver URL: <a href={wirelessCastStatus?.urls?.pc_to_phone_live_screen_viewer || 'http://192.168.4.26:8000/api/executive/wireless-cast/viewer'} target="_blank" rel="noreferrer" style={{ color: '#38bdf8' }}>
+                    {wirelessCastStatus?.urls?.pc_to_phone_live_screen_viewer || 'http://192.168.4.26:8000/api/executive/wireless-cast/viewer'}
+                  </a>
+                </div>
+              </div>
+
+              {/* 3. Phone -> PC (Mirror Phone Screen onto PC Desktop) */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                borderRadius: '8px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
+              }}>
+                <div style={{ fontSize: '0.76rem', fontWeight: 800, color: '#fbbf24' }}>
+                  3️⃣ 📱 Phone ➔ PC (Mirror Phone on PC)
+                </div>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <input
+                    type="text"
+                    value={phoneIpInput}
+                    onChange={(e) => setPhoneIpInput(e.target.value)}
+                    placeholder="Phone Wi-Fi IP (e.g. 192.168.4.x:5555)"
+                    style={{
+                      flex: 1,
+                      background: '#050811',
+                      border: '1px solid rgba(245, 158, 11, 0.35)',
+                      borderRadius: '5px',
+                      padding: '4px 7px',
+                      color: '#f8fafc',
+                      fontSize: '0.7rem'
+                    }}
+                  />
+                  <button
+                    onClick={() => handleWirelessCastAction('adb_tcpip_auto')}
+                    title="Plug phone via USB once, then click to switch to Wireless ADB (:5555)"
+                    style={{
+                      background: 'rgba(245, 158, 11, 0.18)', color: '#fde68a', border: '1px solid rgba(245, 158, 11, 0.45)',
+                      borderRadius: '5px', padding: '4px 7px', fontSize: '0.67rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap'
+                    }}
+                  >
+                    🔌 USB➔Wi-Fi
+                  </button>
+                </div>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <input
+                    type="text"
+                    value={pairPortInput}
+                    onChange={(e) => setPairPortInput(e.target.value)}
+                    placeholder="Pair Port (opt)"
+                    style={{
+                      width: '48%',
+                      background: '#050811',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      borderRadius: '5px',
+                      padding: '3px 6px',
+                      color: '#cbd5e1',
+                      fontSize: '0.67rem'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    value={pairCodeInput}
+                    onChange={(e) => setPairCodeInput(e.target.value)}
+                    placeholder="6-Digit Pair Code (opt)"
+                    style={{
+                      width: '52%',
+                      background: '#050811',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      borderRadius: '5px',
+                      padding: '3px 6px',
+                      color: '#cbd5e1',
+                      fontSize: '0.67rem'
+                    }}
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <button
+                    onClick={() => handleWirelessCastAction('phone_to_pc_scrcpy')}
+                    style={{
+                      flex: 1,
+                      background: 'linear-gradient(135deg, #d97706, #b45309)',
+                      color: '#fff',
+                      border: '1px solid #fbbf24',
+                      borderRadius: '6px',
+                      padding: '6px 8px',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📱 Mirror Phone to PC (Scrcpy 60FPS)
+                  </button>
+                  <button
+                    onClick={() => handleWirelessCastAction('project_to_pc_settings')}
+                    title="Open Windows 'Projecting to this PC' Miracast Receiver settings"
+                    style={{
+                      background: 'rgba(255,255,255,0.06)',
+                      color: '#cbd5e1',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '6px',
+                      padding: '6px 8px',
+                      fontSize: '0.68rem',
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🪟 Miracast Rx
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {nearbyScanResult && (
+              <div style={{
+                background: 'rgba(0,0,0,0.45)',
+                border: '1px solid rgba(56, 189, 248, 0.25)',
+                borderRadius: '6px',
+                padding: '7px 10px',
+                fontSize: '0.69rem',
+                color: '#cbd5e1',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px'
+              }}>
+                <div>
+                  <strong style={{ color: '#38bdf8' }}>📺 Detected Display/Audio Endpoints:</strong>{' '}
+                  {(nearbyScanResult.pnp_displays_and_endpoints || []).slice(0, 6).map(d => d.name).join(' • ') || 'None'}
+                </div>
+                <div>
+                  <strong style={{ color: '#34d399' }}>📶 Nearby Wi-Fi Subnet Peers (Click to target Phone IP):</strong>{' '}
+                  {(nearbyScanResult.wifi_lan_peers || []).map(p => (
+                    <button
+                      key={p.ip}
+                      onClick={() => setPhoneIpInput(`${p.ip}:5555`)}
+                      style={{
+                        background: 'rgba(16, 185, 129, 0.15)',
+                        color: '#6ee7b7',
+                        border: '1px solid rgba(16, 185, 129, 0.35)',
+                        borderRadius: '4px',
+                        padding: '1px 6px',
+                        marginLeft: '4px',
+                        fontSize: '0.66rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {p.ip}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* BS-Chat Mobile Synergy, DPI Scaling & Bluetooth Trackpad Dock */}
         {mobileSynergyMode && (
           <div style={{
@@ -6763,6 +7973,17 @@ export default function ChatTab({ isNested = false }) {
                 title="Inspect Display Resolution, DPI Scaling, Parsec/Tailscale & Bluetooth HID Status"
               >
                 📱 /dpi status
+              </button>
+
+              <button
+                onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+                style={{
+                  background: 'rgba(56, 189, 248, 0.22)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.5)',
+                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
+                }}
+                title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Display, PC➔Phone, Phone➔PC)"
+              >
+                📡 /cast Wireless Mirror
               </button>
             </div>
           </div>

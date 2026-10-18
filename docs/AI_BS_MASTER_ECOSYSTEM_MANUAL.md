@@ -1,8 +1,59 @@
 # The Stehouwer Master Ecosystem Manual
-**Current Ecosystem Version:** 5.315.0
-**Last Major Update:** October 14, 2026
-**Last Updated:** 2026-10-14
+**Current Ecosystem Version:** 5.321.0
+**Last Major Update:** October 15, 2026
+**Last Updated:** 2026-10-15
 **Primary Architect & Operator:** Brett Stehouwer
+
+## 5.321.0 - 🎬 Universal Hollywood Screenwriting Studio 1:1 Ecosystem Parity, View Stack Modes, Native Dropdown Menus & Full Ecosystem Audit (2026-10-15)
+### Screenwriting Studio 1:1 Parity, Multi-Mode Center Workspace Stack, Dynamic Beat Board, Paginated Courier Layout, Rich Native Dropdown Menus & Full Ecosystem Comprehensive Audit
+**AI Rationale & Implementation:**
+- **Universal Screenwriting Studio 1:1 Parity (`native_studio/screenwriting_view.py`):**
+  - Replicated complete functionality between web `ai-bs-dashboard.web.app` (`frontend/src/components/ScreenwritingTab.jsx`) and native Windows Direct2D desktop interface.
+  - **Multi-Mode Center Workspace Stack (`QStackedWidget`)**:
+    - **Index 0 (`Editor`)**: Interactive AST Courier screenplay editor with standard Hollywood margins.
+    - **Index 1 (`Page View`)**: Paginated 8.5" x 11" sheets formatted with 54-line industry Courier standards and active page highlight.
+    - **Index 2 (`Split`)**: Side-by-side split container featuring editor on left and paginated finished page preview on right.
+    - **Index 3 (`Beat Board`)**: Interactive visual Story Beat Board canvas displaying `#Index`, `p.Page`, dynamic emojis (`🌙`, `🌅`, `🎬`), scene headings, and direct `🎥 Animate Scene` action buttons.
+  - **Rich Native Dropdown Menus (`QMenu`)**:
+    - `📥 Import`: Options for Fountain (`.fountain`), Final Draft (`.fdx`), PDF (`.pdf`), and Plain Text (`.txt`).
+    - `📄 Export FDX`: Export Final Draft (`.fdx`) or Fountain (`.fountain`).
+    - `📑 Export PDF`: Export finished screenplay PDF or Call Sheet & Shooting Schedule PDF.
+    - `🧩 Elements`: Direct element insertion for Scene Heading, Action Beat, Character Cue, Parenthetical, Dialogue, and Transition (`CUT TO:`).
+    - `👁️ Views & Split`: Instant switching between Editor, Page View, Split, Beat Board, and toggling Beat Notes Side Drawer.
+    - `🚀 Production & CMS`: Production Stripboard, AI Script Coverage, and Character Vault.
+  - **Dynamic Scene Dropdown Selector (`self.combo_scene`)**:
+    - Automatically parsed from screenplay headings with live page index calculations; jumps directly to scene and synchronizes page views.
+  - **Direct Pipeline Binding**:
+    - `🎥 Animate Scene` routes directly into Video Studio prompt console.
+    - `❇️ Chunk in ComfyUI` dispatches 130 WPM pacing chunks into ComfyUI queue on Port 8189/8188.
+- **Full Ecosystem Comprehensive Audit Verification:**
+  - `comprehensive_interactive_audit.py`: 100% **PASS** (657 interactive buttons clicked, 123 line edits exercised, 54 combos opened, 45 sliders adjusted, 28 checkboxes toggled, 0 unhandled UI exceptions).
+  - Hardware Telemetry: NVIDIA GeForce RTX 4090 (24GB VRAM) verified at 44°C; AMD Ryzen 9 (32 cores) with 22.46 GB RAM available.
+  - Port Topology: 23 of 25 static sockets online and verified.
+- **Release & Parity Standards:**
+  - Automated tests: 21/21 passed (`pytest native_studio/test_native_studio.py -v`).
+  - Multi-mirror byte parity: 100% SHA-256 match confirmed across all 4 frontend directory trees (`scripts/verify-mirror-parity.ps1`).
+
+## 5.320.0 - 📡 Advanced Broadcast Studio Suite, Output Preview Engine, Real-Time Ingest Ping Diagnostics & Industry Streaming Platform Standards (2026-10-15)
+### Pro Output Preview Engine, Dual Studio Mode A/B Monitoring, Safe-Area Overlays, Multi-Threaded Ingest Ping Probe & Broadcast Platform Compliance
+**AI Rationale & Implementation:**
+- **Comprehensive Streaming Service Compliance Engine (`native_studio/broadcast_stream_engine.py`):**
+  - **Platform Specifications Registry (`STREAM_PLATFORM_SPECS`)**:
+    - **Twitch (Amazon IVS)**: Enforces strict CBR, 2.0s GOP keyframe intervals, dual B-frames, 6,000–8,000 kbps video bitrate limits, AAC 160 kbps 48 kHz audio, and Twitch VOD Track isolation on Track 2 for DMCA-safe music playback.
+    - **YouTube Live**: Up to 4K UHD (3840x2160) @ 60 FPS, AV1 Dual NVENC 8th Gen, HEVC HDR10, bitrates up to 51,000 kbps, 2s keyframes, and dual RTMPS encrypted ports (1935 / 443).
+    - **Kick.com**: Ultra-low latency CBR streaming at 8,000 kbps, 2.0s GOP interval, dual B-frames, sub-200ms glass-to-glass delay.
+    - **TikTok Live**: Strict 9:16 vertical canvas (1080x1920) at 60 FPS, 6,000 kbps CBR, dynamic RTMP credentials.
+    - **Facebook Live**: Strict TLS/SSL RTMPS on Port 443, 8,000 kbps CBR, 2s GOP keyframes.
+    - **Sovereign Local Broadcast Link**: Custom Secure Reliable Transport (SRT point-to-point caller mode) and local HLS (Port 8089) with sub-120ms buffers, 8K Master AV1/HEVC encoding up to 60,000 kbps.
+- **Real-Time Ingest Ping Checks (`PlatformPingProbeThread` & `PING_TEST_TARGETS`):**
+  - Multi-threaded asynchronous socket probe testing 12 regional ingest points across North America and Europe.
+  - Color-coded route quality ratings: Ultra-Low Latency (<35ms, Emerald `#10b981`), Optimal (<80ms, Cyan `#00f0ff`), Fair (<140ms, Amber `#eab308`), High Latency / Timeout (Red `#ef4444`).
+- **Pro Output Preview Engine (`LiveBroadcastCanvas` in `native_studio/omni_broadcast_studio.py`):**
+  - **Studio Mode (A/B Staging vs Program)**: Dual-monitor viewport rendering with staging preview on left (emerald boundary), center transition strip (`CUT`, `AUTO`, `300ms`), and live program on right (red/cyan boundary).
+  - **Safe Area Guides Overlay**: 90% Action Safe cyan border, 80% Title Safe amber border, 3x3 Rule of Thirds composition grid, and center crosshairs.
+- **Automated Verification & Zero Regression:**
+  - Automated tests: 21/21 passed in `native_studio/test_native_studio.py`.
+  - Comprehensive interactive UI audit: 655 safe buttons clicked with 0 unhandled UI exceptions.
 
 ## 5.315.0 - 🎬 Universal Creation Suite 1:1 Web Parity & 25-Port Ecosystem Expansion (2026-10-14)
 ### Writing Studio, Wan2.1 Video Studio, ComfyUI Script Chunk Parser, Visual Scripting Node Flow Graph, Studio Guide, Lock Screen, 25-Port Collision Matrix, Theatrical Film Hub & Matrix Doctor

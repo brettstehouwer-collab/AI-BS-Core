@@ -28,9 +28,11 @@ if not defined PYTHON_EXE (
     exit /b 1
 )
 
-:: 2. Local Microservices & Web Servers
-:: Local web servers (FastAPI 8080, Broadcast Daemon 8005, Kernel 8088, Vite 5174)
-:: operate freely to power the Native Windows version.
+:: 2. Local Microservices, Daemons & Sovereign Web Servers
+:: Guarantees Ollama Swarm (11434/11435), FastAPI (8080), Crypto Swarm (8007),
+:: ChromaDB (8001), Vite (5173/5174), VST3 (8013), and NVENC (8088) are active.
+echo [STEHOUWER BROADCAST] Ensuring all sovereign ecosystem daemons are active...
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%PYTHON_EXE%' -ArgumentList '-m backend.aibs_ecosystem_spawner' -WorkingDirectory '%APP_DIR%' -WindowStyle Hidden"
 
 :: 3. Start Hardware Broadcast Kernel (Port 8088 NVENC / OBS IPC) if not already active
 netstat -an | find ":8088 " | find "LISTENING" >nul

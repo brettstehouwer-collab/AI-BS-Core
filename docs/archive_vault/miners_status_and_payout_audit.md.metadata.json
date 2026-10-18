@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive real-time status and audit report of the sovereign Pearl mining operation, documenting the confirmed 1.9933 PRL first payout broadcast, current pool balances, GPU telemetry under 310W clamping, and proposed socket stall recovery patches for pearl_payout_watcher.py.",
+  "updatedAt": "2026-09-08T12:59:48.442650400Z",
+  "userFacing": true
+}

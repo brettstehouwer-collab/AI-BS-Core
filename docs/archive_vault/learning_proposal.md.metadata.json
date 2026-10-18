@@ -1,0 +1,6 @@
+{
+  "summary": "A proposal to create a new 'unreal-pixel-streaming' skill capturing the WebRTC signaling logic and command-line flags required for UE5 Pixel Streaming.",
+  "updatedAt": "2026-08-11T04:52:46.374123500Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

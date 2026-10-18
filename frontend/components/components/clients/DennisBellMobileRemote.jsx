@@ -82,17 +82,28 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
 
   // Default Dennis Bell message script
   const [messageText, setMessageText] = useState(
-    "Hey {first_name}, this is Dennis Bell, former New York Knick and President of Recreational Debut.\n\n" +
-    "Your talent caught our attention in Las Vegas, and we believe you have the potential to play at the college level.\n\n" +
-    "We’ve helped more than 100 student-athletes get recruited, and we want to help get your athletic profile in front of 850+ college coaches nationwide.\n\n" +
-    "If playing college sports is your goal, don’t wait for coaches to find you.\n\n" +
-    "📱 Call or text: +1-616-291-5227\n" +
-    "✅ Register FREE: RecDebut.com\n" +
-    "📧 dbell002@sbcglobal.net\n\n" +
-    "Let’s get you recruited!\n\n" +
+    "YOUR ELIGIBILITY IS A MUST!\n" +
+    "Hi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.\n\n" +
+    "I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process.\n\n" +
+    "🏀 NCAA DIVISION I ELIGIBILITY REQUIREMENTS\n\n" +
+    "16 NCAA-approved core courses\n" +
+    "• Minimum 2.3 core-course GPA\n" +
+    "https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-i/\n\n" +
+    "🏀 NCAA DIVISION II ELIGIBILITY REQUIREMENTS\n" +
+    "• 16 NCAA-approved core courses\n" +
+    "• Minimum 2.2 core-course GPA\n" +
+    "https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-ii/\n\n" +
+    "🏀 NCAA DIVISION III ELIGIBILITY REQUIREMENTS\n" +
+    "https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-iii/\n\n" +
+    "Remember, being eligible is only part of the process — college coaches also need to know who you are!\n\n" +
+    "Recreational Debut can help get your athletic portfolio in front of 850 college coaches nationwide. Get your information out before October 31, 2026, while coaches are putting together their number 1 recruiting lists.\n\n" +
+    "✅ REGISTER FREE:\n" +
+    "http://www.recdebut.com\n\n" +
     "Dennis Bell\n" +
-    "Former New York Knicks\n" +
-    "President, Recreational Debut"
+    "Former NY Knick\n" +
+    "President, Recreational Debut\n" +
+    "616-291-5227\n" +
+    "Dbell002@sbcglobal.net"
   );
 
   // Quick recipient for single test send
@@ -100,6 +111,11 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
 
   // Pre-configured AI Studio Prompts infused with Dennis Bell's authentic voice
   const AI_PROMPTS = [
+    {
+      label: "📋 NCAA Academic Eligibility Breakdown",
+      prompt: "Official NCAA Division I/II/III Core Courses and GPA requirements reminder before October 31 deadline",
+      template: "YOUR ELIGIBILITY IS A MUST!\nHi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.\n\nI want to make sure you know the academic requirements to be eligible for college athletics. Division I requires 16 core courses and a minimum 2.3 GPA; Division II requires a 2.2 GPA.\n\nWe can get your profile in front of 850 college coaches nationwide before the October 31, 2026 deadline!\n\n✅ Register 100% Free: RecDebut.com\n📱 Call or text me: 616-291-5227\n\nDennis Bell\nFormer NY Knick | President, Recreational Debut"
+    },
     {
       label: "🏀 2028-2029 Guards College Exposure",
       prompt: "High-energy SMS invitation for 2028-2029 guards to get evaluated by 850+ college coaches",

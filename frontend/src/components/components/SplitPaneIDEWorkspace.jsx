@@ -262,8 +262,24 @@ export default function SplitPaneIDEWorkspace() {
               🧬 Stage 3 RTX 4090 QLoRA
             </span>
           </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '11px', color: '#7ee787' }}>● {showRightPane ? 'Split-Pane IDE Active' : 'Single-Pane Active'} (v5.323.0)</span>
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('aibs-toggle-wireless-cast'))}
+              style={{
+                background: 'linear-gradient(135deg, #0284c7, #2563eb)',
+                border: '1px solid #60a5fa',
+                color: '#fff',
+                padding: '4px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 700
+              }}
+              title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Wireless Display, PC➔Phone, Phone➔PC)"
+            >
+              📡 Wireless Cast & Mirror
+            </button>
             <button
               onClick={() => {
                 setActiveRightTab('ide_editor');

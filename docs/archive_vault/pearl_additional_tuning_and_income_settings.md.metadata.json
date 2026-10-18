@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive engineering analysis of all additional hardware, network, software, and architectural settings to maximize Pearl (PRL) mining income and total rig earnings under zero electricity cost ($0.00/kWh). Explores power limit expansion (420W-450W), core clock V/F curve offsets (+150MHz to +200MHz), stratum connection hierarchy optimization (us3 integration, keepalive, stale share penalty protection), and simultaneous CPU monetization of the AMD Ryzen 9 9950X.",
+  "updatedAt": "2026-09-08T17:06:07.839644100Z",
+  "userFacing": true
+}

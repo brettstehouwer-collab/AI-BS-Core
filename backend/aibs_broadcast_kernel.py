@@ -18,20 +18,30 @@ if sys.platform == "win32":
     _orig_popen = subprocess.Popen
     _orig_check_output = subprocess.check_output
 
+    _hidden_startupinfo = subprocess.STARTUPINFO()
+    _hidden_startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    _hidden_startupinfo.wShowWindow = 0
+
     def _silent_run(*args, **kwargs):
         if "creationflags" not in kwargs:
             kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        if "startupinfo" not in kwargs:
+            kwargs["startupinfo"] = _hidden_startupinfo
         return _orig_run(*args, **kwargs)
 
     class _SilentPopen(_orig_popen):
         def __init__(self, *args, **kwargs):
             if "creationflags" not in kwargs:
                 kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+            if "startupinfo" not in kwargs:
+                kwargs["startupinfo"] = _hidden_startupinfo
             super().__init__(*args, **kwargs)
 
     def _silent_check_output(*args, **kwargs):
         if "creationflags" not in kwargs:
             kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+        if "startupinfo" not in kwargs:
+            kwargs["startupinfo"] = _hidden_startupinfo
         return _orig_check_output(*args, **kwargs)
 
     subprocess.run = _silent_run
@@ -315,7 +325,22 @@ def scan_system_windows_and_games() -> Dict[str, Any]:
     active_game = None
 
     try:
-        res = subprocess.run(["tasklist", "/v", "/fo", "csv"], capture_output=True, text=True, errors='ignore')
+        startupinfo = None
+        creationflags = 0
+        if sys.platform == "win32":
+            creationflags = subprocess.CREATE_NO_WINDOW
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = 0
+
+        res = subprocess.run(
+            ["tasklist", "/v", "/fo", "csv"],
+            capture_output=True,
+            text=True,
+            errors='ignore',
+            creationflags=creationflags,
+            startupinfo=startupinfo,
+        )
         reader = csv.DictReader(io.StringIO(res.stdout))
         for row in reader:
             title = (row.get("Window Title") or "").strip()
@@ -523,17 +548,18 @@ class BroadcastKernel:
     def _game_detector_loop(self):
         while True:
             try:
-                res = scan_system_windows_and_games()
-                with self.lock:
-                    self.open_windows = res["windows"]
-                    self.active_game = res["active_game"]
-                    if self.active_game:
-                        self.telemetry["game_name"] = self.active_game.get("game_name") or self.active_game.get("title")
-                    else:
-                        self.telemetry["game_name"] = "Desktop"
+                if self.is_streaming or getattr(self, "telemetry_clients", None):
+                    res = scan_system_windows_and_games()
+                    with self.lock:
+                        self.open_windows = res["windows"]
+                        self.active_game = res["active_game"]
+                        if self.active_game:
+                            self.telemetry["game_name"] = self.active_game.get("game_name") or self.active_game.get("title")
+                        else:
+                            self.telemetry["game_name"] = "Desktop"
             except Exception as e:
                 logging.debug(f"Game detector error: {e}")
-            time.sleep(2.0)
+            time.sleep(5.0 if self.is_streaming else 20.0)
 
     def switch_scene(self, scene_id: str, target: str = "program"):
         with self.lock:

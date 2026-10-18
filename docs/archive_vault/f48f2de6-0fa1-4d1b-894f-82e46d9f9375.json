@@ -1,0 +1,1 @@
+{"id":"f48f2de6-0fa1-4d1b-894f-82e46d9f9375","recipient":"47308843-ca86-4806-b517-800f45137e7e","sender":"47308843-ca86-4806-b517-800f45137e7e/task-110","priority":"MESSAGE_PRIORITY_HIGH","timestamp":"2026-08-24T03:53:17.306061300Z","renderDetails":{"messageTitle":"Wait for user: Timer has expired"},"content":"Check if the user has responded. If not, wait for their input."}

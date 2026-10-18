@@ -1,0 +1,94 @@
+{
+  "vault_metadata": {
+    "title": "AI-BS Ecosystem Curated Training Playlists",
+    "exported_at": "2026-10-15",
+    "target_system": "AI-BS Local Vault",
+    "version": "1.0"
+  },
+  "categories": [
+    {
+      "category_name": "Programming & LLM Fine-Tuning",
+      "description": "Playlists covering dataset preparation, instruction tuning, PEFT (LoRA/QLoRA), and quantization for code LLMs.",
+      "playlists": [
+        {
+          "title": "Complete LLM Finetuning",
+          "channel": "Sunny Savita",
+          "url": "http://www.youtube.com/playlist?list=PLQxDHpeGU14BX9L83JMSoKHsdIjv98BGn"
+        },
+        {
+          "title": "LLM Fine-Tuning from Scratch to Advance",
+          "channel": "Sunny Savita",
+          "url": "http://www.youtube.com/playlist?list=PLQxDHpeGU14AfMnI41zEo5G1xfZXhSVm0"
+        },
+        {
+          "title": "Building LLMs from scratch",
+          "channel": "Vizuara",
+          "url": "http://www.youtube.com/playlist?list=PLPTV0NXA_ZSgsLAr8YCgCwhPIJNNtexWu"
+        },
+        {
+          "title": "fine-tuning / RL / aml / quantization",
+          "channel": "Gordei Vasilev",
+          "url": "http://www.youtube.com/playlist?list=PLUBL8w2KtS3MbWI0NMIPSx5-UXfHXVXfQ"
+        }
+      ]
+    },
+    {
+      "category_name": "Video Generation & Diffusion Workflows",
+      "description": "Playlists covering ComfyUI graph node pipelines, Stable Diffusion, and temporal video synthesis.",
+      "playlists": [
+        {
+          "title": "ComfyUI Tutorial Series: Mastering Stable Diffusion AI",
+          "channel": "pixaroma",
+          "url": "http://www.youtube.com/playlist?list=PL-pohOSaL8P9kLZP8tQ1K1QWdZEgwiBM0"
+        },
+        {
+          "title": "ComfyUI Complete Masterclass",
+          "channel": "Grow with AI",
+          "url": "http://www.youtube.com/playlist?list=PLgUGIkDQO0yTPMDmcFDhG5908-G2q_NU_"
+        },
+        {
+          "title": "ComfyUI Tutorial",
+          "channel": "AI Tech Gyan",
+          "url": "http://www.youtube.com/playlist?list=PLvXIs6kwslKUqO4udf_bl6iGufQWRf4LE"
+        }
+      ]
+    },
+    {
+      "category_name": "Audio & Voice Synthesis Training",
+      "description": "Playlists covering RVC voice cloning and neural speech synthesis frameworks.",
+      "playlists": [
+        {
+          "title": "RVC Web UI - Open Source AI Voice Cloning",
+          "channel": "LEARNING SYSTEM",
+          "url": "http://www.youtube.com/playlist?list=PLTZeh6btm6CBtEJVnSuZyyga2fwZYJN7E"
+        }
+      ]
+    },
+    {
+      "category_name": "Gaming & Reinforcement Learning",
+      "description": "Playlists covering Deep Q-Learning, policy gradients, and game engine AI training agents (Unity ML-Agents).",
+      "playlists": [
+        {
+          "title": "Reinforcement Learning Tutorial",
+          "channel": "Aleksandar Haber PhD",
+          "url": "http://www.youtube.com/playlist?list=PLO89phzZmnHjYXlCNR_y2qF0gr9x8YpC8"
+        },
+        {
+          "title": "Implement Deep Q-Learning (DQN) in PyTorch",
+          "channel": "Johnny Code",
+          "url": "http://www.youtube.com/playlist?list=PL58zEckBH8fCMIVzQCRSZVPUp3ZAVagWi"
+        },
+        {
+          "title": "Stanford CS224R Deep Reinforcement Learning",
+          "channel": "Stanford Online",
+          "url": "http://www.youtube.com/playlist?list=PLoROMvodv4rPwxE0ONYRa_itZFdaKCylL"
+        },
+        {
+          "title": "Machine Learning AI in Unity (ML-Agents)",
+          "channel": "Code Monkey",
+          "url": "http://www.youtube.com/playlist?list=PLzDRvYVwl53vehwiN_odYJkPBzcqFw110"
+        }
+      ]
+    }
+  ]
+}

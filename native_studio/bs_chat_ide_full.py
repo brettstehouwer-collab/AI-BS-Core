@@ -786,6 +786,7 @@ class BsChatIdeFullView(QWidget):
             ("🕸️ /graph 491-Node", "/graph"),
             ("🧬 /distill QLoRA", "/distill"),
             ("📱 /dpi Mobile Profile", "/dpi"),
+            ("📡 /cast Wireless Mirror", "/cast "),
             ("🧠 1M+ RAG Search", "/rag "),
             ("📚 Ingest to 1M RAG", "/rag_ingest "),
             ("📑 1M Map-Reduce", "/summarize_1m "),
@@ -856,9 +857,11 @@ class BsChatIdeFullView(QWidget):
             ("/ps ", "⚡ Execute PowerShell Command"),
             ("/cmd ", "🪟 Execute Windows Command Prompt (cmd.exe)"),
             ("/wsl ", "🐧 Execute Linux WSL2 Bash Command"),
-            ("/build", "🔨 Run Production Build in PowerShell"),
+            ("/bash ", "🐚 Execute Bash Command (Git Bash / WSL)"),
+            ("/build", "🔨 Run Project Build (auto-detects npm/cargo/go/cmake/make/pip)"),
             ("/test", "🧪 Run Pytest Test Battery in PowerShell"),
             ("/program list", "📦 List Programs in saved_data/built_programs"),
+            ("/program build ", "🔨 Build/Compile Program or Project"),
             ("/program run ", "⚡ Run Built Program in PowerShell"),
             ("/terminal", "🖥️ Spawn Interactive PowerShell Terminal"),
             ("/runlast", "⚡ Run Last Code Block (with Stage 1 Auto-Heal)"),
@@ -1071,26 +1074,38 @@ class BsChatIdeFullView(QWidget):
         if first_token in (
             "powershell", "powershell.exe", "pwsh", "pwsh.exe",
             "python", "python.exe", "py",
-            "pip", "pytest", "npm", "npx", "git", "cargo", "dotnet", "firebase",
-            "node", "node.exe", "wsl", "wsl.exe"
+            "pip", "pip3", "pytest", "npm", "npx", "git", "cargo", "dotnet", "firebase",
+            "node", "node.exe", "wsl", "wsl.exe", "bash", "sh"
         ):
             self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')} (Direct Host CLI)]:\n{txt}\n")
             if first_token in ("python", "python.exe", "py"):
                 rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
                 ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" {rest}'
-            elif first_token == "pip":
+                self.bus.submit(self._run_powershell_task, ps_cmd)
+                return
+            elif first_token in ("pip", "pip3"):
                 rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
                 ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pip {rest}'
+                self.bus.submit(self._run_powershell_task, ps_cmd)
+                return
+            elif first_token in ("bash", "sh"):
+                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
+                self.bus.submit(self._run_multi_runtime_with_auto_heal, rest, "bash", None)
+                return
             elif first_token == "pytest":
                 rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
                 ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pytest {rest}'
+                self.bus.submit(self._run_powershell_task, ps_cmd)
+                return
             elif first_token in ("powershell", "powershell.exe", "pwsh", "pwsh.exe"):
                 rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
                 ps_cmd = rest or "Get-Host"
+                self.bus.submit(self._run_powershell_task, ps_cmd)
+                return
             else:
                 ps_cmd = txt
-            self.bus.submit(self._run_powershell_task, ps_cmd)
-            return
+                self.bus.submit(self._run_powershell_task, ps_cmd)
+                return
 
         # 5. Natural Language Developer & Host Action Dispatch (Zero Slash Commands Required)
         p_low = txt.lower()
@@ -1357,6 +1372,141 @@ class BsChatIdeFullView(QWidget):
             self.bus.submit(_dpi_task)
             return
 
+        # ── 3-WAY WIRELESS SCREEN MIRROR & DISPLAY CAST (/cast & /mirror) ──
+        if cmd in ("/cast", "/mirror", "/wireless-display", "/screen-mirror"):
+            sub_parts = arg.split()
+            sub_act = (sub_parts[0] if sub_parts else "status").lower()
+            sub_arg = sub_parts[1] if len(sub_parts) > 1 else ""
+
+            def _cast_task():
+                try:
+                    from backend.mobile_workstation_engine import (
+                        execute_wireless_cast_action,
+                        get_wireless_cast_status,
+                    )
+                    if sub_act in ("display", "tv", "miracast", "win-k", "wink"):
+                        res = execute_wireless_cast_action("win_k")
+                        self.action_log_signal.emit("PC ➔ WIRELESS DISPLAY (WIN+K)", res.get("message", ""))
+                    elif sub_act in ("clone", "duplicate", "extend", "external", "second", "internal", "pc"):
+                        res = execute_wireless_cast_action("display_mode", mode=sub_act)
+                        self.action_log_signal.emit("WINDOWS PROJECTION MODE", res.get("message", ""))
+                    elif sub_act in ("phone", "scrcpy", "phone-to-pc", "android"):
+                        res = execute_wireless_cast_action("phone_to_pc_scrcpy", phone_ip=sub_arg)
+                        self.action_log_signal.emit("PHONE ➔ PC SCRCPY MIRROR", res.get("message", ""))
+                    elif sub_act in ("adb", "tcpip", "wireless-adb"):
+                        res = execute_wireless_cast_action("adb_tcpip_auto", phone_ip=sub_arg)
+                        self.action_log_signal.emit("WIRELESS ADB SETUP (:5555)", res.get("message", ""))
+                    elif sub_act in ("scan", "nearby", "devices"):
+                        res = execute_wireless_cast_action("scan_nearby")
+                        scan = res.get("scan", {})
+                        pnp = "\n".join(f"  • [{d.get('class')}] {d.get('name')}" for d in scan.get("pnp_displays_and_endpoints", []))
+                        peers = "\n".join(f"  • {p.get('ip')} ({p.get('mac')})" for p in scan.get("wifi_lan_peers", []))
+                        self.action_log_signal.emit(
+                            "NEARBY WIRELESS DISPLAYS & WI-FI PEERS",
+                            f"[WINDOWS DISPLAYS & ENDPOINTS]:\n{pnp}\n\n[WI-FI LAN PEERS]:\n{peers}"
+                        )
+                    else:
+                        st = get_wireless_cast_status()
+                        urls = st.get("urls", {})
+                        p2p = st.get("phone_to_pc", {})
+                        out = (
+                            f"=== 📡 3-WAY WIRELESS SCREEN MIRROR & DISPLAY CAST HUB ===\n"
+                            f"1️⃣ PC ➔ Wireless Display (TV / Monitor): Run `/cast display` (Win+K), `/cast clone`, or `/cast extend`\n"
+                            f"2️⃣ PC ➔ Phone / Tablet (Wi-Fi IDE): {urls.get('pc_to_phone_workspace_lan')}\n"
+                            f"   Live PC Screen Viewer URL: {urls.get('pc_to_phone_live_screen_viewer')}\n"
+                            f"3️⃣ Phone ➔ PC (Scrcpy v4.1 60FPS): {'🟢 READY' if p2p.get('scrcpy_installed') else '⚪ STANDBY'} | Run `/cast adb` then `/cast phone [ip]`"
+                        )
+                        self.action_log_signal.emit("3-WAY WIRELESS CAST STATUS", out)
+                except Exception as e:
+                    self.action_log_signal.emit("WIRELESS CAST ERROR", str(e))
+            self.bus.submit(_cast_task)
+            return
+
+        # ── SOVEREIGN EXECUTION & PRIVILEGE DIRECTIVE (/directive & /privilege) ──
+        if cmd in ("/directive", "/privilege", "/ring0", "/aibs-dir-000"):
+            sub_act = (arg or "status").strip().lower()
+
+            def _directive_task():
+                try:
+                    from backend.sovereign_privilege_engine import (
+                        enforce_sovereign_privilege_directive,
+                        get_sovereign_privilege_status,
+                    )
+                    if sub_act in ("enforce", "apply"):
+                        res = enforce_sovereign_privilege_directive()
+                        self.action_log_signal.emit(
+                            "AIBS-DIR-000 ENFORCEMENT COMPLETE",
+                            res.get("stdout") or json.dumps(res, indent=2),
+                        )
+                    else:
+                        st = get_sovereign_privilege_status()
+                        ls = st.get("live_state", {})
+                        ts = st.get("two_strike_governance", {})
+                        out = (
+                            f"=== 🛡️ AIBS-DIR-000 SOVEREIGN PRIVILEGE & EXECUTION DIRECTIVE ===\n"
+                            f"• Directive Spec: {st.get('directive_file')}\n"
+                            f"• Tier 1 Elevated Admin (Ring 3): {'🟢 ACTIVE' if ls.get('tier1_elevated_admin_active') else '⚪ STANDARD'}\n"
+                            f"• Tier 4 Ring 0 / VTL 1 HVCI De-Clamping: {'🟢 UNBLOCKED (HVCI=0)' if ls.get('ring0_msr_telemetry_unblocked') else '⚠️ LOCKED'}\n"
+                            f"• 4096-Bit RSA SHA-256 X.509 Cert: {ls.get('sovereign_x509_thumbprint') or 'Not Enrolled'}\n"
+                            f"• ReAct Sandbox Dir: {ls.get('react_sandbox_dir')}\n"
+                            f"• Two-Strike Fault Heuristics Logged: {ts.get('total_logged_fault_vectors', 0)}"
+                        )
+                        self.action_log_signal.emit("AIBS-DIR-000 PRIVILEGE TELEMETRY", out)
+                except Exception as e:
+                    self.action_log_signal.emit("DIRECTIVE ERROR", str(e))
+            self.bus.submit(_directive_task)
+            return
+
+        # ── SOVEREIGN MEMORY & REASONING RECALL (/recall & /memory) ──
+        if cmd in ("/recall", "/memory", "/thinking"):
+            query_str = (arg or "").strip()
+            if not query_str:
+                self.action_log_signal.emit(
+                    "MEMORY USAGE",
+                    "Usage: /recall <query>\nExample: /recall closeEvent window bug\nQueries ChromaDB vector vault and SQLite sovereign reasoning store."
+                )
+                return
+
+            def _recall_task():
+                try:
+                    from backend.sovereign_memory_ingestor import search_memory
+                    hits = search_memory(query_str, n_results=5)
+                    if hits:
+                        lines = [f"=== 🧠 SOVEREIGN MEMORY RECALL: '{query_str}' ==="]
+                        for idx, h in enumerate(hits):
+                            t = h.get("metadata", {}).get("title") or h.get("id")
+                            cat = h.get("metadata", {}).get("category") or "memory"
+                            dist = h.get("distance", 0.0)
+                            sim = max(0.0, 1.0 - dist)
+                            snippet = h.get("document", "").replace("\n", " ")[:200]
+                            lines.append(f"[{idx+1}] {t} ({cat}) - Similarity: {sim:.3f}\n   ↳ {snippet}...\n")
+                        self.action_log_signal.emit("MEMORY RECALL (CHROMADB)", "\n".join(lines))
+                    else:
+                        # Fallback to SQLite
+                        import sqlite3
+                        db_p = r"C:\AI-BS\backend\aibs_master.db"
+                        conn = sqlite3.connect(db_p)
+                        cur = conn.cursor()
+                        like_q = f"%{query_str}%"
+                        cur.execute("""
+                            SELECT title, category, content FROM sovereign_reasoning_vault
+                            WHERE content LIKE ? OR prompt LIKE ? OR title LIKE ?
+                            ORDER BY created_at DESC LIMIT 5
+                        """, (like_q, like_q, like_q))
+                        rows = cur.fetchall()
+                        conn.close()
+                        if rows:
+                            lines = [f"=== 🧠 SOVEREIGN MEMORY RECALL (SQLITE): '{query_str}' ==="]
+                            for idx, r in enumerate(rows):
+                                lines.append(f"[{idx+1}] {r[0]} ({r[1]})\n   ↳ {(r[2] or '')[:200]}...\n")
+                            self.action_log_signal.emit("MEMORY RECALL (SQLITE)", "\n".join(lines))
+                        else:
+                            self.action_log_signal.emit("MEMORY RECALL", f"No memory nodes matched '{query_str}'.")
+                except Exception as e:
+                    self.action_log_signal.emit("MEMORY RECALL ERROR", str(e))
+            self.bus.submit(_recall_task)
+            return
+
         # ── MULTI-SHELL & POLYGLOT DEVELOPER DISPATCH ROUTERS (/ps, /cmd, /wsl, /run) ──
         if cmd in ("/ps", "/powershell"):
             if not arg:
@@ -1374,9 +1524,10 @@ class BsChatIdeFullView(QWidget):
 
         if cmd in ("/wsl", "/sh", "/bash"):
             if not arg:
-                self.chat_display.appendPlainText("[USAGE]: /wsl <linux_command> (e.g., /wsl uname -a)\n")
+                self.chat_display.appendPlainText(f"[USAGE]: {cmd} <command> (e.g., {cmd} pip install requests or {cmd} uname -a)\n")
                 return
-            self.bus.submit(self._run_multi_runtime_with_auto_heal, arg, "wsl", None)
+            rt_mode = "wsl" if cmd == "/wsl" else "bash"
+            self.bus.submit(self._run_multi_runtime_with_auto_heal, arg, rt_mode, None)
             return
 
         if cmd in ("/run", "/exec"):
@@ -1406,8 +1557,25 @@ class BsChatIdeFullView(QWidget):
             return
 
         if cmd == "/build":
-            self.chat_display.appendPlainText("[POWERSHELL BUILD]: Initiating production build in PowerShell...\n")
-            self.bus.submit(self._run_powershell_task, 'powershell -ExecutionPolicy Bypass -Command "npm run build"')
+            target_proj = arg.strip() if arg else r"C:\AI-BS"
+            parts_b = target_proj.split(maxsplit=1)
+            b_dir = parts_b[0] if parts_b else r"C:\AI-BS"
+            b_custom = parts_b[1] if len(parts_b) > 1 else None
+
+            self.chat_display.appendPlainText(f"[PROJECT BUILD]: Initiating build for '{b_dir}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+            def _build_project_task():
+                from core.program_builder_engine import AutonomousProgramBuilder
+                res = AutonomousProgramBuilder.build_project(b_dir, build_command=b_custom)
+                status_str = res.get("status", "error").upper()
+                exit_code = res.get("exit_code", 1)
+                cmd_run = res.get("command", "N/A")
+                out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
+                if res.get("stdout"):
+                    out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
+                if res.get("stderr"):
+                    out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
+                self.action_log_signal.emit(f"Project '{b_dir}' build completed ({status_str})", out_text)
+            self.bus.submit(_build_project_task)
             return
 
         if cmd == "/test":
@@ -1427,7 +1595,31 @@ class BsChatIdeFullView(QWidget):
                 progs = AutonomousProgramBuilder.list_programs()
                 self.chat_display.appendPlainText(f"[PROGRAM BUILDER]: Found {len(progs)} built program(s) in saved_data/built_programs:\n")
                 for p in progs:
-                    self.chat_display.appendPlainText(f"  • {p.get('project_name')} ({p.get('language')}) - {p.get('description', '')}\n")
+                    b_info = p.get("build")
+                    b_str = f" [Build: {b_info.get('status')}]" if b_info else ""
+                    self.chat_display.appendPlainText(f"  • {p.get('project_name')} ({p.get('language')}){b_str} - {p.get('description', '')}\n")
+                return
+            elif sub in ("build", "compile"):
+                if not prog_arg:
+                    self.chat_display.appendPlainText("[USAGE]: /program build <project_name_or_dir> [build_cmd]\n")
+                    return
+                b_parts = prog_arg.split(maxsplit=1)
+                b_proj = b_parts[0]
+                b_custom = b_parts[1] if len(b_parts) > 1 else None
+                self.chat_display.appendPlainText(f"[PROJECT BUILD]: Building '{b_proj}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+                def _build_prog_task():
+                    from core.program_builder_engine import AutonomousProgramBuilder
+                    res = AutonomousProgramBuilder.build_project(b_proj, build_command=b_custom)
+                    status_str = res.get("status", "error").upper()
+                    exit_code = res.get("exit_code", 1)
+                    cmd_run = res.get("command", "N/A")
+                    out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
+                    if res.get("stdout"):
+                        out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
+                    if res.get("stderr"):
+                        out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
+                    self.action_log_signal.emit(f"Project '{b_proj}' build completed ({status_str})", out_text)
+                self.bus.submit(_build_prog_task)
                 return
             elif sub == "run":
                 if not prog_arg:
@@ -1441,7 +1633,7 @@ class BsChatIdeFullView(QWidget):
                 self.bus.submit(_run_prog_task)
                 return
             else:
-                self.chat_display.appendPlainText("[USAGE]: /program [list | run <name>]\n")
+                self.chat_display.appendPlainText("[USAGE]: /program [list | build <name> [cmd] | run <name>]\n")
                 return
 
         if cmd in ("/dir", "/ls"):
@@ -1471,7 +1663,7 @@ class BsChatIdeFullView(QWidget):
             self.bus.submit(self._run_powershell_task, f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" {arg}')
             return
 
-        if cmd == "/pip":
+        if cmd in ("/pip", "/pip3"):
             self.bus.submit(self._run_powershell_task, f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pip {arg}')
             return
 
@@ -1611,6 +1803,7 @@ class BsChatIdeFullView(QWidget):
                 else f"MULTI-RUNTIME EXECUTION ({rt_used.upper()} FAILED — EXIT {rc})"
             )
             self.action_log_signal.emit(header, "\n".join(out_lines))
+            self.token_chunk.emit(f"\n{header}\n" + "\n".join(out_lines) + "\n\n")
 
             if rc == 0 or not self._auto_heal_enabled or attempt >= max_attempts:
                 break
@@ -2067,13 +2260,13 @@ class BsChatIdeFullView(QWidget):
             from tools.tool_registry import ToolRegistry
 
             t_name, t_args = detect_tool_intent(prompt)
-            if t_name and t_name in ("read_host_file", "scan_directory_tree", "execute_powershell", "check_hardware", "probe_port"):
+            if t_name and t_name in ("read_host_file", "scan_directory_tree", "execute_powershell", "execute_bash", "execute_pip", "check_hardware", "probe_port"):
                 res = ToolRegistry.execute_tool(t_name, t_args)
                 self.token_chunk.emit(
                     f"⚡ [AUTONOMOUS HOST TOOL EXECUTED: {t_name}]\n"
                     f"{json.dumps(res, indent=2)}\n\n"
                 )
-                if t_name == "execute_powershell":
+                if t_name in ("execute_powershell", "execute_bash", "execute_pip"):
                     self._is_streaming = False
                     return
                 prompt = (

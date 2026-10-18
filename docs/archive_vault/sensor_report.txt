@@ -1,0 +1,30 @@
+﻿=== CHECKING FANCONTROL / MONITORING APPS ON DISK ===
+Found HWiNFO: C:\Program Files (x86)\RivaTuner Statistics Server\ProfileTemplates\hwinfo32.exe.cfg
+Found HWiNFO: C:\Program Files (x86)\RivaTuner Statistics Server\ProfileTemplates\hwinfo64.exe.cfg
+
+=== ASUS SERVICES & SYSTEM CONTROL ===
+AsusUpdateCheck | AsusUpdateCheck | Running | Automatic
+PcaSvc | Program Compatibility Assistant Service | Running | Automatic
+
+=== CPU HARDWARE STATUS & THERMALS ===
+
+
+Name                      : AMD Ryzen 9 9950X 16-Core Processor            
+NumberOfCores             : 16
+NumberOfLogicalProcessors : 32
+CurrentClockSpeed         : 4300
+MaxClockSpeed             : 4300
+LoadPercentage            : 15
+
+
+
+
+
+=== MOTHERBOARD ACPI FAN / THERMAL ZONES ===
+MSAcpi_ThermalZoneTemperature not populated by BIOS.
+
+=== USB / HID HARDWARE CONTROLLERS ===
+AURA LED Controller [DeviceID: USB\VID_0B05&PID_19AF&MI_00\9&DE2EAF5&0&0000] (Status: OK)
+
+=== NVIDIA GPU THERMAL & FAN TELEMETRY ===
+GPU Stats: NVIDIA GeForce RTX 4090, 616.64, 26, 100 %, 49.49 W, 450.00 W, 40 %, 5 %

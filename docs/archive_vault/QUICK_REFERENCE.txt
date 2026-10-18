@@ -1,0 +1,182 @@
+================================================================================
+PHASE 4 QUICK REFERENCE CARD
+================================================================================
+
+DEPLOYMENT IN 5 MINUTES
+────────────────────────────────────────────────────────────────────────────
+
+1. UPDATE AI_BS_BACKEND.PY
+   Add:
+     from phase4_endpoints_v2 import router as phase4_router_v2
+     app.include_router(phase4_router_v2)
+
+2. INSTALL DEPENDENCIES
+   pip install docker websockets
+
+3. START BACKEND
+   python AI_BS_Backend.py
+
+4. LAUNCH APP
+   C:\Users\footb\AI-BS_Matrix\frontend\build-output\win-unpacked\AI-BS Matrix.exe
+
+5. CLICK: Virtual Machines (sidebar)
+
+DONE ✓
+
+────────────────────────────────────────────────────────────────────────────
+WHAT YOU GET
+────────────────────────────────────────────────────────────────────────────
+
+Live VM Management Tab:
+  • VM list (real-time updates)
+  • VNC canvas (framebuffer display)
+  • Keyboard/mouse input
+  • Status monitoring
+
+────────────────────────────────────────────────────────────────────────────
+TEST IT
+────────────────────────────────────────────────────────────────────────────
+
+From command line:
+
+  # Boot a test VM
+  curl -X POST http://localhost:8000/api/phase4/vm/boot ^
+    -H "Content-Type: application/json" ^
+    -d "{\"memory_mb\": 256, \"cpu_cores\": 1}"
+
+  # Watch it appear in the UI (5-second poll)
+
+────────────────────────────────────────────────────────────────────────────
+KEY FILES
+────────────────────────────────────────────────────────────────────────────
+
+Backend:
+  hypervisor_controller_daemon.py    (VM lifecycle)
+  disk_image_manager_v2.py           (Storage)
+  vnc_buffer_bridge_daemon.py        (VNC streaming)
+  phase4_endpoints_v2.py             (REST API - 14 endpoints)
+
+Frontend:
+  VirtualMachineTab.jsx              (React component)
+  App.jsx                            (Updated with Phase 4 tab)
+  Sidebar.jsx                        (Updated with VM tab)
+
+────────────────────────────────────────────────────────────────────────────
+API ENDPOINTS
+────────────────────────────────────────────────────────────────────────────
+
+VMs:
+  POST /api/phase4/vm/boot
+  POST /api/phase4/vm/{id}/exec
+  GET  /api/phase4/vm/{id}/status
+  POST /api/phase4/vm/{id}/shutdown
+  GET  /api/phase4/vm/list
+
+Disks:
+  POST /api/phase4/disk/create
+  POST /api/phase4/disk/{name}/clone
+  POST /api/phase4/disk/{name}/attach
+  POST /api/phase4/disk/{name}/detach
+  GET  /api/phase4/disk/{name}
+  GET  /api/phase4/disk/list
+  POST /api/phase4/disk/{name}/cleanup
+
+Status:
+  GET  /api/phase4/status
+  GET  /api/phase4/vnc/status
+  POST /api/phase4/vnc/start-bridge
+  WS   ws://localhost:6080
+
+────────────────────────────────────────────────────────────────────────────
+REQUIREMENTS
+────────────────────────────────────────────────────────────────────────────
+
+✓ Docker Desktop (running)
+✓ Python 3.8+
+✓ FastAPI backend
+✓ Node.js (already installed)
+✓ Electron app rebuilt
+
+────────────────────────────────────────────────────────────────────────────
+VERIFY IT WORKS
+────────────────────────────────────────────────────────────────────────────
+
+Backend running?
+  curl http://localhost:8000/api/phase4/status
+
+Docker working?
+  docker ps
+
+VNC bridge active?
+  Check backend logs for: "Phase 4 VNC bridge started"
+
+UI showing VM tab?
+  Open app, look for "Virtual Machines" in sidebar (🖥️)
+
+────────────────────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+────────────────────────────────────────────────────────────────────────────
+
+"No active VMs"           → Boot a VM via curl or test_phase4_simple.py
+"Connection failed"       → Restart backend, check port 6080
+"Docker error"            → Start Docker Desktop
+"Build error"             → cd frontend && npm run build
+"terser not found"        → npm install --save-dev terser
+"Cannot resolve module"   → Already fixed in current build
+
+────────────────────────────────────────────────────────────────────────────
+PERFORMANCE
+────────────────────────────────────────────────────────────────────────────
+
+VM boot:          ~3 seconds
+Command exec:     ~71ms
+Disk create:      <10ms
+Disk clone:       <10ms
+VNC latency:      1-2ms per frame
+VM list poll:     5 seconds (configurable)
+
+────────────────────────────────────────────────────────────────────────────
+ARCHITECTURE
+────────────────────────────────────────────────────────────────────────────
+
+Electron UI (React)
+    ↓
+FastAPI :8000 (/api/phase4/*)
+    ↓
+HypervisorController + DiskManagerV2 + VNCBridge
+    ↓
+Docker Engine
+    ↓
+Alpine Linux Containers + Named Volumes
+
+────────────────────────────────────────────────────────────────────────────
+SUCCESS CHECKLIST
+────────────────────────────────────────────────────────────────────────────
+
+[ ] Docker is running
+[ ] Backend updated with phase4_endpoints_v2 import
+[ ] Dependencies installed (docker, websockets)
+[ ] Backend started (python AI_BS_Backend.py)
+[ ] Electron app launched
+[ ] Virtual Machines tab visible in sidebar
+[ ] Click VM tab loads without errors
+[ ] Status shows "Bridge connected"
+[ ] Test VM boots and appears in list
+[ ] UI shows VM in real-time
+
+All checked? Phase 4 is deployed! ✓
+
+────────────────────────────────────────────────────────────────────────────
+SUPPORT
+────────────────────────────────────────────────────────────────────────────
+
+Documentation:
+  • DEPLOYMENT_GUIDE.md        (full setup instructions)
+  • PHASE_4_COMPLETE_REVIEW.md (comprehensive review)
+  • PHASE_4_STAGES_2_3_COMPLETION.md (technical details)
+
+Tests:
+  • test_phase4_simple.py
+  • test_phase4_stages_2_3.py
+
+────────────────────────────────────────────────────────────────────────────

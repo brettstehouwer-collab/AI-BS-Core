@@ -21,6 +21,13 @@ for /f "tokens=5" %%a in ('netstat -aon ^| find ":8005 " ^| find "LISTENING"') d
 for /f "tokens=5" %%a in ('netstat -aon ^| find ":8013 " ^| find "LISTENING"') do taskkill /F /PID %%a >nul 2>&1
 for /f "tokens=5" %%a in ('netstat -aon ^| find ":8006 " ^| find "LISTENING"') do taskkill /F /PID %%a >nul 2>&1
 
-echo [3/3] System state saved. All AI-BS studio processes stopped.
+echo [3/4] Running Zombie Node Cleaner to sweep orphaned processes and reclaim RAM...
+if exist "%APP_DIR%..\backend\zombie_node_cleaner.py" (
+    python "%APP_DIR%..\backend\zombie_node_cleaner.py" >nul 2>&1
+) else if exist "C:\AI-BS\backend\zombie_node_cleaner.py" (
+    python "C:\AI-BS\backend\zombie_node_cleaner.py" >nul 2>&1
+)
+
+echo [4/4] System state saved. All AI-BS studio processes stopped.
 timeout /t 2 /nobreak >nul
 exit /b 0
