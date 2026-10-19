@@ -4651,13 +4651,16 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
 
         # 1. Emit cognitive metadata event immediately on chunk 0
         yield meta_header
+        await asyncio.sleep(0.01)
 
         # If large job, yield notification badge; otherwise invisible heartbeat to lock HTTP stream open
         if job_id and job_output_path:
             badge = f"> 💾 **[Large Job Offloaded & Staged]** Input persisted to disk (`{os.path.basename(job_input_path)}`). Allocated context: **{target_num_ctx:,} tokens**. Stream auto-saving to `{os.path.basename(job_output_path)}`.\n\n"
             yield badge
+            await asyncio.sleep(0.01)
         else:
             yield "\u200B"
+            await asyncio.sleep(0.01)
 
         for host in ollama_hosts:
             try:

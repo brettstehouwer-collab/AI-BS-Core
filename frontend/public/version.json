@@ -1,6 +1,6 @@
 {
-  "version": "5.326.0",
-  "release_tag": "v5.326.0-release",
-  "release_date": "2026-10-17",
-  "description": "Autonomous Project Build Pipeline & Program Builder Execution Suite: Multi-Tool Detection (npm, cargo, go, cmake, make, pip, dotnet, build scripts), Pre-Flight Gated Compilation, BS-Chat /build and /program Slash Commands, ToolRegistry build_project, Native Studio and Web React Parity."
+  "version": "5.327.0",
+  "release_tag": "v5.327.0-release",
+  "release_date": "2026-10-19",
+  "description": "Live System Telemetry Strip (VRAM/Wattage/Temp/GPU Load/Sys RAM), Point A to Point Infinity CoT Reasoning Pipeline, Dynamic Cognitive Model Routing Inspector (Why this LLM? & 6-Step Stepper), and Persistent RTX 4090 Hot VRAM Allocation."
 }

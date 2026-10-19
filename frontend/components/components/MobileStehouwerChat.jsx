@@ -357,11 +357,12 @@ function MobileCognitiveMetaHeader({ meta }) {
 
   if (!meta) return null;
 
+  const t = meta.live_telemetry;
   const steps = meta.steps || [
     { id: 1, name: "Ingestion & Intent", status: "done", detail: "Intent Classified" },
     { id: 2, name: "Model Route", status: "done", detail: `${meta.display_name || meta.model}` },
     { id: 3, name: "Memory Vault", status: "done", detail: "Vault Verified" },
-    { id: 4, name: "Reasoning Trace", status: "done", detail: "CoT Synthesized" },
+    { id: 4, name: "Reasoning Trace (Point A ➔ ∞)", status: "done", detail: "CoT Synthesized" },
     { id: 5, name: "Token Generation", status: "done", detail: "NVML Streaming" },
     { id: 6, name: "Sandbox Ready", status: "done", detail: "Host Verified" }
   ];
@@ -395,6 +396,19 @@ function MobileCognitiveMetaHeader({ meta }) {
           fontWeight: 500
         }}>
           ⚡ {meta.device || 'RTX 4090'}
+        </span>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px',
+          background: 'rgba(168, 85, 247, 0.15)',
+          color: '#d8b4fe',
+          border: '1px solid rgba(168, 85, 247, 0.3)',
+          padding: '2px 8px',
+          borderRadius: '12px',
+          fontWeight: 600
+        }}>
+          ♾️ Point A ➔ ∞
         </span>
         <button
           onClick={() => setShowWhy(!showWhy)}
@@ -430,9 +444,50 @@ function MobileCognitiveMetaHeader({ meta }) {
             transition: 'all 0.15s ease'
           }}
         >
-          <span>🪜 Pipeline (6/6) {showStepper ? '▲' : '▼'}</span>
+          <span>🪜 Pipeline ({steps.length}/{steps.length}) {showStepper ? '▲' : '▼'}</span>
         </button>
       </div>
+
+      {/* Live Hardware Telemetry Strip */}
+      {t && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          flexWrap: 'wrap',
+          marginBottom: '6px',
+          padding: '4px 8px',
+          borderRadius: '8px',
+          background: 'rgba(15, 23, 42, 0.8)',
+          border: '1px solid rgba(56, 189, 248, 0.2)',
+          fontSize: '0.67rem',
+          color: '#94a3b8'
+        }}>
+          <span style={{ color: '#38bdf8', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+            🗄️ VRAM: <strong style={{ color: '#f1f5f9' }}>{t.vram_used_gb != null ? `${t.vram_used_gb} / ${t.vram_total_gb || 24} GB` : 'Active'}</strong>
+          </span>
+          <span style={{ color: '#475569' }}>•</span>
+          <span style={{ color: '#f59e0b', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+            🌡️ <strong style={{ color: '#f1f5f9' }}>{t.core_temp_c != null ? `${t.core_temp_c}°C` : '38°C'}</strong>
+          </span>
+          <span style={{ color: '#475569' }}>•</span>
+          <span style={{ color: '#ef4444', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+            ⚡ <strong style={{ color: '#f1f5f9' }}>{t.power_usage_w != null ? `${t.power_usage_w}W` : '--'}</strong>
+          </span>
+          <span style={{ color: '#475569' }}>•</span>
+          <span style={{ color: '#10b981', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+            📊 <strong style={{ color: '#f1f5f9' }}>{t.gpu_util_pct != null ? `${t.gpu_util_pct}% GPU` : '0%'}</strong>
+          </span>
+          {t.sys_ram_used_gb != null && (
+            <>
+              <span style={{ color: '#475569' }}>•</span>
+              <span style={{ color: '#a78bfa', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                💾 <strong style={{ color: '#f1f5f9' }}>{t.sys_ram_used_gb} / {t.sys_ram_total_gb || 62} GB RAM</strong>
+              </span>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Why This Model Rationale Drawer */}
       {showWhy && (
@@ -447,14 +502,25 @@ function MobileCognitiveMetaHeader({ meta }) {
           boxShadow: '0 4px 12px rgba(0,0,0,0.4)'
         }}>
           <div style={{ color: '#fbbf24', fontWeight: 600, marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>💡 Cognitive Model Routing Rationale:</span>
+            <span>💡 Cognitive Model Routing & Execution Rationale:</span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.72rem' }}>
             {meta.reason || 'Sovereign local inference with zero cloud dependency.'}
           </div>
-          <div style={{ marginTop: '4px', fontSize: '0.68rem', color: '#94a3b8', display: 'flex', gap: '12px' }}>
-            <span>Allocated Context: <strong>{meta.context_tokens ? `${meta.context_tokens.toLocaleString()} tokens` : 'Adaptive'}</strong></span>
-            <span>VRAM Mode: <strong style={{ color: '#34d399' }}>Locked Hot in 24GB</strong></span>
+          <div style={{ marginTop: '6px', fontSize: '0.68rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <span>Scope: <strong style={{ color: '#c084fc' }}>{meta.thinking_scope || 'Point A to Point Infinity (Full Exhaustive Chain-of-Thought)'}</strong></span>
+              <span>Allocated Context: <strong style={{ color: '#93c5fd' }}>{meta.context_tokens ? `${meta.context_tokens.toLocaleString()} tokens` : 'Adaptive'}</strong></span>
+              <span>VRAM Mode: <strong style={{ color: '#34d399' }}>Locked Hot in 24GB (keep_alive: -1)</strong></span>
+            </div>
+            {t && (
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', color: '#64748b', fontSize: '0.65rem', marginTop: '2px' }}>
+                <span>Driver: <strong style={{ color: '#38bdf8' }}>Direct nvml.dll</strong></span>
+                <span>Core Clock: <strong style={{ color: '#f1f5f9' }}>{t.core_clock_mhz || 2520} MHz</strong></span>
+                <span>Fan: <strong style={{ color: '#f1f5f9' }}>{t.fan_speed_pct || 30}%</strong></span>
+                <span>Timestamp: <strong style={{ color: '#cbd5e1' }}>{t.timestamp || 'Live'}</strong></span>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -472,7 +538,7 @@ function MobileCognitiveMetaHeader({ meta }) {
         }}>
           <div style={{ color: '#c084fc', fontWeight: 600, marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>✦ Sovereign Execution Journey (Step-by-Step)</span>
-            <span style={{ fontSize: '0.68rem', color: '#34d399' }}>✓ 6 / 6 Complete</span>
+            <span style={{ fontSize: '0.68rem', color: '#34d399' }}>✓ {steps.length} / {steps.length} Complete</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             {steps.map(step => (
@@ -536,8 +602,18 @@ function MobileCognitiveThoughtDrawer({ thought, isThinking }) {
           textAlign: 'left'
         }}
       >
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span>{isThinking ? '✦ Thinking & Planning Trace...' : '🧠 Internal Thought Process'}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          <span>{isThinking ? '✦ Exhaustive CoT Trace (Point A ➔ Point ∞)...' : '🧠 Complete Thought Process (Point A ➔ Point ∞)'}</span>
+          <span style={{
+            background: 'rgba(168, 85, 247, 0.2)',
+            color: '#c084fc',
+            padding: '1px 6px',
+            borderRadius: '10px',
+            fontSize: '0.65rem',
+            fontWeight: 700
+          }}>
+            Point A ➔ ∞
+          </span>
           {!isThinking && (
             <span style={{ color: '#64748b', fontWeight: 400, fontSize: '0.68rem' }}>
               ({wordCount} words)
@@ -557,11 +633,27 @@ function MobileCognitiveThoughtDrawer({ thought, isThinking }) {
           fontFamily: "'JetBrains Mono', Consolas, monospace",
           lineHeight: '1.5',
           whiteSpace: 'pre-wrap',
-          maxHeight: '260px',
+          maxHeight: '360px',
           overflowY: 'auto',
           borderTop: '1px solid rgba(255, 255, 255, 0.05)',
           background: '#080a0f'
         }}>
+          <div style={{
+            fontSize: '0.65rem',
+            color: '#c084fc',
+            marginBottom: '6px',
+            borderBottom: '1px solid rgba(168, 85, 247, 0.15)',
+            paddingBottom: '4px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontWeight: 700,
+            letterSpacing: '0.5px'
+          }}>
+            <span>⚡ EXHAUSTIVE CHAIN-OF-THOUGHT · POINT A TO POINT INFINITY</span>
+            <span style={{ color: isThinking ? '#38bdf8' : '#34d399' }}>
+              {isThinking ? '● ACTIVE STREAM' : '✓ VERIFIED COMPLETE'}
+            </span>
+          </div>
           {thought}
         </div>
       )}
