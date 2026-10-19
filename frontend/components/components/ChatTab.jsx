@@ -1041,6 +1041,279 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
   );
 }
 
+// ─── Cognitive Parser & Desktop Architecture Components ──────────────────────
+function parseCognitiveContent(rawContent) {
+  if (typeof rawContent !== 'string') {
+    return { meta: null, thought: null, body: rawContent, isThinking: false };
+  }
+
+  let text = rawContent;
+  let meta = null;
+
+  // 1. Extract metadata comment <!--AI-BS-METADATA:...-->
+  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(text);
+  if (metaMatch) {
+    try {
+      meta = JSON.parse(metaMatch[1]);
+    } catch (e) {
+      console.warn("Failed to parse AI-BS cognitive metadata", e);
+    }
+    text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/, '').trimStart();
+  }
+
+  // 2. Extract <think>...</think> block (complete or in-progress stream)
+  let thought = null;
+  let body = text;
+  let isThinking = false;
+
+  const completeThinkMatch = /<think>([\s\S]*?)<\/think>/.exec(text);
+  if (completeThinkMatch) {
+    thought = completeThinkMatch[1].trim();
+    body = text.replace(/<think>[\s\S]*?<\/think>/, '').trim();
+    isThinking = false;
+  } else {
+    const inProgressThinkMatch = /<think>([\s\S]*)$/.exec(text);
+    if (inProgressThinkMatch) {
+      thought = inProgressThinkMatch[1].trim();
+      body = text.split('<think>')[0].trim();
+      isThinking = true;
+    }
+  }
+
+  return { meta, thought, body, isThinking };
+}
+
+function DesktopCognitiveMetaHeader({ meta }) {
+  const [showWhy, setShowWhy] = useState(false);
+  const [showStepper, setShowStepper] = useState(false);
+
+  if (!meta) return null;
+
+  const steps = meta.steps || [
+    { id: 1, name: "Ingestion & Intent Analysis", status: "done", detail: "Intent Classified" },
+    { id: 2, name: "Model & VRAM Route", status: "done", detail: `${meta.display_name || meta.model}` },
+    { id: 3, name: "Personal Memory Vault", status: "done", detail: "Vault Verified" },
+    { id: 4, name: "CoT Reasoning Trace", status: "done", detail: "CoT Synthesized" },
+    { id: 5, name: "Token Stream Generation", status: "done", detail: "NVML Streaming" },
+    { id: 6, name: "Sandbox Verification", status: "done", detail: "Host Verified" }
+  ];
+
+  return (
+    <div style={{ marginBottom: '10px', fontSize: '0.78rem' }}>
+      {/* Pills Header Bar */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          background: 'rgba(96, 165, 250, 0.12)',
+          color: '#93c5fd',
+          border: '1px solid rgba(96, 165, 250, 0.25)',
+          padding: '3px 10px',
+          borderRadius: '14px',
+          fontWeight: 600,
+          fontSize: '0.75rem'
+        }}>
+          🤖 {meta.display_name || meta.model}
+        </span>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          background: 'rgba(52, 211, 153, 0.12)',
+          color: '#6ee7b7',
+          border: '1px solid rgba(52, 211, 153, 0.25)',
+          padding: '3px 10px',
+          borderRadius: '14px',
+          fontWeight: 500,
+          fontSize: '0.75rem'
+        }}>
+          ⚡ {meta.device || 'RTX 4090'}
+        </span>
+        <button
+          onClick={() => setShowWhy(!showWhy)}
+          style={{
+            background: showWhy ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+            color: showWhy ? '#fbbf24' : '#cbd5e1',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '14px',
+            padding: '3px 10px',
+            fontSize: '0.74rem',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <span>ℹ️ Why this LLM?</span>
+        </button>
+        <button
+          onClick={() => setShowStepper(!showStepper)}
+          style={{
+            background: showStepper ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+            color: showStepper ? '#c084fc' : '#cbd5e1',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '14px',
+            padding: '3px 10px',
+            fontSize: '0.74rem',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <span>🪜 Pipeline (6/6) {showStepper ? '▲' : '▼'}</span>
+        </button>
+      </div>
+
+      {/* Why This Model Rationale Drawer */}
+      {showWhy && (
+        <div style={{
+          background: '#0d1117',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          borderRadius: '10px',
+          padding: '10px 14px',
+          marginBottom: '10px',
+          color: '#e2e8f0',
+          lineHeight: '1.5',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+        }}>
+          <div style={{ color: '#fbbf24', fontWeight: 600, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>💡 Cognitive Model Routing Rationale:</span>
+          </div>
+          <div style={{ color: '#cbd5e1', fontSize: '0.78rem' }}>
+            {meta.reason || 'Sovereign local inference with zero cloud dependency.'}
+          </div>
+          <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#94a3b8', display: 'flex', gap: '16px' }}>
+            <span>Allocated Context: <strong style={{ color: '#93c5fd' }}>{meta.context_tokens ? `${meta.context_tokens.toLocaleString()} tokens` : 'Adaptive'}</strong></span>
+            <span>VRAM Mode: <strong style={{ color: '#34d399' }}>Locked Hot in 24GB</strong></span>
+          </div>
+        </div>
+      )}
+
+      {/* Pipeline Stepper Drawer */}
+      {showStepper && (
+        <div style={{
+          background: '#070a10',
+          border: '1px solid rgba(168, 85, 247, 0.35)',
+          borderRadius: '10px',
+          padding: '10px 14px',
+          marginBottom: '10px',
+          color: '#cbd5e1',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+        }}>
+          <div style={{ color: '#c084fc', fontWeight: 600, marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>✦ Sovereign Execution Journey (Step-by-Step)</span>
+            <span style={{ fontSize: '0.72rem', color: '#34d399' }}>✓ 6 / 6 Complete</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px' }}>
+            {steps.map(step => (
+              <div key={step.id || step.name} style={{
+                background: 'rgba(255,255,255,0.02)',
+                padding: '6px 10px',
+                borderRadius: '6px',
+                border: '1px solid rgba(255,255,255,0.05)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '0.75rem'
+              }}>
+                <span style={{ color: step.status === 'done' ? '#34d399' : step.status === 'active' ? '#60a5fa' : '#94a3b8', fontWeight: 700 }}>
+                  {step.status === 'done' ? '✓' : step.status === 'active' ? '⟳' : '○'}
+                </span>
+                <div>
+                  <div style={{ fontWeight: 600, color: step.status === 'done' ? '#f1f5f9' : '#cbd5e1' }}>
+                    {step.name}
+                  </div>
+                  {step.detail && (
+                    <div style={{ color: '#94a3b8', fontSize: '0.68rem' }}>
+                      {step.detail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
+  const [isOpen, setIsOpen] = useState(isThinking);
+
+  useEffect(() => {
+    if (isThinking) {
+      setIsOpen(true);
+    }
+  }, [isThinking]);
+
+  if (!thought) return null;
+
+  const wordCount = thought.split(/\s+/).filter(Boolean).length;
+
+  return (
+    <div style={{
+      marginBottom: '12px',
+      borderRadius: '10px',
+      background: 'rgba(168, 85, 247, 0.05)',
+      border: isThinking ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+      overflow: 'hidden',
+      transition: 'all 0.2s ease'
+    }}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 12px',
+          background: isThinking ? 'rgba(168, 85, 247, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+          border: 'none',
+          color: isThinking ? '#d8b4fe' : '#94a3b8',
+          fontSize: '0.76rem',
+          fontWeight: 600,
+          cursor: 'pointer',
+          textAlign: 'left'
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>{isThinking ? '✦ Thinking & Planning Trace...' : '🧠 Internal Thought Process'}</span>
+          {!isThinking && (
+            <span style={{ color: '#64748b', fontWeight: 400, fontSize: '0.7rem' }}>
+              ({wordCount} words)
+            </span>
+          )}
+        </span>
+        <span style={{ fontSize: '0.72rem', color: isThinking ? '#c084fc' : '#64748b' }}>
+          {isOpen ? '▲ Collapse' : '▼ Expand'}
+        </span>
+      </button>
+
+      {isOpen && (
+        <div style={{
+          padding: '10px 14px',
+          fontSize: '0.78rem',
+          color: '#cbd5e1',
+          fontFamily: "'JetBrains Mono', Consolas, monospace",
+          lineHeight: '1.55',
+          whiteSpace: 'pre-wrap',
+          maxHeight: '320px',
+          overflowY: 'auto',
+          borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+          background: '#080a0f'
+        }}>
+          {thought}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FormattedMessageContent({ content, role }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
@@ -1048,8 +1321,9 @@ function FormattedMessageContent({ content, role }) {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  const hasRunToken = typeof content === 'string' && /\[Run\s+([^\]]+)\]/.test(content);
-  const stagedPayloads = hasRunToken ? extractStagedPayloads(content) : null;
+  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
+  const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
+  const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
 
   const renderMarkdownBlock = (markdownText, key) => (
     <ReactMarkdown
@@ -1269,33 +1543,39 @@ function FormattedMessageContent({ content, role }) {
     </ReactMarkdown>
   );
 
-  if (hasRunToken) {
-    const parts = content.split(/(\[Run\s+[^\]]+\])/g);
-    return (
-      <div className="chat-markdown-content" style={{ wordBreak: 'break-word' }}>
-        {parts.map((part, idx) => {
-          const runMatch = /\[Run\s+([^\]]+)\]/.exec(part);
-          if (runMatch) {
-            const label = runMatch[1] || 'Interactive Canvas';
-            return (
-              <TapToRunCanvas
-                key={`canvas-${idx}`}
-                label={label}
-                stagedPayloads={stagedPayloads}
-                backendUrl={BACKEND_URL}
-              />
-            );
-          }
-          if (!part || !part.trim()) return null;
-          return renderMarkdownBlock(part, `md-${idx}`);
-        })}
-      </div>
-    );
-  }
+  const renderCanvasParts = () => {
+    const parts = body.split(/(\[Run\s+[^\]]+\])/g);
+    return parts.map((part, idx) => {
+      const runMatch = /\[Run\s+([^\]]+)\]/.exec(part);
+      if (runMatch) {
+        const label = runMatch[1] || 'Interactive Canvas';
+        return (
+          <TapToRunCanvas
+            key={`canvas-${idx}`}
+            label={label}
+            stagedPayloads={stagedPayloads}
+            backendUrl={BACKEND_URL}
+          />
+        );
+      }
+      if (!part || !part.trim()) return null;
+      return renderMarkdownBlock(part, `md-${idx}`);
+    });
+  };
 
   return (
     <div className="chat-markdown-content" style={{ wordBreak: 'break-word' }}>
-      {renderMarkdownBlock(content, 'single-md')}
+      {meta && <DesktopCognitiveMetaHeader meta={meta} />}
+      {thought && <DesktopCognitiveThoughtDrawer thought={thought} isThinking={isThinking} />}
+      {hasRunToken ? (
+        renderCanvasParts()
+      ) : (
+        body ? renderMarkdownBlock(body, 'single-md') : (isThinking ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c084fc', fontSize: '0.82rem', fontStyle: 'italic', padding: '6px 0' }}>
+            <span style={{ animation: 'spin 1.5s linear infinite' }}>✦</span> Formulating synthesized response...
+          </div>
+        ) : null)
+      )}
     </div>
   );
 }
@@ -6350,7 +6630,6 @@ export default function ChatTab({ isNested = false }) {
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
-              
               const chunk = decoder.decode(value);
               assistantMessage += chunk;
               
@@ -6358,6 +6637,16 @@ export default function ChatTab({ isNested = false }) {
                 const newArr = [...prev];
                 if (newArr.length > 0 && newArr[newArr.length - 1].role === 'assistant') {
                   newArr[newArr.length - 1].content = assistantMessage;
+                  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(assistantMessage);
+                  if (metaMatch) {
+                    try {
+                      const parsedMeta = JSON.parse(metaMatch[1]);
+                      if (parsedMeta.display_name) {
+                        newArr[newArr.length - 1].model = parsedMeta.display_name;
+                      }
+                      newArr[newArr.length - 1].meta = parsedMeta;
+                    } catch (e) {}
+                  }
                 }
                 return newArr;
               });

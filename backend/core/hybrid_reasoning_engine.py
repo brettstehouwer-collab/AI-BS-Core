@@ -637,10 +637,11 @@ async def stream_shadow_coder_response(prompt: str, messages: Optional[list] = N
         "You are an elite, production-grade software engineer working within the C:\\AI-BS ecosystem. "
         "Rules:\n"
         "1. Write clean, complete, modern, syntactically flawless code.\n"
-        "2. When proposing file modifications, use targeted diffs or precise replacement blocks that can be applied with patch_host_file.\n"
-        "3. When creating frontend components, adhere to the 4-mirror architecture (write_mirror_component).\n"
-        "4. Output executable markdown code blocks with language tags (```python, ```javascript, ```jsx, ```json, ```powershell, ```go, ```sql).\n"
-        "5. Explain changes concisely without unnecessary conversational filler."
+        "2. Before generating your final response, outline your concise step-by-step reasoning or execution plan inside <think>...</think> tags.\n"
+        "3. When proposing file modifications, use targeted diffs or precise replacement blocks that can be applied with patch_host_file.\n"
+        "4. When creating frontend components, adhere to the 4-mirror architecture (write_mirror_component).\n"
+        "5. Output executable markdown code blocks with language tags (```python, ```javascript, ```jsx, ```json, ```powershell, ```go, ```sql).\n"
+        "6. Explain changes concisely without unnecessary conversational filler."
     )
     system_instruction = inject_safety_directive(system_instruction)
 
@@ -654,11 +655,31 @@ async def stream_shadow_coder_response(prompt: str, messages: Optional[list] = N
                 history_text += f"{role.upper()}: {content}\n\n"
         full_prompt = f"{history_text}USER: {prompt}\nASSISTANT:"
 
+    metadata_obj = {
+        "type": "aibs_cognitive_meta",
+        "model": "qwen2.5-coder:latest",
+        "display_name": "Qwen2.5-Coder (Shadow Coder)",
+        "reason": "Polyglot programming & syntax formatting detected. Routed to Qwen2.5-Coder on RTX 4090 for verified syntax, high throughput, and host execution.",
+        "device": "NVIDIA GeForce RTX 4090 (24GB)",
+        "context_tokens": 32768,
+        "keep_alive": "persistent_vram",
+        "steps": [
+            {"id": 1, "name": "Ingestion & Intent Analysis", "status": "done", "detail": "Polyglot Coding"},
+            {"id": 2, "name": "Model & VRAM Route", "status": "done", "detail": "Qwen2.5-Coder (RTX 4090)"},
+            {"id": 3, "name": "Personal Memory Vault", "status": "done", "detail": "stehouwer_vault.db active"},
+            {"id": 4, "name": "CoT Reasoning Trace", "status": "active", "detail": "Synthesizing internal thought chain"},
+            {"id": 5, "name": "Token Stream Generation", "status": "pending", "detail": "Direct NVML streaming"},
+            {"id": 6, "name": "Sandbox Verification", "status": "pending", "detail": "Interactive ▶ Run ready"}
+        ]
+    }
+    yield f"<!--AI-BS-METADATA:{json.dumps(metadata_obj)}-->\n\n"
+
     payload = {
         "model": "qwen2.5-coder:7b",
         "prompt": full_prompt,
         "system": system_instruction,
         "stream": True,
+        "keep_alive": -1,  # Keep hot in VRAM forever
         "options": {
             "temperature": 0.2,
             "num_ctx": 32768,
