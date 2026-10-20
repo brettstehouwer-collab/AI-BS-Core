@@ -2212,6 +2212,7 @@ class BsChatIdeFullView(QWidget):
                                 "model": "stehouwer_llm:latest",
                                 "prompt": prompt,
                                 "stream": False,
+                                "keep_alive": 0,
                                 "options": {"num_ctx": 4096, "num_predict": 512},
                             },
                         )
@@ -2329,6 +2330,7 @@ class BsChatIdeFullView(QWidget):
                     "prompt": enriched_prompt,
                     "system": system_instruction,
                     "stream": True,
+                    "keep_alive": 0,
                     "options": {"num_ctx": dynamic_ctx},
                 },
                 timeout=120.0
@@ -2394,6 +2396,12 @@ class BsChatIdeFullView(QWidget):
             self.token_chunk.emit(f"[Stream Error on Port 11434: {e}]")
         finally:
             self._is_streaming = False
+            # Sovereign On-Demand VRAM Reclamation: evict loaded weights immediately
+            try:
+                with httpx.Client(timeout=2.0) as evict_c:
+                    evict_c.post(f"http://127.0.0.1:11434/api/generate", json={"model": model, "keep_alive": 0})
+            except Exception:
+                pass
 
     def _extract_last_code_block(self, custom_text: Optional[str] = None) -> Tuple[str, str]:
         """Extracts the most recent code block from the chat transcript or provided text."""

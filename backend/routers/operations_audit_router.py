@@ -599,37 +599,40 @@ def get_error_diagnostics(tenant: str = Depends(get_tenant)):
             age_sec = now - mtime
             
             # Determine health based on last modification
-            # If a daemon has not written a log in > 24 hours, mark idle/stopped
-            status = "HEALTHY"
-            if age_sec > 86400 * 3:
-                status = "STOPPED / INACTIVE"
+            # Logs untouched for > 72 hours are classified as ARCHIVED / INACTIVE
+            is_stale = age_sec > (86400 * 3)
+            if is_stale:
+                status = "ARCHIVED / INACTIVE"
             elif age_sec > 3600:
                 status = "IDLE"
+            else:
+                status = "HEALTHY"
             
             recent_errs_count = 0
             recent_error_lines = []
 
-            # Fast tail read: read only the last 32 KB chunk rather than whole file
-            with open(lf, "r", encoding="utf-8", errors="ignore") as f:
-                if st.st_size > 32768:
-                    f.seek(st.st_size - 32768)
-                chunk = f.read()
-                tail_lines = chunk.splitlines()[-100:]
-                for line in tail_lines:
-                    line_str = line.strip()
-                    line_upper = line_str.upper()
-                    if any(k in line_upper for k in error_keywords):
-                        recent_errs_count += 1
-                        if len(recent_error_lines) < 4:
-                            recent_error_lines.append(line_str[:160])
-                        error_events.append({
-                            "log_file": p.name,
-                            "line": line_str[:200],
-                            "timestamp_approx": mtime
-                        })
+            # Fast tail read: read only for active/recent logs to avoid surfacing historical stale errors
+            if not is_stale:
+                with open(lf, "r", encoding="utf-8", errors="ignore") as f:
+                    if st.st_size > 32768:
+                        f.seek(st.st_size - 32768)
+                    chunk = f.read()
+                    tail_lines = chunk.splitlines()[-100:]
+                    for line in tail_lines:
+                        line_str = line.strip()
+                        line_upper = line_str.upper()
+                        if any(k in line_upper for k in error_keywords):
+                            recent_errs_count += 1
+                            if len(recent_error_lines) < 4:
+                                recent_error_lines.append(line_str[:160])
+                            error_events.append({
+                                "log_file": p.name,
+                                "line": line_str[:200],
+                                "timestamp_approx": mtime
+                            })
 
-            if recent_errs_count > 10:
-                status = "ERRORS DETECTED"
+                if recent_errs_count > 5:
+                    status = "ERRORS DETECTED"
 
             daemon_health.append({
                 "logfile": p.name,
@@ -643,7 +646,9 @@ def get_error_diagnostics(tenant: str = Depends(get_tenant)):
         except Exception:
             pass
 
-    daemon_health.sort(key=lambda x: (x["error_count_in_tail"], -x["last_modified"]), reverse=True)
+    # Sort: Active errors first, then healthy, idle, and finally archived/inactive
+    status_order = {"ERRORS DETECTED": 0, "HEALTHY": 1, "IDLE": 2, "ARCHIVED / INACTIVE": 3, "STOPPED / INACTIVE": 3}
+    daemon_health.sort(key=lambda x: (status_order.get(x["status"], 4), -x["last_modified"]))
     error_events.sort(key=lambda x: x["timestamp_approx"], reverse=True)
 
     result_payload = {

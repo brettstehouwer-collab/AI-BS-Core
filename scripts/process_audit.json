@@ -1,0 +1,458 @@
+[
+  {
+    "pid": 19020,
+    "name": "vmmemWSL",
+    "cmdline": "",
+    "rss_mb": 3750.6
+  },
+  {
+    "pid": 4624,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\AI_BS_Backend.py",
+    "rss_mb": 687.2
+  },
+  {
+    "pid": 15928,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --max-old-space-size=3072 c:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\resources\\app\\extensions\\n...",
+    "rss_mb": 607.3
+  },
+  {
+    "pid": 14720,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-re...",
+    "rss_mb": 480.0
+  },
+  {
+    "pid": 31592,
+    "name": "node.exe",
+    "cmdline": "node C:\\AI-BS\\frontend\\node_modules\\.bin\\\\..\\vite\\bin\\vite.js --host --port 5173 --strictPort",
+    "rss_mb": 409.8
+  },
+  {
+    "pid": 31176,
+    "name": "llama-server.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\llama-server.exe --model E:\\AI_BS_Resources\\Ollama\\blobs\\sha256-970aa74c0a90ef7482477cf803618e776e173c007bf957f635f1015bfcfe...",
+    "rss_mb": 291.2
+  },
+  {
+    "pid": 19596,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --video-...",
+    "rss_mb": 158.4
+  },
+  {
+    "pid": 22232,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --max-old-space-size=3072 c:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\resources\\app\\extensions\\n...",
+    "rss_mb": 150.6
+  },
+  {
+    "pid": 13632,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --video-...",
+    "rss_mb": 146.5
+  },
+  {
+    "pid": 15748,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --video-...",
+    "rss_mb": 138.1
+  },
+  {
+    "pid": 35768,
+    "name": "node.exe",
+    "cmdline": "node C:\\AI-BS\\tools\\chrome-devtools-mcp\\chrome-devtools-mcp-main\\build\\src\\bin\\chrome-devtools-mcp.js --ignoreDefaultChromeArg=--enable-automation --ignoreDefaultChromeArg=--disabl...",
+    "rss_mb": 127.5
+  },
+  {
+    "pid": 2564,
+    "name": "node.exe",
+    "cmdline": "C:\\Program Files\\nodejs\\node.exe C:\\AI-BS\\tools\\chrome-devtools-mcp\\chrome-devtools-mcp-main\\build\\src\\telemetry\\watchdog\\main.js --parent-pid=35768 --app-version=1.8.0 --os-type=1",
+    "rss_mb": 125.2
+  },
+  {
+    "pid": 14544,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe c:/Users/footb/AppData/Local/Programs/Antigravity IDE/resources/app/extensions/node_modules/typescript/lib...",
+    "rss_mb": 124.7
+  },
+  {
+    "pid": 29064,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\pyppeteer_env\\Scripts\\chroma.exe run --host 0.0.0.0 --port 8001 --path C:\\AI-BS\\chroma_db",
+    "rss_mb": 113.1
+  },
+  {
+    "pid": 11840,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe c:\\Users\\footb\\.antigravity-ide\\extensions\\dbaeumer.vscode-eslint-3.0.34-universal\\server\\out\\eslintServer...",
+    "rss_mb": 111.9
+  },
+  {
+    "pid": 9752,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe c:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\resources\\app\\extensions\\json-language-features\\serv...",
+    "rss_mb": 110.7
+  },
+  {
+    "pid": 19216,
+    "name": "Antigravity IDE.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe c:\\Users\\footb\\AppData\\Local\\Programs\\Antigravity IDE\\resources\\app\\extensions\\markdown-language-features\\...",
+    "rss_mb": 109.9
+  },
+  {
+    "pid": 14752,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\research_agent_daemon.py",
+    "rss_mb": 106.9
+  },
+  {
+    "pid": 23384,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe c:\\Users\\footb\\.antigravity-ide\\extensions\\ms-python.pylint-2025.2.0-universal\\bundled\\tool\\lsp_server.py",
+    "rss_mb": 104.1
+  },
+  {
+    "pid": 10468,
+    "name": "ollama.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\ollama.exe serve",
+    "rss_mb": 100.7
+  },
+  {
+    "pid": 34724,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'C:\\AI-BS\\stehouwer_vector_memory', '--po...",
+    "rss_mb": 93.7
+  },
+  {
+    "pid": 32052,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'C:\\AI-BS\\stehouwer_vector_memory', '--po...",
+    "rss_mb": 90.6
+  },
+  {
+    "pid": 36764,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'E:\\AI_BS_Resources\\ChromaDB', '--port', ...",
+    "rss_mb": 90.6
+  },
+  {
+    "pid": 11892,
+    "name": "ollama app.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\ollama app.exe",
+    "rss_mb": 86.5
+  },
+  {
+    "pid": 5796,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\memory_daemon.py",
+    "rss_mb": 81.1
+  },
+  {
+    "pid": 29708,
+    "name": "ollama.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Ollama\\ollama.exe serve",
+    "rss_mb": 79.0
+  },
+  {
+    "pid": 31328,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\pythonw.exe gemini_mcp_server.py",
+    "rss_mb": 73.4
+  },
+  {
+    "pid": 15176,
+    "name": "msrdc.exe",
+    "cmdline": "msrdc.exe /wslg /silent /v:E178637C-D9D2-4FAB-85B1-37ABF30C6942 /hvsocketserviceid:00000001-FACB-11E6-BD58-64006A7986D3 /plugin:WSLDVC_PACKAGE /wslgsharedmemorypath:WSL\\E178637C-D9...",
+    "rss_mb": 69.4
+  },
+  {
+    "pid": 33064,
+    "name": "powershell.exe",
+    "cmdline": "powershell -Command C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\scripts\\audit_processes.py",
+    "rss_mb": 67.0
+  },
+  {
+    "pid": 29384,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\discord_bot_daemon.py",
+    "rss_mb": 65.3
+  },
+  {
+    "pid": 31192,
+    "name": "node.exe",
+    "cmdline": "C:\\Program Files\\nodejs\\\\node.exe C:\\Program Files\\nodejs\\\\node_modules\\npm\\bin\\npm-cli.js run dev",
+    "rss_mb": 60.6
+  },
+  {
+    "pid": 22508,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe aibs_social_daemon.py",
+    "rss_mb": 59.9
+  },
+  {
+    "pid": 21664,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe aibs_vst_daemon.py",
+    "rss_mb": 56.3
+  },
+  {
+    "pid": 27492,
+    "name": "node.exe",
+    "cmdline": "C:\\Program Files\\nodejs\\node.exe server.js",
+    "rss_mb": 56.2
+  },
+  {
+    "pid": 26752,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe c:\\Users\\footb\\.antigravity-ide\\extensions\\ms-python.flake8-2025.2.0-universal\\bundled\\tool\\lsp_server.py",
+    "rss_mb": 54.9
+  },
+  {
+    "pid": 12904,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\pythonw.exe shm_websocket_gateway.py",
+    "rss_mb": 45.6
+  },
+  {
+    "pid": 29964,
+    "name": "cloudflared.exe",
+    "cmdline": "C:\\AI-BS\\cloudflared.exe tunnel run ai-bs",
+    "rss_mb": 41.9
+  },
+  {
+    "pid": 6312,
+    "name": "wslservice.exe",
+    "cmdline": "C:\\Program Files\\WSL\\wslservice.exe",
+    "rss_mb": 34.7
+  },
+  {
+    "pid": 12236,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\pythonw.exe C:\\AI-BS\\scripts\\start_ollama_sovereign.py",
+    "rss_mb": 23.2
+  },
+  {
+    "pid": 26884,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\wallet_tracker_daemon.py",
+    "rss_mb": 20.7
+  },
+  {
+    "pid": 24968,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\compute_monetization_daemon.py",
+    "rss_mb": 20.5
+  },
+  {
+    "pid": 31148,
+    "name": "esbuild.exe",
+    "cmdline": "C:\\AI-BS\\frontend\\node_modules\\@esbuild\\win32-x64\\esbuild.exe --service=0.21.5 --ping",
+    "rss_mb": 20.2
+  },
+  {
+    "pid": 15460,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\backend\\context_ingestor_daemon.py",
+    "rss_mb": 19.3
+  },
+  {
+    "pid": 5232,
+    "name": "python.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe C:\\AI-BS\\scripts\\audit_processes.py",
+    "rss_mb": 18.6
+  },
+  {
+    "pid": 14760,
+    "name": "aibs_engine.exe",
+    "cmdline": "C:\\AI-BS\\go-core\\aibs_engine.exe",
+    "rss_mb": 17.6
+  },
+  {
+    "pid": 30180,
+    "name": "wsl.exe",
+    "cmdline": "C:\\WINDOWS\\system32\\wsl.exe -d Ubuntu -u root -- bash -c systemctl start nginx; sleep infinity",
+    "rss_mb": 12.3
+  },
+  {
+    "pid": 11440,
+    "name": "wslhost.exe",
+    "cmdline": " --vm-id {e178637c-d9d2-4fab-85b1-37abf30c6942} --handle 2988",
+    "rss_mb": 12.1
+  },
+  {
+    "pid": 16060,
+    "name": "wslhost.exe",
+    "cmdline": " --vm-id {e178637c-d9d2-4fab-85b1-37abf30c6942} --handle 3008",
+    "rss_mb": 11.9
+  },
+  {
+    "pid": 30484,
+    "name": "wslhost.exe",
+    "cmdline": " --distro-id {2a6e86f0-59d7-4310-a062-c710b61cbf0e} --vm-id {e178637c-d9d2-4fab-85b1-37abf30c6942} --handle 756 --event 788 --parent 792",
+    "rss_mb": 11.6
+  },
+  {
+    "pid": 28376,
+    "name": "nginx.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe -p C:\\StehouwerPublishing.com -c C:\\StehouwerPubl...",
+    "rss_mb": 10.7
+  },
+  {
+    "pid": 26368,
+    "name": "nginx.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe -p C:\\StehouwerPublishing.com -c C:\\StehouwerPubl...",
+    "rss_mb": 10.4
+  },
+  {
+    "pid": 4180,
+    "name": "nginx.exe",
+    "cmdline": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe -p C:\\StehouwerPublishing.com -c C:\\StehouwerPubl...",
+    "rss_mb": 10.2
+  },
+  {
+    "pid": 27296,
+    "name": "wsl.exe",
+    "cmdline": "C:\\WINDOWS\\system32\\wsl.exe -d Ubuntu -u root -- bash -c systemctl start nginx; sleep infinity",
+    "rss_mb": 7.9
+  },
+  {
+    "pid": 27468,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\pythonw.exe C:\\AI-BS\\scripts\\start_ollama_sovereign.py",
+    "rss_mb": 5.7
+  },
+  {
+    "pid": 28436,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\pythonw.exe shm_websocket_gateway.py",
+    "rss_mb": 5.7
+  },
+  {
+    "pid": 31304,
+    "name": "pythonw.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\pythonw.exe gemini_mcp_server.py",
+    "rss_mb": 5.7
+  },
+  {
+    "pid": 6696,
+    "name": "python.exe",
+    "cmdline": "c:\\AI-BS\\backend\\.venv\\Scripts\\python.exe c:\\Users\\footb\\.antigravity-ide\\extensions\\ms-python.flake8-2025.2.0-universal\\bundled\\tool\\lsp_server.py",
+    "rss_mb": 4.7
+  },
+  {
+    "pid": 26852,
+    "name": "python.exe",
+    "cmdline": "c:\\AI-BS\\backend\\.venv\\Scripts\\python.exe c:\\Users\\footb\\.antigravity-ide\\extensions\\ms-python.pylint-2025.2.0-universal\\bundled\\tool\\lsp_server.py",
+    "rss_mb": 4.6
+  },
+  {
+    "pid": 29276,
+    "name": "chroma.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\chroma.exe run --host 0.0.0.0 --port 8001 --path C:\\AI-BS\\chroma_db",
+    "rss_mb": 4.5
+  },
+  {
+    "pid": 15400,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe aibs_vst_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 15580,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'C:\\AI-BS\\stehouwer_vector_memory', '--port', '8001']; chromadb.c...",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 18804,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'C:\\AI-BS\\stehouwer_vector_memory', '--port', '8001']; chromadb.c...",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 20656,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\discord_bot_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 24500,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\context_ingestor_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 26876,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\wallet_tracker_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 27284,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\research_agent_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 27636,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\pyppeteer_env\\Scripts\\chroma.exe run --host 0.0.0.0 --port 8001 --path C:\\AI-BS\\chroma_db",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 28780,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\memory_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 29552,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\compute_monetization_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 31696,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe aibs_social_daemon.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 34064,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe -c import sys, chromadb.cli.cli; sys.argv = ['chroma', 'run', '--path', r'E:\\AI_BS_Resources\\ChromaDB', '--port', '8002']; chromadb.cli.cl...",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 35856,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\backend\\AI_BS_Backend.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 38232,
+    "name": "python.exe",
+    "cmdline": "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe C:\\AI-BS\\scripts\\audit_processes.py",
+    "rss_mb": 4.3
+  },
+  {
+    "pid": 17444,
+    "name": "wsl.exe",
+    "cmdline": "wsl.exe -d Ubuntu -u root -- sleep infinity",
+    "rss_mb": 2.8
+  },
+  {
+    "pid": 24340,
+    "name": "wsl.exe",
+    "cmdline": "wsl.exe -d Ubuntu -u root -- sleep infinity",
+    "rss_mb": 2.7
+  },
+  {
+    "pid": 22008,
+    "name": "wslhost.exe",
+    "cmdline": " --distro-id {2a6e86f0-59d7-4310-a062-c710b61cbf0e} --vm-id {e178637c-d9d2-4fab-85b1-37abf30c6942} --handle 760 --event 780 --parent 784",
+    "rss_mb": 2.6
+  }
+]

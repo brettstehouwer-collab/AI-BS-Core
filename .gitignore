@@ -352,7 +352,10 @@ Workflows for comfy ui/
 *Screenplay*
 *Film*
 *Manuscript*
-*Script*
+*MovieScript*
+*ScreenplayScript*
+!scripts/
+!scripts/**
 *Book*
 TheSimpleChef*
 Echoes_Within*

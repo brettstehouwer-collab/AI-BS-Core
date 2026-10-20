@@ -1,0 +1,165 @@
+.vs-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0d1017;
+  color: #e2e8f0;
+  font-family: sans-serif;
+}
+
+/* Toolbar */
+.vs-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 12px 24px;
+  background: rgba(13, 16, 23, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vs-toolbar-group {
+  display: flex;
+  gap: 8px;
+  margin-right: 20px;
+}
+
+.vs-toolbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.vs-select {
+  padding: 8px 12px;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.vs-select-nodejs {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.vs-select-webgl {
+  background: rgba(168, 85, 247, 0.2);
+}
+
+/* Canvas */
+.vs-canvas {
+  flex: 1;
+  background: #0a0a0a;
+  position: relative;
+}
+
+/* Node Shared Styles */
+.vs-node {
+  background: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  width: 180px;
+  overflow: hidden;
+  color: #e2e8f0;
+}
+
+.vs-node-header {
+  padding: 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #333;
+  background: rgba(0,0,0,0.3);
+}
+
+.vs-node-body {
+  padding: 12px;
+}
+
+.vs-node-input {
+  width: 100%;
+  background: #111;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+
+/* Node Variants */
+.vs-node-start {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+.vs-node-start .vs-node-header { color: #38bdf8; }
+
+.vs-node-action {
+  border-color: rgba(244, 63, 94, 0.5);
+}
+.vs-node-action .vs-node-header { color: #f43f5e; }
+
+.vs-node-math {
+  border-color: rgba(245, 158, 11, 0.5);
+}
+.vs-node-math .vs-node-header { color: #f59e0b; }
+.vs-node-math-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vs-node-logic {
+  border-color: rgba(234, 179, 8, 0.5);
+}
+.vs-node-logic .vs-node-header { color: #eab308; }
+.vs-node-logic-inputs {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.vs-node-logic-var { width: 40px; }
+.vs-node-logic-comp { width: 50px; }
+.vs-node-logic-true {
+  position: absolute;
+  right: -35px;
+  top: 26px;
+  font-size: 10px;
+  color: #10b981;
+  font-weight: bold;
+}
+.vs-node-logic-false {
+  position: absolute;
+  right: -40px;
+  top: 66px;
+  font-size: 10px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.vs-node-3d {
+  border-color: rgba(168, 85, 247, 0.5);
+}
+.vs-node-3d .vs-node-header { color: #a855f7; }
+.vs-node-3d-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vs-node-3d-coords {
+  display: flex;
+  gap: 4px;
+}
+.vs-node-3d-color {
+  padding: 0;
+  height: 30px;
+}
+
+.vs-node-telemetry {
+  border-color: rgba(76, 201, 240, 0.5);
+}
+.vs-node-telemetry .vs-node-header { color: #4cc9f0; }
+.vs-node-telemetry-desc {
+  font-size: 10px;
+  margin-top: 4px;
+}

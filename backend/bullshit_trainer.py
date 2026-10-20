@@ -252,10 +252,10 @@ def run_unsloth_training_job(vault: str, epochs: int, rank: int, lr: str):
     )
 
     try:
-        print(f"[Bullshit Trainer] Reloading stehouwer_llm into VRAM...")
+        print(f"[Bullshit Trainer] Unloading stehouwer_llm from VRAM (On-Demand Mode)...")
         requests.post(
             "http://127.0.0.1:11434/api/generate",
-            json={"model": "stehouwer_llm", "keep_alive": -1},
+            json={"model": "stehouwer_llm", "keep_alive": 0},
             timeout=5.0,
         )
     except Exception as e:

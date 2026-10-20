@@ -94,36 +94,42 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
 
   // Custom Message Box State (Pre-populated with Dennis's updated NCAA Eligibility Email Draft)
   const NCAA_ELIGIBILITY_DRAFT = `YOUR ELIGIBILITY IS A MUST!
-Hi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.
+Hi {first_name}, this is Dennis Bell, former NY Knick and President of Recreational Debut.
 
-I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process.
+If playing college sports is your goal, don’t wait for coaches to find you. We want to help get your athletic profile in front of 850+ college coaches nationwide!
+
+I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process:
 
 🏀 NCAA DIVISION I ELIGIBILITY REQUIREMENTS
-
-16 NCAA-approved core courses
+• 16 NCAA-approved core courses
 • Minimum 2.3 core-course GPA
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-i/
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-i-academic-eligibility.aspx
 
 🏀 NCAA DIVISION II ELIGIBILITY REQUIREMENTS
 • 16 NCAA-approved core courses
 • Minimum 2.2 core-course GPA
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-ii/
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-ii-academic-eligibility.aspx
 
 🏀 NCAA DIVISION III ELIGIBILITY REQUIREMENTS
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-iii/
+• Meet institution admission standards & core coursework
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-iii-academic-eligibility.aspx
 
-Remember, being eligible is only part of the process — college coaches also need to know who you are!
+Remember, being eligible is only part of the process — college coaches also need to know who you are and see your film!
 
 Recreational Debut can help get your athletic portfolio in front of 850 college coaches nationwide. Get your information out before October 31, 2026, while coaches are putting together their number 1 recruiting lists.
 
 ✅ REGISTER FREE:
-http://www.recdebut.com
+https://recdebut.com/all-registration/
+
+📱 Call or text: 616-291-5227
+📧 Email: dbell002@sbcglobal.net
+🌐 Web: https://recdebut.com
+
+Let’s get you recruited!
 
 Dennis Bell
-Former NY Knick
-President, Recreational Debut
-616-291-5227 
-Dbell002@sbcglobal.net`;
+Former New York Knicks (#4)
+President, Recreational Debut`;
 
   const LAS_VEGAS_TALENT_SCRIPT = `Hey {first_name}, this is Dennis Bell, former New York Knick and President of Recreational Debut.
 

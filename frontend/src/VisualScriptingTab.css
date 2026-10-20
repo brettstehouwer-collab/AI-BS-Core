@@ -1,0 +1,113 @@
+.vs-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.vs-toolbar {
+  display: flex;
+  gap: 12px;
+  padding: 12px 24px;
+  align-items: center;
+}
+
+.vs-canvas {
+  flex: 1;
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #0b0f19;
+}
+
+/* Custom Nodes Styling */
+.vs-node {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  min-width: 150px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  font-family: inherit;
+}
+
+.vs-node-start {
+  border-color: #10b981;
+}
+.vs-node-start .vs-node-header {
+  background: rgba(16, 185, 129, 0.2);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.vs-node-action {
+  border-color: #3b82f6;
+}
+.vs-node-action .vs-node-header {
+  background: rgba(59, 130, 246, 0.2);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+/* NEW: Math Node */
+.vs-node-math {
+  border-color: #f59e0b;
+}
+.vs-node-math .vs-node-header {
+  background: rgba(245, 158, 11, 0.2);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+/* NEW: Logic Node */
+.vs-node-logic {
+  border-color: #eab308;
+}
+.vs-node-logic .vs-node-header {
+  background: rgba(234, 179, 8, 0.2);
+  border-bottom: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+/* NEW: 3D Node */
+.vs-node-3d {
+  border-color: #a855f7;
+}
+.vs-node-3d .vs-node-header {
+  background: rgba(168, 85, 247, 0.2);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+/* NEW: Telemetry Node */
+.vs-node-telemetry {
+  border-color: #4cc9f0;
+}
+.vs-node-telemetry .vs-node-header {
+  background: rgba(76, 201, 240, 0.2);
+  border-bottom: 1px solid rgba(76, 201, 240, 0.4);
+}
+
+.vs-node-header {
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: #fff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.vs-node-body {
+  padding: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.vs-node-input {
+  width: 100%;
+  margin-top: 6px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border-glow);
+  color: #fff;
+  padding: 4px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.vs-node-input:focus {
+  border-color: var(--accent-neon);
+}

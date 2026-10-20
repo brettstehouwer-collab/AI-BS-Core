@@ -1055,10 +1055,14 @@ class ActiveGameDiscoveryWidget(QFrame):
 
     game_selected = pyqtSignal(str, int)  # Emits (title, hwnd)
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, bus: Optional[EngineBus] = None, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.bus = bus
         self.setStyleSheet("background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 10px;")
         self._window_map: Dict[str, int] = {}
+        self._current_window_items: List[tuple[str, int]] = []
+        self._daemon_games: List[str] = []
+        self._probe_inflight = False
 
         lay = QVBoxLayout(self)
         lay.setContentsMargins(8, 8, 8, 8)
@@ -1111,57 +1115,98 @@ class ActiveGameDiscoveryWidget(QFrame):
         self.game_selected.emit(selected_text, hwnd)
 
     def fetch_active_windows(self) -> None:
-        """Queries OS desktop windows directly and queries Port 8005/8088 for running games."""
+        """Queries OS desktop windows directly and queries Port 8005/8088 asynchronously for running games."""
         real_windows = get_desktop_capture_windows()
         filter_kw = self.txt_custom.text().strip().lower() if hasattr(self, "txt_custom") else ""
 
-        cur_text = self.combo_games.currentText()
-
-        self.combo_games.blockSignals(True)
-        self.combo_games.clear()
-        self._window_map.clear()
-
         auto_label = "⚡ Auto-Detect Foreground Game/Window"
-        self.combo_games.addItem(auto_label)
-        self._window_map[auto_label] = 0
+        new_items: List[tuple[str, int]] = [(auto_label, 0)]
+
+        # Include any discovered daemon games from async background worker
+        if self.chk_auto.isChecked():
+            for g_label in self._daemon_games:
+                if not any(item[0] == g_label for item in new_items):
+                    new_items.append((g_label, 0))
 
         for w in real_windows:
             title = w["title"]
             if filter_kw and filter_kw not in title.lower():
                 continue
             label = f"🎮 {title} ({w['width']}x{w['height']})"
-            self.combo_games.addItem(label)
-            self._window_map[label] = w["hwnd"]
+            new_items.append((label, w["hwnd"]))
 
-        # Also probe Port 8005 / 8088 if games are registered
-        for port in [8005, 8088]:
-            try:
-                req = urllib.request.Request(f"http://127.0.0.1:{port}/api/windows", headers={"User-Agent": "AI-BS-Native"})
-                with urllib.request.urlopen(req, timeout=0.4) as resp:
-                    data = json.loads(resp.read().decode("utf-8", errors="ignore"))
-                    active_game = data.get("active_game")
-                    if active_game and self.chk_auto.isChecked():
-                        g_name = active_game.get("game_name") or active_game.get("title")
-                        if g_name:
-                            target = f"🎮 {g_name} (Port {port})"
-                            if target not in self._window_map:
-                                self.combo_games.insertItem(1, target)
-                                self._window_map[target] = 0
-            except Exception:
-                pass
+        # Avoid rebuilding the ComboBox on every tick if the window list hasn't changed
+        if new_items != self._current_window_items:
+            self._current_window_items = new_items
+            cur_text = self.combo_games.currentText()
 
-        # Restore selection if possible
-        found_idx = self.combo_games.findText(cur_text)
-        if found_idx != -1:
-            self.combo_games.setCurrentIndex(found_idx)
-        else:
-            self.combo_games.setCurrentIndex(0)
+            self.combo_games.blockSignals(True)
+            self.combo_games.clear()
+            self._window_map.clear()
 
-        self.combo_games.blockSignals(False)
+            for label, hwnd in new_items:
+                self.combo_games.addItem(label)
+                self._window_map[label] = hwnd
+
+            # Restore selection if possible
+            found_idx = self.combo_games.findText(cur_text)
+            if found_idx != -1:
+                self.combo_games.setCurrentIndex(found_idx)
+            else:
+                self.combo_games.setCurrentIndex(0)
+
+            self.combo_games.blockSignals(False)
+
+        # Offload Port 8005 / 8088 daemon probing to EngineBus worker thread (Zero GUI blocking)
+        self._trigger_async_daemon_probe()
+
+    def _trigger_async_daemon_probe(self) -> None:
+        if self._probe_inflight or not self.chk_auto.isChecked():
+            return
+        if self.bus is None:
+            return
+
+        self._probe_inflight = True
+
+        def _bg_probe() -> List[str]:
+            found: List[str] = []
+            for port in [8005, 8088]:
+                try:
+                    req = urllib.request.Request(
+                        f"http://127.0.0.1:{port}/api/windows",
+                        headers={"User-Agent": "AI-BS-Native"},
+                    )
+                    with urllib.request.urlopen(req, timeout=0.5) as resp:
+                        data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                        active_game = data.get("active_game")
+                        if active_game:
+                            g_name = active_game.get("game_name") or active_game.get("title")
+                            if g_name:
+                                found.append(f"🎮 {g_name} (Port {port})")
+                except Exception:
+                    pass
+            return found
+
+        self.bus.submit(
+            _bg_probe,
+            on_result=self._on_daemon_probe_result,
+            on_error=lambda _: self._on_daemon_probe_error(),
+        )
+
+    def _on_daemon_probe_result(self, found_games: List[str]) -> None:
+        self._probe_inflight = False
+        if found_games != self._daemon_games:
+            self._daemon_games = found_games
+            # Re-run local list sync now that background discovery has new entries
+            self.fetch_active_windows()
+
+    def _on_daemon_probe_error(self) -> None:
+        self._probe_inflight = False
 
     def shutdown(self) -> None:
         if hasattr(self, "_poller") and self._poller.isActive():
             self._poller.stop()
+        self._probe_inflight = True
 
     def closeEvent(self, event: Any) -> None:
         self.shutdown()
@@ -2062,7 +2107,7 @@ class UniversalOmniStudioNativeView(QWidget):
         bot_grid.setSpacing(10)
 
         # COL 1: GAME DISCOVERY HOOK
-        self.game_discovery = ActiveGameDiscoveryWidget()
+        self.game_discovery = ActiveGameDiscoveryWidget(bus=self.bus)
         self.game_discovery.game_selected.connect(self._on_game_selected)
         bot_grid.addWidget(self.game_discovery, 0, 0)
 

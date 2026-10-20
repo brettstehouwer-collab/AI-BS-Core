@@ -1,0 +1,16 @@
+import smtplib
+
+email_user = 'brettstehouwer@gmail.com'
+app_password = 'tngtxhpdgunzjiva'
+
+try:
+    print(f"Connecting to smtp.gmail.com:587 for {email_user}...")
+    server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10.0)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login(email_user, app_password)
+    print("SUCCESS: brettstehouwer@gmail.com authenticated successfully with Google SMTP!")
+    server.quit()
+except Exception as e:
+    print(f"FAILED: {e}")

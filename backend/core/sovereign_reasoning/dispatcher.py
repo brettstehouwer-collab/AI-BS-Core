@@ -36,8 +36,8 @@ def ensure_ollama_running():
 
         env = os.environ.copy()
         env["OLLAMA_HOST"] = "0.0.0.0:11434"
-        env["OLLAMA_MODELS"] = r"E:\AI_BS_Resources\Ollama"
-        env["OLLAMA_KEEP_ALIVE"] = "10m"
+        env["OLLAMA_MODELS"] = r"C:\AI-BS\models\ollama" if os.path.exists(r"C:\AI-BS\models\ollama") else r"E:\AI_BS_Resources\Ollama"
+        env["OLLAMA_KEEP_ALIVE"] = "0"
         env["OLLAMA_NUM_PARALLEL"] = "1"
         env["OLLAMA_MAX_LOADED_MODELS"] = "1"
         env["OLLAMA_FLASH_ATTENTION"] = "1"
@@ -311,7 +311,7 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
         "prompt": synthesized_prompt,
         "system": stehouwer_system_prompt,
         "stream": True,
-        "keep_alive": "15m",
+        "keep_alive": 0,
         "options": {
             "num_ctx": 8192,
             "temperature": 0.8,
@@ -388,3 +388,17 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
     if full_text:
         # Asynchronous background auto-save and preference extraction
         asyncio.create_task(asyncio.to_thread(personal_memory.log_interaction_and_auto_extract, user_query, full_text))
+
+    # Sovereign On-Demand VRAM Reclamation: evict loaded weights immediately so idle VRAM is 0 MB
+    async def _evict_ollama_vram():
+        try:
+            async with httpx.AsyncClient(timeout=3.0) as evict_c:
+                for target_ep in OLLAMA_ENDPOINTS:
+                    try:
+                        await evict_c.post(target_ep, json={"model": payload.get("model", "stehouwer_llm"), "keep_alive": 0})
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+    asyncio.create_task(_evict_ollama_vram())

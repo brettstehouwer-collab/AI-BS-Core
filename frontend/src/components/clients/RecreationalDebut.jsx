@@ -106,38 +106,85 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [testResult, setTestResult] = useState(null);
 
+  // Transactional Email API (Resend / SendGrid) Shield State
+  const [emailApiConfig, setEmailApiConfig] = useState(null);
+  const [resendApiKeyInput, setResendApiKeyInput] = useState('');
+  const [resendFromInput, setResendFromInput] = useState('Dennis Bell <recruiting@recdebut.com>');
+  const [selectedProvider, setSelectedProvider] = useState('auto');
+  const [isSavingApiConfig, setIsSavingApiConfig] = useState(false);
+  const [apiConfigToast, setApiConfigToast] = useState(null);
+  const [showApiSetupGuide, setShowApiSetupGuide] = useState(false);
+
+  const handleSaveApiConfig = async () => {
+    setIsSavingApiConfig(true);
+    setApiConfigToast(null);
+    try {
+      const payload = {
+        provider: selectedProvider,
+        resend_from_email: resendFromInput.trim() || 'Dennis Bell <recruiting@recdebut.com>'
+      };
+      if (resendApiKeyInput.trim()) {
+        payload.resend_api_key = resendApiKeyInput.trim();
+      }
+      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/email-api/config`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setApiConfigToast('✅ Email API configuration successfully saved! Transactional Shield Active.');
+        fetchData();
+        setResendApiKeyInput('');
+      } else {
+        setApiConfigToast(`❌ Error saving API config: ${data.detail || data.message}`);
+      }
+    } catch (e) {
+      setApiConfigToast(`❌ Network error: ${e.message}`);
+    } finally {
+      setIsSavingApiConfig(false);
+      setTimeout(() => setApiConfigToast(null), 6000);
+    }
+  };
+
   // Custom Message Box State (Pre-populated with Dennis's updated NCAA Eligibility Email Draft)
   const NCAA_ELIGIBILITY_DRAFT = `YOUR ELIGIBILITY IS A MUST!
-Hi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.
+Hi {first_name}, this is Dennis Bell, former NY Knick and President of Recreational Debut.
 
-I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process.
+If playing college sports is your goal, don’t wait for coaches to find you. We want to help get your athletic profile in front of 850+ college coaches nationwide!
+
+I want to make sure you know the academic requirements to be eligible for college athletics. Knowing these requirements early can make a big difference in your recruiting process:
 
 🏀 NCAA DIVISION I ELIGIBILITY REQUIREMENTS
-
-16 NCAA-approved core courses
+• 16 NCAA-approved core courses
 • Minimum 2.3 core-course GPA
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-i/
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-i-academic-eligibility.aspx
 
 🏀 NCAA DIVISION II ELIGIBILITY REQUIREMENTS
 • 16 NCAA-approved core courses
 • Minimum 2.2 core-course GPA
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-ii/
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-ii-academic-eligibility.aspx
 
 🏀 NCAA DIVISION III ELIGIBILITY REQUIREMENTS
-https://www.ncaa.org/eligibility-center/initial-eligibility-requirements/division-iii/
+• Meet institution admission standards & core coursework
+• Guide: https://www.ncaa.org/sports/2021/4/27/division-iii-academic-eligibility.aspx
 
-Remember, being eligible is only part of the process — college coaches also need to know who you are!
+Remember, being eligible is only part of the process — college coaches also need to know who you are and see your film!
 
 Recreational Debut can help get your athletic portfolio in front of 850 college coaches nationwide. Get your information out before October 31, 2026, while coaches are putting together their number 1 recruiting lists.
 
 ✅ REGISTER FREE:
-http://www.recdebut.com
+https://recdebut.com/all-registration/
+
+📱 Call or text: 616-291-5227
+📧 Email: dbell002@sbcglobal.net
+🌐 Web: https://recdebut.com
+
+Let’s get you recruited!
 
 Dennis Bell
-Former NY Knick
-President, Recreational Debut
-616-291-5227 
-Dbell002@sbcglobal.net`;
+Former New York Knicks (#4)
+President, Recreational Debut`;
 
   const LAS_VEGAS_TALENT_SCRIPT = `Hey {first_name}, this is Dennis Bell, former New York Knick and President of Recreational Debut.
 
@@ -230,7 +277,7 @@ President, Recreational Debut`;
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [athRes, campRes, coachRes, quotaRes, smtpRes, emailSumRes, repliesRes, analyticsRes] = await Promise.all([
+      const [athRes, campRes, coachRes, quotaRes, smtpRes, emailSumRes, repliesRes, analyticsRes, apiConfigRes] = await Promise.all([
         fetch(`${BACKEND_URL}/api/v1/recdebut/athletes`).then(r => r.json()).catch(() => ({ athletes: [] })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/campaigns`).then(r => r.json()).catch(() => ({ campaigns: [] })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/excluded-coaches`).then(r => r.json()).catch(() => ({ coaches: [] })),
@@ -238,7 +285,8 @@ President, Recreational Debut`;
         fetch(`${BACKEND_URL}/api/v1/recdebut/smtp-accounts`).then(r => r.json()).catch(() => ({ accounts: [] })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/athlete-emails`).then(r => r.json()).catch(() => null),
         fetch(`${BACKEND_URL}/api/v1/recdebut/sms/replies`).then(r => r.json()).catch(() => ({ replies: [], unread_count: 0 })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/outreach-analytics`).then(r => r.json()).catch(() => null)
+        fetch(`${BACKEND_URL}/api/v1/recdebut/outreach-analytics`).then(r => r.json()).catch(() => null),
+        fetch(`${BACKEND_URL}/api/v1/recdebut/email-api/config`).then(r => r.json()).catch(() => null)
       ]);
 
       if (athRes.athletes) setAthletes(athRes.athletes);
@@ -252,6 +300,11 @@ President, Recreational Debut`;
       }
       if (analyticsRes && analyticsRes.success) {
         setAnalyticsData(analyticsRes);
+      }
+      if (apiConfigRes && apiConfigRes.success) {
+        setEmailApiConfig(apiConfigRes);
+        if (apiConfigRes.provider) setSelectedProvider(apiConfigRes.provider);
+        if (apiConfigRes.resend_from_email) setResendFromInput(apiConfigRes.resend_from_email);
       }
       if (quotaRes && quotaRes.success) {
         setQuotaStatus(quotaRes);
@@ -836,7 +889,8 @@ President, Recreational Debut`;
   };
 
   // Categorize Athletes
-  const pendingAthletes = athletes.filter(a => !a.status || a.status === 'Pending' || a.status === 'Selected');
+  const phoneOnlyAthletes = athletes.filter(a => a.email_status === 'NO_EMAIL' || (!a.email && a.phone));
+  const pendingAthletes = athletes.filter(a => (!a.status || a.status === 'Pending' || a.status === 'Selected') && a.email_status !== 'NO_EMAIL' && a.email);
   const messagedAthletes = athletes.filter(a => a.status === 'Contacted' || a.status === 'Messaged');
   const athletesWithEmails = athletes.filter(a => a.email && a.email.includes('@'));
 
@@ -844,6 +898,7 @@ President, Recreational Debut`;
   const getActiveList = () => {
     let source = [];
     if (syndicationCategory === 'messaged') source = messagedAthletes;
+    else if (syndicationCategory === 'phone_only') source = phoneOnlyAthletes;
     else source = pendingAthletes;
 
     if (!searchTerm.trim()) return source;
@@ -2181,8 +2236,7 @@ President, Recreational Debut`;
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '12px', color: '#94a3b8', flexWrap: 'wrap', gap: '10px' }}>
                 <div>
                   <span>Length: <strong style={{ color: '#F58426' }}>{messageScript.length}</strong> characters</span>
-                  <span style={{ margin: '0 8px' }}>•</span>
-                  <span>Personalization: <strong>Auto-tailored to each athlete</strong> (use <code style={{ color: '#38bdf8' }}>{"{first_name}"}</code> or auto-prepends <em>"Hey [Name],"</em>)</span>
+                  <span>Personalization: <strong>Auto-tailored</strong> (Tokens: <code style={{ color: '#38bdf8' }}>{"{first_name}"}</code>, <code style={{ color: '#38bdf8' }}>{"{name}"}</code>, <code style={{ color: '#38bdf8' }}>{"{school}"}</code>, <code style={{ color: '#38bdf8' }}>{"{sport}"}</code>, <code style={{ color: '#38bdf8' }}>{"{grad_year}"}</code>)</span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -2602,6 +2656,22 @@ President, Recreational Debut`;
                     🟢 Already Messaged ({messagedAthletes.length})
                   </button>
 
+                  <button
+                    onClick={() => { setSyndicationCategory('phone_only'); setSelectedIds(new Set()); }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      fontWeight: '800',
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      backgroundColor: syndicationCategory === 'phone_only' ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)',
+                      color: syndicationCategory === 'phone_only' ? '#ffffff' : '#94a3b8'
+                    }}
+                  >
+                    📱 Phone-Only Follow-Up ({phoneOnlyAthletes.length})
+                  </button>
+
                   <div style={{
                     padding: '8px 14px',
                     borderRadius: '6px',
@@ -2706,6 +2776,45 @@ President, Recreational Debut`;
                 </div>
               )}
 
+              {/* Phone-Only Advisory Banner */}
+              {syndicationCategory === 'phone_only' && (
+                <div style={{
+                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  borderRadius: '8px',
+                  padding: '14px 18px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '13px',
+                  color: '#93c5fd'
+                }}>
+                  <div>
+                    <strong style={{ color: '#ffffff', fontSize: '14px' }}>📱 Phone-Only Outreach Queue ({phoneOnlyAthletes.length} Student-Athletes)</strong>
+                    <div style={{ fontSize: '12px', marginTop: '4px', color: '#cbd5e1' }}>
+                      These verified student-athletes have high schools and active phone numbers in the recruiting guide, but no email listed. Recommended: Direct 1-on-1 SMS or phone call from Dennis Bell (616-291-5227). They are safely isolated from bulk email blasts.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => exportCsv(phoneOnlyAthletes, 'Athletes_Nike_Phone_Only_Roster', false)}
+                    style={{
+                      backgroundColor: '#2563eb',
+                      border: 'none',
+                      color: '#ffffff',
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    📥 Export Phone-Only (CSV)
+                  </button>
+                </div>
+              )}
+
               {/* Spreadsheet Table View */}
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
@@ -2774,7 +2883,18 @@ President, Recreational Debut`;
                               {item.grad_year || '2026'}
                             </td>
                             <td style={{ padding: '10px 14px' }}>
-                              {(item.status === 'Contacted' || item.status === 'Messaged') ? (
+                              {item.email_status === 'NO_EMAIL' ? (
+                                <span style={{
+                                  backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                  color: '#60a5fa',
+                                  fontSize: '11px',
+                                  fontWeight: '800',
+                                  padding: '3px 8px',
+                                  borderRadius: '4px'
+                                }}>
+                                  📱 Phone Only
+                                </span>
+                              ) : (item.status === 'Contacted' || item.status === 'Messaged') ? (
                                 <span style={{
                                   backgroundColor: 'rgba(16, 185, 129, 0.2)',
                                   color: '#10b981',
@@ -2945,6 +3065,202 @@ President, Recreational Debut`;
                 {copiedEmailsToast}
               </div>
             )}
+
+            {/* ── TRANSACTIONAL EMAIL API SHIELD (RESEND / SENDGRID) ────────────────────────── */}
+            <div style={{
+              background: emailApiConfig?.is_api_active
+                ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(7, 16, 30, 0.95))'
+                : 'linear-gradient(135deg, rgba(245, 132, 38, 0.12), rgba(7, 16, 30, 0.95))',
+              borderRadius: '12px',
+              border: emailApiConfig?.is_api_active ? '2px solid #10b981' : '2px solid #F58426',
+              padding: '24px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '14px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '26px' }}>🛡️</span>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff' }}>
+                          Anti-Spam Email Protection Shield & Transactional API
+                        </h3>
+                        <span style={{
+                          backgroundColor: emailApiConfig?.is_api_active ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 132, 38, 0.2)',
+                          color: emailApiConfig?.is_api_active ? '#10b981' : '#F58426',
+                          border: `1px solid ${emailApiConfig?.is_api_active ? '#10b981' : '#F58426'}`,
+                          padding: '3px 10px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: '800'
+                        }}>
+                          {emailApiConfig?.is_api_active ? 'API SHIELD ACTIVE' : 'DIRECT SMTP FALLBACK'}
+                        </span>
+                      </div>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#cbd5e1' }}>
+                        {emailApiConfig?.recommendation || 'Protect your personal Google account from spam flags and temporary restrictions.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={() => setShowApiSetupGuide(!showApiSetupGuide)}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      padding: '8px 14px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📖 Why Emails Get Flagged & How to Fix
+                  </button>
+                </div>
+              </div>
+
+              {/* Collapsible API & Spam Explanation Guide */}
+              {showApiSetupGuide && (
+                <div style={{
+                  background: '#07101e',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: '10px',
+                  padding: '18px 20px',
+                  marginBottom: '18px',
+                  fontSize: '13px',
+                  color: '#cbd5e1',
+                  lineHeight: '1.6'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <strong style={{ color: '#38bdf8', fontSize: '14px' }}>
+                      🔍 Root Cause of Email Flagging & Restriction:
+                    </strong>
+                    <button
+                      onClick={() => setShowApiSetupGuide(false)}
+                      style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
+                  <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                    <li><strong>Carrier SMS Shotgun Blasts:</strong> In SMS mode, sending emails to 7 carrier gateways (@vzwpix.com, @mms.att.net, etc.) creates 6 immediate hard bounces per athlete (85.7% bounce rate!). Google detects this high bounce volume and temporarily restricts personal Gmail accounts.</li>
+                    <li><strong>SPF & DMARC Mismatch:</strong> Setting <code>From: Dennis Bell &lt;dbell002@sbcglobal.net&gt;</code> while authenticating via <code>@gmail.com</code> fails SPF/DKIM validation at remote mail servers.</li>
+                    <li><strong>The Solution (Transactional API):</strong> With <strong>Resend</strong> (resend.com) or <strong>SendGrid</strong>, all emails are signed with custom domain DKIM/SPF. Personal Gmail accounts are 100% untouched, ensuring zero risk of account bans or restrictions.</li>
+                  </ul>
+                  <div style={{ marginTop: '8px', fontSize: '12px', color: '#10b981' }}>
+                    💡 <strong>Resend Free Tier:</strong> Gives you 3,000 free emails/month. Sign up at <a href="https://resend.com" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', fontWeight: '700' }}>resend.com ↗</a>, grab your API Key (starts with <code>re_</code>), paste it below, and click Save!
+                  </div>
+                </div>
+              )}
+
+              {/* API Configuration Inputs */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginTop: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Active Provider Mode
+                  </label>
+                  <select
+                    value={selectedProvider}
+                    onChange={(e) => setSelectedProvider(e.target.value)}
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  >
+                    <option value="auto">Auto-Detect (Use API Shield if configured, else SMTP)</option>
+                    <option value="resend">Resend API (Recommended — Zero-Spam / Custom Domain)</option>
+                    <option value="sendgrid">SendGrid API</option>
+                    <option value="smtp_swarm">Gmail Direct SMTP Swarm (Fallback)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Resend API Key {emailApiConfig?.resend_status && <span style={{ color: '#10b981' }}>({emailApiConfig.resend_status})</span>}
+                  </label>
+                  <input
+                    type="password"
+                    value={resendApiKeyInput}
+                    onChange={(e) => setResendApiKeyInput(e.target.value)}
+                    placeholder="re_1234567890abcdef..."
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Verified Sender Address (From)
+                  </label>
+                  <input
+                    type="text"
+                    value={resendFromInput}
+                    onChange={(e) => setResendFromInput(e.target.value)}
+                    placeholder="Dennis Bell <recruiting@recdebut.com>"
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Action Toolbar */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                  Student athlete replies will always be routed directly to: <strong style={{ color: '#ffffff' }}>dbell002@sbcglobal.net</strong>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={handleSaveApiConfig}
+                    disabled={isSavingApiConfig}
+                    style={{
+                      backgroundColor: '#10b981',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '10px 20px',
+                      fontSize: '13px',
+                      fontWeight: '800',
+                      cursor: isSavingApiConfig ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    {isSavingApiConfig ? 'Saving...' : '💾 Save API Shield Configuration'}
+                  </button>
+                </div>
+              </div>
+
+              {apiConfigToast && (
+                <div style={{ marginTop: '14px', backgroundColor: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#10b981', padding: '10px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '700' }}>
+                  {apiConfigToast}
+                </div>
+              )}
+            </div>
 
             {/* ── SMTP ACCOUNT SWARM MANAGER ────────────────────────────────────────── */}
             <div style={{

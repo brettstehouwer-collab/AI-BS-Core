@@ -1,0 +1,74 @@
+﻿SHORTCUT: C:\Users\Public\Desktop\AI-BS Broadcast Studio.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Launch_Broadcast_Studio.bat
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\Public\Desktop\AI-BS Check Updates.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Update_Desktop_Studio.bat
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\Public\Desktop\AI-BS Matrix Boot.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Launch_AI_BS.bat
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\Public\Desktop\AI-BS Shutdown.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Shutdown_Desktop_Studio.bat
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\Public\Desktop\AI-BS Sovereign Studio.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\Stehouwer AI â€¢ Sovereign Intelligence Studio.lnk [NOT FOUND]
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\AI-BS Main Workstation (Full Suite & DAW).lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Launch_Desktop_Studio.vbs
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\AI-BS Live Streaming & Video Stage.lnk
+  TARGET: C:\Program Files\AI-BS Sovereign Studio\Launch_Broadcast_Studio.bat
+  ARGS:   
+  DIR:    C:\Program Files\AI-BS Sovereign Studio
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\AI-BS Master Server Boot (All 18 Engines).lnk
+  TARGET: C:\AI-BS\Launch_AI_BS.bat
+  ARGS:   
+  DIR:    C:\AI-BS
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\Pearl Wallet.lnk
+  TARGET: C:\Users\footb\AppData\Local\Programs\Pearl Wallet\Pearl Wallet.exe
+  ARGS:   
+  DIR:    C:\Users\footb\AppData\Local\Programs\Pearl Wallet
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\AI-BS Shutdown.lnk
+  TARGET: C:\AI-BS\Shutdown_AI_BS.bat
+  ARGS:   
+  DIR:    C:\AI-BS
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\OneDrive\Desktop\AI-BS Executive Studio.lnk
+  TARGET: C:\WINDOWS\system32\wscript.exe
+  ARGS:   "C:\AI-BS\Launch_Desktop_Studio.vbs"
+  DIR:    C:\AI-BS
+  EXISTS: True
+--------------------------------------------------
+SHORTCUT: C:\Users\footb\Desktop\AI-BS Executive Studio.lnk
+  TARGET: C:\WINDOWS\system32\wscript.exe
+  ARGS:   "C:\AI-BS\Launch_Desktop_Studio.vbs"
+  DIR:    C:\AI-BS
+  EXISTS: True
+--------------------------------------------------

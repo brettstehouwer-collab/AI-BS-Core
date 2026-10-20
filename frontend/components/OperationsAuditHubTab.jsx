@@ -21,7 +21,7 @@ const OperationsAuditHubTab = () => {
 
   // UI Interactive States
   const [processSearch, setProcessSearch] = useState('');
-  const [selectedLogFile, setSelectedLogFile] = useState('auto_healer_daemon.log');
+  const [selectedLogFile, setSelectedLogFile] = useState('crypto_trader_bot.log');
   const [logTailContent, setLogTailContent] = useState('');
   const [logTailLoading, setLogTailLoading] = useState(false);
   const [selectedMediaModal, setSelectedMediaModal] = useState(null);
@@ -49,7 +49,12 @@ const OperationsAuditHubTab = () => {
           setSelectedAdminTable(aRes.tables[0]);
         }
       }
-      if (eRes) setErrorData(eRes);
+      if (eRes) {
+        setErrorData(eRes);
+        if (eRes.daemons && eRes.daemons.length > 0 && (!selectedLogFile || !eRes.daemons.some(d => d.logfile === selectedLogFile))) {
+          setSelectedLogFile(eRes.daemons[0].logfile);
+        }
+      }
       setLastRefreshed(new Date());
     } catch (err) {
       console.error("Operations Audit Hub fetch error:", err);

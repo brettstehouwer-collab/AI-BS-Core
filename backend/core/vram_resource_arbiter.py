@@ -152,6 +152,28 @@ class VRAMResourceArbiter:
                 flushed = True
         except Exception as e:
             logger.warning(f"CUDA flush error: {e}")
+        # Evict all loaded Ollama models from VRAM across candidate ports (11434 & 11435)
+        try:
+            import urllib.request
+            for p in [11434, 11435]:
+                try:
+                    ps_req = urllib.request.Request(f"http://127.0.0.1:{p}/api/ps")
+                    with urllib.request.urlopen(ps_req, timeout=1.0) as resp:
+                        if resp.status == 200:
+                            ps_data = json.loads(resp.read().decode())
+                            for m in ps_data.get("models", []):
+                                m_name = m.get("name")
+                                if m_name:
+                                    unload_req = urllib.request.Request(
+                                        f"http://127.0.0.1:{p}/api/generate",
+                                        data=json.dumps({"model": m_name, "keep_alive": 0}).encode("utf-8"),
+                                        headers={"Content-Type": "application/json"}
+                                    )
+                                    urllib.request.urlopen(unload_req, timeout=1.5)
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         telemetry = VRAMResourceArbiter.get_vram_telemetry()
         return {
