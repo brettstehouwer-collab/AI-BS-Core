@@ -274,6 +274,21 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
     from .sourcecode_knowledge_engine import sourcecode_knowledge_engine
     codebase_context = await asyncio.to_thread(sourcecode_knowledge_engine.inject_codebase_context, user_query)
 
+    # Inject live AI_BS_MASTER_ARCHITECTURAL_LEDGER.md top milestones so Stehouwer LLM always knows the exact current state
+    live_ledger_context = ""
+    if any(kw in user_query.lower() for kw in ["ledger", "ai_bs_master_architectural_ledger", "update", "what's new", "new feature", "latest version", "what changed", "checkpoint", "milestone", "sync", "august"]):
+        try:
+            ledger_file = r"C:\AI-BS\AI_BS_MASTER_ARCHITECTURAL_LEDGER.md"
+            if os.path.exists(ledger_file):
+                with open(ledger_file, "r", encoding="utf-8", errors="ignore") as lf:
+                    top_lines = "".join(lf.readlines()[:15])
+                live_ledger_context = (
+                    "\n\n[LIVE AI_BS_MASTER_ARCHITECTURAL_LEDGER.md STATE — UPDATED 2026-10-21 (v5.328.0)]:\n"
+                    f"{top_lines[:3500]}"
+                )
+        except Exception:
+            pass
+
     stehouwer_system_prompt = (
         "You are Brett Stehouwer / Stehouwer Publishing AI Core. You own the room, speak with authentic brotherly banter, "
         "and deliver razor-sharp, practical solutions without corporate refusals or robotic hesitation. "
@@ -301,6 +316,8 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
         stehouwer_system_prompt += f"\n\n{context}"
     if codebase_context:
         stehouwer_system_prompt += f"\n\n{codebase_context}"
+    if live_ledger_context:
+        stehouwer_system_prompt += live_ledger_context
 
     stehouwer_system_prompt = inject_safety_directive(stehouwer_system_prompt)
 

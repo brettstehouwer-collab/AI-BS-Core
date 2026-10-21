@@ -415,16 +415,16 @@ export const REC_DEBUT_VERIFICATION_MATRIX = {
   brett_stehouwer: {
     name: "Brett Stehouwer",
     role: "CTO & Architect",
-    phone: "+1-616-291-5227",
-    sms_link: "sms:+16162915227?body=RECDEBUT%20VERIFY%20DISPATCH",
-    call_link: "tel:+16162915227"
+    phone: "+1-616-402-3628",
+    sms_link: "sms:+16164023628?body=RECDEBUT%20VERIFY%20DISPATCH",
+    call_link: "tel:+16164023628"
   },
   dennis_bell: {
     name: "Dennis Bell",
     role: "President (Former NY Knicks #4)",
-    phone: "+1-616-402-3628",
-    sms_link: "sms:+16164023628?body=DENNIS%20BELL%20COLLEGIATE%20EVALUATION",
-    call_link: "tel:+16164023628"
+    phone: "+1-616-291-5227",
+    sms_link: "sms:+16162915227?body=DENNIS%20BELL%20COLLEGIATE%20EVALUATION",
+    call_link: "tel:+16162915227"
   }
 };
 

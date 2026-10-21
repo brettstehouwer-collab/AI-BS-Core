@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SYSTEM_VERSION } from './version';
 
 export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
   const [tools, setTools] = useState({
@@ -17,7 +18,7 @@ export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
   const TOOL_LABELS = {
     plan_and_review: '📋 Mode: Plan & Review',
     shadow_coder: '⚡ Shadow Coder',
-    media_studio: '🎬 Media Studio (v5.323.0)',
+    media_studio: `🎬 Media Studio (${SYSTEM_VERSION})`,
     unreal_3d_engine: '🎮 Unreal 3D Engine',
     search_local_files: '🔍 Search Local Files',
     polyglot_runner: '🐚 Polyglot Runner (/ps /wsl /cmd)',

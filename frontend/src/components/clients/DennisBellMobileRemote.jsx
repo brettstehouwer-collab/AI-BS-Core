@@ -112,6 +112,11 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
   // Pre-configured AI Studio Prompts infused with Dennis Bell's authentic voice
   const AI_PROMPTS = [
     {
+      label: "🛡️ Carrier-Safe Endorsement (Option B — Tracked)",
+      prompt: "Carrier-safe former NBA player endorsement script with unique athlete tracking ID and direct contact info",
+      template: "Hi {first_name}, a former NBA player wants to endorse your athletic portfolio! Dennis Bell, former NY Knick, can help your recruiting profile stand out. Free registration: recdebut-recruit.org/r/{athlete_id} 616-291-5227 Dbell002@sbcglobal.net"
+    },
+    {
       label: "📋 NCAA Academic Eligibility Breakdown",
       prompt: "Official NCAA Division I/II/III Core Courses and GPA requirements reminder before October 31 deadline",
       template: "YOUR ELIGIBILITY IS A MUST!\nHi {NAME}, this is Dennis Bell, former NY Knick and President of Recreational Debut.\n\nI want to make sure you know the academic requirements to be eligible for college athletics. Division I requires 16 core courses and a minimum 2.3 GPA; Division II requires a 2.2 GPA.\n\nWe can get your profile in front of 850 college coaches nationwide before the October 31, 2026 deadline!\n\n✅ Register 100% Free: RecDebut.com\n📱 Call or text me: 616-291-5227\n\nDennis Bell\nFormer NY Knick | President, Recreational Debut"
@@ -2397,7 +2402,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <a
-                  href={REC_DEBUT_VERIFICATION_MATRIX?.brett_stehouwer?.sms_link || "sms:+16162915227?body=RecDebut verification ping"}
+                  href={REC_DEBUT_VERIFICATION_MATRIX?.brett_stehouwer?.sms_link || "sms:+16164023628?body=RecDebut verification ping"}
                   style={{
                     padding: '14px',
                     backgroundColor: '#001F3F',
@@ -2412,13 +2417,13 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
                 >
                   <div>
                     <div style={{ fontWeight: 800, fontSize: '14px' }}>Brett Stehouwer</div>
-                    <div style={{ fontSize: '12px', color: '#F58426' }}>+1 (616) 291-5227 &bull; CTO</div>
+                    <div style={{ fontSize: '12px', color: '#F58426' }}>+1 (616) 402-3628 &bull; CTO</div>
                   </div>
                   <span style={{ fontSize: '18px' }}>💬</span>
                 </a>
 
                 <a
-                  href={REC_DEBUT_VERIFICATION_MATRIX?.dennis_bell?.sms_link || "sms:+16164023628?body=RecDebut verification ping"}
+                  href={REC_DEBUT_VERIFICATION_MATRIX?.dennis_bell?.sms_link || "sms:+16162915227?body=RecDebut verification ping"}
                   style={{
                     padding: '14px',
                     backgroundColor: '#001F3F',
@@ -2433,7 +2438,7 @@ export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, onS
                 >
                   <div>
                     <div style={{ fontWeight: 800, fontSize: '14px' }}>Dennis Bell</div>
-                    <div style={{ fontSize: '12px', color: '#F58426' }}>+1 (616) 402-3628 &bull; President (NY Knicks #4)</div>
+                    <div style={{ fontSize: '12px', color: '#F58426' }}>+1 (616) 291-5227 &bull; President (NY Knicks #4)</div>
                   </div>
                   <span style={{ fontSize: '18px' }}>💬</span>
                 </a>

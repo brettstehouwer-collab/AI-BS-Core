@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SYSTEM_VERSION } from './version';
 import ChatToolControlBar from './ChatToolControlBar';
 import ChatTab from './ChatTab';
 import VisualScriptingTab from './VisualScriptingTab';
@@ -211,10 +212,10 @@ export default function SplitPaneIDEWorkspace() {
         backgroundColor: '#161b22',
         border: '1px solid #30363d',
         borderRadius: '8px',
-        padding: '12px',
+        padding: '6px 8px',
         overflow: 'hidden'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
           <h3 style={{ margin: 0, fontSize: '14px', color: '#58a6ff', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span>💬</span> AI-BS Autonomous Agentic IDE Chat
             <span style={{
@@ -263,7 +264,7 @@ export default function SplitPaneIDEWorkspace() {
             </span>
           </h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '11px', color: '#7ee787' }}>● {showRightPane ? 'Split-Pane IDE Active' : 'Single-Pane Active'} (v5.323.0)</span>
+            <span style={{ fontSize: '11px', color: '#7ee787' }}>● {showRightPane ? 'Split-Pane IDE Active' : 'Single-Pane Active'} ({SYSTEM_VERSION})</span>
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('aibs-toggle-wireless-cast'))}
               style={{

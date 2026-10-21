@@ -13,7 +13,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-export default function SystemUpdateModal({ isOpen, onClose, currentVersion = '5.233.0' }) {
+export default function SystemUpdateModal({ isOpen, onClose, currentVersion = '5.327.0' }) {
   const [checking, setChecking] = useState(false);
   const [updateInfo, setUpdateInfo] = useState(null);
   const [status, setStatus] = useState('idle'); // idle | checking | available | up_to_date | downloading | downloaded | applying | error

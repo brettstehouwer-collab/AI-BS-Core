@@ -9,6 +9,7 @@ import TeamLiveChatModal from './TeamLiveChatModal';
 import { subscribeToPresence, startPresenceHeartbeat } from './collaborationService';
 import { filterNavigationByTier, USER_TIERS } from './accessControl';
 import { auth } from '../firebase';
+import { SYSTEM_VERSION } from './version';
 import './MomMode.css';
 
 export default function TopNavbar({ 
@@ -178,52 +179,6 @@ export default function TopNavbar({
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* 🚨 VERY LARGE HARDCODED MOM MODE RED ALERT ADVISE BANNER */}
-      <div className="mom-mode-top-banner">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '1.4rem' }}>🚨</span>
-          <button
-            onClick={onToggleMomMode}
-            className={`mom-banner-btn-large ${momMode ? 'active' : ''}`}
-            title="Toggle MOM Mode: Extra Large Text, High Contrast & Zoom Assistance"
-          >
-            <span>{momMode ? '✅ 🌸 MOM MODE ACTIVE (BIG TEXT & HIGH CONTRAST)' : '🚨 🌸 MOM VERSION — CLICK HERE FOR BIG TEXT & EASY VIEW 🌸 🚨'}</span>
-          </button>
-          <span style={{ fontSize: '0.85rem', color: '#fef2f2', fontWeight: '600' }} className="hide-mobile">
-            {momMode ? '✨ Ultra-legible fonts, pure-white contrast, and enlarged buttons enabled.' : '⚠️ Click to enlarge text and boost readability for Julie / Mom.'}
-          </span>
-        </div>
-
-        {momMode && (
-          <div className="mom-banner-zoom-controls">
-            <span style={{ fontSize: '0.8rem', color: '#fecaca', fontWeight: 'bold' }}>ZOOM:</span>
-            <button 
-              className="mom-zoom-step-btn" 
-              onClick={() => onZoomChange && onZoomChange(Math.max(100, zoomLevel - 15))}
-              title="Make Text & Visuals Smaller"
-            >
-              −
-            </button>
-            <span className="mom-zoom-label">{zoomLevel}%</span>
-            <button 
-              className="mom-zoom-step-btn" 
-              onClick={() => onZoomChange && onZoomChange(Math.min(160, zoomLevel + 15))}
-              title="Make Text & Visuals Bigger"
-            >
-              +
-            </button>
-            <button 
-              className="mom-zoom-step-btn" 
-              onClick={() => onZoomChange && onZoomChange(100)}
-              style={{ fontSize: '0.75rem', padding: '4px 8px' }}
-              title="Reset Zoom to Normal"
-            >
-              Reset
-            </button>
-          </div>
-        )}
-      </div>
-
       {/* Main Top Navbar with Pinned Quick-Dock & Horizontal Pan Controls */}
       <div ref={navRef} style={{
         height: 'auto',
@@ -245,7 +200,7 @@ export default function TopNavbar({
           <span style={{ fontWeight: '700', color: '#58a6ff', fontSize: '0.95rem', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             Stehouwer Publishing AI
           </span>
-          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>v5.323.0</span>
+          <span style={{ fontSize: '0.68rem', color: '#8b949e' }}>{SYSTEM_VERSION}</span>
         </div>
 
         {/* ⚡ PINNED QUICK-DOCK BAR (Instant 1-Click Jumping) */}
@@ -396,6 +351,57 @@ export default function TopNavbar({
             Ctrl+K
           </kbd>
         </button>
+
+        {/* 🌸 DISCREET MOM MODE BUTTON (Fixed in Top Bar) */}
+        {onToggleMomMode && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
+            <button
+              onClick={onToggleMomMode}
+              title={momMode ? "Mom Mode is Active (Big Text & High Contrast) — Click to Turn Off" : "Toggle Mom Mode: Big Text & High Contrast"}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: momMode ? 'linear-gradient(135deg, #e11d48, #be123c)' : 'rgba(244, 63, 94, 0.12)',
+                color: momMode ? '#ffffff' : '#fb7185',
+                border: `1px solid ${momMode ? '#fda4af' : 'rgba(244, 63, 94, 0.35)'}`,
+                padding: '5px 9px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.74rem',
+                fontWeight: '700',
+                boxShadow: momMode ? '0 0 10px rgba(225, 29, 72, 0.4)' : 'none',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>🌸</span>
+              <span>{momMode ? 'Mom Mode' : 'Mom View'}</span>
+            </button>
+            {momMode && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2px',
+                background: 'rgba(15, 23, 42, 0.9)',
+                border: '1px solid rgba(244, 63, 94, 0.4)',
+                padding: '2px 5px',
+                borderRadius: '5px'
+              }}>
+                <button
+                  onClick={() => onZoomChange && onZoomChange(Math.max(100, zoomLevel - 15))}
+                  style={{ background: 'transparent', border: 'none', color: '#fda4af', cursor: 'pointer', fontWeight: 900, fontSize: '0.75rem', padding: '0 2px' }}
+                  title="Make Text & Visuals Smaller"
+                >−</button>
+                <span style={{ fontSize: '0.7rem', color: '#fecdd3', fontWeight: 700 }}>{zoomLevel}%</span>
+                <button
+                  onClick={() => onZoomChange && onZoomChange(Math.min(160, zoomLevel + 15))}
+                  style={{ background: 'transparent', border: 'none', color: '#fda4af', cursor: 'pointer', fontWeight: 900, fontSize: '0.75rem', padding: '0 2px' }}
+                  title="Make Text & Visuals Bigger"
+                >+</button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ◀ PAN LEFT BUTTON */}
         <button

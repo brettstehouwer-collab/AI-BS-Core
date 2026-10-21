@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -9097,7 +9098,7 @@ export default function ChatTab({ isNested = false }) {
               <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : 'Auto-Save Active'}
             </span>
             <span style={{ color: '#60a5fa', fontSize: '0.72rem', fontWeight: 700 }}>
-              Stehouwer LLM v5.323.0 • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active
+              {`Stehouwer LLM ${SYSTEM_VERSION} • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active`}
             </span>
           </div>
         </div>

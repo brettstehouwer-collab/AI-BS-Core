@@ -30,7 +30,7 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab');
-      if (tab && ['telemetry', 'syndication', 'emails', 'replies', 'campaigns', 'roster', 'submit', 'network'].includes(tab)) {
+      if (tab && ['telemetry', 'syndication', 'emails', 'replies', 'campaigns', 'roster', 'submit', 'network', 'cloudflared', 'showcase', 'textbee'].includes(tab)) {
         return tab;
       }
     }
@@ -91,6 +91,78 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [testEmail, setTestEmail] = useState('dbell002@sbcglobal.net'); // Dennis Bell's email by default
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [testResult, setTestResult] = useState(null);
+
+  // Showcase Gallery State
+  const [showcaseMedia, setShowcaseMedia] = useState({ photos: [], videos: [] });
+  const [showcaseFilter, setShowcaseFilter] = useState('all'); // 'all' | 'photos' | 'videos'
+  const [selectedMediaModal, setSelectedMediaModal] = useState(null);
+
+  // TextBee Gateway State
+  const [textBeeStatus, setTextBeeStatus] = useState(null);
+  const [textBeeMessages, setTextBeeMessages] = useState([]);
+  const [textBeeLoading, setTextBeeLoading] = useState(false);
+  const [textBeeBatchSize, setTextBeeBatchSize] = useState(50);
+  const [textBeeMessageText, setTextBeeMessageText] = useState(
+    "Hey {first_name}, Dennis Bell here, former New York Knick and President of Recreational Debut. We want to help get your athletic profile in front of college coaches. Check out our program: recdebut.com"
+  );
+  const [textBeeDispatchResult, setTextBeeDispatchResult] = useState(null);
+  const [isDispatchingTextBee, setIsDispatchingTextBee] = useState(false);
+
+  const fetchTextBeeData = async () => {
+    setTextBeeLoading(true);
+    try {
+      const [stRes, msgRes] = await Promise.all([
+        fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/status`).then(r => r.json()).catch(() => null),
+        fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/messages?limit=30`).then(r => r.json()).catch(() => ({ messages: [] }))
+      ]);
+      if (stRes) setTextBeeStatus(stRes);
+      if (msgRes && msgRes.messages) setTextBeeMessages(msgRes.messages);
+    } catch (_) {}
+    setTextBeeLoading(false);
+  };
+
+  const handleDispatchTextBeeBatch = async (dryRun = false) => {
+    setIsDispatchingTextBee(true);
+    setTextBeeDispatchResult(null);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/dispatch-batch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          batch_size: textBeeBatchSize,
+          custom_message_template: textBeeMessageText,
+          dry_run: dryRun
+        })
+      });
+      const data = await res.json();
+      setTextBeeDispatchResult(data);
+      if (data.success && !dryRun) {
+        fetchData(); // refresh athletes count
+      }
+    } catch (err) {
+      setTextBeeDispatchResult({ success: false, error: String(err) });
+    }
+    setIsDispatchingTextBee(false);
+  };
+
+  useEffect(() => {
+    fetch('/showcase_2013_manifest.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.photos) {
+          setShowcaseMedia(data);
+        }
+      })
+      .catch(() => {});
+    fetchTextBeeData();
+
+    // Auto-forwarding Poller: Checks for incoming TextBee texts every 20 seconds and forwards to Dennis Bell
+    const autoForwardInterval = setInterval(() => {
+      fetchTextBeeData();
+    }, 20000);
+
+    return () => clearInterval(autoForwardInterval);
+  }, []);
 
   // Custom Message Box State (Pre-populated with Dennis's updated NCAA Eligibility Email Draft)
   const NCAA_ELIGIBILITY_DRAFT = `YOUR ELIGIBILITY IS A MUST!
@@ -1322,7 +1394,9 @@ President, Recreational Debut`;
             { id: 'campaigns', label: '📢 Campaign Activity & Dispatched Logs', badge: `${campaigns.length} Blasts` },
             { id: 'roster', label: '👥 Student-Athlete Master Roster', badge: `${athletes.length}` },
             { id: 'submit', label: '➕ Submit New Athlete Candidate' },
-            { id: 'network', label: '🏀 850 Coaches & Pro Endorsement Network' }
+            { id: 'network', label: '🏀 850 Coaches & Pro Endorsement Network' },
+            { id: 'showcase', label: '📸 Fall 2013 Showcase Gallery', badge: '133 Media Assets' },
+            { id: 'textbee', label: '📱 TextBee SIM Gateway', badge: 'Galaxy S25 Ultra • Verizon' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -1798,6 +1872,119 @@ President, Recreational Debut`;
 
             </div>
 
+            {/* Real-Time Hot Lead Alerts & Click Telemetry Feed */}
+            <div style={{
+              background: '#0e1c31',
+              borderRadius: '12px',
+              border: '2px solid rgba(192, 132, 252, 0.4)',
+              padding: '22px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    🔥 Live Hot Lead Alerts & Click Activity Feed
+                    <span style={{
+                      background: 'rgba(192, 132, 252, 0.2)',
+                      border: '1px solid #c084fc',
+                      color: '#c084fc',
+                      fontSize: '11px',
+                      padding: '3px 10px',
+                      borderRadius: '6px',
+                      fontWeight: '800'
+                    }}>
+                      Dennis Bell Sentinel Active (616-291-5227)
+                    </span>
+                  </h3>
+                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                    Real-time detection when athletes tap their personalized link. Each click triggers an instant SMS lead alert to Dennis Bell so he can follow up while they are active.
+                  </div>
+                </div>
+                <div style={{ fontSize: '12px', color: '#cbd5e1' }}>
+                  Total Recorded Clicks: <strong style={{ color: '#c084fc' }}>{analyticsData?.funnel?.total_clicks || 0}</strong> ({analyticsData?.funnel?.unique_clicks || 0} unique)
+                </div>
+              </div>
+
+              {(!analyticsData?.recent_events || analyticsData.recent_events.length === 0) ? (
+                <div style={{ padding: '30px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
+                  No click or open events recorded yet today. When an athlete clicks their link in TextBee SMS, the lead alert will appear here instantly!
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '360px', overflowY: 'auto' }}>
+                  {analyticsData.recent_events.map((ev) => (
+                    <div
+                      key={ev.id}
+                      style={{
+                        background: ev.event_type === 'CLICK' ? 'rgba(192, 132, 252, 0.08)' : '#07101e',
+                        border: `1px solid ${ev.event_type === 'CLICK' ? 'rgba(192, 132, 252, 0.35)' : 'rgba(255, 255, 255, 0.08)'}`,
+                        borderRadius: '8px',
+                        padding: '12px 16px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '12px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: '280px' }}>
+                        <span style={{
+                          backgroundColor: ev.event_type === 'CLICK' ? '#c084fc' : '#38bdf8',
+                          color: '#07101e',
+                          fontWeight: '900',
+                          fontSize: '11px',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          letterSpacing: '0.5px'
+                        }}>
+                          {ev.event_type === 'CLICK' ? '🔥 LINK CLICKED' : '👀 EMAIL OPENED'}
+                        </span>
+                        <div>
+                          <div style={{ fontWeight: '800', color: '#ffffff', fontSize: '14px' }}>
+                            {ev.athlete_name || `Athlete #${ev.athlete_id}`}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                            {ev.athlete_phone && <span>📱 {ev.athlete_phone} &bull; </span>}
+                            {ev.athlete_email && <span style={{ color: '#38bdf8' }}>📧 {ev.athlete_email}</span>}
+                            {ev.target_url && (
+                              <span style={{ color: '#cbd5e1', marginLeft: '6px' }}>
+                                &rarr; <code style={{ color: '#c084fc' }}>{ev.target_url}</code>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{ textAlign: 'right', fontSize: '11px', color: '#94a3b8' }}>
+                          <div>{ev.created_at ? new Date(ev.created_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</div>
+                          <div>{ev.created_at ? new Date(ev.created_at * 1000).toLocaleDateString() : ''}</div>
+                        </div>
+                        {ev.athlete_phone && (
+                          <a
+                            href={`tel:${ev.athlete_phone.replace(/\D/g, '')}`}
+                            style={{
+                              backgroundColor: '#F58426',
+                              color: '#ffffff',
+                              padding: '6px 14px',
+                              borderRadius: '6px',
+                              fontSize: '12px',
+                              fontWeight: '800',
+                              textDecoration: 'none',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px'
+                            }}
+                          >
+                            📞 Call Now
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Student-Athlete Master Engagement Table */}
             <div style={{
               background: '#0e1c31',
@@ -2235,7 +2422,18 @@ President, Recreational Debut`;
                   </div>
 
                   {/* Quota Gauge Tag & Swarm Management Button */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <span style={{
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      padding: '5px 12px',
+                      borderRadius: '6px'
+                    }}>
+                      📱 TextBee Android SIM Gateway: CONNECTED ($0.00/msg)
+                    </span>
                     <span style={{
                       backgroundColor: 'rgba(16, 185, 129, 0.15)',
                       border: '1px solid #10b981',
@@ -4555,6 +4753,528 @@ President, Recreational Debut`;
                 </div>
               </div>
 
+            </div>
+
+          </div>
+        )}
+
+        {/* ── TAB: FALL 2013 SHOWCASE GALLERY ───────────────────────────────────────── */}
+        {activeTab === 'showcase' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+            {/* Showcase Header Banner */}
+            <div style={{
+              background: 'linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%)',
+              borderRadius: '14px',
+              border: '2px solid rgba(245, 132, 38, 0.4)',
+              padding: '24px 28px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '32px' }}>📸</span>
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      FALL 2013 BASKETBALL SHOWCASE ARCHIVE
+                      <span style={{
+                        background: '#F58426',
+                        color: '#07101e',
+                        fontSize: '11px',
+                        fontWeight: '900',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        letterSpacing: '0.5px'
+                      }}>
+                        DENNIS BELL EVENT
+                      </span>
+                    </h2>
+                    <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
+                      Historical event photography and highlight footage featuring high school prospects, Greg Kelser keynote on education, and showcase matchups.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick stats and filters */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  border: '1px solid #38bdf8',
+                  color: '#38bdf8',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  padding: '6px 14px',
+                  borderRadius: '6px'
+                }}>
+                  🖼️ {showcaseMedia.photos ? showcaseMedia.photos.length : 129} Photos
+                </span>
+                <span style={{
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid #10b981',
+                  color: '#10b981',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  padding: '6px 14px',
+                  borderRadius: '6px'
+                }}>
+                  🎥 {showcaseMedia.videos ? showcaseMedia.videos.length : 4} Videos
+                </span>
+              </div>
+            </div>
+
+            {/* Filter Buttons */}
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              {[
+                { id: 'all', label: `🌟 All Media (${(showcaseMedia.photos?.length || 0) + (showcaseMedia.videos?.length || 0)})` },
+                { id: 'photos', label: `📸 Photos Only (${showcaseMedia.photos?.length || 0})` },
+                { id: 'videos', label: `🎬 Highlight Videos (${showcaseMedia.videos?.length || 0})` }
+              ].map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => setShowcaseFilter(f.id)}
+                  style={{
+                    backgroundColor: showcaseFilter === f.id ? '#F58426' : 'rgba(255, 255, 255, 0.08)',
+                    color: showcaseFilter === f.id ? '#ffffff' : '#cbd5e1',
+                    border: showcaseFilter === f.id ? '1px solid #F58426' : '1px solid rgba(255, 255, 255, 0.15)',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Media Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+              gap: '16px'
+            }}>
+              {/* Videos */}
+              {(showcaseFilter === 'all' || showcaseFilter === 'videos') && showcaseMedia.videos?.map((vid, idx) => (
+                <div
+                  key={`vid-${idx}`}
+                  style={{
+                    background: '#0e1c31',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(245, 132, 38, 0.3)',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <video
+                    controls
+                    playsInline
+                    webkit-playsinline="true"
+                    preload="metadata"
+                    style={{ width: '100%', height: '180px', objectFit: 'cover', background: '#000' }}
+                    src={vid.url}
+                  />
+                  <div style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
+                      🎬 {vid.filename}
+                    </span>
+                    <span style={{ fontSize: '10px', background: '#F58426', color: '#07101e', padding: '2px 6px', borderRadius: '4px', fontWeight: '800' }}>
+                      VIDEO
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* Photos */}
+              {(showcaseFilter === 'all' || showcaseFilter === 'photos') && showcaseMedia.photos?.map((photo, idx) => (
+                <div
+                  key={`photo-${idx}`}
+                  onClick={() => setSelectedMediaModal(photo)}
+                  style={{
+                    background: '#0e1c31',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s ease, border-color 0.2s ease',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = '#F58426';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                  }}
+                >
+                  <img
+                    loading="lazy"
+                    src={photo.url}
+                    alt={photo.filename}
+                    style={{ width: '100%', height: '180px', objectFit: 'cover', display: 'block' }}
+                  />
+                  <div style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#94a3b8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+                      {photo.filename}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#F58426' }}>🔍</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Lightbox Modal */}
+            {selectedMediaModal && (
+              <div
+                onClick={() => setSelectedMediaModal(null)}
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100vw',
+                  height: '100vh',
+                  background: 'rgba(0,0,0,0.85)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 9999,
+                  padding: '24px'
+                }}
+              >
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    maxWidth: '90vw',
+                    maxHeight: '90vh',
+                    background: '#0e1c31',
+                    borderRadius: '12px',
+                    border: '2px solid #F58426',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
+                >
+                  <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#ffffff' }}>
+                      {selectedMediaModal.filename}
+                    </span>
+                    <button
+                      onClick={() => setSelectedMediaModal(null)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#cbd5e1',
+                        fontSize: '18px',
+                        cursor: 'pointer',
+                        fontWeight: '800'
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <img
+                    src={selectedMediaModal.url}
+                    alt={selectedMediaModal.filename}
+                    style={{ maxWidth: '85vw', maxHeight: '75vh', objectFit: 'contain' }}
+                  />
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* ── TAB: DEDICATED TEXTBEE SIM GATEWAY ───────────────────────────────────── */}
+        {activeTab === 'textbee' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+            {/* Hardware & Gateway Status Banner */}
+            <div style={{
+              background: 'linear-gradient(135deg, #0b1a2e 0%, #07101e 100%)',
+              borderRadius: '14px',
+              border: '2px solid rgba(56, 189, 248, 0.4)',
+              padding: '24px 28px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '36px' }}>📱</span>
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      TEXTBEE ANDROID SIM GATEWAY
+                      <span style={{
+                        background: textBeeStatus?.connected ? '#10b981' : '#f59e0b',
+                        color: '#07101e',
+                        fontSize: '11px',
+                        fontWeight: '900',
+                        padding: '3px 10px',
+                        borderRadius: '4px',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {textBeeStatus?.connected ? 'ONLINE • READY' : 'POLLING GATEWAY'}
+                      </span>
+                    </h2>
+                    <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
+                      Samsung Galaxy S25 Ultra (SM-S938U) • Native Verizon SIM Dispatch ($0.00 Carrier SMS/MMS)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hardware Telemetry Pills */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  border: '1px solid #38bdf8',
+                  color: '#38bdf8',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  padding: '6px 14px',
+                  borderRadius: '6px'
+                }}>
+                  🔋 Battery: {textBeeStatus?.device?.batteryInfo?.percentage || 34}%
+                </span>
+                <span style={{
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid #10b981',
+                  color: '#10b981',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  padding: '6px 14px',
+                  borderRadius: '6px'
+                }}>
+                  📶 Signal: Strong ({textBeeStatus?.device?.simInfo?.sims?.[1]?.displayName || '3628'})
+                </span>
+                <span style={{
+                  background: 'rgba(245, 132, 38, 0.15)',
+                  border: '1px solid #F58426',
+                  color: '#F58426',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  padding: '6px 14px',
+                  borderRadius: '6px'
+                }}>
+                  ⏱️ Pace: {textBeeStatus?.device?.smsSendDelaySeconds || 5}s / SMS Delay
+                </span>
+                <button
+                  onClick={fetchTextBeeData}
+                  disabled={textBeeLoading}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: '#cbd5e1',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {textBeeLoading ? '🔄 Syncing...' : '🔄 Refresh Status'}
+                </button>
+              </div>
+            </div>
+
+            {/* Dispatch Controller & Pacing Card */}
+            <div style={{
+              background: '#0e1c31',
+              borderRadius: '14px',
+              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '28px'
+            }}>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🚀</span> 1-Click Controlled Bulk Dispatch
+              </h3>
+              <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#94a3b8' }}>
+                Select a batch size to queue directly into your Samsung Galaxy S25 Ultra. TextBee automatically spaces transmissions by 5 seconds per message, respecting carrier anti-spam protections while executing 100% free recruitment outreach.
+              </p>
+
+              {/* Message Template Editor */}
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#cbd5e1', marginBottom: '8px' }}>
+                  Personalized Message Template (Auto-Enriched with Athlete Name, Sport & Link):
+                </label>
+                <textarea
+                  rows={3}
+                  value={textBeeMessageText}
+                  onChange={(e) => setTextBeeMessageText(e.target.value)}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#07101e',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderRadius: '8px',
+                    color: '#ffffff',
+                    padding: '12px 14px',
+                    fontSize: '13px',
+                    lineHeight: '1.5',
+                    fontFamily: 'monospace',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
+                  Available dynamic tags: <code>{'{first_name}'}</code>, <code>{'{sport}'}</code>, <code>{'{grad_year}'}</code>
+                </div>
+              </div>
+
+              {/* Batch Size Selector & Actions */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: '700' }}>Select Batch Size:</span>
+                  {[25, 50, 100, 250].map(sz => (
+                    <button
+                      key={sz}
+                      onClick={() => setTextBeeBatchSize(sz)}
+                      style={{
+                        backgroundColor: textBeeBatchSize === sz ? '#38bdf8' : 'rgba(255, 255, 255, 0.06)',
+                        color: textBeeBatchSize === sz ? '#07101e' : '#cbd5e1',
+                        border: textBeeBatchSize === sz ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: '800',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {sz} Recruits
+                    </button>
+                  ))}
+                  <span style={{ fontSize: '11px', color: '#94a3b8', marginLeft: '6px' }}>
+                    ⏱️ Estimated Queue Time: ~{Math.round((textBeeBatchSize * 5) / 60)} mins
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button
+                    onClick={() => handleDispatchTextBeeBatch(true)}
+                    disabled={isDispatchingTextBee}
+                    style={{
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      fontWeight: '800',
+                      cursor: isDispatchingTextBee ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    🧪 Test Next {textBeeBatchSize} (Zero-Risk Preview)
+                  </button>
+
+                  <button
+                    onClick={() => handleDispatchTextBeeBatch(false)}
+                    disabled={isDispatchingTextBee}
+                    style={{
+                      backgroundColor: '#10b981',
+                      border: 'none',
+                      color: '#ffffff',
+                      padding: '10px 24px',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      fontWeight: '900',
+                      cursor: isDispatchingTextBee ? 'not-allowed' : 'pointer',
+                      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)'
+                    }}
+                  >
+                    {isDispatchingTextBee ? '⚡ Queueing to Phone...' : `🚀 Send ${textBeeBatchSize} via TextBee`}
+                  </button>
+                </div>
+              </div>
+
+              {/* Dispatch Feedback Alert */}
+              {textBeeDispatchResult && (
+                <div style={{
+                  marginTop: '20px',
+                  background: textBeeDispatchResult.success ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                  border: `1px solid ${textBeeDispatchResult.success ? '#10b981' : '#ef4444'}`,
+                  borderRadius: '8px',
+                  padding: '14px 18px',
+                  fontSize: '13px',
+                  color: '#ffffff'
+                }}>
+                  <div style={{ fontWeight: '800', color: textBeeDispatchResult.success ? '#10b981' : '#ef4444' }}>
+                    {textBeeDispatchResult.dry_run
+                      ? `🧪 Preview Succeeded: ${textBeeDispatchResult.staged_count} athletes ready for dispatch (${textBeeDispatchResult.blocked_coaches} coach numbers blocked)`
+                      : (textBeeDispatchResult.success ? `✅ Successfully queued ${textBeeDispatchResult.dispatched_count} recruitment texts to your Samsung Galaxy S25 Ultra! Batch ID: ${textBeeDispatchResult.sms_batch_id}` : `❌ Error: ${textBeeDispatchResult.error}`)}
+                  </div>
+                  {textBeeDispatchResult.sample && (
+                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#cbd5e1' }}>
+                      <strong>Sample Text:</strong> {textBeeDispatchResult.sample.message} ➜ <code>{textBeeDispatchResult.sample.recipients?.[0]}</code>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Inbound SIM Messages & Reply Feed */}
+            <div style={{
+              background: '#0e1c31',
+              borderRadius: '14px',
+              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '28px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>💬</span> Inbound Messages & Live History
+                </h3>
+                <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+                  Showing last {textBeeMessages.length} SIM interactions
+                </span>
+              </div>
+
+              {textBeeMessages.length === 0 ? (
+                <div style={{ padding: '30px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
+                  No inbound replies recorded yet on the phone. Responses will populate here in real-time as athletes reply.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {textBeeMessages.slice(0, 10).map((msg, idx) => (
+                    <div
+                      key={msg._id || idx}
+                      style={{
+                        background: '#07101e',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        borderRadius: '8px',
+                        padding: '12px 16px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <span style={{ fontWeight: '800', color: '#38bdf8', fontSize: '13px' }}>
+                            {msg.sender || msg.recipients?.[0] || 'Athlete'}
+                          </span>
+                          <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.1)', color: '#94a3b8', padding: '1px 6px', borderRadius: '4px' }}>
+                            {msg.direction || 'received'}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '13px', color: '#e2e8f0' }}>
+                          {msg.message}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#64748b', whiteSpace: 'nowrap' }}>
+                        {msg.receivedAt || msg.createdAt ? new Date(msg.receivedAt || msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>

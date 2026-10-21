@@ -2,5 +2,7 @@
   "version": "5.327.0",
   "release_tag": "v5.327.0-release",
   "release_date": "2026-10-19",
-  "description": "Live System Telemetry Strip (VRAM/Wattage/Temp/GPU Load/Sys RAM), Point A to Point Infinity CoT Reasoning Pipeline, Dynamic Cognitive Model Routing Inspector (Why this LLM? & 6-Step Stepper), and Persistent RTX 4090 Hot VRAM Allocation."
+  "description": "Live System Telemetry Strip (VRAM/Wattage/Temp/GPU Load/Sys RAM), Point A to Point Infinity CoT Reasoning Pipeline, Dynamic Cognitive Model Routing Inspector (Why this LLM? & 6-Step Stepper), and Persistent RTX 4090 Hot VRAM Allocation.",
+  "tag": "v5.327.0",
+  "updated_at": "2026-10-21"
 }

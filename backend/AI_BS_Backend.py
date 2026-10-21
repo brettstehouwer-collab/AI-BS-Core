@@ -671,6 +671,12 @@ try:
 except ImportError as e:
     print(f"Warning: Could not load rec_debut_router: {e}")
 
+try:
+    from routers.fe_express_router import router as fe_express_router
+    app.include_router(fe_express_router)
+except ImportError as e:
+    print(f"Warning: Could not load fe_express_router: {e}")
+
 
 try:
     from routers.chef_orders_router import router as chef_orders_router
@@ -4620,7 +4626,7 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
             "timestamp": live_gpu.get("timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         },
         "context_tokens": target_num_ctx,
-        "keep_alive": 0,
+        "keep_alive": -1,
         "thinking_scope": "Point A to Point Infinity (Full Exhaustive Chain-of-Thought)",
         "steps": [
             {"id": 1, "name": "Ingestion & Intent Analysis", "status": "done", "detail": "Polyglot Coding" if is_code else "Conversational Reasoning"},
@@ -4638,7 +4644,7 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
         "model": model_name,
         "messages": formatted_messages,
         "stream": True,
-        "keep_alive": 0,  # Unload model immediately after generation to ensure 0 idle VRAM
+        "keep_alive": -1,  # Keep hot in RTX 4090 VRAM for instant zero-latency responses
         "options": {
             "temperature": 0.5,
             "num_ctx": target_num_ctx,
@@ -4750,12 +4756,6 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
                                         pass
 
                             if streamed_any:
-                                # Sovereign On-Demand VRAM Reclamation: release weights immediately
-                                try:
-                                    async with httpx.AsyncClient(timeout=2.0) as evict_c:
-                                        await evict_c.post(f"{host}/api/generate", json={"model": model_name, "keep_alive": 0})
-                                except Exception:
-                                    pass
                                 return
             except Exception as e:
                 logger.warning(f"Hybrid stream host {host} attempt failed: {e}")
@@ -5152,7 +5152,7 @@ async def chat_endpoint(request: Request):
             system_content = "You are Stehouwer LLM. Maintain a clinical, objective, highly precise, zero-fluff technical tone. You use the AI-BS AIBSTensor define-by-run autograd engine (aibs_autograd_engine.py) and self-attention reasoning engine (aibs_reasoning_engine.py) for all computational graph reasoning, gradient backpropagation, and loss optimization."
 
         # Self-Awareness of Matrix Updates
-        if any(kw in user_msg_lower for kw in ["update", "what's new", "new feature", "latest version", "what changed"]):
+        if any(kw in user_msg_lower for kw in ["ledger", "ai_bs_master_architectural_ledger", "update", "what's new", "new feature", "latest version", "what changed", "checkpoint", "milestone", "sync"]):
             try:
                 ledger_path = r"C:\AI-BS\AI_BS_MASTER_ARCHITECTURAL_LEDGER.md"
                 if os.path.exists(ledger_path):

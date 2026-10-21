@@ -2594,7 +2594,7 @@ const BroadcastStudio = () => {
 
             {/* Guide Footer */}
             <div style={{ padding: '12px 20px', background: '#090d16', borderTop: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', color: '#64748b' }}>AI-BS Studio v5.147.0 • OBS Hardware Engine</span>
+              <span style={{ fontSize: '11px', color: '#64748b' }}>AI-BS Studio v5.327.0 • OBS Hardware Engine</span>
               <button 
                 onClick={() => setShowGuideModal(false)}
                 style={{ background: '#00e5ff', color: '#000', border: 'none', padding: '7px 22px', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}

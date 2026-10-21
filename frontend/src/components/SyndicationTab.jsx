@@ -306,7 +306,7 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
               padding: '2px 8px',
               borderRadius: '12px'
             }}>
-              v5.147.0 SOVEREIGN
+              v5.327.0 SOVEREIGN
             </span>
           </div>
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#8b949e' }}>

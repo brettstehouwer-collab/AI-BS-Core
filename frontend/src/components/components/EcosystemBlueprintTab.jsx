@@ -255,7 +255,7 @@ export default function EcosystemBlueprintTab() {
             <span style={{ fontSize: '11px', background: 'rgba(0, 240, 255, 0.15)', color: '#00f0ff', padding: '3px 8px', borderRadius: '4px', border: '1px solid #00f0ff', fontWeight: 'bold' }}>
               FINANCIAL ARCHITECTURE & SYSTEMS CONSOLIDATION
             </span>
-            <span style={{ fontSize: '11px', color: '#888' }}>AI-BS Matrix OS v5.147.0</span>
+            <span style={{ fontSize: '11px', color: '#888' }}>AI-BS Matrix OS v5.327.0</span>
           </div>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.5px' }}>
             YOUR BUSINESS. YOUR HARDWARE.

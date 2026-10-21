@@ -10,16 +10,17 @@ LOCAL_CHROMA = "C:/AI-BS/database/ChromaDB_local"
 E_CHROMA = "E:/AI_BS_Resources/ChromaDB"
 
 def search_chronology_fts(query: str, limit: int = 3) -> List[Dict[str, Any]]:
-    """Executes sub-2ms SQLite FTS5 search across all ecosystem eras and versions."""
+    """Executes sub-2ms SQLite FTS5 search across all ecosystem eras and versions, prioritizing latest milestones."""
     results = []
     if not os.path.exists(DB_PATH):
         return results
     
-    clean_query = "".join(c for c in query if c.isalnum() or c.isspace()).strip()
+    import re
+    clean_query = re.sub(r'[^a-zA-Z0-9]+', ' ', query).strip()
     if not clean_query:
         return results
         
-    terms = clean_query.split()[:12]
+    terms = [t for t in clean_query.split() if len(t) >= 2][:12]
     if not terms:
         return results
     fts_query = " OR ".join(f'"{t}"*' for t in terms)
@@ -36,7 +37,7 @@ def search_chronology_fts(query: str, limit: int = 3) -> List[Dict[str, Any]]:
         SELECT era, date, version, title, content, rank
         FROM chronology_fts
         WHERE chronology_fts MATCH ?
-        ORDER BY rank
+        ORDER BY date DESC, rank
         LIMIT ?;
         """
         cursor.execute(sql, (fts_query, limit))
@@ -77,10 +78,8 @@ def search_chronology_vector(query: str, limit: int = 3) -> List[Dict[str, Any]]
     return results
 
 def get_stehouwer_historical_context(query: str) -> str:
-    """Combines FTS5 and Vector semantic search to return exact factual grounding."""
-    # First try FTS5
-    fts_res = search_chronology_fts(query, limit=2)
-    # Then try Vector
+    """Combines FTS5 and Vector semantic search to return exact factual grounding, sorted newest first."""
+    fts_res = search_chronology_fts(query, limit=3)
     vec_res = search_chronology_vector(query, limit=2)
     
     combined = []
@@ -94,22 +93,13 @@ def get_stehouwer_historical_context(query: str) -> str:
     if not combined:
         return ""
         
+    combined.sort(key=lambda x: x.get("date", ""), reverse=True)
     brief = ["### [Stehouwer Autonomous Memory & Historical Grounding]:"]
     for c in combined[:2]:
         brief.append(f"**Era/Date:** {c.get('era')} ({c.get('date')}) | **Version:** {c.get('version')}")
         brief.append(f"**Title:** {c.get('title')}")
-        brief.append(f"**Record:** {c.get('content')[:600]}...\n")
-        
+        content_snip = c.get("content", "")
+        if len(content_snip) > 900:
+            content_snip = content_snip[:900] + "..."
+        brief.append(f"**Record:** {content_snip}\n")
     return "\n".join(brief)
-
-if __name__ == "__main__":
-    test_queries = [
-        "when was our first vercel upload?",
-        "what is the 90 day accumulation matrix?",
-        "what is our silicon hardware chassis?",
-        "what was updated in version 5.152.0?"
-    ]
-    for q in test_queries:
-        print(f"\n==================== QUERY: {q} ====================")
-        ctx = get_stehouwer_historical_context(q)
-        print(ctx)

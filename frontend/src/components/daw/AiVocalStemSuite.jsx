@@ -283,7 +283,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
                 borderRadius: '12px',
                 border: '1px solid rgba(168, 85, 247, 0.3)'
               }}>
-                v5.305.0 Sovereign Core
+                v5.327.0 Sovereign Core
               </span>
             </div>
             <div style={{ fontSize: '12px', color: '#8b949e', marginTop: '2px' }}>
