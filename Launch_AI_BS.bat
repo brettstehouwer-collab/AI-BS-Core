@@ -21,6 +21,12 @@ echo [1/9] Executing Smart Zombie Node Sweep to reclaim RAM...
 "%BASE_DIR%pyppeteer_env\Scripts\python.exe" "%BASE_DIR%backend\zombie_node_cleaner.py"
 echo.
 
+echo [1.2/9] Syncing Recreational Debut Sovereign Parity...
+if exist "C:\Recreational-Debut\sync\recdebut_sync_engine.py" (
+    "%BASE_DIR%pyppeteer_env\Scripts\python.exe" "C:\Recreational-Debut\sync\recdebut_sync_engine.py"
+)
+echo.
+
 echo [1.5/9] Verifying Windows Defender Firewall Streaming ^& Network Access Ports...
 powershell -ExecutionPolicy Bypass -File "%BASE_DIR%scripts\open_streaming_firewall_ports.ps1"
 echo.
@@ -68,6 +74,14 @@ powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d %BASE_DIR%frontend && npm run dev' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'gemini_mcp_server.py' -WorkingDirectory '%BASE_DIR%backend' -RedirectStandardOutput '%BASE_DIR%logs\gemini_mcp_server.log' -RedirectStandardError '%BASE_DIR%logs\gemini_mcp_server.err' -WindowStyle Hidden"
 
+:: Launch Recreational Debut Sovereign Platform (Backend Port 8095 & Frontend Port 5180)
+if exist "C:\Recreational-Debut\backend\main.py" (
+    powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\pythonw.exe' -ArgumentList 'main.py' -WorkingDirectory 'C:\Recreational-Debut\backend' -RedirectStandardOutput '%BASE_DIR%logs\recdebut_backend.log' -RedirectStandardError '%BASE_DIR%logs\recdebut_backend.err' -WindowStyle Hidden"
+)
+if exist "C:\Recreational-Debut\frontend\package.json" (
+    powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c cd /d C:\Recreational-Debut\frontend && npm run dev' -WindowStyle Hidden"
+)
+
 :: Note: Heavy creative and background engines are now ON-DEMAND to preserve memory:
 :: - ComfyUI: Launch_ComfyUI_OnDemand.bat
 :: - Unreal Engine: Launch_Unreal_OnDemand.bat
@@ -101,6 +115,8 @@ call :WaitForPort 8002 "ChromaDB E-Drive" 15
 call :WaitForPort 8085 "Ubuntu-Bio Bridge" 5
 call :WaitForPort 80 "StehouwerPublishing Nginx" 15
 call :WaitForPort 8099 "Gemini MCP Server" 15
+call :WaitForPort 8095 "RecDebut Backend" 15
+call :WaitForPort 5180 "RecDebut Frontend" 15
 echo.
 
 echo ===================================================
