@@ -93,6 +93,7 @@ export const TAB_PERMISSIONS = {
   api_recon: ['admin', 'enterprise_all_access', 'b2b_growth'],
   email_client: ['admin', 'enterprise_all_access', 'b2b_growth', 'screenwriting'],
   clients: ['admin', 'enterprise_all_access', 'b2b_growth'],
+  fe_express: ['admin', 'enterprise_all_access', 'b2b_growth'],
   rec_debut: ['admin', 'enterprise_all_access', 'b2b_growth'],
   client_directory: ['admin', 'enterprise_all_access', 'b2b_growth'],
   advertising: ['admin', 'enterprise_all_access', 'b2b_growth', 'creator_media'],
@@ -143,7 +144,9 @@ export const ADMIN_EMAILS = [
   'theseandaley@gmail.com',
   'sean@stehouwerpublishing.com',
   'rottierannajoy@gmail.com',
-  'keith@evolution6media.com'
+  'keith@evolution6media.com',
+  'devin.feexpress@gmail.com',
+  'devin@feexpress.com'
 ];
 
 /**

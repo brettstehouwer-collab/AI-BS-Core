@@ -111,6 +111,22 @@ export default defineConfig({
           if (id.includes('recharts') || id.includes('d3-')) {
             return 'recharts';
           }
+          // Heavy third-party libraries (code split for faster initial load)
+          if (id.includes('hls.js')) {
+            return 'hls';
+          }
+          if (id.includes('flexlayout-react')) {
+            return 'flexlayout';
+          }
+          if (id.includes('react-big-calendar')) {
+            return 'calendar';
+          }
+          if (id.includes('re2js')) {
+            return 're2js';
+          }
+          if (id.includes('three')) {
+            return 'three';
+          }
           // Vendor utilities
           if (id.includes('node_modules')) {
             return 'vendor';

@@ -38,8 +38,18 @@ export default function TopNavbar({
   zoomLevel = 125,
   onZoomChange,
   zenMode = false,
-  onToggleZenMode
+  onToggleZenMode,
+  onOpenMobileDrawer
 }) {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [openGroup, setOpenGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -66,21 +76,38 @@ export default function TopNavbar({
   // Poll Live GPU/CPU Hardware Telemetry for Ambient Navbar HUD
   useEffect(() => {
     let isMounted = true;
+    let failStreak = 0;
+
+    const isLocalDev = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
     const fetchTelemetry = async () => {
+      if (failStreak > 3) return; // Prevent network churn and thread blocking if core unreachable
       try {
-        const res = await fetch('http://127.0.0.1:8080/api/v1/hardware/gpu/telemetry');
+        const apiBase = isLocalDev ? 'http://127.0.0.1:8080' : 'https://api.brettstehouwer.live';
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1200);
+
+        const res = await fetch(`${apiBase}/api/v1/hardware/gpu/telemetry`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
         if (res.ok) {
           const data = await res.json();
           if (isMounted && data.telemetry) {
             setHwTelemetry(data.telemetry);
+            failStreak = 0;
           }
+        } else {
+          failStreak++;
         }
       } catch (err) {
-        // Suppress background poll errors
+        failStreak++;
       }
     };
     fetchTelemetry();
-    const interval = setInterval(fetchTelemetry, 2500);
+    const interval = setInterval(fetchTelemetry, 5000);
     return () => {
       isMounted = false;
       clearInterval(interval);
@@ -179,7 +206,116 @@ export default function TopNavbar({
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Main Top Navbar with Pinned Quick-Dock & Horizontal Pan Controls */}
+      {/* 📱 NATIVE SMARTPHONE HEADER BAR (<= 768px) */}
+      {isMobile ? (
+        <div style={{
+          height: '52px',
+          background: 'rgba(13, 17, 23, 0.98)',
+          borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '6px 12px',
+          paddingTop: 'max(env(safe-area-inset-top, 0px), 6px)',
+          color: '#c9d1d9',
+          userSelect: 'none',
+          zIndex: 1000,
+          position: 'relative',
+          backdropFilter: 'blur(16px)'
+        }}>
+          {/* Left: Brand + Status */}
+          <div
+            onClick={() => onTabChange && onTabChange('chat')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+          >
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '6px',
+              background: 'linear-gradient(135deg, #38bdf8, #a855f7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '0.85rem',
+              color: '#000000'
+            }}>
+              AI
+            </div>
+            <div>
+              <div style={{ fontWeight: 800, color: '#58a6ff', fontSize: '0.9rem', lineHeight: 1.1 }}>
+                Stehouwer AI
+              </div>
+              <div style={{ fontSize: '0.62rem', color: '#8b949e', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                <span>{SYSTEM_VERSION} • RTX 4090 ({hwTelemetry?.core_temp_c || 72}°C)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Quick Mobile Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {onToggleMomMode && (
+              <button
+                onClick={onToggleMomMode}
+                title="Mom View: High Contrast & Big Text"
+                style={{
+                  background: momMode ? 'rgba(244, 63, 94, 0.3)' : 'rgba(255, 255, 255, 0.05)',
+                  border: `1px solid ${momMode ? '#fb7185' : 'rgba(255, 255, 255, 0.15)'}`,
+                  color: momMode ? '#fb7185' : '#94a3b8',
+                  borderRadius: '6px',
+                  padding: '5px 8px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                🌸
+              </button>
+            )}
+
+            <button
+              onClick={() => setShowCmdPalette(true)}
+              title="Search Tools & Tabs (Ctrl+K)"
+              style={{
+                background: 'rgba(56, 189, 248, 0.15)',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
+                color: '#38bdf8',
+                borderRadius: '6px',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <span>🔍</span>
+            </button>
+
+            <button
+              onClick={() => onOpenMobileDrawer && onOpenMobileDrawer()}
+              title="Open Navigation Menu"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                borderRadius: '6px',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 900,
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              ☰
+            </button>
+          </div>
+        </div>
+      ) : (
+      /* Main Top Navbar with Pinned Quick-Dock & Horizontal Pan Controls */
       <div ref={navRef} style={{
         height: 'auto',
         minHeight: '54px',
@@ -270,7 +406,10 @@ export default function TopNavbar({
           boxShadow: '0 0 12px rgba(0,0,0,0.5)',
           fontSize: '0.74rem',
           fontWeight: '700',
-          flexShrink: 0
+          flexShrink: 0,
+          minHeight: '28px',
+          minWidth: '220px',
+          contain: 'layout'
         }}>
           <span 
             title={`RTX 4090 Core Temp: ${hwTelemetry?.core_temp_c || 28}°C (Fan: ${hwTelemetry?.fan_speed_pct || 100}%)`}
@@ -403,33 +542,17 @@ export default function TopNavbar({
           </div>
         )}
 
-        {/* ◀ PAN LEFT BUTTON */}
-        <button
-          onClick={handleScrollLeft}
-          title="Scroll Navigation Left (◀)"
-          style={{
-            background: '#161b22',
-            color: '#58a6ff',
-            border: '1px solid #30363d',
-            borderRadius: '6px',
-            padding: '6px 10px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: 'bold',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
-          }}
-        >
-          ◀
-        </button>
+        
 
         {/* ↔️ SCROLLABLE NAVIGATION & TOOL RIBBON CONTAINER */}
         <div 
           ref={scrollRibbonRef}
           onScroll={() => setOpenGroup(null)}
+          onWheel={(e) => {
+            if (scrollRibbonRef.current && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+              scrollRibbonRef.current.scrollLeft += e.deltaY;
+            }
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -816,29 +939,9 @@ export default function TopNavbar({
           </div>
         </div>
 
-        {/* ▶ PAN RIGHT BUTTON */}
-        <button
-          onClick={handleScrollRight}
-          title="Scroll Navigation Right (▶)"
-          style={{
-            background: '#161b22',
-            color: '#58a6ff',
-            border: '1px solid #30363d',
-            borderRadius: '6px',
-            padding: '6px 10px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: 'bold',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
-          }}
-        >
-          ▶
-        </button>
+        
       </div>
+      )}
 
       {/* Modals */}
       <TeamLiveChatModal 

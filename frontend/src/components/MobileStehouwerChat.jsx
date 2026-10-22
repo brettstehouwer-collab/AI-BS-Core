@@ -957,12 +957,13 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const [gpuTelemetry, setGpuTelemetry] = useState(null);
   useEffect(() => {
     const fetchTelemetry = async () => {
+      const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
       const candidateBases = [
         BACKEND_URL,
         'https://api.brettstehouwer.live',
-        'http://127.0.0.1:8080',
-        'http://localhost:8080',
-        'http://192.168.4.92:8080'
+        !isHttps ? 'http://127.0.0.1:8080' : null,
+        !isHttps ? 'http://localhost:8080' : null,
+        !isHttps ? 'http://192.168.4.92:8080' : null
       ].filter(Boolean);
 
       let fetched = false;
@@ -1817,6 +1818,8 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             {/* God-Mode GPU Telemetry Banner */}
             <div style={{
               width: '100%',
+              minHeight: '76px',
+              contain: 'layout',
               marginBottom: '24px',
               padding: '12px 16px',
               background: 'rgba(20, 20, 20, 0.8)',
@@ -1926,7 +1929,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                     flexDirection: 'column',
                     justifyContent: 'center',
                     minHeight: '60px',
-                    transition: 'all 0.15s ease'
+                    transition: 'transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease'
                   }}
                   onTouchStart={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
                   onTouchEnd={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)'}
@@ -2076,7 +2079,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
       {/* ── Floating Capsule Bottom Input Bar ── */}
       <footer style={{
         padding: '8px 16px',
-        paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+        paddingBottom: 'calc(var(--mobile-bottom-nav-height, 60px) + max(10px, env(safe-area-inset-bottom)))',
         background: 'linear-gradient(180deg, transparent 0%, #131314 40%)',
         position: 'relative',
         zIndex: 40

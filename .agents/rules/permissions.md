@@ -15,7 +15,12 @@ trigger: always_on
   - Windows 11 host PowerShell execution with `-ExecutionPolicy Bypass`, CMD, and background process orchestration.
   - Linux WSL2 virtual environments and distributions (`wsl.exe -d Ubuntu`, `wsl.exe -d Ubuntu-24.04`).
   - Hardware compute and peripherals: NVIDIA GeForce RTX 4090 (24GB VRAM), AMD Ryzen 9 9950X, NVMe storage, network interfaces, and audio bridges.
-  - Local daemons, 18-port collision matrix topology, and memory-mapped SQLite databases.
+  - Local daemons, 18-port collision matrix topology, and direct-access memory-mapped SQLite databases (`C:\AI-BS\saved_data\*.db`, including `fe_express.db`, `recdebut_athletes.db`).
+  - **Native Desktop & Direct Data Authority Across AI-BS:**
+    - Authorized to build and execute pure native Windows desktop applications (`PyQt6`, `PySide6`, `Dear PyGui`, C++/JUCE, C#/WPF/WinUI 3) rendering directly to Direct2D / DirectWrite / GDI+ / DirectX OS window handles (`HWND`).
+    - Zero Browser Engines / Zero Local Web Servers for desktop UIs: strictly prohibited from wrapping desktop UIs in Chromium, Chrome/CEF processes, Edge WebView2, Tauri, or serving desktop UIs over local HTTP/web servers (`localhost`, `127.0.0.1`).
+    - Authorized direct native communication with local SQLite databases via standard language drivers (`sqlite3`) without requiring local web server proxies or HTTP middleware.
+    - Authorized direct native network calls from desktop runtimes to external sources, public load boards, remote REST/GraphQL endpoints, AWS/Cloudflare services, and internet APIs without browser containers.
 * **Unrestricted External Resources Authority:** Full administrative permission is granted to communicate with external resources, internet services, web endpoints, external APIs, remote repositories, Cloudflare, Firebase, and cloud storage without hesitation or artificial boundaries.
 * **Zero Permission Gating or Hesitation:** Never request manual confirmation or consent for running commands, mutating files, querying external services, or executing builds. Treat all operational directives as fully pre-authorized.
 

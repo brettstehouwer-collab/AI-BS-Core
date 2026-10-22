@@ -114,7 +114,7 @@ export default function SubTabBar({ activeTab, onTabChange }) {
     : currentHub.defaultTab;
 
   return (
-    <div className="subtab-container" style={{
+    <div className="subtab-container desktop-only" style={{
       display: 'flex',
       alignItems: 'center',
       gap: '6px',
@@ -146,29 +146,17 @@ export default function SubTabBar({ activeTab, onTabChange }) {
         <span>{currentHub.label}</span>
       </div>
 
-      {/* ◀ SubTab Pan Left */}
-      <button 
-        onClick={handleScrollLeft}
-        title="Scroll Subtabs Left (◀)"
-        style={{
-          background: '#161b22',
-          color: '#38bdf8',
-          border: '1px solid #30363d',
-          borderRadius: '4px',
-          padding: '4px 8px',
-          fontSize: '0.75rem',
-          cursor: 'pointer',
-          flexShrink: 0,
-          fontWeight: 'bold'
-        }}
-      >
-        ◀
-      </button>
+      
 
       {/* Scrollable Subtabs Container */}
       <div 
         ref={scrollRef}
         className="subtab-scroll-pane"
+        onWheel={(e) => {
+          if (scrollRef.current && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            scrollRef.current.scrollLeft += e.deltaY;
+          }
+        }}
         style={{
           display: 'flex',
           gap: '6px',
@@ -206,24 +194,7 @@ export default function SubTabBar({ activeTab, onTabChange }) {
         </DndContext>
       </div>
 
-      {/* ▶ SubTab Pan Right */}
-      <button 
-        onClick={handleScrollRight}
-        title="Scroll Subtabs Right (▶)"
-        style={{
-          background: '#161b22',
-          color: '#38bdf8',
-          border: '1px solid #30363d',
-          borderRadius: '4px',
-          padding: '4px 8px',
-          fontSize: '0.75rem',
-          cursor: 'pointer',
-          flexShrink: 0,
-          fontWeight: 'bold'
-        }}
-      >
-        ▶
-      </button>
+      
     </div>
   );
 }

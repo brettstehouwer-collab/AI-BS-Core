@@ -486,16 +486,18 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '10px 18px',
+        padding: '10px clamp(10px, 2.5vw, 18px)',
         backgroundColor: '#0d1117',
         borderBottom: '1px solid #21262d',
-        flexShrink: 0
+        flexShrink: 0,
+        flexWrap: 'wrap',
+        gap: '12px'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontSize: '1.4rem' }}>⚡</span>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#58a6ff', letterSpacing: '0.04em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontWeight: 800, fontSize: 'clamp(0.92rem, 3vw, 1.05rem)', color: '#58a6ff', letterSpacing: '0.04em' }}>
                 AI-BS EXECUTIVE COMMAND COCKPIT
               </span>
               <span style={{
@@ -550,7 +552,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
         </div>
 
         {/* Global Controls: Autonomy Mode & Emergency Halt */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           {/* Autonomy Mode Switcher */}
           <div style={{
             display: 'flex',

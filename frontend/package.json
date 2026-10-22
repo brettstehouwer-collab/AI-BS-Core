@@ -1,6 +1,6 @@
 {
   "name": "ai-bs-frontend",
-  "version": "5.327.0",
+  "version": "5.328.0",
   "description": "AI-BS Sovereign Intelligence Studio",
   "author": "Brett Stehouwer / Stehouwer Publishing",
   "private": true,
@@ -44,6 +44,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "recharts": "^3.10.1",
     "remark-gfm": "^3.0.1",
+    "three": "^0.186.1",
     "tone": "^15.1.22",
     "uuid": "^14.0.1",
     "xterm": "^5.3.0",

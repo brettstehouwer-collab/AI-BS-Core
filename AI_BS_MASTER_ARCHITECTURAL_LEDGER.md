@@ -2591,3 +2591,76 @@ eact-player natively into StehouwerPublishing.com with a new /live route.
   3. **Class of 2027 Campaign & Tracking Verification**: Verified 903 Class of 2027 athletes reached and 745 unique US Class of 2027 athletes ready (`#3705 Destiny Weaver` -> `#7573 Zya Small`) with `recdebut-recruit.org/r/{athlete_id}` tracking (302 redirect to `https://recdebut.com/all-registration/`) and carrier spam-filter audit.
   4. **Master Chronology & Stehouwer LLM Ledger Grounding**: Synchronized `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`, `STEHOUWER_OMNI_CHRONOLOGICAL_MASTER_ARCHIVE.md`, `stehouwer_chronology.db`, `aibs_master.db` (`codebase_master_knowledge`), and ChromaDB vector collections so Stehouwer LLM always reflects the live October 21, 2026 (`v5.328.0`) state.
 
+
+## Milestone v5.328.0 - Multi-Drive Omni-Mount Linking, Sovereign Workspace Binding & RecDebut Enriched Metadata Portal (Oct 21, 2026)
+
+- **AI Rationale & Architecture:**
+  1. **Multi-Drive Omni-Mount Architecture (C:, D:, E:)**:
+     - Deployed scripts/aibs_antigravity_linker.py and scripts/aibs_virtual_workspace_linker.py to index and link 14 physical multi-drive directories without copying or duplicating files to C: drive NVMe.
+     - Generated saved_data/antigravity_omni_mounts.json (100% CONNECTED across 18 granular sub-paths, 0 missing).
+     - Bound roots in AI-BS_Sovereign.code-workspace and saved_data/ai_bs_virtual_omni.code-workspace.
+     - Created runtime cross-drive asset resolver ackend/core/aibs_mount_loader.py (AntigravityMountLoader).
+     - Verified NVMe disk headroom: Drive C: ~219 GB free preserved by directing heavy model weights (OLLAMA_MODELS) to Drive E: and ComfyUI/master memory to Drive D:.
+  2. **Recreational Debut (RecDebut) Enriched Click & Open Telemetry (
+ec_debut_router.py)**:
+     - Upgraded get_rec_debut_analytics() endpoint in ackend/routers/rec_debut_router.py and C:\Recreational-Debut\backend\rec_debut_router.py to join 
+ec_debut_tracking_events with 
+ec_debut_athletes.
+     - Delivers enriched fields: High School, Sport, Class cohort, lifetime click volume, direct phone, email, client IP, delivery status (STATUS: DELIVERED), and exact millisecond-precision timestamps.
+  3. **DennisBellPortal.jsx 4-Mirror Synchronized UI & Firebase Production Release**:
+     - Overhauled Recent Link Click Alerts cards with prominent sport badges, Class tags, click volume counters, delivery indicators, exact local timestamps (HH:MM:SS AM/PM, Weekday, Month DD, YYYY), and 1-click 📞 Call Now direct dialer.
+     - Synchronized all 4 frontend mirrors with 100% SHA-256 byte parity (rontend/src/components, rontend/components, rontend/src/components/components, rontend/components/components).
+     - Built with Vite and deployed to production hosting: https://ai-bs-dashboard.web.app.
+
+- **Updated Technical Specifications:**
+  - Runtime Resolver: AntigravityMountLoader in ackend/core/aibs_mount_loader.py.
+  - Multi-Drive Workspaces: AI-BS_Sovereign.code-workspace & saved_data/ai_bs_virtual_omni.code-workspace.
+  - Parity Audit: 463/463 frontend component files at 100% SHA-256 byte parity.
+  - Active Version: 5.328.0.
+
+- **Modified Files:**
+  - ersion.txt, package.json, rontend/package.json, rontend/public/version.json
+  - scripts/aibs_antigravity_linker.py
+  - scripts/aibs_virtual_workspace_linker.py
+  - scripts/aibs_workspace_syncer.py
+  - saved_data/antigravity_omni_mounts.json
+  - saved_data/ai_bs_virtual_omni.code-workspace
+  - AI-BS_Sovereign.code-workspace
+  - ackend/core/aibs_mount_loader.py
+  - ackend/routers/rec_debut_router.py
+  - C:\Recreational-Debut\backend\rec_debut_router.py
+  - rontend/src/components/DennisBellPortal.jsx
+  - rontend/components/DennisBellPortal.jsx [Mirror 2 - 100% Parity]
+  - rontend/src/components/components/DennisBellPortal.jsx [Mirror 3 - 100% Parity]
+  - rontend/components/components/DennisBellPortal.jsx [Mirror 4 - 100% Parity]
+
+## Milestone v5.329.0 - FE Express Box Truck Freight Hub: Live Load Ingestion, Secondary Adapters, Fuel/Margin Engine & Broker Bid Automation (Oct 21, 2026)
+
+- **AI Rationale & Architecture:**
+  1. **Live Board Auto-Refresher & Timestamp Engine**:
+     - Upgraded ackend/fe_express_live_ingestor.py with dynamic posted_at timestamp capture across all parsed Trulos public freight loads.
+     - Enriched e_express.db schema with posted_at TEXT column.
+     - Updated native PyQt6 desktop GUI (ackend/fe_express_native_desktop.py) with a dedicated Posted Time table column styled in cyan.
+  2. **Automated Broker Contact / Dispatcher (ackend/fe_express_bid_generator.py)**:
+     - Built BrokerBidGenerator delivering formal email rate bids and compact SMS negotiation scripts (<160 chars) targeting Greenlight Tier 1 loads with authority details (MC-1482910, USDOT-3918241), equipment specs (26' Box Truck w/ Liftgate), and insurance COI readiness.
+     - Mounted endpoint /api/v1/fe-express/loads/{load_id}/bid.
+  3. **DAT One & Truckstop.com Integration Adapters (ackend/fe_express_adapters.py)**:
+     - Built normalized freight payload parsers DATOneAdapter and TruckstopAdapter.
+     - Mounted ingest endpoints /api/v1/fe-express/adapters/dat-one/ingest and /api/v1/fe-express/adapters/truckstop/ingest.
+  4. **Custom Home Base, Fuel Index & True Net Margin Calculator (ackend/fe_express_fuel_calculator.py)**:
+     - Built FuelCostCalculator factoring loaded + deadhead miles from Home Base (Grand Rapids, MI), national on-highway diesel fuel price index (.85/gal), 9.5 MPG truck burn, .25/mi maintenance reserve, driver labor, and true net hourly take-home.
+     - Mounted endpoint /api/v1/fe-express/loads/{load_id}/fuel-analysis.
+
+- **Updated Technical Specifications:**
+  - Database: C:\AI-BS\saved_data\fe_express.db.
+  - Desktop Application: Launch_FE_Express.bat -> ackend/fe_express_native_desktop.py (PyQt6 Direct2D HWND).
+  - Version: 5.329.0.
+
+- **Modified Files:**
+  - ersion.txt, package.json, rontend/package.json, rontend/public/version.json
+  - ackend/fe_express_adapters.py
+  - ackend/fe_express_fuel_calculator.py
+  - ackend/fe_express_bid_generator.py
+  - ackend/fe_express_live_ingestor.py
+  - ackend/fe_express_native_desktop.py
+  - ackend/routers/fe_express_router.py

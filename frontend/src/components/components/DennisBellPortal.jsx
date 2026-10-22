@@ -1,17 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DennisBellMobileRemote from './DennisBellMobileRemote.jsx';
-import CampaignAutomationTab from './CampaignAutomationTab.jsx';
+import { 
+  REC_DEBUT_BRAND, 
+  REC_DEBUT_LEADERSHIP, 
+  REC_DEBUT_AWARDS, 
+  REC_DEBUT_SPORTS_PORTALS, 
+  REC_DEBUT_FAQS, 
+  REC_DEBUT_PROGRAM_DETAILS,
+  REC_DEBUT_YOUTUBE_CHANNELS,
+  REC_DEBUT_FEATURED_VIDEOS,
+  REC_DEBUT_VERIFICATION_MATRIX
+} from './recDebutAssets.js';
 
 export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_URL: propUpperBackendUrl }) {
   const BACKEND_URL = propBackendUrl || propUpperBackendUrl || (
     typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-      ? 'http://127.0.0.1:8095' 
+      ? 'http://127.0.0.1:8080' 
       : 'https://api.brettstehouwer.live'
   );
 
-  const [campaignViewMode, setCampaignViewMode] = useState('automation'); // 'automation' | 'history'
-
-  // View Mode: 'desktop' vs 'mobile' (Remote Control App)
+  // View Mode: 'desktop' vs 'mobile' (S25 Ultra Remote Control Suite)
   const [viewMode, setViewMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -30,7 +38,7 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get('tab');
-      if (tab && ['telemetry', 'syndication', 'emails', 'replies', 'campaigns', 'roster', 'submit', 'network', 'cloudflared', 'showcase', 'textbee'].includes(tab)) {
+      if (tab && ['telemetry', 'syndication', 'emails', 'replies', 'campaigns', 'roster', 'submit', 'network', 'awards', 'portals', 'faq'].includes(tab)) {
         return tab;
       }
     }
@@ -86,83 +94,58 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [replyMessageText, setReplyMessageText] = useState('');
   const [isSendingReply, setIsSendingReply] = useState(false);
 
+  // RecDebut Verified Assets State (All-American Alumni, Sport Portals, FAQ)
+  const [awardSearchTerm, setAwardSearchTerm] = useState('');
+  const [awardStateFilter, setAwardStateFilter] = useState('ALL');
+  const [selectedSportPortal, setSelectedSportPortal] = useState('all');
+  const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
+
   // Test Dispatch State
   const [testPhone, setTestPhone] = useState('616-402-3628'); // Brett's phone by default
   const [testEmail, setTestEmail] = useState('dbell002@sbcglobal.net'); // Dennis Bell's email by default
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [testResult, setTestResult] = useState(null);
 
-  // Showcase Gallery State
-  const [showcaseMedia, setShowcaseMedia] = useState({ photos: [], videos: [] });
-  const [showcaseFilter, setShowcaseFilter] = useState('all'); // 'all' | 'photos' | 'videos'
-  const [selectedMediaModal, setSelectedMediaModal] = useState(null);
+  // Transactional Email API (Resend / SendGrid) Shield State
+  const [emailApiConfig, setEmailApiConfig] = useState(null);
+  const [resendApiKeyInput, setResendApiKeyInput] = useState('');
+  const [resendFromInput, setResendFromInput] = useState('Dennis Bell <recruiting@recdebut.com>');
+  const [selectedProvider, setSelectedProvider] = useState('auto');
+  const [isSavingApiConfig, setIsSavingApiConfig] = useState(false);
+  const [apiConfigToast, setApiConfigToast] = useState(null);
+  const [showApiSetupGuide, setShowApiSetupGuide] = useState(false);
 
-  // TextBee Gateway State
-  const [textBeeStatus, setTextBeeStatus] = useState(null);
-  const [textBeeMessages, setTextBeeMessages] = useState([]);
-  const [textBeeLoading, setTextBeeLoading] = useState(false);
-  const [textBeeBatchSize, setTextBeeBatchSize] = useState(50);
-  const [textBeeMessageText, setTextBeeMessageText] = useState(
-    "Hey {first_name}, Dennis Bell here, former New York Knick and President of Recreational Debut. We want to help get your athletic profile in front of college coaches. Check out our program: recdebut.com"
-  );
-  const [textBeeDispatchResult, setTextBeeDispatchResult] = useState(null);
-  const [isDispatchingTextBee, setIsDispatchingTextBee] = useState(false);
-
-  const fetchTextBeeData = async () => {
-    setTextBeeLoading(true);
+  const handleSaveApiConfig = async () => {
+    setIsSavingApiConfig(true);
+    setApiConfigToast(null);
     try {
-      const [stRes, msgRes] = await Promise.all([
-        fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/status`).then(r => r.json()).catch(() => null),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/messages?limit=30`).then(r => r.json()).catch(() => ({ messages: [] }))
-      ]);
-      if (stRes) setTextBeeStatus(stRes);
-      if (msgRes && msgRes.messages) setTextBeeMessages(msgRes.messages);
-    } catch (_) {}
-    setTextBeeLoading(false);
-  };
-
-  const handleDispatchTextBeeBatch = async (dryRun = false) => {
-    setIsDispatchingTextBee(true);
-    setTextBeeDispatchResult(null);
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/textbee/dispatch-batch`, {
+      const payload = {
+        provider: selectedProvider,
+        resend_from_email: resendFromInput.trim() || 'Dennis Bell <recruiting@recdebut.com>'
+      };
+      if (resendApiKeyInput.trim()) {
+        payload.resend_api_key = resendApiKeyInput.trim();
+      }
+      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/email-api/config`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          batch_size: textBeeBatchSize,
-          custom_message_template: textBeeMessageText,
-          dry_run: dryRun
-        })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
-      setTextBeeDispatchResult(data);
-      if (data.success && !dryRun) {
-        fetchData(); // refresh athletes count
+      if (data.success) {
+        setApiConfigToast('✅ Email API configuration successfully saved! Transactional Shield Active.');
+        fetchData();
+        setResendApiKeyInput('');
+      } else {
+        setApiConfigToast(`❌ Error saving API config: ${data.detail || data.message}`);
       }
-    } catch (err) {
-      setTextBeeDispatchResult({ success: false, error: String(err) });
+    } catch (e) {
+      setApiConfigToast(`❌ Network error: ${e.message}`);
+    } finally {
+      setIsSavingApiConfig(false);
+      setTimeout(() => setApiConfigToast(null), 6000);
     }
-    setIsDispatchingTextBee(false);
   };
-
-  useEffect(() => {
-    fetch('/showcase_2013_manifest.json')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.photos) {
-          setShowcaseMedia(data);
-        }
-      })
-      .catch(() => {});
-    fetchTextBeeData();
-
-    // Auto-forwarding Poller: Checks for incoming TextBee texts every 20 seconds and forwards to Dennis Bell
-    const autoForwardInterval = setInterval(() => {
-      fetchTextBeeData();
-    }, 20000);
-
-    return () => clearInterval(autoForwardInterval);
-  }, []);
 
   // Custom Message Box State (Pre-populated with Dennis's updated NCAA Eligibility Email Draft)
   const NCAA_ELIGIBILITY_DRAFT = `YOUR ELIGIBILITY IS A MUST!
@@ -257,14 +240,6 @@ President, Recreational Debut`;
   });
   const [batchSize, setBatchSize] = useState(400);
 
-  // Cloudflared Edge Dispatcher State
-  const [cfStatus, setCfStatus] = useState(null);
-  const [cfRecipient, setCfRecipient] = useState('616-402-3628');
-  const [cfMessage, setCfMessage] = useState(DEFAULT_MESSAGE);
-  const [cfChannel, setCfChannel] = useState('auto');
-  const [cfSending, setCfSending] = useState(false);
-  const [cfResult, setCfResult] = useState(null);
-
   // CSV / File Upload State
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState(null);
@@ -302,7 +277,7 @@ President, Recreational Debut`;
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [athRes, campRes, coachRes, quotaRes, smtpRes, emailSumRes, repliesRes, analyticsRes, cfRes] = await Promise.all([
+      const [athRes, campRes, coachRes, quotaRes, smtpRes, emailSumRes, repliesRes, analyticsRes, apiConfigRes] = await Promise.all([
         fetch(`${BACKEND_URL}/api/v1/recdebut/athletes`).then(r => r.json()).catch(() => ({ athletes: [] })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/campaigns`).then(r => r.json()).catch(() => ({ campaigns: [] })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/excluded-coaches`).then(r => r.json()).catch(() => ({ coaches: [] })),
@@ -311,7 +286,7 @@ President, Recreational Debut`;
         fetch(`${BACKEND_URL}/api/v1/recdebut/athlete-emails`).then(r => r.json()).catch(() => null),
         fetch(`${BACKEND_URL}/api/v1/recdebut/sms/replies`).then(r => r.json()).catch(() => ({ replies: [], unread_count: 0 })),
         fetch(`${BACKEND_URL}/api/v1/recdebut/outreach-analytics`).then(r => r.json()).catch(() => null),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/cloudflared/status`).then(r => r.json()).catch(() => null)
+        fetch(`${BACKEND_URL}/api/v1/recdebut/email-api/config`).then(r => r.json()).catch(() => null)
       ]);
 
       if (athRes.athletes) setAthletes(athRes.athletes);
@@ -326,8 +301,10 @@ President, Recreational Debut`;
       if (analyticsRes && analyticsRes.success) {
         setAnalyticsData(analyticsRes);
       }
-      if (cfRes && cfRes.success) {
-        setCfStatus(cfRes);
+      if (apiConfigRes && apiConfigRes.success) {
+        setEmailApiConfig(apiConfigRes);
+        if (apiConfigRes.provider) setSelectedProvider(apiConfigRes.provider);
+        if (apiConfigRes.resend_from_email) setResendFromInput(apiConfigRes.resend_from_email);
       }
       if (quotaRes && quotaRes.success) {
         setQuotaStatus(quotaRes);
@@ -868,63 +845,6 @@ President, Recreational Debut`;
     }
   };
 
-  // Cloudflared Edge Dispatcher Handlers
-  const handleSendCloudflared = async (isTestModeParam = false) => {
-    if (!cfRecipient.trim()) {
-      alert('Please enter a recipient phone number, email, or select the Last 300 Athletes.');
-      return;
-    }
-    if (!cfMessage.trim()) {
-      alert('Please enter a message.');
-      return;
-    }
-    setCfSending(true);
-    setCfResult(null);
-
-    const isTestMode = isTestModeParam || cfRecipient.toLowerCase().includes('test');
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/cloudflared/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          recipient: cfRecipient.trim(),
-          message_text: cfMessage.trim(),
-          channel: cfChannel,
-          dry_run: isTestMode,
-          batch_limit: 300,
-          caller_id_email: 'dbell002@sbcglobal.net',
-          caller_id_phone: '+1-616-291-5227',
-          caller_id_name: 'Dennis Bell (+1-616-291-5227)'
-        })
-      });
-      const data = await res.json();
-      setCfResult(data);
-      fetchData();
-    } catch (e) {
-      setCfResult({ success: false, error: e.message });
-    } finally {
-      setCfSending(false);
-    }
-  };
-
-  const handleTestPingCloudflared = async () => {
-    setCfSending(true);
-    setCfResult(null);
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/cloudflared/test-ping?phone=616-402-3628`, {
-        method: 'POST'
-      });
-      const data = await res.json();
-      setCfResult(data);
-      fetchData();
-    } catch (e) {
-      setCfResult({ success: false, error: e.message });
-    } finally {
-      setCfSending(false);
-    }
-  };
-
   // Export CSV Helper
   const exportCsv = (dataList, filename, isCoach = false) => {
     if (dataList.length === 0) {
@@ -969,7 +889,8 @@ President, Recreational Debut`;
   };
 
   // Categorize Athletes
-  const pendingAthletes = athletes.filter(a => !a.status || a.status === 'Pending' || a.status === 'Selected');
+  const phoneOnlyAthletes = athletes.filter(a => a.email_status === 'NO_EMAIL' || (!a.email && a.phone));
+  const pendingAthletes = athletes.filter(a => (!a.status || a.status === 'Pending' || a.status === 'Selected') && a.email_status !== 'NO_EMAIL' && a.email);
   const messagedAthletes = athletes.filter(a => a.status === 'Contacted' || a.status === 'Messaged');
   const athletesWithEmails = athletes.filter(a => a.email && a.email.includes('@'));
 
@@ -977,6 +898,7 @@ President, Recreational Debut`;
   const getActiveList = () => {
     let source = [];
     if (syndicationCategory === 'messaged') source = messagedAthletes;
+    else if (syndicationCategory === 'phone_only') source = phoneOnlyAthletes;
     else source = pendingAthletes;
 
     if (!searchTerm.trim()) return source;
@@ -1144,9 +1066,9 @@ President, Recreational Debut`;
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Switch to Mobile Phone Remote View"
+              title="Switch to Mobile Phone Remote View (6-Tab S25 Ultra App)"
             >
-              📱 Mobile Remote
+              📱 S25 Ultra Mobile Remote
             </button>
 
             <button
@@ -1189,124 +1111,250 @@ President, Recreational Debut`;
 
         </div>
 
-        {/* Executive Metric Cards */}
-        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+        {/* Consolidated Executive 4-Card Hero Grid */}
+        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
           
-          <div style={{
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.4)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🟢</div>
+          <div 
+            onClick={() => {
+              setSyndicationCategory('messaged');
+              handleTabChange('syndication');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.25) 100%)',
+              border: '1px solid rgba(16, 185, 129, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Contacted Athletes in Outbox"
+          >
+            <div style={{ fontSize: '32px' }}>🟢</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#10b981' }}>{messagedAthletes.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contacted & Verified</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#10b981' }}>{messagedAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Contacted & Verified</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(245, 132, 38, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🟡</div>
+          <div 
+            onClick={() => {
+              setSyndicationCategory('pending');
+              handleTabChange('syndication');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(245, 132, 38, 0.12) 0%, rgba(124, 45, 18, 0.25) 100%)',
+              border: '1px solid rgba(245, 132, 38, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Ready / Pending Athletes in Outbox"
+          >
+            <div style={{ fontSize: '32px' }}>🟡</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#F58426' }}>{pendingAthletes.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Needs To Be Messaged</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#F58426' }}>{pendingAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Needs To Be Messaged</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>📧</div>
+          <div 
+            onClick={() => handleTabChange('replies')}
+            style={{
+              background: unreadRepliesCount > 0 ? 'linear-gradient(135deg, rgba(245, 132, 38, 0.2) 0%, rgba(180, 83, 9, 0.3) 100%)' : 'rgba(255, 255, 255, 0.04)',
+              border: unreadRepliesCount > 0 ? '1px solid #F58426' : '1px solid rgba(16, 185, 129, 0.35)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Inbound Athlete Replies"
+          >
+            <div style={{ fontSize: '32px' }}>💬</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#38bdf8' }}>{athletesWithEmails.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Clean Athlete Emails Saved</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>⚡</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#10b981' }}>{swarmDailyCapacity}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Swarm Cap / Day ({activeSmtpCount} Gmail{activeSmtpCount > 1 ? 's' : ''})</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🛡️</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#34d399' }}>{excludedCoaches.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Coaches Quarantined (Zero on Page)</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: unreadRepliesCount > 0 ? 'rgba(245, 132, 38, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-            border: unreadRepliesCount > 0 ? '1px solid #F58426' : '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            cursor: 'pointer'
-          }} onClick={() => handleTabChange('replies')}>
-            <div style={{ fontSize: '28px' }}>💬</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: unreadRepliesCount > 0 ? '#F58426' : '#10b981' }}>
-                {athleteReplies.length} {unreadRepliesCount > 0 && <span style={{ fontSize: '11px', background: '#F58426', color: '#000', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>{unreadRepliesCount} NEW</span>}
+              <div style={{ fontSize: '24px', fontWeight: '900', color: unreadRepliesCount > 0 ? '#F58426' : '#10b981', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {athleteReplies.length}
+                {unreadRepliesCount > 0 && (
+                  <span style={{ fontSize: '10px', background: '#F58426', color: '#000', padding: '2px 8px', borderRadius: '4px', fontWeight: '900' }}>
+                    {unreadRepliesCount} NEW
+                  </span>
+                )}
               </div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Inbound SMS Replies (IMAP Sync)</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Inbound SMS Replies</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🏀</div>
+          <div 
+            onClick={() => handleTabChange('emails')}
+            style={{
+              background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(14, 116, 144, 0.25) 100%)',
+              border: '1px solid rgba(56, 189, 248, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to open Email Hub & SMTP Swarm"
+          >
+            <div style={{ fontSize: '32px' }}>📧</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#38bdf8' }}>850+</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>College Coaches Network</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#38bdf8' }}>{athletesWithEmails.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Clean Athlete Emails</div>
             </div>
           </div>
 
+        </div>
+
+        {/* Compact Telemetry Status Strip */}
+        <div style={{
+          maxWidth: '1400px',
+          margin: '10px auto 0 auto',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px',
+          padding: '8px 16px',
+          background: 'rgba(255, 255, 255, 0.025)',
+          borderRadius: '8px',
+          border: '1px solid rgba(255, 255, 255, 0.06)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '12px', color: '#94a3b8', flexWrap: 'wrap' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#10b981' }}>⚡</span> Swarm Daily Cap: <strong style={{ color: '#ffffff' }}>{swarmDailyCapacity}</strong> ({activeSmtpCount} Gmail{activeSmtpCount > 1 ? 's' : ''})
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#34d399' }}>🛡️</span> Coach Safety Quarantine: <strong style={{ color: '#ffffff' }}>{excludedCoaches.length.toLocaleString()}</strong> Shielded
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#38bdf8' }}>🏀</span> College Coaches Network: <strong style={{ color: '#ffffff' }}>850+</strong> NCAA / NAIA
+            </span>
+          </div>
+          <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block' }}></span>
+            Dual SIM & SMTP Swarm Active
+          </div>
+        </div>
+
+        {/* Permanent Master Outreach Progress & Live Telemetry Card */}
+        <div style={{
+          maxWidth: '1400px',
+          margin: '14px auto 0 auto',
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 100%)',
+          border: '1px solid rgba(245, 132, 38, 0.35)',
+          borderRadius: '12px',
+          padding: '16px 22px',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '26px' }}>🚀</span>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '15px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px' }}>
+                    CAMPAIGN PROGRESS: {messagedAthletes.length.toLocaleString()} OF {athletes.length.toLocaleString()} ATHLETES CONTACTED
+                  </span>
+                  <span style={{
+                    backgroundColor: messagedAthletes.length > 0 ? '#10b981' : '#F58426',
+                    color: '#07101e',
+                    fontSize: '11px',
+                    fontWeight: '900',
+                    padding: '3px 8px',
+                    borderRadius: '4px',
+                    letterSpacing: '0.5px'
+                  }}>
+                    {athletes.length > 0 ? ((messagedAthletes.length / athletes.length) * 100).toFixed(1) : 0}% COMPLETE
+                  </span>
+                  <span style={{
+                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                    border: '1px solid rgba(56, 189, 248, 0.4)',
+                    color: '#38bdf8',
+                    fontSize: '11px',
+                    fontWeight: '800',
+                    padding: '2px 8px',
+                    borderRadius: '4px'
+                  }}>
+                    ⚡ Cloudflare Tunnel: api.brettstehouwer.live
+                  </span>
+                </div>
+                <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
+                  <strong style={{ color: '#10b981' }}>{messagedAthletes.length.toLocaleString()} Contacted & Verified</strong> • <strong style={{ color: '#F58426' }}>{pendingAthletes.length.toLocaleString()} Pending</strong> • <strong style={{ color: '#38bdf8' }}>{athleteReplies.length} Inbound SMS Replies</strong> • <strong>0% Bounce Rate</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={() => {
+                  setSyndicationCategory('messaged');
+                  handleTabChange('syndication');
+                }}
+                style={{
+                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                  color: '#10b981',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  borderRadius: '6px',
+                  padding: '7px 14px',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                View {messagedAthletes.length.toLocaleString()} Contacted ✓
+              </button>
+              <button
+                onClick={() => {
+                  setSyndicationCategory('pending');
+                  handleTabChange('syndication');
+                }}
+                style={{
+                  backgroundColor: '#F58426',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '7px 14px',
+                  fontSize: '12px',
+                  fontWeight: '800',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 10px rgba(245, 132, 38, 0.35)'
+                }}
+              >
+                Send Next Batch ({pendingAthletes.length.toLocaleString()} Ready) →
+              </button>
+            </div>
+          </div>
+
+          {/* Master Progress Bar Track */}
+          <div style={{
+            width: '100%',
+            height: '10px',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            borderRadius: '6px',
+            overflow: 'hidden',
+            position: 'relative',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${Math.min(100, Math.max(1, athletes.length > 0 ? (messagedAthletes.length / athletes.length) * 100 : 0))}%`,
+              background: 'linear-gradient(90deg, #F58426 0%, #10b981 100%)',
+              borderRadius: '6px',
+              transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: '0 0 12px rgba(16, 185, 129, 0.6)'
+            }} />
+          </div>
         </div>
 
         {/* Global Live Swarm Broadcast Telemetry Banner */}
@@ -1340,7 +1388,7 @@ President, Recreational Debut`;
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
-                  onClick={() => setActiveTab('syndication')}
+                  onClick={() => handleTabChange('syndication')}
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     color: '#ffffff',
@@ -1383,53 +1431,304 @@ President, Recreational Debut`;
           </div>
         )}
 
-        {/* Tab Navigation */}
-        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'flex', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', flexWrap: 'wrap' }}>
-          {[
-            { id: 'telemetry', label: '📊 Outreach Telemetry & Analytics', badge: `${messagedAthletes.length} Sent • ${athleteReplies.length} Replies • 0% Bounce` },
-            { id: 'cloudflared', label: '☁️ Cloudflared Edge Dispatcher', badge: 'api.brettstehouwer.live' },
-            { id: 'syndication', label: '🌐 Mass Syndication & Outbox', badge: `${messagedAthletes.length} Sent • ${pendingAthletes.length} Ready` },
-            { id: 'emails', label: '📧 Athlete Email Hub & SMTP Swarm', badge: `${athletesWithEmails.length} Emails • ${activeSmtpCount} Gmails` },
-            { id: 'replies', label: '💬 Inbound Athlete SMS Replies', badge: `${unreadRepliesCount > 0 ? unreadRepliesCount + ' New • ' : ''}${athleteReplies.length} Replies` },
-            { id: 'campaigns', label: '📢 Campaign Activity & Dispatched Logs', badge: `${campaigns.length} Blasts` },
-            { id: 'roster', label: '👥 Student-Athlete Master Roster', badge: `${athletes.length}` },
-            { id: 'submit', label: '➕ Submit New Athlete Candidate' },
-            { id: 'network', label: '🏀 850 Coaches & Pro Endorsement Network' },
-            { id: 'showcase', label: '📸 Fall 2013 Showcase Gallery', badge: '133 Media Assets' },
-            { id: 'textbee', label: '📱 TextBee SIM Gateway', badge: 'Galaxy S25 Ultra • Verizon' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              style={{
-                padding: '10px 18px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: '700',
-                fontSize: '13px',
-                backgroundColor: activeTab === tab.id ? '#F58426' : 'rgba(255, 255, 255, 0.08)',
-                color: activeTab === tab.id ? '#ffffff' : '#cbd5e1',
-                transition: 'all 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <span>{tab.label}</span>
-              {tab.badge && (
-                <span style={{
-                  fontSize: '10px',
-                  padding: '2px 8px',
-                  borderRadius: '10px',
-                  backgroundColor: activeTab === tab.id ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.15)',
-                  color: '#ffffff'
-                }}>
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          ))}
+        {/* ── CONSOLIDATED 4-TAB EXECUTIVE NAVIGATION ────────────────────────── */}
+        <div style={{ maxWidth: '1400px', margin: '22px auto 0 auto' }}>
+          {/* Level 1: 4 Master Workspace Tabs */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.75)',
+            padding: '6px',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            {[
+              {
+                id: 'analytics',
+                label: '📊 Campaigns & Analytics',
+                badge: `${messagedAthletes.length.toLocaleString()} Sent • ${campaigns.length} Blasts`,
+                matches: ['telemetry', 'campaigns'],
+                defaultTab: 'telemetry'
+              },
+              {
+                id: 'comms',
+                label: '💬 Communications Hub',
+                badge: `${pendingAthletes.length.toLocaleString()} Ready • ${athleteReplies.length} Replies`,
+                matches: ['syndication', 'emails', 'replies'],
+                defaultTab: 'syndication'
+              },
+              {
+                id: 'roster',
+                label: '👥 Athlete Master Roster',
+                badge: `${athletes.length.toLocaleString()} Athletes`,
+                matches: ['roster', 'submit'],
+                defaultTab: 'roster'
+              },
+              {
+                id: 'vault',
+                label: '🏛️ Organization & Vault',
+                badge: 'Directory & Resources',
+                matches: ['network', 'awards', 'portals', 'faq'],
+                defaultTab: 'network'
+              }
+            ].map(cat => {
+              const isCatActive = cat.matches.includes(activeTab);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    if (!isCatActive) {
+                      handleTabChange(cat.defaultTab);
+                    }
+                  }}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: isCatActive ? '900' : '700',
+                    fontSize: '14px',
+                    backgroundColor: isCatActive ? '#F58426' : 'transparent',
+                    color: isCatActive ? '#ffffff' : '#94a3b8',
+                    transition: 'all 0.15s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
+                    boxShadow: isCatActive ? '0 4px 16px rgba(245, 132, 38, 0.4)' : 'none'
+                  }}
+                >
+                  <span style={{ letterSpacing: '0.3px' }}>{cat.label}</span>
+                  <span style={{
+                    fontSize: '11px',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    backgroundColor: isCatActive ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.06)',
+                    color: isCatActive ? '#ffffff' : '#64748b',
+                    fontWeight: '700'
+                  }}>
+                    {cat.badge}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Level 2: Secondary Contextual Sub-Nav Pills */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            marginTop: '10px',
+            padding: '8px 12px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            <span style={{ fontSize: '11px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: '6px' }}>
+              Workspace View:
+            </span>
+
+            {/* Sub-pills for Category 1: Analytics */}
+            {['telemetry', 'campaigns'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('telemetry')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'telemetry' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'telemetry' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'telemetry' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📊 Live Outreach Telemetry &amp; Funnel
+                </button>
+                <button
+                  onClick={() => handleTabChange('campaigns')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'campaigns' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'campaigns' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'campaigns' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📢 Campaign Activity &amp; Dispatched Logs ({campaigns.length} Blasts)
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 2: Comms */}
+            {['syndication', 'emails', 'replies'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('syndication')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'syndication' ? '1px solid #F58426' : '1px solid transparent',
+                    backgroundColor: activeTab === 'syndication' ? 'rgba(245, 132, 38, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'syndication' ? '#F58426' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📱 Mass SMS Syndication &amp; Outbox ({pendingAthletes.length.toLocaleString()} Ready)
+                </button>
+                <button
+                  onClick={() => handleTabChange('emails')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'emails' ? '1px solid #38bdf8' : '1px solid transparent',
+                    backgroundColor: activeTab === 'emails' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'emails' ? '#38bdf8' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📧 Athlete Email Hub &amp; SMTP Swarm ({athletesWithEmails.length.toLocaleString()} Emails)
+                </button>
+                <button
+                  onClick={() => handleTabChange('replies')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'replies' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'replies' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'replies' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>💬 Inbound Athlete SMS Replies</span>
+                  {unreadRepliesCount > 0 && (
+                    <span style={{ fontSize: '10px', background: '#F58426', color: '#000', padding: '1px 6px', borderRadius: '4px', fontWeight: '900' }}>
+                      {unreadRepliesCount} NEW
+                    </span>
+                  )}
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 3: Roster */}
+            {['roster', 'submit'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('roster')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'roster' ? '1px solid #38bdf8' : '1px solid transparent',
+                    backgroundColor: activeTab === 'roster' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'roster' ? '#38bdf8' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  👥 Master Athlete Directory ({athletes.length.toLocaleString()})
+                </button>
+                <button
+                  onClick={() => handleTabChange('submit')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'submit' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'submit' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'submit' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ➕ Submit New Candidate Intake Form
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 4: Vault */}
+            {['network', 'awards', 'portals', 'faq'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('network')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'network' ? '1px solid #F58426' : '1px solid transparent',
+                    backgroundColor: activeTab === 'network' ? 'rgba(245, 132, 38, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'network' ? '#F58426' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🏀 2,000+ Coaches &amp; Pro Ambassadors
+                </button>
+                <button
+                  onClick={() => handleTabChange('awards')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'awards' ? '1px solid #eab308' : '1px solid transparent',
+                    backgroundColor: activeTab === 'awards' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'awards' ? '#eab308' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🏆 All-American Alumni Vault ({REC_DEBUT_AWARDS.length})
+                </button>
+                <button
+                  onClick={() => handleTabChange('portals')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'portals' ? '1px solid #ec4899' : '1px solid transparent',
+                    backgroundColor: activeTab === 'portals' ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'portals' ? '#ec4899' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🎯 13-Sport Registration Portals
+                </button>
+                <button
+                  onClick={() => handleTabChange('faq')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'faq' ? '1px solid #a855f7' : '1px solid transparent',
+                    backgroundColor: activeTab === 'faq' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'faq' ? '#a855f7' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ❓ Program Intel &amp; FAQs
+                </button>
+              </>
+            )}
+
+          </div>
         </div>
 
       </header>
@@ -1872,119 +2171,6 @@ President, Recreational Debut`;
 
             </div>
 
-            {/* Real-Time Hot Lead Alerts & Click Telemetry Feed */}
-            <div style={{
-              background: '#0e1c31',
-              borderRadius: '12px',
-              border: '2px solid rgba(192, 132, 252, 0.4)',
-              padding: '22px',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    🔥 Live Hot Lead Alerts & Click Activity Feed
-                    <span style={{
-                      background: 'rgba(192, 132, 252, 0.2)',
-                      border: '1px solid #c084fc',
-                      color: '#c084fc',
-                      fontSize: '11px',
-                      padding: '3px 10px',
-                      borderRadius: '6px',
-                      fontWeight: '800'
-                    }}>
-                      Dennis Bell Sentinel Active (616-291-5227)
-                    </span>
-                  </h3>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-                    Real-time detection when athletes tap their personalized link. Each click triggers an instant SMS lead alert to Dennis Bell so he can follow up while they are active.
-                  </div>
-                </div>
-                <div style={{ fontSize: '12px', color: '#cbd5e1' }}>
-                  Total Recorded Clicks: <strong style={{ color: '#c084fc' }}>{analyticsData?.funnel?.total_clicks || 0}</strong> ({analyticsData?.funnel?.unique_clicks || 0} unique)
-                </div>
-              </div>
-
-              {(!analyticsData?.recent_events || analyticsData.recent_events.length === 0) ? (
-                <div style={{ padding: '30px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
-                  No click or open events recorded yet today. When an athlete clicks their link in TextBee SMS, the lead alert will appear here instantly!
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '360px', overflowY: 'auto' }}>
-                  {analyticsData.recent_events.map((ev) => (
-                    <div
-                      key={ev.id}
-                      style={{
-                        background: ev.event_type === 'CLICK' ? 'rgba(192, 132, 252, 0.08)' : '#07101e',
-                        border: `1px solid ${ev.event_type === 'CLICK' ? 'rgba(192, 132, 252, 0.35)' : 'rgba(255, 255, 255, 0.08)'}`,
-                        borderRadius: '8px',
-                        padding: '12px 16px',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: '12px'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: '280px' }}>
-                        <span style={{
-                          backgroundColor: ev.event_type === 'CLICK' ? '#c084fc' : '#38bdf8',
-                          color: '#07101e',
-                          fontWeight: '900',
-                          fontSize: '11px',
-                          padding: '4px 10px',
-                          borderRadius: '6px',
-                          letterSpacing: '0.5px'
-                        }}>
-                          {ev.event_type === 'CLICK' ? '🔥 LINK CLICKED' : '👀 EMAIL OPENED'}
-                        </span>
-                        <div>
-                          <div style={{ fontWeight: '800', color: '#ffffff', fontSize: '14px' }}>
-                            {ev.athlete_name || `Athlete #${ev.athlete_id}`}
-                          </div>
-                          <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                            {ev.athlete_phone && <span>📱 {ev.athlete_phone} &bull; </span>}
-                            {ev.athlete_email && <span style={{ color: '#38bdf8' }}>📧 {ev.athlete_email}</span>}
-                            {ev.target_url && (
-                              <span style={{ color: '#cbd5e1', marginLeft: '6px' }}>
-                                &rarr; <code style={{ color: '#c084fc' }}>{ev.target_url}</code>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <div style={{ textAlign: 'right', fontSize: '11px', color: '#94a3b8' }}>
-                          <div>{ev.created_at ? new Date(ev.created_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</div>
-                          <div>{ev.created_at ? new Date(ev.created_at * 1000).toLocaleDateString() : ''}</div>
-                        </div>
-                        {ev.athlete_phone && (
-                          <a
-                            href={`tel:${ev.athlete_phone.replace(/\D/g, '')}`}
-                            style={{
-                              backgroundColor: '#F58426',
-                              color: '#ffffff',
-                              padding: '6px 14px',
-                              borderRadius: '6px',
-                              fontSize: '12px',
-                              fontWeight: '800',
-                              textDecoration: 'none',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px'
-                            }}
-                          >
-                            📞 Call Now
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {/* Student-Athlete Master Engagement Table */}
             <div style={{
               background: '#0e1c31',
@@ -2318,8 +2504,7 @@ President, Recreational Debut`;
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '12px', color: '#94a3b8', flexWrap: 'wrap', gap: '10px' }}>
                 <div>
                   <span>Length: <strong style={{ color: '#F58426' }}>{messageScript.length}</strong> characters</span>
-                  <span style={{ margin: '0 8px' }}>•</span>
-                  <span>Personalization: <strong>Auto-tailored to each athlete</strong> (use <code style={{ color: '#38bdf8' }}>{"{first_name}"}</code> or auto-prepends <em>"Hey [Name],"</em>)</span>
+                  <span>Personalization: <strong>Auto-tailored</strong> (Tokens: <code style={{ color: '#38bdf8' }}>{"{first_name}"}</code>, <code style={{ color: '#38bdf8' }}>{"{name}"}</code>, <code style={{ color: '#38bdf8' }}>{"{school}"}</code>, <code style={{ color: '#38bdf8' }}>{"{sport}"}</code>, <code style={{ color: '#38bdf8' }}>{"{grad_year}"}</code>)</span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -2422,18 +2607,7 @@ President, Recreational Debut`;
                   </div>
 
                   {/* Quota Gauge Tag & Swarm Management Button */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <span style={{
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid #38bdf8',
-                      color: '#38bdf8',
-                      fontSize: '12px',
-                      fontWeight: '800',
-                      padding: '5px 12px',
-                      borderRadius: '6px'
-                    }}>
-                      📱 TextBee Android SIM Gateway: CONNECTED ($0.00/msg)
-                    </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <span style={{
                       backgroundColor: 'rgba(16, 185, 129, 0.15)',
                       border: '1px solid #10b981',
@@ -2750,6 +2924,22 @@ President, Recreational Debut`;
                     🟢 Already Messaged ({messagedAthletes.length})
                   </button>
 
+                  <button
+                    onClick={() => { setSyndicationCategory('phone_only'); setSelectedIds(new Set()); }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      fontWeight: '800',
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      backgroundColor: syndicationCategory === 'phone_only' ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)',
+                      color: syndicationCategory === 'phone_only' ? '#ffffff' : '#94a3b8'
+                    }}
+                  >
+                    📱 Phone-Only Follow-Up ({phoneOnlyAthletes.length})
+                  </button>
+
                   <div style={{
                     padding: '8px 14px',
                     borderRadius: '6px',
@@ -2854,6 +3044,45 @@ President, Recreational Debut`;
                 </div>
               )}
 
+              {/* Phone-Only Advisory Banner */}
+              {syndicationCategory === 'phone_only' && (
+                <div style={{
+                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  borderRadius: '8px',
+                  padding: '14px 18px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '13px',
+                  color: '#93c5fd'
+                }}>
+                  <div>
+                    <strong style={{ color: '#ffffff', fontSize: '14px' }}>📱 Phone-Only Outreach Queue ({phoneOnlyAthletes.length} Student-Athletes)</strong>
+                    <div style={{ fontSize: '12px', marginTop: '4px', color: '#cbd5e1' }}>
+                      These verified student-athletes have high schools and active phone numbers in the recruiting guide, but no email listed. Recommended: Direct 1-on-1 SMS or phone call from Dennis Bell (616-291-5227). They are safely isolated from bulk email blasts.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => exportCsv(phoneOnlyAthletes, 'Athletes_Nike_Phone_Only_Roster', false)}
+                    style={{
+                      backgroundColor: '#2563eb',
+                      border: 'none',
+                      color: '#ffffff',
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    📥 Export Phone-Only (CSV)
+                  </button>
+                </div>
+              )}
+
               {/* Spreadsheet Table View */}
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
@@ -2922,7 +3151,18 @@ President, Recreational Debut`;
                               {item.grad_year || '2026'}
                             </td>
                             <td style={{ padding: '10px 14px' }}>
-                              {(item.status === 'Contacted' || item.status === 'Messaged') ? (
+                              {item.email_status === 'NO_EMAIL' ? (
+                                <span style={{
+                                  backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                  color: '#60a5fa',
+                                  fontSize: '11px',
+                                  fontWeight: '800',
+                                  padding: '3px 8px',
+                                  borderRadius: '4px'
+                                }}>
+                                  📱 Phone Only
+                                </span>
+                              ) : (item.status === 'Contacted' || item.status === 'Messaged') ? (
                                 <span style={{
                                   backgroundColor: 'rgba(16, 185, 129, 0.2)',
                                   color: '#10b981',
@@ -3093,6 +3333,202 @@ President, Recreational Debut`;
                 {copiedEmailsToast}
               </div>
             )}
+
+            {/* ── TRANSACTIONAL EMAIL API SHIELD (RESEND / SENDGRID) ────────────────────────── */}
+            <div style={{
+              background: emailApiConfig?.is_api_active
+                ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(7, 16, 30, 0.95))'
+                : 'linear-gradient(135deg, rgba(245, 132, 38, 0.12), rgba(7, 16, 30, 0.95))',
+              borderRadius: '12px',
+              border: emailApiConfig?.is_api_active ? '2px solid #10b981' : '2px solid #F58426',
+              padding: '24px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '14px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '26px' }}>🛡️</span>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff' }}>
+                          Anti-Spam Email Protection Shield & Transactional API
+                        </h3>
+                        <span style={{
+                          backgroundColor: emailApiConfig?.is_api_active ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 132, 38, 0.2)',
+                          color: emailApiConfig?.is_api_active ? '#10b981' : '#F58426',
+                          border: `1px solid ${emailApiConfig?.is_api_active ? '#10b981' : '#F58426'}`,
+                          padding: '3px 10px',
+                          borderRadius: '20px',
+                          fontSize: '11px',
+                          fontWeight: '800'
+                        }}>
+                          {emailApiConfig?.is_api_active ? 'API SHIELD ACTIVE' : 'DIRECT SMTP FALLBACK'}
+                        </span>
+                      </div>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#cbd5e1' }}>
+                        {emailApiConfig?.recommendation || 'Protect your personal Google account from spam flags and temporary restrictions.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={() => setShowApiSetupGuide(!showApiSetupGuide)}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      padding: '8px 14px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📖 Why Emails Get Flagged & How to Fix
+                  </button>
+                </div>
+              </div>
+
+              {/* Collapsible API & Spam Explanation Guide */}
+              {showApiSetupGuide && (
+                <div style={{
+                  background: '#07101e',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: '10px',
+                  padding: '18px 20px',
+                  marginBottom: '18px',
+                  fontSize: '13px',
+                  color: '#cbd5e1',
+                  lineHeight: '1.6'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <strong style={{ color: '#38bdf8', fontSize: '14px' }}>
+                      🔍 Root Cause of Email Flagging & Restriction:
+                    </strong>
+                    <button
+                      onClick={() => setShowApiSetupGuide(false)}
+                      style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
+                  <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                    <li><strong>Carrier SMS Shotgun Blasts:</strong> In SMS mode, sending emails to 7 carrier gateways (@vzwpix.com, @mms.att.net, etc.) creates 6 immediate hard bounces per athlete (85.7% bounce rate!). Google detects this high bounce volume and temporarily restricts personal Gmail accounts.</li>
+                    <li><strong>SPF & DMARC Mismatch:</strong> Setting <code>From: Dennis Bell &lt;dbell002@sbcglobal.net&gt;</code> while authenticating via <code>@gmail.com</code> fails SPF/DKIM validation at remote mail servers.</li>
+                    <li><strong>The Solution (Transactional API):</strong> With <strong>Resend</strong> (resend.com) or <strong>SendGrid</strong>, all emails are signed with custom domain DKIM/SPF. Personal Gmail accounts are 100% untouched, ensuring zero risk of account bans or restrictions.</li>
+                  </ul>
+                  <div style={{ marginTop: '8px', fontSize: '12px', color: '#10b981' }}>
+                    💡 <strong>Resend Free Tier:</strong> Gives you 3,000 free emails/month. Sign up at <a href="https://resend.com" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', fontWeight: '700' }}>resend.com ↗</a>, grab your API Key (starts with <code>re_</code>), paste it below, and click Save!
+                  </div>
+                </div>
+              )}
+
+              {/* API Configuration Inputs */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginTop: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Active Provider Mode
+                  </label>
+                  <select
+                    value={selectedProvider}
+                    onChange={(e) => setSelectedProvider(e.target.value)}
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  >
+                    <option value="auto">Auto-Detect (Use API Shield if configured, else SMTP)</option>
+                    <option value="resend">Resend API (Recommended — Zero-Spam / Custom Domain)</option>
+                    <option value="sendgrid">SendGrid API</option>
+                    <option value="smtp_swarm">Gmail Direct SMTP Swarm (Fallback)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Resend API Key {emailApiConfig?.resend_status && <span style={{ color: '#10b981' }}>({emailApiConfig.resend_status})</span>}
+                  </label>
+                  <input
+                    type="password"
+                    value={resendApiKeyInput}
+                    onChange={(e) => setResendApiKeyInput(e.target.value)}
+                    placeholder="re_1234567890abcdef..."
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#94a3b8', marginBottom: '6px' }}>
+                    Verified Sender Address (From)
+                  </label>
+                  <input
+                    type="text"
+                    value={resendFromInput}
+                    onChange={(e) => setResendFromInput(e.target.value)}
+                    placeholder="Dennis Bell <recruiting@recdebut.com>"
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#07101e',
+                      color: '#ffffff',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '6px',
+                      padding: '10px 12px',
+                      fontSize: '13px'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Action Toolbar */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                  Student athlete replies will always be routed directly to: <strong style={{ color: '#ffffff' }}>dbell002@sbcglobal.net</strong>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={handleSaveApiConfig}
+                    disabled={isSavingApiConfig}
+                    style={{
+                      backgroundColor: '#10b981',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '10px 20px',
+                      fontSize: '13px',
+                      fontWeight: '800',
+                      cursor: isSavingApiConfig ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    {isSavingApiConfig ? 'Saving...' : '💾 Save API Shield Configuration'}
+                  </button>
+                </div>
+              </div>
+
+              {apiConfigToast && (
+                <div style={{ marginTop: '14px', backgroundColor: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#10b981', padding: '10px 16px', borderRadius: '6px', fontSize: '13px', fontWeight: '700' }}>
+                  {apiConfigToast}
+                </div>
+              )}
+            </div>
 
             {/* ── SMTP ACCOUNT SWARM MANAGER ────────────────────────────────────────── */}
             <div style={{
@@ -3847,52 +4283,7 @@ President, Recreational Debut`;
 
         {/* ── TAB 3: CAMPAIGN ACTIVITY & TEXTS SENT ─────────────────────────────────── */}
         {activeTab === 'campaigns' && (
-          <div>
-            {/* View Mode Switcher: Automation Suite vs History */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
-              <button
-                onClick={() => setCampaignViewMode('automation')}
-                style={{
-                  background: campaignViewMode === 'automation' ? '#10b981' : 'rgba(255,255,255,0.05)',
-                  border: 'none',
-                  color: '#ffffff',
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                ✨ Campaign Automation & Builder
-              </button>
-              <button
-                onClick={() => setCampaignViewMode('history')}
-                style={{
-                  background: campaignViewMode === 'history' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.05)',
-                  border: campaignViewMode === 'history' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(255,255,255,0.08)',
-                  color: campaignViewMode === 'history' ? '#38bdf8' : '#94a3b8',
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                📜 Outbound Broadcast Log ({campaigns.length})
-              </button>
-            </div>
-
-            {campaignViewMode === 'automation' ? (
-              <CampaignAutomationTab backendUrl={BACKEND_URL} />
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '28px' }}>
-
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '28px' }}>
             
             {/* Left: Broadcast History Ledger */}
             <div>
@@ -4026,14 +4417,13 @@ President, Recreational Debut`;
                   <strong style={{ color: '#38bdf8' }}>Identity & Reply Assurance:</strong>
                   <div style={{ marginTop: '4px' }}>
                     Messages sent through both carrier MMS and SMTP Swarm gateways display <strong>Dennis Bell (616-291-5227)</strong> as caller ID / sender address so athlete callbacks and direct replies route to Dennis Bell at <strong>616-291-5227</strong> and <strong>dbell002@sbcglobal.net</strong>.
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
-        </div>
-      )}
-    </div>
-  )}
+        )}
 
         {/* ── TAB 4: STUDENT-ATHLETE MASTER ROSTER ─────────────────────────────────── */}
         {activeTab === 'roster' && (
@@ -4343,938 +4733,605 @@ President, Recreational Debut`;
           </div>
         )}
 
-        {/* ── TAB 6: 850 COACHES NETWORK ─────────────────────────────────────────── */}
+        {/* ── TAB 6: 2,000+ COACHES & PRO AMBASSADORS NETWORK ──────────────────────── */}
         {activeTab === 'network' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
-            <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '28px' }}>
-              <h2 style={{ margin: '0 0 12px 0', fontSize: '20px', fontWeight: '800', color: '#ffffff' }}>
-                Collegiate Recruitment Architecture
-              </h2>
-              <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
-                Recreational Debut delivers athletic resumes and highlight film directly to college coaching departments across the United States and Canada.
-              </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            
+            {/* Top Overview Banner */}
+            <div style={{
+              background: 'linear-gradient(135deg, #0e1c31 0%, #081325 100%)',
+              borderRadius: '14px',
+              border: '1px solid rgba(245, 132, 38, 0.4)',
+              padding: '28px',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '20px'
+            }}>
+              <div style={{ maxWidth: '850px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 132, 38, 0.15)', border: '1px solid #F58426', padding: '4px 12px', borderRadius: '20px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '13px' }}>🏀</span>
+                  <span style={{ fontSize: '12px', fontWeight: '800', color: '#F58426', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Authentic Pedigree Since 1984
+                  </span>
+                </div>
+                <h2 style={{ margin: '0 0 10px 0', fontSize: '24px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.5px' }}>
+                  Collegiate Recruitment Architecture & Pro Leadership
+                </h2>
+                <p style={{ margin: 0, fontSize: '14px', color: '#94a3b8', lineHeight: '1.6' }}>
+                  Recreational Debut delivers student-athlete resumes and highlight film directly to over <strong>2,000+ college coaches</strong> across NCAA Division I, II, III, NAIA, and NJCAA throughout the United States and Canada. Every portfolio is fortified by an official signed letter from former New York Knick Dennis Bell and our veteran coaching staff.
+                </p>
+              </div>
 
-              <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                {[
-                  { title: 'NCAA Division I', desc: 'Over 350+ Division 1 athletic departments across ACC, Big Ten, SEC, Pac-12, Big East.' },
-                  { title: 'NCAA Division II', desc: 'Full scholarship tier with extensive midwest & nationwide programs.' },
-                  { title: 'NCAA Division III', desc: 'High academic standards, competitive athletics, and merit grant aid.' },
-                  { title: 'NAIA & NJCAA', desc: 'Premier development, immediate starter opportunities, and university transfer pipelines.' }
-                ].map((tier, i) => (
-                  <div key={i} style={{ background: '#07101e', padding: '14px 18px', borderRadius: '8px', borderLeft: '4px solid #F58426' }}>
-                    <div style={{ fontSize: '15px', fontWeight: '800', color: '#ffffff' }}>{tier.title}</div>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>{tier.desc}</div>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <div style={{ background: 'rgba(0, 107, 182, 0.2)', border: '1px solid #006BB6', padding: '14px 20px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '900', color: '#38bdf8' }}>2,000+</div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', textTransform: 'uppercase', fontWeight: '700' }}>College Coaches</div>
+                </div>
+                <div style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', padding: '14px 20px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '900', color: '#10b981' }}>34+</div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', textTransform: 'uppercase', fontWeight: '700' }}>Years Impact</div>
+                </div>
+                <div style={{ background: 'rgba(245, 132, 38, 0.2)', border: '1px solid #F58426', padding: '14px 20px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: '900', color: '#F58426' }}>501(c)(3)</div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', textTransform: 'uppercase', fontWeight: '700' }}>Nonprofit Status</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Leadership & Staff Grid */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span>🌟</span> Executive Leadership, Pro Ambassadors & Coaching Staff
+                </h3>
+                <span style={{ fontSize: '12px', color: '#64748b' }}>Verified profiles from RecDebut.com WordPress Registry</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+                {REC_DEBUT_LEADERSHIP.map((leader, idx) => (
+                  <div key={idx} style={{
+                    background: '#0e1c31',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+                  }}>
+                    <div>
+                      <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
+                        <div style={{
+                          width: '76px',
+                          height: '76px',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          backgroundColor: '#07101e',
+                          border: '2px solid #F58426',
+                          flexShrink: 0
+                        }}>
+                          <img 
+                            src={leader.image} 
+                            alt={leader.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.parentNode.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#F58426;font-weight:bold;font-size:20px;">RD</div>';
+                            }}
+                          />
+                        </div>
+
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <h4 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff' }}>
+                              {leader.name}
+                            </h4>
+                            {leader.badge && (
+                              <span style={{
+                                backgroundColor: '#F58426',
+                                color: '#ffffff',
+                                fontSize: '10px',
+                                fontWeight: '800',
+                                padding: '2px 8px',
+                                borderRadius: '4px'
+                              }}>
+                                {leader.badge}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8', marginTop: '3px' }}>
+                            {leader.role}
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
+                            {leader.phone} • {leader.email}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ background: '#07101e', padding: '12px 14px', borderRadius: '8px', marginBottom: '12px', borderLeft: '3px solid #006BB6' }}>
+                        <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700', marginBottom: '4px' }}>
+                          Athletic / Coaching Career
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#e2e8f0', fontWeight: '600', lineHeight: '1.4' }}>
+                          {leader.pro}
+                        </div>
+                      </div>
+
+                      <div style={{ background: '#07101e', padding: '12px 14px', borderRadius: '8px', marginBottom: '14px', borderLeft: '3px solid #10b981' }}>
+                        <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700', marginBottom: '4px' }}>
+                          Collegiate & Academic Credentials
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.4' }}>
+                          {leader.college}
+                        </div>
+                      </div>
+
+                      <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.6', margin: 0 }}>
+                        {leader.bio}
+                      </p>
+                    </div>
+
+                    <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Recreational Debut 501(c)(3)</span>
+                      <a 
+                        href={`mailto:${leader.email}`} 
+                        style={{ fontSize: '12px', color: '#38bdf8', textDecoration: 'none', fontWeight: '700' }}
+                      >
+                        ✉️ Contact Direct ↗
+                      </a>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '28px' }}>
-              <h2 style={{ margin: '0 0 12px 0', fontSize: '20px', fontWeight: '800', color: '#ffffff' }}>
-                Dennis Bell Professional Endorsement
-              </h2>
-              <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.7' }}>
-                Every student portfolio distributed through Recreational Debut includes an official acknowledgement letter from former New York Knick Dennis Bell. This gives coaches added credibility and reasons to evaluate game footage closely.
-              </p>
+            {/* Collegiate Divisions Breakdown & Endorsement Letter Details */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '24px' }}>
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '800', color: '#ffffff' }}>
+                  Collegiate Division Tier Distribution
+                </h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+                  Our network maintains active collegiate relationships spanning every governing division:
+                </p>
 
-              <div style={{ marginTop: '24px', background: 'rgba(0, 107, 182, 0.1)', border: '1px solid #006BB6', borderRadius: '8px', padding: '18px' }}>
-                <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#38bdf8' }}>Official Program Inclusions:</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#f8fafc' }}>
-                  <div>🏀 Pro Player Endorsement Letter</div>
-                  <div>📄 Standardized Academic & Athletic Resume</div>
-                  <div>📊 Official Statistical Breakdown</div>
-                  <div>🎥 Professional Highlight Film Editing</div>
-                  <div>⚡ Direct Delivery to 850+ College Coaches</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TAB: CLOUDFLARED EDGE DISPATCHER ────────────────────────────────────── */}
-        {activeTab === 'cloudflared' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-
-            {/* Cloudflared Header Banner */}
-            <div style={{
-              background: 'linear-gradient(135deg, #0e1c31 0%, #0a172a 100%)',
-              borderRadius: '14px',
-              border: '2px solid rgba(245, 132, 38, 0.4)',
-              padding: '24px 28px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '20px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-            }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '32px' }}>☁️</span>
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      CLOUDFLARED EDGE TUNNEL DISPATCHER
-                      <span style={{
-                        fontSize: '11px',
-                        backgroundColor: cfStatus?.tunnel_active ? '#10b981' : '#ef4444',
-                        color: '#07101e',
-                        padding: '3px 10px',
-                        borderRadius: '20px',
-                        fontWeight: '900'
-                      }}>
-                        {cfStatus?.tunnel_active ? '● TUNNEL ONLINE' : '○ OFFLINE'}
-                      </span>
-                    </h2>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#94a3b8' }}>
-                      Send recruitment SMS texts to cell phones and transactional emails directly from AI-BS via the Cloudflare Zero-Trust edge pipeline (<code style={{ color: '#38bdf8' }}>api.brettstehouwer.live</code>).
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <button
-                  onClick={fetchData}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#ffffff',
-                    padding: '9px 16px',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    cursor: 'pointer'
-                  }}
-                >
-                  🔄 Refresh Status
-                </button>
-                <button
-                  onClick={handleTestPingCloudflared}
-                  disabled={cfSending}
-                  style={{
-                    backgroundColor: '#F58426',
-                    border: 'none',
-                    color: '#ffffff',
-                    padding: '9px 18px',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: '800',
-                    cursor: cfSending ? 'not-allowed' : 'pointer',
-                    boxShadow: '0 4px 14px rgba(245, 132, 38, 0.35)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  {cfSending ? '⚡ Sending Test...' : '📱 Quick Test to My Phone (616-402-3628)'}
-                </button>
-              </div>
-            </div>
-
-            {/* Architecture Metrics Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
-              
-              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '18px 22px' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Edge Tunnel Endpoint</div>
-                <div style={{ fontSize: '17px', fontWeight: '800', color: '#38bdf8', marginTop: '6px', wordBreak: 'break-all' }}>
-                  https://api.brettstehouwer.live
-                </div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px' }}>
-                  Routes to AI-BS Port 8080 via Cloudflared PID {cfStatus?.tunnel_pid || 'Active'}
-                </div>
-              </div>
-
-              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '18px 22px' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Verified Caller ID</div>
-                <div style={{ fontSize: '17px', fontWeight: '800', color: '#F58426', marginTop: '6px' }}>
-                  Dennis Bell (+1-616-291-5227)
-                </div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px' }}>
-                  dbell002@sbcglobal.net • RecDebut President
-                </div>
-              </div>
-
-              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '18px 22px' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Carrier Cellular MMS Coverage</div>
-                <div style={{ fontSize: '17px', fontWeight: '800', color: '#10b981', marginTop: '6px' }}>
-                  8 Major Carrier Gateways
-                </div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '6px' }}>
-                  Verizon, AT&T, T-Mobile, Cricket, Boost, US Cellular, Google Fi
-                </div>
-              </div>
-
-              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '18px 22px' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Cloudflare Account ID</div>
-                <div style={{ fontSize: '15px', fontWeight: '800', color: '#cbd5e1', marginTop: '6px', fontFamily: 'monospace' }}>
-                  81041170430c35368afacc42e6efec67
-                </div>
-                <div style={{ fontSize: '12px', color: '#10b981', marginTop: '6px' }}>
-                  ✓ Token Active • stehouwer-publishing.com Ready
-                </div>
-              </div>
-
-            </div>
-
-            {/* Test / Send Result Banner if available */}
-            {cfResult && (
-              <div style={{
-                background: cfResult.success ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
-                border: `2px solid ${cfResult.success ? '#10b981' : '#ef4444'}`,
-                borderRadius: '12px',
-                padding: '16px 22px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px'
-              }}>
-                <span style={{ fontSize: '26px', marginTop: '2px' }}>{cfResult.dry_run ? '🧪' : (cfResult.success ? '✅' : '❌')}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '800', color: cfResult.dry_run ? '#38bdf8' : (cfResult.success ? '#10b981' : '#ef4444'), fontSize: '16px' }}>
-                    {cfResult.dry_run ? '🧪 Cloudflared Edge Staging Test Succeeded (Zero-Risk Draft Mode)' : (cfResult.success ? 'Message Dispatched Successfully via Cloudflared!' : 'Dispatch Error Encountered')}
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#e2e8f0', marginTop: '4px' }}>
-                    {cfResult.message || cfResult.error || JSON.stringify(cfResult)}
-                  </div>
-                  {cfResult.ready_athletes_count !== undefined && (
-                    <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: '8px', fontSize: '12px' }}>
-                      <span style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', padding: '3px 10px', borderRadius: '4px', fontWeight: '700' }}>
-                        🎯 Ready Athletes: {cfResult.ready_athletes_count}
-                      </span>
-                      <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', padding: '3px 10px', borderRadius: '4px', fontWeight: '700' }}>
-                        🛡️ Coaches Blocked: {cfResult.blocked_coaches_count}
-                      </span>
-                      <span style={{ background: 'rgba(245, 132, 38, 0.2)', color: '#F58426', padding: '3px 10px', borderRadius: '4px', fontWeight: '700' }}>
-                        👤 Caller ID: {cfResult.caller_id}
-                      </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    { tier: 'NCAA Division I', desc: 'Over 350+ Division 1 athletic departments across ACC, Big Ten, SEC, Big 12, Big East, and mid-majors.' },
+                    { tier: 'NCAA Division II', desc: 'Full and partial athletic scholarship tier with competitive nationwide and Midwest programs.' },
+                    { tier: 'NCAA Division III', desc: 'High academic standards, competitive athletics, and merit-based financial aid awards.' },
+                    { tier: 'NAIA & NJCAA', desc: 'Premier collegiate development, immediate starter opportunities, and university transfer pipelines.' }
+                  ].map((t, idx) => (
+                    <div key={idx} style={{ background: '#07101e', padding: '12px 16px', borderRadius: '8px', borderLeft: '4px solid #F58426' }}>
+                      <div style={{ fontSize: '14px', fontWeight: '800', color: '#ffffff' }}>{t.tier}</div>
+                      <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px' }}>{t.desc}</div>
                     </div>
-                  )}
-                  {cfResult.preview_recipients && cfResult.preview_recipients.length > 0 && (
-                    <div style={{ marginTop: '10px', background: 'rgba(0,0,0,0.25)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px', color: '#cbd5e1' }}>
-                      <div style={{ fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>Preview of Staged Athlete Recipients:</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {cfResult.preview_recipients.slice(0, 5).map((a, idx) => (
-                          <span key={idx} style={{ background: '#07101e', border: '1px solid rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px' }}>
-                            {a.name} ({a.phone || a.email})
-                          </span>
-                        ))}
-                        {cfResult.ready_athletes_count > 5 && (
-                          <span style={{ color: '#64748b', alignSelf: 'center' }}>+{cfResult.ready_athletes_count - 5} more athletes</span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {cfResult.recipient && (
-                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>
-                      Target: <strong>{cfResult.recipient}</strong> • Gateway: <strong>{cfResult.gateway}</strong> • Carriers Contacted: <strong>{cfResult.carriers_reached || 8}</strong>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Live Interactive Sender Console */}
-            <div style={{ background: '#0e1c31', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', padding: '28px' }}>
-              
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>🚀</span> Dispatch Live Message via Cloudflared Edge
-              </h3>
-              <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#94a3b8' }}>
-                Enter any 10-digit phone number or email address, or target the remaining 300 athletes. When texting, your announcement transmits through cellular carrier MMS gateways with Dennis Bell set as the verified sender.
-              </p>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#cbd5e1', marginBottom: '6px' }}>
-                    Recipient Phone Number or Email:
-                  </label>
-                  <input
-                    type="text"
-                    value={cfRecipient}
-                    onChange={(e) => setCfRecipient(e.target.value)}
-                    placeholder="e.g. 616-402-3628 or athlete@gmail.com"
-                    style={{
-                      width: '100%',
-                      backgroundColor: '#07101e',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      borderRadius: '8px',
-                      padding: '12px 14px',
-                      color: '#ffffff',
-                      fontSize: '14px',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                  <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
-                    Tip: Numbers automatically route to cellular carriers (Verizon, AT&T, T-Mobile).
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#cbd5e1', marginBottom: '6px' }}>
-                    Dispatch Channel Mode:
-                  </label>
-                  <select
-                    value={cfChannel}
-                    onChange={(e) => setCfChannel(e.target.value)}
-                    style={{
-                      width: '100%',
-                      backgroundColor: '#07101e',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      borderRadius: '8px',
-                      padding: '12px 14px',
-                      color: '#ffffff',
-                      fontSize: '14px',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <option value="auto">Auto-Detect (Phone = SMS MMS / Email = HTML Tracked)</option>
-                    <option value="sms">Force SMS (Carrier MMS Gateways)</option>
-                    <option value="email">Force Email (Multipart HTML with Tracking Pixel)</option>
-                  </select>
-                  <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
-                    Caller ID: Dennis Bell (+1-616-291-5227 / dbell002@sbcglobal.net)
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#cbd5e1', marginBottom: '6px' }}>
-                  Recruitment Announcement Body:
-                </label>
-                <textarea
-                  rows={9}
-                  value={cfMessage}
-                  onChange={(e) => setCfMessage(e.target.value)}
-                  style={{
-                    width: '100%',
-                    backgroundColor: '#07101e',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '8px',
-                    padding: '14px',
-                    color: '#ffffff',
-                    fontSize: '13px',
-                    lineHeight: '1.6',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                    fontFamily: 'inherit'
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => setCfRecipient('616-402-3628')}
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#cbd5e1',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    👤 Set to My Phone (616-402-3628)
-                  </button>
-                  <button
-                    onClick={() => setCfRecipient('Last 300 Pending Athletes (Test Batch)')}
-                    style={{
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid #38bdf8',
-                      color: '#38bdf8',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      fontWeight: '800',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    🎯 Target Last 300 Pending Athletes
-                  </button>
-                  <button
-                    onClick={() => setCfMessage(DEFAULT_MESSAGE)}
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#cbd5e1',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    ↺ Reset to Standard Dennis Bell Script
-                  </button>
-                </div>
-
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => handleSendCloudflared(true)}
-                    disabled={cfSending}
-                    style={{
-                      backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                      border: '1px solid #10b981',
-                      color: '#10b981',
-                      padding: '12px 20px',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontWeight: '800',
-                      cursor: cfSending ? 'not-allowed' : 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    {cfSending ? '⚡ Running Test...' : '🧪 Run 300 Test via Cloudflared Edge'}
-                  </button>
-
-                  <button
-                    onClick={() => handleSendCloudflared(false)}
-                    disabled={cfSending}
-                    style={{
-                      backgroundColor: '#F58426',
-                      border: 'none',
-                      color: '#ffffff',
-                      padding: '12px 28px',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '900',
-                      cursor: cfSending ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 16px rgba(245, 132, 38, 0.4)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    {cfSending ? '⚡ Dispatched via Cloudflared...' : '🚀 Transmit via Cloudflared Edge'}
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* ── TAB: FALL 2013 SHOWCASE GALLERY ───────────────────────────────────────── */}
-        {activeTab === 'showcase' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-
-            {/* Showcase Header Banner */}
-            <div style={{
-              background: 'linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%)',
-              borderRadius: '14px',
-              border: '2px solid rgba(245, 132, 38, 0.4)',
-              padding: '24px 28px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '20px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-            }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '32px' }}>📸</span>
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      FALL 2013 BASKETBALL SHOWCASE ARCHIVE
-                      <span style={{
-                        background: '#F58426',
-                        color: '#07101e',
-                        fontSize: '11px',
-                        fontWeight: '900',
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        letterSpacing: '0.5px'
-                      }}>
-                        DENNIS BELL EVENT
-                      </span>
-                    </h2>
-                    <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
-                      Historical event photography and highlight footage featuring high school prospects, Greg Kelser keynote on education, and showcase matchups.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick stats and filters */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <span style={{
-                  background: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid #38bdf8',
-                  color: '#38bdf8',
-                  fontSize: '12px',
-                  fontWeight: '800',
-                  padding: '6px 14px',
-                  borderRadius: '6px'
-                }}>
-                  🖼️ {showcaseMedia.photos ? showcaseMedia.photos.length : 129} Photos
-                </span>
-                <span style={{
-                  background: 'rgba(16, 185, 129, 0.15)',
-                  border: '1px solid #10b981',
-                  color: '#10b981',
-                  fontSize: '12px',
-                  fontWeight: '800',
-                  padding: '6px 14px',
-                  borderRadius: '6px'
-                }}>
-                  🎥 {showcaseMedia.videos ? showcaseMedia.videos.length : 4} Videos
-                </span>
-              </div>
-            </div>
-
-            {/* Filter Buttons */}
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-              {[
-                { id: 'all', label: `🌟 All Media (${(showcaseMedia.photos?.length || 0) + (showcaseMedia.videos?.length || 0)})` },
-                { id: 'photos', label: `📸 Photos Only (${showcaseMedia.photos?.length || 0})` },
-                { id: 'videos', label: `🎬 Highlight Videos (${showcaseMedia.videos?.length || 0})` }
-              ].map(f => (
-                <button
-                  key={f.id}
-                  onClick={() => setShowcaseFilter(f.id)}
-                  style={{
-                    backgroundColor: showcaseFilter === f.id ? '#F58426' : 'rgba(255, 255, 255, 0.08)',
-                    color: showcaseFilter === f.id ? '#ffffff' : '#cbd5e1',
-                    border: showcaseFilter === f.id ? '1px solid #F58426' : '1px solid rgba(255, 255, 255, 0.15)',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Media Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: '16px'
-            }}>
-              {/* Videos */}
-              {(showcaseFilter === 'all' || showcaseFilter === 'videos') && showcaseMedia.videos?.map((vid, idx) => (
-                <div
-                  key={`vid-${idx}`}
-                  style={{
-                    background: '#0e1c31',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(245, 132, 38, 0.3)',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
-                  }}
-                >
-                  <video
-                    controls
-                    playsInline
-                    webkit-playsinline="true"
-                    preload="metadata"
-                    style={{ width: '100%', height: '180px', objectFit: 'cover', background: '#000' }}
-                    src={vid.url}
-                  />
-                  <div style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '180px' }}>
-                      🎬 {vid.filename}
-                    </span>
-                    <span style={{ fontSize: '10px', background: '#F58426', color: '#07101e', padding: '2px 6px', borderRadius: '4px', fontWeight: '800' }}>
-                      VIDEO
-                    </span>
-                  </div>
-                </div>
-              ))}
-
-              {/* Photos */}
-              {(showcaseFilter === 'all' || showcaseFilter === 'photos') && showcaseMedia.photos?.map((photo, idx) => (
-                <div
-                  key={`photo-${idx}`}
-                  onClick={() => setSelectedMediaModal(photo)}
-                  style={{
-                    background: '#0e1c31',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s ease, border-color 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = '#F58426';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                  }}
-                >
-                  <img
-                    loading="lazy"
-                    src={photo.url}
-                    alt={photo.filename}
-                    style={{ width: '100%', height: '180px', objectFit: 'cover', display: 'block' }}
-                  />
-                  <div style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: '#94a3b8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
-                      {photo.filename}
-                    </span>
-                    <span style={{ fontSize: '11px', color: '#F58426' }}>🔍</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Lightbox Modal */}
-            {selectedMediaModal && (
-              <div
-                onClick={() => setSelectedMediaModal(null)}
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100vw',
-                  height: '100vh',
-                  background: 'rgba(0,0,0,0.85)',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  zIndex: 9999,
-                  padding: '24px'
-                }}
-              >
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    maxWidth: '90vw',
-                    maxHeight: '90vh',
-                    background: '#0e1c31',
-                    borderRadius: '12px',
-                    border: '2px solid #F58426',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}
-                >
-                  <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#ffffff' }}>
-                      {selectedMediaModal.filename}
-                    </span>
-                    <button
-                      onClick={() => setSelectedMediaModal(null)}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#cbd5e1',
-                        fontSize: '18px',
-                        cursor: 'pointer',
-                        fontWeight: '800'
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <img
-                    src={selectedMediaModal.url}
-                    alt={selectedMediaModal.filename}
-                    style={{ maxWidth: '85vw', maxHeight: '75vh', objectFit: 'contain' }}
-                  />
-                </div>
-              </div>
-            )}
-
-          </div>
-        )}
-
-        {/* ── TAB: DEDICATED TEXTBEE SIM GATEWAY ───────────────────────────────────── */}
-        {activeTab === 'textbee' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-
-            {/* Hardware & Gateway Status Banner */}
-            <div style={{
-              background: 'linear-gradient(135deg, #0b1a2e 0%, #07101e 100%)',
-              borderRadius: '14px',
-              border: '2px solid rgba(56, 189, 248, 0.4)',
-              padding: '24px 28px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '20px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-            }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '36px' }}>📱</span>
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      TEXTBEE ANDROID SIM GATEWAY
-                      <span style={{
-                        background: textBeeStatus?.connected ? '#10b981' : '#f59e0b',
-                        color: '#07101e',
-                        fontSize: '11px',
-                        fontWeight: '900',
-                        padding: '3px 10px',
-                        borderRadius: '4px',
-                        letterSpacing: '0.5px'
-                      }}>
-                        {textBeeStatus?.connected ? 'ONLINE • READY' : 'POLLING GATEWAY'}
-                      </span>
-                    </h2>
-                    <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
-                      Samsung Galaxy S25 Ultra (SM-S938U) • Native Verizon SIM Dispatch ($0.00 Carrier SMS/MMS)
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Hardware Telemetry Pills */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <span style={{
-                  background: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid #38bdf8',
-                  color: '#38bdf8',
-                  fontSize: '12px',
-                  fontWeight: '800',
-                  padding: '6px 14px',
-                  borderRadius: '6px'
-                }}>
-                  🔋 Battery: {textBeeStatus?.device?.batteryInfo?.percentage || 34}%
-                </span>
-                <span style={{
-                  background: 'rgba(16, 185, 129, 0.15)',
-                  border: '1px solid #10b981',
-                  color: '#10b981',
-                  fontSize: '12px',
-                  fontWeight: '800',
-                  padding: '6px 14px',
-                  borderRadius: '6px'
-                }}>
-                  📶 Signal: Strong ({textBeeStatus?.device?.simInfo?.sims?.[1]?.displayName || '3628'})
-                </span>
-                <span style={{
-                  background: 'rgba(245, 132, 38, 0.15)',
-                  border: '1px solid #F58426',
-                  color: '#F58426',
-                  fontSize: '12px',
-                  fontWeight: '800',
-                  padding: '6px 14px',
-                  borderRadius: '6px'
-                }}>
-                  ⏱️ Pace: {textBeeStatus?.device?.smsSendDelaySeconds || 5}s / SMS Delay
-                </span>
-                <button
-                  onClick={fetchTextBeeData}
-                  disabled={textBeeLoading}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#cbd5e1',
-                    padding: '6px 12px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {textBeeLoading ? '🔄 Syncing...' : '🔄 Refresh Status'}
-                </button>
-              </div>
-            </div>
-
-            {/* Dispatch Controller & Pacing Card */}
-            <div style={{
-              background: '#0e1c31',
-              borderRadius: '14px',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '28px'
-            }}>
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>🚀</span> 1-Click Controlled Bulk Dispatch
-              </h3>
-              <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#94a3b8' }}>
-                Select a batch size to queue directly into your Samsung Galaxy S25 Ultra. TextBee automatically spaces transmissions by 5 seconds per message, respecting carrier anti-spam protections while executing 100% free recruitment outreach.
-              </p>
-
-              {/* Message Template Editor */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#cbd5e1', marginBottom: '8px' }}>
-                  Personalized Message Template (Auto-Enriched with Athlete Name, Sport & Link):
-                </label>
-                <textarea
-                  rows={3}
-                  value={textBeeMessageText}
-                  onChange={(e) => setTextBeeMessageText(e.target.value)}
-                  style={{
-                    width: '100%',
-                    backgroundColor: '#07101e',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '8px',
-                    color: '#ffffff',
-                    padding: '12px 14px',
-                    fontSize: '13px',
-                    lineHeight: '1.5',
-                    fontFamily: 'monospace',
-                    boxSizing: 'border-box'
-                  }}
-                />
-                <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
-                  Available dynamic tags: <code>{'{first_name}'}</code>, <code>{'{sport}'}</code>, <code>{'{grad_year}'}</code>
-                </div>
-              </div>
-
-              {/* Batch Size Selector & Actions */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: '700' }}>Select Batch Size:</span>
-                  {[25, 50, 100, 250].map(sz => (
-                    <button
-                      key={sz}
-                      onClick={() => setTextBeeBatchSize(sz)}
-                      style={{
-                        backgroundColor: textBeeBatchSize === sz ? '#38bdf8' : 'rgba(255, 255, 255, 0.06)',
-                        color: textBeeBatchSize === sz ? '#07101e' : '#cbd5e1',
-                        border: textBeeBatchSize === sz ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
-                        padding: '6px 14px',
-                        borderRadius: '6px',
-                        fontSize: '12px',
-                        fontWeight: '800',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {sz} Recruits
-                    </button>
                   ))}
-                  <span style={{ fontSize: '11px', color: '#94a3b8', marginLeft: '6px' }}>
-                    ⏱️ Estimated Queue Time: ~{Math.round((textBeeBatchSize * 5) / 60)} mins
-                  </span>
+                </div>
+              </div>
+
+              <div style={{ background: '#0e1c31', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', padding: '24px' }}>
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '800', color: '#ffffff' }}>
+                  Dennis Bell Signed Pro Endorsement Letter
+                </h3>
+                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+                  College coaches receive hundreds of emails every single week from athletes and parents. When an email or envelope carries the formal seal and endorsement of a former NBA player like Dennis Bell, coaches stop, open, and evaluate the game footage.
+                </p>
+
+                <div style={{ background: 'rgba(0, 107, 182, 0.1)', border: '1px solid #006BB6', borderRadius: '8px', padding: '18px', marginBottom: '16px' }}>
+                  <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#38bdf8' }}>Included In The Gold Package:</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#f8fafc' }}>
+                    <div>🏀 Dennis Bell Signed Professional Player Acknowledgment Letter</div>
+                    <div>📄 Standardized Academic & Athletic Resume</div>
+                    <div>📊 Official Statistical Breakdown & Physical Testing Profile</div>
+                    <div>🎥 Professional Highlight Film Consultation</div>
+                    <div>⚡ Direct Placement into 2,000+ College Coaches Inboxes</div>
+                    <div>🧾 100% Tax-Deductible 501(c)(3) Charitable Receipt</div>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <button
-                    onClick={() => handleDispatchTextBeeBatch(true)}
-                    disabled={isDispatchingTextBee}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <a 
+                    href="https://recdebut.com/program/" 
+                    target="_blank" 
+                    rel="noreferrer"
                     style={{
-                      backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid #38bdf8',
-                      color: '#38bdf8',
+                      background: '#F58426',
+                      color: '#ffffff',
+                      textDecoration: 'none',
                       padding: '10px 18px',
                       borderRadius: '8px',
                       fontSize: '13px',
                       fontWeight: '800',
-                      cursor: isDispatchingTextBee ? 'not-allowed' : 'pointer'
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
                     }}
                   >
-                    🧪 Test Next {textBeeBatchSize} (Zero-Risk Preview)
-                  </button>
-
-                  <button
-                    onClick={() => handleDispatchTextBeeBatch(false)}
-                    disabled={isDispatchingTextBee}
-                    style={{
-                      backgroundColor: '#10b981',
-                      border: 'none',
-                      color: '#ffffff',
-                      padding: '10px 24px',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontWeight: '900',
-                      cursor: isDispatchingTextBee ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)'
-                    }}
-                  >
-                    {isDispatchingTextBee ? '⚡ Queueing to Phone...' : `🚀 Send ${textBeeBatchSize} via TextBee`}
-                  </button>
+                    View Official Program Page ↗
+                  </a>
                 </div>
               </div>
-
-              {/* Dispatch Feedback Alert */}
-              {textBeeDispatchResult && (
-                <div style={{
-                  marginTop: '20px',
-                  background: textBeeDispatchResult.success ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  border: `1px solid ${textBeeDispatchResult.success ? '#10b981' : '#ef4444'}`,
-                  borderRadius: '8px',
-                  padding: '14px 18px',
-                  fontSize: '13px',
-                  color: '#ffffff'
-                }}>
-                  <div style={{ fontWeight: '800', color: textBeeDispatchResult.success ? '#10b981' : '#ef4444' }}>
-                    {textBeeDispatchResult.dry_run
-                      ? `🧪 Preview Succeeded: ${textBeeDispatchResult.staged_count} athletes ready for dispatch (${textBeeDispatchResult.blocked_coaches} coach numbers blocked)`
-                      : (textBeeDispatchResult.success ? `✅ Successfully queued ${textBeeDispatchResult.dispatched_count} recruitment texts to your Samsung Galaxy S25 Ultra! Batch ID: ${textBeeDispatchResult.sms_batch_id}` : `❌ Error: ${textBeeDispatchResult.error}`)}
-                  </div>
-                  {textBeeDispatchResult.sample && (
-                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#cbd5e1' }}>
-                      <strong>Sample Text:</strong> {textBeeDispatchResult.sample.message} ➜ <code>{textBeeDispatchResult.sample.recipients?.[0]}</code>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
-            {/* Inbound SIM Messages & Reply Feed */}
+          </div>
+        )}
+
+        {/* ── TAB: ALL-AMERICAN & PRESEASON HONOREES VAULT ─────────────────────────── */}
+        {activeTab === 'awards' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            
+            {/* Awards Header Banner */}
             <div style={{
               background: '#0e1c31',
-              borderRadius: '14px',
-              border: '1px solid rgba(255,255,255,0.08)',
-              padding: '28px'
+              borderRadius: '12px',
+              border: '1px solid rgba(245, 132, 38, 0.3)',
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '800', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>💬</span> Inbound Messages & Live History
-                </h3>
-                <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-                  Showing last {textBeeMessages.length} SIM interactions
-                </span>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 132, 38, 0.15)', border: '1px solid #F58426', padding: '3px 10px', borderRadius: '20px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '12px' }}>🏆</span>
+                  <span style={{ fontSize: '11px', fontWeight: '800', color: '#F58426', textTransform: 'uppercase' }}>
+                    Proven Track Record
+                  </span>
+                </div>
+                <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff' }}>
+                  McDonald's & Pre-Season All-American Nominees From RecDebut
+                </h2>
+                <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#94a3b8' }}>
+                  Over the decades, Recreational Debut has guided dozens of standouts to All-American ballots, state championships, and full college scholarships.
+                </p>
               </div>
 
-              {textBeeMessages.length === 0 ? (
-                <div style={{ padding: '30px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
-                  No inbound replies recorded yet on the phone. Responses will populate here in real-time as athletes reply.
+              {/* State Filter Buttons */}
+              <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '8px' }}>
+                {['ALL', 'MI', 'IN', 'OH'].map(st => (
+                  <button
+                    key={st}
+                    onClick={() => setAwardStateFilter(st)}
+                    style={{
+                      background: awardStateFilter === st ? '#F58426' : 'transparent',
+                      color: awardStateFilter === st ? '#ffffff' : '#94a3b8',
+                      border: 'none',
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {st === 'ALL' ? 'All States' : `${st}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Search Input */}
+            <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+              <input 
+                type="text"
+                placeholder="🔍 Search honoree by athlete name, high school, city, or coach..."
+                value={awardSearchTerm}
+                onChange={(e) => setAwardSearchTerm(e.target.value)}
+                style={{
+                  flex: 1,
+                  padding: '12px 18px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: '#07101e',
+                  color: '#ffffff',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+              />
+              <span style={{ fontSize: '12px', color: '#64748b' }}>
+                Showing {REC_DEBUT_AWARDS.filter(a => {
+                  const matchSearch = !awardSearchTerm || 
+                    a.name.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                    a.school.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                    a.city_state.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                    a.coach.toLowerCase().includes(awardSearchTerm.toLowerCase());
+                  const matchState = awardStateFilter === 'ALL' || a.city_state.includes(awardStateFilter);
+                  return matchSearch && matchState;
+                }).length} of {REC_DEBUT_AWARDS.length} Honorees
+              </span>
+            </div>
+
+            {/* Awards Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
+              {REC_DEBUT_AWARDS.filter(a => {
+                const matchSearch = !awardSearchTerm || 
+                  a.name.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                  a.school.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                  a.city_state.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
+                  a.coach.toLowerCase().includes(awardSearchTerm.toLowerCase());
+                const matchState = awardStateFilter === 'ALL' || a.city_state.includes(awardStateFilter);
+                return matchSearch && matchState;
+              }).map((honoree, idx) => (
+                <div key={idx} style={{
+                  background: '#0e1c31',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.2)'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                      <h4 style={{ margin: 0, fontSize: '17px', fontWeight: '900', color: '#ffffff' }}>
+                        {honoree.name}
+                      </h4>
+                      <span style={{
+                        background: '#F58426',
+                        color: '#ffffff',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        padding: '2px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        {honoree.height}
+                      </span>
+                    </div>
+
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#38bdf8' }}>
+                      🏫 {honoree.school}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                      📍 {honoree.city_state}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '6px' }}>
+                      👤 <strong>Coach:</strong> {honoree.coach}
+                    </div>
+
+                    <div style={{ background: '#07101e', padding: '10px 12px', borderRadius: '6px', marginTop: '12px', borderLeft: '3px solid #10b981' }}>
+                      <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700' }}>Accolades & Honors</div>
+                      <div style={{ fontSize: '12px', color: '#f8fafc', marginTop: '2px', lineHeight: '1.4' }}>
+                        {honoree.accolades}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#64748b' }}>All-American Registry</span>
+                    <span style={{ fontSize: '11px', color: '#F58426', fontWeight: '800' }}>{honoree.badge}</span>
+                  </div>
                 </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {textBeeMessages.slice(0, 10).map((msg, idx) => (
-                    <div
-                      key={msg._id || idx}
+              ))}
+            </div>
+
+          </div>
+        )}
+
+        {/* ── TAB: 13-SPORT REGISTRATION PORTALS ────────────────────────────────────── */}
+        {activeTab === 'portals' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            
+            {/* Header Banner */}
+            <div style={{
+              background: '#0e1c31',
+              borderRadius: '12px',
+              border: '1px solid rgba(0, 107, 182, 0.4)',
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}>
+              <div style={{ maxWidth: '800px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(0, 107, 182, 0.2)', border: '1px solid #006BB6', padding: '3px 10px', borderRadius: '20px', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '12px' }}>🎯</span>
+                  <span style={{ fontSize: '11px', fontWeight: '800', color: '#38bdf8', textTransform: 'uppercase' }}>
+                    Multi-Sport Coverage
+                  </span>
+                </div>
+                <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff' }}>
+                  Official 13-Sport Student-Athlete Registration Portals
+                </h2>
+                <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#94a3b8' }}>
+                  Each sport features specialized metric intake tailored to college scouts (40 times, approach vertical, pitching velocity, PR times, Hudl highlights). Click any sport to open its dedicated intake portal on RecDebut.com.
+                </p>
+              </div>
+
+              <a
+                href={REC_DEBUT_BRAND.all_registration_url}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  background: '#F58426',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  padding: '12px 20px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  fontWeight: '800',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 14px rgba(245, 132, 38, 0.4)'
+                }}
+              >
+                📝 Master Registration Hub (All Sports) ↗
+              </a>
+            </div>
+
+            {/* Grid of 13 Sports */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+              {REC_DEBUT_SPORTS_PORTALS.map(sport => (
+                <div key={sport.id} style={{
+                  background: '#0e1c31',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '28px' }}>{sport.icon}</span>
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff' }}>
+                          {sport.sport}
+                        </h4>
+                        <div style={{ fontSize: '11px', color: '#10b981', fontWeight: '700' }}>
+                          Verified Portal
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#07101e', padding: '10px 12px', borderRadius: '6px', marginBottom: '16px' }}>
+                      <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: '700', marginBottom: '2px' }}>
+                        Key Scouting Metrics Collected:
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.4' }}>
+                        {sport.focus}
+                      </div>
+                    </div>
+                  </div>
+
+                  <a
+                    href={sport.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      color: '#ffffff',
+                      textDecoration: 'none',
+                      textAlign: 'center',
+                      padding: '10px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    Open {sport.sport} Registration Form ↗
+                  </a>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        )}
+
+        {/* ── TAB: PROGRAM INTEL & FAQS ────────────────────────────────────────────── */}
+        {activeTab === 'faq' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            
+            {/* Header */}
+            <div style={{
+              background: '#0e1c31',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '900', color: '#ffffff' }}>
+                  Frequently Asked Questions & Program Intel
+                </h2>
+                <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#94a3b8' }}>
+                  Essential answers regarding the collegiate recruiting process, tax-deductibility, and Dennis Bell's signature endorsement letter.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <a
+                  href={`tel:${REC_DEBUT_BRAND.phone}`}
+                  style={{
+                    background: '#10b981',
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '800'
+                  }}
+                >
+                  📞 Call: {REC_DEBUT_BRAND.phone}
+                </a>
+                <a
+                  href={`mailto:${REC_DEBUT_BRAND.email}`}
+                  style={{
+                    background: '#006BB6',
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: '800'
+                  }}
+                >
+                  ✉️ Email: {REC_DEBUT_BRAND.email}
+                </a>
+              </div>
+            </div>
+
+            {/* FAQs Accordion / Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {REC_DEBUT_FAQS.map((faq, idx) => {
+                const isExpanded = expandedFaqIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: '#0e1c31',
+                      borderRadius: '10px',
+                      border: isExpanded ? '1px solid #F58426' : '1px solid rgba(255,255,255,0.08)',
+                      overflow: 'hidden',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <button
+                      onClick={() => setExpandedFaqIndex(isExpanded ? null : idx)}
                       style={{
-                        background: '#07101e',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '18px 22px',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: '12px'
+                        gap: '16px'
                       }}
                     >
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <span style={{ fontWeight: '800', color: '#38bdf8', fontSize: '13px' }}>
-                            {msg.sender || msg.recipients?.[0] || 'Athlete'}
-                          </span>
-                          <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.1)', color: '#94a3b8', padding: '1px 6px', borderRadius: '4px' }}>
-                            {msg.direction || 'received'}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '13px', color: '#e2e8f0' }}>
-                          {msg.message}
+                      <span style={{ fontSize: '15px', fontWeight: '800', color: isExpanded ? '#F58426' : '#ffffff' }}>
+                        {faq.q}
+                      </span>
+                      <span style={{ fontSize: '18px', color: '#94a3b8' }}>
+                        {isExpanded ? '▲' : '▼'}
+                      </span>
+                    </button>
+
+                    {isExpanded && (
+                      <div style={{ padding: '0 22px 20px 22px', fontSize: '14px', color: '#cbd5e1', lineHeight: '1.7', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ paddingTop: '14px' }}>
+                          {faq.a}
                         </div>
                       </div>
-                      <div style={{ fontSize: '11px', color: '#64748b', whiteSpace: 'nowrap' }}>
-                        {msg.receivedAt || msg.createdAt ? new Date(msg.receivedAt || msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
           </div>

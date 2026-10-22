@@ -32,8 +32,7 @@ body {
               radial-gradient(circle at 85% 20%, rgba(63, 0, 255, 0.28), transparent 25%),
               radial-gradient(circle at 50% 80%, rgba(0, 209, 166, 0.24), transparent 35%),
               #0b0717;
-  background-size: 200% 200%;
-  animation: backgroundShift 20s ease infinite;
+  background-attachment: fixed;
 }
 
 .glass-panel {

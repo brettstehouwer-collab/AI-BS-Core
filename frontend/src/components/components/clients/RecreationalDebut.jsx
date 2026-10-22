@@ -1111,130 +1111,147 @@ President, Recreational Debut`;
 
         </div>
 
-        {/* Executive Metric Cards */}
-        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+        {/* Consolidated Executive 4-Card Hero Grid */}
+        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
           
-          <div style={{
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.4)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🟢</div>
+          <div 
+            onClick={() => {
+              setSyndicationCategory('messaged');
+              handleTabChange('syndication');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.25) 100%)',
+              border: '1px solid rgba(16, 185, 129, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Contacted Athletes in Outbox"
+          >
+            <div style={{ fontSize: '32px' }}>🟢</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#10b981' }}>{messagedAthletes.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contacted & Verified</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#10b981' }}>{messagedAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Contacted & Verified</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(245, 132, 38, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🟡</div>
+          <div 
+            onClick={() => {
+              setSyndicationCategory('pending');
+              handleTabChange('syndication');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(245, 132, 38, 0.12) 0%, rgba(124, 45, 18, 0.25) 100%)',
+              border: '1px solid rgba(245, 132, 38, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Ready / Pending Athletes in Outbox"
+          >
+            <div style={{ fontSize: '32px' }}>🟡</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#F58426' }}>{pendingAthletes.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Needs To Be Messaged</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#F58426' }}>{pendingAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Needs To Be Messaged</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>📧</div>
+          <div 
+            onClick={() => handleTabChange('replies')}
+            style={{
+              background: unreadRepliesCount > 0 ? 'linear-gradient(135deg, rgba(245, 132, 38, 0.2) 0%, rgba(180, 83, 9, 0.3) 100%)' : 'rgba(255, 255, 255, 0.04)',
+              border: unreadRepliesCount > 0 ? '1px solid #F58426' : '1px solid rgba(16, 185, 129, 0.35)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to view Inbound Athlete Replies"
+          >
+            <div style={{ fontSize: '32px' }}>💬</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#38bdf8' }}>{athletesWithEmails.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Clean Athlete Emails Saved</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>⚡</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#10b981' }}>{swarmDailyCapacity}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Swarm Cap / Day ({activeSmtpCount} Gmail{activeSmtpCount > 1 ? 's' : ''})</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🛡️</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#34d399' }}>{excludedCoaches.length}</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Coaches Quarantined (Zero on Page)</div>
-            </div>
-          </div>
-
-          <div style={{
-            background: unreadRepliesCount > 0 ? 'rgba(245, 132, 38, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-            border: unreadRepliesCount > 0 ? '1px solid #F58426' : '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            cursor: 'pointer'
-          }} onClick={() => handleTabChange('replies')}>
-            <div style={{ fontSize: '28px' }}>💬</div>
-            <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: unreadRepliesCount > 0 ? '#F58426' : '#10b981' }}>
-                {athleteReplies.length} {unreadRepliesCount > 0 && <span style={{ fontSize: '11px', background: '#F58426', color: '#000', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>{unreadRepliesCount} NEW</span>}
+              <div style={{ fontSize: '24px', fontWeight: '900', color: unreadRepliesCount > 0 ? '#F58426' : '#10b981', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {athleteReplies.length}
+                {unreadRepliesCount > 0 && (
+                  <span style={{ fontSize: '10px', background: '#F58426', color: '#000', padding: '2px 8px', borderRadius: '4px', fontWeight: '900' }}>
+                    {unreadRepliesCount} NEW
+                  </span>
+                )}
               </div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Inbound SMS Replies (IMAP Sync)</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Inbound SMS Replies</div>
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            borderRadius: '10px',
-            padding: '14px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px'
-          }}>
-            <div style={{ fontSize: '28px' }}>🏀</div>
+          <div 
+            onClick={() => handleTabChange('emails')}
+            style={{
+              background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(14, 116, 144, 0.25) 100%)',
+              border: '1px solid rgba(56, 189, 248, 0.45)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            title="Click to open Email Hub & SMTP Swarm"
+          >
+            <div style={{ fontSize: '32px' }}>📧</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: '900', color: '#38bdf8' }}>850+</div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>College Coaches Network</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#38bdf8' }}>{athletesWithEmails.length.toLocaleString()}</div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Clean Athlete Emails</div>
             </div>
           </div>
 
         </div>
 
+        {/* Compact Telemetry Status Strip */}
+        <div style={{
+          maxWidth: '1400px',
+          margin: '10px auto 0 auto',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px',
+          padding: '8px 16px',
+          background: 'rgba(255, 255, 255, 0.025)',
+          borderRadius: '8px',
+          border: '1px solid rgba(255, 255, 255, 0.06)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '12px', color: '#94a3b8', flexWrap: 'wrap' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#10b981' }}>⚡</span> Swarm Daily Cap: <strong style={{ color: '#ffffff' }}>{swarmDailyCapacity}</strong> ({activeSmtpCount} Gmail{activeSmtpCount > 1 ? 's' : ''})
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#34d399' }}>🛡️</span> Coach Safety Quarantine: <strong style={{ color: '#ffffff' }}>{excludedCoaches.length.toLocaleString()}</strong> Shielded
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ color: '#38bdf8' }}>🏀</span> College Coaches Network: <strong style={{ color: '#ffffff' }}>850+</strong> NCAA / NAIA
+            </span>
+          </div>
+          <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block' }}></span>
+            Dual SIM & SMTP Swarm Active
+          </div>
+        </div>
+
         {/* Permanent Master Outreach Progress & Live Telemetry Card */}
         <div style={{
           maxWidth: '1400px',
-          margin: '18px auto 0 auto',
+          margin: '14px auto 0 auto',
           background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 100%)',
           border: '1px solid rgba(245, 132, 38, 0.35)',
           borderRadius: '12px',
@@ -1246,7 +1263,7 @@ President, Recreational Debut`;
               <span style={{ fontSize: '26px' }}>🚀</span>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '16px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px' }}>
+                  <span style={{ fontSize: '15px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px' }}>
                     CAMPAIGN PROGRESS: {messagedAthletes.length.toLocaleString()} OF {athletes.length.toLocaleString()} ATHLETES CONTACTED
                   </span>
                   <span style={{
@@ -1295,7 +1312,7 @@ President, Recreational Debut`;
                   cursor: 'pointer'
                 }}
               >
-                View {messagedAthletes.length} Contacted ✓
+                View {messagedAthletes.length.toLocaleString()} Contacted ✓
               </button>
               <button
                 onClick={() => {
@@ -1314,7 +1331,7 @@ President, Recreational Debut`;
                   boxShadow: '0 2px 10px rgba(245, 132, 38, 0.35)'
                 }}
               >
-                Send Next Batch ({pendingAthletes.length} Ready) →
+                Send Next Batch ({pendingAthletes.length.toLocaleString()} Ready) →
               </button>
             </div>
           </div>
@@ -1371,7 +1388,7 @@ President, Recreational Debut`;
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
-                  onClick={() => setActiveTab('syndication')}
+                  onClick={() => handleTabChange('syndication')}
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     color: '#ffffff',
@@ -1414,53 +1431,304 @@ President, Recreational Debut`;
           </div>
         )}
 
-        {/* Tab Navigation */}
-        <div style={{ maxWidth: '1400px', margin: '20px auto 0 auto', display: 'flex', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', flexWrap: 'wrap' }}>
-          {[
-            { id: 'telemetry', label: '📊 Outreach Telemetry & Analytics', badge: `${messagedAthletes.length} Sent • ${athleteReplies.length} Replies • 0% Bounce` },
-            { id: 'syndication', label: '🌐 Mass Syndication & Outbox', badge: `${messagedAthletes.length} Sent • ${pendingAthletes.length} Ready` },
-            { id: 'emails', label: '📧 Athlete Email Hub & SMTP Swarm', badge: `${athletesWithEmails.length} Emails • ${activeSmtpCount} Gmails` },
-            { id: 'replies', label: '💬 Inbound Athlete SMS Replies', badge: `${unreadRepliesCount > 0 ? unreadRepliesCount + ' New • ' : ''}${athleteReplies.length} Replies` },
-            { id: 'campaigns', label: '📢 Campaign Activity & Dispatched Logs', badge: `${campaigns.length} Blasts` },
-            { id: 'roster', label: '👥 Student-Athlete Master Roster', badge: `${athletes.length}` },
-            { id: 'submit', label: '➕ Submit New Athlete Candidate' },
-            { id: 'network', label: '🏀 2,000+ Coaches & Pro Ambassadors', badge: `${REC_DEBUT_LEADERSHIP.length} Staff & Pros` },
-            { id: 'awards', label: '🏆 All-American Alumni Vault', badge: `${REC_DEBUT_AWARDS.length} Honorees` },
-            { id: 'portals', label: '🎯 13-Sport Registration Portals', badge: `${REC_DEBUT_SPORTS_PORTALS.length} Sports` },
-            { id: 'faq', label: '❓ Program Intel & FAQs', badge: '501(c)(3)' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              style={{
-                padding: '10px 18px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: '700',
-                fontSize: '13px',
-                backgroundColor: activeTab === tab.id ? '#F58426' : 'rgba(255, 255, 255, 0.08)',
-                color: activeTab === tab.id ? '#ffffff' : '#cbd5e1',
-                transition: 'all 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <span>{tab.label}</span>
-              {tab.badge && (
-                <span style={{
-                  fontSize: '10px',
-                  padding: '2px 8px',
-                  borderRadius: '10px',
-                  backgroundColor: activeTab === tab.id ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.15)',
-                  color: '#ffffff'
-                }}>
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          ))}
+        {/* ── CONSOLIDATED 4-TAB EXECUTIVE NAVIGATION ────────────────────────── */}
+        <div style={{ maxWidth: '1400px', margin: '22px auto 0 auto' }}>
+          {/* Level 1: 4 Master Workspace Tabs */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.75)',
+            padding: '6px',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            {[
+              {
+                id: 'analytics',
+                label: '📊 Campaigns & Analytics',
+                badge: `${messagedAthletes.length.toLocaleString()} Sent • ${campaigns.length} Blasts`,
+                matches: ['telemetry', 'campaigns'],
+                defaultTab: 'telemetry'
+              },
+              {
+                id: 'comms',
+                label: '💬 Communications Hub',
+                badge: `${pendingAthletes.length.toLocaleString()} Ready • ${athleteReplies.length} Replies`,
+                matches: ['syndication', 'emails', 'replies'],
+                defaultTab: 'syndication'
+              },
+              {
+                id: 'roster',
+                label: '👥 Athlete Master Roster',
+                badge: `${athletes.length.toLocaleString()} Athletes`,
+                matches: ['roster', 'submit'],
+                defaultTab: 'roster'
+              },
+              {
+                id: 'vault',
+                label: '🏛️ Organization & Vault',
+                badge: 'Directory & Resources',
+                matches: ['network', 'awards', 'portals', 'faq'],
+                defaultTab: 'network'
+              }
+            ].map(cat => {
+              const isCatActive = cat.matches.includes(activeTab);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    if (!isCatActive) {
+                      handleTabChange(cat.defaultTab);
+                    }
+                  }}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: isCatActive ? '900' : '700',
+                    fontSize: '14px',
+                    backgroundColor: isCatActive ? '#F58426' : 'transparent',
+                    color: isCatActive ? '#ffffff' : '#94a3b8',
+                    transition: 'all 0.15s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
+                    boxShadow: isCatActive ? '0 4px 16px rgba(245, 132, 38, 0.4)' : 'none'
+                  }}
+                >
+                  <span style={{ letterSpacing: '0.3px' }}>{cat.label}</span>
+                  <span style={{
+                    fontSize: '11px',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    backgroundColor: isCatActive ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.06)',
+                    color: isCatActive ? '#ffffff' : '#64748b',
+                    fontWeight: '700'
+                  }}>
+                    {cat.badge}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Level 2: Secondary Contextual Sub-Nav Pills */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            marginTop: '10px',
+            padding: '8px 12px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            <span style={{ fontSize: '11px', fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.8px', marginRight: '6px' }}>
+              Workspace View:
+            </span>
+
+            {/* Sub-pills for Category 1: Analytics */}
+            {['telemetry', 'campaigns'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('telemetry')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'telemetry' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'telemetry' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'telemetry' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📊 Live Outreach Telemetry &amp; Funnel
+                </button>
+                <button
+                  onClick={() => handleTabChange('campaigns')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'campaigns' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'campaigns' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'campaigns' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📢 Campaign Activity &amp; Dispatched Logs ({campaigns.length} Blasts)
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 2: Comms */}
+            {['syndication', 'emails', 'replies'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('syndication')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'syndication' ? '1px solid #F58426' : '1px solid transparent',
+                    backgroundColor: activeTab === 'syndication' ? 'rgba(245, 132, 38, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'syndication' ? '#F58426' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📱 Mass SMS Syndication &amp; Outbox ({pendingAthletes.length.toLocaleString()} Ready)
+                </button>
+                <button
+                  onClick={() => handleTabChange('emails')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'emails' ? '1px solid #38bdf8' : '1px solid transparent',
+                    backgroundColor: activeTab === 'emails' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'emails' ? '#38bdf8' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  📧 Athlete Email Hub &amp; SMTP Swarm ({athletesWithEmails.length.toLocaleString()} Emails)
+                </button>
+                <button
+                  onClick={() => handleTabChange('replies')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'replies' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'replies' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'replies' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>💬 Inbound Athlete SMS Replies</span>
+                  {unreadRepliesCount > 0 && (
+                    <span style={{ fontSize: '10px', background: '#F58426', color: '#000', padding: '1px 6px', borderRadius: '4px', fontWeight: '900' }}>
+                      {unreadRepliesCount} NEW
+                    </span>
+                  )}
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 3: Roster */}
+            {['roster', 'submit'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('roster')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'roster' ? '1px solid #38bdf8' : '1px solid transparent',
+                    backgroundColor: activeTab === 'roster' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'roster' ? '#38bdf8' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  👥 Master Athlete Directory ({athletes.length.toLocaleString()})
+                </button>
+                <button
+                  onClick={() => handleTabChange('submit')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'submit' ? '1px solid #10b981' : '1px solid transparent',
+                    backgroundColor: activeTab === 'submit' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'submit' ? '#10b981' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ➕ Submit New Candidate Intake Form
+                </button>
+              </>
+            )}
+
+            {/* Sub-pills for Category 4: Vault */}
+            {['network', 'awards', 'portals', 'faq'].includes(activeTab) && (
+              <>
+                <button
+                  onClick={() => handleTabChange('network')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'network' ? '1px solid #F58426' : '1px solid transparent',
+                    backgroundColor: activeTab === 'network' ? 'rgba(245, 132, 38, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'network' ? '#F58426' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🏀 2,000+ Coaches &amp; Pro Ambassadors
+                </button>
+                <button
+                  onClick={() => handleTabChange('awards')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'awards' ? '1px solid #eab308' : '1px solid transparent',
+                    backgroundColor: activeTab === 'awards' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'awards' ? '#eab308' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🏆 All-American Alumni Vault ({REC_DEBUT_AWARDS.length})
+                </button>
+                <button
+                  onClick={() => handleTabChange('portals')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'portals' ? '1px solid #ec4899' : '1px solid transparent',
+                    backgroundColor: activeTab === 'portals' ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'portals' ? '#ec4899' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🎯 13-Sport Registration Portals
+                </button>
+                <button
+                  onClick={() => handleTabChange('faq')}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: activeTab === 'faq' ? '1px solid #a855f7' : '1px solid transparent',
+                    backgroundColor: activeTab === 'faq' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    color: activeTab === 'faq' ? '#a855f7' : '#cbd5e1',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ❓ Program Intel &amp; FAQs
+                </button>
+              </>
+            )}
+
+          </div>
         </div>
 
       </header>

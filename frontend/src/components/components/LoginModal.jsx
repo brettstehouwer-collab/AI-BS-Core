@@ -11,7 +11,9 @@ const AUTHORIZED_EMAILS = [
   'stehouwer.julie@gmail.com',
   'brettstehouwer@gmail.com',
   'footballstar0325@gmail.com',
-  'rottierannajoy@gmail.com'
+  'rottierannajoy@gmail.com',
+  'devin.feexpress@gmail.com',
+  'devin@feexpress.com'
 ];
 
 export default function LoginModal({ onLoginSuccess }) {

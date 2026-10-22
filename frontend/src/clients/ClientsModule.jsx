@@ -73,7 +73,7 @@ export default function ClientsModule({ backendUrl }) {
       </div>
 
       {/* Client Workspace Content */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
         {selectedClient === "rec_debut" ? (
           <RecreationalDebut BACKEND_URL={backendUrl} />
         ) : selectedClient === "fe_express" ? (

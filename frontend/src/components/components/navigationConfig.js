@@ -66,6 +66,7 @@ export const masterHubs = [
       { key: 'shared_cloud_drive', label: 'Shared Cloud Drive', icon: '☁️', description: 'Google Drive-Style Cloud Storage & Asset Sharing' },
       { key: 'operations_audit', label: 'Omni Operations Audit Hub', icon: '📋', description: 'Live Tasks, Media Queue, Autosaves & Daemon Diagnostics' },
       { key: 'clients', label: 'Clients Hub & CRM', icon: '🏢', description: 'Client Profiles, Interaction History & Contract Matrix' },
+      { key: 'fe_express', label: 'FE Express Box Truck Automation Hub (Devin)', icon: '🚚', description: 'Real-Time Trulos Public Load Board, Smart Backhaul Radar, Broker Credit Sentinel, Spot Rate Benchmarks & 1-Tap Mobile Dispatch Suite for Devin' },
       { key: 'rec_debut', label: 'Recreational Debut (Dennis Bell)', icon: '🏀', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite' },
       { key: 'onboarding', label: 'Client Onboarding', icon: '🚀', description: 'Intelligent Client Intake & Onboarding Portal' },
       { key: 'unified_financial', label: 'Financial Ledger & Taxes', icon: '💰', description: 'Master Accounting, P&L, Expense Tracking & Tax Suite' },

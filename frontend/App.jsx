@@ -17,6 +17,8 @@ import './components/MomMode.css';
 import { setAntiTamperUser } from './utils/antiTamperGuard.js';
 import { applyLayoutConfigToDom, DEFAULT_LAYOUT_CONFIG } from './components/GlobalLayoutCustomizerModal.jsx';
 import MobileStehouwerChat from './components/MobileStehouwerChat.jsx';
+import MobileBottomNav from './components/MobileBottomNav.jsx';
+import MobileNavDrawer from './components/MobileNavDrawer.jsx';
 import { isNativeMobile } from './config/api.js';
 import { useUserSessionTelemetry } from './src/hooks/useUserSessionTelemetry.js';
 
@@ -138,6 +140,7 @@ const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardw
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
 const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
 const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
+const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressDispatcher.jsx'));
 const ClusterEngineDashboard = safeLazy(() => import('./src/components/ClusterEngineDashboard.jsx'));
 
 class TabErrorBoundary extends React.Component {
@@ -224,6 +227,7 @@ const tabs = [
   { key: 'advertising', label: 'Advertising', description: 'Local business lead management and AI ad copy', Component: AdvertisingTab },
   { key: 'syndication', label: '🌐 Automated Syndication', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite', Component: SyndicationTab },
   { key: 'clients', label: 'Clients Hub', description: 'Master Workspace for all clients', Component: ClientsModuleTab },
+  { key: 'fe_express', label: '🚚 FE Express Box Truck Automation Hub (Devin)', description: 'Real-Time Trulos Public Load Board, Smart Backhaul Radar, Broker Credit Sentinel, Spot Rate Benchmarks & 1-Tap Mobile Dispatch Suite for Devin', Component: FEExpressDispatcherTab },
   { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite', Component: RecreationalDebutTab },
   { key: 'nda_module', label: '📜 Sovereign NDA & Anti-Tamper', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal', Component: NdaModuleTab },
   { key: 'moneytrack', label: 'Money Track', description: 'Financial dashboard for revenue, expenses, and invoices', Component: MoneyTrackTab },
@@ -649,6 +653,7 @@ export default function App() {
   const activeTabConfig = tabs.find((tab) => tab.key === activeTab) ?? tabs[0];
   const ActiveComponent = activeTabConfig.Component;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   const currentPath = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
   const isPublicStandaloneRoute = currentPath.includes('/playground') || currentPath.includes('/checkout');
@@ -774,16 +779,8 @@ export default function App() {
     );
   }
 
-  // Mobile Stehouwer Chat View (Default on Phone / APK)
-  if (isMobileDevice && mobileViewMode === 'chat') {
-    return (
-      <MobileStehouwerChat
-        backendUrl={backendUrl}
-        onSwitchToDesktop={() => handleSetMobileViewMode('desktop')}
-        currentUser={currentUser}
-      />
-    );
-  }
+  // Native Responsive Platform Mode for Mobile & Desktop
+  // Users can access Chat, Project NoCo, VLC Media Player, and all 35+ tools seamlessly on phones.
 
   return (
     <>
@@ -791,7 +788,8 @@ export default function App() {
         {!zenMode && navLayout === 'top' && (
           <TopNavbar 
             activeTab={activeTab}
-            onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); }}
+            onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
+            onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
             navLayout={navLayout}
             onToggleNavLayout={handleToggleNavLayout}
             selectedModel={selectedModel}
@@ -1048,34 +1046,29 @@ export default function App() {
           </button>
         )}
 
-        {/* Floating Toggle to return to Gemini Mobile Chat Mode when in Desktop view on phone */}
-        {isMobileDevice && mobileViewMode === 'desktop' && (
-          <button
-            onClick={() => handleSetMobileViewMode('chat')}
-            style={{
-              position: 'fixed',
-              bottom: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 99999,
-              background: 'linear-gradient(135deg, #4285f4, #9b72cf)',
-              color: '#fff',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '24px',
-              padding: '10px 20px',
-              fontSize: '0.85rem',
-              fontWeight: '700',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
-              cursor: 'pointer'
-            }}
-          >
-            <span>✦</span>
-            <span>Switch to Stehouwer Mobile Chat</span>
-          </button>
-        )}
+        {/* Native Mobile Bottom Navigation Bar (Active on Mobile Viewports) */}
+        <MobileBottomNav
+          activeTab={activeTab}
+          onTabChange={(t) => {
+            setActiveTab(t);
+            setIsMobileDrawerOpen(false);
+          }}
+          onOpenDrawer={() => setIsMobileDrawerOpen(true)}
+        />
+
+        {/* Fullscreen Mobile Navigation & Tool Drawer */}
+        <MobileNavDrawer
+          isOpen={isMobileDrawerOpen}
+          onClose={() => setIsMobileDrawerOpen(false)}
+          activeTab={activeTab}
+          onTabChange={(t) => {
+            setActiveTab(t);
+            setIsMobileDrawerOpen(false);
+          }}
+          momMode={momMode}
+          onToggleMomMode={handleToggleMomMode}
+          currentUser={currentUser}
+        />
       </div>
     </>
   );

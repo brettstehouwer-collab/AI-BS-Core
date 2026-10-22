@@ -12,7 +12,7 @@ export default function UnifiedCreationHub(props) {
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#0d1117', color: '#c9d1d9' }}>
-      <div style={{ display: 'flex', gap: '10px', padding: '10px 20px', backgroundColor: '#161b22', borderBottom: '1px solid #30363d' }}>
+      <div className="mobile-scroll-ribbon" style={{ display: 'flex', gap: '8px', padding: '8px clamp(10px, 2.5vw, 20px)', backgroundColor: '#161b22', borderBottom: '1px solid #30363d', overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', flexShrink: 0 }}>
         {tabs.map(tab => (
           <button
             key={tab.id}

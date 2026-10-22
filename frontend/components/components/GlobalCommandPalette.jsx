@@ -69,6 +69,28 @@ export default function GlobalCommandPalette({
       }
     },
     {
+      id: 'action-portal-fe-express',
+      type: 'action',
+      label: '🚚 Open FE Express Box Truck Dispatch Portal (Devin) (?tab=clients&client=fe_express)',
+      icon: '🚚',
+      category: 'Client Portals',
+      action: () => {
+        onClose();
+        if (onNavigateTab) {
+          onNavigateTab('clients');
+          setTimeout(() => {
+            const select = document.querySelector('select');
+            if (select) {
+              select.value = 'fe_express';
+              select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }, 150);
+        } else {
+          window.location.href = '?tab=clients&client=fe_express';
+        }
+      }
+    },
+    {
       id: 'action-portal-banquet',
       type: 'action',
       label: '🌐 Open Client 3D Banquet Planner Portal (?portal=banquet)',

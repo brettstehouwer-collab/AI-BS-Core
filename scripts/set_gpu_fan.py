@@ -1,108 +1,77 @@
-#!/usr/bin/env python3
 """
-Sovereign GPU Fan Control Utility
-Controls NVIDIA GeForce RTX 4090 fan speeds via direct NVML hardware bindings.
+AI-BS Sovereign Hardware Controller: NVIDIA GPU Fan Speed Manager
+------------------------------------------------------------------
 Usage:
-    python set_gpu_fan.py --speed 100       # Force 100% fan speed
-    python set_gpu_fan.py --speed 80        # Set 80% fan speed
-    python set_gpu_fan.py --status          # Query current fan speed and thermals
-    python set_gpu_fan.py --auto            # Restore automatic driver curve
+  python set_gpu_fan.py --speed 100       # Set all fans to 100% max speed
+  python set_gpu_fan.py --speed 80        # Set all fans to 80%
+  python set_gpu_fan.py --auto            # Restore factory automatic curve
+  python set_gpu_fan.py --status          # Query current temperatures & fan RPM %
 """
 
 import sys
-import ctypes
 import argparse
-
-# Ensure UTF-8 output on Windows consoles
-if sys.stdout.encoding != 'utf-8':
-    try:
-        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-    except Exception:
-        pass
+import ctypes
+from ctypes import byref, c_uint, c_void_p
 
 def get_nvml():
     try:
-        nvml = ctypes.CDLL("nvml.dll")
-        ret = nvml.nvmlInit_v2()
-        if ret != 0:
-            raise RuntimeError(f"nvmlInit_v2 failed with error code: {ret}")
-        return nvml
-    except Exception as e:
-        print(f"Error loading NVML: {e}")
-        sys.exit(1)
+        nvml = ctypes.CDLL('nvml.dll')
+    except Exception:
+        nvml = ctypes.CDLL(r'C:\Windows\System32\nvml.dll')
+    nvml.nvmlInit_v2()
+    handle = c_void_p()
+    nvml.nvmlDeviceGetHandleByIndex_v2(c_uint(0), byref(handle))
+    return nvml, handle
 
-def set_fan_speed(speed: int):
-    nvml = get_nvml()
-    handle = ctypes.c_void_p()
-    ret = nvml.nvmlDeviceGetHandleByIndex_v2(0, ctypes.byref(handle))
-    if ret != 0:
-        print(f"Failed to get GPU 0 handle (code: {ret})")
-        nvml.nvmlShutdown()
-        sys.exit(1)
+def set_fan_speed(speed_pct):
+    nvml, handle = get_nvml()
+    num_fans = c_uint(0)
+    nvml.nvmlDeviceGetNumFans(handle, byref(num_fans))
+    
+    print(f"Detected {num_fans.value} fan zones on NVIDIA GeForce RTX 4090.")
+    print(f"Applying fan target: {speed_pct}%...")
+    
+    for i in range(num_fans.value):
+        res = nvml.nvmlDeviceSetFanSpeed_v2(handle, c_uint(i), c_uint(speed_pct))
+        status = "OK" if res == 0 else f"Err ({res})"
+        print(f"  • Fan {i} -> {speed_pct}%: {status}")
 
-    num_fans = ctypes.c_uint(1)
-    if hasattr(nvml, "nvmlDeviceGetNumFans"):
-        nvml.nvmlDeviceGetNumFans(handle, ctypes.byref(num_fans))
+def restore_auto_curve():
+    nvml, handle = get_nvml()
+    num_fans = c_uint(0)
+    nvml.nvmlDeviceGetNumFans(handle, byref(num_fans))
+    print(f"Restoring factory automatic fan curve on {num_fans.value} fans...")
+    for i in range(num_fans.value):
+        if hasattr(nvml, 'nvmlDeviceSetDefaultFanSpeed_v2'):
+            res = nvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, c_uint(i))
+        else:
+            # Fallback
+            res = nvml.nvmlDeviceSetFanSpeed_v2(handle, c_uint(i), c_uint(0))
+        print(f"  • Fan {i} restored to AUTO: code {res}")
 
-    print(f"[GPU Fan Control] Target Speed: {speed}% across {num_fans.value} fan(s)...")
-    for f in range(num_fans.value):
-        if hasattr(nvml, "nvmlDeviceSetFanSpeed_v2"):
-            res = nvml.nvmlDeviceSetFanSpeed_v2(handle, f, int(speed))
-            if res == 0:
-                print(f"  ✓ Fan {f}: Locked to {speed}%")
-            else:
-                print(f"  ✗ Fan {f}: Failed to set speed (code: {res})")
+def query_status():
+    nvml, handle = get_nvml()
+    temp = c_uint(0)
+    nvml.nvmlDeviceGetTemperature(handle, c_uint(0), byref(temp))
+    num_fans = c_uint(0)
+    nvml.nvmlDeviceGetNumFans(handle, byref(num_fans))
+    print(f"GPU Core Temp: {temp.value}°C")
+    for i in range(num_fans.value):
+        speed = c_uint(0)
+        nvml.nvmlDeviceGetFanSpeed_v2(handle, c_uint(i), byref(speed))
+        print(f"  • Fan {i}: {speed.value}%")
 
-    # Read back current
-    cur_speed = ctypes.c_uint()
-    nvml.nvmlDeviceGetFanSpeed(handle, ctypes.byref(cur_speed))
-    print(f"[GPU Fan Control] Current Sensor Readout: {cur_speed.value}%")
-    nvml.nvmlShutdown()
-
-def restore_auto():
-    nvml = get_nvml()
-    handle = ctypes.c_void_p()
-    nvml.nvmlDeviceGetHandleByIndex_v2(0, ctypes.byref(handle))
-    num_fans = ctypes.c_uint(1)
-    if hasattr(nvml, "nvmlDeviceGetNumFans"):
-        nvml.nvmlDeviceGetNumFans(handle, ctypes.byref(num_fans))
-
-    print(f"[GPU Fan Control] Restoring automatic thermal curve...")
-    for f in range(num_fans.value):
-        if hasattr(nvml, "nvmlDeviceSetDefaultFanSpeed_v2"):
-            res = nvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, f)
-            print(f"  Fan {f} reset to default: {res == 0}")
-        elif hasattr(nvml, "nvmlDeviceSetFanControlPolicy"):
-            res = nvml.nvmlDeviceSetFanControlPolicy(handle, f, 0)
-            print(f"  Fan {f} policy set to AUTO: {res == 0}")
-    nvml.nvmlShutdown()
-
-def show_status():
-    nvml = get_nvml()
-    handle = ctypes.c_void_p()
-    nvml.nvmlDeviceGetHandleByIndex_v2(0, ctypes.byref(handle))
-    cur_speed = ctypes.c_uint()
-    temp = ctypes.c_uint()
-    nvml.nvmlDeviceGetFanSpeed(handle, ctypes.byref(cur_speed))
-    if hasattr(nvml, "nvmlDeviceGetTemperature"):
-        nvml.nvmlDeviceGetTemperature(handle, 0, ctypes.byref(temp))
-    print(f"GPU Fan Speed: {cur_speed.value}% | Temp: {temp.value}°C")
-    nvml.nvmlShutdown()
-
-def main():
-    parser = argparse.ArgumentParser(description="NVIDIA GPU Fan Control Utility")
-    parser.add_argument("--speed", type=int, default=100, help="Fan speed percentage (0-100)")
-    parser.add_argument("--auto", action="store_true", help="Restore automatic fan curve")
-    parser.add_argument("--status", action="store_true", help="Display current fan speed and temperature")
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="NVIDIA GPU Fan Controller")
+    parser.add_argument('--speed', type=int, help="Target fan speed (0-100%)")
+    parser.add_argument('--auto', action='store_true', help="Restore automatic fan curve")
+    parser.add_argument('--status', action='store_true', help="Show current temp and fan speeds")
     args = parser.parse_args()
 
     if args.auto:
-        restore_auto()
-    elif args.status:
-        show_status()
+        restore_auto_curve()
+    elif args.speed is not None:
+        val = max(0, min(100, args.speed))
+        set_fan_speed(val)
     else:
-        set_fan_speed(args.speed)
-
-if __name__ == "__main__":
-    main()
+        query_status()

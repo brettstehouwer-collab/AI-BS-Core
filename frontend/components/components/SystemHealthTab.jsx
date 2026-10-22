@@ -137,12 +137,14 @@ export default function SystemHealthTab({ backendUrl }) {
     }}>
       {/* Header */}
       <div style={{
-        padding: '16px 32px',
+        padding: '12px clamp(12px, 3vw, 32px)',
         backgroundColor: '#121212',
         borderBottom: '1px solid #333',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
         zIndex: 10
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

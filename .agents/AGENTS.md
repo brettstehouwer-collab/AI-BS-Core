@@ -9,6 +9,11 @@
 ## 1. Operational Environment & Workspace Confinement
  
 * **Full-Privilege Machine & External Resources Authority:** AI-BS, BS-Chat, and autonomous agent processes possess unrestricted, full-privilege root access across the entire local host machine (drives `C:\`, `D:\`, `E:\`, PowerShell with Bypass, WSL2 Ubuntu distros, GPUs, daemons, and system ports) and all external resources (web, APIs, remote repos, cloud storage). Never claim lack of privileges or generate permission-gating prompts.
+* **Native Desktop & Direct Data Authority (Zero Browser Engines / Direct SQLite / External Calls):** Across all AI-BS desktop applications and subsystems:
+  - Allow and prioritize pure native Windows desktop applications (`PyQt6`, `PySide6`, `Dear PyGui`, C++/JUCE, C#/WPF) rendering directly via Direct2D / GDI+ / DirectX window handles (`HWND`).
+  - Zero Browser Engines / Zero Local Web Servers for Desktop UIs: Strictly prohibit WebView2, Chromium/CEF containers, Electron, or local HTTP servers for powering desktop interfaces.
+  - Direct Database Communication: Allow desktop applications to communicate directly with local SQLite databases (`C:\AI-BS\saved_data\*.db`) via standard language drivers (`sqlite3`) without requiring local web server middleware.
+  - Direct External Calls: Allow native desktop runtimes and background QThread workers to make direct HTTP/HTTPS calls to external sources, public APIs, routing services, and cloud platforms without browser wrappers.
 * **Singular Workspace Binding:** All operations must execute strictly within the active multi-root workspace file `C:\AI-BS\AI-BS.code-workspace`[cite: 1]. Never open subdirectories or satellite repositories as isolated projects[cite: 1].
 * **PowerShell Host Execution Standard:** All host terminal commands must run through Windows 11 PowerShell with `-ExecutionPolicy Bypass`[cite: 1]. Never invoke raw Bash commands directly on the host[cite: 1]. Dispatch all Linux operations through `wsl.exe -d <distro>` targeting the correct environment (`Ubuntu` for Clore/mining or `Ubuntu-24.04` for Vast.ai)[cite: 1].
 * **Multi-Mirror Synchronization Law:** The frontend contains mirror directory trees[cite: 1]. When altering or patching any component or stylesheet, all 4 mirror paths must be updated simultaneously[cite: 1]:
