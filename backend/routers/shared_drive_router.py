@@ -4,14 +4,19 @@ import zipfile
 import mimetypes
 import io
 import time
+import tempfile
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 from datetime import datetime
-from fastapi import APIRouter, UploadFile, File, Form, Query, HTTPException, Request, Response
+from fastapi import Depends, APIRouter, UploadFile, File, Form, Query, HTTPException, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/api/drive", tags=["Admin Shared Cloud Drive"])
+from security.document_access import require_document_access, issue_media_ticket, MEDIA_TICKET_TTL
+from security.document_retention import assert_document_write_allowed, document_retention_metadata, safe_drive_leaf
+
+router = APIRouter(prefix="/api/drive", tags=["Admin Shared Cloud Drive"],
+                   dependencies=[Depends(require_document_access)])
 
 # Root drive storage location on host system
 DRIVE_ROOT = Path(r"C:\AI-BS\shared_cloud_drive").resolve()
@@ -59,7 +64,7 @@ def resolve_safe_path(rel_path: str) -> Path:
     resolved_target = target.resolve()
     
     # Enforce containment inside DRIVE_ROOT or authorized junction roots
-    is_allowed = any(str(resolved_target).lower().startswith(str(root).lower()) for root in ALLOWED_ROOTS)
+    is_allowed = any(resolved_target.is_relative_to(root.resolve()) for root in ALLOWED_ROOTS)
     if not is_allowed:
         raise HTTPException(status_code=403, detail="Access denied: Path traversal attempted.")
     return target
@@ -284,6 +289,8 @@ async def list_files(
             return (0 if x["is_dir"] else 1, x["name"].lower())
 
     items.sort(key=sort_key, reverse=reverse_order)
+    for item in items:
+        item.update(document_retention_metadata(resolve_safe_path(item['path']), DRIVE_ROOT))
 
     return {
         "current_path": f"/{rel_path_str}" if rel_path_str else "/",
@@ -307,22 +314,28 @@ async def upload_files(
     Preserves original filenames or resolves duplicate names with numbering.
     """
     target_dir = resolve_safe_path(target_path)
+    assert_document_write_allowed(target_dir, DRIVE_ROOT)
+    upload_names = [safe_drive_leaf(file.filename or 'uploaded_file') for file in files]
     target_dir.mkdir(parents=True, exist_ok=True)
 
     uploaded_results = []
 
-    for file in files:
-        original_name = os.path.basename(file.filename or "uploaded_file")
+    for file, original_name in zip(files, upload_names):
         dest_path = target_dir / original_name
         
         # Handle collision
         stem, ext = os.path.splitext(original_name)
         counter = 1
-        while dest_path.exists():
-            dest_path = target_dir / f"{stem} ({counter}){ext}"
-            counter += 1
+        while True:
+            assert_document_write_allowed(dest_path, DRIVE_ROOT)
+            try:
+                destination_stream = open(dest_path, 'xb')
+                break
+            except FileExistsError:
+                dest_path = target_dir / f"{stem} ({counter}){ext}"
+                counter += 1
 
-        with open(dest_path, "wb") as f:
+        with destination_stream as f:
             shutil.copyfileobj(file.file, f)
 
         stat = dest_path.stat()
@@ -348,15 +361,19 @@ async def upload_files(
 async def create_folder(req: CreateFolderRequest):
     """Creates a new folder inside current directory."""
     parent_dir = resolve_safe_path(req.current_path)
-    clean_name = os.path.basename(req.folder_name.strip())
+    clean_name = safe_drive_leaf(req.folder_name)
     if not clean_name:
         raise HTTPException(status_code=400, detail="Invalid folder name.")
 
     new_folder = parent_dir / clean_name
+    assert_document_write_allowed(new_folder, DRIVE_ROOT)
     if new_folder.exists():
         raise HTTPException(status_code=409, detail="A folder with this name already exists.")
 
-    new_folder.mkdir(parents=True, exist_ok=True)
+    try:
+        new_folder.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        raise HTTPException(status_code=409, detail='A folder with this name already exists.')
     rel = str(new_folder.relative_to(DRIVE_ROOT)).replace("\\", "/")
 
     return {
@@ -373,9 +390,9 @@ async def create_document(req: CreateDocumentRequest):
     directly in the specified folder with optional initial content.
     """
     parent_dir = resolve_safe_path(req.current_path)
-    parent_dir.mkdir(parents=True, exist_ok=True)
+    assert_document_write_allowed(parent_dir, DRIVE_ROOT)
 
-    clean_name = os.path.basename(req.file_name.strip())
+    clean_name = safe_drive_leaf(req.file_name)
     if not clean_name:
         raise HTTPException(status_code=400, detail="Invalid file name.")
 
@@ -393,11 +410,16 @@ async def create_document(req: CreateDocumentRequest):
         clean_name = f"{stem}{ext_map.get(req.doc_type, '.md')}"
 
     target_file = parent_dir / clean_name
+    assert_document_write_allowed(target_file, DRIVE_ROOT)
     if target_file.exists():
         raise HTTPException(status_code=409, detail="A file with this name already exists.")
 
-    with open(target_file, "w", encoding="utf-8") as f:
-        f.write(req.content or "")
+    parent_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(target_file, "x", encoding="utf-8") as f:
+            f.write(req.content or "")
+    except FileExistsError:
+        raise HTTPException(status_code=409, detail='A file with this name already exists.')
 
     stat = target_file.stat()
     rel = str(target_file.relative_to(DRIVE_ROOT)).replace("\\", "/")
@@ -422,6 +444,9 @@ async def read_document(path: str = Query(..., description="Relative file path")
     target_file = resolve_safe_path(path)
     if not target_file.exists() or target_file.is_dir():
         raise HTTPException(status_code=404, detail="File not found.")
+    retention = document_retention_metadata(target_file, DRIVE_ROOT)
+    if retention['binary']:
+        raise HTTPException(status_code=415, detail='Use preview or download for this binary document. Create an editable working copy before editing.')
 
     try:
         with open(target_file, "r", encoding="utf-8", errors="replace") as f:
@@ -437,6 +462,7 @@ async def read_document(path: str = Query(..., description="Relative file path")
             "extension": ext,
             "category": cat,
             "content": content,
+            **retention,
             "size_bytes": stat.st_size,
             "modified_formatted": datetime.fromtimestamp(stat.st_mtime).strftime("%b %d, %Y %I:%M %p")
         }
@@ -448,12 +474,21 @@ async def read_document(path: str = Query(..., description="Relative file path")
 async def save_document(req: SaveDocumentRequest):
     """Saves updated document content directly to disk."""
     target_file = resolve_safe_path(req.file_path)
+    assert_document_write_allowed(target_file, DRIVE_ROOT)
+    if document_retention_metadata(target_file, DRIVE_ROOT)['binary']:
+        raise HTTPException(status_code=415, detail='Text save cannot replace a binary document.')
     if not target_file.exists():
         raise HTTPException(status_code=404, detail="Target document not found.")
 
+    temporary_path = None
     try:
-        with open(target_file, "w", encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', dir=target_file.parent,
+                                         prefix='.drive-document-', suffix='.tmp', delete=False) as f:
+            temporary_path = Path(f.name)
             f.write(req.content)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary_path, target_file)
 
         stat = target_file.stat()
         return {
@@ -465,6 +500,9 @@ async def save_document(req: SaveDocumentRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save document: {str(e)}")
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
 
 
 # ==============================================================================
@@ -475,14 +513,16 @@ async def save_document(req: SaveDocumentRequest):
 async def rename_item(req: RenameItemRequest):
     """Renames a file or folder."""
     target = resolve_safe_path(req.item_path)
+    assert_document_write_allowed(target, DRIVE_ROOT, encompassing=True)
     if not target.exists():
         raise HTTPException(status_code=404, detail="Item not found.")
 
-    new_name = os.path.basename(req.new_name.strip())
+    new_name = safe_drive_leaf(req.new_name)
     if not new_name:
         raise HTTPException(status_code=400, detail="Invalid new name.")
 
     destination = target.parent / new_name
+    assert_document_write_allowed(destination, DRIVE_ROOT, encompassing=True)
     if destination.exists():
         raise HTTPException(status_code=409, detail="An item with the new name already exists.")
 
@@ -500,17 +540,31 @@ async def rename_item(req: RenameItemRequest):
 async def move_items(req: MoveItemsRequest):
     """Moves files and/or folders into a destination directory."""
     target_dir = resolve_safe_path(req.target_folder)
+    assert_document_write_allowed(target_dir, DRIVE_ROOT)
     if not target_dir.exists() or not target_dir.is_dir():
         raise HTTPException(status_code=404, detail="Destination directory not found.")
 
-    moved_count = 0
+    pending_moves = []
     for src_rel in req.source_paths:
         src = resolve_safe_path(src_rel)
-        if src.exists() and src != target_dir:
-            dest = target_dir / src.name
-            if not dest.exists():
-                shutil.move(str(src), str(dest))
-                moved_count += 1
+        assert_document_write_allowed(src, DRIVE_ROOT, encompassing=True)
+        dest = target_dir / src.name
+        assert_document_write_allowed(dest, DRIVE_ROOT, encompassing=True)
+        if not src.exists():
+            raise HTTPException(status_code=404, detail='A source item does not exist; nothing was moved.')
+        if src.resolve() == target_dir.resolve() or target_dir.resolve().is_relative_to(src.resolve()):
+            raise HTTPException(status_code=400, detail='An item cannot be moved into itself.')
+        if dest.exists():
+            raise HTTPException(status_code=409, detail='A destination item already exists; nothing was moved.')
+        pending_moves.append((src, dest))
+    moved_count = 0
+    for src, dest in pending_moves:
+        try:
+            # Same-volume rename never copies over an existing file on this Windows host.
+            os.rename(src, dest)
+        except OSError:
+            raise HTTPException(status_code=409, detail='Move could not be completed without replacing data. Existing files have been retained.')
+        moved_count += 1
 
     return {
         "status": "success",
@@ -520,21 +574,7 @@ async def move_items(req: MoveItemsRequest):
 
 @router.post("/delete")
 async def delete_items(req: DeleteItemsRequest):
-    """Deletes files or directories."""
-    deleted_count = 0
-    for item_rel in req.item_paths:
-        item = resolve_safe_path(item_rel)
-        if item.exists():
-            if item.is_dir():
-                shutil.rmtree(str(item))
-            else:
-                item.unlink()
-            deleted_count += 1
-
-    return {
-        "status": "success",
-        "message": f"Deleted {deleted_count} item(s)."
-    }
+    raise HTTPException(status_code=403, detail='Retention policy: permanent deletion is disabled. Documents, duplicates, and previous versions must be retained.')
 
 
 # ==============================================================================
@@ -681,3 +721,22 @@ async def get_storage_stats():
             for cat in categories_count if categories_count[cat] > 0
         ]
     }
+
+
+class MediaTicketRequest(BaseModel):
+    path: str
+    action: str = "preview"
+
+
+@router.post("/media-ticket")
+async def create_media_ticket(req: MediaTicketRequest):
+    """An authenticated admin may grant temporary read access to one target."""
+    from urllib.parse import urlencode
+    target = resolve_safe_path(req.path)
+    if not target.exists():
+        raise HTTPException(404, "File not found.")
+    if req.action == "preview" and not target.is_file():
+        raise HTTPException(400, "Select a file for preview.")
+    ticket = issue_media_ticket(target, req.action)
+    return JSONResponse({"url": f"/api/drive/{req.action}?" + urlencode({"path": str(target), "ticket": ticket}),
+                         "expires_in": MEDIA_TICKET_TTL}, headers={"Cache-Control": "no-store"})

@@ -80,7 +80,7 @@ Write-Host ">>> [4/6] Verifying and spawning all ecosystem daemons via multi-por
 $env:CUDA_VISIBLE_DEVICES = "0"
 $env:OLLAMA_IGPU_ENABLE = "0"
 $env:OLLAMA_MODELS = "C:\AI-BS\models\ollama"
-$env:OLLAMA_HOST = "0.0.0.0"
+$env:OLLAMA_HOST = "127.0.0.1"
 $env:OLLAMA_KEEP_ALIVE = "0"
 $env:OLLAMA_FLASH_ATTENTION = "1"
 

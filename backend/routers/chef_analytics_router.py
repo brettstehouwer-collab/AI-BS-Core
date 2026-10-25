@@ -3,11 +3,12 @@ The Simple Chef - Analytics & Sovereign Hosting Retainer Router
 Mounted at /api/v1/chef/analytics on Port 8080
 """
 
-from fastapi import APIRouter, Request, Query, HTTPException
+from fastapi import APIRouter, Request, Query, HTTPException, Depends
+from security.analytics_access import require_analytics_access
 from typing import Optional, Dict, Any
 from backend.core.thesimplechef_analytics_daemon import analytics_daemon
 
-router = APIRouter(prefix="/api/v1/chef/analytics", tags=["The Simple Chef Analytics"])
+router = APIRouter(prefix="/api/v1/chef/analytics", tags=["The Simple Chef Analytics"], dependencies=[Depends(require_analytics_access)])
 
 @router.get("/overview")
 def get_analytics_overview():

@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { loadAnalyticsSnapshot, emptyTrafficData, emptyApiData } from '/src/utils/analyticsData.js';
 import { getApiBase } from '../config/api';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
 import UserSessionTelemetryWidget from './UserSessionTelemetryWidget';
 
 const AUTHORIZED_EMAILS = [
+  'brett@stehouwerproductions.com',
+  'brett@stehouwerpublishing.com',
   'brettstehouwer@gmail.com',
   'footballstar0325@gmail.com',
   'stehouwerjulie@gmail.com',
@@ -88,26 +91,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   const [siteCounts, setSiteCounts] = useState({ stehouwer_publishing: 0, thesimplechef: 0 });
 
   // 1. Site Traffic Telemetry State (16-Layer Suite)
-  const [trafficData, setTrafficData] = useState({
-    total_pageviews: 0,
-    unique_visitors: 0,
-    avg_dwell_time_sec: 0,
-    scroll_completion_rate: 0,
-    human_traffic_pct: 100,
-    top_pages: [],
-    top_referrers: [],
-    geo_distribution: [],
-    top_gpus: [],
-    web_vitals: { lcp_ms: 0, cls_score: 0 },
-    network_metrics: { avg_ttfb_ms: 35, avg_rtt_ms: 18, avg_downlink_mbps: 24.5, network_breakdown: [] },
-    attribution_metrics: { top_sources: [], top_campaigns: [] },
-    media_readiness: { hls_supported_pct: 100, live_stream_hits: 0 },
-    client_diagnostics: { dark_mode_pct: 0, top_timezones: [] },
-    recent_errors: [],
-    form_abandonment_leads: [],
-    heatmap_points: [],
-    live_events: []
-  });
+  const [trafficData, setTrafficData] = useState(emptyTrafficData);
 
   // 2. Wire Packet Hashes & ASGI Gateway State
   const [wireRecordType, setWireRecordType] = useState('ALL');
@@ -162,14 +146,43 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   const [airScanAlert, setAirScanAlert] = useState(null);
 
   // 4. API Compute & Security State
-  const [apiData, setApiData] = useState({
-    total_security_events: 0,
-    total_banned_ips: 0,
-    security_events: [],
-    active_ip_bans: [],
-    live_stream: []
-  });
+  const [apiData, setApiData] = useState(emptyApiData);
   const [pubSecurityEvents, setPubSecurityEvents] = useState([]);
+  const [analyticsError, setAnalyticsError] = useState(null);
+  const privateRequest = useRef(null);
+  const privateGeneration = useRef(0);
+
+  const clearPrivateAnalytics = () => {
+    setTrafficData(emptyTrafficData());
+    setSiteCounts({ stehouwer_publishing: 0, thesimplechef: 0 });
+    setApiData(emptyApiData());
+    setPubSecurityEvents([]);
+    setLastRefreshed(null);
+  };
+
+  const refreshPrivateAnalytics = async () => {
+    privateRequest.current?.abort();
+    const controller = new AbortController();
+    privateRequest.current = controller;
+    const generation = ++privateGeneration.current;
+    try {
+      const snapshot = await loadAnalyticsSnapshot(apiHost, selectedSite, { signal: controller.signal });
+      if (controller.signal.aborted || generation !== privateGeneration.current) return;
+      setTrafficData(snapshot.trafficData);
+      setSiteCounts(snapshot.siteCounts);
+      setApiData(snapshot.apiData);
+      setPubSecurityEvents(snapshot.pubSecurityEvents);
+      setAnalyticsError(null);
+      setLastRefreshed(new Date().toLocaleTimeString());
+    } catch (error) {
+      if (controller.signal.aborted || generation !== privateGeneration.current) return;
+      clearPrivateAnalytics();
+      setAnalyticsError(error.message || 'Web analytics could not refresh.');
+    } finally {
+      if (privateRequest.current === controller) privateRequest.current = null;
+    }
+  };
+
 
   // 5. CDZ Cryptographic Audit Ledger State
   const [cdzSummary, setCdzSummary] = useState({
@@ -244,36 +257,6 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       setCdzScanAlert(`Error triggering CDZ scan: ${e.message}`);
     } finally {
       setIsScanningCdz(false);
-    }
-  };
-
-  const fetchTrafficData = async () => {
-    try {
-      const res = await fetch(`${apiHost}/api/analytics/traffic-summary?site_id=${selectedSite}&limit=50`);
-      if (res.ok) {
-        const json = await res.json();
-        setTrafficData(json);
-      }
-    } catch (e) {
-      console.warn('Failed to fetch site traffic telemetry:', e);
-    }
-
-    // Refresh hit count tallies for both sites
-    try {
-      const [spRes, chefRes] = await Promise.all([
-        fetch(`${apiHost}/api/analytics/traffic-summary?site_id=stehouwer_publishing&limit=1`),
-        fetch(`${apiHost}/api/analytics/traffic-summary?site_id=thesimplechef&limit=1`)
-      ]);
-      if (spRes.ok && chefRes.ok) {
-        const spJ = await spRes.json();
-        const chefJ = await chefRes.json();
-        setSiteCounts({
-          stehouwer_publishing: spJ.total_pageviews || 0,
-          thesimplechef: chefJ.total_pageviews || 0
-        });
-      }
-    } catch (e) {
-      // non-blocking
     }
   };
 
@@ -439,48 +422,37 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     }
   };
 
-  const fetchApiData = async () => {
-    try {
-      const res = await fetch(`${apiHost}/api/admin/security-telemetry`, {
-        headers: { 'x-admin-email': currentUser?.email || 'footballstar0325@gmail.com' }
-      });
-      if (res.ok) {
-        const json = await res.json();
-        setApiData(json);
-      }
-    } catch (e) {
-      console.warn('Failed to fetch API security telemetry:', e);
-    }
-
-    try {
-      const res = await fetch(`${apiHost}/api/analytics/publishing-events`);
-      if (res.ok) {
-        const json = await res.json();
-        setPubSecurityEvents(json.events || []);
-      }
-    } catch (e) {
-      console.warn('Failed to fetch publishing security events:', e);
-    }
-  };
-
   const refreshAll = async () => {
     setIsLoading(true);
-    await Promise.all([fetchTrafficData(), fetchWireTelemetry(), fetchAirTelemetry(), fetchApiData()]);
-    setLastRefreshed(new Date().toLocaleTimeString());
+    await Promise.all([refreshPrivateAnalytics(), fetchWireTelemetry(), fetchAirTelemetry()]);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (!isAuthorizedOperator || !isUnlocked) {
+    // Revoke any in-flight response on a site/session/lock change, including
+    // transports that finish after AbortController cancellation.
+    privateRequest.current?.abort();
+    privateGeneration.current += 1;
+    clearPrivateAnalytics();
+    setAnalyticsError(null);
+    if (!isAuthorizedOperator || !isUnlocked || !currentUser?.uid || !currentUser?.emailVerified) {
+      setAnalyticsError('Sign in with an authorized administrator account to load private analytics.');
       return;
     }
     refreshAll();
     if (activeSubView === 'wire_packets') {
       fetchInterfaces();
     }
-    const interval = setInterval(refreshAll, 6000);
-    return () => clearInterval(interval);
-  }, [isAuthorizedOperator, isUnlocked, activeSubView, selectedSite, wireFilterStehouwer, wireFilterHasHash, wireSearchDomain, wireLimit, wireFilterEngine, airFilterType, airFilterBand, airSearchHash, airLimit]);
+    const interval = setInterval(() => {
+      // Let a slow read finish instead of cancelling it every polling interval.
+      if (!privateRequest.current) refreshAll();
+    }, 6000);
+    return () => {
+      clearInterval(interval);
+      privateRequest.current?.abort();
+      privateGeneration.current += 1;
+    };
+  }, [currentUser?.uid, currentUser?.email, currentUser?.emailVerified, apiHost, isAuthorizedOperator, isUnlocked, activeSubView, selectedSite, wireFilterStehouwer, wireFilterHasHash, wireSearchDomain, wireLimit, wireFilterEngine, airFilterType, airFilterBand, airSearchHash, airLimit]);
 
   const isChef = selectedSite === 'thesimplechef';
 
@@ -724,6 +696,12 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         </div>
       </div>
 
+      {analyticsError && (
+        <div role="alert" style={{ padding: '12px', marginBottom: '18px', color: '#fca5a5', background: '#29161a', border: '1px solid #85404a', borderRadius: '8px' }}>
+          {analyticsError} Previous web traffic and security results have been cleared.
+        </div>
+      )}
+
       {/* Navigation Sub-Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
         <button
@@ -869,7 +847,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       )}
 
       {/* VIEW 1: WEBSITE TRAFFIC ANALYTICS (16-LAYER DEEP TELEMETRY SUITE) */}
-      {activeSubView === 'site_traffic' && (
+      {activeSubView === 'site_traffic' && !analyticsError && (
         <div>
           {/* Active Site Scope Banner */}
           <div style={{
@@ -1861,7 +1839,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       )}
 
       {/* VIEW 4: API & SECURITY TELEMETRY */}
-      {activeSubView === 'api_compute' && (
+      {activeSubView === 'api_compute' && !analyticsError && (
         <div>
           {/* Summary Stat Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>

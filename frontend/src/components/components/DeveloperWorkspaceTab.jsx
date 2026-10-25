@@ -68,8 +68,7 @@ export default function DeveloperWorkspaceTab() {
       const res = await fetch(`${BACKEND_URL}/v1/ide/reason-and-code`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
           user_prompt: text, 

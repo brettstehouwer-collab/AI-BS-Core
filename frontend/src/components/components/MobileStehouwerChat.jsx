@@ -1,4 +1,8 @@
+import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
+import { archiveChatAndClear } from '/src/utils/chatArchive.js';
+import CodingPreparationPanel from './CodingPreparationPanel';
 import React, { useState, useRef, useEffect } from 'react';
+import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -97,8 +101,7 @@ const MobileCodeBlock = React.memo(function MobileCodeBlock({ language, code, ba
         const res = await fetch(`${base}/api/executive/run`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer sk_aibs_dev_master_key_2026'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             command_type: cmdType,
@@ -912,10 +915,8 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const BACKEND_URL = (isMobileClient && (!rawUrl || rawUrl.includes('127.0.0.1') || rawUrl.includes('localhost')))
     ? 'https://api.brettstehouwer.live'
     : (rawUrl || 'https://api.brettstehouwer.live');
-  const chatMessages = useAppStore(state => state.chatMessages);
-  const setChatMessages = useAppStore(state => state.setChatMessages);
-  const footerInput = useAppStore(state => state.footerInput);
-  const setFooterInput = useAppStore(state => state.setFooterInput);
+  const storedChatMessages = useAppStore(state => state.chatMessages);
+  const storedFooterInput = useAppStore(state => state.footerInput);
   const selectedModel = useAppStore(state => state.selectedModel) || 'stehouwer_llm';
   const setSelectedModel = useAppStore(state => state.setSelectedModel);
 
@@ -927,6 +928,11 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const [autoSpeak, setAutoSpeak] = useState(false);
 
   const abortControllerRef = useRef(null);
+  const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
+  const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
+  const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
+  const setChatMessages = conversationMemory.setMessages;
+  const setFooterInput = conversationMemory.setDraft;
   const [genStartTime, setGenStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState('0.0');
 
@@ -970,7 +976,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
       for (const base of candidateBases) {
         try {
           const res = await fetch(`${base}/api/v1/hardware/gpu/telemetry`, {
-            headers: { 'Authorization': 'Bearer sk_aibs_dev_master_key_2026' },
+            headers: {  },
             signal: AbortSignal.timeout ? AbortSignal.timeout(2000) : undefined
           });
           if (res.ok) {
@@ -1172,76 +1178,42 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const [isSavingMemory, setIsSavingMemory] = useState(false);
   const [memoryToast, setMemoryToast] = useState('');
 
-  // Save conversation to Master Memory and clear chat
+  // Archive conversation to SQLite; clear only after confirmation
+  const memoryArchiveRef = useRef({ busy:false, pending:null });
   const handleSaveToMemoryAndClear = async () => {
-    if (!chatMessages || chatMessages.length === 0) {
+    if (!conversationMemory.viewReady) return;
+    if (memoryArchiveRef.current.busy) return;
+    if (!useAppStore.getState().chatMessages?.length) {
       setMemoryToast('Chat is already empty');
-      setTimeout(() => setMemoryToast(''), 2500);
       return;
     }
-
+    if (isLoading) {
+      setMemoryToast('Wait for the response to finish before archiving.');
+      return;
+    }
     setIsSavingMemory(true);
-    setMemoryToast('🧠 Ingesting conversation into Master Memory...');
-
+    setMemoryToast('Archiving conversation to the local SQLite vault...');
     try {
-      const payload = {
-        messages: chatMessages.map(m => ({
-          role: m.role,
-          content: m.content,
-          model: m.model || selectedModel,
-          timestamp: m.timestamp || Date.now()
-        })),
-        session_title: `Mobile Chat Session (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`,
-        source: 'mobile_chat_stehouwer'
-      };
-
-      const candidateBases = [
-        BACKEND_URL,
-        'https://api.brettstehouwer.live',
-        'http://localhost:8080',
-        'http://127.0.0.1:8080'
-      ].filter((u, i, arr) => u && arr.indexOf(u) === i);
-
-      let saved = false;
-      for (const base of candidateBases) {
-        try {
-          const res = await fetch(`${base}/api/memory/ingest-chat`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
-              'X-Client-ID': 'stehouwer_publishing'
-            },
-            body: JSON.stringify(payload),
-            signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
-          });
-          if (res && res.ok) {
-            saved = true;
-            break;
-          }
-        } catch (e) {
-          console.warn(`Memory ingest attempt on ${base} failed:`, e);
-        }
-      }
-
-      setChatMessages([]);
-      if (saved) {
-        setMemoryToast('💾 Ingested to Master Memory & Cleared!');
-      } else {
-        setMemoryToast('💾 Cleared & Saved locally');
-      }
+      const saved = await archiveChatAndClear({
+        state:memoryArchiveRef.current, backendUrl:BACKEND_URL,
+        getMessages:() => useAppStore.getState().chatMessages,
+        setMessages:setChatMessages,
+        isCurrentBackend:conversationMemory.isCurrent,
+        beforeClear:conversationMemory.beforeClear,
+        sessionTitle:'Mobile Chat Session', source:'mobile_chat_stehouwer',
+      });
+      setMemoryToast(saved.cleared ? 'Archived to SQLite & cleared.' : 'Archived snapshot; current chat kept.');
     } catch (err) {
-      console.warn('Memory ingest error:', err);
-      setChatMessages([]);
-      setMemoryToast('💾 Chat cleared');
+      setMemoryToast('Archive not confirmed; chat kept. ' + err.message);
     } finally {
       setIsSavingMemory(false);
-      setTimeout(() => setMemoryToast(''), 3500);
+      setTimeout(() => setMemoryToast(''), 5000);
     }
   };
 
   // Message Send Logic
   const handleSendMessage = async (textToSend = null) => {
+    if (!conversationMemory.viewReady) return;
     const rawText = textToSend !== null ? textToSend : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
 
@@ -1277,7 +1249,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
     try {
       const reqHeaders = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+        
         'X-Client-ID': 'stehouwer_mobile_sovereign'
       };
 
@@ -1321,6 +1293,11 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
               signal: controller.signal
             });
 
+            if ([401, 403].includes(streamRes.status)) {
+              const error = Object.assign(new Error(`AI-BS backend returned HTTP ${streamRes.status}. Sign in with an authorized administrator account.`), { chatAuthorizationFailure: true });
+              throw error;
+            }
+
             if (streamRes.ok && streamRes.body) {
               const reader = streamRes.body.getReader();
               const decoder = new TextDecoder();
@@ -1358,6 +1335,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
               }
             }
           } catch (streamErr) {
+            if (streamErr && typeof streamErr === 'object' && 'chatAuthorizationFailure' in streamErr && streamErr.chatAuthorizationFailure) throw streamErr;
             if (streamErr.name === 'AbortError') {
               console.log('Stream generation aborted by user.');
               const partialTrimmed = accumulated.replace(/^[\u200B\s]+/, '').trim();
@@ -1391,28 +1369,23 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           model: selectedModel
         });
 
+        const responseStartedAt = Date.now();
         const fallbackTimeout = isVisualOrMediaIntent ? 600000 : 300000;
         let res = null;
-        for (const targetBase of candidateBases) {
-          try {
-            res = await fetch(`${targetBase}/api/chat`, {
-              method: 'POST',
-              headers: reqHeaders,
-              body: payloadBody,
-              signal: controller.signal
-            });
-            if (res && res.ok) break;
-
-            res = await fetch(`${targetBase}/v1/chat/completions`, {
-              method: 'POST',
-              headers: reqHeaders,
-              body: payloadBody,
-              signal: controller.signal
-            });
-            if (res && res.ok) break;
-          } catch (e) {
-            if (e.name === 'AbortError') break;
-            console.warn(`Chat endpoint attempt on ${targetBase} failed:`, e);
+        candidateLoop: for (const targetBase of candidateBases) {
+          for (const endpoint of ['/api/chat', '/v1/chat/completions']) {
+            try {
+              res = await fetch(`${targetBase}${endpoint}`, {
+                method: 'POST', headers: reqHeaders, body: payloadBody, signal: controller.signal
+              });
+            } catch (error) {
+              if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') throw error;
+              throw new Error('The chat request was not acknowledged. It may have reached the host; no automatic retry was sent. Your prompt is retained.');
+            }
+            if (res?.ok) break candidateLoop;
+            if (!res || ![404, 405].includes(res.status)) {
+              await readChatHttpResponse(res);
+            }
           }
         }
 
@@ -1427,8 +1400,13 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                 body: JSON.stringify({ prompt: formattedPrompt, stream: false }),
                 signal: AbortSignal.timeout ? AbortSignal.timeout(fallbackTimeout) : undefined
               });
+              if ([401, 403].includes(fbRes?.status)) {
+                const error = Object.assign(new Error(`AI-BS backend returned HTTP ${fbRes.status}. Sign in with an authorized administrator account.`), { chatAuthorizationFailure: true });
+                throw error;
+              }
               if (fbRes && fbRes.ok) {
-                const fbText = await fbRes.text();
+                const fbData = await readChatHttpResponse(fbRes);
+                const fbText = chatResponseText(fbData);
                 if (fbText.trim()) {
                   setChatMessages(prev => [
                     ...prev,
@@ -1436,7 +1414,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                       role: 'assistant',
                       content: fbText,
                       model: 'Stehouwer LLM (Fallback)',
-                      execution_time_ms: 150
+                      execution_time_ms: typeof fbData.execution_time_ms === 'number' ? fbData.execution_time_ms : Date.now() - responseStartedAt
                     }
                   ]);
                   if (autoSpeak) speakText(fbText);
@@ -1444,6 +1422,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
                 }
               }
             } catch (fbErr) {
+              if (fbErr && typeof fbErr === 'object' && 'chatAuthorizationFailure' in fbErr && fbErr.chatAuthorizationFailure) throw fbErr;
               console.warn(`Secondary fallback attempt on ${targetBase} failed:`, fbErr);
             }
           }
@@ -1451,36 +1430,8 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           throw new Error(`Server returned HTTP ${res ? res.status : 'Connection Offline'}`);
         }
 
-        let data = {};
-        const rawTextRes = await res.text();
-        if (rawTextRes.trim().startsWith('data:')) {
-          let sseContent = '';
-          for (const line of rawTextRes.split('\n')) {
-            const trimmed = line.trim();
-            if (trimmed.startsWith('data:')) {
-              const jsonPart = trimmed.replace(/^data:\s*/, '');
-              if (jsonPart === '[DONE]') continue;
-              try {
-                const parsed = JSON.parse(jsonPart);
-                if (parsed.content) sseContent += parsed.content;
-                else if (parsed.response) sseContent += parsed.response;
-                else if (parsed.error) sseContent = `⚠️ ${parsed.error}`;
-              } catch (_) {
-                if (jsonPart) sseContent += jsonPart;
-              }
-            }
-          }
-          data = { response: sseContent };
-        } else {
-          try {
-            data = JSON.parse(rawTextRes);
-          } catch (_) {
-            data = { response: rawTextRes };
-          }
-        }
-
-        const rawContent = data.choices?.[0]?.message?.content || data.message || (typeof data.response === 'string' ? data.response : '');
-        const botResponse = rawContent.trim() !== '' ? rawContent : 'Operational.';
+        const data = await readChatHttpResponse(res);
+        const botResponse = chatResponseText(data);
 
         setChatMessages(prev => [
           ...prev,
@@ -1488,13 +1439,17 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             role: 'assistant',
             content: botResponse,
             model: data.model || selectedModel,
-            execution_time_ms: data.execution_time_ms || 120
+            execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : Date.now() - responseStartedAt
           }
         ]);
 
         if (autoSpeak) speakText(botResponse);
       }
     } catch (err) {
+      // Keep the submitted prompt available without replacing newer text typed during the request.
+      if (!(useAppStore.getState().footerInput || '').trim()) setFooterInput(rawText);
+      setAttachments(prev => prev.length ? prev : attachments);
+      setChatMessages(/** @param {typeof chatMessages} prev */ prev => prev.length && prev[prev.length - 1].role === 'assistant' && prev[prev.length - 1].content === '' ? prev.slice(0, -1) : prev);
       if (err.name === 'AbortError') {
         console.log('Stream generation aborted by user.');
       } else {
@@ -1526,14 +1481,18 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: '100vh',
-      width: '100vw',
+      height: '100%',
+      width: '100%',
+      flex: 1,
+      minHeight: 0,
       background: '#131314',
       color: '#e3e3e3',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       position: 'relative',
       overflow: 'hidden'
     }}>
+      <ConversationMemoryStatus memory={conversationMemory} />
+      <CodingPreparationPanel memory={conversationMemory} />
       {/* ── Hidden File Input ── */}
       <input
         ref={fileInputRef}
@@ -1548,11 +1507,11 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 16px',
-        paddingTop: 'max(12px, env(safe-area-inset-top))',
+        padding: '8px 12px',
         background: '#131314',
         borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-        zIndex: 50
+        zIndex: 50,
+        flexShrink: 0
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {/* Menu Drawer Button */}
@@ -1649,7 +1608,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           {/* Save to Memory & Clear Button */}
           <button
             onClick={handleSaveToMemoryAndClear}
-            disabled={isSavingMemory}
+            disabled={isSavingMemory || isLoading}
             style={{
               background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(99, 102, 241, 0.25))',
               border: '1px solid rgba(168, 85, 247, 0.45)',
@@ -1663,7 +1622,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
               fontSize: '0.74rem',
               fontWeight: '700'
             }}
-            title="Save conversation to Master Memory and clear chat"
+            title="Archive conversation to SQLite; clear only after confirmation"
           >
             <Sparkles size={13} color="#c084fc" />
             <span>{isSavingMemory ? 'Saving...' : 'Save & Clear'}</span>
@@ -1758,9 +1717,10 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
       {/* ── Main Chat Stream / Empty State ── */}
       <main style={{
         flex: 1,
+        minHeight: 0,
         overflowY: 'auto',
         overflowX: 'hidden',
-        padding: '16px',
+        padding: '12px 14px 6px',
         display: 'flex',
         flexDirection: 'column',
         WebkitOverflowScrolling: 'touch'
@@ -1807,12 +1767,12 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
             maxWidth: '520px',
             margin: '0 auto',
             textAlign: 'center',
-            padding: '20px 10px',
+            padding: '10px 10px 16px',
             width: '100%'
           }}>
             {/* God-Mode GPU Telemetry Banner */}
@@ -2078,11 +2038,12 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
 
       {/* ── Floating Capsule Bottom Input Bar ── */}
       <footer style={{
-        padding: '8px 16px',
-        paddingBottom: 'calc(var(--mobile-bottom-nav-height, 60px) + max(10px, env(safe-area-inset-bottom)))',
+        padding: '6px 12px',
+        paddingBottom: 'calc(var(--mobile-bottom-nav-height, 60px) + max(8px, env(safe-area-inset-bottom)))',
         background: 'linear-gradient(180deg, transparent 0%, #131314 40%)',
         position: 'relative',
-        zIndex: 40
+        zIndex: 40,
+        flexShrink: 0
       }}>
         <div style={{
           maxWidth: '740px',
@@ -2121,6 +2082,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
           {/* Text Input Area */}
           <textarea
             ref={textareaRef}
+            disabled={!conversationMemory.viewReady}
             value={footerInput}
             onChange={(e) => setFooterInput(e.target.value)}
             onKeyDown={(e) => {
@@ -2262,7 +2224,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
             {/* New Chat Action */}
             <button
               onClick={() => {
-                setChatMessages([]);
+                handleSaveToMemoryAndClear();
                 setDrawerOpen(false);
               }}
               style={{

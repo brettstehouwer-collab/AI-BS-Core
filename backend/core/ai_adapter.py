@@ -10,10 +10,13 @@ import chromadb
 import fitz
 import httpx
 
-from core.matrix_docs import init_project
+from core.adaptation_store import (
+    ADAPTATION_TASKS, OwnershipLost, reserve_adaptation, claim_job, check_owned,
+    update_job, retain_chunks, commit_chunk, load_all_states,
+    cancel_adaptation, reset_adaptation, get_all_adaptation_tasks,
+)
 
 # Track global progress in-memory (synced with disk)
-ADAPTATION_TASKS = {}
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST_EDRIVE", "http://127.0.0.1:11435")
 if not OLLAMA_HOST.startswith("http"):
     if OLLAMA_HOST == "0.0.0.0":
@@ -131,6 +134,10 @@ def _extract_text_from_file(file_path: Path) -> str:
         except Exception as e:
             print(f"[AI Adapter] RTF extraction failed: {e}")
 
+    # Binary formats must never silently turn into Latin-1 gibberish.
+    if suffix in {'.pdf', '.epub', '.docx', '.doc', '.fdx'}:
+        raise ValueError(f'No readable text could be extracted from {suffix}; retained source bytes are unchanged.')
+
     # 5. Plaintext fallback (.txt, .md, .markdown, .fountain, etc.)
     for enc in ["utf-8", "utf-8-sig", "latin-1", "cp1252"]:
         try:
@@ -225,44 +232,26 @@ def _get_adaptation_rules(adaptation_type: str, book_style: str = "") -> str:
 
 
 async def _chunk_text(text: str, max_chars: int = 6000):
-    """Chunking by lines to handle PDF extraction"""
-    paragraphs = text.split('\n')
-    chunks = []
-    current_chunk = ""
-    for p in paragraphs:
-        if len(current_chunk) + len(p) > max_chars:
-            if current_chunk.strip():
-                chunks.append(current_chunk.strip())
-            current_chunk = p + "\n"
+    """Keep source order and bound even documents without paragraph breaks."""
+    if max_chars < 1:
+        raise ValueError('Chunk size must be positive')
+    chunks, pending = [], ''
+    for line in text.splitlines(keepends=True):
+        while len(line) > max_chars:
+            if pending.strip():
+                chunks.append(pending.strip())
+            pending = ''
+            chunks.append(line[:max_chars])
+            line = line[max_chars:]
+        if len(pending) + len(line) > max_chars:
+            if pending.strip():
+                chunks.append(pending.strip())
+            pending = line
         else:
-            current_chunk += p + "\n"
-    if current_chunk.strip():
-        chunks.append(current_chunk.strip())
+            pending += line
+    if pending.strip():
+        chunks.append(pending.strip())
     return chunks
-
-
-def _save_state(project_dir: Path, project_name: str, state_dict: dict):
-    """Save the adaptation state to disk."""
-    state_file = project_dir / "adaptation_state.json"
-    with open(state_file, "w", encoding="utf-8") as f:
-        json.dump(state_dict, f, indent=2)
-    ADAPTATION_TASKS[project_name] = state_dict
-
-
-def load_all_states(projects_dir: Path = Path("C:/AI-BS/screenplay_projects")):
-    """Load all adaptation states from disk on startup."""
-    if not projects_dir.exists():
-        return
-    for proj_path in projects_dir.iterdir():
-        if proj_path.is_dir():
-            state_file = proj_path / "adaptation_state.json"
-            if state_file.exists():
-                try:
-                    with open(state_file, "r", encoding="utf-8") as f:
-                        state = json.load(f)
-                        ADAPTATION_TASKS[proj_path.name] = state
-                except OSError:
-                    pass
 
 
 async def _generate_embedding(text: str) -> list[float]:
@@ -282,208 +271,111 @@ async def _generate_embedding(text: str) -> list[float]:
     return []
 
 
-def cancel_adaptation(project_name: str) -> bool:
-    """Cancels an ongoing adaptation task for a project."""
-    if project_name in ADAPTATION_TASKS:
-        ADAPTATION_TASKS[project_name]["status"] = "canceled"
-        ADAPTATION_TASKS[project_name]["error"] = "Adaptation canceled by user"
-    project_dir = Path(f"C:/AI-BS/screenplay_projects/{project_name}")
-    state_file = project_dir / "adaptation_state.json"
-    if state_file.exists():
-        try:
-            with open(state_file, "r", encoding="utf-8") as f:
-                s = json.load(f)
-            s["status"] = "canceled"
-            s["error"] = "Adaptation canceled by user"
-            with open(state_file, "w", encoding="utf-8") as f:
-                json.dump(s, f, indent=2)
-        except Exception:
-            pass
-    return True
-
-def reset_adaptation(project_name: str) -> bool:
-    """Clears in-memory and on-disk state so a fresh adaptation can start."""
-    if project_name in ADAPTATION_TASKS:
-        del ADAPTATION_TASKS[project_name]
-    project_dir = Path(f"C:/AI-BS/screenplay_projects/{project_name}")
-    state_file = project_dir / "adaptation_state.json"
-    if state_file.exists():
-        try:
-            state_file.unlink()
-        except Exception:
-            pass
-    return True
-
-def get_all_adaptation_tasks():
-    """Returns a dict of all known adaptation tasks from memory and disk."""
-    tasks = dict(ADAPTATION_TASKS)
-    projects_dir = Path("C:/AI-BS/screenplay_projects")
-    if projects_dir.exists():
-        for p in projects_dir.iterdir():
-            if p.is_dir() and p.name not in tasks:
-                sf = p / "adaptation_state.json"
-                if sf.exists():
-                    try:
-                        with open(sf, "r", encoding="utf-8") as f:
-                            tasks[p.name] = json.load(f)
-                    except Exception:
-                        pass
-    return tasks
+async def _infer_chunk(prompt, project_name, job_id, worker_id, previous_summary):
+    for target_model in FALLBACK_MODELS:
+        for attempt in range(3):
+            check_owned(project_name, job_id, worker_id)
+            try:
+                async with httpx.AsyncClient(timeout=httpx.Timeout(600.0, connect=10.0)) as client:
+                    response = await client.post(
+                        f"{OLLAMA_HOST}/api/chat",
+                        json={"model": target_model, "messages": [{"role": "user", "content": prompt}],
+                              "stream": False, "options": {"temperature": 0.3, "num_predict": 2500, "num_ctx": 8192}})
+                check_owned(project_name, job_id, worker_id)
+                if response.status_code == 404:
+                    break
+                if response.status_code != 200:
+                    raise RuntimeError(f"Model returned HTTP {response.status_code}")
+                candidate = response.json().get('message', {}).get('content', '').strip()
+                if _is_model_refusal(candidate):
+                    break
+                candidate = re.sub(r"^```(?:fountain|markdown)?\s*\n", "", candidate, flags=re.IGNORECASE)
+                candidate = re.sub(r"\n```\s*$", "", candidate)
+                summary = previous_summary
+                if '<SUMMARY>' in candidate and '</SUMMARY>' in candidate:
+                    start, end = candidate.rfind('<SUMMARY>'), candidate.rfind('</SUMMARY>')
+                    if end > start:
+                        proposed = candidate[start + 9:end].strip()
+                        if not _is_model_refusal(proposed):
+                            summary = proposed
+                        candidate = candidate[:start].strip()
+                if not candidate.strip() or _is_model_refusal(candidate):
+                    break
+                return candidate, summary
+            except (httpx.RequestError, RuntimeError, ValueError):
+                check_owned(project_name, job_id, worker_id)
+                if attempt < 2:
+                    await asyncio.sleep(5)
+                    check_owned(project_name, job_id, worker_id)
+    raise RuntimeError('All configured models failed to produce an adaptation.')
 
 
-async def adapt_book_to_screenplay(
-        file_path: Path,
-        project_name: str,
-        adaptation_type: str = "Feature Film (Spec Script)",
-        book_style: str = "Fiction Novel / Narrative"):
-    """Background task to process PDF/documents and write to project."""
-
-    # Initialize project
-    project = init_project(project_name)
-    state_file = project.project_dir / "adaptation_state.json"
-    chunks_file = project.project_dir / "chunks.json"
-
-    # Check if we're resuming
-    is_resuming = False
-    state = {
-        "status": "processing",
-        "progress": 0,
-        "current_chunk": 0,
-        "total_chunks": 0,
-        "previous_summary": "This is the very beginning of the story.",
-        "adaptation_type": adaptation_type,
-        "book_style": book_style
-    }
-
-    if state_file.exists() and chunks_file.exists():
-        with open(state_file, "r", encoding="utf-8") as f:
-            saved_state = json.load(f)
-            if saved_state.get("status") in ["processing", "error"]:
-                state = saved_state
-                state["status"] = "processing"
-                if "error" in state:
-                    del state["error"]
-                is_resuming = True
-
-    _save_state(project.project_dir, project_name, state)
-
+async def adapt_book_to_screenplay(file_path: Path, project_name: str,
+        adaptation_type: str = 'Feature Film (Spec Script)',
+        book_style: str = 'Fiction Novel / Narrative', job_id: str = None):
+    """Process only a durably reserved new-project job; legacy calls cannot write."""
+    if not job_id:
+        return
     try:
-        chunks = []
-        if is_resuming:
-            # Load chunks from disk
-            with open(chunks_file, "r", encoding="utf-8") as f:
-                chunks = json.load(f)
-        else:
-            # 1. Extract Text from any supported format (.pdf, .docx, .epub, .txt, .rtf, .md, .fdx)
-            full_text = _extract_text_from_file(file_path)
-            if not full_text or not full_text.strip():
-                raise ValueError(f"Could not extract readable text from {file_path.name}")
+        directory, source, state = claim_job(project_name, job_id)
+    except OwnershipLost:
+        return
+    worker_id = state['worker_id']
+    try:
+        # The durable source path and options are authoritative, never caller paths.
+        adaptation_type, book_style = state['adaptation_type'], state['book_style']
+        full_text = await asyncio.to_thread(_extract_text_from_file, source)
+        check_owned(project_name, job_id, worker_id)
+        if not full_text or not full_text.strip():
+            raise ValueError(f'Could not extract readable text from {source.suffix} source')
+        chunks = await _chunk_text(full_text)
+        check_owned(project_name, job_id, worker_id)
+        retain_chunks(project_name, job_id, worker_id, chunks)
 
-            # 2. Chunk text
-            chunks = await _chunk_text(full_text)
+        # A unique collection retains prior projects/jobs and never deletes a vault.
+        collection = None
+        try:
+            import hashlib
+            identity = hashlib.sha256((str(directory.resolve()) + job_id).encode()).hexdigest()[:40]
+            client = chromadb.HttpClient(host='127.0.0.1', port=8001)
+            collection = client.get_or_create_collection(name='screenplay_' + identity)
+            for index, chunk in enumerate(chunks):
+                check_owned(project_name, job_id, worker_id)
+                embedding = await _generate_embedding(chunk)
+                check_owned(project_name, job_id, worker_id)
+                if not embedding:
+                    raise RuntimeError('Embedding service returned no vector; no substitute vector was stored.')
+                collection.add(ids=[f'chunk_{index}'], embeddings=[embedding],
+                    documents=[chunk], metadatas=[{'chunk_index': index, 'job_id': job_id}])
+            update_job(project_name, job_id, worker_id, rag_status='ready')
+        except OwnershipLost:
+            return
+        except Exception as error:
+            collection = None
+            update_job(project_name, job_id, worker_id, rag_status='unavailable', rag_error=str(error))
 
-            # Save chunks to disk
-            with open(chunks_file, "w", encoding="utf-8") as f:
-                json.dump(chunks, f)
-
-            # --- PHASE 4.7 RAG Ingestion ---
-            try:
-                chroma_client = chromadb.HttpClient(
-                    host="127.0.0.1", port=8001
-                )
-                safe_name = "".join([c for c in project_name if c.isalnum()])
-                collection_name = f"screenplay_{safe_name.lower()}"
+        previous_summary = state['previous_summary']
+        for i, chunk in enumerate(chunks):
+            check_owned(project_name, job_id, worker_id)
+            retrieved_memory = ''
+            if collection is not None and i > 0:
                 try:
-                    chroma_client.delete_collection(name=collection_name)
-                except Exception:
-                    pass
-                collection = chroma_client.create_collection(
-                    name=collection_name
-                )
-
-                chunk_embeddings = []
-                for chunk in chunks:
-                    emb = await _generate_embedding(chunk)
-                    chunk_embeddings.append(emb if emb else [0.0] * 768)
-
-                collection.add(
-                    ids=[f"chunk_{idx}" for idx in range(len(chunks))],
-                    embeddings=chunk_embeddings,
-                    documents=chunks,
-                    metadatas=[{"chunk_index": idx} for idx in range(len(chunks))]
-                )
-                print(
-                    f"[AI Adapter] Ingested {len(chunks)} chunks into ChromaDB."
-                )
-            except Exception as e:
-                print(f"[AI Adapter] ChromaDB ingestion skipped/failed: {e}")
-
-            # Ensure file starts clean
-            project.write_screenplay(f"Title: {project_name}\n\n")
-
-        total_chunks = len(chunks)
-        state["total_chunks"] = total_chunks
-        _save_state(project.project_dir, project_name, state)
-
-        start_idx = int(state.get("current_chunk", 0))
-        previous_summary = state.get(
-            "previous_summary", "This is the very beginning of the story."
-        )
-
-        # 3. Process each chunk
-        for i in range(start_idx, total_chunks):
-            # Check for user cancellation
-            if ADAPTATION_TASKS.get(project_name, {}).get("status") == "canceled":
-                print(f"[AI Adapter] Adaptation for {project_name} was canceled.")
-                return
-
-            chunk = chunks[i]
-
-            state["current_chunk"] = i
-            state["progress"] = int((i / total_chunks) * 100)
-            _save_state(project.project_dir, project_name, state)
-
-            # --- PHASE 4.7 RAG Retrieval ---
-            retrieved_memory = ""
-            try:
-                chroma_client = chromadb.HttpClient(
-                    host="127.0.0.1", port=8001
-                )
-                safe_name = "".join([c for c in project_name if c.isalnum()])
-                collection_name = f"screenplay_{safe_name.lower()}"
-                collection = chroma_client.get_or_create_collection(
-                    name=collection_name
-                )
-
-                current_vector = await _generate_embedding(chunk)
-                if current_vector:
-                    results = collection.query(
-                        query_embeddings=[current_vector],
-                        n_results=3,
-                        where={"chunk_index": {"$lt": i}}  # Only PAST chunks
-                    )
-                    if results and results.get('documents'):
-                        if results['documents'][0]:
-                            retrieved_memory = "\n\n".join(
-                                results['documents'][0]
-                            )
-                            print("[AI Adapter] Retrieved past context.")
-            except httpx.RequestError as e:
-                print(f"[AI Adapter] ChromaDB Retrieval offline: {e}")
-
-            if retrieved_memory:
-                safe_context = (
-                    f"High-Speed SSD Memory (Relevant past chunks):\n"
-                    f"{retrieved_memory}\n\nImmediate Rolling Summary:\n"
-                    f"{previous_summary}"
-                )
-            else:
-                safe_context = previous_summary
-
-            # Pass chunk directly as Ollama natively supports UTF-8
+                    vector = await _generate_embedding(chunk)
+                    check_owned(project_name, job_id, worker_id)
+                    if vector:
+                        results = collection.query(query_embeddings=[vector], n_results=min(3, i),
+                            where={'chunk_index': {'$lt': i}})
+                        documents = results.get('documents') or []
+                        if documents and documents[0]:
+                            retrieved_memory = '\n\n'.join(documents[0])
+                except OwnershipLost:
+                    return
+                except Exception as error:
+                    update_job(project_name, job_id, worker_id, rag_status='retrieval_unavailable', rag_error=str(error))
+            safe_context = (f'Relevant past source segments:\n{retrieved_memory}\n\n'
+                            f'Immediate Rolling Summary:\n{previous_summary}') if retrieved_memory else previous_summary
             safe_chunk = chunk
             specific_rules = _get_adaptation_rules(adaptation_type, book_style)
-
             prompt = f"""EDITORIAL DIRECTIVE:
 You are an expert Hollywood dramatic screenwriter and adaptation engine. You are adapting an authored personal memoir and biographical true story into a professional screenplay format for: {adaptation_type}.
 This is creative biographical storytelling and dramatic film/television writing.
@@ -507,127 +399,21 @@ Previous Plot Context:
 
 New Segment to Adapt:
 {safe_chunk}"""
-
-            max_retries = 3
-            success = False
-            adapted_text = ""
-            new_summary = ""
-            for target_model in FALLBACK_MODELS:
-                if success:
-                    break
-                for attempt in range(max_retries):
-                    try:
-                        async with httpx.AsyncClient(timeout=None) as client:
-                            response = await client.post(
-                                f"{OLLAMA_HOST}/api/chat",
-                                json={
-                                    "model": target_model,
-                                    "messages": [
-                                        {"role": "user", "content": prompt}
-                                    ],
-                                    "stream": False,
-                                    "options": {
-                                        "temperature": 0.3,
-                                        "num_predict": 2500,
-                                        "num_ctx": 8192
-                                    }
-                                }
-                            )
-
-                            if response.status_code == 404:
-                                print(
-                                    f"[AI Adapter] Model "
-                                    f"'{target_model}' not found in Ollama pool."
-                                )
-                                break  # Break retry loop and try next model
-
-                            if response.status_code != 200:
-                                raise RuntimeError(
-                                    f"HTTP {response.status_code}"
-                                )
-
-                            result = response.json()
-                            candidate_text = result.get("message", {}).get("content", "").strip()
-
-                            # Refusal check: NEVER allow canned LLM refusal boilerplate to enter the screenplay
-                            if _is_model_refusal(candidate_text):
-                                print(f"[AI Adapter] Detected canned refusal on model '{target_model}' for chunk {i+1}. Attempting next model...")
-                                break
-
-                            adapted_text = candidate_text
-
-                            # Robust Markdown Stripper
-                            adapted_text = re.sub(
-                                r"^```(?:fountain|markdown)?\s*\n",
-                                "", adapted_text, flags=re.IGNORECASE
-                            )
-                            adapted_text = re.sub(
-                                r"\n```\s*$", "", adapted_text
-                            )
-
-                            # Extract summary
-                            if ("<SUMMARY>" in adapted_text and
-                                    "</SUMMARY>" in adapted_text):
-                                start_idx = adapted_text.rfind("<SUMMARY>")
-                                end_idx = adapted_text.rfind("</SUMMARY>")
-                                new_summary = adapted_text[
-                                    start_idx + 9:end_idx
-                                ].strip()
-                                adapted_text = adapted_text[:start_idx].strip()
-                            else:
-                                # Fallback: keep previous valid summary rather than raw text
-                                new_summary = previous_summary
-
-                            # Secondary validation on extracted summary
-                            if _is_model_refusal(new_summary):
-                                new_summary = previous_summary
-
-                            success = True
-                            break  # Success, break out of retry loop
-                    except (httpx.RequestError, RuntimeError, ValueError) as e:
-                        if attempt == max_retries - 1:
-                            err_msg = (
-                                f"[AI Adapter Error] Inference failed for "
-                                f"{target_model} after 3 attempts: {str(e)}"
-                            )
-                            print(err_msg)
-                            with open(
-                                "C:/AI-BS/ai_error.log",
-                                "a",
-                                encoding="utf-8"
-                            ) as err_log:
-                                err_log.write(err_msg + "\n")
-                        else:
-                            print(
-                                f"[AI Adapter] Chunk {i + 1} "
-                                f"with {target_model} failed "
-                                f"({e}), retrying in 5s..."
-                            )
-                            await asyncio.sleep(5)
-
-            if not success:
-                raise RuntimeError("All fallback models and retries failed.")
-
-            # Append to current screenplay
-            current_script = project.read_screenplay()
-            new_script = current_script + "\n\n" + adapted_text
-            project.write_screenplay(new_script)
-
-            # Save context for next chunk
+            adapted_text, new_summary = await _infer_chunk(prompt, project_name, job_id, worker_id, previous_summary)
+            check_owned(project_name, job_id, worker_id)
+            commit_chunk(project_name, job_id, worker_id, i, adapted_text, new_summary)
             previous_summary = new_summary
-
-            # Update state after chunk success
-            state["current_chunk"] = i + 1
-            state["previous_summary"] = previous_summary
-            state["progress"] = int(((i + 1) / total_chunks) * 100)
-            _save_state(project.project_dir, project_name, state)
-
-        state["progress"] = 100
-        state["status"] = "complete"
-        _save_state(project.project_dir, project_name, state)
-
-    except (httpx.RequestError, RuntimeError, OSError, ValueError) as e:
-        state["status"] = "error"
-        state["error"] = str(e)
-        _save_state(project.project_dir, project_name, state)
-        print(f"[AI Adapter Error] {e}")
+        update_job(project_name, job_id, worker_id, progress=100, status='complete')
+    except OwnershipLost:
+        return
+    except asyncio.CancelledError:
+        try:
+            update_job(project_name, job_id, worker_id, status='interrupted', error='Worker stopped; retained files preserved.')
+        except OwnershipLost:
+            pass
+        raise
+    except Exception as error:
+        try:
+            update_job(project_name, job_id, worker_id, status='error', error=str(error))
+        except OwnershipLost:
+            pass

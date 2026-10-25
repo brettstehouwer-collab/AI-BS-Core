@@ -66,23 +66,27 @@ export function useBackendHealth(intervalMs = 10000) {
         }
       }
 
-      // 1. Try Localhost FastAPI Backend (for PC desktop dev)
+      // 1. Confirm the configured local core, then the optional Go gateway.
       if (isLocal) {
-        for (const path of ['/v1/health', '/api/health', '/health']) {
-          try {
-            const localRes = await fetch(`http://127.0.0.1:8000${path}`, { signal: AbortSignal.timeout(1500) });
-            if (isMounted && localRes.ok) {
-              markOnline('http://127.0.0.1:8000');
-              return;
+        const localTargets = [...new Set([
+          getApiBase(), 'http://127.0.0.1:8080', 'http://127.0.0.1:8000'
+        ])].filter(target => ['http://127.0.0.1:8080', 'http://127.0.0.1:8000'].includes(target));
+        for (const target of localTargets) {
+          for (const path of ['/v1/health', '/api/health', '/health']) {
+            if (!isMounted) return;
+            try {
+              const localRes = await fetch(`${target}${path}`, { signal: AbortSignal.timeout(1500) });
+              if (isMounted && localRes.ok) {
+                markOnline(target);
+                return;
+              }
+            } catch (e) {
+              // Keep the selected origin until another local health check succeeds.
             }
-          } catch (e) {
-            // Localhost unavailable
           }
         }
-        if (isMounted) {
-          markOnline('http://127.0.0.1:8000');
-          return;
-        }
+        if (isMounted) setBackendStatus('offline');
+        return;
       }
 
       // 1.5. Try Hostname IP (Tailscale/LAN)

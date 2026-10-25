@@ -3,6 +3,8 @@ import {
   collection, 
   doc, 
   setDoc, 
+  getDoc,
+  updateDoc,
   addDoc, 
   query, 
   where, 
@@ -14,41 +16,94 @@ import {
 
 export const KNOWN_TEAM_MEMBERS = [
   {
-    email: 'brettstehouwer@gmail.com',
+    id: 'brett',
+    email: 'brett@stehouwerproductions.com',
+    aliases: [
+      'brett@stehouwerproductions.com',
+      'brett@stehouwerpublishing.com',
+      'brettstehouwer@gmail.com',
+      'footballstar0325@gmail.com',
+      'footballsyat0325@gmail.com'
+    ],
     name: 'Brett Stehouwer',
     role: 'Founder & CTO',
     avatar: '👑',
     color: '#38bdf8'
   },
   {
+    id: 'julie',
     email: 'stehouwerjulie@gmail.com',
+    aliases: [
+      'stehouwerjulie@gmail.com',
+      'julie.a.stehouwer@gmail.com',
+      'julieannstehouwer@gmail.com',
+      'juliestehouwer@gmail.com',
+      'stehouwer.julie@gmail.com',
+      'julie@stehouwerpublishing.com',
+      'stehouwer@gmail.com'
+    ],
     name: 'Julie Stehouwer (Mom)',
     role: 'Executive Partner',
     avatar: '🌸',
     color: '#ec4899'
   },
   {
+    id: 'sean',
     email: 'theseandaley@gmail.com',
+    aliases: [
+      'theseandaley@gmail.com',
+      'sean@stehouwerpublishing.com'
+    ],
     name: 'Sean Daley',
     role: 'Production & Creative Partner',
     avatar: '🎬',
     color: '#a855f7'
   },
   {
-    email: 'footballstar0325@gmail.com',
-    name: 'Brett Stehouwer (Mobile)',
-    role: 'Lead Administrator',
-    avatar: '⚡',
-    color: '#38bdf8'
+    id: 'anna',
+    email: 'rottierannajoy@gmail.com',
+    aliases: [
+      'rottierannajoy@gmail.com'
+    ],
+    name: 'Anna Joy Rottier',
+    role: 'Executive Partner & Strategy',
+    avatar: '✨',
+    color: '#10b981'
+  },
+  {
+    id: 'keith',
+    email: 'keith@evolution6media.com',
+    aliases: [
+      'keith@evolution6media.com'
+    ],
+    name: 'Keith (Evolution 6 Media)',
+    role: 'Media & Production Partner',
+    avatar: '🎥',
+    color: '#f59e0b'
+  },
+  {
+    id: 'devin',
+    email: 'devin@feexpress.com',
+    aliases: [
+      'devin@feexpress.com',
+      'devin.feexpress@gmail.com'
+    ],
+    name: 'Devin (FE Express Logistics)',
+    role: 'Logistics Dispatcher',
+    avatar: '🚚',
+    color: '#06b6d4'
   }
 ];
 
 export const getFriendlyUserName = (email = '') => {
   const lower = email.toLowerCase().trim();
   if (lower.includes('julie')) return 'Julie Stehouwer (Mom)';
-  if (lower.includes('theseandaley')) return 'Sean Daley';
-  if (lower.includes('brett') || lower.includes('footballstar')) return 'Brett Stehouwer';
-  const found = KNOWN_TEAM_MEMBERS.find(m => m.email.toLowerCase() === lower);
+  if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return 'Sean Daley';
+  if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return 'Brett Stehouwer';
+  if (lower.includes('rottierannajoy')) return 'Anna Joy Rottier';
+  if (lower.includes('evolution6media') || lower.includes('keith@')) return 'Keith (Evolution 6 Media)';
+  if (lower.includes('devin') || lower.includes('feexpress')) return 'Devin (FE Express)';
+  const found = KNOWN_TEAM_MEMBERS.find(m => m.aliases && m.aliases.some(a => a.toLowerCase() === lower));
   if (found) return found.name;
   if (!email) return 'Admin User';
   return email.split('@')[0];
@@ -57,16 +112,22 @@ export const getFriendlyUserName = (email = '') => {
 export const getFriendlyUserRole = (email = '') => {
   const lower = email.toLowerCase().trim();
   if (lower.includes('julie')) return 'Executive Partner';
-  if (lower.includes('theseandaley')) return 'Production Partner';
-  if (lower.includes('brett') || lower.includes('footballstar')) return 'Founder & CTO';
+  if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return 'Production & Creative Partner';
+  if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return 'Founder & CTO';
+  if (lower.includes('rottierannajoy')) return 'Executive Partner & Strategy';
+  if (lower.includes('evolution6media') || lower.includes('keith@')) return 'Media & Production Partner';
+  if (lower.includes('devin') || lower.includes('feexpress')) return 'Logistics Dispatcher';
   return 'Stehouwer Publishing Admin';
 };
 
 export const getFriendlyUserAvatar = (email = '') => {
   const lower = email.toLowerCase().trim();
   if (lower.includes('julie')) return '🌸';
-  if (lower.includes('theseandaley')) return '🎬';
-  if (lower.includes('brett') || lower.includes('footballstar')) return '👑';
+  if (lower.includes('theseandaley') || lower.includes('sean@stehouwer')) return '🎬';
+  if (lower.includes('brett') || lower.includes('footballstar') || lower.includes('footballsyat')) return '👑';
+  if (lower.includes('rottierannajoy')) return '✨';
+  if (lower.includes('evolution6media') || lower.includes('keith@')) return '🎥';
+  if (lower.includes('devin') || lower.includes('feexpress')) return '🚚';
   return '👤';
 };
 
@@ -152,12 +213,40 @@ export const subscribeToPresence = (callback) => {
     });
 
     const combined = KNOWN_TEAM_MEMBERS.map(member => {
-      const liveData = presenceMap[member.email.toLowerCase()];
+      const activeDevices = [];
+      let overallStatus = 'offline';
+      let latestTab = 'Offline';
+      let latestSeen = 0;
+
+      for (const alias of (member.aliases || [member.email])) {
+        const live = presenceMap[alias.toLowerCase()];
+        if (live) {
+          if (live.status === 'online') {
+            overallStatus = 'online';
+            const deviceName = alias.includes('footballstar') ? 'Mobile' : (alias.includes('gmail') ? 'Studio PC' : 'Production Web');
+            activeDevices.push({
+              device: deviceName,
+              tab: live.currentTab || 'Active',
+              email: alias
+            });
+            if (live.lastSeen > latestSeen) {
+              latestSeen = live.lastSeen;
+              latestTab = live.currentTab;
+            }
+          } else if (live.status === 'away' && overallStatus !== 'online') {
+            overallStatus = 'away';
+          }
+        }
+      }
+
       return {
         ...member,
-        ...(liveData || {}),
-        status: liveData?.status || 'offline',
-        currentTab: liveData?.currentTab || 'Offline'
+        status: overallStatus,
+        currentTab: latestTab,
+        activeDevices: activeDevices,
+        deviceBadge: activeDevices.length > 0 
+          ? activeDevices.map(d => `${d.device === 'Mobile' ? '📱' : '🖥️'} ${d.device} (${d.tab})`).join(' · ')
+          : null
       };
     });
 
@@ -180,7 +269,8 @@ export const sendTeamMessage = async ({
   senderEmail,
   senderName,
   text,
-  toolLink = null
+  toolLink = null,
+  senderDevice = 'Desktop'
 }) => {
   if (!db || !text?.trim()) return;
 
@@ -191,14 +281,42 @@ export const sendTeamMessage = async ({
       senderEmail: senderEmail?.toLowerCase() || 'admin@stehouwer.live',
       senderName: senderName || getFriendlyUserName(senderEmail),
       senderAvatar: getFriendlyUserAvatar(senderEmail),
+      senderRole: getFriendlyUserRole(senderEmail),
+      senderDevice: senderDevice || 'Desktop',
       text: text.trim(),
       toolLink: toolLink || null,
+      reactions: {},
       timestamp: Date.now(),
       createdAt: serverTimestamp()
     });
   } catch (err) {
     console.error('[Chat] Failed to send message:', err);
     throw err;
+  }
+};
+
+export const toggleMessageReaction = async (messageId, emoji, userEmail) => {
+  if (!db || !messageId || !emoji || !userEmail) return;
+  try {
+    const msgRef = doc(db, 'team_messages', messageId);
+    const msgSnap = await getDoc(msgRef);
+    if (!msgSnap.exists()) return;
+    const currentReactions = msgSnap.data().reactions || {};
+    const email = userEmail.toLowerCase();
+    const userList = currentReactions[emoji] || [];
+    let updatedList;
+    if (userList.includes(email)) {
+      updatedList = userList.filter(e => e !== email);
+    } else {
+      updatedList = [...userList, email];
+    }
+    const updatedReactions = { ...currentReactions, [emoji]: updatedList };
+    if (updatedList.length === 0) {
+      delete updatedReactions[emoji];
+    }
+    await updateDoc(msgRef, { reactions: updatedReactions });
+  } catch (err) {
+    console.warn('[Chat] Failed to toggle reaction:', err.message);
   }
 };
 

@@ -67,6 +67,7 @@ class FountainParser:
 
     def parse(self):
         """Main parsing loop — consume lines and emit structured elements"""
+        self.elements = []  # Re-parsing must replace the previous result, not append duplicates.
         i = 0
         while i < len(self.lines):
             line = self.lines[i]
@@ -560,7 +561,7 @@ class ScreenplayProject:
     def write_screenplay(self, content: str) -> bool:
         """Write screenplay content and auto-commit"""
         try:
-            self.screenplay_file.write_text(content, encoding='utf-8')
+            self.screenplay_file.write_bytes(content.encode('utf-8'))
 
             # Generate and save FDX automatically
             parser = FountainParser(content)
@@ -571,7 +572,7 @@ class ScreenplayProject:
                     'author', 'Unknown'))
 
             fdx_file = self.project_dir / f"{self.project_dir.name}.fdx"
-            fdx_file.write_text(fdx_content, encoding='utf-8')
+            fdx_file.write_bytes(fdx_content.encode('utf-8'))
 
             # Auto-commit with timestamp
             subprocess.run(

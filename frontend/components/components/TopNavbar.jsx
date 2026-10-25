@@ -208,20 +208,24 @@ export default function TopNavbar({
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* 📱 NATIVE SMARTPHONE HEADER BAR (<= 768px) */}
       {isMobile ? (
-        <div style={{
-          height: '52px',
+        <div className="mobile-top-navbar" style={{
+          minHeight: '52px',
+          height: 'auto',
           background: 'rgba(13, 17, 23, 0.98)',
           borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
           display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'nowrap',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '6px 12px',
-          paddingTop: 'max(env(safe-area-inset-top, 0px), 6px)',
+          paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)',
           color: '#c9d1d9',
           userSelect: 'none',
           zIndex: 1000,
           position: 'relative',
-          backdropFilter: 'blur(16px)'
+          backdropFilter: 'blur(16px)',
+          boxSizing: 'border-box'
         }}>
           {/* Left: Brand + Status */}
           <div
@@ -292,6 +296,31 @@ export default function TopNavbar({
               }}
             >
               <span>🔍</span>
+            </button>
+
+            <button
+              onClick={() => setShowChatModal(true)}
+              title="Open Stehouwer Team Messenger"
+              className="mobile-messenger-trigger-btn"
+              style={{
+                background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)',
+                border: '1px solid #38bdf8',
+                color: '#ffffff',
+                borderRadius: '6px',
+                padding: '6px 9px',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <span>💬</span>
+              {onlineCount > 0 && (
+                <span style={{ fontSize: '0.62rem', background: '#10b981', color: '#fff', borderRadius: '8px', padding: '1px 5px', fontWeight: 800 }}>
+                  {onlineCount}
+                </span>
+              )}
             </button>
 
             <button

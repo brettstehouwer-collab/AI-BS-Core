@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ScreenwritingTab.css';
 
-export default function CharacterVaultModal({ backendUrl, onClose, onCharactersUpdate }) {
+export default function CharacterVaultModal({ backendUrl, projectName, onClose, onCharactersUpdate }) {
   const [characters, setCharacters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingChar, setEditingChar] = useState(null);
+  const [error, setError] = useState('');
+  const projectNameRef = useRef(projectName);
+  projectNameRef.current = projectName;
+  const mountedRef = useRef(true);
+  const requestSequenceRef = useRef(0);
 
   // Form State
   const [name, setName] = useState('');
@@ -19,33 +24,50 @@ export default function CharacterVaultModal({ backendUrl, onClose, onCharactersU
   const [speakingStyle, setSpeakingStyle] = useState('');
 
   const loadCharacters = async () => {
+    const project = projectName;
+    if (!project || !mountedRef.current) return;
+    const sequence = ++requestSequenceRef.current;
+    const isCurrent = () => mountedRef.current && projectNameRef.current === project && sequence === requestSequenceRef.current;
     setIsLoading(true);
+    setError('');
     try {
-      const res = await fetch(`${backendUrl}/api/screenwriting/projects/characters`);
+      const res = await fetch(`${backendUrl}/api/screenwriting/projects/characters?project_name=${encodeURIComponent(project)}`);
       const data = await res.json();
+      if (!isCurrent()) return;
+      if (!res.ok) throw new Error(data.detail || 'Could not load the character vault.');
       if (data.status === 'success') {
         setCharacters(data.characters || []);
-        if (onCharactersUpdate) onCharactersUpdate(data.characters);
+        if (onCharactersUpdate) onCharactersUpdate(data.characters, project);
       }
     } catch (err) {
       console.error('Failed to load characters', err);
+      if (isCurrent()) setError(err.message);
     } finally {
-      setIsLoading(false);
+      if (isCurrent()) setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    mountedRef.current = true;
+    setCharacters([]);
+    resetForm();
     loadCharacters();
-  }, []);
+    return () => { mountedRef.current = false; requestSequenceRef.current += 1; };
+  }, [projectName, backendUrl]);
 
   const handleSave = async () => {
-    if (!name.trim()) return;
+    const project = projectName;
+    if (!name.trim() || !project || !mountedRef.current || isLoading) return;
+    const sequence = ++requestSequenceRef.current;
+    const isCurrent = () => mountedRef.current && projectNameRef.current === project && sequence === requestSequenceRef.current;
     setIsLoading(true);
+    setError('');
     try {
       const res = await fetch(`${backendUrl}/api/screenwriting/projects/characters`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
+          project_name: project,
           name, 
           bio, 
           speaking_style: speakingStyle,
@@ -59,35 +81,46 @@ export default function CharacterVaultModal({ backendUrl, onClose, onCharactersU
         })
       });
       const data = await res.json();
+      if (!isCurrent()) return;
+      if (!res.ok) throw new Error(data.detail || 'Could not save the character.');
       if (data.status === 'success') {
         setCharacters(data.characters);
-        if (onCharactersUpdate) onCharactersUpdate(data.characters);
+        if (onCharactersUpdate) onCharactersUpdate(data.characters, project);
         resetForm();
       }
     } catch (err) {
       console.error('Failed to save character', err);
+      if (isCurrent()) setError(err.message);
     } finally {
-      setIsLoading(false);
+      if (isCurrent()) setIsLoading(false);
     }
   };
 
   const handleDelete = async (charName) => {
+    const project = projectName;
+    if (!project || !mountedRef.current || isLoading) return;
     if (!window.confirm(`Delete character ${charName}?`)) return;
+    const sequence = ++requestSequenceRef.current;
+    const isCurrent = () => mountedRef.current && projectNameRef.current === project && sequence === requestSequenceRef.current;
     setIsLoading(true);
+    setError('');
     try {
-      const res = await fetch(`${backendUrl}/api/screenwriting/projects/characters?name=${encodeURIComponent(charName)}`, {
+      const res = await fetch(`${backendUrl}/api/screenwriting/projects/characters?project_name=${encodeURIComponent(project)}&name=${encodeURIComponent(charName)}`, {
         method: 'DELETE'
       });
       const data = await res.json();
+      if (!isCurrent()) return;
+      if (!res.ok) throw new Error(data.detail || 'Could not delete the character.');
       if (data.status === 'success') {
         setCharacters(data.characters);
-        if (onCharactersUpdate) onCharactersUpdate(data.characters);
+        if (onCharactersUpdate) onCharactersUpdate(data.characters, project);
         if (editingChar?.name === charName) resetForm();
       }
     } catch (err) {
       console.error('Failed to delete character', err);
+      if (isCurrent()) setError(err.message);
     } finally {
-      setIsLoading(false);
+      if (isCurrent()) setIsLoading(false);
     }
   };
 
@@ -126,7 +159,7 @@ export default function CharacterVaultModal({ backendUrl, onClose, onCharactersU
         {/* Left List Pane */}
         <div style={{ width: '280px', background: '#1f2937', borderRight: '1px solid #374151', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '16px', borderBottom: '1px solid #374151', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ color: '#fff', margin: 0, fontSize: '1rem' }}>🎭 Character Vault ({characters.length})</h3>
+            <h3 title={projectName} style={{ color: '#fff', margin: 0, fontSize: '1rem' }}>🎭 Character Vault ({characters.length}) — {projectName}</h3>
             <button onClick={resetForm} title="Add New Character" style={{ background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '4px', width: '24px', height: '24px', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
           </div>
           <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
@@ -167,6 +200,7 @@ export default function CharacterVaultModal({ backendUrl, onClose, onCharactersU
             <span>{gender === 'Female' ? '👩' : '👨'}</span>
             {editingChar ? `Character Dossier: ${name}` : 'New Character Dossier'}
           </h2>
+          {error && <p role="alert" style={{ color: '#f87171' }}>{error}</p>}
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '12px' }}>
             <div>

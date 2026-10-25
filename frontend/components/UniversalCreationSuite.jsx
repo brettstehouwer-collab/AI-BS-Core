@@ -8,6 +8,8 @@ const VideoStudioTab = lazy(() => import('./VideoStudioTab.jsx'));
 const ComfyUIStudio = lazy(() => import('../src/components/ComfyUIStudio.jsx'));
 
 const AUTHORIZED_EMAILS = [
+    'brett@stehouwerproductions.com',
+    'brett@stehouwerpublishing.com',
     'brettstehouwer@gmail.com',
     'footballstar0325@gmail.com',
     'stehouwerjulie@gmail.com',

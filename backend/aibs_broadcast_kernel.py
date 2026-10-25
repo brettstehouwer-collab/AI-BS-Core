@@ -1035,6 +1035,6 @@ if __name__ == "__main__":
     port = 8088
     logging.info(f"Starting AI-BS Broadcast Kernel on http://127.0.0.1:{port}")
     try:
-        uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+        uvicorn.run(app, host="127.0.0.1", port=port, log_level="info")
     except Exception as e:
         logging.critical(f"Fatal error running uvicorn: {e}", exc_info=True)

@@ -1,5 +1,9 @@
+import subprocess
+
+WSL_BIND_HOST = subprocess.check_output(["hostname", "-I"], text=True).split()[0]
+
 NGINX_CONF = """server {
-    listen 8055;
+    listen __WSL_BIND_HOST__:8055;
     server_name thesimplechef.com www.thesimplechef.com thesimplechef.local localhost;
     
     root /var/www/thesimplechef/public;
@@ -27,7 +31,7 @@ NGINX_CONF = """server {
         log_not_found off;
     }
 }
-"""
+""".replace("__WSL_BIND_HOST__", WSL_BIND_HOST)
 
 LOGROTATE_CONF = """/var/log/nginx/thesimplechef_access.log /var/log/nginx/thesimplechef_error.log {
     daily

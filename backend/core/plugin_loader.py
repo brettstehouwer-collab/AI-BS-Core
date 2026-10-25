@@ -38,11 +38,20 @@ class PluginRegistry:
 
             # Discover packages and standalone router modules
             for finder, name, ispkg in pkgutil.iter_modules([b_dir]):
-                if name.startswith("__"):
+                # Backups such as "rec_debut_router (2).py" are retained files,
+                # not active plugins. Import only valid Python module names.
+                if name.startswith("__") or not name.isidentifier():
                     continue
 
                 try:
-                    module = importlib.import_module(name)
+                    # Match explicit backend imports so one file has one module
+                    # instance, rather than running its initialization twice.
+                    backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    normalized_dir = os.path.normcase(os.path.abspath(b_dir))
+                    package = next((package_name for package_name in ("modules", "routers")
+                                    if normalized_dir == os.path.normcase(os.path.join(backend_dir, package_name))), None)
+                    module_name = f"{package}.{name}" if package else name
+                    module = importlib.import_module(module_name)
                     
                     # 1. Look for 'router' attribute
                     router = getattr(module, "router", None)

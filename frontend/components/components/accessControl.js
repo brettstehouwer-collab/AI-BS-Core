@@ -109,6 +109,10 @@ export const TAB_PERMISSIONS = {
   unified_financial: ['admin', 'enterprise_all_access', 'b2b_growth'],
   digital_storefront: ['admin', 'enterprise_all_access', 'creator_media'],
 
+  // --- Mobile & Core Hubs ---
+  chat: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
+  video_streaming: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'hospitality', 'b2b_growth', 'free_demo'],
+
   // --- Creator & Media Studio ---
   comfy_workspace: ['admin', 'enterprise_all_access', 'creator_media'],
   public_playground: ['admin', 'enterprise_all_access', 'creator_media', 'screenwriting', 'free_demo'],
@@ -132,6 +136,7 @@ export const TAB_PERMISSIONS = {
 export const ADMIN_EMAILS = [
   'brettstehouwer@gmail.com',
   'brett@stehouwerpublishing.com',
+  'brett@stehouwerproductions.com',
   'footballstar0325@gmail.com',
   'footballsyat0325@gmail.com',
   'stehouwer@gmail.com',

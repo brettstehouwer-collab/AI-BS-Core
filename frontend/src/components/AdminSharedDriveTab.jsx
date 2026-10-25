@@ -1,3 +1,5 @@
+import { isDriveIntakeOriginal } from '/src/utils/driveIntakeDocuments.js';
+import { AuthenticatedDriveMedia, AuthenticatedDriveDownload, requestDriveMediaUrl, useDriveMediaSession } from '/src/components/AuthenticatedDriveMedia.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import './AdminSharedDriveTab.css';
 import WordDocsPaperCanvas from './WordDocsPaperCanvas.jsx';
@@ -112,7 +114,20 @@ export const OCTOBER7_STEMS = [
   }
 ];
 
-export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNavigateTab }) {
+/** @param {{backendUrl?:string,onNavigateTab?:(tab:string)=>void}} props */
+export default function AdminSharedDriveTab(props) {
+  const session = useDriveMediaSession(props.backendUrl);
+  return <ScopedAdminSharedDriveTab {...props} key={session.key} isCurrent={session.isCurrent} />;
+}
+
+/** @param {{backendUrl?:string,onNavigateTab?:((tab:string)=>void),isCurrent:()=>boolean}} props */
+function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNavigateTab, isCurrent }) {
+  const active = useRef(true);
+  const current = () => active.current && isCurrent();
+  useEffect(() => {
+    active.current = true;
+    return () => { active.current = false; };
+  }, []);
   // Navigation & Folder State
   const [currentPath, setCurrentPath] = useState('/');
   const [breadcrumbs, setBreadcrumbs] = useState([{ name: 'Shared Cloud Drive', path: '/' }]);
@@ -268,6 +283,15 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
 
   // Open Preview or In-Drive Document Editor
   const handleOpenPreviewOrEdit = async (item) => {
+    if (!current()) return;
+    if (isDriveIntakeOriginal(item.path)) {
+      try {
+        const url = item.extension?.toLowerCase() === '.pdf' ? await requestDriveMediaUrl(backendUrl, item.path) : null;
+        if (!current()) return;
+        setPreviewMedia({ ...item, url, intakeOriginal: true });
+      } catch (error) { if (current()) alert(`Unable to preview original: ${error.message}`); }
+      return;
+    }
     const nonTextExtensions = ['.pdf', '.doc', '.docx', '.rtf', '.odt'];
     const ext = item.extension ? item.extension.toLowerCase() : '';
     const isTextDoc = (['screenplay', 'document', 'code'].includes(item.category) && !nonTextExtensions.includes(ext)) || 
@@ -294,10 +318,12 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
     }
 
     // Default media/PDF preview
-    setPreviewMedia({
-      ...item,
-      url: `${backendUrl}/api/drive/preview?path=${encodeURIComponent(item.path)}`
-    });
+    if (!current()) return;
+    try {
+      const url = await requestDriveMediaUrl(backendUrl, item.path);
+      if (!current()) return;
+      setPreviewMedia({ ...item, url });
+    } catch (error) { if (current()) alert(`Unable to preview file: ${error.message}`); }
   };
 
   // File Upload Handlers (Any File Type)
@@ -403,6 +429,7 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
 
   // Save Document in Drive
   const handleSaveDocument = async () => {
+    if (isDriveIntakeOriginal(editingDoc.path)) return;
     setIsSavingDoc(true);
     setAutoSaveStatus('saving');
     try {
@@ -455,7 +482,7 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
 
   // 💾 Automated Continuous Auto-Save for In-Drive Documents
   useEffect(() => {
-    if (!showDocEditor || !editingDoc.content || !editingDoc.filename || editingDoc.isNew) return;
+    if (!showDocEditor || !editingDoc.content || !editingDoc.filename || editingDoc.isNew || isDriveIntakeOriginal(editingDoc.path)) return;
 
     // 1. Snapshot backup to localStorage
     try {
@@ -497,6 +524,7 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
 
   // AI Document Assistant Prompt Injection
   const handleAiPolishDoc = async (promptType) => {
+    if (isDriveIntakeOriginal(editingDoc.path)) return;
     setIsAiAssisting(true);
     try {
       let promptText = '';
@@ -600,8 +628,13 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
   };
 
   // Download Single File or ZIP Bundle
-  const handleDownload = (item) => {
-    window.open(`${backendUrl}/api/drive/download?path=${encodeURIComponent(item.path)}`, '_blank');
+  const handleDownload = async (item) => {
+    if (!current()) return;
+    try {
+      const url = await requestDriveMediaUrl(backendUrl, item.path, 'download');
+      if (!current()) return;
+      window.location.assign(url);
+    } catch (error) { if (current()) alert(`Download unavailable: ${error.message}`); }
   };
 
   const handleZipDownload = async () => {
@@ -1025,15 +1058,14 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
                   </p>
                 </div>
                 <div className="october7-header-actions">
-                  <a
-                    href={`${backendUrl}/api/drive/download?path=${encodeURIComponent('/October_7_Stems_Ultra_HQ/October_7_All_Stems_Ultra_HQ.zip')}`}
+                  <AuthenticatedDriveDownload backendUrl={backendUrl} path={'/October_7_Stems_Ultra_HQ/October_7_All_Stems_Ultra_HQ.zip'}
                     className="october7-download-all-btn"
                     target="_blank"
                     rel="noreferrer"
                     title="Download complete stems package as a single ZIP archive"
                   >
                     <span>📦</span> Download All Stems (ZIP 432.9 MB)
-                  </a>
+                  </AuthenticatedDriveDownload>
                   <button
                     onClick={() => { setCurrentPath('/October_7_Stems_Ultra_HQ'); setSearchQuery(''); }}
                     className="october7-explore-folder-btn"
@@ -1077,36 +1109,33 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
                     </div>
 
                     {/* Inline Audio Preview Player */}
-                    <audio
+                    <AuthenticatedDriveMedia as="audio" backendUrl={backendUrl} path={st.mp3 || st.wav}
                       controls
                       className="october7-audio-player"
                       preload="none"
-                      src={`${backendUrl}/api/drive/preview?path=${encodeURIComponent(st.mp3 || st.wav)}`}
                     />
 
                     {/* Stem Download Action Buttons */}
                     <div className="october7-stem-downloads">
                       {st.wav && (
-                        <a
-                          href={`${backendUrl}/api/drive/download?path=${encodeURIComponent(st.wav)}`}
+                        <AuthenticatedDriveDownload backendUrl={backendUrl} path={st.wav}
                           className="october7-dl-btn-wav"
                           target="_blank"
                           rel="noreferrer"
                           title={`Download Studio Master 24-bit WAV (${st.wavSize})`}
                         >
                           <span>⬇️</span> WAV (24-bit)
-                        </a>
+                        </AuthenticatedDriveDownload>
                       )}
                       {st.mp3 && (
-                        <a
-                          href={`${backendUrl}/api/drive/download?path=${encodeURIComponent(st.mp3)}`}
+                        <AuthenticatedDriveDownload backendUrl={backendUrl} path={st.mp3}
                           className="october7-dl-btn-mp3"
                           target="_blank"
                           rel="noreferrer"
                           title={`Download High Bitrate 320 kbps MP3 (${st.mp3Size})`}
                         >
                           <span>⬇️</span> MP3 (320k)
-                        </a>
+                        </AuthenticatedDriveDownload>
                       )}
                     </div>
                   </div>
@@ -1342,7 +1371,7 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
             <div className="drive-preview-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span>{previewMedia.icon}</span>
-                <span className="drive-preview-filename">{previewMedia.name}</span>
+                <span className="drive-preview-filename">{previewMedia.name}{previewMedia.intakeOriginal ? ' — Preserved original (read only)' : ''}</span>
                 <span style={{ color: '#9ca3af', fontSize: '0.8rem' }}>({previewMedia.size_formatted})</span>
               </div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -1376,8 +1405,8 @@ export default function AdminSharedDriveTab({ backendUrl = 'http://localhost:808
               ) : (
                 <div className="drive-preview-fallback">
                   <span>📎</span>
-                  <h3>Preview not available for this binary format</h3>
-                  <p>You can download this asset to view or execute it on your host system.</p>
+                  <h3>{previewMedia.intakeOriginal ? 'Original preserved without editing' : 'Preview not available for this binary format'}</h3>
+                  <p>{previewMedia.intakeOriginal ? 'Download the original to review it. Creation Studio → General Documents can create a separate editable working copy for supported text and DOCX files.' : 'Download this asset to open it in its native application.'}</p>
                   <button onClick={() => handleDownload(previewMedia)} className="drive-btn-primary">
                     ⬇️ Download {previewMedia.name}
                   </button>

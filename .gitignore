@@ -269,6 +269,12 @@ scratch/
 .vercel
 .env*
 
+# Local OAuth credentials and the existing vault encryption key.
+# Ignore rules do not remove an already tracked key from Git history.
+/client_secret.json
+/token.json
+/backend/vault_master.key
+
 # -----------------------------------------------------------------------
 # PRIVACY & PERSONAL DATA GOVERNANCE (NEVER PUSH TO GITHUB)
 # -----------------------------------------------------------------------

@@ -1,0 +1,15 @@
+# Planning controls in the existing preparation panel
+
+Checkpoint source5.329.45 / plan1.55. Reuse the current component, authenticated client, owner journal and fixed-source planning service. No new chat store or execution route.
+
+Show Generate plan only for an inspected/saved PREPARED receipt. Bind each operation to its selected backend, verified principal, actor, preparation ID and exact snapshot/review hashes. Keep a pending plan ID before POST; explicit same-ID retry may inspect existing evidence, never silently use a new ID. After reload, bounded server metadata listing discovers retained plan IDs without rerunning them; incomplete records remain explicit. Client-only drafts/unacknowledged requests are not guaranteed durable browser storage.
+
+Render public model summary, selected-file steps and questions as escaped plain React text, never markdown/tool/code action cards. Separate Plan proposed, Needs clarification, Failed, Timed out, Cancelled and Incomplete. All say tests not run. Permit inspect/recover and independent cancellation while generation is awaiting its reply. Cancellation acknowledgement is not terminal cancellation; never downgrade a terminal result with an older in-flight response. New IDs require an explicit new operation after a known terminal result.
+
+Source/backend/actor changes abort/hide stale requests and suppress follow-up writes; close preserves private owned pending IDs for reconnect. Form/receipt switches are blocked during planning, and plan data is reset when selecting another preparation. Use existing fetch authorization, no new credentials or browser permission workaround.
+
+Backend: authenticated, cursor-paged metadata-only plan listing under the existing preparation, max50/cooperative0.5sec. No copied-source or proposal revalidation during metadata listing; inspection verifies evidence. Corruption/deadline failure is an error, never empty success. Missing plan namespace does not create a store. Improve model guidance to prefer empty questions for explicit changes and avoid generic style/commit/context questions; retain actual model questions rather than suppressing them in code. A real-model evaluation is evidence, not a universal quality guarantee.
+
+Verify failing controller/view/backend cases first; preserve prior preparation/planning checks and four panel mirrors. Exercise real localhost backend/gateway access and model planning after one controlled main-only restart, preserving document/memory/model evidence and disabled service/outbound flags. Browser DOM/sign-in acceptance and actual VM execution remain pending. No Firebase/native publication.
+
+Evidence:33backend methods,41client cases,16offline React cases,13source checks and63actual API/model/cancel observations. Model plan24.031seconds/0questions for one explicit Python/JS fixture; actual local-client cancellation reached terminal without replay, GPU-release timing unmeasured. Main68264serves45, other services unchanged. Actual Chrome browser access is still tool-denied after reported app-permission update; no browser acceptance or publication claimed.

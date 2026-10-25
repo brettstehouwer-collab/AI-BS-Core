@@ -4,7 +4,8 @@ import time
 import sqlite3
 import logging
 from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Request, Header, HTTPException, status
+from fastapi import APIRouter, Request, Header, HTTPException, status, Depends
+from security.analytics_access import require_analytics_admin
 from fastapi.responses import JSONResponse
 
 BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,42 +25,12 @@ logger = logging.getLogger("AdminTelemetryRouter")
 logger.setLevel(logging.INFO)
 
 admin_telemetry_router = APIRouter(
-    prefix="/api/admin", tags=["Admin Security Telemetry"]
+    prefix="/api/admin", tags=["Admin Security Telemetry"], dependencies=[Depends(require_analytics_admin)]
 )
 
-AUTHORIZED_ADMIN_EMAILS = {
-    "footballstar0325@gmail.com",
-    "footballsyat0325@gmail.com",
-    "brettstehouwer@gmail.com",
-    "stehouwer@gmail.com",
-    "theseandaley@gmail.com",
-    "rottierannajoy@gmail.com",
-    "keith@evolution6media.com",
-}
-
-
-def verify_admin_access(
-    request: Request, x_admin_email: Optional[str] = Header(None)
-) -> str:
-    """Verify inbound header against authorized admin email whitelist."""
-    if (
-        not x_admin_email
-        or x_admin_email.strip().lower() not in AUTHORIZED_ADMIN_EMAILS
-    ):
-        ip = SecurityShield.extract_client_ip(request)
-        logger.warning(
-            f"Unauthorized admin telemetry attempt from IP: {ip}, Email: '{x_admin_email}'"
-        )
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail={
-                "error": {
-                    "code": "access_restricted",
-                    "message": "Access prohibited. Authorized admin credentials required.",
-                }
-            },
-        )
-    return x_admin_email.strip().lower()
+async def verify_admin_access(request: Request, x_admin_email: Optional[str] = None):
+    """Authenticate credentials; a caller-supplied email is never proof of identity."""
+    await require_analytics_admin(request)
 
 
 @admin_telemetry_router.get("/security-telemetry")
@@ -67,7 +38,7 @@ async def get_security_telemetry(
     request: Request, x_admin_email: Optional[str] = Header(None)
 ):
     """Fetch live security audit events, active IP bans, and usage metrics for admin view."""
-    verify_admin_access(request, x_admin_email)
+    await verify_admin_access(request, x_admin_email)
 
     # 1. Fetch Security Audit Events
     events = []
@@ -158,7 +129,7 @@ async def manual_ip_ban(
     x_admin_email: Optional[str] = Header(None),
 ):
     """Allow admins to manually ban an IP address."""
-    verify_admin_access(request, x_admin_email)
+    await verify_admin_access(request, x_admin_email)
     target_ip = payload.get("ip_address")
     reason = payload.get("reason", "Manual Admin Ban")
 
@@ -177,7 +148,7 @@ async def create_tester_passkey_endpoint(
     x_admin_email: Optional[str] = Header(None),
 ):
     """Allow admins to generate a new Authorized Tester Passkey and secret header rules."""
-    verify_admin_access(request, x_admin_email)
+    await verify_admin_access(request, x_admin_email)
     tester_email = payload.get("tester_email")
     allowed_ips = payload.get("allowed_ips", ["127.0.0.1"])
     duration_days = int(payload.get("duration_days", 30))
@@ -199,7 +170,7 @@ async def create_tester_passkey_endpoint(
 
 @admin_telemetry_router.get("/scope-manifest")
 async def get_scope_manifest(request: Request):
-    """Publicly expose authorized testing scope manifest for auditors."""
+    """Expose the testing scope manifest to authenticated administrators."""
     manifest_path = os.path.join(COMMERCIAL_DIR, "SCOPE_MANIFEST.json")
     if os.path.exists(manifest_path):
         import json

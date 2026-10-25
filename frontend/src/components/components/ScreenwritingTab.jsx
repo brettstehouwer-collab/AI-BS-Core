@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
+import { createScreenplayDraftCoordinator } from '/src/utils/screenplayDraftCoordinator.js';
 import { Fountain } from 'fountain-js';
 const fountainParser = new Fountain();
 import { useAppStore } from './useAppStore';
@@ -9,9 +11,9 @@ import ScreenplayViewer from './ScreenplayViewer';
 import AdaptationStatusBar from './AdaptationStatusBar';
 import ScriptAssistantDrawer from './ScriptAssistantDrawer';
 import ProjectAudioPlayer from './ProjectAudioPlayer';
-import { parseFDX } from '../utils/FDXParser';
-import { serializeFDX } from '../utils/FDXSerializer';
-import { fountainToAST, astToFountain } from '../utils/FountainAdapter';
+import { parseFDX } from '/utils/FDXParser.js';
+import { serializeFDX } from '/utils/FDXSerializer.js';
+import { fountainToAST, astToFountain } from '/utils/FountainAdapter.js';
 import { logTeamActivity } from './collaborationService';
 import ScriptToBookNovelizerModal from './ScriptToBookNovelizerModal';
 import ScreenplayTableReadModal from './ScreenplayTableReadModal';
@@ -21,7 +23,7 @@ import StagePlayBreakdownModal from './StagePlayBreakdownModal';
 import ScriptTelemetryModal from './ScriptTelemetryModal';
 import './StagePlayBreakdownModal.css';
 
-const StoryboardModal = ({ isOpen, onClose, storyboards }) => {
+const StoryboardModal = ({ isOpen, onClose, storyboards, backendUrl = '' }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
@@ -37,7 +39,7 @@ const StoryboardModal = ({ isOpen, onClose, storyboards }) => {
           {storyboards.map((sb, idx) => (
             <div key={idx} className="bg-gray-800 rounded-lg p-4 border border-gray-700 shadow-lg">
               <div className="text-sm text-gray-300 mb-3 h-16 overflow-y-auto italic">"{sb.action}"</div>
-              <img src={sb.image_url?.startsWith('http') || sb.image_url?.startsWith('data:') || sb.image_url?.startsWith('blob:') ? sb.image_url : `${BACKEND_URL || 'http://127.0.0.1:8000'}${sb.image_url?.startsWith('/') ? '' : '/'}${sb.image_url}`} alt="Storyboard Panel" className="w-full h-auto rounded-lg shadow-md border border-gray-600" />
+              <img src={sb.image_url?.startsWith('http') || sb.image_url?.startsWith('data:') || sb.image_url?.startsWith('blob:') ? sb.image_url : `${backendUrl}${sb.image_url?.startsWith('/') ? '' : '/'}${sb.image_url}`} alt="Storyboard Panel" className="w-full h-auto rounded-lg shadow-md border border-gray-600" />
             </div>
           ))}
         </div>
@@ -248,12 +250,25 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const storeBackendUrl = useAppStore(state => state.BACKEND_URL);
   const BACKEND_URL = backendUrl || storeBackendUrl || 'http://127.0.0.1:8000';
 
-  // Screenplay State uses sharedWorkspace state if available, otherwise local state
-  const [localScreenplay, setLocalScreenplay] = useState('');
-  const screenplay = (sharedContent !== undefined && sharedContent !== null && sharedContent !== '') ? sharedContent : localScreenplay;
+  // The loaded project's draft stays authoritative. A parent workspace changing
+  // documents must not silently replace this editor and autosave into its project.
+  const [localScreenplay, setLocalScreenplay] = useState(() => typeof sharedContent === 'string' ? sharedContent : '');
+  const screenplay = localScreenplay;
+  const sharedEchoRef = useRef(sharedContent);
+  const screenplayRef = useRef(screenplay);
+  const draftRevisionRef = useRef(0);
+  if (screenplayRef.current !== screenplay) {
+    screenplayRef.current = screenplay;
+    draftRevisionRef.current += 1;
+  }
   const setScreenplay = (content) => {
+    screenplayRef.current = content;
+    draftRevisionRef.current += 1;
     setLocalScreenplay(content);
-    if (setSharedContent) setSharedContent(content);
+    if (setSharedContent) {
+      sharedEchoRef.current = content;
+      setSharedContent(content);
+    }
   };
   const [ast, setAst] = useState([]);
   const [isInternalChange, setIsInternalChange] = useState(false);
@@ -387,10 +402,38 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   
   // Projects State
   const [projects, setProjects] = useState([]);
-  const [currentProject, setCurrentProject] = useState('');
+  const [currentProject, setCurrentProjectState] = useState('');
+  const currentProjectRef = useRef('');
+  const setCurrentProject = (project) => {
+    currentProjectRef.current = project;
+    setCurrentProjectState(project);
+  };
+  const [archivedProjects, setArchivedProjects] = useState([]);
+  const [showArchivedProjects, setShowArchivedProjects] = useState(false);
   const fileInputRef = useRef(null);
   
   const [isLoading, setIsLoading] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
+  const reorderInFlightRef = useRef(false);
+  const saveCoordinatorRef = useRef(null);
+  const backendUrlRef = useRef(BACKEND_URL);
+  backendUrlRef.current = BACKEND_URL;
+  if (!saveCoordinatorRef.current) {
+    saveCoordinatorRef.current = createScreenplayDraftCoordinator({ write: async payload => {
+      const response = await fetch(`${backendUrlRef.current}/api/screenwriting/write`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw Object.assign(new Error(typeof data.detail === 'string' ? data.detail : 'Draft save failed.'), { status: response.status });
+      return data;
+    }});
+  }
+  const [saveProblem, setSaveProblem] = useState(null);
+  const manualReviewRef = useRef(new Set());
+  const [recoveryDrafts, setRecoveryDrafts] = useState([]);
+  const [incomingWorkspaceDraft, setIncomingWorkspaceDraft] = useState(null);
+  const transitionRef = useRef(false);
+  const recoveryIdRef = useRef(`${Date.now()}-${Math.random().toString(36).slice(2)}`);
   const editorRef = useRef(null);
   const [draggedBeatIndex, setDraggedBeatIndex] = useState(null);
   const [isProofing, setIsProofing] = useState(false);
@@ -531,7 +574,10 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       alert("Please enter a project name.");
       return;
     }
+    if (transitionRef.current) return;
+    transitionRef.current = true; setIsLoading(true);
     try {
+      const departingDraft = await flushDraftForTransition();
       const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -546,49 +592,98 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
         setShowNewProjectModal(false);
         setNewProjectName('');
         await loadProjects();
-        setCurrentProject(data.current);
-        await loadScreenplay();
+        if (!draftStillCurrent(departingDraft)) throw new Error('Project created. Your newer edits remain open; select the new project when ready.');
+        await loadScreenplay(data.current);
         await loadBranches();
         await loadSprints();
         await loadCharacters();
       } else {
-        alert(`Failed to create project: ${data.message || 'Unknown error'}`);
+        alert(`Failed to create project: ${data.detail || data.message || 'Unknown error'}`);
       }
     } catch (err) {
       alert(`Error creating project: ${err.message}`);
-    }
+    } finally { transitionRef.current = false; setIsLoading(false); }
   };
 
   const handleDeleteCurrentProject = async () => {
     if (currentProject === 'Default Project') {
-      alert("Cannot delete the Default Project.");
+      alert("Cannot archive the Default Project.");
       return;
     }
-    if (!confirm(`Are you sure you want to delete the project "${currentProject}"? This will permanently remove its script and local files.`)) {
+    if (!currentProject || loadedProjectRef.current !== currentProject || isLoading) return;
+    if (!confirm(`Archive "${currentProject}"? Its script, assets, and history will be preserved. Use Archived projects to restore it.`)) {
       return;
     }
+    if (transitionRef.current) return;
+    setIsLoading(true);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    const projectToArchive = currentProject;
+    transitionRef.current = true;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/delete`, {
+      const captured = await flushDraftForTransition();
+      if (!draftStillCurrent(captured)) return;
+      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/archive`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_name: currentProject })
+        body: JSON.stringify({ project_name: projectToArchive })
       });
       const data = await res.json();
-      if (data.status === 'success') {
-        await loadProjects();
-        setCurrentProject(data.current || 'Default Project');
-        await loadScreenplay();
+      if (!res.ok) throw new Error(data.detail || 'Project could not be archived.');
+      await loadProjects();
+      if (!draftStillCurrent(captured)) {
+        manualReviewRef.current.add(projectToArchive);
+        preserveDraft(captureDraft());
+        throw new Error('Project archived, but newer local edits remain open. Download them before loading another project.');
       }
+      await loadScreenplay(data.current || 'Default Project');
+      if (showArchivedProjects) await loadArchivedProjects();
     } catch (err) {
-      alert(`Error deleting project: ${err.message}`);
+      setSaveProblem({ project: projectToArchive, message: err.message });
+      alert(`Error archiving project: ${err.message}`);
+    } finally {
+      transitionRef.current = false;
+      setIsLoading(false);
     }
+  };
+
+  const loadArchivedProjects = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/archives`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Could not load archived projects.');
+      setArchivedProjects(data.archives || []);
+    } catch (err) { alert(err.message); }
+  };
+
+  const handleRestoreProject = async (archiveId) => {
+    if (transitionRef.current) return;
+    transitionRef.current = true;
+    setIsLoading(true);
+    try {
+      const departingDraft = await flushDraftForTransition();
+      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/restore`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ archive_id: archiveId })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Could not restore project.');
+      await loadProjects();
+      if (!draftStillCurrent(departingDraft)) throw new Error('Project restored. Your newer edits remain open; select the restored project when ready.');
+      await loadScreenplay(data.current);
+      await loadArchivedProjects();
+    } catch (err) {
+      alert(err.message);
+    }
+    finally { transitionRef.current = false; setIsLoading(false); }
   };
 
   // Parse Screenplay helper
   const parseScreenplay = async (contentToParse) => {
+    const sequence = screenplayLoadSequenceRef.current;
+    const draft = contentToParse ?? screenplayRef.current;
     try {
       // Local real-time fountain-js parse for split-pane preview
-      const htmlOutput = fountainParser.parse(contentToParse || screenplay);
+      const htmlOutput = fountainParser.parse(draft);
       if (htmlOutput && htmlOutput.html && htmlOutput.html.script) {
         setLiveHtml(htmlOutput.html.script);
       }
@@ -597,10 +692,10 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       const res = await fetch(`${BACKEND_URL}/api/screenwriting/parse`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: contentToParse || screenplay }),
+        body: JSON.stringify({ content: draft }),
       });
       const data = await res.json();
-      setParsed(data);
+      if (sequence === screenplayLoadSequenceRef.current && draft === screenplayRef.current) setParsed(data);
     } catch (err) {
       console.error('Parse failed:', err);
     }
@@ -637,41 +732,64 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
           const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects`);
           const data = await res.json();
           setProjects(data.projects || []);
-          setCurrentProject(data.current || '');
+          if (!currentProjectRef.current) setCurrentProject(data.current || '');
       } catch (err) {
           console.error('Failed to load projects:', err);
       }
   };
 
-  const loadScreenplay = async (targetProj) => {
+  const loadedProjectRef = useRef('');
+  const screenplayLoadSequenceRef = useRef(0);
+  const loadScreenplay = async (targetProj, { reload = false } = {}) => {
+    // Fetch first, then replace the visible draft only if no edit happened while
+    // saving or loading. Failed reads leave the existing editor/project intact.
+    if (reorderInFlightRef.current) return false;
+    const sequence = ++screenplayLoadSequenceRef.current;
     try {
-      const proj = targetProj || currentProject;
-      if (sharedActiveDoc && typeof sharedActiveDoc === 'string') {
-        setCurrentProject(sharedActiveDoc);
-      }
-      // If we have an active doc from the Studio Workspace, parse it directly!
-      if (sharedActiveDoc && sharedContent) {
-        setScreenplay(sharedContent);
-        setAst(fountainToAST(sharedContent));
-        await parseScreenplay(sharedContent);
-        return;
-      }
-      
+      const captured = reload ? captureDraft() : await flushDraftForTransition();
+      const sharedProject = typeof sharedActiveDoc === 'string' ? sharedActiveDoc : '';
+      const proj = targetProj || sharedProject || currentProjectRef.current;
+      const hasSharedDraft = !loadedProjectRef.current && !targetProj && !!sharedProject && typeof sharedContent === 'string';
+      const initialDraft = screenplayRef.current;
+      const initialEdit = draftRevisionRef.current;
       const queryParam = proj ? `?project_name=${encodeURIComponent(proj)}` : '';
       const res = await fetch(`${BACKEND_URL}/api/screenwriting/read${queryParam}`);
+      if (!res.ok) throw new Error(`Project load failed (${res.status})`);
       const data = await res.json();
-      if (data.content) {
-        setScreenplay(data.content);
-        setAst(fountainToAST(data.content));
-        await parseScreenplay(data.content);
+      if (sequence !== screenplayLoadSequenceRef.current) return false;
+      if ((captured && !draftStillCurrent(captured)) || draftRevisionRef.current !== initialEdit) {
+        throw new Error('Your draft changed during loading. It is still open; retry the project change when ready.');
       }
-      if (data.project && data.project !== currentProject) {
-        setCurrentProject(data.project);
+      saveCoordinatorRef.current.load(data.project, data.content, data.revision);
+      manualReviewRef.current.delete(data.project);
+      loadedProjectRef.current = data.project;
+      setCurrentProject(data.project);
+      setSaveProblem(null);
+      setCharacters([]);
+      setShowCharacterVault(false);
+      setDraggedBeatIndex(null);
+      const content = hasSharedDraft ? initialDraft : data.content;
+      setScreenplay(content);
+      setAst(fountainToAST(content));
+      setLastSavedTime(null);
+      setAutoSaveStatus(content === data.content ? 'saved' : 'unsaved');
+      // A shared-workspace draft has no historical disk baseline. Keep it visible,
+      // but require an explicit review/save instead of autosaving on initial load.
+      if (hasSharedDraft && content !== data.content) {
+        manualReviewRef.current.add(data.project);
+        setSaveProblem({ project: data.project, message: 'Workspace draft retained. Review it against the saved version before choosing Save.', reviewOnly: true });
+        preserveDraft({ project: data.project, content, revision: data.revision });
       }
+      refreshRecoveryDrafts(data.project);
+      await parseScreenplay(content);
+      if (sequence !== screenplayLoadSequenceRef.current) return true;
       setCurrentBranch(data.metadata?.current_branch || 'main');
       setProjectMetadata(data.metadata || {});
+      await loadCharacters(data.project);
+      return true;
     } catch (err) {
-      console.error('Failed to load screenplay:', err);
+      setSaveProblem({ project: loadedProjectRef.current || targetProj, message: err.message });
+      return false;
     }
   };
 
@@ -687,11 +805,15 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   };
 
 
-  const loadCharacters = async () => {
+  const loadCharacters = async (targetProject = loadedProjectRef.current) => {
+    const project = targetProject;
+    const sequence = screenplayLoadSequenceRef.current;
+    if (!project || loadedProjectRef.current !== project || currentProjectRef.current !== project) return;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/characters`);
+      const res = await fetch(`${BACKEND_URL}/api/screenwriting/projects/characters?project_name=${encodeURIComponent(project)}`);
       const data = await res.json();
-      if (data.status === 'success') setCharacters(data.characters || []);
+      if (sequence !== screenplayLoadSequenceRef.current || loadedProjectRef.current !== project || currentProjectRef.current !== project) return;
+      if (res.ok && data.status === 'success') setCharacters(data.characters || []);
     } catch (err) {
       console.error('Failed to load characters:', err);
     }
@@ -713,91 +835,139 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     loadScreenplay();
     loadBranches();
     loadSprints();
-    loadCharacters();
   }, []);
 
-  // 💾 Automated Continuous Auto-Save Engine for Admins
   const autoSaveTimerRef = useRef(null);
-  const [autoSaveStatus, setAutoSaveStatus] = useState('saved'); // 'saved' | 'saving' | 'error'
+  const [autoSaveStatus, setAutoSaveStatus] = useState('saved');
   const [lastSavedTime, setLastSavedTime] = useState(null);
-  const lastActivityLogRef = useRef(0);
+
+  const captureDraft = () => {
+    const project = loadedProjectRef.current;
+    if (!project || project !== currentProjectRef.current) return null;
+    return { project, content: screenplayRef.current, edit: draftRevisionRef.current, branch: currentBranch,
+      revision: saveCoordinatorRef.current.snapshot(project)?.revision };
+  };
+  const draftStillCurrent = draft => !draft || (loadedProjectRef.current === draft.project && currentProjectRef.current === draft.project &&
+    screenplayRef.current === draft.content && draftRevisionRef.current === draft.edit);
+  const preserveDraft = (draft, recoveryId = recoveryIdRef.current) => {
+    if (!draft) return false;
+    try {
+      const key = `aibs_script_recovery_${encodeURIComponent(draft.project)}_${recoveryId}`;
+      localStorage.setItem(key, JSON.stringify({ ...draft, savedAt: new Date().toISOString() }));
+      return true;
+    } catch {
+      setSaveProblem({ project: draft.project, message: 'Browser recovery storage is unavailable. Download your local draft before leaving.' });
+      return false;
+    }
+  };
+  const refreshRecoveryDrafts = project => {
+    try {
+      const prefix = `aibs_script_recovery_${encodeURIComponent(project)}_`;
+      const entries = Object.keys(localStorage).filter(key => key.startsWith(prefix)).map(key => {
+        try { return { ...JSON.parse(localStorage.getItem(key)), key }; } catch { return null; }
+      }).filter(item => item && typeof item.content === 'string');
+      setRecoveryDrafts(entries.sort((a,b) => b.savedAt.localeCompare(a.savedAt)));
+    } catch { setRecoveryDrafts([]); }
+  };
+  const downloadLocalDraft = (draft = captureDraft()) => {
+    if (!draft) return;
+    const url = URL.createObjectURL(new Blob([draft.content], { type: 'text/plain;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${draft.project}-recovered-${Date.now()}.fountain`;
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const reportSaveFailure = (draft, error) => {
+    if (draftStillCurrent(draft)) setAutoSaveStatus('error');
+    preserveDraft(loadedProjectRef.current === draft?.project ? captureDraft() : draft);
+    setSaveProblem({ project: draft?.project, conflict: error.status === 409,
+      message: error.status === 409 ? 'Another tab or process changed this project. Your local draft is retained; saving has stopped to protect both versions.' : `${error.message} Your local draft is retained.` });
+  };
+  const saveCapturedDraft = async draft => {
+    if (!draft) throw new Error('Wait for the project to load before saving.');
+    if (saveCoordinatorRef.current.isDirty(draft.project, draft.content)) preserveDraft(draft);
+    try {
+      const result = await saveCoordinatorRef.current.save(draft.project, draft.content, draft.branch);
+      if (draftStillCurrent(draft)) {
+        setAutoSaveStatus('saved'); setSaveProblem(null);
+        if (!result.unchanged) setLastSavedTime(new Date().toLocaleTimeString());
+      }
+      return result;
+    } catch (error) { reportSaveFailure(draft, error); throw error; }
+  };
+  const flushDraftForTransition = async () => {
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (reorderInFlightRef.current) throw new Error('Wait for scene reordering to finish before changing projects.');
+    const draft = captureDraft();
+    if (!draft) return null;
+    if (manualReviewRef.current.has(draft.project)) throw new Error('Review and save the local draft, or download it and reload the saved version first.');
+    await saveCapturedDraft(draft);
+    if (!draftStillCurrent(draft)) throw new Error('Your draft changed while saving. The project stays open; retry after your latest edits save.');
+    return draft;
+  };
+  const reloadSavedVersion = async () => {
+    const draft = captureDraft();
+    if (!draft || transitionRef.current) return;
+    if (!preserveDraft(draft)) { downloadLocalDraft(draft); return; }
+    if (!confirm('Reload the saved version? Your current text will remain in browser recovery copies. Download it first if you want a separate file.')) return;
+    // Retain this recovery snapshot even after the user edits the reloaded copy.
+    recoveryIdRef.current = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    transitionRef.current = true; setIsLoading(true);
+    try {
+      await saveCoordinatorRef.current.idle();
+      if (draftStillCurrent(draft)) await loadScreenplay(draft.project, { reload: true });
+    } finally { transitionRef.current = false; setIsLoading(false); }
+  };
 
   useEffect(() => {
-    if (!screenplay || screenplay.trim() === '') return;
+    if (typeof sharedContent !== 'string' || sharedContent === sharedEchoRef.current) return;
+    sharedEchoRef.current = sharedContent;
+    if (sharedContent === screenplayRef.current) return;
+    const incoming = { project: typeof sharedActiveDoc === 'string' && sharedActiveDoc ? sharedActiveDoc : 'Workspace draft', content: sharedContent };
+    preserveDraft(incoming, `workspace-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    setIncomingWorkspaceDraft(incoming);
+  }, [sharedContent, sharedActiveDoc]);
 
-    // 1. Immediate client-side snapshot backup
-    const projectKey = currentProject || 'active_screenplay';
-    try {
-      localStorage.setItem(`aibs_script_backup_${projectKey}`, screenplay);
-      localStorage.setItem(`aibs_script_backup_time_${projectKey}`, String(Date.now()));
-    } catch {}
-
-    // 2. Debounce auto-save to backend
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    setAutoSaveStatus('saving');
-
-    autoSaveTimerRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/screenwriting/write`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            content: screenplay, 
-            branch: currentBranch,
-            project_name: currentProject 
-          }),
-        });
-        if (res.ok) {
-          setAutoSaveStatus('saved');
-          setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-
-          // 3. Log team activity with 45-second cooldown
-          const now = Date.now();
-          if (now - lastActivityLogRef.current > 45000) {
-            lastActivityLogRef.current = now;
-            logTeamActivity({
-              action: `Autosaved screenplay: ${currentProject || 'Main Screenplay'}`,
-              toolName: 'Screenwriting Studio',
-              tabKey: 'unified_creation',
-              details: `${totalScriptPages} pages`
-            });
-          }
-        } else {
-          setAutoSaveStatus('error');
-        }
-      } catch (err) {
-        console.warn('[Screenplay AutoSave] Background save error:', err.message);
-        setAutoSaveStatus('error');
+  useEffect(() => {
+    const onUnload = event => {
+      const draft = captureDraft();
+      if (draft && (saveCoordinatorRef.current.isDirty(draft.project, draft.content) || saveCoordinatorRef.current.snapshot(draft.project)?.blocked)) {
+        preserveDraft(draft); event.preventDefault(); event.returnValue = '';
       }
-    }, 1500);
-
-    return () => {
-      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
     };
-  }, [screenplay, currentProject, currentBranch, BACKEND_URL, totalScriptPages]);
+    window.addEventListener('beforeunload', onUnload);
+    return () => window.removeEventListener('beforeunload', onUnload);
+  }, []);
+
+  useEffect(() => {
+    const draft = captureDraft();
+    if (!draft) return;
+    if (!saveCoordinatorRef.current.isDirty(draft.project, draft.content)) return;
+    preserveDraft(draft);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (isLoading || isReordering || transitionRef.current || reorderInFlightRef.current || saveCoordinatorRef.current.snapshot(draft.project)?.blocked || manualReviewRef.current.has(draft.project)) return;
+    setAutoSaveStatus('unsaved');
+    autoSaveTimerRef.current = setTimeout(async () => {
+      if (!draftStillCurrent(draft) || transitionRef.current || reorderInFlightRef.current) return;
+      setAutoSaveStatus('saving');
+      try { await saveCapturedDraft(draft); } catch { /* The visible recovery notice retains the error. */ }
+    }, 1500);
+    return () => clearTimeout(autoSaveTimerRef.current);
+  }, [screenplay, currentProject, currentBranch, BACKEND_URL, isLoading, isReordering, saveProblem?.reviewOnly]);
 
   const handleSaveScreenplay = async () => {
-    setIsLoading(true);
-    setAutoSaveStatus('saving');
+    if (transitionRef.current || reorderInFlightRef.current) return;
+    const draft = captureDraft();
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    setIsLoading(true); setAutoSaveStatus('saving');
     try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/write`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: screenplay, branch: currentBranch, project_name: currentProject }),
-      });
-      const data = await res.json();
-      if (data.status === 'success' || res.ok) {
-        setAutoSaveStatus('saved');
-        setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-      } else {
-        setAutoSaveStatus('error');
-      }
-    } catch (err) {
-      console.error('Save failed:', err);
-      setAutoSaveStatus('error');
-    } finally {
-      setIsLoading(false);
+      await saveCapturedDraft(draft);
+      manualReviewRef.current.delete(draft.project);
     }
+    catch { /* Keep the local draft and visible recovery controls. */ }
+    finally { setIsLoading(false); }
   };
 
   const handleExportFDX = () => {
@@ -813,28 +983,45 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     URL.revokeObjectURL(url);
   };
 
-  const handleExportPDF = async () => {
+  const downloadScreenplayExport = async (format, watermark = '') => {
+    if (!currentProject || loadedProjectRef.current !== currentProject || isLoading) {
+      alert('Wait for the selected project to finish loading before exporting.');
+      return;
+    }
+    const project = currentProject;
+    const draft = captureDraft();
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
     setIsLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/export/pdf`);
-      if (!res.ok) throw new Error("Failed to export PDF.");
-      
-      const blob = await res.blob();
+      if (manualReviewRef.current.has(project)) throw new Error('Review and save the local draft before exporting, or download it from the draft protection notice.');
+      await saveCapturedDraft(draft);
+      const query = new URLSearchParams({ project_name: project });
+      if (watermark) query.set('watermark', watermark);
+      const response = await fetch(`${BACKEND_URL}/api/screenwriting/export/${format}?${query}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || `Export failed (HTTP ${response.status}).`);
+      }
+      const blob = await response.blob();
+      if (format === 'pdf' && (await blob.slice(0, 5).text()) !== '%PDF-') {
+        throw new Error('The export service did not return a PDF.');
+      }
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.download = `${currentProject || 'screenplay'}.pdf`;
+      link.download = `${project}.${format}`;
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("PDF Export failed:", err);
-      alert("Failed to export PDF. Check if backend generates it correctly.");
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      alert(`Export failed: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleExportPDF = () => downloadScreenplayExport('pdf');
 
   const handleCreateBranch = async () => {
     if (!newBranchName.trim()) return;
@@ -904,47 +1091,77 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const handleDrop = async (e, targetIndex) => {
     e.preventDefault();
     if (draggedBeatIndex === null || draggedBeatIndex === targetIndex) return;
-    
+    const project = loadedProjectRef.current;
+    if (!project || currentProjectRef.current !== project || isLoading || reorderInFlightRef.current) return;
+    const sequence = screenplayLoadSequenceRef.current;
+    const draft = screenplayRef.current;
+    const revision = draftRevisionRef.current;
+    const isCurrent = () => sequence === screenplayLoadSequenceRef.current && loadedProjectRef.current === project && currentProjectRef.current === project;
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    reorderInFlightRef.current = true;
+    setIsReordering(true);
     setIsLoading(true);
     try {
-      const res = await fetch(`${BACKEND_URL}/api/screenwriting/beats/reorder`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ source_index: draggedBeatIndex, target_index: targetIndex }),
+      const data = await saveCoordinatorRef.current.mutate(project, draft, async payload => {
+        if (!isCurrent() || draftRevisionRef.current !== revision) throw new Error('The draft changed while waiting to reorder. Retry the move.');
+        const res = await fetch(`${BACKEND_URL}/api/screenwriting/beats/reorder`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, expected_revision: payload.expected_revision, source_index: draggedBeatIndex, target_index: targetIndex }),
+        });
+        const result = await res.json();
+        if (!res.ok) throw Object.assign(new Error(typeof result.detail === 'string' ? result.detail : 'Beat reordering failed.'), { status: res.status });
+        return result;
       });
-      const data = await res.json();
-      if (data.status === 'success') {
+      if (!isCurrent()) return;
+      if (draftRevisionRef.current !== revision || screenplayRef.current !== draft) {
+        // The remote order changed, while this editor has newer edits. Keep those
+        // edits, block automatic saving, and require an explicit recovery decision.
+        const state = saveCoordinatorRef.current.snapshot(project);
+        manualReviewRef.current.add(project);
+        setSaveProblem({ project, reviewOnly: true, message: 'Scene order was saved, but newer local edits are still open. Review them before saving or reload the saved order.' });
+        preserveDraft({ project, content: screenplayRef.current, revision: state?.revision });
+        return;
+      }
+      if (data.status === 'success' && typeof data.content === 'string') {
         setParsed(data.parsed);
-        await loadScreenplay();
+        setScreenplay(data.content);
+        setAst(fountainToAST(data.content));
+        if (data.warning) alert(`Beat order saved. ${data.warning}`);
       }
     } catch (err) {
-      console.error('Reorder failed:', err);
+      reportSaveFailure({ project, content: screenplayRef.current, edit: draftRevisionRef.current }, err);
+      if (isCurrent()) alert(err.message);
     } finally {
-      setIsLoading(false);
-      setDraggedBeatIndex(null);
+      reorderInFlightRef.current = false;
+      setIsReordering(false);
+      if (isCurrent()) {
+        setIsLoading(false);
+        setDraggedBeatIndex(null);
+      }
     }
   };
 
   const handleSwitchProject = async (proj) => {
-      if (!proj) return;
-      setIsLoading(true);
-      setCurrentProject(proj);
-      try {
-          await fetch(`${BACKEND_URL}/api/screenwriting/projects/switch`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ project_name: proj })
-          });
-          await loadProjects();
-          await loadScreenplay(proj);
-          await loadBranches();
-          await loadSprints();
-          await loadCharacters();
-      } catch (e) { console.error(e); }
-      setIsLoading(false);
+    if (!proj || transitionRef.current || reorderInFlightRef.current) return;
+    transitionRef.current = true; setIsLoading(true);
+    try {
+      const departingDraft = await flushDraftForTransition();
+      const response = await fetch(`${BACKEND_URL}/api/screenwriting/projects/switch`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ project_name: proj }),
+      });
+      if (!response.ok) { const error = await response.json(); throw new Error(error.detail || 'Project switch failed.'); }
+      await loadProjects();
+      if (!draftStillCurrent(departingDraft)) throw new Error('Your draft changed during the switch. It remains open; retry when ready.');
+      if (await loadScreenplay(proj)) { await loadBranches(); await loadSprints(); }
+    } catch (error) { setSaveProblem({ project: currentProjectRef.current, message: error.message }); }
+    finally { transitionRef.current = false; setIsLoading(false); }
   };
 
   const handleAnimateBeat = async (beat) => {
+      const project = loadedProjectRef.current;
+      if (!project || currentProjectRef.current !== project || isLoading) return;
+      const sequence = screenplayLoadSequenceRef.current;
+      const isCurrent = () => sequence === screenplayLoadSequenceRef.current && loadedProjectRef.current === project && currentProjectRef.current === project;
       setAnimatingBeats(prev => ({...prev, [beat.id]: true}));
       try {
           const prompt = beat.heading + " " + beat.summary;
@@ -958,18 +1175,18 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
                // Hardcoded HLS stream for now as output from VLC transcoder
                const videoUrl = `${BACKEND_URL}/streams/test_output.m3u8`;
                
-               await fetch(`${BACKEND_URL}/api/screenwriting/projects/scene_video`, {
+               const saved = await fetch(`${BACKEND_URL}/api/screenwriting/projects/scene_video`, {
                    method: 'POST',
                    headers: {'Content-Type': 'application/json'},
-                   body: JSON.stringify({ beat_id: beat.id, video_url: videoUrl })
+                   body: JSON.stringify({ project_name: project, beat_id: beat.id, video_url: videoUrl })
                });
-               
-               await loadScreenplay(); // refresh metadata
+               if (!saved.ok) throw new Error('Scene video could not be saved.');
+               if (isCurrent()) setProjectMetadata(prev => ({...prev, beat_videos: {...prev?.beat_videos, [beat.id]: videoUrl}}));
           }
       } catch(err) {
           console.error(err);
       } finally {
-          setAnimatingBeats(prev => ({...prev, [beat.id]: false}));
+          if (isCurrent()) setAnimatingBeats(prev => ({...prev, [beat.id]: false}));
       }
   };
 
@@ -1023,6 +1240,9 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   const handleFileChange = async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
+      const sequence = screenplayLoadSequenceRef.current;
+      const initiatingProject = currentProjectRef.current;
+      const isCurrent = () => sequence === screenplayLoadSequenceRef.current && currentProjectRef.current === initiatingProject;
       
       const fileName = file.name.toLowerCase();
       const validExts = ['.pdf', '.docx', '.doc', '.epub', '.txt', '.rtf', '.md', '.markdown', '.fountain', '.fdx'];
@@ -1044,7 +1264,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
       }
       
       // Direct screenplay script import (.fdx or .fountain)
-      const projName = prompt("Importing script into project (or type a new project name):", defaultName);
+      const projName = prompt("Import screenplay as a new project (existing projects are preserved):", file.name.replace(/\.(fdx|fountain)$/i, ''));
       if (!projName) {
           e.target.value = '';
           return;
@@ -1059,20 +1279,35 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
               text = astToFountain(newAst);
           }
           
+          if (!isCurrent() || transitionRef.current) return;
+          transitionRef.current = true;
           setIsLoading(true);
           try {
-              await fetch(`${BACKEND_URL}/api/screenwriting/projects/import`, {
+              const departingDraft = await flushDraftForTransition();
+              const response = await fetch(`${BACKEND_URL}/api/screenwriting/projects/import`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ project_name: projName, content: text })
               });
+              const data = await response.json();
+              if (!response.ok) throw new Error(data.detail || 'The screenplay could not be imported.');
+              const importedProject = data.project || data.current;
+              if (!importedProject) throw new Error('Import did not return a project name.');
+              if (!isCurrent()) return;
               await loadProjects();
-              await loadScreenplay();
+              if (!isCurrent()) return;
+              if (!draftStillCurrent(departingDraft)) throw new Error('Import created. Your newer edits remain open; select the imported project when ready.');
+              await loadScreenplay(importedProject);
               await loadBranches();
               await loadSprints();
-              await loadCharacters();
-          } catch(err) { console.error(err); }
-          setIsLoading(false);
+              if (currentProjectRef.current === importedProject) setIsLoading(false);
+          } catch(err) {
+              console.error(err);
+              if (isCurrent()) {
+                  alert(`Import failed: ${err.message}`);
+                  setIsLoading(false);
+              }
+          } finally { transitionRef.current = false; setIsLoading(false); }
       };
       reader.readAsText(file);
       e.target.value = '';
@@ -1080,6 +1315,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
 
   const handleStartAdaptation = async (forceRestart = false) => {
       if (!adaptFile || !adaptProjectName) return;
+      try { await flushDraftForTransition(); } catch (error) { alert(error.message); return; }
       setIsAdapting(true);
       setShowAdaptModal(false);
       setAdaptProgress({ status: 'processing', progress: 0, current_chunk: 0, total_chunks: 0 });
@@ -1121,7 +1357,7 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
   };
 
   const startAdaptationStream = (projName) => {
-      const eventSource = new EventSource(`${BACKEND_URL}/api/screenplay/adapt/stream?project_name=${projName}`);
+      const eventSource = createAuthenticatedEventSource(`${BACKEND_URL}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projName)}`);
       let lastProgress = -1;
 
       eventSource.onmessage = async (event) => {
@@ -1132,9 +1368,8 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
                   
                   if (data.status === 'processing' && data.progress !== lastProgress) {
                       lastProgress = data.progress;
-                      setCurrentProject(projName);
-                      await loadProjects();
-                      await loadScreenplay();
+                      lastProgress = data.progress;
+                      // Progress never replaces the active draft or steals project focus.
                   }
 
                   if (data.status === 'complete' || data.status === 'error') {
@@ -1146,10 +1381,11 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
                           alert(`AI Adaptation Failed: ${data.error || 'Unknown error'}`);
                       }
                       
-                      setCurrentProject(projName);
                       await loadProjects();
-                      await loadScreenplay();
-                      await loadBranches();
+                      if (currentProjectRef.current === projName) {
+                        manualReviewRef.current.add(projName);
+                        setSaveProblem({ project: projName, reviewOnly: true, message: 'Adaptation finished. Download any local edits, then use Reload saved version to view the generated manuscript.' });
+                      }
                   }
               }
           } catch(err) {
@@ -1201,17 +1437,11 @@ export default function ScreenwritingTab({ backendUrl, sharedContent, setSharedC
     handleAstChange(newAst);
   };
 
-  const exportFDX = () => {
-    window.open(`${BACKEND_URL}/api/screenwriting/export/fdx`, '_blank');
-  };
+  const exportFDX = () => downloadScreenplayExport('fdx');
 
   const exportPDF = () => {
-    const wm = prompt("Enter watermark text (or leave blank for none):", "");
-    let url = `${BACKEND_URL}/api/screenwriting/export/pdf`;
-    if (wm) {
-       url += `?watermark=${encodeURIComponent(wm)}`;
-    }
-    window.open(url, '_blank');
+    const watermark = prompt('Enter watermark text (or leave blank for none):', '');
+    if (watermark !== null) return downloadScreenplayExport('pdf', watermark);
   };
 
   // Helper to extract selected text or active focused block in ScreenplayEditor
@@ -1798,12 +2028,37 @@ ${origFountain}`;
       )}
 
       {/* Character Vault Modal */}
-      {showCharacterVault && (
+      {incomingWorkspaceDraft && (
+        <div role="status" style={{ padding: '12px', background: '#172033', color: '#e2e8f0' }}>
+          Workspace text changed outside this editor. Your current project remains open. Download the incoming copy to review or import it separately.
+          {' '}<button type="button" onClick={() => downloadLocalDraft(incomingWorkspaceDraft)}>Download workspace draft</button>
+        </div>
+      )}
+      {saveProblem && (
+        <div role="alert" style={{ padding: '12px', background: '#422006', color: '#fef3c7', border: '1px solid #d97706' }}>
+          <strong>Draft protection — {saveProblem.project || 'Screenwriting Studio'}</strong>
+          <p>{saveProblem.message}</p>
+          <button type="button" onClick={() => downloadLocalDraft()}>Download local draft</button>{' '}
+          <button type="button" disabled={isLoading || isReordering} onClick={reloadSavedVersion}>Reload saved version</button>
+          <p>To keep both versions, download your draft and import it under a new project name. Reload never merges drafts automatically.</p>
+        </div>
+      )}
+      {recoveryDrafts.length > 0 && (
+        <details style={{ padding: '8px', background: '#172033', color: '#e2e8f0' }}>
+          <summary>Browser recovery copies ({recoveryDrafts.length})</summary>
+          {recoveryDrafts.map(draft => <button type="button" key={draft.key} onClick={() => downloadLocalDraft(draft)}>
+            Download {draft.project} — {new Date(draft.savedAt).toLocaleString()}
+          </button>)}
+        </details>
+      )}
+      {showCharacterVault && currentProject && loadedProjectRef.current === currentProject && (
         <CharacterVaultModal 
+          key={`${currentProject}:${screenplayLoadSequenceRef.current}`}
+          projectName={currentProject}
           backendUrl={BACKEND_URL}
           onClose={() => setShowCharacterVault(false)}
-          onCharactersUpdate={(chars) => {
-             setCharacters(chars);
+          onCharactersUpdate={(chars, project) => {
+             if (project === currentProjectRef.current && project === loadedProjectRef.current) setCharacters(chars);
           }}
         />
       )}
@@ -1974,10 +2229,10 @@ ${origFountain}`;
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(15, 23, 42, 0.9)', border: '1px solid #334155', padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem' }} title="Continuous background autosave for admins">
               <span style={{ fontSize: '0.65rem' }}>
-                {autoSaveStatus === 'saving' ? '🟡' : autoSaveStatus === 'error' ? '🔴' : '🟢'}
+                {autoSaveStatus === 'saving' || autoSaveStatus === 'unsaved' ? '🟡' : autoSaveStatus === 'error' ? '🔴' : '🟢'}
               </span>
               <span style={{ color: autoSaveStatus === 'error' ? '#f87171' : (autoSaveStatus === 'saving' ? '#fbbf24' : '#38bdf8'), fontWeight: 600 }}>
-                {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'error' ? 'Autosave Failed' : `Autosaved ${lastSavedTime ? lastSavedTime : ''}`}
+                {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'unsaved' ? 'Unsaved changes' : autoSaveStatus === 'error' ? 'Save paused' : `Saved ${lastSavedTime || ''}`}
               </span>
             </div>
             <button onClick={handleSaveScreenplay} disabled={isLoading} className="sw-save-btn" style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
@@ -2532,13 +2787,34 @@ ${origFountain}`;
                 {currentProject !== 'Default Project' && (
                   <button 
                     onClick={handleDeleteCurrentProject} 
+                    disabled={isLoading}
                     style={{ background: '#ef444422', border: '1px solid #ef444466', color: '#ef4444', padding: '0 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
-                    title="Delete current project"
+                    title="Archive current project (recoverable)"
+                    aria-label="Archive current project"
                   >
-                    🗑️
+                    📦
                   </button>
                 )}
               </div>
+              <button type="button" aria-expanded={showArchivedProjects} onClick={async () => {
+                if (!showArchivedProjects) await loadArchivedProjects();
+                setShowArchivedProjects(!showArchivedProjects);
+              }} style={{ width: '100%', marginBottom: '6px' }}>
+                📦 Archived projects
+              </button>
+              {showArchivedProjects && (
+                <div role="region" aria-label="Archived projects" style={{ marginBottom: '10px' }}>
+                  {archivedProjects.length === 0 && <p>No archived projects.</p>}
+                  {archivedProjects.map(item => (
+                    <div key={item.archive_id} style={{ marginBottom: '6px' }}>
+                      <span>{item.project_name}</span>{' '}
+                      <button type="button" disabled={isLoading} onClick={() => handleRestoreProject(item.archive_id)}>
+                        Restore
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <button onClick={handleImportClick} style={{ width: '100%', background: 'transparent', border: '1px solid #facc15', color: '#facc15', padding: '4px', cursor: 'pointer', fontSize: '0.8rem', borderRadius: '4px' }}>
                 + Import (.pdf, .docx, .epub, .fdx, etc.)
               </button>

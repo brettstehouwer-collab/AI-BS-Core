@@ -5,6 +5,7 @@ AI-BS Port 8080 Endpoint Matrix for Sovereign Agent Applications
 Exposes session management, app catalog, and multi-turn execution for the 14 agent tools.
 """
 
+import asyncio
 import json
 import logging
 from fastapi import APIRouter, HTTPException, Query, Body, WebSocket, WebSocketDisconnect
@@ -23,6 +24,8 @@ except ImportError:
         sys.path.insert(0, _backend_dir)
     from modules.agent_harness_runner import agent_harness_runner
     from core.sovereign_reasoning.swarm_coordinator import swarm_coordinator
+
+from security.firebase_auth import verify_admin_credentials
 
 router = APIRouter(prefix="/api/v1/agent-harness", tags=["Sovereign Agent Harness"])
 logger = logging.getLogger("agent_harness_router")
@@ -150,12 +153,24 @@ async def terminate_agent_session(session_id: str):
 # TRIPLE-TIER HYBRID STREAMING (WEBSOCKET + SSE FALLBACK)
 # =============================================================================
 
+async def _authorize_agent_websocket(websocket: WebSocket) -> bool:
+    """Authorize headers before accepting a connection or accessing runner state."""
+    supplied = websocket.headers.get("x-admin-key", "") or websocket.headers.get("x-api-key", "")
+    authorization = websocket.headers.get("authorization", "")
+    if not await asyncio.to_thread(verify_admin_credentials, supplied, authorization):
+        await websocket.close(code=4403, reason="Administrator authorization is required.")
+        return False
+    return True
+
+
 @router.websocket("/ws/{session_id}")
 async def websocket_agent_session(websocket: WebSocket, session_id: str):
     """
     Tier 1 Streaming: High-speed bidirectional WebSocket connection for live agent sessions.
     Streams token-by-token LLM output and line-by-line subprocess logs directly to the UI.
     """
+    if not await _authorize_agent_websocket(websocket):
+        return
     await websocket.accept()
     logger.info(f"[AgentWS] Client connected to session {session_id}")
     try:
@@ -330,6 +345,8 @@ async def stream_swarm_job(job_id: str):
 @router.websocket("/swarm/ws/{job_id}")
 async def websocket_swarm_job(websocket: WebSocket, job_id: str):
     """WebSocket stream for real-time multi-agent swarm execution."""
+    if not await _authorize_agent_websocket(websocket):
+        return
     await websocket.accept()
     try:
         job = swarm_coordinator.get_job_status(job_id)

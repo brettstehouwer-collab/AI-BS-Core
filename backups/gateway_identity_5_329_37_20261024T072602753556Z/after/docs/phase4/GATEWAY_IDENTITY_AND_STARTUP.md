@@ -1,0 +1,19 @@
+# Gateway identity and startup checkpoint
+
+Source/build v5.329.37, October 24, 2026. This is verified local gateway work; browser sign-in, actual Firebase sessions, Windows VM containment and complete platform release acceptance remain pending.
+
+`go-core/cmd/aibs_engine/main.go` now starts only the loopback gateway by default. `-manage-daemons` explicitly starts registered auto-start services; `-handoff` restores only verified existing ownership. Those two options cannot be combined. The existing supervisor and its stopped registrations remain intact. Startup does not adopt the separately running FastAPI, Vite or Ollama processes. `-version` prints the compiled build stamp without starting services. Unstamped builds report `development`.
+
+`go-core/pkg/telemetry/security.go::ActiveDefenseShield` verifies the caller without replacing a Firebase Bearer token with the shared master-key header. FastAPI independently verifies the original token and derives private ownership from its subject. Explicit local-admin keys retain their existing meaning. The Go layer also protects chat, hybrid-chat and coding routes before proxying; downstream protection remains.
+
+The CORS wrapper removes upstream access-control grants before applying its explicit origin allowlist. Untrusted origins cannot keep a reflected credentialed grant. Existing `Vary` fields and streaming response-controller support remain. This does not implement the existing stubbed rate limiter, prove every route's permissions, or measure GPU readiness. The gateway's old GPU boolean and model fallback list still require separate truthfulness review.
+
+Retained evidence: `backups/gateway_identity_5_329_37_20261024T072602753556Z`. Sixteen top-level Go test methods pass, including real ephemeral RSA signatures with pinned test-only public keys, and startup-policy fixtures. The whole Go module test and vet commands pass with dependency downloads disabled. These Firebase tests do not authenticate against real Google sessions.
+
+Twenty actual local-admin HTTP observations pass: anonymous and invalid-key denial, direct/proxied private identity agreement, private revision reads, documented executive status, invalid native-action rejection, allowed/untrusted CORS and preflight behavior, review-mode refusal, genuine Stehouwer streaming, all eleven registrations stopped, and compiled gateway version. No arbitrary execution or managed service was started. The selected 888 document originals/copies match, and both authority databases retain integrity and existing table counts.
+
+The verified workspace binary is `go-core/aibs_engine.exe`, SHA256 `18ed747d07b6a41aaa776175d00c4b16e32f3f3173063c142f4aaa92620c73a9`. The previous binary remains at the checkpoint's `before/go-core/aibs_engine.exe`, SHA256 `cdf38c7261311f23f1aa20b2d68670d6f847f336a0460dce6ddf1d2de01093f0`. The running process uses the retained `build/aibs_engine.exe` from the same checkpoint. Installed native applications and installers were not replaced or distributed.
+
+If gateway rollback is required, identify and stop only this recorded gateway process after confirming no active request or owned service. Preserve FastAPI, Vite and Ollama. The direct 8080 API remains the local core path; browser rollback behavior still needs actual browser acceptance. Retain the previous binary for recovery/inspection, but do not relaunch its old default startup or Firebase-key translation without reviewing those known defects. A complete release rollback rehearsal remains Phase 6 work.
+
+Outstanding backend finding: `AI_BS_Backend.py::catch_all` ends with a plain `{"status": "unhandled", "path": full_path}` dictionary. Unsupported API methods/paths can therefore return HTTP 200. The initial method-probe failure is retained; changing the probe to the documented read-status endpoint does not fix this defect. Correct that error contract separately before claiming complete verified execution or release readiness.

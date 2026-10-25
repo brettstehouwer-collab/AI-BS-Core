@@ -327,4 +327,4 @@ if __name__ == "__main__":
     print("Starting AI-BS Bullshit Trainer Daemon on Port 8004...")
     print("Hardware Target: RTX 4090 (24GB VRAM)")
     print("==================================================")
-    uvicorn.run(app, host="0.0.0.0", port=8004, log_level="info")
+    uvicorn.run(app, host="127.0.0.1", port=8004, log_level="info")

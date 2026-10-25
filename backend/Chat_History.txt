@@ -16415,3 +16415,86 @@ Now, let's have a look at the code in a split view. Here's the direct action but
 
 Is there a specific part of the code you’d like to focus on? Let me know if you need to tweak or inspect anything.
 
+
+
+==================================================
+Desktop IDE Chat Session (10:57 AM)
+==================================================
+# Desktop IDE Chat Session (10:57 AM)
+*Ingested at: 2026-10-23 10:57:08 AM | Source: desktop_ide_chat*
+
+### User `[stehouwer_llm]`:
+Test hello echoe reply back test echoe
+
+### Assistant `[stehouwer_llm (Hybrid Stream)]`:
+Test echoe, hello. Reply back with another test echoe.
+
+### User `[stehouwer_llm]`:
+# AI-BS v5.329.9 - mission outcome propagation
+
+One focused task completed: preserve actual mission outcomes through the API and mission card.
+
+- The mission endpoint and all executive mission aliases report failure, blocked or unimplemented results truthfully. Success additionally requires matching completed task records and counts. Malformed completion claims are rejected without changing the original engine result.
+- The mission card retains unsuccessful mission/step results, displays their status and explanation, exposes HTTP/login errors, and disables competing run controls while a request is active. All four mirrors match.
+- 37 isolated helper/actual-endpoint checks and 52 actual-component checks passed. Live neutral inspection missions through direct FastAPI and the gateway returned unimplemented rather than success; anonymous callers received403/401. No mutation executor, provider, test, mirror or delivery phase ran during those live probes.
+- Named FastAPI restart passed16 checks; other managed service states and PIDs were preserved. All866 screenplay and22 document baseline hashes were unchanged.
+- Frontend build passed. All9,972 pre-existing strict TypeScript diagnostics remain, with no new normalized signatures. Candidate scan found zero inspected credential patterns, including RapidAPI. Five internal documents and source maps remain excluded.
+- Firebase v5.329.9 published successfully. Hosted assets containing the actual mission-card change match the candidate. Local source metadata is v5.329.9. Native installation remains deferred.
+
+## Next bounded task
+
+Implement the first isolated coding-change workflow with explicit inputs, saved state and real check results. This release does not add an autonomous patch generator, durable general mission execution, or a worktree controller. New provider connections remain unconfigured.
+
+## Proposal reviewed only
+
+refactoring_campaign_pearl_mining_cms_and_advertising_routers.md correctly identifies four inline domains suitable for later extraction. The sample is incomplete: it omits currently implemented endpoints, deletes all advertising leads before replacing rows, overwrites CMS files without retained versions, reports GPU clock success without checking command returncodes, and counts ignored/failed subscriber inserts misleadingly. Preserve auth, outbound activation policy, existing route behavior, database provenance, and startup isolation during any later extraction. Both backend/state.db and backend/aibs_master.db currently contain the two named subscriber/advertising tables, so data-location assumptions must be verified. No proposed refactor or hardware action was executed.
+
+## Evidence
+
+- AI-BS_Mission_API_Status_2026-10-23.json
+- AI-BS_Mission_Card_Status_2026-10-23.json
+- AI-BS_Mission_API_Status_Live_2026-10-23.json
+- AI-BS_Runtime_5_329_9_Live_Verification_2026-10-23.json
+- AI-BS_Firebase_PostRelease_5_329_9_2026-10-23.json
+- Source checkpoint: C:\AI-BS\backups\runtime_checkpoint_5_329_9_20261023T144008Z
+
+No new API keys were stored, no new subscribed service was invoked, and no created documents were deleted. Previously exposed RapidAPI credentials still require provider-side rotation.
+
+### Assistant `[stehouwer_llm (Hybrid Stream)]`:
+> 🧠 **[Swarm Pre-Parse: Specialist `qwen2.5-coder:latest`]** *(Technical Architecture & Code Engineering Model)*
+> 💭 *Analyzing domain constraints and constructing technical grounding briefing...*
+
+### User `[stehouwer_llm]`:
+# AI-BS v5.329.9 - mission outcome propagation
+
+One focused task completed: preserve actual mission outcomes through the API and mission card.
+
+- The mission endpoint and all executive mission aliases report failure, blocked or unimplemented results truthfully. Success additionally requires matching completed task records and counts. Malformed completion claims are rejected without changing the original engine result.
+- The mission card retains unsuccessful mission/step results, displays their status and explanation, exposes HTTP/login errors, and disables competing run controls while a request is active. All four mirrors match.
+- 37 isolated helper/actual-endpoint checks and 52 actual-component checks passed. Live neutral inspection missions through direct FastAPI and the gateway returned unimplemented rather than success; anonymous callers received403/401. No mutation executor, provider, test, mirror or delivery phase ran during those live probes.
+- Named FastAPI restart passed16 checks; other managed service states and PIDs were preserved. All866 screenplay and22 document baseline hashes were unchanged.
+- Frontend build passed. All9,972 pre-existing strict TypeScript diagnostics remain, with no new normalized signatures. Candidate scan found zero inspected credential patterns, including RapidAPI. Five internal documents and source maps remain excluded.
+- Firebase v5.329.9 published successfully. Hosted assets containing the actual mission-card change match the candidate. Local source metadata is v5.329.9. Native installation remains deferred.
+
+## Next bounded task
+
+Implement the first isolated coding-change workflow with explicit inputs, saved state and real check results. This release does not add an autonomous patch generator, durable general mission execution, or a worktree controller. New provider connections remain unconfigured.
+
+## Proposal reviewed only
+
+refactoring_campaign_pearl_mining_cms_and_advertising_routers.md correctly identifies four inline domains suitable for later extraction. The sample is incomplete: it omits currently implemented endpoints, deletes all advertising leads before replacing rows, overwrites CMS files without retained versions, reports GPU clock success without checking command returncodes, and counts ignored/failed subscriber inserts misleadingly. Preserve auth, outbound activation policy, existing route behavior, database provenance, and startup isolation during any later extraction. Both backend/state.db and backend/aibs_master.db currently contain the two named subscriber/advertising tables, so data-location assumptions must be verified. No proposed refactor or hardware action was executed.
+
+## Evidence
+
+- AI-BS_Mission_API_Status_2026-10-23.json
+- AI-BS_Mission_Card_Status_2026-10-23.json
+- AI-BS_Mission_API_Status_Live_2026-10-23.json
+- AI-BS_Runtime_5_329_9_Live_Verification_2026-10-23.json
+- AI-BS_Firebase_PostRelease_5_329_9_2026-10-23.json
+- Source checkpoint: C:\AI-BS\backups\runtime_checkpoint_5_329_9_20261023T144008Z
+
+No new API keys were stored, no new subscribed service was invoked, and no created documents were deleted. Previously exposed RapidAPI credentials still require provider-side rotation.
+
+### Assistant `[stehouwer_llm]`:
+Plan generated.
+

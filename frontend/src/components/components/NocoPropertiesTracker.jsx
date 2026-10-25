@@ -49,7 +49,7 @@ export default function NocoPropertiesTracker() {
     active: true,
     interval: 3600,
     lastRun: new Date().toLocaleTimeString(),
-    recipients: ['brettstehouwer@gmail.com', 'theseandaley@gmail.com', 'footballstar0325@gmail.com'],
+    recipients: ['brett@stehouwerproductions.com', 'brettstehouwer@gmail.com', 'theseandaley@gmail.com', 'footballstar0325@gmail.com'],
     quotaNotice: 'IONOS Hourly Rate Limit Protected (Consolidated Digest Mode)'
   });
   const [verdictFilter, setVerdictFilter] = useState('ALL');

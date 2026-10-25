@@ -5,7 +5,8 @@ import json
 import asyncio
 import logging
 from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Request, Header, HTTPException, status
+from fastapi import APIRouter, Request, Header, HTTPException, status, Depends
+from security.analytics_access import require_analytics_admin
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -1653,8 +1654,8 @@ from commercial_gateway.site_analytics_router import (
     TrafficBeaconPayload,
 )
 
-@gateway_router.get("/analytics/traffic-summary")
-@gateway_router.get("/api/analytics/traffic-summary")
+@gateway_router.get("/analytics/traffic-summary", dependencies=[Depends(require_analytics_admin)])
+@gateway_router.get("/api/analytics/traffic-summary", dependencies=[Depends(require_analytics_admin)])
 async def gateway_traffic_summary(limit: int = 50, site_id: str = "stehouwer_publishing"):
     return await get_site_traffic_summary(limit=limit, site_id=site_id)
 

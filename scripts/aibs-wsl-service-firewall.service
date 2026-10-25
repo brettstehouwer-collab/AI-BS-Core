@@ -1,0 +1,12 @@
+[Unit]
+Description=Restrict AI-BS WSL service ports to the Windows host
+After=network-pre.target
+Before=nginx.service ubuntu-bio-bridge.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/aibs-wsl-service-firewall.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

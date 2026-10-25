@@ -9,8 +9,8 @@ from shell_adapter import build_command
 
 TRUSTED_BASES: tuple[Path, ...] = (
     Path(r"C:\AI-BS"),
-    Path(r"D:\AI-BS"),
-    Path(r"E:\AI_BS_Resources"),
+    Path("D:\\"),
+    Path("E:\\"),
     Path.home(),
 )
 

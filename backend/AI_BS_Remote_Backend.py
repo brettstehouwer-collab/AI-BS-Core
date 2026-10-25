@@ -108,7 +108,7 @@ def main():
     print("WARNING: This instance is running on Port 8010 for remote access.")
     print("SECURITY: Polyglot Execution and UI Mutations are HARD-BLOCKED.")
     print("============================================================")
-    uvicorn.run(app, host="0.0.0.0", port=8010, log_level="warning")
+    uvicorn.run(app, host="127.0.0.1", port=8010, log_level="warning")
 
 
 if __name__ == "__main__":

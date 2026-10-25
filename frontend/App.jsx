@@ -10,7 +10,7 @@ import { auth, db } from './firebase.js';
 import { SYSTEM_VERSION } from './version.js';
 import { useBackendHealth } from './components/useBackendHealth.js';
 import { useAppStore } from './components/useAppStore.js';
-import { getUserTier, canAccessTab, ADMIN_EMAILS, USER_TIERS } from './components/accessControl.js';
+import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS, USER_TIERS } from './components/accessControl.js';
 import FeatureGateLockedCard from './components/FeatureGateLockedCard.jsx';
 import MomAccessibilityHUD from './components/MomAccessibilityHUD.jsx';
 import './components/MomMode.css';
@@ -91,6 +91,7 @@ const AutomatedClientSchedulerTab = safeLazy(() => import('./components/Automate
 const DeepLearningStudioTab = safeLazy(() => import('./components/DeepLearningStudioTab.jsx'));
 const ReasoningAttentionTab = safeLazy(() => import('./components/ReasoningAttentionTab.jsx'));
 const VideoStreamingTab = safeLazy(() => import('./components/VideoStreamingTab.jsx'));
+const VideoStudioTab = safeLazy(() => import('./components/VideoStudioTab.jsx'));
 const DigitalStorefrontTab = safeLazy(() => import('./components/DigitalStorefrontTab.jsx'));
 const GpuNetworkTab = safeLazy(() => import('./components/GpuNetworkTab.jsx'));
 const DefinitionsModuleTab = safeLazy(() => import('./components/DefinitionsModuleTab.jsx'));
@@ -200,6 +201,8 @@ class TabErrorBoundary extends React.Component {
 const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
+  { key: 'chat', label: '💬 BS-CHAT Assistant', description: 'Autonomous Sovereign Mobile & Desktop AI Assistant & Swarm', Component: MobileStehouwerChat },
+  { key: 'video_streaming', label: '🎬 VLC Media Player & Video Studio', description: 'Integrated VLC Player for Rendered & Uploaded Videos, HLS Streaming & UE5 Bridge', Component: VideoStudioTab },
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
   { key: 'nutrition_subsystem', label: '🥗 Clinical Nutrition & Detox Engine', description: 'Hybrid Cold-Press Mechanical Extraction, Fiber Suspension & 4-Day Stepped Keto Refeeding Protocol', Component: NutritionSubsystemLedger },
   { key: 'sovereign_apps', label: '🤖 Sovereign Agent Apps Hub', description: '14-Tool Sovereign Agent Suite (Claude Code, Codex, OpenClaw, OpenCode, Hermes, Droid, Pi, Cline, Copilot) & MoE Specialist Router', Component: SovereignAgentAppsTab },
@@ -300,14 +303,7 @@ export default function App() {
   const { backendUrl, backendStatus } = useBackendHealth();
   const [localTrustState, setLocalTrustState] = useState({ enabled: false, allowedUsers: [] });
   const [authLoading, setAuthLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const cached = localStorage.getItem('aibs_cached_user');
-      return cached ? JSON.parse(cached) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [currentUser, setCurrentUser] = useState(null);
   // Mobile View Mode: 'chat' (default on mobile devices/APK) vs 'desktop'
   const isMobileDevice = typeof window !== 'undefined' && (isNativeMobile() || window.innerWidth <= 768);
   const [mobileViewMode, setMobileViewMode] = useState(() => {
@@ -326,16 +322,7 @@ export default function App() {
     } catch {}
   };
 
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    try {
-      if (typeof window !== 'undefined' && (isNativeMobile() || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        return true;
-      }
-      return !!localStorage.getItem('aibs_cached_user');
-    } catch {
-      return false;
-    }
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [viewMode, setViewMode] = useState('2D');
   const [workspaceMode, setWorkspaceMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -452,6 +439,7 @@ export default function App() {
   const isMasterAdmin = Boolean(
     currentUser && (
       ADMIN_EMAILS.includes((currentUser.email || '').toLowerCase()) ||
+      ADMIN_UIDS.includes(currentUser.uid) ||
       currentUser.email === 'brettstehouwer@gmail.com' ||
       (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
     )
@@ -464,9 +452,9 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         const email = user.email.toLowerCase();
-        // Any user authenticated with Firebase or present in ADMIN_EMAILS or localhost is authorized
-        const isAuthorized = Boolean(user && user.email) || ADMIN_EMAILS.includes(email) ||
-          (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+        const isAuthorized = Boolean(user.emailVerified && (
+          ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(user.uid)
+        ));
 
         if (isAuthorized) {
           setIsAuthenticated(true);
@@ -505,12 +493,12 @@ export default function App() {
           // Trigger Real-Time Multi-Channel Login Notification Sentinel
           try {
             if (typeof window !== 'undefined' && window.sendDashboardLoginNotification) {
-              window.sendDashboardLoginNotification({
+              Promise.resolve(window.sendDashboardLoginNotification({
                 email: user.email,
                 displayName: user.displayName,
                 uid: user.uid,
                 photoURL: user.photoURL
-              });
+              })).catch(() => console.warn('Login notification could not be confirmed.'));
             } else {
               const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
               const targetUrl = isLocalHost ? 'http://127.0.0.1:8080/api/analytics/notify-login' : 'https://api.brettstehouwer.live/api/analytics/notify-login';
@@ -527,7 +515,9 @@ export default function App() {
                 }),
                 keepalive: true,
                 mode: 'cors'
-              }).catch(() => {});
+              }).then(response => {
+                if (!response.ok) console.warn(`Login notification unavailable (HTTP ${response.status}).`);
+              }).catch(() => console.warn('Login notification could not be confirmed.'));
             }
           } catch (loginNotifyErr) {
             console.warn('Login notification sentinel error:', loginNotifyErr);
@@ -538,16 +528,13 @@ export default function App() {
           setCurrentUser(null);
           useAppStore.getState().setCurrentUser(null);
           localStorage.removeItem('aibs_cached_user');
+          auth.signOut().catch(() => {});
         }
       } else {
-        if (typeof window !== 'undefined' && (isNativeMobile() || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          setIsAuthenticated(true);
-          setCurrentUser({ email: 'brettstehouwer@gmail.com', displayName: 'Brett Stehouwer (Local Admin)', uid: 'local_admin_brett' });
-        } else {
-          setIsAuthenticated(false);
-          setCurrentUser(null);
-          localStorage.removeItem('aibs_cached_user');
-        }
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        useAppStore.getState().setCurrentUser(null);
+        localStorage.removeItem('aibs_cached_user');
       }
       setAuthLoading(false);
     });
@@ -650,7 +637,30 @@ export default function App() {
     localStorage.setItem('sp-ai-nav-layout', nextLayout);
   };
 
-  const activeTabConfig = tabs.find((tab) => tab.key === activeTab) ?? tabs[0];
+  const TAB_ALIASES = {
+    chat: 'chat',
+    team_chat: 'chat',
+    mobile_chat: 'chat',
+    vlc: 'video_streaming',
+    vlc_player: 'video_streaming',
+    video_streaming: 'video_streaming',
+    command_center: 'dashboard',
+    agent_apps: 'sovereign_apps',
+    host_terminal: 'terminal',
+    screenwriting: 'creation_suite',
+    cloud_drive: 'shared_cloud_drive',
+    noto_bar: 'noto_inventory',
+    prestige_wash: 'power_washing',
+    bible_study: 'bible_hub',
+    video_meet: 'video_streaming',
+    noco_properties: 'project_noco',
+    campus_map: 'project_noco',
+    stage_acoustics: 'project_noco',
+    energy_microgrid: 'project_noco',
+    cea_agriculture: 'project_noco',
+  };
+  const effectiveTab = TAB_ALIASES[activeTab] || activeTab;
+  const activeTabConfig = tabs.find((tab) => tab.key === effectiveTab) ?? tabs[0];
   const ActiveComponent = activeTabConfig.Component;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -670,18 +680,6 @@ export default function App() {
       window.location.search.includes('remote=true') ||
       window.location.search.includes('view=mobile')
     ));
-
-  if (isRecDebutStandaloneRoute) {
-    return (
-      <div style={{ width: '100vw', height: '100vh', overflowY: 'auto', background: '#07101e' }}>
-        <TabErrorBoundary key="recdebut-portal">
-          <Suspense fallback={<TabLoader />}>
-            <DennisBellPortal backendUrl={backendUrl} />
-          </Suspense>
-        </TabErrorBoundary>
-      </div>
-    );
-  }
 
   if (isMobileWriterRoute) {
     return (
@@ -776,6 +774,18 @@ export default function App() {
         }} 
         backendUrl={backendUrl} 
       />
+    );
+  }
+
+  if (isRecDebutStandaloneRoute) {
+    return (
+      <div style={{ width: '100vw', height: '100vh', overflowY: 'auto', background: '#07101e' }}>
+        <TabErrorBoundary key="recdebut-portal">
+          <Suspense fallback={<TabLoader />}>
+            <DennisBellPortal backendUrl={backendUrl} />
+          </Suspense>
+        </TabErrorBoundary>
+      </div>
     );
   }
 

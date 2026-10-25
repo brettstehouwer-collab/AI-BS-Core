@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import { ADMIN_EMAILS, ADMIN_UIDS } from './accessControl.js';
 
-const AUTHORIZED_EMAILS = [
-  'theseandaley@gmail.com',
-  'stehouwerjulie@gmail.com',
-  'julie.a.stehouwer@gmail.com',
-  'julieannstehouwer@gmail.com',
-  'juliestehouwer@gmail.com',
-  'stehouwer.julie@gmail.com',
-  'brettstehouwer@gmail.com',
-  'footballstar0325@gmail.com',
-  'rottierannajoy@gmail.com',
-  'devin.feexpress@gmail.com',
-  'devin@feexpress.com'
-];
+const isAdmin = (user) => {
+  const email = (user?.email || '').toLowerCase().trim();
+  return Boolean(user && user.emailVerified && (
+    ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(user.uid)
+  ));
+};
+
+const isLocalDesktop = () => typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+);
 
 export default function LoginModal({ onLoginSuccess }) {
   const [errorMsg, setErrorMsg] = useState('');
@@ -26,7 +24,7 @@ export default function LoginModal({ onLoginSuccess }) {
       .then((result) => {
         if (result && result.user) {
           const user = result.user;
-          if (AUTHORIZED_EMAILS.includes((user.email || '').toLowerCase())) {
+          if (isAdmin(user)) {
             try {
               localStorage.setItem('aibs_cached_user', JSON.stringify({
                 email: user.email,
@@ -37,7 +35,7 @@ export default function LoginModal({ onLoginSuccess }) {
             } catch {}
             onLoginSuccess(user);
           } else {
-            setErrorMsg(`Unauthorized Email (${user.email}). Access restricted.`);
+            setErrorMsg('This verified account is not on the AI-BS administrator list.');
             auth.signOut();
           }
         }
@@ -55,7 +53,7 @@ export default function LoginModal({ onLoginSuccess }) {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      if (AUTHORIZED_EMAILS.includes(user.email.toLowerCase())) {
+      if (isAdmin(user)) {
         try {
           localStorage.setItem('aibs_cached_user', JSON.stringify({
             email: user.email,
@@ -66,7 +64,7 @@ export default function LoginModal({ onLoginSuccess }) {
         } catch {}
         onLoginSuccess(user);
       } else {
-        setErrorMsg(`Unauthorized Email (${user.email}). Access restricted.`);
+        setErrorMsg('This verified account is not on the AI-BS administrator list.');
         await auth.signOut();
       }
     } catch (err) {
@@ -111,12 +109,18 @@ export default function LoginModal({ onLoginSuccess }) {
 
         <div style={{ margin: '15px 0', color: '#64748b', fontSize: '0.8rem' }}>— OR —</div>
 
-        <button 
-          onClick={() => onLoginSuccess({ email: 'brettstehouwer@gmail.com', displayName: 'Brett Stehouwer (Desktop Admin)', uid: 'local_admin_brett' })} 
+        {isLocalDesktop() && <button 
+          onClick={() => {
+            const localUser = { email: 'brett@stehouwerproductions.com', displayName: 'Brett Stehouwer (Desktop Admin)', uid: 'local_admin_brett' };
+            try {
+              localStorage.setItem('aibs_cached_user', JSON.stringify(localUser));
+            } catch {}
+            onLoginSuccess(localUser);
+          }} 
           style={styles.localButton}
         >
           ⚡ Local Desktop Access
-        </button>
+        </button>}
         
         {errorMsg && <p style={styles.error}>{errorMsg}</p>}
       </div>

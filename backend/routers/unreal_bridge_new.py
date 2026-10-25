@@ -186,5 +186,5 @@ def kill_unreal_streamer():
 def unreal_status():
     return {"status": "Unreal Engine Automation Bridge is Online."}
 
-# Notify Discord on module load
-send_discord_update("Phase 13 Complete: Unreal Engine Bridge API initialized and ready for execution.")
+# Importing this router never sends a notification. Explicit actions use the
+# centrally gated notifier.

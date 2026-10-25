@@ -34,7 +34,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     try {
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/artifacts/live`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -56,7 +56,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     try {
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/memory/personal`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -73,7 +73,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     try {
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/memory/personal/activity?limit=50`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -102,7 +102,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ project_name: projectName })
@@ -125,7 +125,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify(newMemory)
@@ -152,7 +152,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/memory/personal/delete/${factId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });

@@ -17,7 +17,7 @@ export function useStehouwerHybrid() {
         : ""; // Use relative path in prod if hosted on same origin, or specify prod backend URL here.
 
     try {
-        const response = await fetch(${BACKEND_URL}/api/v1/hybrid-chat/stream, {
+        const response = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: userPrompt }),

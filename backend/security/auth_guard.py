@@ -4,11 +4,11 @@ Protects administrative, compute, and daemon management routes.
 """
 
 import os
-import secrets
 from fastapi import Header, HTTPException, Request, Depends
+from security.firebase_auth import verify_admin_credentials
 
 # Load or generate stable pre-shared admin key
-DEFAULT_ADMIN_KEY = os.getenv("AI_BS_ADMIN_KEY", "stehouwer_admin_secure_passkey_2026")
+DEFAULT_ADMIN_KEY = os.getenv("AI_BS_ADMIN_KEY", "")
 
 def verify_admin_key(
     request: Request,
@@ -17,20 +17,12 @@ def verify_admin_key(
 ):
     """
     Verifies administrative authorization key on protected endpoints.
-    Allows loopback localhost if running in local development or if valid key provided.
+    Requires the configured admin key on every request.
     """
-    provided_key = x_admin_key
-    if not provided_key and authorization and authorization.startswith("Bearer "):
-        provided_key = authorization.split("Bearer ", 1)[1].strip()
-
-    # Check against expected admin key using constant-time comparison
-    if provided_key and secrets.compare_digest(provided_key, DEFAULT_ADMIN_KEY):
+    provided_key = x_admin_key or request.headers.get("x-api-key", "")
+    if verify_admin_credentials(provided_key, authorization or request.headers.get("authorization", "")):
         return True
 
-    # Check if loopback connection from localhost
-    client_ip = request.client.host if request.client else "127.0.0.1"
-    if client_ip in {"127.0.0.1", "::1", "localhost", "testclient"}:
-        return True
 
     raise HTTPException(
         status_code=403,

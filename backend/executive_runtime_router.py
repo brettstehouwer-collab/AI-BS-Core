@@ -1,11 +1,18 @@
 # File: backend/executive_runtime_router.py
 import os
+import hashlib
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
+import uuid
 from pathlib import Path
+
+try:
+    from core.code_quality_gate import sanitize_and_validate_llm_code
+except ImportError:
+    from backend.core.code_quality_gate import sanitize_and_validate_llm_code
 
 WORKSPACE_ROOT = Path(r"C:\AI-BS")
 SCRATCH_DIR = WORKSPACE_ROOT / ".temp_executor"
@@ -49,6 +56,7 @@ def execute_multi_runtime(command_type: str = "powershell", target: str = "", pa
 
     timeout = int(payload.get("timeout_seconds", 120))
     t0 = time.perf_counter()
+    code_quality = None
 
     try:
         # 1. UNIVERSAL FILE READ
@@ -76,10 +84,24 @@ def execute_multi_runtime(command_type: str = "powershell", target: str = "", pa
             fpath.parent.mkdir(parents=True, exist_ok=True)
             content = payload.get("content", "")
             backup_file = None
-            if fpath.exists():
-                backup_file = f"{fpath}.{int(time.time())}.bak"
-                shutil.copy2(fpath, backup_file)
-            fpath.write_text(content, encoding="utf-8")
+            exclusive_receipt = {}
+            if payload.get("exclusive") is True:
+                # Opt-in source staging must never replace an earlier paste or
+                # translate newlines. Failed writes/readbacks retain evidence.
+                encoded = content.encode("utf-8")
+                with fpath.open("xb") as staged:
+                    staged.write(encoded)
+                    staged.flush()
+                    os.fsync(staged.fileno())
+                actual = fpath.read_bytes()
+                if actual != encoded:
+                    raise RuntimeError("Exclusive file-write readback did not match submitted bytes")
+                exclusive_receipt = {"sha256": hashlib.sha256(actual).hexdigest(), "exclusive": True}
+            else:
+                if fpath.exists():
+                    backup_file = f"{fpath}.{int(time.time())}.bak"
+                    shutil.copy2(fpath, backup_file)
+                fpath.write_text(content, encoding="utf-8")
             return {
                 "status": "success",
                 "result": {
@@ -87,7 +109,8 @@ def execute_multi_runtime(command_type: str = "powershell", target: str = "", pa
                     "path": str(fpath),
                     "bytes_written": fpath.stat().st_size,
                     "backup_created": bool(backup_file),
-                    "backup_file": backup_file
+                    "backup_file": backup_file,
+                    **exclusive_receipt
                 },
                 "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2),
                 "elapsed_ms": round((time.perf_counter() - t0) * 1000, 2)
@@ -146,11 +169,29 @@ def execute_multi_runtime(command_type: str = "powershell", target: str = "", pa
             else:
                 cmd_list = ["wsl.exe", "-d", distro, "--", "bash", "-lc", target]
         elif command_type in ("python", "py"):
-            if os.path.exists(resolve_host_path(target)) and "\n" not in target:
-                cmd_list = [py_exe, str(resolve_host_path(target))] + extra_args
+            script_path = resolve_host_path(target) if "\n" not in target and "\r" not in target and len(target) < 1024 else None
+            existing_script = script_path is not None and script_path.is_file()
+            if existing_script:
+                import tokenize
+                with tokenize.open(script_path) as source_file:
+                    source_code = source_file.read()
             else:
-                temp_file = SCRATCH_DIR / f"_exec_{int(time.time()*1000)}.py"
-                temp_file.write_text(target, encoding="utf-8")
+                source_code = target
+            code_quality = sanitize_and_validate_llm_code(
+                source_code, strict=payload.get("strict_quality_gate") is True
+            )
+            if not code_quality["valid"]:
+                return {"status": "error", "message": "Python code failed pre-execution validation.",
+                        "code_quality": code_quality, "returncode": None,
+                        "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2)}
+            if existing_script:
+                if code_quality["sanitized_code"] != source_code:
+                    return {"status": "error", "message": "Existing Python file needs whitespace correction before execution; original preserved.",
+                            "code_quality": code_quality, "returncode": None}
+                cmd_list = [py_exe, str(script_path)] + extra_args
+            else:
+                temp_file = SCRATCH_DIR / f"_exec_{uuid.uuid4().hex}.py"
+                temp_file.write_text(code_quality["sanitized_code"], encoding="utf-8")
                 cmd_list = [py_exe, str(temp_file)] + extra_args
         elif command_type in ("node", "javascript", "js", "mjs"):
             if os.path.exists(resolve_host_path(target)) and "\n" not in target:
@@ -238,6 +279,7 @@ def execute_multi_runtime(command_type: str = "powershell", target: str = "", pa
             "stdout": proc.stdout,
             "stderr": proc.stderr,
             "returncode": proc.returncode,
+            "code_quality": code_quality,
             "two_strike_governance": two_strike_info,
             "sandbox_dir": str(SCRATCH_DIR),
             "execution_time_ms": round((time.perf_counter() - t0) * 1000, 2),

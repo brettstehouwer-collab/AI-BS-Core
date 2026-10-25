@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -15,7 +19,43 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "types": [
+      "vite/client"
+    ],
+    "paths": {
+      "/src/*": [
+        "./src/*"
+      ],
+      "/utils/*": [
+        "./utils/*"
+      ],
+      "/firebase.js": [
+        "./firebase.js"
+      ],
+      "/components/*": [
+        "./components/*"
+      ]
+    }
   },
-  "include": ["src"]
+  "include": [
+    "main.jsx",
+    "App.jsx",
+    "src/writer_main.jsx",
+    "public/analytics.js",
+    "public/ghost_preload.js"
+  ],
+  "files": [
+    "utils/FDXSerializer.js",
+    "components/ChatToolControlBar.jsx",
+    "components/ComfyUIRenderWidget.jsx",
+    "components/ComfyUIWorkflowTrigger.jsx",
+    "components/SHMTelemetryWidget.jsx",
+    "components/SplitPaneIDEWorkspace.jsx",
+    "components/VectorVaultManager.jsx",
+    "components/useSHMTelemetry.js",
+    "src/BullshitKnowledgeSuite.jsx",
+    "src/BullshitTelemetrySuite.jsx",
+    "src/components/ArtifactRenderer.jsx"
+  ]
 }

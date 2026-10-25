@@ -113,6 +113,13 @@ BASE_KNOWN_MEMBERS = [
         "color": "#38bdf8"
     },
     {
+        "email": "brett@stehouwerproductions.com",
+        "name": "Brett Stehouwer",
+        "role": "Founder & Executive Director",
+        "avatar": "👑",
+        "color": "#38bdf8"
+    },
+    {
         "email": "sean@stehouwerpublishing.com",
         "name": "Sean Stehouwer",
         "role": "Chief Strategy Officer",

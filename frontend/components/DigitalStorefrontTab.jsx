@@ -45,7 +45,7 @@ const CopyIcon = ({ color = "#8b949e", size = 16 }) => (
 const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView = 'storefront_hub' }) => {
   const [activeApp, setActiveApp] = useState(subView);
   const [credits, setCredits] = useState(500);
-  const [userEmail] = useState(currentUser?.email || "brettstehouwer@gmail.com");
+  const [userEmail] = useState(currentUser?.email || "brett@stehouwerproductions.com");
 
   // AI Content State
   const [prompt, setPrompt] = useState('');

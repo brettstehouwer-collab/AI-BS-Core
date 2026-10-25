@@ -54,8 +54,8 @@ def boot_all():
     ollama_env = {
         "CUDA_VISIBLE_DEVICES": "0",
         "OLLAMA_IGPU_ENABLE": "0",
-        "OLLAMA_MODELS": r"E:\AI_BS_Resources\Ollama",
-        "OLLAMA_HOST": "0.0.0.0:11434",
+        "OLLAMA_MODELS": r"C:\AI-BS\models\ollama",
+        "OLLAMA_HOST": "127.0.0.1:11434",
         "OLLAMA_KEEP_ALIVE": "15m",
         "OLLAMA_NUM_PARALLEL": "1",
         "OLLAMA_MAX_LOADED_MODELS": "1",
@@ -67,7 +67,7 @@ def boot_all():
         
     # Also spawn E-Drive Ollama on 11435 if separate instance configured
     ollama_env_11435 = ollama_env.copy()
-    ollama_env_11435["OLLAMA_HOST"] = "0.0.0.0:11435"
+    ollama_env_11435["OLLAMA_HOST"] = "127.0.0.1:11435"
     if os.path.exists(ollama_exe):
         spawn_daemon("ollama_11435", [ollama_exe, "serve"], cwd=BASE_DIR, env=ollama_env_11435)
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SYSTEM_VERSION } from './version';
 import { useAppStore } from './useAppStore';
 import {
   DndContext,
@@ -136,7 +137,7 @@ const Sidebar = ({ activeTab, onTabChange }) => {
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px', whiteSpace: 'nowrap' }}>
               Stehouwer Publishing
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>v5.327.0</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{SYSTEM_VERSION}</div>
           </div>
         )}
         <button 

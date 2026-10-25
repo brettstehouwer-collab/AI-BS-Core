@@ -17,6 +17,10 @@ class ChatMessage(BaseModel):
     content: str = Field(..., description="Message content")
 
 class ChatRequest(BaseModel):
+    prompt: Optional[str] = None
+    mode: Optional[str] = None
+    plan_only: bool = False
+    execution_backend: str = 'trusted_host'
     model: str = Field(default="stehouwer_llm", description="Target model name")
     messages: List[ChatMessage] = Field(default_factory=list, description="Conversation messages")
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)
@@ -119,6 +123,11 @@ async def generate_embedding(request: EmbedRequest):
 @router.post("/completions")
 async def generate_chat_completion(request: ChatRequest):
     """Executes a chat completion with dynamic CPU/GPU layer offloading and zero-latency token streaming."""
+    from core.coding_chat import coding_request
+    body = request.model_dump() if hasattr(request, 'model_dump') else request.dict()
+    reply = await asyncio.to_thread(coding_request, body)
+    if reply is not None:
+        return reply
     target_host = await resolve_model_host(request.model)
     num_gpu = 99
     if arbitrate_workload:

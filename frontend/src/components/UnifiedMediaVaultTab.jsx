@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './UnifiedMediaVaultTab.css';
 
 const AUTHORIZED_EMAILS = [
+  'brett@stehouwerproductions.com',
+  'brett@stehouwerpublishing.com',
   'brettstehouwer@gmail.com',
   'footballstar0325@gmail.com',
   'stehouwerjulie@gmail.com',

@@ -1,3 +1,5 @@
+import { isDriveIntakeOriginal, createIntakeWorkingCopy } from '/src/utils/driveIntakeDocuments.js';
+import { AuthenticatedDriveMedia, AuthenticatedDriveDownload } from '/src/components/AuthenticatedDriveMedia.jsx';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import AdaptationStatusBar from './AdaptationStatusBar.jsx';
@@ -101,6 +103,8 @@ const FILE_TYPE_MAP = {
   '.tsx': { label: 'TSX', language: 'typescript', icon: '⚛️' },
   '.xml': { label: 'XML', language: 'xml', icon: '📋' },
   '.fdx': { label: 'Final Draft', language: 'xml', icon: '🎬' },
+  '.fountain': { label: 'Fountain', language: 'plaintext', icon: '🎬' },
+  '.docx': { label: 'Word document', language: 'plaintext', icon: '📘' },
   '.pdf': { label: 'PDF', language: 'plaintext', icon: '📕' },
   '.csv': { label: 'CSV', language: 'plaintext', icon: '📊' },
   '.yaml': { label: 'YAML', language: 'yaml', icon: '⚙️' },
@@ -113,7 +117,7 @@ function getLanguageForExt(ext) {
 }
 
 function getFileTypeInfo(ext) {
-  return FILE_TYPE_MAP[ext] || { label: 'Unknown', language: 'plaintext', icon: '📄' };
+  return FILE_TYPE_MAP[ext?.startsWith('.') ? ext : `.${ext}`] || { label: 'Unknown', language: 'plaintext', icon: '📄' };
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -128,6 +132,13 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   const setActiveDoc = setSharedActiveDoc;
   const content = sharedContent;
   const setContent = setSharedContent;
+  const currentDocumentRef = useRef(null);
+  currentDocumentRef.current = { doc: activeDoc, content };
+  const lastSavedDocumentRef = useRef({ path: null, content: null });
+  const savedNewPathsRef = useRef(new Set());
+  const saveQueueRef = useRef(Promise.resolve());
+  const saveFileRef = useRef(null);
+  const documentLoadSequenceRef = useRef(0);
   const [loading, setLoading] = useState(false);
 
   // ── Adaptation & Conversion State ──
@@ -147,32 +158,42 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
 
   // ── Signature Canvas State ──
   const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const drawingPointerRef = useRef(null);
+  const filingInFlightRef = useRef(false);
+  const [isFiling, setIsFiling] = useState(false);
+
+  const signaturePosition = (e) => {
+    const canvas = canvasRef.current;
+    const bounds = canvas.getBoundingClientRect();
+    return [(e.clientX - bounds.left) * canvas.width / bounds.width,
+            (e.clientY - bounds.top) * canvas.height / bounds.height];
+  };
 
   const startDrawing = (e) => {
-    const { offsetX, offsetY } = e.nativeEvent;
-    const ctx = canvasRef.current.getContext("2d");
+    if (isFiling || e.isPrimary === false) return;
+    const canvas = canvasRef.current;
+    canvas.setPointerCapture(e.pointerId);
+    drawingPointerRef.current = e.pointerId;
+    const ctx = canvas.getContext('2d');
     ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#e8e8f0";
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#111111';
     ctx.beginPath();
-    ctx.moveTo(offsetX, offsetY);
-    setIsDrawing(true);
+    ctx.moveTo(...signaturePosition(e));
+    e.preventDefault();
   };
 
   const draw = (e) => {
-    if (!isDrawing) return;
-    const { offsetX, offsetY } = e.nativeEvent;
-    const ctx = canvasRef.current.getContext("2d");
-    ctx.lineTo(offsetX, offsetY);
+    if (drawingPointerRef.current !== e.pointerId) return;
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.lineTo(...signaturePosition(e));
     ctx.stroke();
   };
 
   const stopDrawing = () => {
-    if (isDrawing) {
-      const ctx = canvasRef.current.getContext("2d");
-      ctx.closePath();
-      setIsDrawing(false);
+    if (drawingPointerRef.current !== null) {
+      canvasRef.current?.getContext('2d').closePath();
+      drawingPointerRef.current = null;
     }
   };
 
@@ -320,25 +341,33 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       if (res.ok) {
         const data = await res.json();
         setFileTree(data.files || []);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.detail || 'Unable to load documents. Check administrator sign-in.');
       }
-    } catch { /* tree unavailable */ }
-  }, []);
+    } catch { setError('The document service is unavailable.'); }
+  }, [baseUrl]);
 
   useEffect(() => { refreshFileTree(); }, [refreshFileTree]);
 
   // ── Load file from backend ──
   const loadFile = useCallback(async (filePath) => {
+    if (saveFileRef.current && (await saveFileRef.current()) === false) return;
+    const sequence = ++documentLoadSequenceRef.current;
     setLoading(true);
     setError('');
     try {
       const ext = filePath.split('.').pop().toLowerCase();
       
-      if (ext === 'pdf') {
+      const isIntakeOriginal = isDriveIntakeOriginal(filePath);
+      const isBinary = ['docx', 'doc', 'odt', 'epub'].includes(ext);
+      if (ext === 'pdf' || isBinary) {
         setActiveDoc({
           name: filePath.split('/').pop().split('\\').pop(),
           path: filePath,
           ext,
-          isPdf: true,
+          isPdf: ext === 'pdf',
+          isBinary, isIntakeOriginal,
           created: new Date().toISOString(),
           modified: new Date().toISOString(),
         });
@@ -351,34 +380,42 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
           throw new Error(errData.detail || `HTTP ${res.status}`);
         }
         const data = await res.json();
+        if (sequence !== documentLoadSequenceRef.current) return;
+        lastSavedDocumentRef.current = { path: data.path || filePath, content: data.content };
 
         setActiveDoc({
           name: filePath.split('/').pop().split('\\').pop(),
-          path: filePath,
+          path: data.path || filePath,
           ext,
           isPdf: false,
+          isIntakeOriginal,
           created: new Date().toISOString(),
           modified: new Date().toISOString(),
         });
         setContent(data.content);
+        if (ext === 'fdx' || ext === 'fountain') setDocCanvasMode('code');
         setViewMode('editor');
       }
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      if (sequence === documentLoadSequenceRef.current) setLoading(false);
     }
-  }, []);
+  }, [baseUrl]);
 
   // ── Create new document from template ──
-  const createDocument = useCallback((template) => {
+  const createDocument = useCallback(async (template) => {
+    if (saveFileRef.current && (await saveFileRef.current()) === false) return;
+    ++documentLoadSequenceRef.current;
+    setLoading(false);
     const timestamp = new Date().toISOString().slice(0, 10);
-    const name = `untitled${template.ext}`;
-    const path = `E:/AI-BS/Documents/${name}`;
+    const name = `untitled-${Date.now()}-${crypto.randomUUID().slice(0, 8)}${template.ext}`;
+    const path = `Documents/${name}`;
 
     setActiveDoc({
       name,
       path,
+      isNew: true,
       ext: template.ext.slice(1),
       created: new Date().toISOString(),
       modified: new Date().toISOString(),
@@ -392,30 +429,52 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   const [lastSavedTime, setLastSavedTime] = useState(null);
   const autoSaveTimerRef = useRef(null);
 
-  const saveFile = useCallback(async () => {
-    if (!activeDoc) return;
+  const saveFile = useCallback(async (destination) => {
+    const snapshot = currentDocumentRef.current;
+    const doc = destination?.path ? destination : snapshot.doc;
+    if (!doc || doc.isPdf || doc.isBinary) return true;
+    if (isDriveIntakeOriginal(doc.path)) return !destination?.path;
+    const text = snapshot.content;
+    if (typeof text !== 'string') return false;
+    if (!destination?.path && lastSavedDocumentRef.current.path === doc.path && lastSavedDocumentRef.current.content === text) return true;
+    const sourcePath = snapshot.doc?.path;
+    const performSave = async () => {
     setAutoSaveStatus('saving');
     try {
       const res = await fetch(`${baseUrl}/api/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filepath: activeDoc.path, content }),
+        body: JSON.stringify({ path: doc.path, content: text, create_only: !!destination?.path || (!!doc.isNew && !savedNewPathsRef.current.has(doc.path)) }),
       });
-      if (!res.ok) throw new Error('Save failed');
-
-      setActiveDoc((prev) => ({ ...prev, modified: new Date().toISOString() }));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+      savedNewPathsRef.current.add(doc.path);
+      if (currentDocumentRef.current.doc?.path !== sourcePath || currentDocumentRef.current.content !== text) return true;
+      const savedPath = data.path || doc.path;
+      lastSavedDocumentRef.current = { path: savedPath, content: text };
+      setActiveDoc((prev) => ({ ...prev, ...doc, path: savedPath, isNew: false, modified: new Date().toISOString() }));
       setAutoSaveStatus('saved');
       setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
       setUnsavedChanges(false);
+      await refreshFileTree();
+      return true;
     } catch (err) {
       setError(`Save failed: ${err.message}`);
       setAutoSaveStatus('error');
+      return false;
     }
-  }, [activeDoc, content, baseUrl]);
+    };
+    const pending = saveQueueRef.current.then(performSave, performSave);
+    saveQueueRef.current = pending.catch(() => false);
+    return pending;
+  }, [baseUrl, refreshFileTree, setActiveDoc]);
+  saveFileRef.current = saveFile;
 
   // 💾 Automated Continuous Auto-Save for Admins (1500ms debounced)
   useEffect(() => {
-    if (!activeDoc || !content || activeDoc.isPdf) return;
+    if (!activeDoc || typeof content !== 'string' || activeDoc.isPdf || activeDoc.isBinary || isDriveIntakeOriginal(activeDoc.path) || loading) return;
+    if (lastSavedDocumentRef.current.path === activeDoc.path && lastSavedDocumentRef.current.content === content) return;
+    setUnsavedChanges(true);
 
     // 1. Immediate client snapshot backup
     try {
@@ -435,7 +494,23 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
     return () => {
       if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
     };
-  }, [content, activeDoc, saveFile]);
+  }, [content, activeDoc, saveFile, loading]);
+
+  const createEditableIntakeCopy = async () => {
+    const original = activeDoc;
+    if (!original || !isDriveIntakeOriginal(original.path) || loading) return;
+    const sequence = ++documentLoadSequenceRef.current;
+    setLoading(true); setError('');
+    try {
+      const path = await createIntakeWorkingCopy({ backendUrl: baseUrl, path: original.path });
+      await refreshFileTree();
+      if (sequence === documentLoadSequenceRef.current) await loadFile(path);
+    } catch (error) {
+      if (sequence === documentLoadSequenceRef.current) setError(error.message);
+    } finally {
+      if (currentDocumentRef.current.doc?.path === original.path) setLoading(false);
+    }
+  };
 
   // ── Convert PDF ──
   const convertPdf = useCallback(async () => {
@@ -448,16 +523,18 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filepath: activeDoc.path }),
       });
-      if (!res.ok) throw new Error('Conversion failed');
       const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Conversion failed');
       await refreshFileTree();
-      await loadFile(data.new_filepath);
+      if (currentDocumentRef.current?.doc?.path === activeDoc.path) {
+        await loadFile(data.new_filepath);
+      }
     } catch (err) {
       setError(`Convert failed: ${err.message}`);
     } finally {
       setLoading(false);
     }
-  }, [activeDoc, refreshFileTree, loadFile]);
+  }, [baseUrl, activeDoc, refreshFileTree, loadFile]);
 
   // ── Convert & Adapt to Hollywood Screenplay ──
   const handleStartAdaptation = async () => {
@@ -544,16 +621,18 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   };
 
   // ── Save As ──
-  const saveAs = useCallback(() => {
+  const saveAs = useCallback(async () => {
     if (!activeDoc) return;
     const newName = prompt('Save as:', activeDoc.name);
     if (!newName) return;
 
-    const ext = newName.split('.').pop();
-    const newPath = `E:/AI-BS/Documents/${newName}`;
-
-    setActiveDoc((prev) => ({ ...prev, name: newName, path: newName, ext: `.${ext}` }));
-    saveFile();
+    if (/[<>:"/\\|?*]/.test(newName) || newName.trim() !== newName || /[. ]$/.test(newName)) {
+      setError('Choose a filename without path separators or reserved characters.');
+      return;
+    }
+    const ext = newName.split('.').pop().toLowerCase();
+    const newPath = `Documents/${newName}`;
+    await saveFile({ ...activeDoc, name: newName, path: newPath, ext, isNew: true });
   }, [activeDoc, saveFile]);
 
   // ── Sign & File ──
@@ -565,41 +644,52 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   }, [activeDoc]);
 
   const submitSignature = useCallback(async (includeGraphic) => {
-    if (!activeDoc) return;
+    if (!activeDoc || activeDoc.isPdf || filingInFlightRef.current) return;
+    filingInFlightRef.current = true;
+    setIsFiling(true);
+    setError('');
+    let saved = null;
     try {
-      let signature_image = null;
-      if (includeGraphic && canvasRef.current) {
-        signature_image = canvasRef.current.toDataURL('image/png');
+      const signature_image = includeGraphic && canvasRef.current
+        ? canvasRef.current.toDataURL('image/png') : null;
+      if (includeGraphic && !signature_image) throw new Error('Signature canvas is unavailable');
+      if (saveFileRef.current && (await saveFileRef.current()) === false) {
+        throw new Error('Save the current draft successfully before filing a PDF');
       }
-
-      setShowSignModal(false);
-
       const res = await fetch(`${baseUrl}/api/documents/sign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          filename: activeDoc.name, 
-          content,
-          signature_image: signature_image 
-        }),
+        body: JSON.stringify({ filename: activeDoc.name, content, signature_image }),
       });
-      if (!res.ok) throw new Error('Signing failed');
-      
-      const blob = await res.blob();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'PDF filing failed');
+      if (!data.path || !data.filename || data.media_type !== 'application/pdf') {
+        throw new Error('The server did not return a saved PDF');
+      }
+      saved = data;
+      setShowSignModal(false);
+      await refreshFileTree();
+      const download = await fetch(`${baseUrl}/api/drive/preview?path=${encodeURIComponent(data.path)}`);
+      if (!download.ok) throw new Error(`Download returned HTTP ${download.status}`);
+      const blob = await download.blob();
+      if ((await blob.slice(0, 5).text()) !== '%PDF-') throw new Error('Download was not a PDF');
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${activeDoc.name.split('.')[0]}_signed.pdf`;
+      a.download = data.filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      window.URL.revokeObjectURL(url);
-      
-      alert("Document cryptographically signed and securely filed in vault!");
+      setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+      alert(`PDF saved to ${data.path}. Download requested. ${data.signature_type === 'drawn_mark' ? 'Your drawn signature is included.' : 'Filed without a signature.'} No certificate-based digital signature was applied.`);
     } catch (err) {
-      setError(`Signing failed: ${err.message}`);
+      setError(saved ? `PDF saved to ${saved.path}, but download failed: ${err.message}. Open it from the file tree.`
+        : `PDF filing failed: ${err.message}`);
+    } finally {
+      filingInFlightRef.current = false;
+      setIsFiling(false);
     }
-  }, [activeDoc, content]);
+  }, [baseUrl, activeDoc, content, refreshFileTree]);
 
   // ── File Tree Management ──
   const deleteFile = useCallback(() => {
@@ -645,7 +735,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
             borderRadius: 4, display: 'flex', alignItems: 'center', gap: 6,
             opacity: activeDoc?.path === item.path ? 0.8 : 1,
           }}>
-            {getFileTypeInfo(item.name.split('.').pop())?.icon || '📄'} {item.name}
+            {getFileTypeInfo(item.name.split('.').pop())?.icon || '📄'} {item.name}{isDriveIntakeOriginal(item.path) ? ' · Original (read only)' : ''}
           </div>
         )}
       </div>
@@ -700,24 +790,44 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
           onChange={async (e) => {
             const file = e.target.files?.[0];
             if (!file) return;
+            if (saveFileRef.current && (await saveFileRef.current()) === false) return;
+            ++documentLoadSequenceRef.current;
+            setLoading(false);
             const ext = file.name.split('.').pop()?.toLowerCase() || 'txt';
             const isPdf = ext === 'pdf';
             const isWordDoc = ext === 'docx' || ext === 'doc';
 
             if (isPdf) {
-              const pdfBlobUrl = URL.createObjectURL(file);
-              setActiveDoc({
-                path: `C:/Users/footb/AI-BS_Matrix/${file.name}`,
-                name: file.name,
-                ext: 'pdf',
-                isPdf: true,
-                pdfBlobUrl: pdfBlobUrl,
-                rawFile: file,
-                created: new Date().toISOString(),
-                modified: new Date().toISOString(),
-              });
-              setContent('');
-              setViewMode('editor');
+              const importSequence = documentLoadSequenceRef.current;
+              setLoading(true);
+              setError('');
+              try {
+                const formData = new FormData();
+                formData.append('files', file);
+                formData.append('target_path', `Documents/PDF-Imports/${crypto.randomUUID()}`);
+                const res = await fetch(`${baseUrl}/api/drive/upload`, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'PDF upload failed');
+                const uploaded = data.uploaded?.[0];
+                if (!uploaded?.path) throw new Error('The server did not return a saved PDF path');
+                await refreshFileTree();
+                if (importSequence !== documentLoadSequenceRef.current) return;
+                setActiveDoc({
+                  path: uploaded.path.replace(/^\/+/, ''),
+                  name: uploaded.name,
+                  ext: 'pdf',
+                  isPdf: true,
+                  rawFile: file,
+                  created: new Date().toISOString(),
+                  modified: new Date().toISOString(),
+                });
+                setContent('');
+                setViewMode('editor');
+              } catch (err) {
+                if (importSequence === documentLoadSequenceRef.current) setError(`PDF import failed: ${err.message}`);
+              } finally {
+                if (importSequence === documentLoadSequenceRef.current) setLoading(false);
+              }
             } else if (isWordDoc) {
               try {
                 const formData = new FormData();
@@ -729,9 +839,10 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                 if (res.ok) {
                   const data = await res.json();
                   setActiveDoc({
-                    path: `C:/Users/footb/AI-BS_Matrix/${file.name}`,
-                    name: file.name,
-                    ext: 'docx',
+                    path: `Documents/imported-${crypto.randomUUID().slice(0, 8)}-${file.name.replace(/\.(docx|doc)$/i, '.md')}`,
+                    name: file.name.replace(/\.(docx|doc)$/i, '.md'),
+                    ext: 'md',
+                    isNew: true,
                     isPdf: false,
                     rawFile: file,
                     created: new Date().toISOString(),
@@ -750,7 +861,8 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
               try {
                 const text = await file.text();
                 setActiveDoc({
-                  path: `C:/Users/footb/AI-BS_Matrix/${file.name}`,
+                  path: `Documents/imported-${crypto.randomUUID().slice(0, 8)}-${file.name}`,
+                  isNew: true,
                   name: file.name,
                   ext: ext,
                   isPdf: false,
@@ -768,7 +880,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
         />
 
         {/* Save & Adapt */}
-        {activeDoc && (
+        {activeDoc && !activeDoc.isBinary && !isDriveIntakeOriginal(activeDoc.path) && (
           <>
             {activeDoc.isPdf ? (
               <button onClick={convertPdf} style={{
@@ -908,7 +1020,27 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
               minWidth: 200, position: 'relative', background: '#0d1117',
             }}>
               {activeDoc ? (
-                activeDoc.isPdf ? (
+                (isDriveIntakeOriginal(activeDoc.path) || activeDoc.isBinary) ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', color: '#e2e8f0' }}>
+                    <div style={{ padding: '12px', borderBottom: '1px solid #334155', background: '#172033' }}>
+                      <strong>{isDriveIntakeOriginal(activeDoc.path) ? 'Preserved original — read only' : 'Word / binary document — download to open'}</strong>
+                      <p>{activeDoc.name}</p>
+                      <AuthenticatedDriveDownload backendUrl={baseUrl} path={activeDoc.path}>Download original</AuthenticatedDriveDownload>
+                      {isDriveIntakeOriginal(activeDoc.path) && activeDoc.isPdf && (
+                        <button type="button" disabled={loading} onClick={convertPdf} style={{ marginLeft: '12px' }}>Extract text to working copy</button>
+                      )}
+                      {isDriveIntakeOriginal(activeDoc.path) && ['docx', 'txt', 'md', 'markdown', 'fdx', 'fountain'].includes(activeDoc.ext) && (
+                        <button type="button" disabled={loading} onClick={createEditableIntakeCopy} style={{ marginLeft: '12px' }}>Create editable working copy</button>
+                      )}
+                      <p>Originals and earlier versions stay unchanged. Editable copies are saved separately in Working_Copies.</p>
+                      {activeDoc.ext === 'docx' && <p>Word conversion extracts text into Markdown. Images, tables, page layout, and some formatting are not preserved in that working copy. Use the original DOCX or paired PDF to review the layout.</p>}
+                      {['fdx', 'fountain'].includes(activeDoc.ext) && <p>For screenplay formatting, use Screenwriting → Import and choose a new project name. No AI adaptation is needed.</p>}
+                    </div>
+                    {activeDoc.isPdf ? <AuthenticatedDriveMedia backendUrl={baseUrl} path={activeDoc.path} title="Original PDF preview" width="100%" height="100%" style={{ border: 0, flex: 1 }} />
+                      : activeDoc.isBinary ? <p style={{ padding: '16px' }}>This file is preserved in its native format. Download it to open in Word or another compatible application.</p>
+                      : <pre style={{ padding: '16px', whiteSpace: 'pre-wrap', overflow: 'auto', flex: 1 }}>{content}</pre>}
+                  </div>
+                ) : activeDoc.isPdf ? (
                   <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#1e1e2e' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', background: '#161b22', borderBottom: '1px solid #30363d' }}>
                       <span style={{ color: '#facc15', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -929,8 +1061,8 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                         </button>
                       </div>
                     </div>
-                    <iframe 
-                      src={activeDoc.pdfBlobUrl || `${baseUrl}/api/serve-file?filepath=${encodeURIComponent(activeDoc.path)}`}
+                    <AuthenticatedDriveMedia
+                      backendUrl={baseUrl} path={activeDoc.path}
                       width="100%" 
                       height="100%" 
                       style={{ border: 'none', background: '#525659', flex: 1 }}
@@ -1156,7 +1288,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
           }}>
             <div style={{ padding: '20px 24px', borderBottom: '1px solid #2a2a3e' }}>
               <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#e8e8f0' }}>Sign Document</h2>
-              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#8b949e' }}>Draw your signature below (optional)</p>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#8b949e' }}>Save a PDF copy with an optional drawn signature. No certificate-based digital signature is applied.</p>
             </div>
 
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -1164,40 +1296,42 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                 ref={canvasRef}
                 width={400}
                 height={200}
-                onMouseDown={startDrawing}
-                onMouseMove={draw}
-                onMouseUp={stopDrawing}
-                onMouseOut={stopDrawing}
+                onPointerDown={startDrawing}
+                onPointerMove={draw}
+                onPointerUp={stopDrawing}
+                onPointerCancel={stopDrawing}
+                onLostPointerCapture={stopDrawing}
                 style={{ 
                   border: '1px solid #3a3a4e', 
                   borderRadius: 8, 
-                  background: '#0d1117', 
+                  background: '#ffffff',
+                  maxWidth: '100%',
                   cursor: 'crosshair',
                   touchAction: 'none'
                 }}
               />
               <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
-                <button onClick={clearCanvas} style={{
+                <button disabled={isFiling} onClick={clearCanvas} style={{
                   background: 'none', border: 'none', color: '#58a6ff', fontSize: 12, cursor: 'pointer'
                 }}>Clear Canvas</button>
               </div>
             </div>
 
             <div style={{ padding: '12px 24px', borderTop: '1px solid #2a2a3e', display: 'flex', justifyContent: 'space-between' }}>
-              <button onClick={() => setShowSignModal(false)} style={{
+              <button disabled={isFiling} onClick={() => setShowSignModal(false)} style={{
                 padding: '8px 20px', fontSize: 12, border: '1px solid #3a3a4e', borderRadius: 8,
                 background: '#1c1c2e', color: '#c9d1d9', cursor: 'pointer',
               }}>Cancel</button>
               
               <div style={{ display: 'flex', gap: 12 }}>
-                <button onClick={() => submitSignature(false)} style={{
+                <button disabled={isFiling} onClick={() => submitSignature(false)} style={{
                   padding: '8px 20px', fontSize: 12, border: '1px solid #3a3a4e', borderRadius: 8,
                   background: '#232338', color: '#c9d1d9', cursor: 'pointer',
-                }}>Skip & Cryptographic Sign</button>
-                <button onClick={() => submitSignature(true)} style={{
+                }}>File without signature</button>
+                <button disabled={isFiling} onClick={() => submitSignature(true)} style={{
                   padding: '8px 20px', fontSize: 12, border: 'none', borderRadius: 8,
                   background: '#238636', color: '#ffffff', cursor: 'pointer',
-                }}>Approve & Sign</button>
+                }}>{isFiling ? 'Saving PDF…' : 'Sign & File PDF'}</button>
               </div>
             </div>
           </div>

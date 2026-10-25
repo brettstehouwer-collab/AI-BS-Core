@@ -1,8 +1,25 @@
-from fastapi import FastAPI, HTTPException
+import hmac
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 import subprocess
 import os
 
 app = FastAPI(title="Ubuntu-Bio Bridge", description="Offline AI-BS Bioinformatics & Emulation RPC Daemon")
+
+@app.middleware("http")
+async def require_admin_for_execution(request: Request, call_next):
+    if request.url.path.startswith("/execute_tool/"):
+        expected = os.environ.get("AI_BS_ADMIN_KEY", "")
+        supplied = request.headers.get("X-Admin-Key", "") or request.headers.get("X-API-Key", "")
+        if not supplied:
+            authorization = request.headers.get("Authorization", "")
+            if authorization.lower().startswith("bearer "):
+                supplied = authorization[7:].strip()
+        if not expected:
+            return JSONResponse(status_code=503, content={"detail": "Admin authentication is not configured"})
+        if not hmac.compare_digest(supplied, expected):
+            return JSONResponse(status_code=401, content={"detail": "Admin authentication required"})
+    return await call_next(request)
 
 @app.get("/ping")
 async def ping():
@@ -48,4 +65,4 @@ async def execute_tool(tool_name: str, args: list[str]):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8085, reload=False)
+    uvicorn.run("main:app", host="127.0.0.1", port=8085, reload=False)

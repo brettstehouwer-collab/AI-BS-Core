@@ -4,10 +4,15 @@ import time
 import json
 from typing import List, Optional
 from pydantic import BaseModel
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from dotenv import load_dotenv
+from security.vault_access import require_vault_access
 
-router = APIRouter(prefix="/api/vault", tags=["Secure Data Vault"])
+router = APIRouter(
+    prefix="/api/vault",
+    tags=["Secure Data Vault"],
+    dependencies=[Depends(require_vault_access)],
+)
 
 MASTER_DB = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "aibs_master.db"

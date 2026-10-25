@@ -62,10 +62,10 @@ class VNCBufferBridgeDaemon:
     async def start_bridge(self):
         """Start the WebSocket bridge server"""
         try:
-            logger.info(f"Starting WebSocket server on ws://0.0.0.0:{self.bridge_port}")
+            logger.info(f"Starting WebSocket server on ws://127.0.0.1:{self.bridge_port}")
 
             async with websockets.serve(
-                self.handle_websocket_client, "0.0.0.0", self.bridge_port
+                self.handle_websocket_client, "127.0.0.1", self.bridge_port
             ):
                 logger.info(f"VNC Bridge listening on port {self.bridge_port}")
                 await asyncio.Future()  # Run forever

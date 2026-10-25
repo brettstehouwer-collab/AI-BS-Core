@@ -297,7 +297,7 @@ class BsChatIdeFullView(QWidget):
     token_chunk = pyqtSignal(str)
     action_log_signal = pyqtSignal(str, str)
 
-    def __init__(self, bus: EngineBus, parent: QWidget | None = None) -> None:
+    def __init__(self, bus: EngineBus, parent: QWidget | None = None, *, session_store=None) -> None:
         super().__init__(parent)
         self.bus = bus
         self._is_streaming = False
@@ -458,6 +458,9 @@ class BsChatIdeFullView(QWidget):
 
         self.token_chunk.connect(self._append_token)
         self.action_log_signal.connect(self._append_action_log)
+        from native_studio.chat_recovery import ChatRecoveryController
+        self._chat_recovery = ChatRecoveryController(self, bus, session_store)
+        self._chat_recovery.begin()
 
     def _build_web_hero_page(self) -> QWidget:
         scroll = QScrollArea()
@@ -939,9 +942,11 @@ class BsChatIdeFullView(QWidget):
 
         f_row.addStretch()
         from native_studio import __version__ as _ns_ver
-        lbl_autosave = QLabel(f"🟢 Auto-Save Active  |  Stehouwer LLM v{_ns_ver} • Multi-Shell + Auto-Heal Active")
-        lbl_autosave.setStyleSheet("color: #10b981; font-size: 7.5pt; font-weight: bold;")
-        f_row.addWidget(lbl_autosave)
+        self.recovery_status = QLabel("Private chat recovery starting…")
+        self.recovery_status.setStyleSheet("color: #10b981; font-size: 7.5pt; font-weight: bold;")
+        f_row.addWidget(self.recovery_status)
+        self.recovery_retry = QPushButton('Retry recovery')
+        f_row.addWidget(self.recovery_retry)
         d_lay.addLayout(f_row)
 
         return deck
@@ -1037,6 +1042,8 @@ class BsChatIdeFullView(QWidget):
         self.input_edit.setFocus()
 
     def _send(self) -> None:
+        if hasattr(self, '_chat_recovery') and not self._chat_recovery.ready:
+            return
         txt = self.input_edit.text().strip()
         if not txt or self._is_streaming:
             return
@@ -2577,6 +2584,10 @@ class BsChatIdeFullView(QWidget):
             self.chat_display.appendPlainText(f"\n[SYSTEM @ {time.strftime('%H:%M:%S')}]: Spawned interactive PowerShell console window (Bypass Mode).\n")
         except Exception as e:
             QMessageBox.critical(self, "Console Error", f"Failed to spawn PowerShell console:\n{e}")
+
+    def shutdown(self) -> None:
+        self._is_streaming = False
+        self._chat_recovery.shutdown()
 
     def _append_token(self, chunk: str) -> None:
         if any(marker in chunk for marker in ("file:///", "[C:", "C:\\", "✅", "⚡", "📂", "📄")):

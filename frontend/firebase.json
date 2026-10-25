@@ -10,7 +10,13 @@
       "**/*.exe",
       "**/*.apk",
       "**/media/generated/**",
-      "**/updates/**"
+      "**/updates/**",
+      "**/*.map",
+      "NoCo_Executive_Due_Diligence_Dossier_2026.pdf",
+      "downloads/AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "downloads/ledger.html",
+      "downloads/omni_archive.html",
+      "downloads/STEHOUWER_OMNI_CHRONOLOGICAL_MASTER_ARCHIVE.md"
     ],
     "rewrites": [
       {

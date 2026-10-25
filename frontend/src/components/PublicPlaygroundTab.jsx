@@ -369,7 +369,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
               setPassKey(e.target.value);
               if (typeof window !== 'undefined') localStorage.setItem('aibs_active_pass_key', e.target.value);
             }}
-            placeholder="sk_aibs_live_..."
+            placeholder="Enter your issued access token"
             style={{
               padding: '6px 12px',
               background: '#161b22',
@@ -954,7 +954,7 @@ export default function PublicPlaygroundTab({ backendUrl }) {
 
             <pre style={{ background: '#161b22', padding: '16px', borderRadius: '8px', color: '#38bdf8', fontSize: '12px', fontFamily: 'monospace', overflowX: 'auto', border: '1px solid #30363d', margin: 0 }}>
 {`curl -X POST https://stehouwer-publishing.com/v1/audio/generations \\
-  -H "Authorization: Bearer ${newGeneratedPasskey?.passkey || 'sk_aibs_live_YOUR_PASSKEY_HERE'}" \\
+  -H "Authorization: Bearer ${newGeneratedPasskey?.passkey || 'YOUR_ISSUED_ACCESS_TOKEN'}" \\
   -H "Content-Type: application/json" \\
 
   -d '{

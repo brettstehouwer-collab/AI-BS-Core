@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getApiBase } from '../config/api';
 
 const ADMIN_EMAILS = [
+  'brett@stehouwerproductions.com',
+  'brett@stehouwerpublishing.com',
   'theseandaley@gmail.com',
   'brettstehouwer@gmail.com',
   'footballstar0325@gmail.com',
   'footballsyat0325@gmail.com',
   'stehouwer@gmail.com',
   'rottierannajoy@gmail.com',
-  'keith@evolution6media.com'
+  'keith@evolution6media.com',
+  'devin.feexpress@gmail.com',
+  'devin@feexpress.com'
 ];
 
 export default function ThoughtfulFrictionModal({ currentUser }) {

@@ -763,6 +763,27 @@ class ToolRegistry:
                 }
             },
             {
+                "name": "run_coding_task",
+                "description": "Apply supplied code changes in a retained Git worktree, run explicit Python checks, and save results for review. Does not merge or publish. Default trusted_host checks are not sandboxed. windows_vm requests fail closed until an isolated worker passes acceptance; no host fallback.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {"type":"string"},
+                        "objective": {"type":"string"},
+                        "files": {"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"content":{"type":"string"}},"required":["path","content"]}},
+                        "checks": {"type":"array","items":{"type":"array","items":{"type":"string"}},"description":"Each check begins with python, e.g. ['python','-m','unittest','test_math']."},
+                        "timeout_seconds": {"type":"integer"},
+                        "execution_backend": {"type":"string","enum":["trusted_host","windows_vm"],"default":"trusted_host"}
+                    },
+                    "required":["repository","objective","files","checks"]
+                }
+            },
+            {
+                "name": "get_coding_task",
+                "description": "Read the saved result of a coding task without running it again.",
+                "parameters": {"type":"object","properties":{"task_id":{"type":"string"}},"required":["task_id"]}
+            },
+            {
                 "name": "build_program",
                 "description": "Autonomously scaffolds, generates multi-file software projects, verifies syntax, executes build or test commands in PowerShell, and archives the program into a zip in saved_data/built_programs.",
                 "parameters": {
@@ -5729,6 +5750,14 @@ class ToolRegistry:
                 timeout = int(arguments.get("timeout_seconds", 600))
                 from executive_runtime_router import execute_multi_runtime
                 return execute_multi_runtime("pip", cmd, {"timeout_seconds": timeout})
+
+            elif tool_name == "run_coding_task":
+                from core.coding_workflow import run_coding_task
+                return run_coding_task(**{k: arguments[k] for k in ("repository", "objective", "files", "checks", "timeout_seconds", "execution_backend") if k in arguments})
+
+            elif tool_name == "get_coding_task":
+                from core.coding_workflow import get_coding_task
+                return get_coding_task(arguments.get("task_id", ""))
 
             elif tool_name in ["build_program", "scaffold_program", "create_program"]:
                 from core.program_builder_engine import AutonomousProgramBuilder

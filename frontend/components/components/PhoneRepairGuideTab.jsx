@@ -94,7 +94,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     try {
       const res = await fetch(`${API_BASE}/api/repair/guides`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -119,7 +119,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     try {
       const res = await fetch(`${API_BASE}/api/repair/diagnostics`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -141,7 +141,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     try {
       const res = await fetch(`${API_BASE}/api/repair/ic_reference`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -160,7 +160,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     try {
       const res = await fetch(`${API_BASE}/api/repair/tools_reference`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -179,7 +179,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     try {
       const res = await fetch(`${API_BASE}/api/repair/tickets`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -263,7 +263,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -297,7 +297,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ status: newStatus })

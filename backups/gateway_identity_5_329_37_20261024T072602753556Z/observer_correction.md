@@ -1,0 +1,1 @@
+Existing Supervisor.GetStatus uses pid-1 for an absent process; the handoff INPUT uses pid0, a different schema. First observer assumed0 and failed after a successful start. Same process inspected, no restart. Preserve original start/live observers and process.json; corrected only live readback/sentinel, then proceed with checks on the same verified listener.

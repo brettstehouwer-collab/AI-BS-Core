@@ -14,4 +14,4 @@ fi
 source /opt/bio_bridge_env/bin/activate
 
 # Start the systemd service or fallback to exec uvicorn
-systemctl start ubuntu-bio-bridge.service || exec uvicorn main:app --host 0.0.0.0 --port 8085 >> /mnt/c/AI-BS/backend/ubuntu_bio_bridge/bridge.log 2>&1
+systemctl start ubuntu-bio-bridge.service || exec uvicorn main:app --host 172.17.136.144 --port 8085 >> /mnt/c/AI-BS/backend/ubuntu_bio_bridge/bridge.log 2>&1

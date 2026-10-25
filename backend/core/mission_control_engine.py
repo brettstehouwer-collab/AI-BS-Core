@@ -189,13 +189,42 @@ class AutonomousMissionEngine:
         if not target_task:
             return {"status": "error", "message": f"Task {task_id} not found in mission {mission_id}."}
 
+        prior_tasks = mission["tasks"][:mission["tasks"].index(target_task)]
+        blockers = [task["task_id"] for task in prior_tasks
+                    if task.get("status") in {"failed", "blocked", "unimplemented"}]
+        if blockers:
+            target_task["status"] = "blocked"
+            target_task["result"] = {
+                "status": "blocked", "blocked_by": blockers,
+                "output": "A preceding mission task did not complete; this task was not executed."
+            }
+            return {"status": "blocked", "task": target_task}
+
         target_task["status"] = "running"
         start_t = time.time()
-        result_payload = {}
+        tool_name = target_task["tool"]
+        result_payload = {"status": "unimplemented", "output": f"No implementation for tool '{tool_name}'."}
+
+        def run_check(name, command, timeout, cwd=None):
+            check = {"name": name, "command": command, "cwd": cwd,
+                     "returncode": None, "stdout": "", "stderr": ""}
+            try:
+                proc = subprocess.run(
+                    command, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+                    encoding="utf-8", errors="replace"
+                )
+                check.update(returncode=proc.returncode, stdout=proc.stdout, stderr=proc.stderr,
+                             status="success" if type(proc.returncode) is int and proc.returncode == 0 else "failed")
+            except subprocess.TimeoutExpired as exc:
+                def text_output(value):
+                    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else (value or "")
+                check.update(status="failed", stdout=text_output(exc.stdout),
+                             stderr=text_output(exc.stderr), error="timeout")
+            except Exception as exc:
+                check.update(status="failed", error=str(exc))
+            return check
 
         try:
-            tool_name = target_task["tool"]
-
             if tool_name == "inspect_workspace_context":
                 ctx = self.inspect_workspace_context()
                 result_payload = {
@@ -206,11 +235,12 @@ class AutonomousMissionEngine:
             elif tool_name == "draft_plan":
                 result_payload = {
                     "status": "success",
-                    "output": f"Mission plan generated for goal: '{mission['goal']}' with {len(mission['tasks'])} atomic execution phases."
+                    "output": f"In-memory mission plan generated for goal: '{mission['goal']}' with {len(mission['tasks'])} phases.",
+                    "artifact_written": False
                 }
 
             elif tool_name == "execute_mission_payload":
-                # Real Host Mutation Execution Loop
+                # Backup and inspection are implemented; goal-specific mutations are not.
                 goal_str = mission.get("goal", "").lower()
                 spec_path = self.workspace_root / "mission_spec.md"
                 
@@ -230,99 +260,79 @@ class AutonomousMissionEngine:
                 
                 output_notes = []
                 if backup_record:
-                    output_notes.append(f"Created surgical backup: {backup_record.get('backup_id')} ({backup_record.get('bytes_original')} bytes)")
+                    output_notes.append(f"Backup helper result: {backup_record.get('status')}; {backup_record.get('backup_id', '')}")
                 
                 if "orderbook" in goal_str or "8007" in goal_str:
                     trader_file = self.workspace_root / "backend" / "crypto_trader_bot.py"
                     trader_code = trader_file.read_text(encoding="utf-8") if trader_file.exists() else ""
                     if "/ws/orderbook" in trader_code:
-                        output_notes.append("Verified real-time WebSocket orderbook streaming routes active on Port 8007.")
+                        output_notes.append("Source contains /ws/orderbook text; runtime availability was not checked.")
                     else:
-                        output_notes.append("Mounted WebSocket Orderbook streaming routes on Port 8007.")
+                        output_notes.append("Source does not contain /ws/orderbook text; no route was mounted.")
                 
                 if spec_path.exists():
-                    output_notes.append(f"Locked architecture specification verified: {spec_path.name}")
+                    output_notes.append(f"Found specification file: {spec_path.name}; its contents were not verified.")
                 result_payload = {
-                    "status": "success",
-                    "output": " | ".join(output_notes) or "Host mutations applied and verified."
+                    "status": "failed" if backup_record and backup_record.get("status") != "success" else "unimplemented",
+                    "output": "Host mutation execution is not implemented. " + " | ".join(output_notes),
+                    "backup": backup_record,
+                    "mutations_applied": False,
+                    "runtime_verified": False
                 }
 
             elif tool_name == "validate_and_test":
-                # Run real tests, socket probes, and syntax validation
-                test_outputs = []
+                # Record command evidence; exit status, not output wording, determines success.
+                checks = []
                 goal_str = mission.get("goal", "").lower()
-                
-                # If orderbook or 8007, execute test_orderbook_ws.py
+                required_checks = []
                 if any(k in goal_str for k in ["orderbook", "websocket", "8007", "crypto"]):
                     ws_test = self.workspace_root / "backend" / "scratch" / "test_orderbook_ws.py"
-                    if ws_test.exists():
-                        proc = subprocess.run(
-                            [r"C:\AI-BS\pyppeteer_env\Scripts\python.exe", str(ws_test)],
-                            capture_output=True,
-                            text=True,
-                            timeout=15,
-                            encoding="utf-8",
-                            errors="replace"
-                        )
-                        if proc.returncode == 0:
-                            test_outputs.append("WebSocket Port 8007 test: PASSED (live frames received)")
-                        else:
-                            test_outputs.append(f"WebSocket test exit {proc.returncode}")
-                
-                # Run py_compile on target backend files
-                proc_ast = subprocess.run(
-                    [sys.executable, "-m", "py_compile", str(self.workspace_root / "backend" / "crypto_trader_bot.py")],
-                    capture_output=True,
-                    text=True,
-                    timeout=10,
-                    encoding="utf-8",
-                    errors="replace"
-                )
-                if proc_ast.returncode == 0:
-                    test_outputs.append("Python AST syntax 100% valid.")
-                else:
-                    test_outputs.append(f"AST syntax error: {proc_ast.stderr.strip()}")
-                
-                # Verify mirror parity
+                    required_checks.append(("orderbook_test", ws_test,
+                                            [sys.executable, str(ws_test)], 15, None))
+                compile_target = self.workspace_root / "backend" / "crypto_trader_bot.py"
+                required_checks.append(("python_compile", compile_target,
+                                        [sys.executable, "-m", "py_compile", str(compile_target)], 10, None))
                 sync_script = self.workspace_root / "frontend" / "scripts" / "sync_mirrors.py"
-                if sync_script.exists():
-                    proc_m = subprocess.run(
-                        [sys.executable, str(sync_script)],
-                        cwd=str(self.workspace_root / "frontend"),
-                        capture_output=True,
-                        text=True,
-                        timeout=15,
-                        encoding="utf-8",
-                        errors="replace"
-                    )
-                    test_outputs.append(f"Mirror Sync: {proc_m.stdout.strip()[:60]}")
-
+                required_checks.append(("mirror_sync", sync_script, [sys.executable, str(sync_script)],
+                                        15, str(self.workspace_root / "frontend")))
+                for name, required_file, command, timeout, cwd in required_checks:
+                    if not required_file.is_file():
+                        check = {"name": name, "command": command, "cwd": cwd,
+                                 "status": "blocked", "returncode": None, "stdout": "", "stderr": "",
+                                 "error": f"Required verification file is missing: {required_file}"}
+                    else:
+                        check = run_check(name, command, timeout, cwd)
+                    checks.append(check)
+                    if check["status"] != "success":
+                        break
                 result_payload = {
-                    "status": "success",
-                    "output": " | ".join(test_outputs) or "Syntax and port health verified."
+                    "status": checks[-1]["status"],
+                    "output": " | ".join(f"{check['name']}: {check['status']} (returncode={check['returncode']})" for check in checks),
+                    "checks": checks,
+                    "returncode": checks[-1]["returncode"],
+                    "stdout": checks[-1]["stdout"], "stderr": checks[-1]["stderr"],
+                    "verified_scope": [check["name"] for check in checks if check["status"] == "success"],
+                    "scope_note": "Only the listed command exit statuses were checked; this is not proof of arbitrary goal completion, live frames, a clean worktree, or delivery."
                 }
 
             elif tool_name == "sync_mirrors_and_deliver":
-                # Enforce mirror parity
                 sync_script = self.workspace_root / "frontend" / "scripts" / "sync_mirrors.py"
-                if sync_script.exists():
-                    proc = subprocess.run(
-                        [sys.executable, str(sync_script)],
-                        cwd=str(self.workspace_root / "frontend"),
-                        capture_output=True,
-                        text=True,
-                        timeout=20,
-                        encoding="utf-8",
-                        errors="replace"
-                    )
-                    result_payload = {
-                        "status": "success" if proc.returncode == 0 else "error",
-                        "output": proc.stdout.strip()
-                    }
+                if sync_script.is_file():
+                    result_payload = run_check("mirror_sync", [sys.executable, str(sync_script)],
+                                               20, str(self.workspace_root / "frontend"))
+                    if result_payload["status"] == "success":
+                        result_payload["status"] = "blocked"
+                        result_payload["output"] = "Mirror sync command exited 0; build, parity verification, and delivery are not implemented by this step."
                 else:
-                    result_payload = {"status": "success", "output": "Mirror sync verified."}
+                    result_payload = {"status": "blocked", "returncode": None, "stdout": "", "stderr": "",
+                                      "output": f"Required mirror sync script is missing: {sync_script}"}
+                result_payload["delivery_completed"] = False
 
-            target_task["status"] = "completed" if result_payload.get("status") == "success" else "failed"
+            result_status = result_payload.get("status", "failed")
+            if result_status not in {"success", "failed", "blocked", "unimplemented"}:
+                result_status = "failed"
+                result_payload["status"] = result_status
+            target_task["status"] = "completed" if result_status == "success" else result_status
             target_task["result"] = result_payload
             target_task["duration_ms"] = round((time.time() - start_t) * 1000, 2)
 
@@ -336,7 +346,7 @@ class AutonomousMissionEngine:
             })
 
             return {
-                "status": "success",
+                "status": result_status,
                 "task": target_task,
                 "mission_progress": {
                     "completed": mission["completed_tasks"],
@@ -346,8 +356,9 @@ class AutonomousMissionEngine:
 
         except Exception as e:
             target_task["status"] = "failed"
-            target_task["result"] = {"status": "error", "message": str(e)}
-            return {"status": "error", "message": str(e), "task": target_task}
+            target_task["result"] = {"status": "failed", "message": str(e)}
+            mission["completed_tasks"] = sum(1 for task in mission["tasks"] if task["status"] == "completed")
+            return {"status": "failed", "message": str(e), "task": target_task}
 
     def run_full_mission(self, goal: str, mode: str = "auto") -> Dict[str, Any]:
         """Executes all 5 phases sequentially in an autonomous agentic loop."""
@@ -355,11 +366,16 @@ class AutonomousMissionEngine:
         mission_id = plan["mission_id"]
 
         start_all = time.time()
-        for task in plan["tasks"]:
+        for index, task in enumerate(plan["tasks"]):
             res = self.execute_mission_step(mission_id, task["task_id"])
-            if res.get("status") != "success" and task["status"] == "failed":
-                plan["status"] = "failed"
-                plan["error"] = f"Failed at task {task['task_id']}: {task.get('title')}"
+            if res.get("status") != "success" or task["status"] != "completed":
+                status = res.get("status")
+                plan["status"] = status if status in {"failed", "blocked", "unimplemented"} else "failed"
+                plan["error"] = f"Stopped at task {task['task_id']}: {task.get('title')} ({plan['status']})"
+                for dependent in plan["tasks"][index + 1:]:
+                    dependent["status"] = "blocked"
+                    dependent["result"] = {"status": "blocked", "blocked_by": [task["task_id"]],
+                                           "output": "Not executed because a preceding task did not complete."}
                 break
         else:
             plan["status"] = "completed"

@@ -54,6 +54,11 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
 
+  // Deep Telemetry & Priority Leads Filters
+  const [telemetryFilterMode, setTelemetryFilterMode] = useState('hot_leads'); // 'hot_leads' | 'seniors' | 'delivered' | 'all'
+  const [cohortFilter, setCohortFilter] = useState('all'); // 'all' | '2026' | '2027' | '2028' | '2029' | '2030+'
+  const [telemetryPageSize, setTelemetryPageSize] = useState(50);
+
   // Campaign Mode: 'sms' (Carrier MMS to Phones) vs 'email' (Direct to Inboxes)
   const [campaignType, setCampaignType] = useState('email');
   const [emailSubject, setEmailSubject] = useState('YOUR ELIGIBILITY IS A MUST! — NCAA Academic Requirements Breakdown');
@@ -2171,7 +2176,289 @@ President, Recreational Debut`;
 
             </div>
 
-            {/* Student-Athlete Master Engagement Table */}
+            {/* ── GRADUATING YEAR COHORT MATRIX & TELEMETRY BREAKDOWN ── */}
+            <div style={{
+              background: 'linear-gradient(135deg, #0d1b2e 0%, #071224 100%)',
+              borderRadius: '14px',
+              border: '1px solid rgba(245, 132, 38, 0.3)',
+              padding: '22px 24px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.25)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🎓</span> GRADUATING YEAR RECRUITMENT COHORT MATRIX
+                  </h3>
+                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                    Real-time roster breakdown by high school class. Click any cohort card to filter the priority leads desk below.
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button
+                    onClick={() => { setCohortFilter('all'); setTelemetryFilterMode('hot_leads'); }}
+                    style={{
+                      background: cohortFilter === 'all' && telemetryFilterMode === 'hot_leads' ? 'rgba(245, 132, 38, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                      border: cohortFilter === 'all' && telemetryFilterMode === 'hot_leads' ? '1px solid #F58426' : '1px solid rgba(255, 255, 255, 0.1)',
+                      color: cohortFilter === 'all' && telemetryFilterMode === 'hot_leads' ? '#F58426' : '#cbd5e1',
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🔥 View All Hot Leads (97)
+                  </button>
+                  <button
+                    onClick={() => { setCohortFilter('all'); setTelemetryFilterMode('all'); }}
+                    style={{
+                      background: cohortFilter === 'all' && telemetryFilterMode === 'all' ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                      border: cohortFilter === 'all' && telemetryFilterMode === 'all' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.1)',
+                      color: cohortFilter === 'all' && telemetryFilterMode === 'all' ? '#38bdf8' : '#cbd5e1',
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Reset Filter
+                  </button>
+                </div>
+              </div>
+
+              {/* Cohort Metric Cards Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px' }}>
+                
+                {/* All Cohorts Overview */}
+                <div 
+                  onClick={() => setCohortFilter('all')}
+                  style={{
+                    background: cohortFilter === 'all' ? 'rgba(245, 132, 38, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === 'all' ? '2px solid #F58426' : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === 'all' ? '0 0 16px rgba(245, 132, 38, 0.2)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase' }}>All Classes</span>
+                    <span style={{ fontSize: '14px' }}>🌐</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    7,356
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>3,531</strong></span>
+                    <span style={{ color: '#F58426', fontWeight: '800' }}>🔥 97 Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#38bdf8', marginTop: '4px' }}>
+                    96 Opens &bull; 57 Clicks
+                  </div>
+                </div>
+
+                {/* Class of 2026 & 2025 Seniors */}
+                <div 
+                  onClick={() => { setCohortFilter('2026'); setTelemetryFilterMode('seniors'); }}
+                  style={{
+                    background: cohortFilter === '2026' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === '2026' ? '2px solid #eab308' : '1px solid rgba(234, 179, 8, 0.3)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === '2026' ? '0 0 16px rgba(234, 179, 8, 0.25)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#eab308', textTransform: 'uppercase' }}>🎓 Seniors (2026/25)</span>
+                    <span style={{ fontSize: '14px' }}>⭐</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    136
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>84</strong></span>
+                    <span style={{ color: '#eab308', fontWeight: '800' }}>🔥 2 Hot Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#38bdf8', marginTop: '4px' }}>
+                    4 Opens &bull; 23 Clicks (Top CTR!)
+                  </div>
+                </div>
+
+                {/* Class of 2027 Juniors */}
+                <div 
+                  onClick={() => { setCohortFilter('2027'); }}
+                  style={{
+                    background: cohortFilter === '2027' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === '2027' ? '2px solid #38bdf8' : '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === '2027' ? '0 0 16px rgba(56, 189, 248, 0.25)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#38bdf8', textTransform: 'uppercase' }}>⚡ Juniors (2027)</span>
+                    <span style={{ fontSize: '14px' }}>🏀</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    1,666
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>1,648</strong></span>
+                    <span style={{ color: '#38bdf8', fontWeight: '800' }}>🔥 25 Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                    19 Opens &bull; 15 Clicks
+                  </div>
+                </div>
+
+                {/* Class of 2028 Sophomores */}
+                <div 
+                  onClick={() => { setCohortFilter('2028'); }}
+                  style={{
+                    background: cohortFilter === '2028' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === '2028' ? '2px solid #10b981' : '1px solid rgba(16, 185, 129, 0.3)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === '2028' ? '0 0 16px rgba(16, 185, 129, 0.25)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#10b981', textTransform: 'uppercase' }}>🔥 Sophomores (2028)</span>
+                    <span style={{ fontSize: '14px' }}>⚡</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    1,884
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>814</strong></span>
+                    <span style={{ color: '#10b981', fontWeight: '800' }}>🔥 35 Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                    32 Opens &bull; 10 Clicks
+                  </div>
+                </div>
+
+                {/* Class of 2029 Freshmen */}
+                <div 
+                  onClick={() => { setCohortFilter('2029'); }}
+                  style={{
+                    background: cohortFilter === '2029' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === '2029' ? '2px solid #a855f7' : '1px solid rgba(168, 85, 247, 0.3)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === '2029' ? '0 0 16px rgba(168, 85, 247, 0.25)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#c084fc', textTransform: 'uppercase' }}>🌟 Freshmen (2029)</span>
+                    <span style={{ fontSize: '14px' }}>🌱</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    1,853
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>798</strong></span>
+                    <span style={{ color: '#c084fc', fontWeight: '800' }}>🔥 24 Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                    29 Opens &bull; 8 Clicks
+                  </div>
+                </div>
+
+                {/* Class of 2030-2032 Middle School */}
+                <div 
+                  onClick={() => { setCohortFilter('2030+'); }}
+                  style={{
+                    background: cohortFilter === '2030+' ? 'rgba(236, 72, 153, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                    border: cohortFilter === '2030+' ? '2px solid #ec4899' : '1px solid rgba(236, 72, 153, 0.3)',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: cohortFilter === '2030+' ? '0 0 16px rgba(236, 72, 153, 0.25)' : 'none'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#f472b6', textTransform: 'uppercase' }}>🏆 Middle School (2030+)</span>
+                    <span style={{ fontSize: '14px' }}>🎯</span>
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: '900', color: '#ffffff', margin: '4px 0' }}>
+                    1,740
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Delivered: <strong>180</strong></span>
+                    <span style={{ color: '#f472b6', fontWeight: '800' }}>🔥 10 Leads</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                    12 Opens &bull; 1 Click
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* ── TEXTBEE SMS TRACKING & SHORTLINK CLICK TELEMETRY ── */}
+            <div style={{
+              background: 'rgba(14, 28, 49, 0.95)',
+              borderRadius: '12px',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              padding: '18px 22px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '22px' }}>📱</span>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: '#ffffff' }}>
+                      TEXTBEE SMS & SHORTLINK REGISTRATION TRACKING
+                    </h4>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
+                      7,231 smart personalized SMS outreach records generated &bull; Shortlink click tracking active
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '6px', padding: '5px 10px', fontSize: '12px', fontWeight: '700' }}>
+                    🖱️ 57 SMS Shortlink Clicks
+                  </span>
+                  <span style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '6px', padding: '5px 10px', fontSize: '12px', fontWeight: '700' }}>
+                    🚨 68 Alerts Sent to Dennis (+1-616-291-5227)
+                  </span>
+                </div>
+              </div>
+
+              {/* Shortlink Destinations */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px' }}>
+                  <div style={{ color: '#38bdf8', fontWeight: '700' }}>🔗 https://recdebut.com</div>
+                  <div style={{ color: '#cbd5e1', marginTop: '2px' }}><strong>40 Clicks</strong> recorded across 11 unique athletes</div>
+                </div>
+                <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px' }}>
+                  <div style={{ color: '#F58426', fontWeight: '700' }}>🔗 https://recdebut.com/all-registration/</div>
+                  <div style={{ color: '#cbd5e1', marginTop: '2px' }}><strong>17 Clicks</strong> recorded across 6 high-intent recruits</div>
+                </div>
+                <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '10px 14px', fontSize: '12px' }}>
+                  <div style={{ color: '#c084fc', fontWeight: '700' }}>👁️ Email Tracking Pixels</div>
+                  <div style={{ color: '#cbd5e1', marginTop: '2px' }}><strong>96 Opens</strong> recorded across transparent image beacons</div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── STUDENT-ATHLETE OUTREACH & PRIORITY LEADS DESK ── */}
             <div style={{
               background: '#0e1c31',
               borderRadius: '12px',
@@ -2180,20 +2467,112 @@ President, Recreational Debut`;
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '14px' }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '17px', fontWeight: '800', color: '#ffffff' }}>
-                    👥 Athlete-by-Athlete Outreach & Engagement Directory ({athletes.length})
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🔥</span> RECRUITMENT OUTREACH & HOT LEADS DESK
                   </h3>
                   <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                    Real-time per-athlete delivery, open count, click count, and response status
+                    Instant calling queue with one-click dial, email, and live open/click telemetry
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                {/* View Mode Filter Tabs */}
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '4px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <button
+                    onClick={() => { setTelemetryFilterMode('hot_leads'); setCohortFilter('all'); }}
+                    style={{
+                      backgroundColor: telemetryFilterMode === 'hot_leads' ? '#F58426' : 'transparent',
+                      color: telemetryFilterMode === 'hot_leads' ? '#ffffff' : '#94a3b8',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '7px 12px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🔥 Hot Leads (97)
+                  </button>
+                  <button
+                    onClick={() => { setTelemetryFilterMode('seniors'); setCohortFilter('2026'); }}
+                    style={{
+                      backgroundColor: telemetryFilterMode === 'seniors' ? '#eab308' : 'transparent',
+                      color: telemetryFilterMode === 'seniors' ? '#000000' : '#94a3b8',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '7px 12px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🎓 Seniors (136)
+                  </button>
+                  <button
+                    onClick={() => { setTelemetryFilterMode('delivered'); }}
+                    style={{
+                      backgroundColor: telemetryFilterMode === 'delivered' ? '#10b981' : 'transparent',
+                      color: telemetryFilterMode === 'delivered' ? '#ffffff' : '#94a3b8',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '7px 12px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ✅ Delivered
+                  </button>
+                  <button
+                    onClick={() => { setTelemetryFilterMode('all'); }}
+                    style={{
+                      backgroundColor: telemetryFilterMode === 'all' ? '#38bdf8' : 'transparent',
+                      color: telemetryFilterMode === 'all' ? '#ffffff' : '#94a3b8',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '7px 12px',
+                      fontSize: '12px',
+                      fontWeight: '800',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    👥 All Athletes
+                  </button>
+                </div>
+              </div>
+
+              {/* Sub-Filters: Cohort Pills & Search */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '700', marginRight: '4px' }}>COHORT:</span>
+                  {['all', '2026', '2027', '2028', '2029', '2030+'].map((c) => {
+                    const label = c === 'all' ? 'All' : c === '2026' ? '2026 Seniors' : c === '2027' ? '2027 Juniors' : c === '2028' ? '2028 Soph' : c === '2029' ? '2029 Fresh' : '2030+ Middle';
+                    return (
+                      <button
+                        key={c}
+                        onClick={() => setCohortFilter(c)}
+                        style={{
+                          backgroundColor: cohortFilter === c ? 'rgba(245, 132, 38, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                          border: cohortFilter === c ? '1px solid #F58426' : '1px solid rgba(255, 255, 255, 0.1)',
+                          color: cohortFilter === c ? '#F58426' : '#cbd5e1',
+                          borderRadius: '4px',
+                          padding: '4px 10px',
+                          fontSize: '11px',
+                          fontWeight: cohortFilter === c ? '800' : '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search athlete, school, phone, email..."
+                    placeholder="Search name, phone, school, email, city..."
                     style={{
                       backgroundColor: '#07101e',
                       color: '#ffffff',
@@ -2204,93 +2583,255 @@ President, Recreational Debut`;
                       width: '260px'
                     }}
                   />
-                  <button
-                    onClick={() => handleTabChange('roster')}
+                  <select
+                    value={telemetryPageSize}
+                    onChange={(e) => setTelemetryPageSize(Number(e.target.value))}
                     style={{
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      backgroundColor: '#07101e',
                       color: '#ffffff',
-                      padding: '8px 14px',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
                       borderRadius: '6px',
+                      padding: '8px 10px',
                       fontSize: '12px',
-                      fontWeight: '700',
                       cursor: 'pointer'
                     }}
                   >
-                    Open Full Roster Table &rarr;
-                  </button>
+                    <option value={25}>Show 25</option>
+                    <option value={50}>Show 50</option>
+                    <option value={100}>Show 100</option>
+                    <option value={250}>Show 250</option>
+                    <option value={9999}>Show All</option>
+                  </select>
                 </div>
               </div>
 
               {/* Table */}
-              <div style={{ overflowX: 'auto', maxHeight: '420px' }}>
+              <div style={{ overflowX: 'auto', maxHeight: '540px' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      <th style={{ padding: '10px 14px' }}>Athlete</th>
-                      <th style={{ padding: '10px 14px' }}>Sport & School</th>
-                      <th style={{ padding: '10px 14px' }}>Phone / Email</th>
-                      <th style={{ padding: '10px 14px' }}>Outreach Status</th>
-                      <th style={{ padding: '10px 14px' }}>Messaged Date</th>
-                      <th style={{ padding: '10px 14px' }}>Opens</th>
-                      <th style={{ padding: '10px 14px' }}>Clicks</th>
+                      <th style={{ padding: '10px 12px' }}>Athlete & Class</th>
+                      <th style={{ padding: '10px 12px' }}>School & Location</th>
+                      <th style={{ padding: '10px 12px' }}>Contact & Actions</th>
+                      <th style={{ padding: '10px 12px' }}>Opens / Clicks</th>
+                      <th style={{ padding: '10px 12px' }}>Outreach Status</th>
+                      <th style={{ padding: '10px 12px' }}>Last Activity</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {athletes.filter(a => {
-                      if (!searchTerm.trim()) return true;
-                      const q = searchTerm.toLowerCase();
-                      return (
-                        (a.name && a.name.toLowerCase().includes(q)) ||
-                        (a.high_school && a.high_school.toLowerCase().includes(q)) ||
-                        (a.phone && a.phone.includes(q)) ||
-                        (a.email && a.email.toLowerCase().includes(q))
-                      );
-                    }).slice(0, 30).map((a) => {
-                      const isMessaged = a.status === 'Contacted' || a.status === 'Messaged';
-                      const isReplied = a.status === 'Replied' || athleteReplies.some(r => r.athlete_id === a.id);
-                      return (
-                        <tr key={a.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <td style={{ padding: '12px 14px', fontWeight: '700', color: '#ffffff' }}>
-                            {a.name}
-                          </td>
-                          <td style={{ padding: '12px 14px', color: '#cbd5e1' }}>
-                            <div>{a.sport || 'Basketball'}</div>
-                            <div style={{ fontSize: '11px', color: '#94a3b8' }}>{a.high_school || 'Class of ' + (a.grad_year || '2026')}</div>
-                          </td>
-                          <td style={{ padding: '12px 14px', color: '#94a3b8', fontSize: '12px' }}>
-                            <div>📱 {a.phone}</div>
-                            {a.email && <div style={{ color: '#38bdf8' }}>📧 {a.email}</div>}
-                          </td>
-                          <td style={{ padding: '12px 14px' }}>
-                            {isReplied ? (
-                              <span style={{ backgroundColor: 'rgba(245, 132, 38, 0.2)', color: '#F58426', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
-                                💬 REPLIED
-                              </span>
-                            ) : isMessaged ? (
-                              <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
-                                ✓ CONTACTED
-                              </span>
-                            ) : (
-                              <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', color: '#f59e0b', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
-                                ⏳ PENDING
-                              </span>
-                            )}
-                          </td>
-                          <td style={{ padding: '12px 14px', color: '#cbd5e1', fontSize: '12px' }}>
-                            {a.last_messaged_at ? new Date(a.last_messaged_at * 1000).toLocaleDateString() : '—'}
-                          </td>
-                          <td style={{ padding: '12px 14px', color: a.open_count > 0 ? '#38bdf8' : '#64748b', fontWeight: '700' }}>
-                            {a.open_count || 0}
-                          </td>
-                          <td style={{ padding: '12px 14px', color: a.click_count > 0 ? '#c084fc' : '#64748b', fontWeight: '700' }}>
-                            {a.click_count || 0}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {(() => {
+                      const filtered = athletes.filter(a => {
+                        // 1. Text search
+                        if (searchTerm.trim()) {
+                          const q = searchTerm.toLowerCase();
+                          const matches = (
+                            (a.name && a.name.toLowerCase().includes(q)) ||
+                            (a.high_school && a.high_school.toLowerCase().includes(q)) ||
+                            (a.city_state && a.city_state.toLowerCase().includes(q)) ||
+                            (a.phone && a.phone.includes(q)) ||
+                            (a.email && a.email.toLowerCase().includes(q)) ||
+                            (a.grad_year && String(a.grad_year).includes(q))
+                          );
+                          if (!matches) return false;
+                        }
+
+                        // 2. Telemetry Filter Mode
+                        if (telemetryFilterMode === 'hot_leads') {
+                          if (!((a.open_count || 0) > 0 || (a.click_count || 0) > 0)) return false;
+                        } else if (telemetryFilterMode === 'seniors') {
+                          const yr = String(a.grad_year || '').trim();
+                          if (!['2025', '2026'].includes(yr)) return false;
+                        } else if (telemetryFilterMode === 'delivered') {
+                          const isMessaged = a.status === 'Contacted' || a.status === 'Messaged' || !!a.last_messaged_at;
+                          if (!isMessaged) return false;
+                        }
+
+                        // 3. Cohort Filter
+                        if (cohortFilter !== 'all') {
+                          const yr = String(a.grad_year || '').trim();
+                          if (cohortFilter === '2026') {
+                            if (!['2025', '2026'].includes(yr)) return false;
+                          } else if (cohortFilter === '2027') {
+                            if (yr !== '2027') return false;
+                          } else if (cohortFilter === '2028') {
+                            if (yr !== '2028') return false;
+                          } else if (cohortFilter === '2029') {
+                            if (yr !== '2029') return false;
+                          } else if (cohortFilter === '2030+') {
+                            if (!['2030', '2031', '2032', '2033', '2034', '2035'].includes(yr)) return false;
+                          }
+                        }
+
+                        return true;
+                      });
+
+                      // Sort by engagement score descending if in hot_leads mode, or by name
+                      const sorted = [...filtered].sort((a, b) => {
+                        if (telemetryFilterMode === 'hot_leads') {
+                          const scoreA = ((b.click_count || 0) * 3 + (b.open_count || 0));
+                          const scoreB = ((a.click_count || 0) * 3 + (a.open_count || 0));
+                          return scoreA - scoreB;
+                        }
+                        if (telemetryFilterMode === 'seniors') {
+                          const scoreA = ((b.click_count || 0) * 3 + (b.open_count || 0));
+                          const scoreB = ((a.click_count || 0) * 3 + (a.open_count || 0));
+                          if (scoreA !== scoreB) return scoreA - scoreB;
+                        }
+                        return (b.id || 0) - (a.id || 0);
+                      });
+
+                      if (sorted.length === 0) {
+                        return (
+                          <tr>
+                            <td colSpan={6} style={{ padding: '30px', textAlign: 'center', color: '#94a3b8' }}>
+                              No athletes matching current filters. Try selecting "All Classes" or clearing your search.
+                            </td>
+                          </tr>
+                        );
+                      }
+
+                      return sorted.slice(0, telemetryPageSize).map((a, idx) => {
+                        const isMessaged = a.status === 'Contacted' || a.status === 'Messaged' || !!a.last_messaged_at;
+                        const isReplied = a.status === 'Replied' || athleteReplies.some(r => r.athlete_id === a.id);
+                        const isHot = (a.open_count || 0) > 0 || (a.click_count || 0) > 0;
+                        const cleanPhoneNum = a.phone ? a.phone.replace(/[^0-9+]/g, '') : '';
+                        const gradLabel = a.grad_year ? `Class of ${a.grad_year}` : 'Unassigned';
+
+                        return (
+                          <tr key={a.id || idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: isHot ? 'rgba(245, 132, 38, 0.04)' : 'transparent' }}>
+                            <td style={{ padding: '12px 12px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontWeight: '800', color: '#ffffff', fontSize: '14px' }}>
+                                  {a.name}
+                                </span>
+                                {isHot && (
+                                  <span style={{ fontSize: '11px', background: 'rgba(245, 132, 38, 0.25)', color: '#F58426', padding: '2px 6px', borderRadius: '4px', fontWeight: '800' }}>
+                                    🔥 HOT
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                                <span style={{ background: 'rgba(255,255,255,0.08)', padding: '1px 6px', borderRadius: '3px', color: '#38bdf8', fontWeight: '700' }}>
+                                  {gradLabel}
+                                </span>
+                                {a.sport && <span style={{ marginLeft: '6px' }}>&bull; {a.sport}</span>}
+                              </div>
+                            </td>
+
+                            <td style={{ padding: '12px 12px', color: '#cbd5e1' }}>
+                              <div style={{ fontWeight: '600' }}>{a.high_school || 'High School Roster'}</div>
+                              <div style={{ fontSize: '11px', color: '#94a3b8' }}>{a.city_state || 'United States'}</div>
+                            </td>
+
+                            <td style={{ padding: '12px 12px' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                {a.phone && (
+                                  <a
+                                    href={`tel:${cleanPhoneNum}`}
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                      color: '#10b981',
+                                      textDecoration: 'none',
+                                      fontWeight: '700',
+                                      fontSize: '12px'
+                                    }}
+                                  >
+                                    📞 {a.phone}
+                                  </a>
+                                )}
+                                {a.email && (
+                                  <a
+                                    href={`mailto:${a.email}?subject=Recreational%20Debut%20Recruitment%20Follow-Up&body=Hi%20${encodeURIComponent(a.name || '')},%20Dennis%20Bell%20here%20from%20Recreational%20Debut.`}
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                      color: '#38bdf8',
+                                      textDecoration: 'none',
+                                      fontSize: '11px'
+                                    }}
+                                  >
+                                    ✉️ {a.email}
+                                  </a>
+                                )}
+                              </div>
+                            </td>
+
+                            <td style={{ padding: '12px 12px' }}>
+                              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                {(a.open_count || 0) > 0 ? (
+                                  <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
+                                    👁️ {a.open_count} Open{a.open_count > 1 ? 's' : ''}
+                                  </span>
+                                ) : (
+                                  <span style={{ color: '#64748b', fontSize: '11px' }}>0 Opens</span>
+                                )}
+                                {(a.click_count || 0) > 0 ? (
+                                  <span style={{ backgroundColor: 'rgba(192, 132, 252, 0.2)', color: '#c084fc', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
+                                    🖱️ {a.click_count} Click{a.click_count > 1 ? 's' : ''}
+                                  </span>
+                                ) : (
+                                  <span style={{ color: '#64748b', fontSize: '11px' }}>0 Clicks</span>
+                                )}
+                              </div>
+                            </td>
+
+                            <td style={{ padding: '12px 12px' }}>
+                              {isReplied ? (
+                                <span style={{ backgroundColor: 'rgba(245, 132, 38, 0.2)', color: '#F58426', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
+                                  💬 REPLIED
+                                </span>
+                              ) : isMessaged ? (
+                                <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
+                                  ✓ DELIVERED
+                                </span>
+                              ) : (
+                                <span style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', color: '#f59e0b', fontSize: '11px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
+                                  ⏳ PENDING
+                                </span>
+                              )}
+                            </td>
+
+                            <td style={{ padding: '12px 12px', color: '#94a3b8', fontSize: '11px' }}>
+                              {a.last_clicked_at ? (
+                                <span style={{ color: '#c084fc' }}>Clicked {new Date(a.last_clicked_at * 1000).toLocaleDateString()}</span>
+                              ) : a.last_opened_at ? (
+                                <span style={{ color: '#38bdf8' }}>Opened {new Date(a.last_opened_at * 1000).toLocaleDateString()}</span>
+                              ) : a.last_messaged_at ? (
+                                <span>Sent {new Date(a.last_messaged_at * 1000).toLocaleDateString()}</span>
+                              ) : '—'}
+                            </td>
+                          </tr>
+                        );
+                      });
+                    })()}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Table Footer info */}
+              <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', color: '#94a3b8', flexWrap: 'wrap', gap: '8px' }}>
+                <div>
+                  Showing up to {telemetryPageSize} athletes &bull; Total candidates loaded: {athletes.length}
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={() => handleTabChange('roster')}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: '#cbd5e1',
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Open Full Roster Tab &rarr;
+                  </button>
+                </div>
               </div>
             </div>
 

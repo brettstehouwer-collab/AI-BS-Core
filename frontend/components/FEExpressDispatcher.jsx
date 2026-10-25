@@ -628,12 +628,14 @@ function classifyEquipmentLocally(equipmentStr, weight = 0) {
   if (isBox) vehicleType = 'BOX_TRUCK';
   else if (isVan) vehicleType = 'CARGO_VAN';
 
-  return { isBox, isVan, vehicleType, isSemi };
+  const requiresLiftgate = ['liftgate', 'lift gate', 'lift-gate', 'lg req', 'needs lg'].some(k => eqLower.includes(k));
+
+  return { isBox, isVan, vehicleType, isSemi, requiresLiftgate };
 }
 
 function evaluateLocally(payload) {
   const weight = parseFloat(payload.weight_lbs || 0);
-  const { isBox, isVan, vehicleType, isSemi } = classifyEquipmentLocally(payload.equipment_type, weight);
+  const { isBox, isVan, vehicleType, isSemi, requiresLiftgate } = classifyEquipmentLocally(payload.equipment_type, weight);
   const underWeight = (isBox && weight <= 10000.0) || (isVan && weight <= 4500.0) || (weight <= 10000.0);
   const miles = Math.max(parseFloat(payload.total_miles || 1), 1.0);
   const deadhead = Math.max(parseFloat(payload.deadhead_miles || 0), 0.0);
@@ -646,7 +648,10 @@ function evaluateLocally(payload) {
   const matchedFleet = isBox || isVan;
 
   if (matchedFleet && underWeight && !isSemi) {
-    if (true_rpm >= 2.50) {
+    if (requiresLiftgate) {
+      score = 'Reject';
+      priority_tier = 4;
+    } else if (true_rpm >= 2.50) {
       score = 'Greenlight';
       priority_tier = 1;
     } else if (true_rpm >= 2.00) {
@@ -663,7 +668,8 @@ function evaluateLocally(payload) {
     is_valid_box_truck: isBox,
     is_valid_cargo_van: isVan,
     vehicle_match: vehicleType,
-    under_weight_limit: underWeight
+    under_weight_limit: underWeight,
+    requires_liftgate: requiresLiftgate
   };
 }
 
@@ -734,7 +740,7 @@ export const DEVIN_DISPATCH_PROFILE = {
 function buildDevinMailto(brokerEmail, load, bidSubject, bidBody) {
   const to = (brokerEmail && brokerEmail.includes('@')) ? brokerEmail.trim() : '';
   const subject = encodeURIComponent(bidSubject || `FE Express LLC - Load ${load.load_id} (${load.origin_city_state} -> ${load.dest_city_state})`);
-  const body = encodeURIComponent(bidBody || `Hello ${load.broker_name},\n\nWe have a 26' Box Truck w/ liftgate ready near ${load.origin_city_state}.\nCan lock down load ${load.load_id}.\n\nDirect Dispatch: Devin\nPhone: (616) 315-7483\nEmail: Devin.feexpress@gmail.com\nFE Express LLC | MC-744829 | USDOT-2137128\nAddress: 2700 Remico St SW, Wyoming, MI 49519\nFleet: 43 Power Units | Safety: Satisfactory (Active & In Good Standing)`);
+  const body = encodeURIComponent(bidBody || `Hello ${load.broker_name},\n\nWe have a 26' Box Truck (Dock High - No Liftgate) ready near ${load.origin_city_state}.\nCan lock down load ${load.load_id}.\n\nDirect Dispatch: Devin\nPhone: (616) 315-7483\nEmail: Devin.feexpress@gmail.com\nFE Express LLC | MC-744829 | USDOT-2137128\nAddress: 2700 Remico St SW, Wyoming, MI 49519\nFleet: 43 Power Units | Safety: Satisfactory (Active & In Good Standing)`);
   return `mailto:${to}?subject=${subject}&body=${body}`;
 }
 
@@ -752,7 +758,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
   // Ad-hoc Quick Calculator
   const [calcOrigin, setCalcOrigin] = useState('Grand Rapids, MI');
   const [calcDest, setCalcDest] = useState('Chicago, IL');
-  const [calcEquip, setCalcEquip] = useState("26' Box Truck w/ Liftgate");
+  const [calcEquip, setCalcEquip] = useState("26' Box Truck (Dock High - No Liftgate)");
   const [calcMiles, setCalcMiles] = useState(180);
   const [calcDeadhead, setCalcDeadhead] = useState(15);
   const [calcPay, setCalcPay] = useState(550);
@@ -802,8 +808,8 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
   const [maxWeight, setMaxWeight] = useState('');
   const [maxDeadhead, setMaxDeadhead] = useState('');
   const [vehicleFilter, setVehicleFilter] = useState('ALL'); // 'ALL' | 'BOX_TRUCK' | 'CARGO_VAN'
-  const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
-  const [showEvaluator, setShowEvaluator] = useState(true);
+  const [viewMode, setViewMode] = useState(() => (typeof window !== 'undefined' && window.innerWidth < 768 ? 'cards' : 'table')); // 'table' | 'cards'
+  const [showEvaluator, setShowEvaluator] = useState(() => (typeof window !== 'undefined' && window.innerWidth < 768 ? false : true));
 
   // Phase 3 & 4: Active Loads, BOL Photos, Profit & Driver Settlements States
   const [activeSubTab, setActiveSubTab] = useState('board'); // 'board' | 'active_dispatches' | 'profit_ledger' | 'drivers_ledger'
@@ -962,9 +968,27 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     const targetBid = Math.round((load.flat_rate_pay || 600) * 1.10);
     setBidData({
       subject: `RATE CONFIRMATION / TRUCK IN HAND: ${load.origin_city_state} -> ${load.dest_city_state} [${load.load_id}] - FE Express LLC`,
-      email_body: `Hello ${load.broker_name} Team,\n\nWe have an empty 26' Box Truck w/ Liftgate & Pallet Jack ready near ${load.origin_city_state} (Home: ${homeBase}) and can lock down load ${load.load_id} immediately.\n\n• Origin: ${load.origin_city_state}\n• Destination: ${load.dest_city_state}\n• Trip: ${load.total_miles} loaded miles\n• Posted Pay: $${load.flat_rate_pay}\n• Our All-In Rate Bid: $${targetBid} (Clean rate)\n\nAuthority: MC-1482910 | USDOT-3918241\nInsurance: $1,000,000 Auto Liability / $100,000 Cargo\n\nPlease send rate confirmation to Devin.feexpress@gmail.com or call Devin directly at (616) 315-7483.\n\nThank you,\nDevin | FE Express Dispatch\nDirect: (616) 315-7483\nEmail: Devin.feexpress@gmail.com`,
+      email_body: `Hello ${load.broker_name} Team,\n\nWe have an empty 26' Box Truck (Dock High - No Liftgate) & Pallet Jack ready near ${load.origin_city_state} (Home: ${homeBase}) and can lock down load ${load.load_id} immediately.\n\n• Origin: ${load.origin_city_state}\n• Destination: ${load.dest_city_state}\n• Trip: ${load.total_miles} loaded miles\n• Posted Pay: $${load.flat_rate_pay}\n• Our All-In Rate Bid: $${targetBid} (Clean rate)\n\nAuthority: MC-1482910 | USDOT-3918241\nInsurance: $1,000,000 Auto Liability / $100,000 Cargo\n\nPlease send rate confirmation to Devin.feexpress@gmail.com or call Devin directly at (616) 315-7483.\n\nThank you,\nDevin | FE Express Dispatch\nDirect: (616) 315-7483\nEmail: Devin.feexpress@gmail.com`,
       sms_text: `FE Express (MC-1482910) has a 26' box truck empty at ${load.origin_city_state} for load ${load.load_id} (${load.origin_city_state}->${load.dest_city_state}). Can take for $${targetBid} all-in. Call or text Devin at (616) 315-7483.`
     });
+  };
+
+  const fetchActiveDispatches = async () => {
+    const response = await fetch(`${baseUrl}/api/v1/fe-express/active-dispatches`);
+    if (!response.ok) throw new Error(`Dispatch refresh returned HTTP ${response.status}`);
+    const data = await response.json();
+    if (!Array.isArray(data.dispatches)) throw new Error('Dispatch response is missing its list.');
+    setActiveDispatches(data.dispatches);
+  };
+
+  // A failed refresh after a successful update must not suggest repeating the update.
+  const refreshDispatchesAfterUpdate = async () => {
+    try {
+      await fetchActiveDispatches();
+    } catch (error) {
+      console.warn('Dispatch updated; the list could not be refreshed:', error);
+      alert('The dispatch update completed, but the list could not be refreshed. Refresh the list before making another update.');
+    }
   };
 
   const fetchLoads = async () => {
@@ -983,14 +1007,8 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         setStatus(stData);
       }
 
-      // Fetch active dispatches
-      const dispRes = await fetch(`${baseUrl}/api/v1/fe-express/active-dispatches`);
-      if (dispRes.ok) {
-        const dispData = await dispRes.json();
-        if (dispData.dispatches) {
-          setActiveDispatches(dispData.dispatches);
-        }
-      }
+      // Use the same dispatch reader for polling and post-update refreshes.
+      await fetchActiveDispatches();
 
       // Fetch 1099 Drivers
       const drvRes = await fetch(`${baseUrl}/api/v1/fe-express/drivers`);
@@ -1220,8 +1238,8 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
   });
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#0B0F19', color: '#F8FAFC', minHeight: '100%', overflowY: 'auto', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #1E293B', paddingBottom: '16px' }}>
+    <div className="fe-express-container" style={{ padding: '24px', backgroundColor: '#0B0F19', color: '#F8FAFC', minHeight: '100%', overflowY: 'auto', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div className="fe-express-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #1E293B', paddingBottom: '16px' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '10px' }}>
             🚚 FE EXPRESS | Box Truck Automation Hub
@@ -1230,7 +1248,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             Real-Time RPM Scoring, Deadhead Analysis, and Automated Expediter Lead Filtering (24&apos;/26&apos; Box &amp; Straight Trucks ≤ 10,000 lbs)
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="fe-express-header-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#1E293B', padding: '4px 10px', borderRadius: '6px', border: '1px solid #334155' }}>
             <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 600 }}>Home Base (for Deadhead):</span>
             <input
@@ -1269,7 +1287,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+      <div className="fe-express-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <div style={{ backgroundColor: '#111827', border: '1px solid #1F2937', padding: '16px', borderRadius: '8px' }}>
           <div style={{ color: '#9CA3AF', fontSize: '12px', textTransform: 'uppercase' }}>Active Hub Status</div>
           <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px' }}>🟢 OPERATIONAL</div>
@@ -1293,7 +1311,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* Telemetry Strip - 100% Native Desktop Parity */}
-      <div style={{
+      <div className="fe-express-telemetry-strip" style={{
         backgroundColor: '#064E3B',
         color: '#A7F3D0',
         border: '1px solid #10B981',
@@ -1307,7 +1325,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* Devin Dispatch Profile & Quick Contact Header */}
-      <div style={{
+      <div className="fe-express-profile-card" style={{
         backgroundColor: '#0F172A',
         border: '1px solid #2563EB',
         borderRadius: '8px',
@@ -1343,14 +1361,17 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               <span style={{ backgroundColor: '#064E3B', color: '#34D399', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', border: '1px solid #059669', fontWeight: 800 }}>
                 🛡️ FMCSA VERIFIED: ACTIVE &amp; IN GOOD STANDING ({DEVIN_DISPATCH_PROFILE.powerUnits} Units • {DEVIN_DISPATCH_PROFILE.annualMiles} mi)
               </span>
+              <span style={{ backgroundColor: '#1E293B', color: '#FCD34D', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', border: '1px solid #F59E0B', fontWeight: 800 }}>
+                🚚 Unit: 26' Box Truck (Dock High • No Liftgate)
+              </span>
             </div>
             <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '3px' }}>
-              Terminal: <strong style={{ color: '#CBD5E1' }}>{DEVIN_DISPATCH_PROFILE.address}</strong> | Direct: <strong style={{ color: '#10B981' }}>{DEVIN_DISPATCH_PROFILE.phone}</strong> | Office: <strong style={{ color: '#94A3B8' }}>{DEVIN_DISPATCH_PROFILE.officePhone}</strong>
+              Terminal: <strong style={{ color: '#CBD5E1' }}>{DEVIN_DISPATCH_PROFILE.address}</strong> | Direct: <strong style={{ color: '#10B981' }}>{DEVIN_DISPATCH_PROFILE.phone}</strong> | Office: <strong style={{ color: '#94A3B8' }}>{DEVIN_DISPATCH_PROFILE.officePhone}</strong> | Unit: <strong style={{ color: '#FCD34D' }}>26' Box Truck (Dock High • No Liftgate)</strong>
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="fe-express-profile-actions" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <a
             href={`tel:${DEVIN_DISPATCH_PROFILE.phoneDigits}`}
             style={{
@@ -1406,7 +1427,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* Phase 3 Dispatch & Accounting Navigation Tabs */}
-      <div style={{
+      <div className="fe-express-subtabs mobile-scroll-ribbon" style={{
         display: 'flex',
         gap: '8px',
         marginBottom: '16px',
@@ -1727,14 +1748,14 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       {activeSubTab === 'board' && (
         <>
           {/* Search & Filter Bar - Devin Lead Criteria Controls */}
-          <div style={{
+          <div className="fe-express-filter-card" style={{
         backgroundColor: '#111827',
         border: '1px solid #1F2937',
         borderRadius: '8px',
         padding: '16px',
         marginBottom: '20px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+        <div className="fe-express-filter-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '15px', fontWeight: 800, color: '#38BDF8' }}>🔍 Lead Search &amp; Filter Controls</span>
             <span style={{ fontSize: '12px', color: '#94A3B8' }}>
@@ -1871,7 +1892,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         </div>
 
         {/* Dynamic Input Grid */}
-        <div style={{
+        <div className="fe-express-filter-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
           gap: '12px'
@@ -2000,10 +2021,10 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* Quick Load Calculator & Feed Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: showEvaluator ? 'minmax(300px, 340px) 1fr' : '1fr', gap: '20px' }}>
+      <div className="fe-express-main-grid" style={{ display: 'grid', gridTemplateColumns: showEvaluator ? 'minmax(300px, 340px) 1fr' : '1fr', gap: '20px' }}>
         {/* Left: Quick Evaluator */}
         {showEvaluator && (
-          <div style={{ backgroundColor: '#111827', border: '1px solid #1F2937', borderRadius: '8px', padding: '18px', height: 'fit-content' }}>
+          <div className="fe-express-evaluator-card" style={{ backgroundColor: '#111827', border: '1px solid #1F2937', borderRadius: '8px', padding: '18px', height: 'fit-content' }}>
             <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#38BDF8', margin: '0 0 16px' }}>⚡ Instant Lane Evaluator</h2>
             <form onSubmit={handleCalculate} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>
@@ -2053,7 +2074,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 <div style={{ fontSize: '13px', marginTop: '4px' }}>True RPM (w/ Deadhead): <strong>${evalResult.true_rpm} / mi</strong></div>
                 <div style={{ fontSize: '13px' }}>Loaded RPM: ${evalResult.rpm} / mi</div>
                 <div style={{ fontSize: '12px', color: '#E2E8F0', marginTop: '4px' }}>
-                  Box Truck Match: {evalResult.is_valid_box_truck ? '✅ Yes' : '❌ No'} | Under 10k lbs: {evalResult.under_weight_limit ? '✅ Yes' : '❌ No'}
+                  Box Truck Match: {evalResult.is_valid_box_truck ? '✅ Yes' : '❌ No'} | Under 10k lbs: {evalResult.under_weight_limit ? '✅ Yes' : '❌ No'} | Liftgate: <strong style={{ color: evalResult.requires_liftgate ? '#EF4444' : '#10B981' }}>{evalResult.requires_liftgate ? '❌ Required by Load (Devin: No Liftgate)' : '✅ Not Required (Dock High)'}</strong>
                 </div>
               </div>
             )}
@@ -2061,8 +2082,8 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         )}
 
         {/* Right: Filtered Live Board Stream */}
-        <div style={{ backgroundColor: '#111827', border: '1px solid #1F2937', borderRadius: '8px', padding: '18px', minWidth: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div className="fe-express-leads-card" style={{ backgroundColor: '#111827', border: '1px solid #1F2937', borderRadius: '8px', padding: '18px', minWidth: 0 }}>
+          <div className="fe-express-leads-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
             <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#F3F4F6', margin: 0 }}>
               📋 Qualified Box Truck Leads ({filteredLoads.length})
             </h2>
@@ -2090,7 +2111,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
 
           {/* VIEW MODE 1: MOBILE CARDS VIEW (Clean Touch-Friendly Layout for Devin) */}
           {viewMode === 'cards' ? (
-            <div style={{
+            <div className="fe-express-cards-grid" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
               gap: '14px',
@@ -2106,6 +2127,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 filteredLoads.map(load => (
                   <div
                     key={load.load_id}
+                    className="fe-express-lead-card"
                     style={{
                       backgroundColor: '#1E293B',
                       border: `1px solid ${load.score === 'Greenlight' ? '#10B981' : load.score === 'Caution' ? '#F59E0B' : '#374151'}`,
@@ -2211,6 +2233,18 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                     <div style={{ fontSize: '11px', color: '#CBD5E1', lineHeight: '1.4', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
                       <div><strong>Equipment:</strong> {load.equipment_type}</div>
                       {(() => {
+                        const eqStr = ((load.equipment_type || '') + ' ' + (load.broker_email || '')).toLowerCase();
+                        const reqLg = ['liftgate', 'lift gate', 'lift-gate', 'lg req'].some(k => eqStr.includes(k));
+                        if (reqLg) {
+                          return (
+                            <span style={{ fontSize: '10px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px', backgroundColor: '#7F1D1D', color: '#FCA5A5', border: '1px solid #DC2626' }}>
+                              ⚠️ LIFTGATE REQ (DEVIN: NO LIFTGATE)
+                            </span>
+                          );
+                        }
+                        return null;
+                      })()}
+                      {(() => {
                         const match = load.vehicle_match || classifyEquipmentLocally(load.equipment_type, load.weight_lbs).vehicleType;
                         if (match === 'BOX_TRUCK') {
                           return (
@@ -2258,7 +2292,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                     })()}
 
                     {/* Quick Action Dial, Auto-Bid, Direct Email/SMS & Smart Backhaul Buttons */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px', marginTop: '4px' }}>
+                    <div className="fe-express-card-actions" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px', marginTop: '4px' }}>
                       {load.broker_phone && (
                         <a
                           href={`tel:${load.broker_phone.replace(/[^0-9]/g, '')}`}
@@ -2388,7 +2422,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             </div>
           ) : (
             /* VIEW MODE 2: DATA TABLE VIEW (Sticky Header & Auto-Wrap) */
-            <div style={{
+            <div className="fe-express-table-wrapper" style={{
               maxHeight: 'calc(100vh - 280px)',
               minHeight: '400px',
               overflowY: 'auto',
@@ -2443,6 +2477,18 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         </td>
                         <td style={{ padding: '8px', color: '#CBD5E1', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '200px' }}>
                           <div>{load.equipment_type}</div>
+                          {(() => {
+                            const eqStr = ((load.equipment_type || '') + ' ' + (load.broker_email || '')).toLowerCase();
+                            const reqLg = ['liftgate', 'lift gate', 'lift-gate', 'lg req'].some(k => eqStr.includes(k));
+                            if (reqLg) {
+                              return (
+                                <span style={{ display: 'inline-block', marginTop: '4px', fontSize: '9px', fontWeight: 800, padding: '1px 5px', borderRadius: '3px', backgroundColor: '#7F1D1D', color: '#FCA5A5', border: '1px solid #DC2626' }}>
+                                  ⚠️ LIFTGATE REQ
+                                </span>
+                              );
+                            }
+                            return null;
+                          })()}
                           {(() => {
                             const match = load.vehicle_match || classifyEquipmentLocally(load.equipment_type, load.weight_lbs).vehicleType;
                             if (match === 'BOX_TRUCK') {
@@ -2788,7 +2834,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 🚚 Devin's Active Hauls &amp; Real-Time Trip Dispatches
               </h3>
               <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '2px' }}>
-                Driver: <strong>Devin</strong> (616) 315-7483 | Equipment: 26' Box Truck w/ Liftgate
+                Driver: <strong>Devin</strong> (616) 315-7483 | Equipment: <strong style={{ color: '#FCD34D' }}>26' Box Truck (Dock High - No Liftgate)</strong>
               </div>
             </div>
             <button
@@ -2820,12 +2866,13 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               onClick={async () => {
                 if (window.confirm("Clear this demo example trip from Devin's queue?")) {
                   try {
-                    await fetch(`${baseUrl}/api/v1/fe-express/update-dispatch-status`, {
+                    const response = await fetch(`${baseUrl}/api/v1/fe-express/update-dispatch-status`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ dispatch_id: 'DISP-2026-001', status: 'DELIVERED' })
                     });
-                    fetchActiveDispatches();
+                    if (!response.ok) throw new Error(`Dispatch update returned HTTP ${response.status}`);
+                    await refreshDispatchesAfterUpdate();
                   } catch (e) {
                     console.error(e);
                   }
@@ -2847,7 +2894,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '14px' }}>
+          <div className="fe-express-dispatches-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '14px' }}>
             {activeDispatches.map(dispatch => (
               <div
                 key={dispatch.dispatch_id}
@@ -3000,7 +3047,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         const data = await r.json();
                         if (data.success) {
                           alert(`✅ FACTORING SUBMISSION SUCCESS!\n\nBatch ID: ${data.factoring_package.submission_id}\nStatus: APPROVED FOR SAME-DAY ACH\nDirect Deposit: $${netP} to FE Express Operating Account.`);
-                          fetchActiveDispatches();
+                          await refreshDispatchesAfterUpdate();
                         } else {
                           alert(`Factoring Error: ${data.error || 'Gateway timed out'}`);
                         }
@@ -3241,7 +3288,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
           </div>
 
           {/* Metric Summary Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+          <div className="fe-express-drivers-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '20px' }}>
             <div style={{ backgroundColor: '#1E293B', padding: '12px', borderRadius: '6px', border: '1px solid #334155' }}>
               <div style={{ fontSize: '11px', color: '#94A3B8', textTransform: 'uppercase' }}>Active 1099 Drivers</div>
               <div style={{ fontSize: '22px', fontWeight: 800, color: '#38BDF8', marginTop: '2px' }}>
@@ -3515,7 +3562,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 {loadingChains ? 'Scanning live freight boards for multi-leg triangulation opportunities...' : 'No multi-leg loops found. Click Refresh to recalculate against active load database.'}
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '14px' }}>
+              <div className="fe-express-triangulation-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '14px' }}>
                 {triangulationChains.map((chain, i) => (
                   <div key={chain.chain_id || i} style={{
                     backgroundColor: '#1E293B',
@@ -3585,7 +3632,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
           </div>
 
           {/* GRID ROW 2: FACTORING & IFTA SPLIT */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '16px' }}>
+          <div className="fe-express-split-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '16px' }}>
             {/* Factoring Card */}
             <div style={{ backgroundColor: '#0F172A', border: '1px solid #1E293B', borderRadius: '8px', padding: '16px' }}>
               <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -3722,7 +3769,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
           </div>
 
           {/* GRID ROW 3: COMMERCIAL HAZARD NAVIGATION & DVIR PREVENTATIVE ASSET UPTIME */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '16px' }}>
+          <div className="fe-express-split-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '16px' }}>
             {/* Commercial Hazard & Clearance Card */}
             <div style={{ backgroundColor: '#0F172A', border: '1px solid #1E293B', borderRadius: '8px', padding: '16px' }}>
               <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: '#F59E0B', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -5329,7 +5376,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             {!broadcastStatus ? (
               <div>
                 <div style={{ backgroundColor: '#1E293B', padding: '14px', borderRadius: '6px', marginBottom: '14px', fontSize: '13px' }}>
-                  <div><strong>Unit:</strong> UNIT-26FT-01 (26' Box Truck w/ Liftgate)</div>
+                  <div><strong>Unit:</strong> UNIT-26FT-01 (26' Box Truck - Dock High / No Liftgate)</div>
                   <div style={{ color: '#94A3B8', marginTop: '4px' }}>
                     Origin: <strong style={{ color: '#E2E8F0' }}>{capacityBroadcastModal.location}</strong> ➡️ Destination: <strong style={{ color: '#E2E8F0' }}>{capacityBroadcastModal.destination}</strong>
                   </div>
@@ -5363,7 +5410,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             unit_id: 'UNIT-26FT-01',
                             location: capacityBroadcastModal.location,
                             destination_zone: capacityBroadcastModal.destination,
-                            equipment_type: "26' Box Truck w/ Liftgate",
+                            equipment_type: "26' Box Truck (Dock High - No Liftgate)",
                             available_time: 'Immediately'
                           })
                         });

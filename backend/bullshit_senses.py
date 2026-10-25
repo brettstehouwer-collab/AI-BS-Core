@@ -198,4 +198,4 @@ if __name__ == "__main__":
     print(f"Starting AI-BS Bullshit Senses Daemon on Port {port}...")
     print("Combined Wake-Word, Voice Orchestrator, and TTS")
     print("==================================================")
-    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="info")

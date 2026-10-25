@@ -295,7 +295,7 @@ import (
 func main() {
     url := "https://geocoding-reverse-geocoding-and-weather.p.rapidapi.com/weather?lat=42.9634&lon=-85.6681"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "geocoding-reverse-geocoding-and-weather.p.rapidapi.com")
     res, _ := http.DefaultClient.Do(req)
     defer res.Body.Close()
@@ -319,7 +319,7 @@ import (
 func main() {
     url := "https://google-trends-keywords-api.p.rapidapi.com/api/googletrends/interest?page=1&limit=50&geo=US&property=youtube&category=finance&q=bitcoin&timeframe=12m"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "google-trends-keywords-api.p.rapidapi.com")
     res, _ := http.DefaultClient.Do(req)
     defer res.Body.Close()
@@ -343,7 +343,7 @@ import (
 func main() {
     url := "https://google-ads-library-api-transparency-center.p.rapidapi.com/advertiser?region=US&id=AR16735076323512287233"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "google-ads-library-api-transparency-center.p.rapidapi.com")
     res, _ := http.DefaultClient.Do(req)
     defer res.Body.Close()
@@ -366,7 +366,7 @@ import (
 func main() {
     url := "https://real-time-e-commerce-data.p.rapidapi.com/ebay/seller-feedback?page=1&seller_id=wireless-source&domain=com&product_id=287062440001"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "real-time-e-commerce-data.p.rapidapi.com")
     res, _ := http.DefaultClient.Do(req)
     defer res.Body.Close()
@@ -391,7 +391,7 @@ func main() {
     url := "https://perplexity2.p.rapidapi.com/"
     payload := strings.NewReader("{\\"content\\":\\"What is todays news in america?\\"}")
     req, _ := http.NewRequest("POST", url, payload)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "perplexity2.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)
@@ -415,7 +415,7 @@ import (
 func main() {
     url := "https://mathematical-symbolic-expression-manipulator.p.rapidapi.com/IsValidExpression"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "mathematical-symbolic-expression-manipulator.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)
@@ -440,7 +440,7 @@ func main() {
     url := "https://seo-mastermind-ai-keyword-meta-title-generator.p.rapidapi.com/seo"
     payload := strings.NewReader("{\"topic\":\"How to lose weight fast\"}")
     req, _ := http.NewRequest("POST", url, payload)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "seo-mastermind-ai-keyword-meta-title-generator.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)
@@ -464,7 +464,7 @@ import (
 func main() {
     url := "https://realtor-agent-scraping-email1.p.rapidapi.com/?profile_id=605ed9640fb522001268bcdc"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "realtor-agent-scraping-email1.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)
@@ -487,7 +487,7 @@ import (
 func main() {
     url := "https://targeted-local-b2b-lead-extractor1.p.rapidapi.com/v1/leads"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "targeted-local-b2b-lead-extractor1.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     req.Header.Add("keyword", "Dentist")
@@ -514,7 +514,7 @@ func main() {
     url := "https://thumbtack-api.p.rapidapi.com/scrapers/api/thumbtack/business/get-by-url"
     payload := strings.NewReader("{\"url\":\"https://www.thumbtack.com/ca/san-mateo/house-cleaning/micheles-clean-pro/service/527617736799977497\"}")
     req, _ := http.NewRequest("POST", url, payload)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "thumbtack-api.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)
@@ -537,7 +537,7 @@ import (
 func main() {
     url := "https://yellowbot-api.p.rapidapi.com/scrapers/api/yellowbot/business/search?page=1&keyword=pizza"
     req, _ := http.NewRequest("GET", url, nil)
-    req.Header.Add("x-rapidapi-key", "715331f921msh08fd118bc6cfcdbp1fd3bfjsn995142bec639")
+    req.Header.Add("x-rapidapi-key", "YOUR_RAPIDAPI_KEY")
     req.Header.Add("x-rapidapi-host", "yellowbot-api.p.rapidapi.com")
     req.Header.Add("Content-Type", "application/json")
     res, _ := http.DefaultClient.Do(req)

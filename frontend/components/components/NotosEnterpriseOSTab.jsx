@@ -27,33 +27,159 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
   const [cellarSearch, setCellarSearch] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('ALL');
   const [cellarInventory, setCellarInventory] = useState([
-    { id: 'W-01', name: '2016 Tenuta San Guido Sassicaia', region: 'Tuscany (Bolgheri)', vintage: 2016, varietal: 'Cabernet Sauvignon/Cab Franc', bin: 'Vault North • Bin A-14-3', bottles: 18, wholesale: 165.00, menuPrice: 385.00, pairing: 'Prime Dry-Aged Ribeye, Braised Short Ribs' },
-    { id: 'W-02', name: '2015 Biondi-Santi Brunello di Montalcino Riserva', region: 'Tuscany', vintage: 2015, varietal: 'Sangiovese Grosso', bin: 'Vault North • Bin B-08-1', bottles: 12, wholesale: 220.00, menuPrice: 520.00, pairing: 'Mary Noto\'s Lasagna, Osso Buco alla Milanese' },
-    { id: 'W-03', name: '2018 Gaja Barbaresco DOP', region: 'Piedmont', vintage: 2018, varietal: 'Nebbiolo', bin: 'Aisle 2 • Bin P-04-2', bottles: 24, wholesale: 140.00, menuPrice: 310.00, pairing: 'Veal Saltimbocca, Wild Mushroom Risotto' },
-    { id: 'W-04', name: '2017 Giuseppe Quintarelli Amarone della Valpolicella', region: 'Veneto', vintage: 2017, varietal: 'Corvina/Rondinella', bin: 'Vault South • Bin V-01-4', bottles: 8, wholesale: 210.00, menuPrice: 480.00, pairing: 'Gorgonzola Filet Mignon, Aged Parmigiano Reggiano' },
-    { id: 'W-05', name: '2019 Planeta Santa Cecilia Noto DOC', region: 'Sicily (Noto Origin)', vintage: 2019, varietal: 'Nero d\'Avola', bin: 'Heritage Bin S-01-1', bottles: 36, wholesale: 32.00, menuPrice: 88.00, pairing: 'Mary Noto\'s Eggplant Parmesan, House Sicilian Sausage' },
-    { id: 'W-06', name: '2021 Marchesi Antinori Tignanello Toscana IGT', region: 'Tuscany', vintage: 2021, varietal: 'Sangiovese/Cabernet', bin: 'Aisle 1 • Bin T-12-2', bottles: 42, wholesale: 95.00, menuPrice: 240.00, pairing: 'Wood-Fired Pizza, Handcrafted Bolognese' }
-  ]);
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 12,
+        "wholesale": 18,
+        "id": "demo-wine-1",
+        "name": "Demo Cellar Sample 1",
+        "bin": "DEMO-1",
+        "pairing": "Fictional tasting plate",
+        "region": "Tuscany (Bolgheri)",
+        "menuPrice": 36,
+        "vintage": 2030
+    },
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 15,
+        "wholesale": 19,
+        "id": "demo-wine-2",
+        "name": "Demo Cellar Sample 2",
+        "bin": "DEMO-2",
+        "pairing": "Fictional tasting plate",
+        "region": "Tuscany",
+        "menuPrice": 38,
+        "vintage": 2030
+    },
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 18,
+        "wholesale": 20,
+        "id": "demo-wine-3",
+        "name": "Demo Cellar Sample 3",
+        "bin": "DEMO-3",
+        "pairing": "Fictional tasting plate",
+        "region": "Piedmont",
+        "menuPrice": 40,
+        "vintage": 2030
+    },
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 21,
+        "wholesale": 21,
+        "id": "demo-wine-4",
+        "name": "Demo Cellar Sample 4",
+        "bin": "DEMO-4",
+        "pairing": "Fictional tasting plate",
+        "region": "Veneto",
+        "menuPrice": 42,
+        "vintage": 2030
+    },
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 24,
+        "wholesale": 22,
+        "id": "demo-wine-5",
+        "name": "Demo Cellar Sample 5",
+        "bin": "DEMO-5",
+        "pairing": "Fictional tasting plate",
+        "region": "Sicily (Noto Origin)",
+        "menuPrice": 44,
+        "vintage": 2030
+    },
+    {
+        "varietal": "Fictional demonstration blend",
+        "bottles": 27,
+        "wholesale": 23,
+        "id": "demo-wine-6",
+        "name": "Demo Cellar Sample 6",
+        "bin": "DEMO-6",
+        "pairing": "Fictional tasting plate",
+        "region": "Tuscany",
+        "menuPrice": 46,
+        "vintage": 2030
+    }
+]);
 
   // ─── 2. Valentina's Live BEO & Banquet Engine State ───
   const [beoList, setBeoList] = useState([
-    { id: 'BEO-8841', name: 'Stehouwer Wedding Gala', client: 'Mr. & Mrs. Stehouwer', location: 'GR', room: 'Grand Ballroom (700 Capacity)', date: 'Saturday, Nov 14, 2026', time: '5:30 PM - 11:30 PM', guests: 220, menu: 'Plated Prime Filet Mignon & Chilean Sea Bass', bar: 'Joanne Noto Cellar Reserve & Premium Open Bar', total: 27720.00, deposit: 5000.00, balance: 22720.00, status: 'Confirmed' },
-    { id: 'BEO-8842', name: 'Amway Executive Leadership Retreat', client: 'Amway Global', location: 'GH', room: 'La Grande Vista (Balcony & Sunset Views)', date: 'Thursday, Oct 22, 2026', time: '6:00 PM - 10:00 PM', guests: 85, menu: 'Lakeshore Wood-Fired Feast & Antipasti Misto', bar: 'Noto\'s Selected Italian Wines & Craft Cocktails', total: 9850.00, deposit: 3000.00, balance: 6850.00, status: 'Confirmed' }
-  ]);
+    {
+        "client": "Demo Client 1",
+        "deposit": 400,
+        "total": 1200,
+        "menu": "Fictional demonstration menu",
+        "status": "Confirmed",
+        "location": "GR",
+        "time": "17:00 - 19:00",
+        "bar": "Demonstration beverage package",
+        "name": "Demo Event 1",
+        "room": "Fictional Demo Hall",
+        "guests": 20,
+        "balance": 800,
+        "date": "2030-06-15",
+        "id": "DEMO-EVENT-1"
+    },
+    {
+        "client": "Demo Client 2",
+        "deposit": 500,
+        "total": 1500,
+        "menu": "Fictional demonstration menu",
+        "status": "Confirmed",
+        "location": "GH",
+        "time": "17:00 - 19:00",
+        "bar": "Demonstration beverage package",
+        "name": "Demo Event 2",
+        "room": "Fictional Demo Hall",
+        "guests": 25,
+        "balance": 1000,
+        "date": "2030-06-16",
+        "id": "DEMO-EVENT-2"
+    }
+]);
   const [isExportingBeo, setIsExportingBeo] = useState(false);
 
   // ─── 3. Tom's Kitchen Expo & Live 86'd Board State ───
   const [eightySixItems, setEightySixItems] = useState([
-    { id: '86-01', item: 'Chilean Sea Bass (Fresh Catch)', category: 'Entree', reason: 'Sold out 38 portions; fresh delivery arriving tomorrow 8 AM', station: 'Grill / Sauté', time: '6:14 PM', reportedBy: 'Chef Marco' }
-  ]);
+    {
+        "id": "demo-86-initial",
+        "item": "Demo Pantry Sample",
+        "category": "Kitchen",
+        "reason": "Fictional training example",
+        "station": "Demo Station",
+        "time": "12:00 PM",
+        "reportedBy": "Demo Operator"
+    }
+]);
   const [newItemTo86, setNewItemTo86] = useState('');
   const [new86Reason, setNew86Reason] = useState('');
 
   // ─── 4. Dual-Location Shift Logs State ───
   const [shiftLogs, setShiftLogs] = useState({
-    GR: { date: 'Tonight • Aug 19, 2026', diningCovers: 248, banquetGuests: 220, totalRevenue: 34850.00, wineRevenue: 11420.00, laborVariance: '+0.4%', kitchenTicketAvg: '18 mins', managerNotes: 'Grand Ballroom wedding executed seamlessly. Joanne hosted private tasting in Vault for party of 12.', maintenanceAlerts: 'Air filtration unit in private dining room #2 cleared.', status: 'On Track' },
-    GH: { date: 'Tonight • Aug 19, 2026', diningCovers: 310, banquetGuests: 85, totalRevenue: 28400.00, wineRevenue: 7850.00, laborVariance: '-1.2%', kitchenTicketAvg: '14 mins', managerNotes: 'Sunset dining was at 100% capacity. Wood-fired pizza turned 180 pies. Bocce courts ran 6 matches.', maintenanceAlerts: 'Deck heater pilot light serviced.', status: 'High Volume' }
-  });
+    "GR": {
+        "kitchenTicketAvg": "12 mins",
+        "maintenanceAlerts": "Demo equipment check: no live maintenance report.",
+        "totalRevenue": 1400,
+        "diningCovers": 24,
+        "laborVariance": "+0.0%",
+        "status": "Demo shift record",
+        "managerNotes": "Fictional demo shift GR: sample training notes only.",
+        "wineRevenue": 180,
+        "date": "2030-06-15",
+        "banquetGuests": 20
+    },
+    "GH": {
+        "kitchenTicketAvg": "12 mins",
+        "maintenanceAlerts": "Demo equipment check: no live maintenance report.",
+        "totalRevenue": 1700,
+        "diningCovers": 32,
+        "laborVariance": "+0.0%",
+        "status": "Demo shift record",
+        "managerNotes": "Fictional demo shift GH: sample training notes only.",
+        "wineRevenue": 220,
+        "date": "2030-06-15",
+        "banquetGuests": 25
+    }
+});
   const [isExportingBrief, setIsExportingBrief] = useState(false);
 
   // ─── 5. Employee Chat State ───
@@ -63,98 +189,126 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
       if (saved) return JSON.parse(saved);
     } catch {}
     return [
-      {
-        department: 'Management & Family Executive',
-        icon: '👑',
-        channels: [
-          {
-            id: 'exec-urgent-86',
-            name: 'urgent-86-executive-alerts',
-            position: 'Tony, Tom, Valentina, GMs & Head Chefs',
-            unread: 2,
-            messages: [
-              { sender: 'Chef Marco', role: 'Executive Chef', time: '6:14 PM', text: '🚨 86 Chilean Sea Bass for the rest of tonight! Substituting Grilled Mediterranean Halibut.' },
-              { sender: 'Tony Noto', role: 'Co-Owner / Director', time: '6:18 PM', text: 'Acknowledged. Update POS table screens and alert host stand immediately.' }
-            ]
-          },
-          {
-            id: 'gr-gh-sync',
-            name: 'gr-gh-cross-location-sync',
-            position: 'Grand Rapids & Grand Haven Leadership',
-            unread: 0,
-            messages: [
-              { sender: 'Valentina Noto', role: 'Event Coordinator', time: '4:45 PM', text: 'GR Ballroom locked in for 220 guests at 5:30 PM. Champagne flutes staged.' },
-              { sender: 'David L.', role: 'General Manager (Grand Haven)', time: '5:02 PM', text: 'Lakeshore deck at Bil-Mar prepped. Sunset forecast is clear; expecting heavy walk-in patio volume.' }
-            ]
-          }
+    {
+        "department": "Demo Operations",
+        "icon": "👑",
+        "channels": [
+            {
+                "id": "exec-urgent-86",
+                "name": "Demo Channel 1-1",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            },
+            {
+                "id": "gr-gh-sync",
+                "name": "Demo Channel 1-2",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            }
         ]
-      },
-      {
-        department: 'Wine Cellar & Sommelier Team',
-        icon: '🍾',
-        channels: [
-          {
-            id: 'joanne-cellar',
-            name: 'joanne-wine-vault-sommeliers',
-            position: 'Joanne Noto & Floor Sommeliers',
-            unread: 1,
-            messages: [
-              { sender: 'Joanne Noto', role: 'Master Sommelier', time: '4:30 PM', text: 'Table 18 ordered the 2015 Biondi-Santi Brunello. Bin B-08-1. Decant 25 minutes prior to main course.' },
-              { sender: 'Matteo V.', role: 'Lead Sommelier', time: '4:35 PM', text: 'Decanter prepped in the cellar tasting room.' }
-            ]
-          }
+    },
+    {
+        "department": "Demo Kitchen",
+        "icon": "🍾",
+        "channels": [
+            {
+                "id": "joanne-cellar",
+                "name": "Demo Channel 2-1",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            }
         ]
-      },
-      {
-        department: 'Banquets & Event Operations',
-        icon: '🏛️',
-        channels: [
-          {
-            id: 'valentina-banquets',
-            name: 'valentina-banquet-logistics',
-            position: 'Valentina Noto & Banquet Captains',
-            unread: 0,
-            messages: [
-              { sender: 'Valentina Noto', role: 'Event Coordinator', time: '3:30 PM', text: 'Head table centerpieces and audiovisual projection for Stehouwer wedding verified.' }
-            ]
-          }
+    },
+    {
+        "department": "Demo Service",
+        "icon": "🏛️",
+        "channels": [
+            {
+                "id": "valentina-banquets",
+                "name": "Demo Channel 3-1",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            }
         ]
-      },
-      {
-        department: 'Kitchen & Culinary Masters',
-        icon: '🍳',
-        channels: [
-          {
-            id: 'tom-kitchen',
-            name: 'tom-noto-kitchen-line',
-            position: 'Tom Noto, Line Cooks & Prep Chefs',
-            unread: 0,
-            messages: [
-              { sender: 'Tom Noto', role: 'Culinary Operator', time: '5:00 PM', text: 'Mary Noto\'s lasagna batch #3 is resting. Fresh bread warmers stocked.' }
-            ]
-          }
+    },
+    {
+        "department": "Demo Cellar",
+        "icon": "🍳",
+        "channels": [
+            {
+                "id": "tom-kitchen",
+                "name": "Demo Channel 4-1",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            }
         ]
-      },
-      {
-        department: 'Front of House & Guest Service',
-        icon: '🤵',
-        channels: [
-          {
-            id: 'nicoletta-foh',
-            name: 'nicoletta-foh-service',
-            position: 'Nicoletta Noto, Host Stand & Servers',
-            unread: 0,
-            messages: [
-              { sender: 'Nicoletta Noto', role: 'FOH Operations', time: '5:15 PM', text: 'Remember Santina\'s standard: greet every guest by name within 30 seconds of arrival.' }
-            ]
-          }
+    },
+    {
+        "department": "Demo Events",
+        "icon": "🤵",
+        "channels": [
+            {
+                "id": "nicoletta-foh",
+                "name": "Demo Channel 5-1",
+                "position": "Fictional demonstration role",
+                "unread": 0,
+                "messages": [
+                    {
+                        "sender": "Demo Operator",
+                        "role": "Demo Team",
+                        "time": "12:00 PM",
+                        "text": "Fictional demo message for this training channel."
+                    }
+                ]
+            }
         ]
-      }
-    ];
+    }
+];
   });
   const [activeChannelId, setActiveChannelId] = useState('exec-urgent-86');
+  const activeChannel = employeeChatDepts.flatMap(dept => dept.channels).find(channel => channel.id === activeChannelId) || null;
   const [chatMessageInput, setChatMessageInput] = useState('');
-  const [selectedPostingRole, setSelectedPostingRole] = useState('Tony Noto (Co-Owner)');
+  const [selectedPostingRole, setSelectedPostingRole] = useState("Demo Operator (General Manager)");
   const chatEndRef = useRef(null);
 
   // Presentation Storyboard Matrix
@@ -289,7 +443,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
   };
 
   const handleSendChatMessage = () => {
-    if (!chatMessageInput.trim()) return;
+    if (!activeChannel || !chatMessageInput.trim()) return;
     const parts = selectedPostingRole.split(' (');
     const sender = parts[0];
     const role = parts[1]?.replace(')', '') || 'Staff';
@@ -317,15 +471,15 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
         body: JSON.stringify({
           event_name: beo.name,
           client_name: beo.client,
-          contact_email: 'events@notosoldworld.com',
-          contact_phone: '(616) 493-6686',
+          contact_email: "",
+          contact_phone: "",
           event_date: beo.date,
           event_time: beo.time,
           room_name: beo.room,
           guest_count: beo.guests,
           menu_package: beo.menu,
           bar_service: beo.bar,
-          special_requests: 'Staged head table, champagne toast upon arrival, customized lighting.',
+          special_requests: "Fictional demo export; no live event requirements.",
           subtotal: beo.total / 1.26,
           service_charge: (beo.total / 1.26) * 0.20,
           tax: (beo.total / 1.26) * 0.06,
@@ -431,6 +585,7 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
             <h1 style={{ margin: 0, fontSize: '1.3rem', fontFamily: '"Playfair Display", Georgia, serif', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '10px' }}>
               Noto's Enterprise <span style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: '400', padding: '2px 8px', borderRadius: '6px', background: 'rgba(159, 18, 57, 0.5)', border: '1px solid rgba(159, 18, 57, 0.8)' }}>OS v5.26</span>
             </h1>
+            <p role="note" style={{ margin: '4px 0', fontSize: '11px', color: '#fbbf24' }}>Demo workspace · Sample starting data</p>
             <p style={{ margin: 0, fontSize: '0.75rem', color: '#fda4af' }}>
               Authentic Sicilian-American Heritage • Est. 1982 • Built Debt-Free
             </p>
@@ -1191,12 +1346,12 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
             {/* Active Channel Chat Area */}
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(159, 18, 57, 0.4)', backgroundColor: 'rgba(20, 4, 8, 0.8)' }}>
-                <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: '#ffffff' }}># {activeChannel.name}</h3>
-                <span style={{ fontSize: '0.8rem', color: '#fda4af' }}>{activeChannel.position}</span>
+                <h3 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', color: '#ffffff' }}>{activeChannel ? `# ${activeChannel.name}` : 'Select a channel'}</h3>
+                <span style={{ fontSize: '0.8rem', color: '#fda4af' }}>{activeChannel?.position || 'Choose a department channel to view messages.'}</span>
               </div>
               
               <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {activeChannel.messages.map((msg, mIdx) => (
+                {(activeChannel?.messages || []).map((msg, mIdx) => (
                   <div key={mIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontWeight: '700', color: '#f59e0b', fontSize: '0.9rem' }}>{msg.sender}</span>
@@ -1219,13 +1374,13 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
                     onChange={e => setSelectedPostingRole(e.target.value)}
                     style={{ backgroundColor: '#120205', border: '1px solid rgba(159, 18, 57, 0.6)', color: '#fef3c7', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', outline: 'none' }}
                   >
-                    <option>Tony Noto (Co-Owner)</option>
-                    <option>Joanne Noto (Master Sommelier)</option>
-                    <option>Tom Noto (Culinary Operator)</option>
-                    <option>Valentina Noto (Event Coordinator)</option>
-                    <option>Nicoletta Noto (FOH Operations)</option>
-                    <option>Chef Marco (Executive Chef)</option>
-                    <option>David L. (General Manager GH)</option>
+                    <option>Demo Operator (General Manager)</option>
+                    <option>Demo Chef (Executive Chef)</option>
+                    <option>Demo Host (Service Lead)</option>
+                    <option>Demo Steward (Cellar Lead)</option>
+                    <option>Demo Planner (Event Lead)</option>
+                    <option>Demo Coordinator (Shift Manager)</option>
+                    <option>Demo Colleague (Team Member)</option>
                   </select>
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }}>
@@ -1234,11 +1389,13 @@ export default function NotosEnterpriseOSTab({ backendUrl }) {
                     value={chatMessageInput}
                     onChange={e => setChatMessageInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleSendChatMessage()}
-                    placeholder={`Message #${activeChannel.name}...`}
+                    disabled={!activeChannel}
+                    placeholder={activeChannel ? `Message #${activeChannel.name}...` : 'Select a channel first'}
                     style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(159, 18, 57, 0.6)', borderRadius: '10px', padding: '12px 16px', color: '#fef3c7', fontSize: '0.95rem', outline: 'none' }}
                   />
                   <button
                     onClick={handleSendChatMessage}
+                    disabled={!activeChannel}
                     style={{
                       backgroundColor: '#881337',
                       color: '#ffffff',

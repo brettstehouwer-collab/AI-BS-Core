@@ -12,7 +12,7 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     strictPort: true,
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
@@ -150,7 +150,7 @@ export default defineConfig({
       }
     },
     cssCodeSplit: true,
-    sourcemap: true,
+    sourcemap: false,
     brotliSize: true
   }
 });

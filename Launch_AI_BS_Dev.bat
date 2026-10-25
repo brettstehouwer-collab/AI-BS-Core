@@ -23,7 +23,7 @@ echo [2/9] Starting All Core Engines in Background...
 set CUDA_VISIBLE_DEVICES=0
 set OLLAMA_IGPU_ENABLE=0
 set OLLAMA_MODELS=E:\AI_BS_Resources\Ollama
-set OLLAMA_HOST=0.0.0.0
+set OLLAMA_HOST=127.0.0.1:11434
 
 :: RTX 4090 (24GB VRAM) & Ryzen 9 9950X (32 Threads) High-Performance Sovereign Profile
 set OLLAMA_KEEP_ALIVE=15m
@@ -44,7 +44,7 @@ powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList 'shm_websocket_gateway.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%go-core\aibs_engine.exe' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'C:\Users\footb\AppData\Local\Microsoft\WinGet\Packages\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\nginx-1.31.3\nginx.exe' -ArgumentList '-p C:\StehouwerPublishing.com -c C:\StehouwerPublishing.com\nginx.conf' -WindowStyle Hidden"
-powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%vnc_bridge.exe' -WindowStyle Hidden"
+powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%pyppeteer_env\Scripts\python.exe' -ArgumentList '%BASE_DIR%backend\vnc_buffer_bridge_daemon.py' -WorkingDirectory '%BASE_DIR%backend' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- systemctl start clore-hosting.service' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'wsl.exe' -ArgumentList '-d Ubuntu -u root -- bash /mnt/c/AI-BS/backend/ubuntu_bio_bridge/start_fastapi.sh' -WindowStyle Hidden"
 powershell -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%BASE_DIR%cloudflared.exe' -ArgumentList 'tunnel run ai-bs' -WindowStyle Hidden"

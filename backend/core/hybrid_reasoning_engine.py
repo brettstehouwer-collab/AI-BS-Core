@@ -17,6 +17,9 @@ SHADOW_OLLAMA_URL = os.environ.get("OLLAMA_HOST_EDRIVE_GEN", "http://127.0.0.1:1
 
 class ChatRequest(BaseModel):
     prompt: str
+    mode: Optional[str] = None
+    plan_only: bool = False
+    execution_backend: str = 'trusted_host'
     messages: Optional[list] = None
     temperature: float = 0.7
     stream: bool = True
@@ -1365,36 +1368,24 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 
 
 
-    # --- Unified Sovereign Reasoning Matrix (Fast Stream + Math Autograd Swarm) ---
+    # Generated output is a proposal, never authority to execute a host command.
     try:
         from core.sovereign_reasoning import stream_sovereign_response
 
-        accumulated = []
+        fence_tail = ""
+        has_code_block = False
         async for chunk in stream_sovereign_response(prompt, messages=messages):
-            accumulated.append(chunk)
+            combined = fence_tail + chunk
+            has_code_block = has_code_block or "```" in combined
+            fence_tail = combined[-2:]
             yield chunk
 
-        full_text = "".join(accumulated)
-        p_lower_check = prompt.lower()
-        is_host_action_req = any(w in p_lower_check for w in ["write", "create", "save", "make", "run", "execute", "powershell", "host", "c drive", "c:"])
-        if is_host_action_req:
-            ps_matches = list(re.finditer(r"```(?:powershell|ps1)\r?\n([\s\S]*?)\r?\n```", full_text, re.IGNORECASE))
-            if ps_matches:
-                ps_code = ps_matches[-1].group(1).strip()
-                if ps_code and not any(d in ps_code.lower() for d in ["remove-item -recurse -force c:\\", "format-volume", "stop-computer", "restart-computer"]):
-                    from tools.tool_registry import ToolRegistry
-                    yield f"\n\n⚡ **Autonomous Host Execution (Running generated PowerShell on C:\\AI-BS)...**\n"
-                    ps_res = await asyncio.to_thread(ToolRegistry.execute_tool, "execute_powershell", {"command": ps_code})
-                    rc = ps_res.get("returncode", -1)
-                    stdout = (ps_res.get("stdout") or "").strip()
-                    stderr = (ps_res.get("stderr") or "").strip()
-                    elapsed = ps_res.get("elapsed_ms", 0)
-                    badge = "✅ **Host Execution Verified**" if rc == 0 else f"❌ **Host Execution Exit Code {rc}**"
-                    yield f"\n{badge} *(in {elapsed}ms)*\n"
-                    if stdout:
-                        yield f"```powershell\n{stdout}\n```\n"
-                    if stderr:
-                        yield f"⚠️ **Stderr:**\n```powershell\n{stderr}\n```\n"
+        if has_code_block:
+            yield (
+                "\n\nGenerated code is a proposal only; no generated command was executed. "
+                "For a verified code change, select the repository, editable files and checks "
+                "through the reviewed coding workflow, then review its diff and results before applying.\n"
+            )
     except Exception as err:
         yield f"Error in sovereign reasoning matrix: {err}"
 
@@ -1402,6 +1393,38 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 
 @router.post("/stream")
 async def chat_hybrid_endpoint(req: ChatRequest):
+    body = req.model_dump() if hasattr(req, 'model_dump') else req.dict()
+    mode = body.get("mode")
+    mode = mode.strip().lower() if isinstance(mode, str) else mode
+    if body.get("plan_only") is True or mode in ("plan", "plan_only", "review"):
+        return StreamingResponse(
+            iter(["Plan/review mode: no tools, model calls or coding task were executed. Use Plan & Review to develop the proposal.\n"]),
+            media_type="text/plain",
+        )
+    if mode not in (None, "", "execute"):
+        return StreamingResponse(
+            iter(["Unsupported chat mode: no tools, model calls or coding task were executed.\n"]),
+            media_type="text/plain",
+        )
+
+    from core.coding_chat import coding_request, is_coding_request
+    if is_coding_request(body):
+        async def coding_events():
+            yield "Preparing a coding task...\n\n"
+            reply = await asyncio.to_thread(coding_request, body)
+            yield reply['response']
+            task_id = (reply.get('coding_task') or {}).get('task_id')
+            if task_id:
+                yield '\n<!--AI-BS-METADATA:' + json.dumps({'coding_task_id':task_id}) + '-->'
+        return StreamingResponse(coding_events(), media_type="text/plain")
+    backend = body.get("execution_backend", "trusted_host")
+    if backend != "trusted_host":
+        reason = (
+            "ISOLATION_UNAVAILABLE: no accepted Windows worker is configured; host fallback is forbidden."
+            if backend == "windows_vm"
+            else "INVALID_EXECUTION_BACKEND: unsupported execution backend."
+        )
+        return StreamingResponse(iter([reason + " No host tool or model was invoked.\n"]), media_type="text/plain")
     return StreamingResponse(
         stream_stehouwer_hybrid_response(req.prompt, messages=req.messages),
         media_type="text/event-stream"

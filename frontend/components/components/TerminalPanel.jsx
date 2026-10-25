@@ -71,7 +71,22 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ command: cmd })
         });
-        const result = await res.json();
+        let result = {};
+        try {
+          result = await res.json();
+        } catch (_) {
+          result = { error: `Server returned non-JSON HTTP ${res.status}` };
+        }
+        if (!res.ok) {
+          const errMsg = typeof result.detail === 'string'
+            ? result.detail
+            : (Array.isArray(result.detail)
+              ? result.detail.map(d => d.msg || JSON.stringify(d)).join(', ')
+              : (result.error || `HTTP ${res.status} ${res.statusText || 'Error'}`));
+          term.writeln(`\x1b[1;31m[API Error ${res.status}]: ${errMsg}\x1b[0m`);
+        } else if (result.error) {
+          term.writeln(`\x1b[1;31m[Error]: ${result.error}\x1b[0m`);
+        }
         if (result.stdout) {
           const lines = result.stdout.split('\n');
           lines.forEach(l => term.writeln(l.replace(/\r/g, '')));

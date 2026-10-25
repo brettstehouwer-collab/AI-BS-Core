@@ -190,9 +190,9 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
     };
 
     return (
-        <div className="video-studio-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px', color: '#e0e0e0', height: '100%', overflowY: 'auto' }}>
+        <div className="video-studio-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: 'clamp(12px, 3vw, 20px)', color: '#e0e0e0', height: '100%', overflowY: 'auto', boxSizing: 'border-box' }}>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #1e293b', paddingBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #1e293b', paddingBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
                 <h2 style={{ margin: 0, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>🎥</span> AI-BS Video Studio & Wan2.1 Cinematic Renderer
                 </h2>
@@ -206,9 +206,9 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                 </div>
             </div>
             
-            <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0, flexWrap: 'wrap' }}>
+            <div className="video-studio-layout" style={{ display: 'flex', gap: '20px', flex: 1, minHeight: 0, flexWrap: 'wrap' }}>
                 {/* Left Column: Controls & Generation */}
-                <div style={{ flex: 1, minWidth: '380px', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: '#0f172a', padding: '20px', borderRadius: '12px', border: '1px solid #1e293b' }}>
+                <div className="scene-prompt-column" style={{ flex: '1 1 420px', minWidth: 0, width: '100%', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: '#0f172a', padding: 'clamp(14px, 3vw, 20px)', borderRadius: '12px', border: '1px solid #1e293b', boxSizing: 'border-box' }}>
                     
                     {/* Scene Generator */}
                     <div className="control-group" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -236,7 +236,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                             }}
                         />
                         
-                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                             <select 
                                 value={generationEngine} 
                                 onChange={(e) => setGenerationEngine(e.target.value)}
@@ -351,7 +351,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                         <h4 style={{ margin: '0 0 6px 0', color: '#94a3b8', fontSize: '0.85rem' }}>
                             📁 Manual Video File Stream Path
                         </h4>
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                             <input 
                                 type="text" 
                                 placeholder="C:\AI-BS\screenplay_projects\Echoes_Within\video.mp4" 
@@ -371,7 +371,7 @@ export default function VideoStudioTab({ BACKEND_URL, backendUrl, sharedVideoPro
                 </div>
 
                 {/* Right Column: Preview Monitor & Recent Clips */}
-                <div style={{ flex: 1.4, minWidth: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="vlc-player-column" style={{ flex: '1 1 540px', minWidth: 0, width: '100%', display: 'flex', flexDirection: 'column', gap: '16px', boxSizing: 'border-box' }}>
                     <VLCPreviewMonitor 
                         videoPath={videoPath} 
                         streamUrl={streamUrl}

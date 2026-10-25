@@ -6,7 +6,8 @@ import sqlite3
 import logging
 import urllib.request
 from typing import Dict, Any, Optional, List, Union
-from fastapi import APIRouter, Request, Header, HTTPException
+from fastapi import APIRouter, Request, Header, HTTPException, Depends
+from security.analytics_access import require_analytics_access
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -339,7 +340,7 @@ def trigger_dashboard_notification(event_type: str, user_email: str, ip: str, ge
 
 
 site_analytics_router = APIRouter(
-    prefix="/api/analytics", tags=["Site Analytics Telemetry"]
+    prefix="/api/analytics", tags=["Site Analytics Telemetry"], dependencies=[Depends(require_analytics_access)]
 )
 
 
@@ -425,14 +426,8 @@ async def track_site_beacon(payload: TrafficBeaconPayload, request: Request):
         site_id = "aibs_dashboard"
         if not payload.domain:
             domain = "ai-bs-dashboard.web.app"
-        # Trigger real-time dashboard notification
-        trigger_dashboard_notification(
-            event_type=payload.event_type or "pageview",
-            user_email=str(payload.event_data) if (isinstance(payload.event_data, str) and "@" in payload.event_data) else "",
-            ip=ip,
-            geo=geo,
-            metadata=payload.dict()
-        )
+        # Public beacons record visitor telemetry only. Outbound notifications
+        # belong to the authenticated /notify-login endpoint.
 
     try:
         event_data_str = json.dumps(payload.event_data) if isinstance(payload.event_data, (dict, list)) else (str(payload.event_data) if payload.event_data is not None else None)

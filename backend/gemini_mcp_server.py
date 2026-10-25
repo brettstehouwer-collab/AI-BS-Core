@@ -1,4 +1,7 @@
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+import secrets
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import sys
@@ -13,12 +16,33 @@ from mcp.server.sse import SseServerTransport
 
 app = FastAPI(title="AI-BS Gemini MCP Bridge")
 
+class MCPAdminBoundaryMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        expected = os.getenv("AI_BS_ADMIN_KEY", "")
+        supplied = request.headers.get("x-admin-key", "") or request.headers.get("x-api-key", "")
+        authorization = request.headers.get("authorization", "")
+        if not supplied and authorization.lower().startswith("bearer "):
+            supplied = authorization[7:].strip()
+        if not expected or not supplied or not secrets.compare_digest(supplied, expected):
+            return JSONResponse(status_code=403, content={"detail": "Admin authorization required."})
+        return await call_next(request)
+
+app.add_middleware(MCPAdminBoundaryMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3001", "http://127.0.0.1:3001",
+        "http://localhost:5173", "http://127.0.0.1:5173",
+        "http://localhost:5174", "http://127.0.0.1:5174",
+        "http://localhost:5180", "http://127.0.0.1:5180",
+        "capacitor://localhost", "ionic://localhost",
+        "https://ai-bs-dashboard.web.app", "https://ai-bs.brettstehouwer.live",
+        "https://api.brettstehouwer.live", "https://recdebut-recruit.org",
+        "https://www.recdebut-recruit.org", "https://r.recdebut-recruit.org",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Admin-Key", "X-API-Key"],
 )
 
 mcp_server = Server("ai-bs-mcp-server")
@@ -174,4 +198,4 @@ app.add_route("/sse", sse_post_dummy, methods=["POST"])
 
 if __name__ == "__main__":
     print("Starting AI-BS Gemini MCP Bridge on port 8099...")
-    uvicorn.run(app, host="0.0.0.0", port=8099)
+    uvicorn.run(app, host="127.0.0.1", port=8099)

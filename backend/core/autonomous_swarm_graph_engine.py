@@ -13,7 +13,11 @@ import sqlite3
 import time
 import json
 import logging
+import tempfile
+from pathlib import Path
 from typing import Dict, Any, Optional, List
+
+from .code_quality_gate import sanitize_and_validate_llm_code
 
 logger = logging.getLogger("AutonomousSwarmGraphEngine")
 
@@ -37,18 +41,32 @@ class AutonomousSwarmGraphEngine:
         max_attempts: int = 3
     ) -> Dict[str, Any]:
         """
-        Executes code in isolated sandbox, captures stdout/stderr, and verifies syntax/execution.
+        Validate and execute one script in a separate working directory.
+
+        This is ordinary administrator-authorized host execution, not an OS
+        security sandbox. A zero exit code is not proof of functional correctness.
         """
         start_time = time.time()
-        target_path = os.path.join(SANDBOX_DIR, script_name)
-
+        validation = sanitize_and_validate_llm_code(code)
+        if not validation["valid"]:
+            return {"status": "failed", "message": "Python code failed pre-execution validation.",
+                    "code_quality": validation, "exit_code": None, "auto_refined": False, "attempts": 0}
+        if (not isinstance(script_name, str) or not script_name or len(script_name) > 200
+                or Path(script_name).name != script_name or any(c in script_name for c in '/\\:')
+                or Path(script_name).suffix.lower() not in (".py", ".pyw")):
+            return {"status": "failed", "message": "script_name must be a Python filename without a directory or drive.",
+                    "exit_code": None, "auto_refined": False, "attempts": 0}
+        # Per-invocation directories retain earlier scripts and prevent callers
+        # from selecting a host file to overwrite through script_name.
+        run_dir = tempfile.mkdtemp(prefix="refine_", dir=SANDBOX_DIR)
+        target_path = os.path.join(run_dir, script_name)
         with open(target_path, "w", encoding="utf-8") as f:
-            f.write(code)
+            f.write(validation["sanitized_code"])
 
         # Run test execution
         proc = subprocess.run(
             [sys.executable, target_path],
-            capture_output=True, text=True, timeout=30
+            capture_output=True, text=True, timeout=30, cwd=run_dir
         )
 
         exec_ms = round((time.time() - start_time) * 1000, 2)
@@ -61,8 +79,10 @@ class AutonomousSwarmGraphEngine:
             "stdout": proc.stdout[:500],
             "stderr": proc.stderr[:500],
             "execution_time_ms": exec_ms,
-            "auto_refined": success,
-            "message": "Script executed and passed all assertions in sandbox." if success else f"Execution failed with error: {proc.stderr[:100]}"
+            "auto_refined": False,
+            "attempts": 1,
+            "code_quality": validation,
+            "message": "Script exited successfully; no automatic repair was performed." if success else f"Execution failed with error: {proc.stderr[:100]}"
         }
 
     # =========================================================================

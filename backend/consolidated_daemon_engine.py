@@ -26,6 +26,15 @@ class ConsolidatedDaemonEngine:
     def __init__(self):
         self.is_running = False
         self.tasks = []
+        self._query_cache = None
+
+    def bind_query_cache(self, cache):
+        """Bind the existing in-memory cache without importing the application."""
+        if not isinstance(cache, dict):
+            raise TypeError("Query cache must be an in-memory dict.")
+        if self._query_cache is not None and self._query_cache is not cache:
+            raise ValueError("The daemon engine already owns a different query cache.")
+        self._query_cache = cache
 
     async def _heuristics_loop(self):
         """Monitors system heuristics & CPU/GPU load."""
@@ -55,11 +64,14 @@ class ConsolidatedDaemonEngine:
         """Sweeps stale cache keys and query caches."""
         while self.is_running:
             try:
-                from AI_BS_Backend import _QUERY_CACHE
-                now = time.time()
-                keys_to_del = [k for k, v in _QUERY_CACHE.items() if now - v[1] > 300]
-                for k in keys_to_del:
-                    _QUERY_CACHE.pop(k, None)
+                cache = self._query_cache
+                if cache is not None:
+                    now = time.time()
+                    stale = [(key, value) for key, value in list(cache.items())
+                             if now - value[1] > 300]
+                    for key, value in stale:
+                        if cache.get(key) is value:
+                            cache.pop(key, None)
             except Exception:
                 pass
             await asyncio.sleep(60)

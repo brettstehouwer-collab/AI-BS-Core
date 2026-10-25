@@ -6,7 +6,8 @@ Exposes endpoints for:
 - POST /api/v1/infrastructure/noco/spatial
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from security.analytics_access import require_analytics_admin
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from core.quantitative_spatial_analytics_engine import QuantitativeSpatialAnalyticsEngine
@@ -35,7 +36,7 @@ class NocoSpatialRequest(BaseModel):
     ceiling_height_ft: float = Field(default=18.0, description="Facility ceiling height in feet")
 
 
-@router.post("/analytics/duckdb/query")
+@router.post("/analytics/duckdb/query", dependencies=[Depends(require_analytics_admin)])
 async def duckdb_query_endpoint(req: DuckDbQueryRequest):
     try:
         res = QuantitativeSpatialAnalyticsEngine.execute_duckdb_query(

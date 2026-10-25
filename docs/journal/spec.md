@@ -1,0 +1,9 @@
+# Coding journal replacement repair
+
+The v5.329.25 broader runs recorded WinError5 replacing task status JSON. The original reader/process/ACL cause is unknown. Do not disable security, elevate, change ACLs, delete failed records or call an unsuccessful write successful.
+
+Use one shared metadata writer for task results, request journals and cancellation markers. Serialize before mutation, create a unique same-directory temporary file exclusively, flush and fsync its bytes, close it, then atomically replace the target. Preserve the old target and new temporary evidence if promotion fails. Existing task/repository locks still own logical serialization; this helper is not a replacement lock or authorization boundary.
+
+Retry only Windows access/sharing/lock-denied replacement errors (5/32/33), with a monotonic default half-second budget and hard configuration maximum one second. Back off between attempts; propagate the original error on expiry. Other errors propagate immediately. Do not retry whole tasks, code execution, application, inference, network operations or failed serialization/fsync. Successful replacement consumes its temporary staging entry normally; failed entries are retained. Flushing the staged file does not establish universal sudden-power-loss guarantees.
+
+Test first with synthetic JSON files and an actual Windows handle denying delete sharing. Demonstrate rejection before the fix, completion after controlled release, bounded permanent failure with both old/staged content intact, unrelated error propagation, serialization/fsync failure, exclusive staging and integration at existing writer call sites. Then rerun the review/preservation tests that failed, and the related project-input regressions. Retain every report/fixture. No VM work, dependency installation, document editing, service restart or publication is required for this task.

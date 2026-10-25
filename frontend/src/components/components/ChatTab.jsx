@@ -1,3 +1,8 @@
+import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
+import { stageRagSource } from '/src/utils/ragSourceStage.js';
+import { archiveChatAndClear } from '/src/utils/chatArchive.js';
+import CodingPreparationPanel from './CodingPreparationPanel';
+import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import React, { useState, useRef, useEffect } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
@@ -9,6 +14,8 @@ import ChatToolControlBar from './ChatToolControlBar';
 import ChatContextToolbar from './ChatContextToolbar';
 import AgentPlanReviewCard from './AgentPlanReviewCard';
 import AutonomousMissionCard from './AutonomousMissionCard';
+import CodingTaskReviewCard from './CodingTaskReviewCard';
+import CodingTaskHistory from './CodingTaskHistory';
 import GrillSessionCard from './GrillSessionCard';
 import UnrealPixelStreamBridge from './UnrealPixelStreamBridge';
 import ContentGovernanceRiskModal from './ContentGovernanceRiskModal';
@@ -47,7 +54,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -92,7 +99,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -139,7 +146,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -212,7 +219,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -243,7 +250,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+              
               'X-Client-ID': 'stehouwer_publishing'
             },
             body: JSON.stringify({
@@ -296,7 +303,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -867,7 +874,7 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -1911,7 +1918,7 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify(payload)
@@ -2138,7 +2145,7 @@ function FileEditorDrawer({ editorData, onClose }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -2169,7 +2176,7 @@ function FileEditorDrawer({ editorData, onClose }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -3066,16 +3073,19 @@ const SLASH_COMMANDS = [
 
 export default function ChatTab({ isNested = false }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
-  const chatMessages = useAppStore(state => state.chatMessages);
-  const setChatMessages = useAppStore(state => state.setChatMessages);
-  const footerInput = useAppStore(state => state.footerInput);
-  const setFooterInput = useAppStore(state => state.setFooterInput);
+  const storedChatMessages = useAppStore(state => state.chatMessages);
+  const storedFooterInput = useAppStore(state => state.footerInput);
   const messageFeedRef = useAppStore(state => state.messageFeedRef);
   const selectedModel = useAppStore(state => state.selectedModel);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendDisabled, setIsBackendDisabled] = useState(false);
   const abortControllerRef = useRef(null);
+  const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
+  const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
+  const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
+  const setChatMessages = conversationMemory.setMessages;
+  const setFooterInput = conversationMemory.setDraft;
 
   const handleStopOrToggleBackend = () => {
     if (isLoading) {
@@ -3148,70 +3158,35 @@ export default function ChatTab({ isNested = false }) {
   const [isSavingMemory, setIsSavingMemory] = useState(false);
   const [memoryToast, setMemoryToast] = useState('');
 
+  const memoryArchiveRef = useRef({ busy:false, pending:null });
   const handleSaveToMemoryAndClear = async () => {
-    if (!chatMessages || chatMessages.length === 0) {
+    if (!conversationMemory.viewReady) return;
+    if (memoryArchiveRef.current.busy) return;
+    if (!useAppStore.getState().chatMessages?.length) {
       setMemoryToast('Chat is already empty');
-      setTimeout(() => setMemoryToast(''), 2500);
       return;
     }
-
+    if (isLoading) {
+      setMemoryToast('Wait for the response to finish before archiving.');
+      return;
+    }
     setIsSavingMemory(true);
-    setMemoryToast('🧠 Ingesting conversation into Master Memory...');
-
+    setMemoryToast('Archiving conversation to the local SQLite vault...');
     try {
-      const payload = {
-        messages: chatMessages.map(m => ({
-          role: m.role,
-          content: m.content,
-          model: m.model || selectedModel,
-          timestamp: m.timestamp || Date.now()
-        })),
-        session_title: `Desktop IDE Chat Session (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`,
-        source: 'desktop_ide_chat'
-      };
-
-      const candidateBases = [
-        BACKEND_URL,
-        'https://api.brettstehouwer.live',
-        'http://localhost:8080',
-        'http://127.0.0.1:8080'
-      ].filter((u, i, arr) => u && arr.indexOf(u) === i);
-
-      let saved = false;
-      for (const base of candidateBases) {
-        try {
-          const res = await fetch(`${base}/api/memory/ingest-chat`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
-              'X-Client-ID': 'stehouwer_publishing'
-            },
-            body: JSON.stringify(payload),
-            signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
-          });
-          if (res && res.ok) {
-            saved = true;
-            break;
-          }
-        } catch (e) {
-          console.warn(`Memory ingest attempt on ${base} failed:`, e);
-        }
-      }
-
-      setChatMessages([]);
-      if (saved) {
-        setMemoryToast('💾 Ingested to Master Memory & Cleared!');
-      } else {
-        setMemoryToast('💾 Cleared chat');
-      }
+      const saved = await archiveChatAndClear({
+        state:memoryArchiveRef.current, backendUrl:BACKEND_URL,
+        getMessages:() => useAppStore.getState().chatMessages,
+        setMessages:setChatMessages,
+        isCurrentBackend:conversationMemory.isCurrent,
+        beforeClear:conversationMemory.beforeClear,
+        sessionTitle:'Desktop IDE Chat Session', source:'desktop_ide_chat',
+      });
+      setMemoryToast(saved.cleared ? 'Archived to SQLite & cleared.' : 'Archived snapshot; current chat kept.');
     } catch (err) {
-      console.warn('Memory ingest error:', err);
-      setChatMessages([]);
-      setMemoryToast('💾 Cleared chat');
+      setMemoryToast('Archive not confirmed; chat kept. ' + err.message);
     } finally {
       setIsSavingMemory(false);
-      setTimeout(() => setMemoryToast(''), 3500);
+      setTimeout(() => setMemoryToast(''), 5000);
     }
   };
 
@@ -3242,7 +3217,7 @@ export default function ChatTab({ isNested = false }) {
     if (mobileSynergyMode || dpiScaleProfile !== 'desktop_native') {
       fetch(`${BACKEND_URL}/api/executive/mobile-workstation/status`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       })
@@ -3267,7 +3242,7 @@ export default function ChatTab({ isNested = false }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -3307,7 +3282,7 @@ export default function ChatTab({ isNested = false }) {
     try {
       const res = await fetch(`${BACKEND_URL}/api/executive/wireless-cast/status`, {
         headers: {
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
@@ -3346,7 +3321,7 @@ export default function ChatTab({ isNested = false }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({
@@ -3437,7 +3412,7 @@ export default function ChatTab({ isNested = false }) {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+              
               'X-Client-ID': 'stehouwer_publishing'
             },
             body: JSON.stringify({ data_url: dataUrl, width: targetW, height: targetH })
@@ -3481,7 +3456,7 @@ export default function ChatTab({ isNested = false }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ grill_id: grillId, operator_response: response, response: response })
@@ -3523,7 +3498,7 @@ export default function ChatTab({ isNested = false }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ grill_id: grillId })
@@ -3563,7 +3538,7 @@ export default function ChatTab({ isNested = false }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ proposal: proposalText })
@@ -3674,6 +3649,7 @@ export default function ChatTab({ isNested = false }) {
   };
 
   const handleSendMessage = async (customText = null) => {
+    if (!conversationMemory.viewReady) return;
     const rawText = customText !== null ? customText : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
 
@@ -3737,7 +3713,7 @@ export default function ChatTab({ isNested = false }) {
 
     const reqHeaders = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+      
       'X-Client-ID': 'stehouwer_publishing'
     };
 
@@ -6063,7 +6039,7 @@ export default function ChatTab({ isNested = false }) {
       }
 
       if (['/recall', '/memory', '/thinking'].includes(command)) {
-        const queryText = (rawTarget || '').trim();
+        const queryText = rest.trim();
         if (!queryText) {
           setChatMessages(prev => [
             ...prev,
@@ -6512,37 +6488,26 @@ export default function ChatTab({ isNested = false }) {
         return;
       }
 
-      // 1. Direct Large Pasted Context Buffer (>16,000 chars / up to 1,000,000 tokens) -> Auto-Stage to 1M+ RAG
+      // 1. Direct Large Pasted Context Buffer: preserve source before analysis.
       if (nlText.length > 16000) {
-        const stagePath = 'C:\\AI-BS\\workspace\\pasted_1m_buffer.txt';
         try {
-          await fetch(`${BACKEND_URL}/api/executive/run`, {
-            method: 'POST',
-            headers: reqHeaders,
-            body: JSON.stringify({
-              command_type: 'file_write',
-              target: stagePath,
-              payload: { content: nlText }
-            })
-          });
-          if (typeof window !== 'undefined') {
-            window.__aibsLastHostFile = stagePath;
-            window.dispatchEvent(new CustomEvent('aibs-open-ide-editor', {
-              detail: { path: stagePath, fullPath: stagePath, content: nlText.substring(0, 50000) }
-            }));
-          }
-          const stageUrl = `file:///${stagePath.replace(/\\/g, '/')}`;
-          const estTokens = Math.floor(nlText.length / 4);
-          setChatMessages(prev => [
-            ...prev,
-            {
-              role: 'assistant',
-              content: `🧠 **[1M+ OFFLOAD RAG AUTO-STAGING COMPLETE]**\n\n- **Staged Host Buffer (C: Drive):** [${stagePath}](${stageUrl})\n- **Payload Size:** \`${nlText.length.toLocaleString()} chars\` (~**${estTokens.toLocaleString()} tokens**)\n- **Active GPU Context Clamped:** \`4,096 tokens\` (Zero VRAM Spillover)\n- **CPU Embedding Engine:** \`Port 11435 (nomic-embed-text)\`\n\n💡 *Your large context has been staged to disk and opened in the BS-Chat IDE Code Editor.*`,
-              model: '1M+ Offload RAG Engine'
-            }
-          ]);
-        } catch (e) {
-          console.warn('1M auto-stage warning:', e);
+          const staged = await stageRagSource({ backendUrl:BACKEND_URL, text:rawText });
+          if (typeof window !== 'undefined') window.__aibsLastHostFile = staged.path;
+          const stageUrl = `file:///${staged.path.replace(/\\/g, '/')}`;
+          setChatMessages(prev => [...prev, {
+            role:'assistant', model:'Large Context Source Staging',
+            content:`Source write confirmed: [${staged.path}](${stageUrl})\n\n` +
+              `${staged.bytes_written.toLocaleString()} UTF-8 bytes preserved; SHA-256: \`${staged.sha256}\`.\n\n` +
+              'Parsing/indexing/retrieval are not yet confirmed. This receipt does not establish a million-token model context.',
+          }]);
+        } catch (err) {
+          setFooterInput(current => current || rawText);
+          setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
+            content:'Source staging was not confirmed; analysis stopped and input was retained. ' + err.message }]);
+          setErrorPopup(err.message);
+          clearTimeout(timeoutId);
+          setIsLoading(false);
+          return;
         }
       }
 
@@ -6692,7 +6657,7 @@ export default function ChatTab({ isNested = false }) {
 
       const reqHeaders = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+        
         'X-Client-ID': 'stehouwer_publishing'
       };
 
@@ -6724,6 +6689,14 @@ export default function ChatTab({ isNested = false }) {
             body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true }),
             signal: controller.signal,
           });
+
+          if (streamRes.status === 401 || streamRes.status === 403) {
+            const authorizationError = Object.assign(
+              new Error(`AI-BS chat requires administrator sign-in (HTTP ${streamRes.status}).`),
+              { status: streamRes.status }
+            );
+            throw authorizationError;
+          }
 
           if (streamRes.ok && streamRes.body) {
             const reader = streamRes.body.getReader();
@@ -6762,6 +6735,8 @@ export default function ChatTab({ isNested = false }) {
             }
           }
         } catch (streamErr) {
+          if (streamErr && typeof streamErr === 'object' && 'status' in streamErr &&
+              (streamErr.status === 401 || streamErr.status === 403)) throw streamErr;
           console.warn('Streaming failed, engaging fallback endpoint...', streamErr);
           if (assistantMessage.trim().length > 0) {
             streamingSucceeded = true;
@@ -6791,6 +6766,7 @@ export default function ChatTab({ isNested = false }) {
           stream: false
         });
 
+        const responseStartedAt = Date.now();
         let res = await fetch(`${BACKEND_URL}${endpoint}`, {
           method: 'POST',
           headers: reqHeaders,
@@ -6798,7 +6774,10 @@ export default function ChatTab({ isNested = false }) {
           signal: controller.signal,
         }).catch(() => null);
 
-        if (!res || !res.ok) {
+        // A lost reply may follow a completed host action. Retry only a definite
+        // missing route, never authentication, server, or ambiguous network errors.
+        if (!res) throw new Error('AI-BS returned no confirmed reply. The request was not retried automatically.');
+        if (!isPlanMode && (res.status === 404 || res.status === 405)) {
           res = await fetch(`${BACKEND_URL}/v1/chat/completions`, {
             method: 'POST',
             headers: reqHeaders,
@@ -6807,9 +6786,12 @@ export default function ChatTab({ isNested = false }) {
           }).catch(() => null);
         }
 
-        // Secondary fallback to FastAPI directly on 8080 if Go Gateway on 8000 dropped
-        if (!res || !res.ok) {
-          const directFastApiUrl = BACKEND_URL.includes(':8000') ? BACKEND_URL.replace(':8000', ':8080') : 'http://127.0.0.1:8080';
+        // The direct compatibility route is available only to the local gateway.
+        // A hosted/mobile client must not redirect its request to the phone's loopback.
+        if (!res) throw new Error('AI-BS returned no confirmed reply. The request was not retried automatically.');
+        const isLocalGateway = /^https?:\/\/(?:localhost|127\.0\.0\.1):8000(?:\/|$)/.test(BACKEND_URL);
+        if (isLocalGateway && (res.status === 404 || res.status === 405)) {
+          const directFastApiUrl = BACKEND_URL.replace(':8000', ':8080');
           res = await fetch(`${directFastApiUrl}${endpoint}`, {
             method: 'POST',
             headers: reqHeaders,
@@ -6818,53 +6800,8 @@ export default function ChatTab({ isNested = false }) {
           }).catch(() => null);
         }
 
-        if (!res || !res.ok) {
-          let errDetail = '';
-          try {
-            const errJson = await res?.json?.();
-            errDetail = errJson?.message || errJson?.detail || errJson?.response || '';
-          } catch (_) {
-            try {
-              errDetail = await res?.text?.();
-            } catch (_) {}
-          }
-          if (errDetail && errDetail.length < 500) {
-            data = { response: `[AI-BS Resilience Core] ${errDetail}` };
-          } else {
-            throw new Error(`Server returned HTTP ${res ? res.status : 'Connection Offline'}`);
-          }
-        }
-
-        let data = {};
-        const rawTextRes = await res.text();
-        if (rawTextRes.trim().startsWith('data:')) {
-          let sseContent = '';
-          for (const line of rawTextRes.split('\n')) {
-            const trimmed = line.trim();
-            if (trimmed.startsWith('data:')) {
-              const jsonPart = trimmed.replace(/^data:\s*/, '');
-              if (jsonPart === '[DONE]') continue;
-              try {
-                const parsed = JSON.parse(jsonPart);
-                if (parsed.content) sseContent += parsed.content;
-                else if (parsed.response) sseContent += parsed.response;
-                else if (parsed.error) sseContent = `⚠️ ${parsed.error}`;
-              } catch (_) {
-                if (jsonPart) sseContent += jsonPart;
-              }
-            }
-          }
-          data = { response: sseContent };
-        } else {
-          try {
-            data = JSON.parse(rawTextRes);
-          } catch (_) {
-            data = { response: rawTextRes };
-          }
-        }
-
-        const rawContent = data.choices?.[0]?.message?.content || data.message || (typeof data.response === 'string' ? data.response : '');
-        const botResponse = rawContent.trim() !== '' ? rawContent : (isPlanMode ? 'Plan generated.' : `Online and operational (${targetModel}).`);
+        const data = await readChatHttpResponse(res);
+        const botResponse = chatResponseText(data, isPlanMode);
         const planData = isPlanMode ? (data.plan_id ? data : (data.planData || null)) : null;
 
         setChatMessages(prev => [
@@ -6873,9 +6810,10 @@ export default function ChatTab({ isNested = false }) {
             role: 'assistant',
             content: botResponse,
             model: data.model || targetModel,
-            execution_time_ms: data.execution_time_ms || 120,
+            execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : Date.now() - responseStartedAt,
             tool_trace: data.tool_trace || null,
-            planData: planData
+            planData: planData,
+            codingTaskId: data.coding_task?.task_id || null
           }
         ]);
 
@@ -7203,6 +7141,8 @@ export default function ChatTab({ isNested = false }) {
       fontFamily: 'Inter, system-ui, sans-serif',
       zoom: uiDpiZoom,
     }}>
+      <ConversationMemoryStatus memory={conversationMemory} />
+      <CodingPreparationPanel memory={conversationMemory} />
       {/* Hidden File Input */}
       <input
         type="file"
@@ -7389,8 +7329,8 @@ export default function ChatTab({ isNested = false }) {
 
           <button
             onClick={handleSaveToMemoryAndClear}
-            disabled={isSavingMemory}
-            title="Ingest entire conversation history into ChromaDB, SQLite Vault, and Master Memory, then clear chat"
+            disabled={isSavingMemory || isLoading}
+            title="Archive the complete conversation to SQLite; clear only after confirmation"
             style={{
               background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(99, 102, 241, 0.25))',
               color: '#c084fc',
@@ -7407,7 +7347,7 @@ export default function ChatTab({ isNested = false }) {
             }}
           >
             <span>💾</span>
-            <span>{isSavingMemory ? 'Ingesting...' : 'Save to Memory & Clear'}</span>
+            <span>{isSavingMemory ? 'Archiving...' : 'Archive Chat & Clear'}</span>
           </button>
 
           <button
@@ -7764,6 +7704,10 @@ export default function ChatTab({ isNested = false }) {
                   </>
                 )}
 
+                {(msg.codingTaskId || msg.meta?.coding_task_id) && (
+                  <CodingTaskReviewCard taskId={msg.codingTaskId || msg.meta?.coding_task_id} />
+                )}
+
                 {/* Reasoning Inspector for Assistant Messages */}
                 {msg.role === 'assistant' && (
                   <ReasoningInspector msg={msg} />
@@ -7789,6 +7733,7 @@ export default function ChatTab({ isNested = false }) {
         borderTop: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(12, 15, 22, 0.98)',
       }}>
+        <CodingTaskHistory />
         {/* Attached Files Preview Bar (GPT Style) */}
         {attachments.length > 0 && (
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
@@ -8788,6 +8733,7 @@ export default function ChatTab({ isNested = false }) {
 
           <textarea
             ref={chatInputRef}
+            disabled={!conversationMemory.viewReady}
             value={footerInput}
             onChange={handleInputChange}
             onKeyDown={(e) => {
@@ -8914,12 +8860,12 @@ export default function ChatTab({ isNested = false }) {
 
             {chatMessages.length > 0 && (
               <button
-                onClick={() => setChatMessages([])}
+                onClick={handleSaveToMemoryAndClear}
                 style={{
                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
                 }}
               >
-                Clear Screen (Retains Memory)
+                Clear Screen (Archives First)
               </button>
             )}
 
@@ -9095,7 +9041,7 @@ export default function ChatTab({ isNested = false }) {
               borderRadius: '6px',
               fontWeight: 600
             }}>
-              <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : 'Auto-Save Active'}
+              <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : conversationMemory.statusLabel}
             </span>
             <span style={{ color: '#60a5fa', fontSize: '0.72rem', fontWeight: 700 }}>
               {`Stehouwer LLM ${SYSTEM_VERSION} • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active`}

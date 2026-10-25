@@ -5,8 +5,13 @@ import json
 import shutil
 import zipfile
 import subprocess
-import py_compile
+import ntpath
+import tempfile
+import uuid
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
+
+from .code_quality_gate import sanitize_and_validate_llm_code
 
 WORKSPACE_ROOT = r"C:\AI-BS"
 PROGRAMS_DIR = os.path.join(WORKSPACE_ROOT, "saved_data", "built_programs")
@@ -24,6 +29,106 @@ class AutonomousProgramBuilder:
     @staticmethod
     def ensure_dir():
         os.makedirs(PROGRAMS_DIR, exist_ok=True)
+
+    @staticmethod
+    def _relative_path(value: str) -> str:
+        """Reject ambiguous Windows names before any project writes occur."""
+        if not isinstance(value, str) or not value or value != value.strip():
+            raise ValueError("File paths must be nonempty relative text without surrounding whitespace")
+        if ntpath.isabs(value) or ntpath.splitdrive(value)[0]:
+            raise ValueError("Absolute, drive-relative and UNC file paths are not permitted")
+        parts = value.replace("\\", "/").split("/")
+        reserved = {"CON", "PRN", "AUX", "NUL", *[f"COM{i}" for i in range(1, 10)], *[f"LPT{i}" for i in range(1, 10)]}
+        for part in parts:
+            if not part or part in {".", ".."} or part.endswith((".", " ")):
+                raise ValueError("Empty, traversal and Windows alias path segments are not permitted")
+            if any(ord(c) < 32 or c in '<>:"|?*' for c in part) or part.split(".", 1)[0].upper() in reserved:
+                raise ValueError("Reserved Windows filenames and alternate data streams are not permitted")
+        return os.path.join(*parts)
+
+    @staticmethod
+    def _contained_path(root: str, relative: str) -> str:
+        target = os.path.abspath(os.path.join(root, relative))
+        root_real = os.path.normcase(os.path.realpath(root))
+        target_real = os.path.normcase(os.path.realpath(target))
+        if os.path.commonpath([root_real, target_real]) != root_real or target_real == root_real:
+            raise ValueError("A project path resolves outside its permitted directory")
+        return target
+
+    @classmethod
+    def _existing_files(cls, project_dir: str, *, exclude_generated: bool = False) -> List[str]:
+        found = []
+        if not os.path.isdir(project_dir):
+            return found
+        excluded = {"node_modules", ".git", ".venv", "venv", "env", "__pycache__", "dist", "build", "backups", ".aibs_backups"}
+        for directory, subdirs, names in os.walk(project_dir, followlinks=False):
+            for name in [*subdirs, *names]:
+                cls._contained_path(project_dir, os.path.relpath(os.path.join(directory, name), project_dir))
+            if exclude_generated:
+                subdirs[:] = [name for name in subdirs if name.lower() not in excluded]
+            for name in names:
+                found.append(os.path.relpath(os.path.join(directory, name), project_dir))
+        return found
+
+    @staticmethod
+    def _preserve_existing(path: str) -> None:
+        if os.path.lexists(path):
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+            shutil.copy2(path, f"{path}.{stamp}_{uuid.uuid4().hex[:8]}.bak")
+
+    @classmethod
+    def _atomic_text(cls, path: str, content: str) -> None:
+        """Keep previous content and replace the destination without truncating it."""
+        cls._preserve_existing(path)
+        descriptor, staged = tempfile.mkstemp(prefix=".aibs_write_", dir=os.path.dirname(path))
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as stream:
+                stream.write(content)
+            os.replace(staged, path)
+        except BaseException:
+            # Retain the failed staging file for review; do not delete user data.
+            raise
+
+    @classmethod
+    def _quality_for_existing(cls, project_dir: str, overlay: Optional[Dict[str, str]] = None,
+                              strict: bool = False, include_paths: Optional[List[str]] = None) -> Dict[str, Any]:
+        if not isinstance(strict, bool):
+            raise ValueError("strict_quality_gate must be a boolean")
+        overlay = overlay or {}
+        sources = dict(overlay)
+        case_names = {os.path.normcase(name) for name in sources}
+        existing = cls._existing_files(project_dir, exclude_generated=True)
+        for relative in include_paths or []:
+            relative = cls._relative_path(relative)
+            path = cls._contained_path(project_dir, relative)
+            if os.path.isfile(path) and relative not in existing:
+                existing.append(relative)
+        for relative in existing:
+            if relative.lower().endswith((".py", ".pyw")) and os.path.normcase(relative) not in case_names:
+                path = cls._contained_path(project_dir, relative)
+                try:
+                    with open(path, "r", encoding="utf-8", newline="") as stream:
+                        sources[relative] = stream.read()
+                except (OSError, UnicodeError) as exc:
+                    return {"valid": False, "strict": strict, "files": {},
+                        "errors": [f"{relative}: Cannot read Python source ({type(exc).__name__})"]}
+        results = {name: sanitize_and_validate_llm_code(content, strict=strict)
+            for name, content in sources.items() if name.lower().endswith((".py", ".pyw"))}
+        for name, result in results.items():
+            if name not in overlay and result["sanitized_code"] != sources[name]:
+                result["valid"] = False
+                result["errors"].append("Existing source requires an explicit sanitized update before execution; original left unchanged")
+        return {"valid": all(value["valid"] for value in results.values()), "strict": strict,
+            "files": results, "errors": [f"{name}: {message}" for name, result in results.items() for message in result["errors"]]}
+
+    @staticmethod
+    def _quality_failure(project_name: str, project_dir: str, quality: Dict[str, Any],
+                         message: str = "Program rejected before writes, build or execution") -> Dict[str, Any]:
+        return {"status": "error", "message": message, "project_name": project_name,
+            "project_dir": project_dir, "files": [], "syntax_errors": quality.get("errors", []),
+            "code_quality": quality,
+            "build": {"executed": False, "status": "blocked_by_quality_gate", "command": "", "stdout": "", "stderr": message, "exit_code": 1},
+            "execution": {"executed": False, "status": "blocked_by_quality_gate", "stdout": "", "stderr": message, "exit_code": 1}}
 
     @classmethod
     def detect_build_command(cls, project_dir: str, language: Optional[str] = None) -> Optional[str]:
@@ -85,32 +190,66 @@ class AutonomousProgramBuilder:
         run_immediately: bool = True,
         powershell_command: Optional[str] = None,
         build_command: Optional[str] = None,
-        execute_build: bool = True
+        execute_build: bool = True,
+        strict_quality_gate: bool = False
     ) -> Dict[str, Any]:
         """
         Builds a complete multi-file software program and executes build steps.
         files: [{"path": "main.py", "content": "..."}, ...]
         """
-        cls.ensure_dir()
         display_name = project_name
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         if not clean_name:
             clean_name = f"program_{int(time.time())}"
 
         project_dir = os.path.join(PROGRAMS_DIR, clean_name)
+        try:
+            cls._contained_path(PROGRAMS_DIR, clean_name)
+            cls._contained_path(PROGRAMS_DIR, clean_name + ".zip")
+            if os.path.lexists(project_dir) and not os.path.isdir(project_dir):
+                raise ValueError("The project name already belongs to a file")
+            entrypoint = cls._relative_path(entrypoint)
+            cls._contained_path(project_dir, entrypoint)
+            prepared: Dict[str, str] = {}
+            normalized_names = set()
+            if not isinstance(strict_quality_gate, bool):
+                raise ValueError("strict_quality_gate must be a boolean")
+            for file_info in files:
+                rel_path = cls._relative_path(file_info.get("path", ""))
+                if os.path.normcase(rel_path) in normalized_names:
+                    raise ValueError("Duplicate or case-equivalent paths are not permitted")
+                if os.path.normcase(rel_path) == "program_manifest.json":
+                    raise ValueError("program_manifest.json is reserved for builder metadata")
+                cls._contained_path(project_dir, rel_path)
+                content = file_info.get("content", "")
+                if not isinstance(content, str):
+                    raise ValueError("Source file content must be text")
+                content.encode("utf-8", errors="strict")
+                normalized_names.add(os.path.normcase(rel_path))
+                prepared[rel_path] = content
+            for relative in prepared:
+                parent = os.path.dirname(relative)
+                while parent:
+                    if os.path.normcase(parent) in normalized_names:
+                        raise ValueError("A supplied file cannot also be a parent directory")
+                    parent = os.path.dirname(parent)
+            quality = cls._quality_for_existing(project_dir, prepared, strict_quality_gate, [entrypoint])
+        except (ValueError, TypeError, AttributeError, OSError, UnicodeError) as exc:
+            quality = {"valid": False, "strict": strict_quality_gate, "files": {},
+                "errors": [f"Invalid project input: {exc}"]}
+        if not quality["valid"]:
+            return cls._quality_failure(clean_name, project_dir, quality)
+        for rel_path, result in quality["files"].items():
+            if rel_path in prepared:
+                prepared[rel_path] = result["sanitized_code"]
+        # All supplied/existing Python sources pass before the first mutation.
+        cls.ensure_dir()
         os.makedirs(project_dir, exist_ok=True)
-
         written_files = []
-        for file_info in files:
-            rel_path = file_info.get("path", "").strip().lstrip("/\\")
-            content = file_info.get("content", "")
-            if not rel_path:
-                continue
-
-            full_file_path = os.path.join(project_dir, rel_path)
+        for rel_path, content in prepared.items():
+            full_file_path = cls._contained_path(project_dir, rel_path)
             os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
-            with open(full_file_path, "w", encoding="utf-8") as f:
-                f.write(content)
+            cls._atomic_text(full_file_path, content)
             
             written_files.append({
                 "name": rel_path,
@@ -118,15 +257,9 @@ class AutonomousProgramBuilder:
                 "content": content
             })
 
-        # Pre-flight syntax validation for Python files
+        # Validation has already completed in memory, without executing code or
+        # creating .pyc files. Retain the manifest field for existing clients.
         syntax_errors = []
-        for wf in written_files:
-            if wf["name"].endswith(".py"):
-                py_path = os.path.join(project_dir, wf["name"])
-                try:
-                    py_compile.compile(py_path, doraise=True)
-                except py_compile.PyCompileError as e:
-                    syntax_errors.append(f"{wf['name']}: {str(e)}")
 
         # Project Build Execution Step
         build_output = {
@@ -265,7 +398,7 @@ class AutonomousProgramBuilder:
                             "stderr": str(e),
                             "exit_code": 1
                         }
-                elif entrypoint.endswith(".py"):
+                elif entrypoint.lower().endswith((".py", ".pyw")):
                     try:
                         res = subprocess.run(
                             [PYTHON_EXE, entry_full],
@@ -301,12 +434,12 @@ class AutonomousProgramBuilder:
         # Package as ZIP archive
         zip_filename = f"{clean_name}.zip"
         zip_path = os.path.join(PROGRAMS_DIR, zip_filename)
-        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-            for root, _, fnames in os.walk(project_dir):
-                for fn in fnames:
-                    fp = os.path.join(root, fn)
-                    arcname = os.path.relpath(fp, project_dir)
-                    zf.write(fp, arcname)
+        cls._preserve_existing(zip_path)
+        staged_zip = zip_path + "." + uuid.uuid4().hex + ".staged"
+        with zipfile.ZipFile(staged_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+            for relative in cls._existing_files(project_dir):
+                zf.write(cls._contained_path(project_dir, relative), relative)
+        os.replace(staged_zip, zip_path)
 
         manifest = {
             "project_name": clean_name,
@@ -317,6 +450,7 @@ class AutonomousProgramBuilder:
             "project_dir": project_dir,
             "files": written_files,
             "syntax_errors": syntax_errors,
+            "code_quality": quality,
             "build": build_output,
             "execution": execution_output,
             "zip_path": zip_path,
@@ -325,8 +459,7 @@ class AutonomousProgramBuilder:
         }
 
         manifest_path = os.path.join(project_dir, "program_manifest.json")
-        with open(manifest_path, "w", encoding="utf-8") as f:
-            json.dump(manifest, f, indent=2)
+        cls._atomic_text(manifest_path, json.dumps(manifest, indent=2))
 
         # Auto-record in Personal Intelligence Memory Vault
         try:
@@ -342,18 +475,37 @@ class AutonomousProgramBuilder:
         return manifest
 
     @classmethod
-    def run_existing_program(cls, project_name: str, entrypoint: Optional[str] = None, powershell_command: Optional[str] = None) -> Dict[str, Any]:
+    def run_existing_program(cls, project_name: str, entrypoint: Optional[str] = None, powershell_command: Optional[str] = None,
+                             strict_quality_gate: bool = False) -> Dict[str, Any]:
         """Runs an existing built program and captures output via Python or PowerShell."""
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         project_dir = os.path.join(PROGRAMS_DIR, clean_name)
         if not os.path.exists(project_dir):
             return {"status": "error", "message": f"Program '{project_name}' not found."}
 
-        manifest_path = os.path.join(project_dir, "program_manifest.json")
+        try:
+            if not clean_name:
+                raise ValueError("A nonempty program name is required")
+            cls._contained_path(PROGRAMS_DIR, clean_name)
+        except (ValueError, TypeError, OSError, UnicodeError) as exc:
+            quality = {"valid": False, "files": {}, "errors": [str(exc)]}
+            return cls._quality_failure(clean_name, project_dir, quality)
+
+        manifest_path = cls._contained_path(project_dir, "program_manifest.json")
         if not entrypoint and os.path.exists(manifest_path):
             with open(manifest_path, "r", encoding="utf-8") as f:
                 manifest = json.load(f)
                 entrypoint = manifest.get("entrypoint", "main.py")
+
+        try:
+            entrypoint = cls._relative_path(entrypoint or "main.py")
+            entry_full = cls._contained_path(project_dir, entrypoint)
+            quality = cls._quality_for_existing(project_dir, strict=strict_quality_gate, include_paths=[entrypoint])
+        except (ValueError, TypeError, OSError) as exc:
+            return cls._quality_failure(clean_name, project_dir,
+                {"valid": False, "files": {}, "errors": [str(exc)]})
+        if not quality["valid"]:
+            return cls._quality_failure(clean_name, project_dir, quality)
 
         # Custom PowerShell command execution
         if powershell_command:
@@ -368,8 +520,6 @@ class AutonomousProgramBuilder:
             except Exception as e:
                 return {"status": "error", "stderr": str(e), "stdout": ""}
 
-        entrypoint = entrypoint or "main.py"
-        entry_full = os.path.join(project_dir, entrypoint)
         if not os.path.exists(entry_full):
             return {"status": "error", "message": f"Entrypoint '{entrypoint}' not found in {project_dir}."}
 
@@ -469,9 +619,9 @@ class AutonomousProgramBuilder:
         return None
 
     @classmethod
-    def build_project(cls, project_name_or_dir: str, build_command: Optional[str] = None, timeout_seconds: int = 300) -> Dict[str, Any]:
+    def build_project(cls, project_name_or_dir: str, build_command: Optional[str] = None, timeout_seconds: int = 300,
+                      strict_quality_gate: bool = False) -> Dict[str, Any]:
         """Executes a build in a project directory, auto-detecting build tools if build_command is omitted."""
-        cls.ensure_dir()
         target_dir = cls.resolve_project_dir(project_name_or_dir)
         if not target_dir:
             return {
@@ -482,6 +632,13 @@ class AutonomousProgramBuilder:
                 "stderr": f"Target directory could not be resolved from '{project_name_or_dir}'",
                 "exit_code": 1
             }
+
+        try:
+            quality = cls._quality_for_existing(target_dir, strict=strict_quality_gate)
+        except (ValueError, TypeError, OSError, UnicodeError) as exc:
+            quality = {"valid": False, "files": {}, "errors": [str(exc)]}
+        if not quality["valid"]:
+            return cls._quality_failure(project_name_or_dir, target_dir, quality)
 
         cmd = build_command
         if not cmd:
@@ -540,8 +697,7 @@ class AutonomousProgramBuilder:
                     "exit_code": result["exit_code"],
                     "timestamp": result["timestamp"]
                 }
-                with open(manifest_path, "w", encoding="utf-8") as f:
-                    json.dump(manifest, f, indent=2)
+                cls._atomic_text(manifest_path, json.dumps(manifest, indent=2))
             except Exception:
                 pass
 

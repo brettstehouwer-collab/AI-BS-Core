@@ -140,6 +140,6 @@ app.post('/api/utils/fb-group-id', async (req, res) => {
 });
 
 const PORT = 3001;
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
     console.log(`Universal Proxy Server running on http://localhost:${PORT}`);
 });

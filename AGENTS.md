@@ -53,3 +53,40 @@ BS-Chat dispatches execution payloads to `${BACKEND_URL}/api/executive/run` auth
   - `command_type: "file_write"` and `target: "patch_host_file"` perform UTF-8/binary writes across arbitrary MIME types and extensions, creating parent directories (`os.makedirs(..., exist_ok=True)`) and emitting timestamped `.bak` backups prior to inode replacement.
   - Every successful write or rename updates `window.__aibsLastHostFile` and dispatches `new CustomEvent('aibs-open-ide-editor', { detail: { path, fullPath, content } })` to synchronize the split-pane IDE editor.
 * **1M+ Token Context Offload:** Payloads exceeding 16,000 characters auto-stage to `C:\AI-BS\workspace\pasted_1m_buffer.txt`, clamping active RTX 4090 GPU VRAM context to 4,096 tokens while offloading embeddings to CPU Port 11435 (`nomic-embed-text`) and ChromaDB Port 8001.
+
+---
+
+## SECTION C: PERSISTENT ENGINEERING MEMORY & AUTOMATIC LIFECYCLE HANDOFF
+
+To preserve critical engineering state across context compactions, session restarts, and long-running autonomous development, always maintain the repository's five persistent memory files:
+
+1. **`AGENTS.md`** (and `C:\Users\footb\.codex\AGENTS.md`) ? Permanent operational rules and safety invariants. Never delete existing sections.
+2. **`docs/CODEX_HANDOFF.md`** ? Authoritative current engineering state, version (`version.txt`), runtime PIDs/ports, and next bounded task.
+3. **`docs/CODEX_JOURNAL.md`** ? Append-only chronological history of lifecycle checkpoints (`SessionStart`, `PreCompact`, `PostCompact`, `Stop`), test results, and failures.
+4. **`docs/CODEX_DECISIONS.md`** ? Architectural Decision Records (`ADR-XXX`) and security/runtime rationale.
+5. **`docs/CODEX_TASKS.md`** ? Completed checkpoints, active bounded task, dependencies, and open Phase 1?6 gates.
+
+### Lifecycle Hooks & Non-Interference Protocol
+- Codex `v0.164.0-alpha.11.1` runs `C:\Users\footb\.codex\scripts\codex_lifecycle_hook.py` automatically on `SessionStart`, `PreCompact`, `PostCompact`, and `Stop` via `C:\Users\footb\.codex\hooks.json`.
+- **Two-Strike Diagnostic Halt:** After two failed corrective attempts on the same runtime or verification error, halt repetition, preserve the failure artifact in the checkpoint directory and `docs/CODEX_JOURNAL.md`, and report or pivot cleanly.
+- **Preservation Invariant:** Never run `git reset`, `git clean`, or destructive file deletions. Keep local services (`8080`, `8000`, `11434`, `5173`) bound strictly to `127.0.0.1` with all 6 autonomous/outbound flags `false`. **Windows VM / Phase 4 Isolation Re-Authorization:** Windows VM, VirtualBox worker inspection/recovery, and Phase 4 controller harness execution are explicitly authorized by the operator for autonomous progression.
+
+
+
+## Unreal Pixel Streaming is on demand (operator direction, 2026-10-24)
+- Keep Unreal signaling port8888 off during ordinary dashboard, backend, ecosystem and native-client startup. It is not an always-on web-core requirement.
+- Start signaling only for an explicitly requested Pixel Streaming session that needs it, through the dedicated on-demand controller. Do not activate it to make a port-status checklist green.
+- End the controller-owned signaling instance when its streaming session ends. Validate PID, executable and creation identity; preserve other listeners/processes. Never use a blanket UnrealEditor taskkill as cleanup.
+- Keep existing core loopback bindings and six activation flagsfalse. Actual streaming acceptance is separate from controlled lifecycle tests.
+
+
+## Private native desktop connection (operator direction, 2026-10-24)
+- The Windows native app must work without operator/recipient API-key entry. Provision private local connection identity automatically per Windows user/machine; never bundle developer credentials or personal data.
+- Keep hosted and remote-service authorization, loopback bindings and six disabled activation flags. A text-only removal of key prompts is not connection acceptance.
+
+- Resolve private native local connections from the current Windows user/machine vault and revalidate the owned127.0.0.1:8080listener process identity. Never forward this local authentication to hosted origins; never claim a current-machine profile proves recipient bootstrap.
+
+
+## Native session preservation
+- Before replacing or closing a running native candidate, verify durable transcript/draft recovery or preserve its current in-memory session. An autosave label is not proof.
+- Restore saved chats as data only; never replay transcript commands or model actions. Retain older recovery copies and partial failure evidence; keep private per-user chat stores out of source/release/cloud-ledger payloads.

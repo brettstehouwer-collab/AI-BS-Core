@@ -3,13 +3,17 @@ import SHMTelemetryWidget from './SHMTelemetryWidget';
 
 
 const AUTHORIZED_ADMIN_EMAILS = [
+  'brett@stehouwerproductions.com',
+  'brett@stehouwerpublishing.com',
   'footballstar0325@gmail.com',
   'footballsyat0325@gmail.com',
   'brettstehouwer@gmail.com',
   'stehouwer@gmail.com',
   'theseandaley@gmail.com',
   'rottierannajoy@gmail.com',
-  'keith@evolution6media.com'
+  'keith@evolution6media.com',
+  'devin.feexpress@gmail.com',
+  'devin@feexpress.com'
 ];
 
 export default function AdminSecurityMonitorTab({ currentUser }) {
@@ -67,7 +71,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
     setIsGeneratingTester(true);
     try {
       const ipsArray = testerIps.split(',').map(ip => ip.trim()).filter(Boolean);
-      const res = await fetch(`${getApiBase()}/api/admin/tester-passkey/create`, {
+      const res = await fetch(`${backendUrl}/api/admin/tester-passkey/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +106,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
     e.preventDefault();
     if (!manualIp) return;
     try {
-      const res = await fetch(`${getApiBase()}/api/admin/ip-ban`, {
+      const res = await fetch(`${backendUrl}/api/admin/ip-ban`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +134,7 @@ export default function AdminSecurityMonitorTab({ currentUser }) {
     setIsSimulating(true);
     setBillingResult(null);
     try {
-      const res = await fetch(`${getApiBase()}/api/v1/billing/simulate-checkout`, {
+      const res = await fetch(`${backendUrl}/api/v1/billing/simulate-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -579,7 +583,7 @@ AIBS_HMAC_SALT=AI_BS_SECURE_HMAC_SALT_2026`}
                 <div style={{ fontSize: '12px', color: '#8b949e' }}>GPU-accelerated ComfyUI image synthesis.</div>
                 <pre style={{ background: '#161b22', padding: '10px', borderRadius: '4px', fontSize: '11px', color: '#7ee787', marginTop: '8px' }}>
 {`curl -X POST http://localhost:8000/v1/images/generations \\
-  -H "Authorization: Bearer sk_aibs_live_..." \\
+  -H "Authorization: Bearer YOUR_AUTHORIZED_API_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{"prompt": "futuristic matrix room"}'`}
                 </pre>
@@ -590,7 +594,7 @@ AIBS_HMAC_SALT=AI_BS_SECURE_HMAC_SALT_2026`}
                 <div style={{ fontSize: '12px', color: '#8b949e' }}>Stehouwer LLM / Ollama text completion.</div>
                 <pre style={{ background: '#161b22', padding: '10px', borderRadius: '4px', fontSize: '11px', color: '#7ee787', marginTop: '8px' }}>
 {`curl -X POST http://localhost:8000/v1/chat/completions \\
-  -H "Authorization: Bearer sk_aibs_live_..." \\
+  -H "Authorization: Bearer YOUR_AUTHORIZED_API_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{"messages": [{"role": "user", "content": "Hello"}]}'`}
                 </pre>

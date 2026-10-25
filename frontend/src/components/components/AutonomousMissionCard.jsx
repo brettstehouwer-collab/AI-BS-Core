@@ -10,6 +10,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
   const [activeTaskRunning, setActiveTaskRunning] = useState(null);
   const [expandedTask, setExpandedTask] = useState(null);
   const [showJson, setShowJson] = useState(false);
+  const [requestError, setRequestError] = useState('');
 
   const PHASES = [
     { id: 1, name: 'Phase 1: Intent & Skills', icon: '🎯', desc: 'Telemetry & skill indexing' },
@@ -20,60 +21,70 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
   ];
 
   const handleRunFull = async () => {
-    if (!mission.goal) return;
+    if (!mission.goal || isRunning || activeTaskRunning !== null) return;
+    setRequestError('');
     setIsRunning(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ goal: mission.goal, mode: 'auto' })
       });
       const data = await res.json();
-      if (data.status === 'success' && data.mission) {
+      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `Mission request failed (${res.status}).`);
+      if (data.mission && ['success', 'failed', 'blocked', 'unimplemented', 'error'].includes(data.status)) {
         setMission(data.mission);
         if (onMissionUpdated) onMissionUpdated(data.mission);
+      } else {
+        throw new Error(data.message || 'Mission engine returned no usable outcome.');
       }
     } catch (err) {
-      console.error('Mission run error:', err);
+      setRequestError(err instanceof Error ? err.message : 'Mission request failed.');
     } finally {
       setIsRunning(false);
     }
   };
 
   const handleExecuteStep = async (taskId) => {
-    if (!mission.mission_id) return;
+    if (!mission.mission_id || isRunning || activeTaskRunning !== null) return;
+    setRequestError('');
     setActiveTaskRunning(taskId);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/execute-step`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+          
           'X-Client-ID': 'stehouwer_publishing'
         },
         body: JSON.stringify({ mission_id: mission.mission_id, task_id: taskId })
       });
       const data = await res.json();
-      if (data.status === 'success' && data.task) {
+      if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `Step request failed (${res.status}).`);
+      if (data.task && ['success', 'failed', 'blocked', 'unimplemented'].includes(data.status)) {
         setMission(prev => ({
           ...prev,
           tasks: (prev.tasks || []).map(t => t.task_id === taskId ? data.task : t),
-          completed_tasks: data.mission_progress?.completed ?? prev.completed_tasks
+          completed_tasks: data.mission_progress?.completed ?? prev.completed_tasks,
+          status: data.status === 'success' ? prev.status : data.status
         }));
+      } else {
+        throw new Error(data.message || 'Mission engine returned no usable step outcome.');
       }
     } catch (err) {
-      console.error('Step execution error:', err);
+      setRequestError(err instanceof Error ? err.message : 'Step request failed.');
     } finally {
       setActiveTaskRunning(null);
     }
   };
 
   const isCompleted = mission.status === 'completed';
-  const isFailed = mission.status === 'failed';
+  const isFailed = ['failed', 'blocked', 'unimplemented', 'error'].includes(mission.status);
+  const statusLabel = mission.status === 'unimplemented' ? 'NOT IMPLEMENTED' : String(mission.status || 'planned').toUpperCase();
   const completedCount = mission.completed_tasks || 0;
   const totalCount = mission.total_tasks || (mission.tasks ? mission.tasks.length : 5);
 
@@ -113,7 +124,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
             color: isCompleted ? '#34d399' : (isFailed ? '#f87171' : '#60a5fa'),
             border: `1px solid ${isCompleted ? 'rgba(16, 185, 129, 0.3)' : (isFailed ? 'rgba(239, 68, 68, 0.3)' : 'rgba(59, 130, 246, 0.3)')}`
           }}>
-            {isCompleted ? '✅ COMPLETED' : (isFailed ? '❌ FAILED' : (isRunning ? '⏳ RUNNING' : '📋 PLANNED'))}
+            {isRunning ? '⏳ RUNNING' : (isCompleted ? '✅ COMPLETED' : (isFailed ? `⛔ ${statusLabel}` : `📋 ${statusLabel}`))}
           </span>
           {mission.total_duration_ms && (
             <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 600 }}>
@@ -122,6 +133,12 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
           )}
         </div>
       </div>
+
+      {(requestError || mission.error) && (
+        <div role="alert" style={{ color: '#fca5a5', padding: '8px 0', fontSize: '0.78rem' }}>
+          {requestError || mission.error}
+        </div>
+      )}
 
       {/* Mission Goal Card */}
       <div style={{
@@ -228,7 +245,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
                     {!isDone && !isCompleted && (
                       <button
                         onClick={() => handleExecuteStep(t.task_id)}
-                        disabled={isTaskRunning || isRunning}
+                        disabled={activeTaskRunning !== null || isRunning}
                         style={{
                           background: 'rgba(59, 130, 246, 0.2)',
                           border: '1px solid rgba(59, 130, 246, 0.4)',
@@ -274,7 +291,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
             onClick={handleRunFull}
-            disabled={isRunning}
+            disabled={isRunning || activeTaskRunning !== null}
             style={{
               background: isRunning ? '#1e3a8a' : 'linear-gradient(135deg, #2563eb, #1d4ed8)',
               border: '1px solid rgba(59, 130, 246, 0.5)',

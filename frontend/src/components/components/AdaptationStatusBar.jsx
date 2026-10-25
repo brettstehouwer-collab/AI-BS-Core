@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
 
 /**
  * AdaptationStatusBar.jsx
@@ -64,7 +65,7 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
     }
 
     try {
-      const es = new EventSource(`${baseUrl}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projectName)}`);
+      const es = createAuthenticatedEventSource(`${baseUrl}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projectName)}`);
       eventSourceRef.current = es;
 
       es.onmessage = (event) => {

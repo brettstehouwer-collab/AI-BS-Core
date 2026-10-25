@@ -113,6 +113,12 @@ export default function DefinitionsModuleTab({ backendUrl: propBackendUrl }) {
       {activeTab === 'glossary'   && <JargonGlossaryPanel          backendUrl={backendUrl} />}
       {activeTab === 'chronology' && <MasterRecordsChronologyPanel backendUrl={backendUrl} />}
       {activeTab === 'quiz'       && <InteractiveStudyGuidePanel   backendUrl={backendUrl} />}
+
+      {/* Content Governance Risk Modal */}
+      <ContentGovernanceRiskModal 
+        isOpen={isGovernanceOpen} 
+        onClose={() => setIsGovernanceOpen(false)} 
+      />
     </div>
   );
 }
@@ -427,11 +433,7 @@ function InteractiveStudyGuidePanel({ backendUrl }) {
         </div>
       )}
 
-      {/* Content Governance Risk Modal */}
-      <ContentGovernanceRiskModal 
-        isOpen={isGovernanceOpen} 
-        onClose={() => setIsGovernanceOpen(false)} 
-      />
+
     </div>
   );
 }

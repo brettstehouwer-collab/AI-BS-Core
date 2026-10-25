@@ -15,8 +15,8 @@ def start_ollama():
 
     # Port 11434
     env1 = os.environ.copy()
-    env1["OLLAMA_HOST"] = "0.0.0.0:11434"
-    env1["OLLAMA_MODELS"] = r"E:\AI_BS_Resources\Ollama"
+    env1["OLLAMA_HOST"] = "127.0.0.1:11434"
+    env1["OLLAMA_MODELS"] = r"C:\AI-BS\models\ollama"
     env1["OLLAMA_KEEP_ALIVE"] = "10m"
     env1["OLLAMA_NUM_PARALLEL"] = "4"
     env1["OLLAMA_MAX_LOADED_MODELS"] = "1"
@@ -36,8 +36,8 @@ def start_ollama():
 
     # Port 11435
     env2 = os.environ.copy()
-    env2["OLLAMA_HOST"] = "0.0.0.0:11435"
-    env2["OLLAMA_MODELS"] = r"E:\AI_BS_Resources\Ollama"
+    env2["OLLAMA_HOST"] = "127.0.0.1:11435"
+    env2["OLLAMA_MODELS"] = r"C:\AI-BS\models\ollama"
     env2["OLLAMA_KEEP_ALIVE"] = "10m"
     env2["OLLAMA_NUM_PARALLEL"] = "4"
     env2["OLLAMA_MAX_LOADED_MODELS"] = "1"

@@ -23,7 +23,7 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+            
             'X-Client-ID': 'stehouwer_publishing'
           },
           body: JSON.stringify({ grill_id: session.grill_id, response: 'yes', operator_response: 'yes' })
@@ -54,7 +54,7 @@ export default function GrillSessionCard({ grillData: initialGrill, onSessionUpd
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+            
             'X-Client-ID': 'stehouwer_publishing'
           },
           body: JSON.stringify({ grill_id: session.grill_id })

@@ -519,7 +519,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) 
     try {
       const reqHeaders = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+        
         'X-Client-ID': 'stehouwer_mobile_sovereign'
       };
 

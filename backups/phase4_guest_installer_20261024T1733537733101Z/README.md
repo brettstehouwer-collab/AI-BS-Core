@@ -1,0 +1,15 @@
+# Guest runtime provisioning candidate
+
+These files are trusted infrastructure for the exact existing Windows guest, VM UUID `6c5a53da-ab80-4ecb-8be6-4059266f736e`. They are not an admitted project/task executor. They have not yet been delivered to or run successfully in that guest.
+
+`Install-AIBSGuestRuntimes.ps1` checks actual CIM hardware identity and rejects the host account SID domain before importing helpers or writing files. It then checks elevation, 64-bit process, zero enabled guest adapters, the `AIBS_PROV` optical volume, pinned package hashes and valid installer publishers. Its only parameter is the optical media root; VM identity, executables and guest result destinations have no override switch.
+
+The candidate installs Node 24.22.1 to `C:\Program Files\nodejs` and Python 3.13.17 to `C:\Program Files\AIBSPython313`, uses exact offline wheel paths without dependency resolution/index access, and verifies exact runtime/package versions and imports. It requires an already elevated guest session; it never requests elevation, changes networking, changes clocks, activates Windows or reboots automatically.
+
+Guest result records are numbered and created exclusively under a fresh attempt in `C:\AIBSGuestProvisioning`. Intent and actual native return/output evidence are retained. Process output is capped at 16 KiB combined and each process has a deadline within an overall 30-minute budget. A timeout or output overflow quarantines provisioning: best-effort parent termination does **not** establish termination of Windows Installer service descendants. Do not proceed with the guest as a task base after an uncertain install.
+
+Reboot-required native exits remain incomplete. A runtime success report still has `TaskAdmissionAuthorized=false`; it cannot resolve the visible expired-license warning, establish hypervisor isolation or produce a review/apply token.
+
+The existing seven-payload v1 ISO does not contain these scripts. Preserve that ISO and the other agent's installer. Deliver this candidate only through a new reviewed media artifact after source review, with exact helper bytes retained. Its fixed helper hash checks must be updated deliberately if reviewed helper source changes. Actual guest CIM observations, media delivery, successful installation, compatibility and protected control/transport remain acceptance prerequisites. Identity/path checks here guard accidental host use; they do not protect against an administrator maliciously replacing hardware facts or source.
+
+Three test entrypoints exercise 27 pure policy cases, 4 real bounded-process probes and 2 real host-refusal/parameter checks. The process probes run only fixed trusted infrastructure snippets to verify stdout/stderr, nonzero returns, deadline failure and output overflow. They do not run an installer or generated project check. The real installation command is never executed on the host. These 33 tests pass in Windows PowerShell 5.1 and PowerShell 7; they do not prove guest provisioning or any of the 14 containment cases.

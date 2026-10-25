@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const PASS_TIERS = [
   { id: 'pass_1day', name: '1-Day Pass', duration: '24 Hours', price: '$4.99', amount: 4.99, badge: 'Popular', reqs: '250 req/day', rpm: '20 RPM', desc: 'Ideal for quick 1-day AI generation projects and quick API testing.' },
@@ -12,126 +12,19 @@ const PASS_TIERS = [
 
 export default function PublicCheckoutTab({ onLaunchPlayground }) {
   const [selectedPass, setSelectedPass] = useState(PASS_TIERS[0]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [issuedKey, setIssuedKey] = useState(null);
-  const [sdkLoaded, setSdkLoaded] = useState(false);
-
-  useEffect(() => {
-    // Dynamically load and initialize PayPal SDK v6 only when on the checkout tab
-    const initPayPalV6 = async () => {
-      try {
-        if (typeof window !== 'undefined' && !window.paypal) {
-          await new Promise((resolve, reject) => {
-            const existingScript = document.getElementById('paypal-sdk-v6');
-            if (existingScript) {
-              existingScript.addEventListener('load', resolve);
-              return;
-            }
-            const script = document.createElement('script');
-            script.id = 'paypal-sdk-v6';
-            script.src = 'https://www.paypal.com/web-sdk/v6/core';
-            script.async = true;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-          });
-        }
-
-        if (typeof window !== 'undefined' && window.paypal && window.paypal.createInstance) {
-          await window.paypal.createInstance({
-            clientId: "BAAmicjyvk5iBoTJTebv5fi9wSGXdv3JeENHw31HNcum6Jtv1dWKK5PxfnBdFCESVmKz25GSnCkjwOvkj4",
-            components: ["paypal-payments"],
-            pageType: "checkout"
-          });
-          setSdkLoaded(true);
-        }
-      } catch (err) {
-        console.warn("PayPal SDK v6 dynamic loading notice:", err);
-        setSdkLoaded(true);
-      }
-    };
-    initPayPalV6();
-  }, []);
-
-  const handlePayPalV6Checkout = async () => {
-    setIsProcessing(true);
-    try {
-      // 1. Create order on backend (Orders v2 API shape: { orderId: "..." })
-      const res = await fetch(`${getApiBase()}/api/paypal/orders/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tier_id: selectedPass.id,
-          amount_usd: selectedPass.amount,
-          client_name: 'Pass Customer',
-          email: 'customer@example.com'
-        })
-      });
-      const orderData = await res.json();
-      const orderId = orderData.orderId || orderData.id;
-
-      // 2. Open 1-Click payment gateway or capture order
-      if (typeof window !== 'undefined') {
-        window.open('https://www.paypal.com/ncp/payment/RFCAV9MWHAC9S', '_blank');
-      }
-
-      // 3. Capture order on backend & issue key
-      const capRes = await fetch(`${getApiBase()}/api/paypal/orders/capture`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: orderId,
-          tier_id: selectedPass.id
-        })
-      });
-      const capData = await capRes.json();
-
-      if (capData.status === 'success' && capData.key_info) {
-        setIssuedKey(capData.key_info.raw_key);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('aibs_active_pass_key', capData.key_info.raw_key);
-        }
-      } else {
-        alert('Payment processed. Default key issued.');
-      }
-    } catch (e) {
-      // Fallback: Open 1-Click Receive Link directly
-      if (typeof window !== 'undefined') {
-        window.open('https://www.paypal.com/ncp/payment/RFCAV9MWHAC9S', '_blank');
-      }
-    } finally {
-      setIsProcessing(false);
-    }
+  const [checkoutError, setCheckoutError] = useState('');
+  // Keep purchases unavailable until server-side order approval, capture,
+  // amount validation and fulfillment are implemented and verified.
+  const checkoutAvailable = false;
+  const unavailableMessage = 'Purchases are temporarily unavailable. No payment has been started.';
+  const handlePayPalV6Checkout = () => {
+    setCheckoutError(unavailableMessage);
+    return false;
   };
-
-  const handleStripeCheckout = async () => {
-    setIsProcessing(true);
-    try {
-      // Create Stripe checkout session
-      const apiBase = typeof getApiBase === 'function' ? getApiBase() : (window.location.hostname === 'localhost' ? 'http://localhost:8080' : '');
-      const res = await fetch(`${apiBase}/api/v1/billing/create-stripe-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tier_id: selectedPass.id,
-          amount_usd: selectedPass.amount,
-          client_name: 'Pass Customer'
-        })
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Failed to initialize Stripe checkout: ' + (data.detail || 'Unknown error'));
-      }
-    } catch (e) {
-      console.error(e);
-      alert('Error connecting to Stripe.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleStripeCheckout = () => {
+    setCheckoutError(unavailableMessage);
+    return false;
   };
-
 
   return (
     <div style={{ padding: '24px', background: '#090d16', color: '#e6edf3', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -142,7 +35,7 @@ export default function PublicCheckoutTab({ onLaunchPlayground }) {
           Stehouwer AI Compute Passes
         </h1>
         <p style={{ color: '#8b949e', fontSize: '15px', maxWidth: '600px', margin: '0 auto' }}>
-          100% Non-Recurring Flexibility Passes — Zero monthly subscriptions, zero hidden fees. Powered by PayPal JavaScript SDK v6.
+          100% Non-Recurring Flexibility Passes — Zero monthly subscriptions, zero hidden fees. 
         </p>
       </div>
 
@@ -187,16 +80,18 @@ export default function PublicCheckoutTab({ onLaunchPlayground }) {
         })}
       </div>
 
+      {checkoutError && <p role="alert" style={{ textAlign: 'center', color: '#fbbf24' }}>{checkoutError}</p>}
+
       {/* Checkout Action Box */}
       <div style={{ maxWidth: '600px', margin: '0 auto', background: '#161b22', border: '1px solid #30363d', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
         <h2 style={{ fontSize: '20px', fontWeight: '700', margin: '0 0 8px 0' }}>Selected: {selectedPass.name} ({selectedPass.price})</h2>
         <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>
-          Instant key issuance with non-recycled token hash. Deposited straight to host backend.
+          Purchases are temporarily unavailable while payment confirmation is being verified.
         </p>
 
         <button
           onClick={handlePayPalV6Checkout}
-          disabled={isProcessing}
+          disabled={!checkoutAvailable}
           style={{
             width: '100%',
             padding: '14px',
@@ -207,17 +102,17 @@ export default function PublicCheckoutTab({ onLaunchPlayground }) {
             borderRadius: '10px',
             fontSize: '16px',
             fontWeight: '700',
-            cursor: isProcessing ? 'not-allowed' : 'pointer',
+            cursor: checkoutAvailable ? 'pointer' : 'not-allowed',
             boxShadow: '0 4px 14px rgba(0, 112, 186, 0.4)',
             transition: 'transform 0.1s ease'
           }}
         >
-          {isProcessing ? 'Processing...' : `Pay ${selectedPass.price} with PayPal`}
+          PayPal checkout unavailable
         </button>
 
         <button
           onClick={handleStripeCheckout}
-          disabled={isProcessing}
+          disabled={!checkoutAvailable}
           style={{
             width: '100%',
             padding: '14px',
@@ -227,50 +122,20 @@ export default function PublicCheckoutTab({ onLaunchPlayground }) {
             borderRadius: '10px',
             fontSize: '16px',
             fontWeight: '700',
-            cursor: isProcessing ? 'not-allowed' : 'pointer',
+            cursor: checkoutAvailable ? 'pointer' : 'not-allowed',
             boxShadow: '0 4px 14px rgba(99, 91, 255, 0.4)',
             transition: 'transform 0.1s ease'
           }}
         >
-          {isProcessing ? 'Processing...' : `Pay ${selectedPass.price} with Stripe`}
+          Stripe checkout unavailable
         </button>
       </div>
 
-      {/* Key Delivery Modal */}
-      {issuedKey && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: '#161b22', border: '1px solid #38bdf8', borderRadius: '16px', padding: '32px', maxWidth: '500px', width: '90%', textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🎉</div>
-            <h2 style={{ fontSize: '22px', color: '#38bdf8', margin: '0 0 8px 0' }}>Pass Purchased Successfully!</h2>
-            <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>Your unique temporary key has been issued:</p>
-
-            <div style={{ background: '#0d1117', border: '1px solid #30363d', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '14px', color: '#58a6ff', wordBreak: 'break-all', marginBottom: '24px' }}>
-              {issuedKey}
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <button
-                onClick={() => navigator.clipboard.writeText(issuedKey)}
-                style={{ padding: '10px 18px', background: '#21262d', color: '#c9d1d9', border: '1px solid #30363d', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
-              >
-                📋 Copy Key
-              </button>
-              
-              <button
-                onClick={() => {
-                  setIssuedKey(null);
-                  if (onLaunchPlayground) {
-                    onLaunchPlayground();
-                  } else {
-                    window.location.href = '/playground';
-                  }
-                }}
-                style={{ padding: '10px 18px', background: '#238636', color: '#ffffff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '700' }}
-              >
-                🎨 Launch Public Playground
-              </button>
-            </div>
-          </div>
+      {onLaunchPlayground && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button onClick={onLaunchPlayground} style={{ padding: '10px 18px', background: '#21262d', color: '#c9d1d9', border: '1px solid #30363d', borderRadius: '8px', cursor: 'pointer' }}>
+            Explore Public Playground
+          </button>
         </div>
       )}
 

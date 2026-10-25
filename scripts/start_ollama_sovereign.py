@@ -22,7 +22,7 @@ def spawn_ollama_instance(port: int, ollama_exe: str):
         return None
 
     env = os.environ.copy()
-    env["OLLAMA_HOST"] = f"0.0.0.0:{port}"
+    env["OLLAMA_HOST"] = f"127.0.0.1:{port}"
     env["OLLAMA_MODELS"] = r"C:\AI-BS\models\ollama"
 
     if port == 11435:

@@ -3,6 +3,7 @@ package gateway
 import (
 	"encoding/json"
 	"log"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -10,12 +11,13 @@ import (
 	"time"
 
 	"aibs_core/pkg/ipc"
-	"aibs_core/pkg/telemetry"
 	"aibs_core/pkg/supervisor"
+	"aibs_core/pkg/telemetry"
 )
 
 // Gateway represents the primary HTTP interface for AI-BS.
 type Gateway struct {
+	Version    string
 	Port       string
 	IPCBridge  *ipc.IPCBridge
 	Supervisor *supervisor.Supervisor
@@ -32,6 +34,15 @@ func NewGateway(port string, pythonPort string, s *supervisor.Supervisor) *Gatew
 
 // Start Server initializes the HTTP routes and listens for incoming traffic.
 func (g *Gateway) StartServer() {
+	listener, err := net.Listen("tcp", "127.0.0.1:"+g.Port)
+	if err != nil {
+		log.Fatalf("[Gateway] Listener failed: %v", err)
+	}
+	g.Serve(listener)
+}
+
+// Serve accepts a listener acquired before the engine starts any daemons.
+func (g *Gateway) Serve(listener net.Listener) {
 	mux := http.NewServeMux()
 
 	// Direct Go Routes (Instantly handled, no Python needed)
@@ -41,7 +52,7 @@ func (g *Gateway) StartServer() {
 	mux.HandleFunc("/api/models", g.modelsHandler)
 	mux.HandleFunc("/models", g.modelsHandler)
 	mux.HandleFunc("/v1/models", g.modelsHandler)
-	
+
 	// Daemon Routes
 	mux.HandleFunc("/api/daemons/status", g.daemonStatusHandler)
 	mux.HandleFunc("/api/daemons/", g.daemonControlHandler)
@@ -56,8 +67,8 @@ func (g *Gateway) StartServer() {
 	// Wrap the entire multiplexer in the Active Defense Shield
 	securedMux := telemetry.ActiveDefenseShield(mux)
 
-	log.Printf("[Gateway] Commercial Gateway listening on 0.0.0.0:%s", g.Port)
-	if err := http.ListenAndServe("0.0.0.0:"+g.Port, securedMux); err != nil {
+	log.Printf("[Gateway] Commercial Gateway listening on 127.0.0.1:%s", g.Port)
+	if err := http.Serve(listener, securedMux); err != nil {
 		log.Fatalf("[Gateway] Server failed: %v", err)
 	}
 }
@@ -67,6 +78,7 @@ func (g *Gateway) healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	response := map[string]interface{}{
 		"status":          "online",
+		"version":         g.Version,
 		"service":         "AI-BS Central Cognitive Engine API (Go Gateway)",
 		"gpu_accelerated": true,
 		"timestamp":       time.Now().Unix(),
@@ -123,7 +135,7 @@ func (g *Gateway) proxyComfyMediaHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Failed to parse target URL", http.StatusInternalServerError)
 		return
 	}
-	
+
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 	r.Host = targetURL.Host
 	proxy.ModifyResponse = func(resp *http.Response) error {
@@ -143,12 +155,12 @@ func (g *Gateway) daemonStatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-	
+
 	if r.Method == http.MethodOptions {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-	
+
 	status := g.Supervisor.GetStatus()
 	json.NewEncoder(w).Encode(status)
 }
@@ -158,12 +170,12 @@ func (g *Gateway) daemonControlHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-	
+
 	if r.Method == http.MethodOptions {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-	
+
 	// Expecting /api/daemons/name/start or /api/daemons/name/stop
 	path := strings.TrimPrefix(r.URL.Path, "/api/daemons/")
 	parts := strings.Split(path, "/")
@@ -171,9 +183,9 @@ func (g *Gateway) daemonControlHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid daemon route", http.StatusBadRequest)
 		return
 	}
-	
+
 	name, action := parts[0], parts[1]
-	
+
 	var err error
 	switch action {
 	case "start":
@@ -184,13 +196,13 @@ func (g *Gateway) daemonControlHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid action, must be start or stop", http.StatusBadRequest)
 		return
 	}
-	
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": err.Error()})
 		return
 	}
-	
+
 	json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Action " + action + " executed for " + name})
 }
 
@@ -201,7 +213,7 @@ func (g *Gateway) proxyToPythonBackend(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to parse target URL", http.StatusInternalServerError)
 		return
 	}
-	
+
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 	proxy.FlushInterval = -1
 	// Update the headers to allow for proper routing and deduplicate CORS headers

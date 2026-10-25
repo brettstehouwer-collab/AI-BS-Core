@@ -127,6 +127,6 @@ async def ws_handler(websocket: WebSocket, full_path: str = ""):
                     pass
 
 if __name__ == "__main__":
-    logging.info("Starting AI-BS Unreal Engine Pixel Streaming Signaling Server on http://0.0.0.0:8888")
-    uvicorn.run(app, host="0.0.0.0", port=8888, log_level="warning")
+    logging.info("Starting AI-BS Unreal Engine Pixel Streaming Signaling Server on http://127.0.0.1:8888")
+    uvicorn.run(app, host="127.0.0.1", port=8888, log_level="warning")
 

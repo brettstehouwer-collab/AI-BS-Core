@@ -7,6 +7,13 @@ import { ADMIN_EMAILS } from './accessControl';
 // Base Known Core Founders & Executives for styling defaults
 const BASE_KNOWN_MEMBERS = [
   {
+    email: 'brett@stehouwerproductions.com',
+    name: 'Brett Stehouwer',
+    role: 'Founder & Executive Director',
+    avatar: '👑',
+    color: '#38bdf8'
+  },
+  {
     email: 'brettstehouwer@gmail.com',
     name: 'Brett Stehouwer',
     role: 'Founder & CTO',
@@ -67,6 +74,20 @@ const BASE_KNOWN_MEMBERS = [
     role: 'Media & Production Partner',
     avatar: '🎥',
     color: '#f59e0b'
+  },
+  {
+    email: 'devin@feexpress.com',
+    name: 'Devin (FE Express Logistics)',
+    role: 'Logistics Dispatcher',
+    avatar: '🚚',
+    color: '#06b6d4'
+  },
+  {
+    email: 'devin.feexpress@gmail.com',
+    name: 'Devin (FE Express Logistics)',
+    role: 'Logistics Dispatcher',
+    avatar: '🚚',
+    color: '#06b6d4'
   }
 ];
 

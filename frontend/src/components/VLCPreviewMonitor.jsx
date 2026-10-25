@@ -343,7 +343,7 @@ export default function VLCPreviewMonitor({
                             gap: '5px'
                         }}
                     >
-                        📁 Open / Upload Video
+                        📁 Open / Upload
                     </button>
 
                     <button
@@ -363,7 +363,7 @@ export default function VLCPreviewMonitor({
                             boxShadow: '0 2px 8px rgba(249, 115, 22, 0.35)'
                         }}
                     >
-                        🔶 Open in VLC App (.m3u)
+                        🔶 In VLC App (.m3u)
                     </button>
                 </div>
             </div>
@@ -550,7 +550,7 @@ export default function VLCPreviewMonitor({
                     gap: '10px'
                 }}>
                     {/* Left: Transport Group */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: '1 1 auto' }}>
                         <button
                             onClick={togglePlay}
                             style={{

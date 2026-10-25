@@ -45,6 +45,7 @@ TARGET_DIRS = [
 
 ROOT_FILES = [
     "AI-BS.code-workspace",
+    "AI_BS_Global_Context.md",
     "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
     "MASTER_HANDOFF_CHRONOLOGY.md",
     "MASTER_HISTORICAL_INDEX.md",

@@ -93,7 +93,7 @@ export default function SystemEconomicsDashboard() {
 
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CarfUitle className="text-sm font-medium text-gray-400">Security Telemetry</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-400">Security Telemetry</CardTitle>
             <Shield className="w-4 h-4 text-red-400" />
           </CardHeader>
           <CardContent>

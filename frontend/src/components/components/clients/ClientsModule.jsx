@@ -30,7 +30,7 @@ export default function ClientsModule({ backendUrl }) {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#07101e' }}>
       
       {/* Top Client Selector Bar */}
-      <div style={{ 
+      <div className="clients-suite-bar" style={{ 
         backgroundColor: '#0A192F', 
         padding: '12px 20px', 
         display: 'flex', 
@@ -39,11 +39,12 @@ export default function ClientsModule({ backendUrl }) {
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         flexShrink: 0
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <h3 style={{ margin: 0, color: '#F58426', fontSize: '16px', fontWeight: '800', letterSpacing: '0.5px' }}>
+        <div className="clients-suite-select-wrap" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <h3 className="clients-suite-title" style={{ margin: 0, color: '#F58426', fontSize: '16px', fontWeight: '800', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             CLIENT SUITE:
           </h3>
           <select 
+            className="clients-suite-select"
             value={selectedClient} 
             onChange={(e) => setSelectedClient(e.target.value)}
             style={{
@@ -67,7 +68,7 @@ export default function ClientsModule({ backendUrl }) {
           </select>
         </div>
 
-        <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+        <div className="clients-suite-subtitle" style={{ fontSize: '12px', color: '#94a3b8' }}>
           AI-BS Sovereign Multi-Client CRM &amp; Campaign Matrix
         </div>
       </div>

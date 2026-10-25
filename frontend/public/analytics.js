@@ -185,8 +185,9 @@
     dispatchBeacon('/api/analytics/track', payload);
   }
 
-  // 7. Public User Login Notification Method
-  function sendLoginNotification(userPayload) {
+  // 7. Authenticated login notification. The app fetch interceptor supplies the
+  // verified Firebase token. sendBeacon cannot carry that authorization header.
+  async function sendLoginNotification(userPayload) {
     if (!userPayload || !userPayload.email) return;
 
     const payload = {
@@ -206,7 +207,16 @@
       }
     };
 
-    dispatchBeacon('/api/analytics/notify-login', payload);
+    const response = await window.fetch(`${PRIMARY_API}/api/analytics/notify-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: 'cors'
+    });
+    // Do not retry an uncertain POST: the server may already have sent it.
+    if (!response.ok) throw new Error(`Login notification unavailable (HTTP ${response.status}).`);
+    return response;
   }
 
   // Expose on window for App.jsx & React components

@@ -1,16 +1,24 @@
-from fastapi import APIRouter, BackgroundTasks, UploadFile, File, Form, Request, HTTPException
+from fastapi import APIRouter, BackgroundTasks, UploadFile, File, Form, Request, HTTPException, Depends
 from fastapi.responses import JSONResponse, StreamingResponse, Response
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 from datetime import datetime
 import csv
+import hashlib
 import io
 import json
 import uuid
 import shutil
 import httpx
 import os
+import tempfile
+import threading
+import subprocess
+import asyncio
+from urllib.parse import quote, urlencode
+from security.screenwriting_access import require_screenwriting_access
+from security.document_access import issue_media_ticket
 import edge_tts
 
 from core.ai_adapter import (
@@ -18,20 +26,262 @@ from core.ai_adapter import (
     ADAPTATION_TASKS,
     cancel_adaptation,
     reset_adaptation,
-    get_all_adaptation_tasks
+    get_all_adaptation_tasks,
+    reserve_adaptation
 )
 
-router = APIRouter(tags=["Screenwriting & Adaptation"])
+router = APIRouter(tags=["Screenwriting & Adaptation"], dependencies=[Depends(require_screenwriting_access)])
 
 SCREENPLAY_ROOT = Path("C:/AI-BS/screenplay_projects")
 SCREENPLAY_ROOT.mkdir(parents=True, exist_ok=True)
 _current_project = "Default Project"
+class _ProjectStoreLock:
+    """Reentrant thread lock plus a same-store Windows mutex shared by API workers."""
+
+    def __init__(self, timeout_ms: int = 15000):
+        self._thread_lock = threading.RLock()
+        self._owned = threading.local()
+        self._timeout_ms = timeout_ms
+
+    def _is_owned(self):
+        return bool(getattr(self._owned, "handles", []))
+
+    def __enter__(self):
+        if not self._thread_lock.acquire(timeout=self._timeout_ms / 1000):
+            raise HTTPException(status_code=503, detail="The project store is busy. Keep your draft and retry shortly.")
+        handle = None
+        acquired = False
+        try:
+            if os.name == "nt":
+                import ctypes
+                from ctypes import wintypes
+                api = ctypes.WinDLL("kernel32", use_last_error=True)
+                api.CreateMutexW.argtypes = (wintypes.LPVOID, wintypes.BOOL, wintypes.LPCWSTR)
+                api.CreateMutexW.restype = wintypes.HANDLE
+                api.WaitForSingleObject.argtypes = (wintypes.HANDLE, wintypes.DWORD)
+                api.WaitForSingleObject.restype = wintypes.DWORD
+                api.CloseHandle.argtypes = (wintypes.HANDLE,)
+                api.CloseHandle.restype = wintypes.BOOL
+                api.ReleaseMutex.argtypes = (wintypes.HANDLE,)
+                api.ReleaseMutex.restype = wintypes.BOOL
+                store = os.path.normcase(str(SCREENPLAY_ROOT.resolve()))
+                identity = hashlib.sha256(store.encode("utf-8")).hexdigest()
+                handle = api.CreateMutexW(None, False, "Global\\AI-BS-Screenplay-" + identity)
+                if not handle:
+                    raise ctypes.WinError(ctypes.get_last_error())
+                outcome = api.WaitForSingleObject(handle, self._timeout_ms)
+                # WAIT_ABANDONED grants ownership too. Every operation re-reads disk state.
+                if outcome not in (0, 0x80):
+                    wait_error = ctypes.get_last_error()
+                    api.CloseHandle(handle)
+                    handle = None
+                    if outcome == 0x102:
+                        raise HTTPException(status_code=503, detail="The project store is busy. Keep your draft and retry shortly.")
+                    raise ctypes.WinError(wait_error)
+                acquired = True
+            if not hasattr(self._owned, "handles"):
+                self._owned.handles = []
+            self._owned.handles.append(handle)
+            return self
+        except BaseException:
+            if handle is not None:
+                if acquired:
+                    api.ReleaseMutex(handle)
+                api.CloseHandle(handle)
+            self._thread_lock.release()
+            raise
+
+    def __exit__(self, exc_type, exc, traceback):
+        handle = self._owned.handles.pop()
+        try:
+            if handle is not None:
+                import ctypes
+                from ctypes import wintypes
+                api = ctypes.WinDLL("kernel32", use_last_error=True)
+                api.ReleaseMutex.argtypes = (wintypes.HANDLE,)
+                api.ReleaseMutex.restype = wintypes.BOOL
+                api.CloseHandle.argtypes = (wintypes.HANDLE,)
+                api.CloseHandle.restype = wintypes.BOOL
+                try:
+                    if not api.ReleaseMutex(handle):
+                        raise ctypes.WinError(ctypes.get_last_error())
+                finally:
+                    api.CloseHandle(handle)
+        finally:
+            self._thread_lock.release()
 
 
-def _get_current_project():
-    global _current_project
-    from core.matrix_docs import ScreenplayProject
-    return ScreenplayProject(SCREENPLAY_ROOT / _current_project)
+_PROJECT_STORE_LOCK = _ProjectStoreLock()
+from core.adaptation_store import configure_adaptation_store, project_directory as _adaptation_directory
+configure_adaptation_store(lambda: SCREENPLAY_ROOT, _PROJECT_STORE_LOCK)
+
+
+def _project_directory(project_name: str) -> Path:
+    name = project_name.strip()
+    if (not name or name in {".", ".."} or name.endswith(".")
+            or any(c in name for c in '<>:"/\\|?*')
+            or any(ord(c) < 32 for c in name)):
+        raise HTTPException(status_code=400, detail="Invalid project name.")
+    if name.split('.')[0].upper() in {"CON", "PRN", "AUX", "NUL", *[f"COM{i}" for i in range(1, 10)], *[f"LPT{i}" for i in range(1, 10)]}:
+        raise HTTPException(status_code=400, detail="Invalid project name.")
+    directory = SCREENPLAY_ROOT / name
+    if (directory.is_symlink() or getattr(directory, 'is_junction', lambda: False)()
+            or directory.resolve().parent != SCREENPLAY_ROOT.resolve()):
+        raise HTTPException(status_code=400, detail="Project must stay inside the project store.")
+    return directory
+
+
+def _existing_project_directory(project_name: str) -> Path:
+    directory = _project_directory(project_name)
+    if not directory.is_dir():
+        raise HTTPException(status_code=404, detail="Project does not exist.")
+    return directory
+
+
+def _atomic_project_text(directory: Path, filename: str, content: str):
+    target = directory / filename
+    if target.resolve().parent != directory.resolve():
+        raise HTTPException(status_code=400, detail="Project file must stay inside its project.")
+    temporary_path = None
+    try:
+        mode = {"mode": "wb"} if isinstance(content, bytes) else {"mode": "w", "encoding": "utf-8"}
+        with tempfile.NamedTemporaryFile(**mode, dir=directory,
+                                         prefix=".project-", suffix=".tmp", delete=False) as temporary:
+            temporary_path = Path(temporary.name)
+            temporary.write(content)
+            temporary.flush()
+            os.fsync(temporary.fileno())
+        os.replace(temporary_path, target)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
+
+
+def _read_project_metadata(directory: Path) -> dict:
+    path = directory / "project.json"
+    if path.resolve().parent != directory.resolve():
+        raise HTTPException(status_code=400, detail="Project metadata must stay inside its project.")
+    if not path.exists():
+        return {"title": directory.name, "characters": [], "beat_videos": {}}
+    try:
+        metadata = json.loads(path.read_text(encoding="utf-8-sig"))
+        if (not isinstance(metadata, dict)
+                or not isinstance(metadata.get("characters", []), list)
+                or not all(isinstance(c, dict) for c in metadata.get("characters", []))
+                or not isinstance(metadata.get("beat_videos", {}), dict)):
+            raise ValueError("Invalid metadata structure")
+        return metadata
+    except (ValueError, UnicodeError):
+        raise HTTPException(status_code=409, detail="Project metadata is invalid; the original has been preserved.")
+
+
+def _write_project_metadata(directory: Path, metadata: dict):
+    _atomic_project_text(directory, "project.json", json.dumps(metadata, ensure_ascii=False, indent=2))
+
+
+def _screenplay_snapshot(directory: Path) -> dict:
+    """Read content and its exact disk revision together under the caller's store lock."""
+    canonical = directory / "screenplay.fountain"
+    if canonical.is_symlink() or canonical.resolve().parent != directory.resolve():
+        raise HTTPException(status_code=400, detail="Screenplay must stay inside its project.")
+    try:
+        raw = canonical.read_bytes()
+    except FileNotFoundError:
+        # Reading a legacy adaptation must not silently create a canonical screenplay.
+        adaptation = directory / "adaptation_output.fountain"
+        if adaptation.is_symlink() or adaptation.resolve().parent != directory.resolve():
+            raise HTTPException(status_code=400, detail="Adaptation must stay inside its project.")
+        try:
+            raw = adaptation.read_bytes()
+            content = raw.decode("utf-8")
+            revision = "adaptation:" + hashlib.sha256(raw).hexdigest()
+            source = "adaptation_output"
+        except FileNotFoundError:
+            content, source, revision = "", "missing", "missing"
+        except UnicodeError:
+            raise HTTPException(status_code=409, detail="The existing adaptation is not valid UTF-8; its original bytes have been preserved.")
+        return {"content": content, "revision": revision, "screenplay_exists": False, "source": source}
+    try:
+        content = raw.decode("utf-8")
+    except UnicodeError:
+        raise HTTPException(status_code=409, detail="The existing screenplay is not valid UTF-8; its original bytes have been preserved.")
+    return {"content": content, "revision": hashlib.sha256(raw).hexdigest(),
+            "screenplay_exists": True, "source": "screenplay"}
+
+
+def _require_screenplay_revision(directory: Path, expected_revision: Optional[str]):
+    """Reject blind or stale saves before any project files or Git state are changed."""
+    if expected_revision is None or not expected_revision.strip():
+        raise HTTPException(status_code=428, detail="Saving requires expected_revision from the loaded screenplay. Keep your draft and reload the project revision.")
+    if expected_revision != _screenplay_snapshot(directory)["revision"]:
+        raise HTTPException(status_code=409, detail="This screenplay changed since it was loaded. Your draft has not been saved; keep a copy and reload before reconciling the changes.")
+    _require_idle_adaptation(directory)
+
+
+def _require_idle_adaptation(directory: Path):
+    """Reject editing while the same-store adaptation job owns this project."""
+    states = [state for name, state in list(ADAPTATION_TASKS.items())
+              if name.casefold() == directory.name.casefold()]
+    state_path = directory / "adaptation_state.json"
+    if state_path.is_symlink() or state_path.resolve().parent != directory.resolve():
+        raise HTTPException(status_code=400, detail="Adaptation state must stay inside its project.")
+    try:
+        states.append(json.loads(state_path.read_text(encoding="utf-8-sig")))
+    except FileNotFoundError:
+        pass
+    except (OSError, ValueError, UnicodeError):
+        raise HTTPException(status_code=409, detail="The adaptation state could not be verified. Keep your draft; the project has not been changed.")
+    for state in states:
+        if not isinstance(state, dict):
+            raise HTTPException(status_code=409, detail="The adaptation state is invalid. Keep your draft; the project has not been changed.")
+        if state.get("status") in {"processing", "queued", "starting", "running", "canceling", "cancelling"}:
+            raise HTTPException(status_code=409, detail="An adaptation is active for this project. Keep your draft and wait for it to finish before saving.")
+
+
+def _save_reordered_project(directory: Path, content: str, parser) -> bool:
+    metadata = _read_project_metadata(directory)
+    parser.estimate_pages()
+    metadata['word_count'] = len(content.split())
+    metadata['page_count'] = int(parser.elements[-1].page_estimate) if parser.elements else 0
+    outputs = {
+        "screenplay.fountain": content.encode("utf-8"),
+        f"{directory.name}.fdx": parser.to_fdx(metadata.get('title', directory.name), metadata.get('author', 'Unknown')),
+        "project.json": json.dumps(metadata, ensure_ascii=False, indent=2),
+    }
+    originals = {}
+    for name in outputs:
+        target = directory / name
+        if target.resolve().parent != directory.resolve():
+            raise HTTPException(status_code=400, detail="Project file must stay inside its project.")
+        originals[name] = target.read_bytes() if target.exists() else None
+    completed = []
+    try:
+        for name, value in outputs.items():
+            _atomic_project_text(directory, name, value)
+            completed.append(name)
+    except Exception:
+        # Restore only files this operation replaced; newly created outputs are disposable.
+        for name in reversed(completed):
+            if originals[name] is None:
+                (directory / name).unlink(missing_ok=True)
+            else:
+                _atomic_project_text(directory, name, originals[name])
+        raise
+    # A failed revision must be reported separately from an already successful save.
+    try:
+        if not (directory / '.git').exists():
+            subprocess.run(['git', 'init'], cwd=directory, capture_output=True, check=True)
+            subprocess.run(['git', 'config', 'user.name', 'AI-BS'], cwd=directory, capture_output=True, check=True)
+            subprocess.run(['git', 'config', 'user.email', 'matrix@ai-bs.local'], cwd=directory, capture_output=True, check=True)
+        files = list(outputs)
+        subprocess.run(['git', 'add', '--', *files], cwd=directory, capture_output=True, check=True)
+        unchanged = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', *files], cwd=directory, capture_output=True)
+        if unchanged.returncode != 0:
+            subprocess.run(['git', 'commit', '--only', '-m', 'Reorder screenplay scenes', '--', *files],
+                           cwd=directory, capture_output=True, check=True)
+        return True
+    except (OSError, subprocess.CalledProcessError):
+        return False
 
 
 # ==============================================================================
@@ -90,6 +340,26 @@ class StagePlayBreakdownPayload(BaseModel):
     project_id: Optional[str] = None
     parameters: StagePlayBudgetParameters
 
+@router.get("/api/screenplay/adapt/capabilities")
+def adaptation_capabilities():
+    return {"contract": "create-only-v1", "create_only": True,
+            "job_tokens": True, "retained_sources": True}
+
+
+def _reserved_adaptation_response(background_tasks, project_name, content, suffix, adaptation_type, book_style):
+    directory, source, task = reserve_adaptation(project_name, content, suffix, adaptation_type, book_style)
+    try:
+        background_tasks.add_task(adapt_book_to_screenplay, source, directory.name,
+                                  adaptation_type, book_style, task['job_id'])
+    except Exception:
+        cancel_adaptation(directory.name, task['job_id'])
+        raise
+    return {"status": "success", "contract": "create-only-v1",
+            "message": f"Adaptation queued for new project {directory.name}",
+            "project_name": directory.name, "project": directory.name, "current": directory.name,
+            "job_id": task['job_id'], "task": task}
+
+
 @router.post("/api/screenplay/adapt")
 async def start_book_adaptation(
     background_tasks: BackgroundTasks,
@@ -99,98 +369,30 @@ async def start_book_adaptation(
     book_style: str = Form("Fiction Novel / Narrative"),
     force: bool = Form(False)
 ):
-    existing = ADAPTATION_TASKS.get(project_name)
-    if existing and existing.get("status") == "processing":
-        if not force:
-            return JSONResponse(
-                status_code=409,
-                content={
-                    "status": "processing",
-                    "message": "An adaptation job is already processing for this project.",
-                    "task": existing
-                }
-            )
-        else:
-            cancel_adaptation(project_name)
-            reset_adaptation(project_name)
-
-    try:
-        project_dir = Path(f"C:/AI-BS/screenplay_projects/{project_name}")
-        project_dir.mkdir(parents=True, exist_ok=True)
-        ext = Path(file.filename).suffix.lower() if file.filename else ".pdf"
-        if not ext:
-            ext = ".pdf"
-        source_path = project_dir / f"source{ext}"
-
-        content = await file.read()
-        with open(source_path, "wb") as f:
-            f.write(content)
-
-        background_tasks.add_task(
-            adapt_book_to_screenplay,
-            source_path,
-            project_name,
-            adaptation_type,
-            book_style
-        )
-
-        return {"status": "success", "message": f"Adaptation started for {project_name}"}
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
+    # force remains accepted for older clients, but never authorizes overwrites.
+    _adaptation_directory(project_name)
+    suffix = Path(file.filename or '').suffix.lower()
+    content = await file.read()
+    return _reserved_adaptation_response(background_tasks, project_name, content, suffix, adaptation_type, book_style)
 
 
 @router.post("/api/screenplay/adapt/text")
-async def start_text_adaptation(
-    background_tasks: BackgroundTasks,
-    request: Request
-):
-    try:
-        data = await request.json()
-        project_name = data.get("project_name", "Studio Document Adaptation")
-        content = data.get("content", "")
-        adaptation_type = data.get("adaptation_type", "Feature Film (Spec Script)")
-        book_style = data.get("book_style", "Fiction Novel / Narrative")
-        force = data.get("force", False)
-
-        if not content or not content.strip():
-            return JSONResponse(status_code=400, content={"status": "error", "message": "Content cannot be empty."})
-
-        existing = ADAPTATION_TASKS.get(project_name)
-        if existing and existing.get("status") == "processing":
-            if not force:
-                return JSONResponse(
-                    status_code=409,
-                    content={
-                        "status": "processing",
-                        "message": "An adaptation job is already processing for this project.",
-                        "task": existing
-                    }
-                )
-            else:
-                cancel_adaptation(project_name)
-                reset_adaptation(project_name)
-
-        project_dir = Path(f"C:/AI-BS/screenplay_projects/{project_name}")
-        project_dir.mkdir(parents=True, exist_ok=True)
-        source_path = project_dir / "source.txt"
-        with open(source_path, "w", encoding="utf-8") as f:
-            f.write(content)
-
-        background_tasks.add_task(
-            adapt_book_to_screenplay,
-            source_path,
-            project_name,
-            adaptation_type,
-            book_style
-        )
-
-        return {"status": "success", "message": f"Adaptation started for {project_name}"}
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
+async def start_text_adaptation(background_tasks: BackgroundTasks, request: Request):
+    data = await request.json()
+    if not isinstance(data, dict):
+        raise HTTPException(400, "Adaptation payload must be a JSON object.")
+    project_name = data.get("project_name", "Studio Document Adaptation")
+    content = data.get("content", "")
+    if not isinstance(content, str) or not content.strip():
+        raise HTTPException(400, "Content cannot be empty.")
+    _adaptation_directory(project_name)
+    return _reserved_adaptation_response(background_tasks, project_name, content.encode('utf-8'), '.txt',
+        data.get("adaptation_type", "Feature Film (Spec Script)"), data.get("book_style", "Fiction Novel / Narrative"))
 
 
 @router.get("/api/screenplay/adapt/status")
 def get_adaptation_status(project_name: str):
+    project_name = _adaptation_directory(project_name).name
     tasks = get_all_adaptation_tasks()
     if project_name not in tasks:
         return {"status": "not_found", "progress": 0}
@@ -205,25 +407,30 @@ def get_active_adaptation_jobs():
 @router.post("/api/screenplay/adapt/cancel")
 async def cancel_adaptation_endpoint(request: Request):
     data = await request.json()
+    if not isinstance(data, dict):
+        raise HTTPException(400, "Adaptation payload must be a JSON object.")
     project_name = data.get("project_name")
     if not project_name:
         return JSONResponse(status_code=400, content={"status": "error", "message": "Missing project_name"})
-    success = cancel_adaptation(project_name)
+    success = cancel_adaptation(project_name, data.get("job_id"))
     return {"status": "success" if success else "not_found", "project_name": project_name}
 
 
 @router.post("/api/screenplay/adapt/reset")
 async def reset_adaptation_endpoint(request: Request):
     data = await request.json()
+    if not isinstance(data, dict):
+        raise HTTPException(400, "Adaptation payload must be a JSON object.")
     project_name = data.get("project_name")
     if not project_name:
         return JSONResponse(status_code=400, content={"status": "error", "message": "Missing project_name"})
-    reset_adaptation(project_name)
-    return {"status": "success", "message": f"Reset adaptation state for {project_name}"}
+    success = reset_adaptation(project_name, data.get("job_id"))
+    return {"status": "success" if success else "not_found", "project_name": project_name, "message": "Job ownership reset; all retained files preserved."}
 
 
 @router.get("/api/screenplay/adapt/stream")
 async def stream_adaptation_status(project_name: str, request: Request):
+    project_name = _adaptation_directory(project_name).name
     async def event_generator():
         while True:
             if await request.is_disconnected():
@@ -234,7 +441,7 @@ async def stream_adaptation_status(project_name: str, request: Request):
             status_json = json.dumps(status)
             yield f"data: {status_json}\n\n"
 
-            if status.get("status") in ["complete", "error", "canceled"]:
+            if status.get("status") in ["complete", "error", "canceled", "interrupted", "reset", "not_found"]:
                 break
 
             await asyncio.sleep(1)
@@ -276,8 +483,11 @@ def create_project(payload: CreateProjectPayload):
     if not clean_name:
         raise HTTPException(status_code=400, detail="Project name cannot be empty.")
 
-    project_dir = SCREENPLAY_ROOT / clean_name
-    project_dir.mkdir(parents=True, exist_ok=True)
+    project_dir = _project_directory(clean_name)
+    try:
+        project_dir.mkdir(parents=False, exist_ok=False)
+    except FileExistsError:
+        raise HTTPException(status_code=409, detail="A project with that name already exists.")
 
     title = clean_name.upper()
     author = payload.author or "Screenwriter"
@@ -400,26 +610,90 @@ FADE OUT.
     return {"status": "success", "current": _current_project}
 
 
+def _archive_entry(archive_id: str) -> Path:
+    try:
+        if uuid.UUID(archive_id).hex != archive_id:
+            raise ValueError()
+    except (ValueError, AttributeError):
+        raise HTTPException(status_code=400, detail="Invalid archive ID.")
+    archive_root = SCREENPLAY_ROOT.parent / "screenplay_archive"
+    entry = archive_root / archive_id
+    if entry.resolve().parent != archive_root.resolve() or (entry / "project").resolve().parent != entry.resolve():
+        raise HTTPException(status_code=400, detail="Invalid archive path.")
+    return entry
+
+
+@router.post("/api/screenwriting/projects/archive")
 @router.post("/api/screenwriting/projects/delete")
 def delete_project(payload: SwitchProjectPayload):
+    """The legacy delete URL now archives the complete project without erasing it."""
     global _current_project
-    if payload.project_name == "Default Project":
-        raise HTTPException(status_code=400, detail="Cannot delete Default Project")
-    project_dir = SCREENPLAY_ROOT / payload.project_name
-    if project_dir.exists():
-        shutil.rmtree(project_dir, ignore_errors=True)
-    _current_project = "Default Project"
-    return {"status": "success", "current": _current_project}
+    with _PROJECT_STORE_LOCK:
+        project_dir = _project_directory(payload.project_name)
+        if project_dir.name.casefold() == "default project":
+            raise HTTPException(status_code=400, detail="Cannot archive Default Project.")
+        if not project_dir.is_dir():
+            raise HTTPException(status_code=404, detail="Project does not exist.")
+        if ADAPTATION_TASKS.get(project_dir.name, {}).get("status") == "processing":
+            raise HTTPException(status_code=409, detail="Finish or cancel the active adaptation before archiving.")
+        archive_id = uuid.uuid4().hex
+        entry = _archive_entry(archive_id)
+        entry.mkdir(parents=True, exist_ok=False)
+        metadata = {"archive_id": archive_id, "project_name": project_dir.name,
+                    "archived_at": datetime.now().astimezone().isoformat()}
+        (entry / "archive.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+        project_dir.rename(entry / "project")
+        if _current_project.casefold() == project_dir.name.casefold():
+            _current_project = "Default Project"
+            _project_directory(_current_project).mkdir(exist_ok=True)
+        return {"status": "success", "current": _current_project, **metadata}
+
+
+@router.get("/api/screenwriting/projects/archives")
+def list_project_archives():
+    archive_root = SCREENPLAY_ROOT.parent / "screenplay_archive"
+    archives = []
+    if archive_root.is_dir():
+        for candidate in archive_root.iterdir():
+            try:
+                entry = _archive_entry(candidate.name)
+                if not (entry / "project").is_dir():
+                    continue
+                metadata = json.loads((entry / "archive.json").read_text(encoding="utf-8"))
+                archives.append({"archive_id": candidate.name, "project_name": metadata["project_name"],
+                                 "archived_at": metadata["archived_at"]})
+            except (HTTPException, OSError, ValueError, KeyError):
+                continue
+    return {"archives": sorted(archives, key=lambda item: item["archived_at"], reverse=True)}
+
+
+class RestoreProjectPayload(BaseModel):
+    archive_id: str
+
+
+@router.post("/api/screenwriting/projects/restore")
+def restore_project(payload: RestoreProjectPayload):
+    global _current_project
+    with _PROJECT_STORE_LOCK:
+        entry = _archive_entry(payload.archive_id)
+        if not (entry / "project").is_dir():
+            raise HTTPException(status_code=404, detail="Archived project not found.")
+        metadata = json.loads((entry / "archive.json").read_text(encoding="utf-8"))
+        destination = _project_directory(metadata["project_name"])
+        if destination.exists():
+            raise HTTPException(status_code=409, detail="A project with that name already exists. Archive or rename it before restoring.")
+        (entry / "project").rename(destination)
+        _current_project = destination.name
+        return {"status": "success", "current": _current_project}
 
 
 @router.post("/api/screenwriting/projects/switch")
 def switch_project(payload: SwitchProjectPayload):
     global _current_project
-    project_dir = SCREENPLAY_ROOT / payload.project_name
-    if not project_dir.exists():
-        project_dir.mkdir(parents=True, exist_ok=True)
-    _current_project = payload.project_name
-    return {"status": "success", "current": _current_project}
+    with _PROJECT_STORE_LOCK:
+        project_dir = _existing_project_directory(payload.project_name)
+        _current_project = project_dir.name
+        return {"status": "success", "current": _current_project}
 
 
 # ==============================================================================
@@ -428,34 +702,34 @@ def switch_project(payload: SwitchProjectPayload):
 
 class WriteScreenplayPayload(BaseModel):
     content: str
+    project_name: Optional[str] = None
+    expected_revision: Optional[str] = None
 
 
 @router.get("/api/screenwriting/read")
 def read_screenplay(project_name: Optional[str] = None):
-    global _current_project
-    if project_name and project_name.strip():
-        _current_project = project_name.strip()
-
-    file_path = SCREENPLAY_ROOT / _current_project / "screenplay.fountain"
-    if file_path.exists():
-        content = file_path.read_text(encoding="utf-8")
-    else:
-        adaptation_path = SCREENPLAY_ROOT / _current_project / "adaptation_output.fountain"
-        if adaptation_path.exists():
-            content = adaptation_path.read_text(encoding="utf-8")
-            file_path.write_text(content, encoding="utf-8")
-        else:
-            content = f"Title: {_current_project}\n\nINT. UNKNOWN - DAY\n\nAction goes here.\n"
-            file_path.write_text(content, encoding="utf-8")
-    return {"content": content, "project": _current_project}
+    with _PROJECT_STORE_LOCK:
+        directory = _existing_project_directory(project_name or _current_project)
+        return {"project": directory.name, **_screenplay_snapshot(directory)}
 
 
 @router.post("/api/screenwriting/write")
 def write_screenplay(payload: WriteScreenplayPayload):
-    global _current_project
-    file_path = SCREENPLAY_ROOT / _current_project / "screenplay.fountain"
-    file_path.write_text(payload.content, encoding="utf-8")
-    return {"status": "success"}
+    with _PROJECT_STORE_LOCK:
+        return _write_screenplay(payload)
+
+
+def _write_screenplay(payload: WriteScreenplayPayload):
+    if not payload.project_name or not payload.project_name.strip():
+        raise HTTPException(status_code=400, detail="Saving requires an explicit project_name.")
+    directory = _project_directory(payload.project_name)
+    if not directory.is_dir():
+        raise HTTPException(status_code=404, detail="Project does not exist.")
+    _require_screenplay_revision(directory, payload.expected_revision)
+    # Binary UTF-8 output avoids translating CRLF into CRCRLF on Windows.
+    _atomic_project_text(directory, "screenplay.fountain", payload.content.encode("utf-8"))
+    return {"status": "success", "project": directory.name,
+            "revision": _screenplay_snapshot(directory)["revision"]}
 
 
 @router.post("/api/screenwriting/parse")
@@ -515,6 +789,7 @@ def end_sprint(payload: SprintEndPayload):
 # ==============================================================================
 
 class CharacterPayload(BaseModel):
+    project_name: str
     name: str
     bio: str = ""
     speaking_style: str = ""
@@ -528,16 +803,18 @@ class CharacterPayload(BaseModel):
 
 
 @router.get("/api/screenwriting/projects/characters")
-def get_characters():
-    proj = _get_current_project()
-    chars = proj.metadata.get('characters', [])
+def get_characters(project_name: str):
+    with _PROJECT_STORE_LOCK:
+        directory = _existing_project_directory(project_name)
+        chars = _read_project_metadata(directory).get('characters', [])
     if not chars:
         # Dynamically autofill Character Vault from screenplay and source book
         try:
             from core.character_extractor import extract_project_characters
-            content = proj.read_screenplay()
+            screenplay_path = directory / "screenplay.fountain"
+            content = screenplay_path.read_text(encoding="utf-8") if screenplay_path.exists() else ""
             source_text = ""
-            chunks_path = proj.project_dir / "chunks.json"
+            chunks_path = directory / "chunks.json"
             if chunks_path.exists():
                 try:
                     import json
@@ -546,19 +823,23 @@ def get_characters():
                 except Exception:
                     pass
             chars = extract_project_characters(content, source_text)
-            if chars:
-                proj.metadata['characters'] = chars
-                proj.save_metadata()
+            # Inferred entries remain a read result until explicitly saved by the user.
         except Exception as e:
             print(f"[Character Vault Auto-Fill Error] {e}")
             
-    return {"status": "success", "characters": chars}
+    return {"status": "success", "project": directory.name, "characters": chars}
 
 
 @router.post("/api/screenwriting/projects/characters")
 def save_character(payload: CharacterPayload):
-    proj = _get_current_project()
-    chars = proj.metadata.get('characters', [])
+    with _PROJECT_STORE_LOCK:
+        return _save_character(payload)
+
+
+def _save_character(payload: CharacterPayload):
+    directory = _existing_project_directory(payload.project_name)
+    metadata = _read_project_metadata(directory)
+    chars = metadata.get('characters', [])
     updated = False
     new_entry = {
         "name": payload.name,
@@ -580,49 +861,68 @@ def save_character(payload: CharacterPayload):
     if not updated:
         chars.append(new_entry)
 
-    proj.metadata['characters'] = chars
-    proj.save_metadata()
-    return {"status": "success", "characters": chars}
+    metadata['characters'] = chars
+    _write_project_metadata(directory, metadata)
+    return {"status": "success", "project": directory.name, "characters": chars}
 
 
 @router.delete("/api/screenwriting/projects/characters")
-def delete_character(name: str):
-    proj = _get_current_project()
-    chars = proj.metadata.get('characters', [])
-    chars = [c for c in chars if c['name'] != name]
-    proj.metadata['characters'] = chars
-    proj.save_metadata()
-    return {"status": "success", "characters": chars}
+def delete_character(name: str, project_name: str):
+    with _PROJECT_STORE_LOCK:
+        directory = _existing_project_directory(project_name)
+        metadata = _read_project_metadata(directory)
+        chars = [c for c in metadata.get('characters', []) if c.get('name') != name]
+        metadata['characters'] = chars
+        _write_project_metadata(directory, metadata)
+        return {"status": "success", "project": directory.name, "characters": chars}
 
 
 class ReorderBeatsPayload(BaseModel):
+    project_name: str
+    content: str
     source_index: int
     target_index: int
+    expected_revision: Optional[str] = None
 
 
 @router.post("/api/screenwriting/beats/reorder")
 def reorder_beats(payload: ReorderBeatsPayload):
-    proj = _get_current_project()
-    success = proj.reorder_beats(payload.source_index, payload.target_index)
-    if success:
+    with _PROJECT_STORE_LOCK:
+        directory = _existing_project_directory(payload.project_name)
+        _require_screenplay_revision(directory, payload.expected_revision)
         from core.matrix_docs import FountainParser
-        content = proj.read_screenplay()
+        parser = FountainParser(payload.content)
+        beats = parser.extract_beats()
+        if not (0 <= payload.source_index < len(beats) and 0 <= payload.target_index < len(beats)):
+            raise HTTPException(status_code=400, detail="Invalid scene index; screenplay unchanged.")
+        lines = payload.content.split('\n')
+        prefix = lines[:beats[0]['start_line']]
+        chunks = [lines[beat['start_line']:beat['end_line'] + 1] for beat in beats]
+        chunks.insert(payload.target_index, chunks.pop(payload.source_index))
+        content = '\n'.join(prefix + [line for chunk in chunks for line in chunk])
         parser = FountainParser(content)
-        parser.parse()
-        return {"status": "success", "parsed": {"html": parser.to_html(), "beats": parser.extract_beats()}}
-    return {"status": "error", "message": "Reorder failed"}
+        parsed = {"html": parser.to_html(), "beats": parser.extract_beats()}
+        revision_saved = _save_reordered_project(directory, content, parser)
+        return {"status": "success", "project": directory.name, "content": content, "parsed": parsed,
+                "revision": _screenplay_snapshot(directory)["revision"],
+                "revision_saved": revision_saved,
+                "warning": None if revision_saved else "Screenplay saved, but its Git revision could not be recorded."}
 
 
 class SceneVideoPayload(BaseModel):
+    project_name: str
     beat_id: str
     video_url: str
 
 
 @router.post("/api/screenwriting/projects/scene_video")
 def save_scene_video(payload: SceneVideoPayload):
-    proj = _get_current_project()
-    proj.map_video_to_beat(payload.beat_id, payload.video_url)
-    return {"status": "success"}
+    with _PROJECT_STORE_LOCK:
+        directory = _existing_project_directory(payload.project_name)
+        metadata = _read_project_metadata(directory)
+        metadata.setdefault('beat_videos', {})[payload.beat_id] = payload.video_url
+        _write_project_metadata(directory, metadata)
+        return {"status": "success", "project": directory.name}
 
 
 class ImportProjectPayload(BaseModel):
@@ -633,10 +933,22 @@ class ImportProjectPayload(BaseModel):
 @router.post("/api/screenwriting/projects/import")
 def do_import_project(payload: ImportProjectPayload):
     from core.matrix_docs import ScreenplayProject
-    proj_dir = SCREENPLAY_ROOT / payload.project_name
-    proj = ScreenplayProject(proj_dir)
-    proj.write_screenplay(payload.content)
-    return {"status": "success"}
+    with _PROJECT_STORE_LOCK:
+        directory = _project_directory(payload.project_name)
+        if directory.exists():
+            raise HTTPException(status_code=409, detail="A project with that name already exists. Choose a new import name.")
+        # Build a complete project off-store before publishing it as one directory rename.
+        # Only these newly created staging files are removed if preparation fails.
+        with tempfile.TemporaryDirectory(prefix=".screenplay-import-", dir=SCREENPLAY_ROOT.parent) as staging:
+            staged_directory = Path(staging) / directory.name
+            project = ScreenplayProject(staged_directory)
+            if not project.write_screenplay(payload.content):
+                raise HTTPException(status_code=500, detail="Import could not be saved; no project was published.")
+            try:
+                os.rename(staged_directory, directory)
+            except FileExistsError:
+                raise HTTPException(status_code=409, detail="A project with that name already exists. Choose a new import name.")
+        return {"status": "success", "project": directory.name}
 
 
 # ==============================================================================
@@ -681,26 +993,48 @@ The JSON must have the following schema:
         return {"status": "error", "message": str(e)}
 
 
+def _screenplay_export_source(project_name: str):
+    directory = _project_directory(project_name)
+    if not directory.is_dir():
+        raise HTTPException(404, "Project does not exist.")
+    source = directory / "screenplay.fountain"
+    if not source.is_file():
+        source = directory / "adaptation_output.fountain"
+    if not source.is_file():
+        raise HTTPException(404, "This project has no screenplay to export.")
+    metadata_path = directory / "project.json"
+    try:
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8-sig")) if metadata_path.is_file() else {}
+        if not isinstance(metadata, dict):
+            raise ValueError("Invalid project metadata")
+        content = source.read_text(encoding="utf-8-sig")
+    except (UnicodeError, ValueError):
+        raise HTTPException(422, "The project text or metadata could not be read for export.")
+    return directory.name, content, metadata
+
+
 @router.get("/api/screenwriting/export/fdx")
-def export_fdx():
-    proj = _get_current_project()
-    content = proj.read_screenplay()
+def export_fdx(project_name: str):
+    from urllib.parse import quote
+    name, content, metadata = _screenplay_export_source(project_name)
     from core.matrix_docs import FountainParser
     parser = FountainParser(content)
     parser.parse()
-    fdx = parser.to_fdx(proj.metadata.get('title', 'Untitled'), proj.metadata.get('author', 'Unknown'))
-    return Response(content=fdx, media_type="application/xml", headers={"Content-Disposition": f"attachment; filename={proj.project_dir.name}.fdx"})
+    fdx = parser.to_fdx(metadata.get('title', name), metadata.get('author', 'Unknown'))
+    return Response(content=fdx, media_type="application/xml",
+                    headers={"Content-Disposition": "attachment; filename*=UTF-8''" + quote(name + '.fdx', safe='')})
 
 
 @router.get("/api/screenwriting/export/pdf")
-def export_pdf(watermark: str = None):
-    proj = _get_current_project()
-    content = proj.read_screenplay()
+def export_pdf(project_name: str, watermark: str = None):
+    from urllib.parse import quote
+    name, content, metadata = _screenplay_export_source(project_name)
     from core.matrix_docs import FountainParser
     parser = FountainParser(content)
     parser.parse()
-    pdf_bytes = parser.to_pdf(proj.metadata.get('title', 'Untitled'), proj.metadata.get('author', 'Unknown'), watermark=watermark)
-    return Response(content=pdf_bytes, media_type="application/pdf", headers={"Content-Disposition": f"attachment; filename={proj.project_dir.name}.pdf"})
+    pdf_bytes = parser.to_pdf(metadata.get('title', name), metadata.get('author', 'Unknown'), watermark=watermark)
+    return Response(content=pdf_bytes, media_type="application/pdf",
+                    headers={"Content-Disposition": "attachment; filename*=UTF-8''" + quote(name + '.pdf', safe='')})
 
 
 @router.post("/api/screenwriting/production_breakdown")
@@ -1177,18 +1511,30 @@ async def chat_project_assistant(payload: ProjectAssistantQuery):
 # 10. PROJECT AUDIO DRAMA & VOICE ADAPTATION VAULT
 # ==============================================================================
 
+def _project_audio_file(project_name: str):
+    project_dir = _project_directory(project_name)
+    audio_dir = (project_dir / "audio").resolve()
+    if not audio_dir.is_relative_to(project_dir.resolve()):
+        raise HTTPException(403, "Audio directory is outside this project.")
+    if audio_dir.is_dir():
+        for target in sorted(audio_dir.iterdir(), key=lambda p: p.name.casefold()):
+            if target.suffix.lower() in {".wav", ".mp3", ".m4a"} and target.is_file():
+                resolved = target.resolve()
+                if not resolved.is_relative_to(audio_dir):
+                    raise HTTPException(403, "Audio file is outside this project.")
+                return resolved
+    raise HTTPException(404, "No audio adaptation found for this project.")
+
+
 @router.get("/api/screenwriting/projects/{project_name}/audio/info")
 def get_project_audio_info(project_name: str):
     import wave
-    audio_dir = SCREENPLAY_ROOT / project_name / "audio"
-    if not audio_dir.exists():
-        return {"status": "not_found", "has_audio": False}
-    
-    wav_files = list(audio_dir.glob("*.wav")) + list(audio_dir.glob("*.mp3")) + list(audio_dir.glob("*.m4a"))
-    if not wav_files:
-        return {"status": "not_found", "has_audio": False}
-    
-    target_file = wav_files[0]
+    try:
+        target_file = _project_audio_file(project_name)
+    except HTTPException as exc:
+        if exc.status_code == 404:
+            return {"status": "not_found", "has_audio": False}
+        raise
     size_mb = round(target_file.stat().st_size / (1024 * 1024), 2)
     duration_s = 0
     sample_rate = 44100
@@ -1210,7 +1556,7 @@ def get_project_audio_info(project_name: str):
     secs = int(duration_s % 60)
     formatted = f"{hrs}h {mins}m {secs}s" if hrs > 0 else f"{mins}m {secs}s"
 
-    return {
+    return JSONResponse({
         "status": "success",
         "has_audio": True,
         "file_name": target_file.name,
@@ -1219,31 +1565,25 @@ def get_project_audio_info(project_name: str):
         "duration_formatted": formatted,
         "sample_rate": sample_rate,
         "channels": channels,
-        "stream_url": f"/api/screenwriting/projects/{project_name}/audio/stream"
-    }
+        "stream_url": f"/api/screenwriting/projects/{quote(project_name, safe='')}/audio/stream?" + urlencode({"ticket": issue_media_ticket(target_file, "preview")})
+    }, headers={"Cache-Control": "no-store"})
 
 
 @router.get("/api/screenwriting/projects/{project_name}/audio/stream")
 def stream_project_audio(project_name: str):
     from fastapi.responses import FileResponse
-    audio_dir = SCREENPLAY_ROOT / project_name / "audio"
-    if not audio_dir.exists():
-        raise HTTPException(status_code=404, detail="Audio directory not found")
-        
-    wav_files = list(audio_dir.glob("*.wav")) + list(audio_dir.glob("*.mp3")) + list(audio_dir.glob("*.m4a"))
-    if not wav_files:
-        raise HTTPException(status_code=404, detail="No audio adaptation found for this project")
-        
-    target_file = wav_files[0]
+    target_file = _project_audio_file(project_name)
     return FileResponse(
         path=str(target_file),
-        media_type="audio/wav" if target_file.suffix.lower() == ".wav" else "audio/mpeg",
+        media_type={".wav": "audio/wav", ".mp3": "audio/mpeg", ".m4a": "audio/mp4"}[target_file.suffix.lower()],
+        headers={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer"},
         filename=target_file.name
     )
 
 
 @router.post("/api/screenwriting/projects/{project_name}/audio/transcribe")
 def start_audio_transcription(project_name: str, background_tasks: BackgroundTasks):
+    _project_audio_file(project_name)
     from core.audio_transcriber import run_transcription_sync
     background_tasks.add_task(run_transcription_sync, project_name, "base")
     return {"status": "started", "message": f"Transcription started for '{project_name}'"}
@@ -1251,12 +1591,14 @@ def start_audio_transcription(project_name: str, background_tasks: BackgroundTas
 
 @router.get("/api/screenwriting/projects/{project_name}/audio/transcribe/status")
 def get_audio_transcription_status(project_name: str):
+    _project_directory(project_name)
     from core.audio_transcriber import AUDIO_TRANSCRIBE_TASKS
     return AUDIO_TRANSCRIBE_TASKS.get(project_name, {"status": "idle"})
 
 
 @router.get("/api/screenwriting/projects/{project_name}/audio/transcript")
 def get_project_audio_transcript(project_name: str):
+    _project_directory(project_name)
     from core.audio_transcriber import get_project_transcription
     return get_project_transcription(project_name)
 

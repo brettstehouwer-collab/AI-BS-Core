@@ -38,7 +38,7 @@ export default function SplitPaneIDEWorkspace() {
 
   const reqHeaders = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer sk_aibs_dev_master_key_2026',
+    
     'X-Client-ID': 'stehouwer_publishing'
   };
 
