@@ -101,11 +101,10 @@ def coding_request(body):
             if Path(value).resolve()==repo:
                 model_prompt=model_prompt.replace('`'+value+'`','the working repository')
         allow_trusted = os.environ.get('AI_BS_ALLOW_TRUSTED_HOST_EXECUTION', '').strip().lower() in ('true', '1', 'yes')
-        allow_vm = os.environ.get('AI_BS_VM_ENABLED', '').strip().lower() in ('true', '1', 'yes')
-        if execution_backend == 'windows_vm' and not allow_vm:
-            # Strict fail-closed rule: Never substitute host checks when windows_vm is requested.
+        if execution_backend == 'windows_vm':
+            # No guest dispatcher is wired into run_coding_task yet.
             error_code='ISOLATION_UNAVAILABLE'
-            raise RuntimeError('Windows VM execution is unavailable: no accepted isolated worker is configured. Host fallback is forbidden.')
+            raise RuntimeError('Windows VM execution is unavailable: no accepted guest runner is connected. Host fallback is forbidden.')
         if execution_backend == 'trusted_host' and not allow_trusted:
             error_code='TRUSTED_HOST_UNAUTHORIZED'
             raise RuntimeError('Trusted host execution is not authorized by administrator policy.')

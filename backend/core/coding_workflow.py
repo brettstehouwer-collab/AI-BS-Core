@@ -126,11 +126,10 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
                 result['error_code']='TRUSTED_HOST_UNAUTHORIZED'
                 raise RuntimeError('Trusted host execution is not authorized by administrator policy.')
         elif execution_backend == 'windows_vm':
-            # Strict fail-closed rule: Never substitute host checks when windows_vm is requested.
-            allow_vm = os.environ.get('AI_BS_VM_ENABLED', '').strip().lower() in ('true', '1', 'yes')
-            if not allow_vm:
-                result['error_code']='ISOLATION_UNAVAILABLE'
-                raise RuntimeError('Windows VM execution is unavailable: no accepted isolated worker is configured. Host fallback is forbidden.')
+            # No guest dispatcher is wired into this runner. A configuration flag alone
+            # must never route a VM request into the host-only run_bounded_check below.
+            result['error_code']='ISOLATION_UNAVAILABLE'
+            raise RuntimeError('Windows VM execution is unavailable: no accepted guest runner is connected. Host fallback is forbidden.')
         else:
             result['error_code']='INVALID_EXECUTION_BACKEND'
             raise ValueError('Unsupported coding execution backend')

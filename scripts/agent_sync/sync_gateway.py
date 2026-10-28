@@ -87,6 +87,8 @@ def generate_handoff_manifest(outgoing_agent, receiving_agent, tasks_completed, 
         "docs/CODEX_HANDOFF.md",
         "docs/memory/Conversation_Learning_and_RAG.md",
         "backend/AI_BS_Backend.py",
+        "backend/core/coding_workflow.py",
+        "backend/core/coding_chat.py",
         "backend/core/sovereign_reasoning/document_engine.py",
         "scripts/agent_sync/sync_gateway.py"
     ]
