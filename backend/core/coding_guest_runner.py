@@ -532,8 +532,8 @@ def inspect_vbox_provider() -> dict:
         return info
     if not VBOX_CONFIG_FILE.is_file() or not VBOX_PASSWORD_FILE.is_file():
         info['reason'] = (
-            'VirtualBox guest credentials are not yet enrolled. '
-            'Run `python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py enroll-vbox` to enroll.'
+            'No independent, licensed, containment-sanitized Windows VM guest is enrolled yet. '
+            'Explicit windows_vm requests fail closed (ISOLATION_UNAVAILABLE) without host or WSL2 substitution.'
         )
         return info
     try:
@@ -546,6 +546,7 @@ def inspect_vbox_provider() -> dict:
         vm_uuid = cfg['vm_uuid']
         snapshot_uuid = cfg['snapshot_uuid']
         vbox_home = cfg.get('vbox_user_home')
+        licensing_verified = bool(cfg.get('licensing_verified'))
         info.update(
             vm_name=cfg.get('vm_name'),
             vm_uuid=vm_uuid,
@@ -554,7 +555,20 @@ def inspect_vbox_provider() -> dict:
             vbox_user_home=vbox_home,
             guest_username=cfg.get('guest_username'),
             guest_python_exe=cfg.get('guest_python_exe'),
+            licensing_verified=licensing_verified,
         )
+        if vm_uuid.lower() == '6c5a53da-ab80-4ecb-8be6-4059266f736e' and not cfg.get('integration_vm_override_authorized'):
+            info['reason'] = (
+                'Integration guest 6c5a53da-ab80-4ecb-8be6-4059266f736e is excluded from disposable '
+                'candidate execution per Record 126; enroll a dedicated clean licensed Windows guest.'
+            )
+            return info
+        if not licensing_verified:
+            info['reason'] = (
+                'Windows guest licensing is unverified (expired/unactivated evaluation images are '
+                'blocked per docs/phase4/WINDOWS_EVALUATION_REVIEW.md).'
+            )
+            return info
         proc = subprocess.run(
             [str(vbox), 'showvminfo', vm_uuid, '--machinereadable'],
             env=_vbox_env(vbox_home),
@@ -572,6 +586,7 @@ def inspect_vbox_provider() -> dict:
         nics_enabled = [f'nic{i}={mr.get(f"nic{i}")}' for i in range(1, 9) if mr.get(f'nic{i}', 'none') != 'none']
         clipboard = mr.get('clipboard', 'disabled')
         draganddrop = mr.get('draganddrop', 'disabled')
+        vrde = mr.get('vrde', 'off').lower()
         shared_folders = [k for k in mr if k.startswith(('SharedFolderNameMachineMapping', 'SharedFolderNameTransientMapping'))]
         violations = []
         if nics_enabled:
@@ -580,6 +595,8 @@ def inspect_vbox_provider() -> dict:
             violations.append(f'clipboard={clipboard}')
         if draganddrop != 'disabled':
             violations.append(f'draganddrop={draganddrop}')
+        if vrde not in ('off', 'disabled'):
+            violations.append(f'vrde={vrde}')
         if shared_folders:
             violations.append(f'shared_folders={len(shared_folders)}')
         if snapshot_uuid not in proc.stdout:
@@ -596,7 +613,7 @@ def inspect_vbox_provider() -> dict:
 
 
 def resolve_coding_execution_plan(requested_backend: str | None) -> dict:
-    """Resolve and authorize a coding execution backend without any host fallback."""
+    """Resolve and authorize a coding execution backend with zero host or cross-OS fallback."""
     effective_request = requested_backend
     if effective_request is None or (isinstance(effective_request, str) and not effective_request.strip()):
         effective_request = os.environ.get('AI_BS_EXECUTION_BACKEND', 'trusted_host').strip() or 'trusted_host'
@@ -638,6 +655,8 @@ def resolve_coding_execution_plan(requested_backend: str | None) -> dict:
         }
 
     # effective_request == 'windows_vm'
+    # Strict fail-closed invariant (ADR-107 / ADR-109 / WINDOWS_EVALUATION_REVIEW.md):
+    # Explicit windows_vm requests NEVER fall back to trusted_host and NEVER substitute wsl2_vm.
     vbox_reason = 'VirtualBox Windows VM disabled by policy'
     if _env_flag('AI_BS_ALLOW_VBOX_WINDOWS_VM', default=True):
         vbox_info = inspect_vbox_provider()
@@ -651,35 +670,9 @@ def resolve_coding_execution_plan(requested_backend: str | None) -> dict:
             }
         vbox_reason = vbox_info.get('reason') or 'VirtualBox Windows VM not ready'
 
-    strict_windows_kernel = _env_flag('AI_BS_REQUIRE_STRICT_WINDOWS_KERNEL_FOR_WINDOWS_VM', default=False)
-    allow_wsl2_delegate = (
-        not strict_windows_kernel
-        and _env_flag('AI_BS_ALLOW_WSL2_GUEST_FOR_WINDOWS_VM', default=False)
-        and _env_flag('AI_BS_ALLOW_WSL2_ISOLATED_VM', default=False)
-    )
-    if allow_wsl2_delegate:
-        wsl_info = inspect_wsl2_provider()
-        if wsl_info['available']:
-            return {
-                'requested_backend': 'windows_vm',
-                'execution_mode': 'wsl2_vm',
-                'guest_provider': 'wsl2_isolated',
-                'isolation_verified': True,
-                'provider_info': wsl_info,
-                'delegation_note': (
-                    'Executed inside isolated Hyper-V/WSL2 Linux VM guest per operator ADR-108 policy '
-                    f'because native VirtualBox Windows guest was not enrolled ({vbox_reason}). '
-                    'No host execution occurred.'
-                ),
-            }
-        raise CodingExecutionPolicyError(
-            'ISOLATION_UNAVAILABLE',
-            f"Neither VirtualBox Windows VM ({vbox_reason}) nor WSL2 isolated VM ({wsl_info.get('reason')}) is available. Host fallback is forbidden.",
-        )
-
     raise CodingExecutionPolicyError(
         'ISOLATION_UNAVAILABLE',
-        f'Windows VM execution is unavailable ({vbox_reason}). Host fallback is forbidden.',
+        f'Windows VM execution is unavailable ({vbox_reason}). Host fallback and Linux/WSL2 substitution are forbidden.',
     )
 
 

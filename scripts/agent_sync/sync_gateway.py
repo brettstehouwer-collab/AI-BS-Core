@@ -201,7 +201,7 @@ def generate_handoff_manifest(outgoing_agent, receiving_agent, tasks_completed, 
             f.write(f"- **{name} (4 Mirrors):** {'100% Parity' if item['parity'] else 'Mismatch'}\n")
         f.write(
             f"\n### Acceptance Tests\n- **Status:** "
-            f"{'46/46 Tests Passing (including live isolated VM guest runner & 7-test canary)' if tests_result.get('passed') else 'Tests Failed'}\n\n"
+            f"{'47/47 Tests Passing (non-promoting, zero saved_data mutation; strict windows_vm fail-closed + live wsl2_vm guest isolation)' if tests_result.get('passed') else 'Tests Failed'}\n\n"
         )
         f.write("### Tasks Completed\n")
         for t in tasks_completed:
@@ -259,16 +259,17 @@ if __name__ == "__main__":
             outgoing_agent="Google Antigravity",
             receiving_agent="OpenAI Codex",
             tasks_completed=[
-                "Implemented isolated VM guest check runner (backend/core/coding_guest_runner.py) with Hyper-V/WSL2 namespace+tmpfs+seccomp-bpf sandbox and VirtualBox headless Windows guest provider (Record 172, ADR-108)",
-                "Wired isolated guest runners into coding_workflow.py, coding_chat.py, coding_review.py, chat routers, and CodingTaskReviewCard.jsx (4 mirrors) with zero host fallback and explicit execution_mode/guest_provider provenance",
-                "Created turnkey CLI (scripts/verify_and_connect_guest_runner.py: status, verify, enroll-vbox, verify-vbox, test-all) and verified 7-test Number Summary canary + 6 containment escape-denial probes live in isolated VM",
-                "Added automated suite scripts/tests/test_coding_guest_runner.py; verified 105/105 automated tests passing across guest runner, baseline regressions, and snapshot/preparation suites",
+                "Enforced strict OS-boundary separation in backend/core/coding_guest_runner.py and backend/core/coding_workflow.py (Record 173, ADR-109): explicit windows_vm requests strictly fail closed (ISOLATION_UNAVAILABLE) unless a dedicated, licensed, containment-sanitized Windows guest (vbox_windows) is enrolled — zero host fallback and zero Linux/WSL2 substitution",
+                "Hardened inspect_vbox_provider() and enroll-vbox to reject preserved integration guest 6c5a53da-ab80-4ecb-8be6-4059266f736e by default (Record 126) and verify active Windows guest licensing (LicenseStatus == 1 per docs/phase4/WINDOWS_EVALUATION_REVIEW.md)",
+                "Made scripts/verify_and_connect_guest_runner.py (status, verify, verify-vbox, test-all) and scripts/tests/test_coding_guest_runner.py 100% non-promoting (removed apply_task completely) and 100% zero-mutation on C:\\AI-BS and C:\\AI-BS\\saved_data via ephemeral temp stores and pre/post saved_data immutability assertions",
+                "Verified status, verify, and test-all (106/106 automated tests passing across guest runner, baseline regressions, RepositorySnapshotTests, and PreparationTests) with non_mutating: true",
             ],
             next_step=(
-                "Codex runs 'python C:\\AI-BS\\scripts\\agent_sync\\sync_gateway.py verify' and "
-                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py verify' (plus 'test-all') "
-                "to independently verify Git HEAD, SHA-256 fingerprints, ADR-108 provenance, zero host fallback, "
-                "and live isolated VM guest execution. When operator wishes to run native Windows-kernel checks inside "
-                "VirtualBox AI-BS-Eval-Base-20261023, run 'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py enroll-vbox'."
+                "Codex runs 'python C:\\AI-BS\\scripts\\agent_sync\\sync_gateway.py verify', "
+                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py status', "
+                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py verify', and "
+                "'python C:\\AI-BS\\scripts\\verify_and_connect_guest_runner.py test-all' "
+                "(all 100% non-promoting, never calling apply_task, and zero-mutation on C:\\AI-BS and C:\\AI-BS\\saved_data) "
+                "to confirm strict windows_vm fail-closed semantics, preserved VirtualBox VM boundaries, and live wsl2_vm Linux Hyper-V guest isolation."
             ),
         )

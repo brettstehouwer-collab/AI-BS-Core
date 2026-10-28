@@ -139,8 +139,6 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
         result['execution_mode'] = plan['execution_mode']
         result['guest_provider'] = plan['guest_provider']
         result['isolation_verified'] = bool(plan['isolation_verified'])
-        if plan.get('delegation_note'):
-            result['delegation_note'] = plan['delegation_note']
         _save(folder, result)
         def remaining(maximum):
             available=deadline-time.monotonic()

@@ -1,23 +1,27 @@
-"""Automated security, containment, and round-trip tests for coding_guest_runner."""
+"""Automated security, containment, and non-promoting round-trip tests for coding_guest_runner.
+
+All task/request stores and fixture Git repositories are strictly isolated inside
+``tempfile.TemporaryDirectory()`` — zero files are written to ``C:\\AI-BS\\saved_data``,
+and ``apply_task`` is never invoked.
+"""
 from __future__ import annotations
 
 import hashlib
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BACKEND_DIR = REPO_ROOT / 'backend'
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from core import coding_chat, coding_guest_runner, coding_review, coding_workflow  # noqa: E402
+from core import coding_chat, coding_guest_runner, coding_recovery, coding_review, coding_workflow  # noqa: E402
 
 
 STUB_SUMMARY = '''"""Stub implementation."""
@@ -97,14 +101,25 @@ def _create_git_fixture(root: Path) -> None:
 
 class CodingGuestRunnerTests(unittest.TestCase):
     def setUp(self):
-        self._created_tasks: list[Path] = []
-        self._created_requests: list[Path] = []
+        self._store_tmp = tempfile.TemporaryDirectory(prefix='aibs_guest_runner_unit_')
+        self.addCleanup(self._store_tmp.cleanup)
+        tmp_base = Path(self._store_tmp.name)
+        ephemeral_tasks = tmp_base / 'coding_tasks'
+        ephemeral_requests = tmp_base / 'coding_requests'
+        ephemeral_tasks.mkdir(parents=True, exist_ok=True)
+        ephemeral_requests.mkdir(parents=True, exist_ok=True)
 
-    def tearDown(self):
-        for path in self._created_tasks:
-            shutil.rmtree(path, ignore_errors=True)
-        for path in self._created_requests:
-            shutil.rmtree(path, ignore_errors=True)
+        for target_mod, attr, val in (
+            (coding_workflow, 'STORE', ephemeral_tasks),
+            (coding_review, 'STORE', ephemeral_tasks),
+            (coding_recovery, 'STORE', ephemeral_tasks),
+            (coding_recovery, 'REQUESTS', ephemeral_requests),
+            (coding_chat, 'STORE', ephemeral_tasks),
+            (coding_chat, 'REQUESTS', ephemeral_requests),
+        ):
+            p = patch.object(target_mod, attr, val)
+            p.start()
+            self.addCleanup(p.stop)
 
     def test_dpapi_encrypt_decrypt_roundtrip(self):
         secret = b'ephemeral-guest-secret-2026!'
@@ -133,32 +148,32 @@ class CodingGuestRunnerTests(unittest.TestCase):
             self.assertNotIn('cred.dpapi', files)
             self.assertFalse(any(k.startswith('.git') for k in files))
 
-    def test_zero_host_fallback_on_strict_windows_vm_and_disabled_wsl2(self):
+    def test_explicit_windows_vm_strictly_fails_closed_without_host_or_wsl2_substitution(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp) / 'repo'
             _create_git_fixture(repo)
             env_overrides = {
+                'AI_BS_EXECUTION_BACKEND': 'wsl2_vm',
                 'AI_BS_ALLOW_TRUSTED_HOST_EXECUTION': 'true',
                 'AI_BS_ALLOW_VBOX_WINDOWS_VM': 'true',
                 'AI_BS_ALLOW_WSL2_ISOLATED_VM': 'true',
-                'AI_BS_ALLOW_WSL2_GUEST_FOR_WINDOWS_VM': 'false',
-                'AI_BS_REQUIRE_STRICT_WINDOWS_KERNEL_FOR_WINDOWS_VM': 'true',
             }
-            unavailable_vbox = {'provider': 'vbox_windows', 'available': False, 'reason': 'No enrolled VBox guest'}
+            unavailable_vbox = {'provider': 'vbox_windows', 'available': False, 'reason': 'No enrolled Windows guest'}
             with patch.dict(os.environ, env_overrides, clear=False), \
                  patch.object(coding_guest_runner, 'inspect_vbox_provider', return_value=unavailable_vbox), \
-                 patch.object(coding_workflow, 'run_bounded_check', side_effect=AssertionError('Host fallback forbidden')):
+                 patch.object(coding_workflow, 'run_bounded_check', side_effect=AssertionError('Host fallback forbidden')), \
+                 patch.object(coding_guest_runner, 'run_wsl2_isolated_check', side_effect=AssertionError('WSL2 substitution for windows_vm forbidden')):
                 res = coding_workflow.run_coding_task(
                     str(repo),
-                    'Strict windows_vm must fail closed when vbox is unavailable',
+                    'Explicit windows_vm must strictly fail closed when vbox_windows is unavailable',
                     [{'path': 'number_summary.py', 'content': GOOD_SUMMARY}],
                     [['python', '-m', 'unittest', 'test_number_summary']],
                     execution_backend='windows_vm',
                 )
-                self._created_tasks.append(coding_workflow.STORE / res['task_id'])
                 self.assertEqual(res['status'], 'failed')
                 self.assertEqual(res['state'], 'FAILED')
                 self.assertEqual(res['error_code'], 'ISOLATION_UNAVAILABLE')
+                self.assertNotIn('review_seal', res)
 
                 chat_reply = coding_chat.coding_request({
                     'prompt': f'Fix `number_summary.py` in `{repo}` and verify with `python -m unittest test_number_summary`',
@@ -166,6 +181,77 @@ class CodingGuestRunnerTests(unittest.TestCase):
                 })
                 self.assertTrue(chat_reply.get('coding_error'))
                 self.assertEqual(chat_reply.get('error_code'), 'ISOLATION_UNAVAILABLE')
+
+    def test_vbox_provider_isolation_and_licensing_preflight_gates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cfg_dir = Path(tmp) / 'vm_cfg'
+            cfg_dir.mkdir(parents=True)
+            cfg_file = cfg_dir / 'vbox_guest_config.json'
+            pw_file = cfg_dir / 'vbox_guest_password.dpapi'
+            fake_vbox = cfg_dir / 'VBoxManage.exe'
+            fake_vbox.write_bytes(b'MZ')
+            pw_file.write_bytes(coding_guest_runner.dpapi_encrypt(b'unit-test-secret'))
+
+            snap_uuid = '11111111-2222-3333-4444-555555555555'
+            dedicated_uuid = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+
+            with patch.object(coding_guest_runner, 'CONFIG_DIR', cfg_dir), \
+                 patch.object(coding_guest_runner, 'VBOX_CONFIG_FILE', cfg_file), \
+                 patch.object(coding_guest_runner, 'VBOX_PASSWORD_FILE', pw_file), \
+                 patch.object(coding_guest_runner, '_vbox_manage_path', return_value=fake_vbox), \
+                 patch.object(coding_guest_runner, '_vbox_env', return_value={}):
+
+                # 1. Preserved integration guest UUID is blocked per Record 126
+                cfg_file.write_text(json.dumps({
+                    'vm_uuid': '6c5a53da-ab80-4ecb-8be6-4059266f736e',
+                    'snapshot_uuid': snap_uuid,
+                    'licensing_verified': True,
+                }), encoding='utf-8')
+                r1 = coding_guest_runner.inspect_vbox_provider()
+                self.assertFalse(r1['available'])
+                self.assertIn('Record 126', r1['reason'])
+
+                # 2. Unlicensed evaluation guest is blocked per WINDOWS_EVALUATION_REVIEW.md
+                cfg_file.write_text(json.dumps({
+                    'vm_uuid': dedicated_uuid,
+                    'snapshot_uuid': snap_uuid,
+                    'licensing_verified': False,
+                }), encoding='utf-8')
+                r2 = coding_guest_runner.inspect_vbox_provider()
+                self.assertFalse(r2['available'])
+                self.assertIn('licensing is unverified', r2['reason'])
+
+                # 3. Active NIC / clipboard / VRDE violates isolation preflight
+                cfg_file.write_text(json.dumps({
+                    'vm_uuid': dedicated_uuid,
+                    'snapshot_uuid': snap_uuid,
+                    'licensing_verified': True,
+                }), encoding='utf-8')
+                dirty_vm = MagicMock(
+                    returncode=0,
+                    stdout=f'nic1="nat"\nclipboard="bidirectional"\nvrde="on"\nCurrentSnapshotUUID="{snap_uuid}"\n',
+                    stderr='',
+                )
+                with patch('core.coding_guest_runner.subprocess.run', return_value=dirty_vm):
+                    r3 = coding_guest_runner.inspect_vbox_provider()
+                self.assertFalse(r3['available'])
+                self.assertIn('nic1=nat', r3['reason'])
+                self.assertIn('clipboard=bidirectional', r3['reason'])
+                self.assertIn('vrde=on', r3['reason'])
+
+                # 4. Clean, isolated, licensed dedicated Windows VM passes preflight and resolves windows_vm
+                clean_lines = '\n'.join([*(f'nic{i}="none"' for i in range(1, 9)),
+                                         'clipboard="disabled"', 'draganddrop="disabled"',
+                                         'vrde="off"', f'CurrentSnapshotUUID="{snap_uuid}"'])
+                clean_vm = MagicMock(returncode=0, stdout=clean_lines, stderr='')
+                with patch('core.coding_guest_runner.subprocess.run', return_value=clean_vm), \
+                     patch.dict(os.environ, {'AI_BS_ALLOW_VBOX_WINDOWS_VM': 'true'}, clear=False):
+                    r4 = coding_guest_runner.inspect_vbox_provider()
+                    self.assertTrue(r4['available'])
+                    self.assertTrue(r4['isolated'])
+                    plan = coding_guest_runner.resolve_coding_execution_plan('windows_vm')
+                    self.assertEqual(plan['execution_mode'], 'windows_vm')
+                    self.assertEqual(plan['guest_provider'], 'vbox_windows')
 
     def test_zero_host_fallback_when_wsl2_unavailable(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -182,7 +268,6 @@ class CodingGuestRunnerTests(unittest.TestCase):
                     [['python', '-m', 'unittest', 'test_number_summary']],
                     execution_backend='wsl2_vm',
                 )
-                self._created_tasks.append(coding_workflow.STORE / res['task_id'])
                 self.assertEqual(res['status'], 'failed')
                 self.assertEqual(res['error_code'], 'ISOLATION_UNAVAILABLE')
 
@@ -249,7 +334,6 @@ print(json.dumps({
             self.assertEqual(data['tamper'], 'PermissionError')
             self.assertEqual(data['cmd'], 'FileNotFoundError')
 
-            # Timeout & pre-cancelled containment
             (work / 'sleep_forever.py').write_text('import time\ntime.sleep(30)\n', encoding='utf-8')
             timeout_ev = coding_guest_runner.run_wsl2_isolated_check(
                 ['python', 'sleep_forever.py'],
@@ -268,11 +352,10 @@ print(json.dumps({
             )
             self.assertEqual(cancel_ev.get('error'), 'cancelled')
 
-    def test_live_7_test_canary_workflow_review_apply_and_failing_candidate(self):
+    def test_live_7_test_canary_workflow_review_seal_and_failing_candidate(self):
         env_overrides = {
+            'AI_BS_EXECUTION_BACKEND': 'wsl2_vm',
             'AI_BS_ALLOW_WSL2_ISOLATED_VM': 'true',
-            'AI_BS_ALLOW_WSL2_GUEST_FOR_WINDOWS_VM': 'true',
-            'AI_BS_REQUIRE_STRICT_WINDOWS_KERNEL_FOR_WINDOWS_VM': 'false',
         }
         with tempfile.TemporaryDirectory() as tmp, \
              patch.dict(os.environ, env_overrides, clear=False), \
@@ -288,12 +371,11 @@ print(json.dumps({
                 [['python', '-m', 'unittest', 'test_number_summary']],
                 execution_backend='wsl2_vm',
             )
-            self._created_tasks.append(coding_workflow.STORE / bad_res['task_id'])
             self.assertEqual(bad_res['status'], 'failed')
             self.assertEqual(bad_res['state'], 'FAILED')
             self.assertNotIn('review_seal', bad_res)
 
-            # 2. Passing 7-test Number Summary canary in wsl2_vm + review + apply
+            # 2. Non-promoting 7-test Number Summary canary in wsl2_vm + review_seal + review_task
             good_repo = Path(tmp) / 'good_repo'
             _create_git_fixture(good_repo)
             good_res = coding_workflow.run_coding_task(
@@ -303,40 +385,22 @@ print(json.dumps({
                 [['python', '-m', 'unittest', 'test_number_summary']],
                 execution_backend='wsl2_vm',
             )
-            self._created_tasks.append(coding_workflow.STORE / good_res['task_id'])
             self.assertEqual(good_res['status'], 'success')
             self.assertEqual(good_res['state'], 'VERIFIED')
             self.assertEqual(good_res['execution_mode'], 'wsl2_vm')
             self.assertEqual(good_res['guest_provider'], 'wsl2_isolated')
             self.assertTrue(good_res['isolation_verified'])
+            self.assertTrue(good_res['originals_unchanged'])
+            self.assertFalse(good_res['merged'])
             self.assertIn('Ran 7 tests', good_res['checks'][0]['stderr'] + good_res['checks'][0]['stdout'])
+            self.assertEqual((good_repo / 'number_summary.py').read_text(encoding='utf-8'), STUB_SUMMARY)
 
             rev = coding_review.review_task(good_res['task_id'])
             self.assertTrue(rev['can_apply'])
             self.assertEqual(rev['execution_mode'], 'wsl2_vm')
             self.assertEqual(rev['guest_provider'], 'wsl2_isolated')
             self.assertTrue(rev['isolation_verified'])
-
-            applied = coding_review.apply_task(good_res['task_id'], rev['review_token'])
-            self.assertEqual(applied['application']['state'], 'APPLIED')
-            self.assertEqual((good_repo / 'number_summary.py').read_text(encoding='utf-8').strip(), GOOD_SUMMARY.strip())
-
-            # 3. Passing 7-test Number Summary canary via windows_vm under ADR-108 delegation
-            vm_repo = Path(tmp) / 'vm_repo'
-            _create_git_fixture(vm_repo)
-            vm_res = coding_workflow.run_coding_task(
-                str(vm_repo),
-                'Verify windows_vm executes inside isolated VM guest',
-                [{'path': 'number_summary.py', 'content': GOOD_SUMMARY}],
-                [['python', '-m', 'unittest', 'test_number_summary']],
-                execution_backend='windows_vm',
-            )
-            self._created_tasks.append(coding_workflow.STORE / vm_res['task_id'])
-            self.assertEqual(vm_res['status'], 'success')
-            self.assertEqual(vm_res['state'], 'VERIFIED')
-            self.assertEqual(vm_res['requested_execution_backend'], 'windows_vm')
-            self.assertTrue(vm_res['isolation_verified'])
-            self.assertIn(vm_res['guest_provider'], ('vbox_windows', 'wsl2_isolated'))
+            self.assertEqual((good_repo / 'number_summary.py').read_text(encoding='utf-8'), STUB_SUMMARY)
 
     def test_coding_chat_adapter_end_to_end_isolated_vm(self):
         env_overrides = {
@@ -355,13 +419,10 @@ print(json.dumps({
             self.assertIsNotNone(reply)
             self.assertFalse(reply.get('coding_error', False), msg=str(reply))
             task = reply['coding_task']
-            self._created_tasks.append(coding_workflow.STORE / task['task_id'])
-            if reply.get('coding_request_id'):
-                from core.coding_recovery import REQUESTS
-                self._created_requests.append(REQUESTS / reply['coding_request_id'])
             self.assertEqual(task['state'], 'VERIFIED')
             self.assertEqual(task['execution_mode'], 'wsl2_vm')
             self.assertTrue(task['isolation_verified'])
+            self.assertEqual((repo / 'number_summary.py').read_text(encoding='utf-8'), STUB_SUMMARY)
 
     def test_coding_review_card_4_mirror_sha256_parity(self):
         mirrors = [

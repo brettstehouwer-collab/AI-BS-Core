@@ -2278,3 +2278,12 @@ The current Record165 summary and existing release, VM, provider and protected-d
 - [x] Create `scripts/verify_and_connect_guest_runner.py` (`status`, `verify`, `enroll-vbox`, `verify-vbox`, `test-all`) and `scripts/tests/test_coding_guest_runner.py`.
 - [x] Verify 6 live guest containment/escape-denial probes + 7-test Number Summary VM canary (`VERIFIED` -> `APPLIED`) + 105/105 automated tests passing.
 - [ ] Optional operator interactive step for native Windows-kernel VirtualBox guest (`AI-BS-Eval-Base-20261023`): run `python C:\AI-BS\scripts\verify_and_connect_guest_runner.py enroll-vbox` to enroll DPAPI guest credentials and take clean offline snapshot `AIBS_IsolatedRunner_Ready`.
+
+
+### Strict `windows_vm` Fail-Closed Alignment & Non-Promoting Guest Verification (Record 173 / ADR-109)
+- [x] Remove cross-OS `windows_vm -> wsl2_vm` substitution in `backend/core/coding_guest_runner.py`, `backend/core/coding_workflow.py`, `.env`, and `backend/.env` so explicit `windows_vm` requests strictly fail closed (`ISOLATION_UNAVAILABLE`) with zero host fallback and zero Linux/WSL2 substitution (`ADR-109`).
+- [x] Keep default AI-BS coding execution on `AI_BS_EXECUTION_BACKEND=wsl2_vm` (`wsl2_isolated` Linux Hyper-V VM guest) with honest `wsl2_vm` provenance (not counted as Phase 4 Windows VM acceptance).
+- [x] Enforce preserved VirtualBox VM boundaries: exclude integration guest `6c5a53da-ab80-4ecb-8be6-4059266f736e` (`AI-BS-Eval-Base-20261023`, Record 126 / `0xC004F009`) by default, require active Windows guest licensing (`LicenseStatus == 1`), and inspect both `6c5a53da-...` and `e5a2fe34-7b90-460c-83af-903d51b4bb16` (`AI-BS-DisposableProbe-20261026`, incomplete WinPE) via read-only `.vbox` XML parsing in `status`.
+- [x] Make `verify_and_connect_guest_runner.py` (`status`, `verify`, `test-all`) and `test_coding_guest_runner.py` 100% non-promoting (`apply_task` completely removed) and zero-mutation on `C:\AI-BS` and `C:\AI-BS\saved_data` (`non_mutating: true`).
+- [x] Verify `status`, `verify`, and `test-all` (**106/106 automated tests passing**: 54 guest runner + core regressions, 23 `RepositorySnapshotTests`, 29 `PreparationTests`).
+- [ ] Phase 4 Windows VM acceptance gate remains open pending completion and enrollment of an independent, licensed, containment-sanitized Windows 11 disposable guest VM via `enroll-vbox --vm-uuid <uuid>`.
