@@ -20,7 +20,7 @@ class ChatRequest(BaseModel):
     prompt: Optional[str] = None
     mode: Optional[str] = None
     plan_only: bool = False
-    execution_backend: str = 'trusted_host'
+    execution_backend: Optional[str] = None
     model: str = Field(default="stehouwer_llm", description="Target model name")
     messages: List[ChatMessage] = Field(default_factory=list, description="Conversation messages")
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)

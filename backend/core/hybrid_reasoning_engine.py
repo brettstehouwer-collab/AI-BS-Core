@@ -19,7 +19,7 @@ class ChatRequest(BaseModel):
     prompt: str
     mode: Optional[str] = None
     plan_only: bool = False
-    execution_backend: str = 'trusted_host'
+    execution_backend: Optional[str] = None
     messages: Optional[list] = None
     temperature: float = 0.7
     stream: bool = True
@@ -1417,11 +1417,11 @@ async def chat_hybrid_endpoint(req: ChatRequest):
             if task_id:
                 yield '\n<!--AI-BS-METADATA:' + json.dumps({'coding_task_id':task_id}) + '-->'
         return StreamingResponse(coding_events(), media_type="text/plain")
-    backend = body.get("execution_backend", "trusted_host")
+    backend = body.get("execution_backend") or "trusted_host"
     if backend != "trusted_host":
         reason = (
-            "ISOLATION_UNAVAILABLE: no accepted Windows worker is configured; host fallback is forbidden."
-            if backend == "windows_vm"
+            "ISOLATION_UNAVAILABLE: non-coding host chat tools cannot run inside VM guest mode; submit a bounded coding task instead."
+            if backend in ("windows_vm", "wsl2_vm")
             else "INVALID_EXECUTION_BACKEND: unsupported execution backend."
         )
         return StreamingResponse(iter([reason + " No host tool or model was invoked.\n"]), media_type="text/plain")

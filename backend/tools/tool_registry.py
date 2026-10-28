@@ -764,7 +764,7 @@ class ToolRegistry:
             },
             {
                 "name": "run_coding_task",
-                "description": "Apply supplied code changes in a retained Git worktree, run explicit Python checks, and save results for review. Does not merge or publish. Default trusted_host checks are not sandboxed. windows_vm requests fail closed until an isolated worker passes acceptance; no host fallback.",
+                "description": "Apply supplied code changes in a retained Git worktree, run explicit Python checks in an isolated VM guest (wsl2_vm / windows_vm) or bounded host (trusted_host), and save results for review. Does not merge or publish; VM requests never fall back to host.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -773,7 +773,7 @@ class ToolRegistry:
                         "files": {"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"content":{"type":"string"}},"required":["path","content"]}},
                         "checks": {"type":"array","items":{"type":"array","items":{"type":"string"}},"description":"Each check begins with python, e.g. ['python','-m','unittest','test_math']."},
                         "timeout_seconds": {"type":"integer"},
-                        "execution_backend": {"type":"string","enum":["trusted_host","windows_vm"],"default":"trusted_host"}
+                        "execution_backend": {"type":"string","enum":["trusted_host","wsl2_vm","windows_vm"]}
                     },
                     "required":["repository","objective","files","checks"]
                 }

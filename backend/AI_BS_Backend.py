@@ -9017,7 +9017,7 @@ class HybridStreamPayload(BaseModel):
 
     plan_only: Optional[bool] = False
 
-    execution_backend: str = 'trusted_host'
+    execution_backend: Optional[str] = None
 
     prompt: Optional[str] = ""
 

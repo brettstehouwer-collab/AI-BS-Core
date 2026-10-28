@@ -2269,3 +2269,12 @@ The current Record165 summary and existing release, VM, provider and protected-d
 - [x] Verify 7-test Number Summary canary fixture execution (Ran 7 tests ... OK), status transition to VERIFIED, and review seal generation (diff_hash: b14e027701641a8cd62e7f5cb523077f2a92734df6926a35257828f29f296b4b).
 - [x] Maintain 38/38 offline test passing baseline in scripts/tests/.
 - [x] Maintain 100% 4-mirror frontend parity and update multi-agent sync gateway manifest.
+
+
+### Isolated VM Guest Runner & Operator Policy Synchronization (Record 172 / ADR-108)
+- [x] Implement `backend/core/coding_guest_runner.py` with `wsl2_isolated` (Hyper-V/WSL2 namespace + `tmpfs` host/interop masking + `nobody` zero-cap drop + `seccomp-bpf` blocking `AF_VSOCK`/`AF_INET`/`AF_INET6`) and `vbox_windows` (headless VirtualBox Windows 11 snapshot-backed `guestcontrol` with DPAPI credentials).
+- [x] Wire guest runner into `coding_workflow.py`, `coding_chat.py`, `coding_review.py`, chat routers, and all 4 mirrors of `CodingTaskReviewCard.jsx` (`b218d82a20e4ac968fee0c046f0669b1f07a5e01440874a3dab8b9670f4fc148`) with zero host fallback and transparent `execution_mode` / `guest_provider` provenance.
+- [x] Configure operator policy flags in `.env` and `backend/.env` (`AI_BS_EXECUTION_BACKEND=wsl2_vm`, `AI_BS_ALLOW_WSL2_ISOLATED_VM=true`, `AI_BS_ALLOW_WSL2_GUEST_FOR_WINDOWS_VM=true`) and document `ADR-108` in `docs/CODEX_DECISIONS.md`.
+- [x] Create `scripts/verify_and_connect_guest_runner.py` (`status`, `verify`, `enroll-vbox`, `verify-vbox`, `test-all`) and `scripts/tests/test_coding_guest_runner.py`.
+- [x] Verify 6 live guest containment/escape-denial probes + 7-test Number Summary VM canary (`VERIFIED` -> `APPLIED`) + 105/105 automated tests passing.
+- [ ] Optional operator interactive step for native Windows-kernel VirtualBox guest (`AI-BS-Eval-Base-20261023`): run `python C:\AI-BS\scripts\verify_and_connect_guest_runner.py enroll-vbox` to enroll DPAPI guest credentials and take clean offline snapshot `AIBS_IsolatedRunner_Ready`.

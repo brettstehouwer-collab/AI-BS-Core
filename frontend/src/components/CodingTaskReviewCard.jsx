@@ -39,9 +39,11 @@ export function CodingVerificationEvidence({ checks, executionMode }) {
         : 'Verification is incomplete; no passing result is confirmed.';
   const environment = executionMode === 'trusted_host'
     ? `${recorded.length ? 'Recorded' : 'Requested'} execution: trusted local host. These checks do not provide VM isolation.`
-    : executionMode === 'windows_vm'
-      ? `${recorded.length ? 'Recorded' : 'Requested'} execution: Windows VM.`
-      : 'Execution environment is not recorded; isolation is unverified.';
+    : executionMode === 'wsl2_vm'
+      ? `${recorded.length ? 'Recorded' : 'Requested'} execution: isolated Hyper-V/WSL2 Linux VM guest (network, host drives, and Windows interop blocked).`
+      : executionMode === 'windows_vm'
+        ? `${recorded.length ? 'Recorded' : 'Requested'} execution: isolated Windows VM guest.`
+        : 'Execution environment is not recorded; isolation is unverified.';
 
   return <div className="mt-2">
     <div role="status">{summary}</div>

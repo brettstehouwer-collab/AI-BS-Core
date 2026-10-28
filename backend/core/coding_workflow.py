@@ -1,7 +1,9 @@
 """Administrator-authorized code changes in retained Git worktrees.
 
-A worktree protects the original checkout from these file writes. Commands are
-ordinary host processes, not an OS security sandbox. No merge or publish occurs.
+A worktree protects the original checkout from file writes. Candidate checks run
+either inside an isolated VM guest runner (``wsl2_vm`` / ``windows_vm``) or, when
+explicitly authorized, inside bounded host job containment (``trusted_host``).
+No automatic merge or publish occurs, and VM requests never fall back to the host.
 """
 from __future__ import annotations
 import hashlib
@@ -15,6 +17,11 @@ import time
 import uuid
 import psutil
 from .code_quality_gate import sanitize_and_validate_llm_code
+from .coding_guest_runner import (
+    CodingExecutionPolicyError,
+    resolve_coding_execution_plan,
+    run_guest_check,
+)
 from .coding_process import run_bounded_check
 from .coding_journal import write_json_record
 
@@ -83,7 +90,7 @@ def request_cancellation(task_id):
     return {'task_id':task_id,'cancel_requested':True,'state':result['state']}
 
 
-def run_coding_task(repository, objective, files, checks, timeout_seconds=30, overall_timeout_seconds=180, output_limit=262144, on_created=None, execution_backend='trusted_host'):
+def run_coding_task(repository, objective, files, checks, timeout_seconds=30, overall_timeout_seconds=180, output_limit=262144, on_created=None, execution_backend=None):
     """Apply supplied text changes, then run required Python checks exactly once."""
     process=psutil.Process(os.getpid())
     result = {'status':'failed','state':'VALIDATING','task_id':uuid.uuid4().hex,
@@ -101,10 +108,12 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
         timeout = min(max(int(timeout_seconds),1),120)
         deadline=started+min(max(int(overall_timeout_seconds),1),600)
         output_limit=min(max(int(output_limit),1024),1048576)
-        result['execution_mode']=execution_backend
+        requested_backend = execution_backend if execution_backend is not None else (os.environ.get('AI_BS_EXECUTION_BACKEND', 'trusted_host').strip() or 'trusted_host')
+        result['requested_execution_backend'] = requested_backend
+        result['execution_mode'] = requested_backend if isinstance(requested_backend, str) else 'unknown'
         result['limits']={'check_timeout_seconds':timeout,'overall_timeout_seconds':deadline-started,'output_bytes_per_check':output_limit}
         raw=json.dumps({'repository':str(repo),'objective':objective,'files':files,'checks':checks,
-                        'limits':result['limits'],'execution_backend':execution_backend},indent=2).encode('utf-8')
+                        'limits':result['limits'],'execution_backend':requested_backend},indent=2).encode('utf-8')
         folder=STORE/result['task_id'];folder.mkdir(parents=True,exist_ok=False)
         result.update(repository=str(repo),input_path=str(folder/'input.json'),input_sha256=_digest(raw),input_ready=False)
         def state(name):
@@ -120,19 +129,19 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
         _save(folder,result)
         if on_created is not None:on_created(result['task_id'])
         check_cancelled()
-        allow_trusted = os.environ.get('AI_BS_ALLOW_TRUSTED_HOST_EXECUTION', '').strip().lower() in ('true', '1', 'yes')
-        if execution_backend == 'trusted_host':
-            if not allow_trusted:
-                result['error_code']='TRUSTED_HOST_UNAUTHORIZED'
-                raise RuntimeError('Trusted host execution is not authorized by administrator policy.')
-        elif execution_backend == 'windows_vm':
-            # No guest dispatcher is wired into this runner. A configuration flag alone
-            # must never route a VM request into the host-only run_bounded_check below.
-            result['error_code']='ISOLATION_UNAVAILABLE'
-            raise RuntimeError('Windows VM execution is unavailable: no accepted guest runner is connected. Host fallback is forbidden.')
-        else:
-            result['error_code']='INVALID_EXECUTION_BACKEND'
-            raise ValueError('Unsupported coding execution backend')
+        try:
+            plan = resolve_coding_execution_plan(requested_backend)
+        except CodingExecutionPolicyError as exc:
+            result['error_code'] = exc.error_code
+            if exc.error_code == 'INVALID_EXECUTION_BACKEND':
+                raise ValueError(str(exc)) from exc
+            raise RuntimeError(str(exc)) from exc
+        result['execution_mode'] = plan['execution_mode']
+        result['guest_provider'] = plan['guest_provider']
+        result['isolation_verified'] = bool(plan['isolation_verified'])
+        if plan.get('delegation_note'):
+            result['delegation_note'] = plan['delegation_note']
+        _save(folder, result)
         def remaining(maximum):
             available=deadline-time.monotonic()
             if available<=0:raise TimeoutError('Overall coding task deadline exceeded')
@@ -156,12 +165,14 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
             prepared[key]=(rel,content)
         check_cancelled()
         commands=[]
+        raw_checks=[]
         verification_names=_verification_files(checks)
         if verification_names is not None and any(name.casefold() in prepared for name in verification_names):
             raise ValueError('Verification files cannot be replaced by a coding proposal')
         for argv in checks:
             if not isinstance(argv,list) or len(argv)<2 or not all(isinstance(a,str) and '\x00' not in a for a in argv) or argv[0]!='python':
                 raise ValueError('Checks must be argument lists beginning with python')
+            raw_checks.append(list(argv))
             commands.append([sys.executable,*argv[1:]])
         # No shell interpolation, hooks, or inherited application credentials.
         env={k:v for k,v in os.environ.items() if k.upper() in {'PATH','SYSTEMROOT','WINDIR','TEMP','TMP','LOCALAPPDATA'}}
@@ -213,9 +224,27 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
                 if verification_hashes[name]['worktree'] != verification_hashes[name]['repository']:
                     raise ValueError('Verification source differs from the selected repository: '+name)
         state('CHECKING')
-        for argv in commands:
-            evidence=run_bounded_check(argv,work,env,timeout_seconds=remaining(timeout),
-                output_limit=output_limit,cancelled=lambda:(folder/'cancel_requested.json').is_file())
+        required_guest_paths = sorted({
+            *(str(rel) for rel, _ in prepared.values()),
+            *(verification_names or []),
+        })
+        for raw_argv, host_argv in zip(raw_checks, commands):
+            cancel_fn = lambda: (folder/'cancel_requested.json').is_file()
+            if plan['execution_mode'] == 'trusted_host' and plan['guest_provider'] is None:
+                evidence = run_bounded_check(
+                    host_argv, work, env,
+                    timeout_seconds=remaining(timeout),
+                    output_limit=output_limit,
+                    cancelled=cancel_fn,
+                )
+            else:
+                evidence = run_guest_check(
+                    plan, raw_argv, work,
+                    required_paths=required_guest_paths,
+                    timeout_seconds=remaining(timeout),
+                    output_limit=output_limit,
+                    cancelled=cancel_fn,
+                )
             result['checks'].append(evidence);_save(folder,result)
             if evidence['returncode']!=0 or evidence.get('error'): break
         staged=subprocess.run(['git','-C',str(work),'add','--intent-to-add','--',*[str(rel) for rel,_ in prepared.values()]],env=env,capture_output=True,timeout=remaining(30))
@@ -236,6 +265,7 @@ def run_coding_task(repository, objective, files, checks, timeout_seconds=30, ov
         result['status']='success' if result['has_changes'] and len(result['checks'])==len(commands) and all(c['returncode']==0 and not c.get('error') for c in result['checks']) and result['originals_unchanged'] and result['proposal_unchanged'] and checks_unchanged else 'failed'
         if result['status']=='success' and result['verification_unchanged']:
             result['review_seal']={'schema_version':2,'repository':str(repo),'base_commit':result['base_commit'],
+                'execution_mode':result['execution_mode'],'guest_provider':result.get('guest_provider'),
                 'original_hashes':result['input_hashes'],'proposal_hashes':proposal_hashes,
                 'verification_hashes':verification_hashes,'diff_hash':_digest(diff.stdout),
                 'checks_hash':_digest(json.dumps(result['checks'],sort_keys=True).encode('utf-8')),

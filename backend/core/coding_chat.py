@@ -9,6 +9,11 @@ import sys
 import threading
 import time
 import requests
+from .coding_guest_runner import (
+    CodingExecutionPolicyError,
+    SUPPORTED_EXECUTION_BACKENDS,
+    resolve_coding_execution_plan,
+)
 from .coding_workflow import run_coding_task, _relative, _inside, _save, STORE
 from .coding_recovery import admit_request, update_request, assert_request_inputs, is_request_cancelled, REQUESTS
 from .coding_process import run_bounded_check
@@ -63,8 +68,9 @@ def coding_request(body):
     result=None
     error_code=None
     try:
-        execution_backend=body.get('execution_backend','trusted_host')
-        if not isinstance(execution_backend,str) or execution_backend not in {'trusted_host','windows_vm'}:
+        raw_backend = body.get('execution_backend')
+        execution_backend = raw_backend if raw_backend is not None else (os.environ.get('AI_BS_EXECUTION_BACKEND', 'trusted_host').strip() or 'trusted_host')
+        if not isinstance(execution_backend,str) or execution_backend not in SUPPORTED_EXECUTION_BACKENDS:
             error_code='INVALID_EXECUTION_BACKEND'
             raise ValueError('Unsupported coding execution backend')
         quoted=re.findall(r'`([^`\r\n]+)`',prompt)
@@ -100,14 +106,13 @@ def coding_request(body):
         for value in quoted:
             if Path(value).resolve()==repo:
                 model_prompt=model_prompt.replace('`'+value+'`','the working repository')
-        allow_trusted = os.environ.get('AI_BS_ALLOW_TRUSTED_HOST_EXECUTION', '').strip().lower() in ('true', '1', 'yes')
-        if execution_backend == 'windows_vm':
-            # No guest dispatcher is wired into run_coding_task yet.
-            error_code='ISOLATION_UNAVAILABLE'
-            raise RuntimeError('Windows VM execution is unavailable: no accepted guest runner is connected. Host fallback is forbidden.')
-        if execution_backend == 'trusted_host' and not allow_trusted:
-            error_code='TRUSTED_HOST_UNAUTHORIZED'
-            raise RuntimeError('Trusted host execution is not authorized by administrator policy.')
+        try:
+            resolve_coding_execution_plan(execution_backend)
+        except CodingExecutionPolicyError as exc:
+            error_code = exc.error_code
+            if exc.error_code == 'INVALID_EXECUTION_BACKEND':
+                raise ValueError(str(exc)) from exc
+            raise RuntimeError(str(exc)) from exc
         admission=admit_request(str(repo),prompt,allowed,commands,context,execution_backend)
         _GENERATION.admission=admission
         def run_attempt(changes):
@@ -174,7 +179,7 @@ def coding_request(body):
             update_request(admission, state=result['state'],
                            attempt_ids=[item['task_id'] for item in attempts],final_task_id=result['task_id'])
         state=result['state']
-        text=f"Coding task {state}. Task ID: {result['task_id']}."
+        text=f"Coding task {state}. Task ID: {result['task_id']}. Execution mode: {result.get('execution_mode', execution_backend)}."
         if result.get('worktree'):text+=f" Working copy: {result['worktree']}."
         if result.get('diff'):text+=f" Review diff: {result['diff']}."
         for check in result.get('checks',[]):
