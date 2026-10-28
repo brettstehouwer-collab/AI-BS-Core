@@ -845,11 +845,11 @@ Client-side file upload workflows in BS-Chat (`ChatTab.jsx`, `MobileGeminiChat.j
 
 
 
-## ADR-107 - Administrative Bounded Execution Authorization & Isolated Fallback Protocol - 2026-10-28T04:21:00Z
+## ADR-107 - Administrative Bounded Trusted Host Execution Authorization & Strict VM Fail-Closed Policy - 2026-10-28T04:21:00Z
 Context:
-The candidate coding execution subsystem previously blocked all candidate test runs with ISOLATION_UNAVAILABLE when the Windows VirtualBox worker was not running or active, completely preventing local test execution and candidate proposal verification in BS-Chat.
+The candidate coding execution subsystem previously had no mechanism to authorize bounded local test execution on the host when developers or operators wished to test candidates under bounded Windows Job Object containment without an active VM worker. At the same time, AI-BS architectural rules dictate that when an isolated execution environment (windows_vm) is explicitly requested, it must fail closed if the isolated environment is unprovisioned or unavailable; silent substitution or fallback to host checks is strictly forbidden.
 Decision:
-1. Introduce explicit administrative authorization via environment variables: AI_BS_ALLOW_TRUSTED_HOST_EXECUTION=true and AI_BS_EXECUTION_BACKEND=trusted_host in both root .env and backend/.env.
-2. In backend/core/coding_workflow.py and backend/core/coding_chat.py, conditionally permit trusted host execution through Windows process containment (coding_process.run_bounded_check) when explicitly authorized.
-3. If windows_vm execution is requested while VM isolation is unprovisioned (AI_BS_VM_ENABLED != 'true') but trusted host execution is authorized by administrator policy, seamlessly fall back to bounded trusted_host execution, capturing full stdout, stderr, return codes, and generating cryptographic review seals without crashing.
-4. Protect snapshot integrity: the ~90 GB VirtualBox disk chain remains preserved intact on disk without arbitrary deletion.
+1. Introduce explicit administrative authorization via environment variables: AI_BS_ALLOW_TRUSTED_HOST_EXECUTION=true and AI_BS_EXECUTION_BACKEND=trusted_host in both root .env and ackend/.env.
+2. In ackend/core/coding_workflow.py and ackend/core/coding_chat.py, conditionally permit trusted host execution through bounded Windows process containment (coding_process.run_bounded_check) ONLY when execution_backend == 'trusted_host' and explicitly authorized by administrator policy.
+3. Strict Fail-Closed Rule for windows_vm: Whenever execution_backend == 'windows_vm' is requested and AI_BS_VM_ENABLED is not active, the system immediately fails closed with ISOLATION_UNAVAILABLE. Host fallback is strictly forbidden.
+4. Protect snapshot integrity: The ~90 GB VirtualBox disk chain (AI-BS-Eval-Base-20261023) remains preserved intact on disk as an offline managed unit, pending isolated containment profile sanitization (disabling NAT, clipboard, and drag-and-drop) and full guest acceptance testing.

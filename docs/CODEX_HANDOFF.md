@@ -3526,10 +3526,9 @@ Initial Manifest: docs/agent_sync/handoff_20261028T072926Z.json (Score: 7/7).
 Codex Continuation Instructions: Run python scripts/agent_sync/sync_gateway.py verify to confirm workspace parity, review Record 169 RAG ingestion, and resume engineering tasks.
 
 
-## Current Status & Handover: Record 171 - Candidate Execution Pipeline Authorized (2026-10-28T04:21:00Z)
+## Current Status & Handover: Record 171 - Bounded Trusted Host Execution Authorized & Strict VM Gate Preserved (2026-10-28T04:21:00Z)
 - Environment Flags: AI_BS_ALLOW_TRUSTED_HOST_EXECUTION=true and AI_BS_EXECUTION_BACKEND=trusted_host authorized in C:\AI-BS\.env and C:\AI-BS\backend\.env.
-- Backend Execution Handlers: backend/core/coding_workflow.py and backend/core/coding_chat.py cleanly route coding jobs through Windows bounded containment (coding_process.run_bounded_check) without failing on ISOLATION_UNAVAILABLE.
-- Canary Fixture Verified: Synthetic roundtrip with test_number_summary.py passed 7/7 unit tests; task status VERIFIED; cryptographic review seal successfully created.
-- Regression & Security Invariant: 38/38 offline baseline tests pass (test_chat_attachment_upload.py, test_router_mount_integrity.py, test_audio_router_trace.py). Zero external network calls.
-- Mirror Parity: 100% SHA-256 byte parity across all 4 frontend mirrors.
-- Sync Gateway Status: 7/7 sync score recorded in docs/agent_sync/handoff_20261028T082121Z.json.
+- Backend Execution Handlers: 	rusted_host requests run through bounded Windows containment (coding_process.run_bounded_check). Strict fail-closed policy maintained: windows_vm requests fail closed immediately with ISOLATION_UNAVAILABLE; zero host fallback.
+- Host Fixture Verification: The 7 Number Summary canary tests passed on host containment (VERIFIED, diff_hash: b14e0277...). VM isolation has NOT been accepted.
+- VirtualBox Status: 90 GB disk chain is intact and preserved. Execution profile remains uncertified pending remediating NAT/clipboard drift and passing guest acceptance.
+- Regression & Security: 38/38 offline tests passing. 100% SHA-256 byte parity across all 4 frontend mirrors.
