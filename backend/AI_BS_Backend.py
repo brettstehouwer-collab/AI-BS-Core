@@ -152,7 +152,7 @@ from fastapi import FastAPI, Header, Depends, WebSocket, WebSocketDisconnect, AP
 
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictStr
 
 from bullshit_polyglot import execute_polyglot_command
 
@@ -1334,6 +1334,8 @@ try:
     from routers.fe_express_router import router as fe_express_router
 
     app.include_router(fe_express_router)
+    from security.website_phone_access import router as website_access_router
+    app.include_router(website_access_router)
 
 except ImportError as e:
 
@@ -1415,16 +1417,7 @@ except ImportError as e:
 
 
 
-try:
-
-    from routers.rec_debut_router import router as rec_debut_router
-
-    app.include_router(rec_debut_router)
-
-except ImportError as e:
-
-    print(f"Warning: Could not load rec_debut_router: {e}")
-
+# rec_debut_router already mounted with legacy_router at line 1322
 
 
 try:
@@ -1776,7 +1769,7 @@ class AdminExecutionBoundaryMiddleware(BaseHTTPMiddleware):
     SENSITIVE_PREFIXES = (
         "/api/v1/system/powershell", "/api/v1/agent-harness", "/api/tools/execute",
         "/api/chat", "/v1/chat/completions", "/api/v1/hybrid-chat",
-        "/api/memory", "/api/memory-lab",
+        "/api/memory", "/api/memory-lab", "/api/artifacts", "/v1/ide/plan", "/api/comfy", "/api/media",
         "/api/executive", "/api/terminal", "/api/execute-code",
         "/polyglot-execution-engine", "/ai-bs-core/execute", "/stage-engine/orchestrate",
         "/v1/ide/execute-plan", "/v1/agent/execute-system", "/api/video/unreal",
@@ -2051,9 +2044,7 @@ app.include_router(upgrades_router)
 
 
 
-from routers.updater_router import router as updater_router
-
-app.include_router(updater_router)
+# updater_router already mounted at line 1250
 
 
 
@@ -2109,9 +2100,7 @@ app.include_router(email_client_router)
 
 
 
-from routers.chef_orders_router import router as chef_orders_router
-
-app.include_router(chef_orders_router)
+# chef_orders_router already mounted at line 1352
 
 
 
@@ -2794,70 +2783,23 @@ _MEDIA_VAULT_CACHE = {"timestamp": 0, "data": None}
 
 @app.get("/api/comfy/media")
 
-async def root_proxy_comfy_media(
-
-    filename: str, subfolder: str = "", type: str = "output"
-
-):
-
-    """Directly serves or proxies ComfyUI generated MP4 video and PNG image files."""
-
-    import os
-
-    from fastapi.responses import FileResponse, Response
-
-
-
-    # Fast direct local disk serving
-
-    comfy_out = r"C:\AI-BS\ComfyUI\ComfyUI\output"
-
-    target_path = os.path.join(comfy_out, subfolder, filename) if subfolder else os.path.join(comfy_out, filename)
-
-    target_path = os.path.abspath(target_path)
-
-    if target_path.startswith(r"C:\AI-BS") and os.path.exists(target_path) and os.path.isfile(target_path):
-
-        media_type = "video/mp4" if filename.endswith((".mp4", ".webm")) else ("image/webp" if filename.endswith(".webp") else "image/png")
-
-        return FileResponse(target_path, media_type=media_type)
-
-
-
-    # Fallback: Proxy to ComfyUI port 8189
-
-    import httpx
-
-    comfy_url = f"http://127.0.0.1:8189/view?filename={filename}&subfolder={subfolder}&type={type}"
-
+async def root_proxy_comfy_media(filename: str, subfolder: str = "", type: str = "output"):
+    """Protected file delivery with range support for images, video and audio."""
+    import mimetypes
+    from pathlib import Path
+    from core.media_delivery import media_output_path
+    from fastapi.responses import FileResponse
+    from fastapi import HTTPException
+    if type not in {'output', 'input', 'temp'}:
+        raise HTTPException(status_code=400, detail='Invalid media store')
     try:
-
-        async with httpx.AsyncClient(timeout=4.0) as client:
-
-            resp = await client.get(comfy_url)
-
-            if resp.status_code == 200:
-
-                media_type = resp.headers.get(
-
-                    "content-type",
-
-                    "video/mp4" if filename.endswith(".mp4") else "image/png",
-
-                )
-
-                return Response(content=resp.content, media_type=media_type)
-
-    except Exception:
-
-        pass
-
-
-
-    return Response(status_code=404, content=b"ComfyUI media asset not found")
-
-
-
+        path = media_output_path(Path(r'C:\AI-BS\ComfyUI\ComfyUI') / type, filename, subfolder)
+    except ValueError:
+        raise HTTPException(status_code=400, detail='Invalid media path')
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail='Media file not found')
+    mime = mimetypes.guess_type(path.name)[0] or 'application/octet-stream'
+    return FileResponse(path, media_type=mime, headers={'Cache-Control':'private, no-store', 'X-Content-Type-Options':'nosniff'})
 
 
 from fastapi.responses import FileResponse
@@ -3114,7 +3056,7 @@ def get_all_media_vault_items():
 
 
 
-app.include_router(gateway_router)
+# gateway_router already mounted at line 2124
 
 app.include_router(admin_telemetry_router)
 
@@ -3146,7 +3088,7 @@ app.include_router(vault_router)
 
 app.include_router(telemetry_matrix_router)
 
-app.include_router(syndication_router)
+# syndication_router already mounted at line 2098
 
 app.include_router(joey_hamilton_router, prefix="/api/clients/joey_hamilton")
 
@@ -8201,21 +8143,26 @@ async def get_documents_tree_alias():
 @app.get("/api/read", tags=["Documents"])
 
 async def read_document_file_alias(path: Optional[str] = None, filepath: Optional[str] = None):
+    import hashlib
     from security.document_retention import document_retention_metadata
+    from security.document_store import document_path_lock
     from routers.shared_drive_router import DRIVE_ROOT
     target = _document_file_path(path or filepath)
     if path and filepath and target != _document_file_path(filepath):
         raise HTTPException(status_code=400, detail="Conflicting document paths.")
-    if not target.is_file():
-        raise HTTPException(status_code=404, detail="Document not found.")
-    if target.suffix.lower() not in _document_text_extensions():
-        raise HTTPException(status_code=415, detail="Use the matching import or preview tool for this document format.")
-    try:
-        content = target.read_text(encoding="utf-8-sig")
-    except UnicodeDecodeError:
-        raise HTTPException(status_code=415, detail="Document is not UTF-8 text; import it before editing.")
-    return {"path": str(target), "content": content, "filename": target.name,
-            **document_retention_metadata(target, DRIVE_ROOT)}
+    with document_path_lock(target):
+        if not target.is_file():
+            raise HTTPException(status_code=404, detail="Document not found.")
+        if target.suffix.lower() not in _document_text_extensions():
+            raise HTTPException(status_code=415, detail="Use the matching import or preview tool for this document format.")
+        try:
+            raw = target.read_bytes()
+            content = raw.decode("utf-8-sig").replace('\r\n', '\n').replace('\r', '\n')
+        except UnicodeDecodeError:
+            raise HTTPException(status_code=415, detail="Document is not UTF-8 text; import it before editing.")
+        return {"path": str(target), "content": content, "filename": target.name,
+                "revision": hashlib.sha256(raw).hexdigest(),
+                **document_retention_metadata(target, DRIVE_ROOT)}
 
 
 
@@ -8224,6 +8171,8 @@ class DocumentSaveRequest(BaseModel):
     path: Optional[str] = None
     filepath: Optional[str] = None
     create_only: bool = False
+    preserve_unchanged_bytes: bool = True
+    expected_revision: Optional[StrictStr] = None
 
     content: str
 
@@ -8233,8 +8182,10 @@ class DocumentSaveRequest(BaseModel):
 
 async def save_document_file_alias(req: DocumentSaveRequest):
 
+    import hashlib
     import tempfile
     from security.document_retention import assert_document_write_allowed
+    from security.document_store import document_path_lock
     from routers.shared_drive_router import DRIVE_ROOT
     target = _document_file_path(req.path or req.filepath)
     assert_document_write_allowed(target, DRIVE_ROOT)
@@ -8242,28 +8193,62 @@ async def save_document_file_alias(req: DocumentSaveRequest):
         raise HTTPException(status_code=400, detail="Conflicting document paths.")
     if target.suffix.lower() not in _document_text_extensions():
         raise HTTPException(status_code=415, detail="Text save cannot replace a binary document. Save an editable text copy instead.")
-    if target.is_dir():
-        raise HTTPException(status_code=400, detail="Document path is a directory.")
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path = None
-    try:
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent,
-                                         prefix=".document-", suffix=".tmp", delete=False) as temporary:
-            temporary_path = Path(temporary.name)
-            temporary.write(req.content)
-            temporary.flush()
-            os.fsync(temporary.fileno())
-        if req.create_only:
-            try:
-                os.link(temporary_path, target)
-            except FileExistsError:
-                raise HTTPException(status_code=409, detail="A document with that name already exists.")
-        else:
-            os.replace(temporary_path, target)
-    finally:
-        if temporary_path is not None and temporary_path.exists():
-            temporary_path.unlink()
-    return {"status": "success", "path": str(target), "message": f"Saved {target.name}"}
+    with document_path_lock(target):
+        # Retention and create-only collision checks take precedence over revision
+        # validation, including requests that would otherwise be a same-text no-op.
+        assert_document_write_allowed(target, DRIVE_ROOT)
+        if target.is_dir():
+            raise HTTPException(status_code=400, detail="Document path is a directory.")
+        exists = target.is_file()
+        if req.create_only and exists:
+            raise HTTPException(status_code=409, detail="A document with that name already exists.")
+        if not req.create_only:
+            if req.expected_revision is None:
+                raise HTTPException(status_code=428, detail="Saving requires expected_revision from the loaded document. Keep your draft and reload; new documents require create_only.")
+            if (len(req.expected_revision) != 64
+                    or any(character not in '0123456789abcdef' for character in req.expected_revision)):
+                raise HTTPException(status_code=400, detail="expected_revision must be the loaded document's SHA-256 revision.")
+            if not exists:
+                raise HTTPException(status_code=409, detail="The document no longer exists. Keep your draft and create a separate copy.")
+            raw = target.read_bytes()
+            revision = hashlib.sha256(raw).hexdigest()
+            if req.expected_revision != revision:
+                raise HTTPException(status_code=409, detail="The document changed after it was loaded. Keep your draft and reload before saving.")
+            if req.preserve_unchanged_bytes:
+                try:
+                    existing = raw.decode("utf-8-sig")
+                except UnicodeDecodeError:
+                    existing = None
+                normalize = lambda text: text.replace('\r\n', '\n').replace('\r', '\n')
+                if existing is not None and normalize(existing) == normalize(req.content):
+                    return {"status": "success", "path": str(target), "message": f"Saved {target.name}",
+                            "revision": revision, "unchanged": True}
+        target.parent.mkdir(parents=True, exist_ok=True)
+        temporary_path = None
+        promoted = False
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent,
+                                             prefix=".document-", suffix=".tmp", delete=False) as temporary:
+                temporary_path = Path(temporary.name)
+                temporary.write(req.content)
+                temporary.flush()
+                os.fsync(temporary.fileno())
+            revision = hashlib.sha256(temporary_path.read_bytes()).hexdigest()
+            if req.create_only:
+                try:
+                    os.link(temporary_path, target)
+                except FileExistsError:
+                    raise HTTPException(status_code=409, detail="A document with that name already exists.")
+            else:
+                os.replace(temporary_path, target)
+            promoted = True
+        finally:
+            # Retain the staged bytes when flush/link/replace fails. Never repeat
+            # the request or discard the only server-side copy of a failed save.
+            if promoted and temporary_path is not None and temporary_path.exists():
+                temporary_path.unlink()
+        return {"status": "success", "path": str(target), "message": f"Saved {target.name}",
+                "revision": revision, "unchanged": False}
 
 
 
@@ -8808,6 +8793,11 @@ async def generate_ide_plan(request: Request):
 
 
 
+        from core.optional_web_search import optional_web_context
+        web_context = await optional_web_context(data.get("web_search_query", ""), data.get("use_web_search", False))
+        if web_context:
+            system_prompt += "\n\n" + web_context
+
         ollama_model = resolve_ollama_model(data.get("model", "qwen2.5-coder:latest"))
 
 
@@ -9014,7 +9004,14 @@ async def execute_ide_plan(request: Request):
 
 
 
+from pydantic import StrictBool
+
+
 class HybridStreamPayload(BaseModel):
+
+    use_web_search: StrictBool = False
+
+    web_search_query: str = ""
 
     mode: Optional[str] = None
 
@@ -9059,6 +9056,11 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
             body = {}
 
 
+
+    from core.optional_web_search import web_search_response
+    research = await web_search_response(body)
+    if research is not None:
+        return research
 
     from core.coding_chat import coding_request, is_coding_request
 
@@ -9184,6 +9186,11 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
 
 
 
+    from core.optional_web_search import optional_web_context
+    web_context = await optional_web_context(body.get("web_search_query", ""), body.get("use_web_search", False))
+    if web_context:
+        formatted_messages.append({"role": "system", "content": web_context})
+
     # Batch mode: big multi-part prompts are split, checkpointed, memory-carried and auto-continued
 
     try:
@@ -9192,7 +9199,7 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
 
         _last_user = next((m.get("content", "") for m in reversed(formatted_messages) if m.get("role") == "user"), "")
 
-        if is_batchable(_last_user):
+        if not body.get("use_web_search") and is_batchable(_last_user):
 
             from fastapi.responses import StreamingResponse as _SR
 
@@ -9423,6 +9430,10 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
         # 1. Emit cognitive metadata event immediately on chunk 0
 
         yield meta_header
+        if web_context:
+            yield ("> Web search unavailable for this message.\n\n" if "unavailable" in web_context
+                   else "> Web search returned no usable sources.\n\n" if "no usable sources" in web_context
+                   else "> Web search enabled; retrieved sources are available for this answer.\n\n")
 
         await asyncio.sleep(0.01)
 
@@ -9706,13 +9717,22 @@ async def chat_endpoint(request: Request):
 
 
 
-    from core.coding_chat import coding_request
+    from core.optional_web_search import web_search_response
+    research = await web_search_response(payload_data)
+    if research is not None:
+        return research
 
+    from core.coding_chat import coding_request
     coding_reply = await asyncio.to_thread(coding_request, payload_data)
 
     if coding_reply is not None:
 
         return coding_reply
+
+    from core.optional_web_search import optional_web_context
+    web_context = await optional_web_context(payload_data.get("web_search_query", ""), payload_data.get("use_web_search", False))
+    if web_context:
+        payload_data["messages"] = list(payload_data.get("messages", [])) + [{"role": "system", "content": web_context}]
 
     if EFFICIENCY_MODE_ENABLED:
 
@@ -10910,63 +10930,8 @@ async def chat_endpoint(request: Request):
 
                 ]:
 
-                    img_url = tool_result.get("image_url")
-
-                    filename = tool_result.get("filename")
-
-                    if not img_url and filename:
-
-                        img_url = f"/api/comfy/media?filename={filename}&subfolder=&type=output"
-
-
-
-                    if img_url:
-
-                        clean_p = (t_args or {}).get("prompt", "Generated Media")
-
-                        safe_alt = re.sub(r'[\r\n\[\]"\'`]+', ' ', clean_p).strip()[:70] or "Generated ComfyUI Media"
-
-                        is_video = (
-
-                            t_name == "generate_comfy_video"
-
-                            or (filename and any(filename.lower().endswith(ext) for ext in [".mp4", ".webm", ".mov", ".mkv"]))
-
-                            or any(ext in img_url.lower() for ext in [".mp4", ".webm", ".mov", ".mkv"])
-
-                        )
-
-                        if is_video:
-
-                            dur_sec = tool_result.get("duration_seconds")
-
-                            fps_val = tool_result.get("fps", 16)
-
-                            frames_val = tool_result.get("num_frames")
-
-                            dur_info = f" ({dur_sec}s @ {fps_val}fps, {frames_val} frames)" if dur_sec else ""
-
-                            media_markdown = f"<video controls autoPlay loop muted playsinline src='{img_url}' style='max-width:100%; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.5);'></video>"
-
-                            content_text = (
-
-                                f"🎬 **Generated ComfyUI Video Output{dur_info}:**\n\n{media_markdown}\n\n[📥 Direct Video Download / High-Res View]({img_url})\n\n---\n*Rendered in cinematic HD via RTX 4090 Wan2.1 pipeline ({dur_sec or '3-8'}s duration).* What's our next creative shot?"
-
-                            )
-
-                        else:
-
-                            media_markdown = f"![{safe_alt}]({img_url})"
-
-                            content_text = (
-
-                                f"🎬 **Generated ComfyUI Image:**\n\n{media_markdown}\n\n[📥 Direct Image Download / High-Res View]({img_url})\n\n---\n*Rendered in high resolution (SDXL 1024x1024) via local RTX 4090.* Razor sharp and ready to roll! What are we building next?"
-
-                            )
-
-                    else:
-
-                        content_text = f"🎬 **ComfyUI Task Executed:**\n\n```json\n{json.dumps(tool_result, indent=2)}\n```"
+                    from core.media_delivery import format_media_result
+                    content_text = format_media_result(tool_result, (t_args or {}).get('prompt', 'Generated media'))
 
                 elif t_name == "interrogate_image":
 
@@ -12998,125 +12963,71 @@ os.makedirs(UPLOAD_ATTACHMENTS_DIR, exist_ok=True)
 
 
 @app.post("/api/chat/attach")
-
 async def chat_attach_file(file: UploadFile = File(...)):
-
     """Receives file upload for ChatTab analysis, extracts text/metadata, and returns attachment payload."""
-
     try:
-
-        safe_filename = file.filename or "uploaded_file.bin"
-
+        os.makedirs(UPLOAD_ATTACHMENTS_DIR, exist_ok=True)
+        raw_filename = file.filename or "uploaded_file.bin"
+        safe_filename = os.path.basename(raw_filename).strip()
+        if not safe_filename:
+            safe_filename = "uploaded_file.bin"
         file_location = os.path.join(UPLOAD_ATTACHMENTS_DIR, safe_filename)
-
         contents = await file.read()
-
         with open(file_location, "wb") as f:
-
             f.write(contents)
 
-
-
         file_ext = os.path.splitext(safe_filename)[1].lower()
-
         is_image = file_ext in [".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"]
-
         text_content = ""
 
-
-
         if is_image:
-
             b64_str = base64.b64encode(contents).decode("utf-8")
-
             try:
-
                 import sys
-
                 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
                 from aibs_computer_vision import AIBSImageAnalyzer
-
                 analyzer = AIBSImageAnalyzer()
-
                 vision_analysis = analyzer.analyze_image_for_llm(file_location)
-
                 text_content = f"[IMAGE_ATTACHMENT:{safe_filename}]\n{vision_analysis}"
-
             except Exception as cv_e:
-
                 text_content = f"[IMAGE_ATTACHMENT:{safe_filename}]\n[Vision Error: {str(cv_e)}]"
-
         elif file_ext == ".pdf":
-
             try:
-
                 import fitz
-
                 doc = fitz.open(stream=contents, filetype="pdf")
-
                 text_content = ""
-
                 for page in doc:
-
                     extracted = page.get_text()
-
                     if isinstance(extracted, str):
-
                         text_content += extracted
-
                     else:
-
                         text_content += str(extracted)
-
-                text_content = text_content.replace("\x00", "")[:15000]
-
+                text_content = text_content.replace("\x00", "")
             except Exception as e:
-
                 text_content = f"[PDF File: {safe_filename}, Extraction Error: {str(e)}]"
-
         else:
-
             try:
-
-                text_content = contents.decode("utf-8")
-
-                text_content = text_content.replace("\x00", "")[:15000]
-
+                text_content = contents.decode("utf-8").replace("\x00", "")
             except UnicodeDecodeError:
-
-                text_content = f"[Binary File: {file.filename}, Size: {len(contents)} bytes]"
-
-
+                try:
+                    text_content = contents.decode("latin-1", errors="replace").replace("\x00", "")
+                except Exception:
+                    text_content = f"[Binary File: {safe_filename}, Size: {len(contents)} bytes]"
 
         return {
-
             "status": "success",
-
             "file": {
-
-                "name": file.filename,
-
+                "name": safe_filename,
                 "size": len(contents),
-
                 "ext": file_ext,
-
                 "is_image": is_image,
-
                 "path": file_location,
-
                 "content": text_content,
-
             },
-
         }
-
     except Exception as e:
-
         return JSONResponse(
-
             status_code=500, content={"status": "error", "message": str(e)}
-
         )
 
 
@@ -15406,6 +15317,9 @@ async def catch_all(request: Request, full_path: str):
                 # 1. Thread: Web Search
 
                 async def fetch_web():
+
+                    if req_json.get("use_web_search") is not True:
+                        return ""
 
                     try:
 

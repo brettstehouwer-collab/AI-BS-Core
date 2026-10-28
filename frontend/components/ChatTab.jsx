@@ -3,7 +3,7 @@ import { stageRagSource } from '/src/utils/ragSourceStage.js';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -12,6 +12,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppStore } from './useAppStore';
 import ChatToolControlBar from './ChatToolControlBar';
 import ChatContextToolbar from './ChatContextToolbar';
+import ChatWorkspaceTools from './ChatWorkspaceTools';
 import AgentPlanReviewCard from './AgentPlanReviewCard';
 import AutonomousMissionCard from './AutonomousMissionCard';
 import CodingTaskReviewCard from './CodingTaskReviewCard';
@@ -1097,15 +1098,12 @@ function DesktopCognitiveMetaHeader({ meta }) {
 
   if (!meta) return null;
 
-  const t = meta.live_telemetry;
-  const steps = meta.steps || [
-    { id: 1, name: "Ingestion & Intent Analysis", status: "done", detail: "Intent Classified" },
-    { id: 2, name: "Model & VRAM Route", status: "done", detail: `${meta.display_name || meta.model}` },
-    { id: 3, name: "Personal Memory Vault", status: "done", detail: "Vault Verified (0.12ms)" },
-    { id: 4, name: "CoT Reasoning Trace (Point A ➔ ∞)", status: "done", detail: "CoT Synthesized" },
-    { id: 5, name: "Token Stream Generation", status: "done", detail: "NVML Streaming" },
-    { id: 6, name: "Sandbox Verification", status: "done", detail: "Host Verified" }
-  ];
+  // Legacy inline metadata is a response claim, not an authenticated runtime receipt.
+  const t = null;
+  const steps = Array.isArray(meta.steps) ? meta.steps.map(step => ({
+    id: step.id, name: step.name, status: 'unverified',
+    detail: 'Reported stage; no runtime completion receipt attached.'
+  })) : [];
 
   return (
     <div style={{ marginBottom: '10px', fontSize: '0.78rem' }}>
@@ -1137,7 +1135,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
           fontWeight: 500,
           fontSize: '0.75rem'
         }}>
-          ⚡ {meta.device || 'RTX 4090'}
+          Reported device: {meta.device || 'Not recorded'}
         </span>
         <span style={{
           display: 'inline-flex',
@@ -1151,7 +1149,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
           fontWeight: 600,
           fontSize: '0.75rem'
         }}>
-          ♾️ Point A ➔ Point ∞
+          Reported route metadata
         </span>
         <button
           onClick={() => setShowWhy(!showWhy)}
@@ -1169,7 +1167,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
             transition: 'all 0.15s ease'
           }}
         >
-          <span>ℹ️ Why this LLM?</span>
+          <span>ℹ️ Reported routing rationale</span>
         </button>
         <button
           onClick={() => setShowStepper(!showStepper)}
@@ -1187,7 +1185,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
             transition: 'all 0.15s ease'
           }}
         >
-          <span>🪜 Pipeline ({steps.length}/{steps.length}) {showStepper ? '▲' : '▼'}</span>
+          <span>🪜 Reported stages ({steps.length}) {showStepper ? '▲' : '▼'}</span>
         </button>
       </div>
 
@@ -1253,16 +1251,14 @@ function DesktopCognitiveMetaHeader({ meta }) {
           boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
         }}>
           <div style={{ color: '#fbbf24', fontWeight: 600, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>💡 Cognitive Model Routing & Execution Rationale:</span>
+            <span>💡 Routing rationale reported in response metadata:</span>
           </div>
           <div style={{ color: '#cbd5e1', fontSize: '0.78rem' }}>
-            {meta.reason || 'Sovereign local inference with zero cloud dependency.'}
+            {meta.reason || 'No routing rationale was recorded.'}
           </div>
           <div style={{ marginTop: '8px', fontSize: '0.72rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <span>Thinking Scope: <strong style={{ color: '#c084fc' }}>{meta.thinking_scope || 'Point A to Point Infinity (Full Exhaustive Chain-of-Thought)'}</strong></span>
-              <span>Allocated Context: <strong style={{ color: '#93c5fd' }}>{meta.context_tokens ? `${meta.context_tokens.toLocaleString()} tokens` : 'Adaptive'}</strong></span>
-              <span>VRAM Mode: <strong style={{ color: '#34d399' }}>Locked Hot in 24GB (keep_alive: -1)</strong></span>
+              <span>Inline metadata does not verify model execution, hardware use, memory retrieval, or sandbox checks.</span>
             </div>
             {t && (
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', color: '#64748b', fontSize: '0.7rem', marginTop: '2px' }}>
@@ -1288,8 +1284,8 @@ function DesktopCognitiveMetaHeader({ meta }) {
           boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
         }}>
           <div style={{ color: '#c084fc', fontWeight: 600, marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>✦ Sovereign Execution Journey (Step-by-Step)</span>
-            <span style={{ fontSize: '0.72rem', color: '#34d399' }}>✓ {steps.length} / {steps.length} Complete</span>
+            <span>Reported pipeline stages</span>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Completion not verified</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px' }}>
             {steps.map(step => (
@@ -1691,7 +1687,11 @@ function FormattedMessageContent({ content, role }) {
 
 function ReasoningInspector({ msg }) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const clientDuration = Number.isFinite(msg.client_elapsed_ms) && msg.client_elapsed_ms >= 0;
+  const reportedDuration = Number.isFinite(msg.execution_time_ms) && msg.execution_time_ms > 0;
+  const duration = clientDuration ? `${Math.round(msg.client_elapsed_ms)} ms (client measured)`
+    : reportedDuration ? `${Math.round(msg.execution_time_ms)} ms (reported)` : 'Not recorded';
+  const dispatch = msg.decision_context;
 
   return (
     <div style={{ marginTop: '10px', borderTop: '1px dashed rgba(255,255,255,0.12)', paddingTop: '6px' }}>
@@ -1713,7 +1713,7 @@ function ReasoningInspector({ msg }) {
       >
         <span>🧠 {isOpen ? 'Hide AI Decision Inspector' : 'Inspect AI Reasoning & Execution Trace'}</span>
         <span style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
-          ({msg.execution_time_ms ? `${msg.execution_time_ms} ms` : 'Fast API Edge'})
+          ({duration})
         </span>
       </button>
 
@@ -1728,38 +1728,44 @@ function ReasoningInspector({ msg }) {
           color: '#cbd5e1'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: '#93c5fd', fontWeight: 600 }}>
-            <span>Model: {msg.model || 'stehouwer_llm'}</span>
-            <span>Latency: {msg.execution_time_ms || 120} ms</span>
+            <span>Response label: {msg.model || 'Not recorded'}</span>
+            <span>Duration: {duration}</span>
           </div>
+
+          {dispatch && (
+            <div style={{ color: '#94a3b8', marginBottom: '8px' }}>
+              <div>Client request: {dispatch.operation || 'Not recorded'}</div>
+              <div>Endpoint: {dispatch.route || 'Not recorded'}</div>
+              <div>Client state: {dispatch.status || 'Not recorded'}</div>
+              <div>Request routing does not confirm the action completed.</div>
+            </div>
+          )}
 
           {msg.tool_trace && msg.tool_trace.tool_name !== 'none' ? (
             <div style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '8px', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
               <div style={{ color: '#34d399', fontWeight: 700, marginBottom: '4px' }}>
-                🛠️ Dispatched Tool: {msg.tool_trace.tool_name}
+                🛠️ Reported Tool: {msg.tool_trace.tool_name}
               </div>
               <div style={{ color: '#94a3b8', fontFamily: 'monospace', fontSize: '0.75rem' }}>
                 Arguments: {JSON.stringify(msg.tool_trace.arguments)}
               </div>
               <div style={{ color: msg.tool_trace.status === 'success' ? '#34d399' : '#f87171', fontSize: '0.72rem', marginTop: '4px' }}>
-                Status: {msg.tool_trace.status}
+                Reported status: {msg.tool_trace.status || 'Not recorded'}
               </div>
             </div>
           ) : (
             <div style={{ color: '#94a3b8', fontStyle: 'italic' }}>
-              Direct neural response generated without external tool invocation.
+              No per-message execution trace was recorded. This does not establish whether tools were used.
             </div>
           )}
 
-          {/* Vector Memory Vault Telemetry */}
+          {/* A static service configuration cannot prove per-message retrieval. */}
           <div style={{ marginTop: '8px', padding: '6px 8px', background: 'rgba(30, 41, 59, 0.6)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.05)', fontSize: '0.72rem' }}>
             <div style={{ color: '#a78bfa', fontWeight: 600, marginBottom: '2px' }}>
-              🧠 Vector Memory Vault:
+              🧠 Memory retrieval:
             </div>
             <div style={{ color: '#94a3b8' }}>
-              Collections: <code style={{ color: '#c084fc' }}>ai_bs_context_memory</code> (768d adaptive) + <code style={{ color: '#c084fc' }}>industry_knowledge_vault</code> (384d adaptive)
-            </div>
-            <div style={{ color: '#64748b', fontSize: '0.68rem', marginTop: '2px' }}>
-              ChromaDB Port 8001 | Dual-Port Ollama Embeddings (11434/11435) | Zero-Mock
+              No per-message memory retrieval evidence was attached to this reply.
             </div>
           </div>
         </div>
@@ -3071,7 +3077,7 @@ const SLASH_COMMANDS = [
   }
 ];
 
-export default function ChatTab({ isNested = false }) {
+export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const storedChatMessages = useAppStore(state => state.chatMessages);
   const storedFooterInput = useAppStore(state => state.footerInput);
@@ -3190,6 +3196,8 @@ export default function ChatTab({ isNested = false }) {
     }
   };
 
+  const [workspacePanel, setWorkspacePanel] = useState(null);
+  const closeWorkspacePanel = useCallback(() => setWorkspacePanel(null), []);
   const [activeContexts, setActiveContexts] = useState({
     file: false,
     terminal: false,
@@ -3301,6 +3309,11 @@ export default function ChatTab({ isNested = false }) {
       refreshWirelessCastStatus();
     }
   }, [showWirelessCastHub, BACKEND_URL]);
+
+  // A retained request also opens controls after lazy mounting; repeated picks reopen them.
+  useEffect(() => {
+    if (wirelessCastOpenRequest > 0) setShowWirelessCastHub(true);
+  }, [wirelessCastOpenRequest]);
 
   useEffect(() => {
     const onToggleCast = () => {
@@ -3619,23 +3632,111 @@ export default function ChatTab({ isNested = false }) {
     setIsUploadingFile(true);
     const newAttachments = [];
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
+    // Helper: read text/code file client-side via FileReader
+    const readLocalFileAsText = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read file client-side'));
+        reader.readAsText(targetFile);
+      });
+    };
 
+    // Helper: read image file client-side as data URL
+    const readLocalFileAsDataUrl = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read image client-side'));
+        reader.readAsDataURL(targetFile);
+      });
+    };
+
+    for (const file of files) {
+      const ext = (file.name.includes('.') ? `.${file.name.split('.').pop().toLowerCase()}` : '').trim();
+      const isImage = file.type?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'].includes(ext);
+      const isTextOrCode = file.type?.startsWith('text/') ||
+        ['.txt', '.md', '.py', '.js', '.jsx', '.ts', '.tsx', '.json', '.html', '.css', '.scss',
+         '.c', '.cpp', '.h', '.hpp', '.rs', '.go', '.sql', '.sh', '.bat', '.ps1', '.yaml',
+         '.yml', '.toml', '.xml', '.csv', '.tsv', '.env', '.log', '.diff', '.patch'].includes(ext);
+
+      let uploadSucceeded = false;
+
+      // 1. Attempt upload to backend endpoint with defensive response reading
       try {
+        const formData = new FormData();
+        formData.append('file', file);
+
         const res = await fetch(`${BACKEND_URL}/api/chat/attach`, {
           method: 'POST',
+          headers: {
+            'X-Client-ID': 'stehouwer_publishing'
+          },
           body: formData
         });
-        const data = await res.json();
-        if (res.ok && data.status === 'success') {
+
+        // Defensive response reading: never call res.json() directly
+        const rawText = await res.text();
+        let data = null;
+        if (rawText && rawText.trim()) {
+          try {
+            data = JSON.parse(rawText);
+          } catch {
+            data = null;
+          }
+        }
+
+        if (res.ok && data && data.status === 'success' && data.file) {
           newAttachments.push(data.file);
+          uploadSucceeded = true;
         } else {
-          setErrorPopup(`Failed to upload ${file.name}: ${data.message || 'Error'}`);
+          // If server returned an error payload, record message
+          const serverError = data?.message || data?.detail || data?.error || (rawText && !rawText.trim().startsWith('<') ? rawText.trim() : null);
+          if (!isTextOrCode && !isImage) {
+            setErrorPopup(`Upload error for ${file.name}: ${serverError || `Server returned HTTP ${res.status}`}`);
+          }
         }
       } catch (err) {
-        setErrorPopup(`Upload error for ${file.name}: ${err.message}`);
+        // Network / connection error; fallback will attempt client-side extraction if text/image
+        if (!isTextOrCode && !isImage) {
+          setErrorPopup(`Upload error for ${file.name}: ${err.message || 'Network error'}`);
+        }
+      }
+
+      // 2. Client-side fallback if backend was offline or returned non-success for text/code/image
+      if (!uploadSucceeded) {
+        if (isTextOrCode) {
+          try {
+            const rawContent = await readLocalFileAsText(file);
+            const sanitized = (rawContent || '').replace(/\x00/g, '');
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: false,
+              path: '',
+              content: sanitized
+            });
+            uploadSucceeded = true;
+          } catch (readErr) {
+            setErrorPopup(`Failed to read ${file.name} locally: ${readErr.message}`);
+          }
+        } else if (isImage) {
+          try {
+            const dataUrl = await readLocalFileAsDataUrl(file);
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: true,
+              path: '',
+              content: `[IMAGE_ATTACHMENT:${file.name}]\n[Client-Staged Data URL: ${dataUrl.slice(0, 100)}...]`
+            });
+            uploadSucceeded = true;
+          } catch (readErr) {
+            setErrorPopup(`Failed to read image ${file.name} locally: ${readErr.message}`);
+          }
+        }
       }
     }
 
@@ -5655,6 +5756,7 @@ export default function ChatTab({ isNested = false }) {
       }
 
       if (command === '/blast') {
+        const blastStartedAt = performance.now();
         const target = rest.trim();
         if (!target) {
           setChatMessages(prev => [
@@ -5717,7 +5819,9 @@ export default function ChatTab({ isNested = false }) {
               {
                 role: 'assistant',
                 content: formatted,
-                model: 'AST Blast-Radius Engine'
+                model: 'AST Blast-Radius Engine',
+                client_elapsed_ms: performance.now() - blastStartedAt,
+                decision_context: { operation: 'AST dependency impact lookup', route: '/api/executive/blast', status: data.status || `HTTP ${res.status}` }
               }
             ]);
           }
@@ -5737,6 +5841,7 @@ export default function ChatTab({ isNested = false }) {
       }
 
       if (command === '/graph' || command === '/rebuild-graph') {
+        const graphStartedAt = performance.now();
         try {
           const res = await fetch(`${BACKEND_URL}/api/executive/graph/build`, {
             method: 'GET',
@@ -5748,7 +5853,9 @@ export default function ChatTab({ isNested = false }) {
             {
               role: 'assistant',
               content: `✅ **AST Codebase Graph Rebuilt Successfully!**\n- **Indexed Nodes:** \`${data.nodes}\` (FastAPI routes, router modules, React components)\n- **Indexed Edges:** \`${data.edges}\` (API fetch calls, component trees, router mounts)\n- **Database:** \`backend/aibs_master.db\` (\`blast_radius_nodes\`, \`blast_radius_edges\`)\n\nYou can now run \`/blast <component_or_route>\` to inspect dependencies before applying any patch.`,
-              model: 'AST Blast-Radius Engine'
+              model: 'AST Blast-Radius Engine',
+              client_elapsed_ms: performance.now() - graphStartedAt,
+              decision_context: { operation: 'Rebuild AST dependency graph', route: '/api/executive/graph/build', status: data.status || `HTTP ${res.status}` }
             }
           ]);
         } catch (err) {
@@ -5767,6 +5874,7 @@ export default function ChatTab({ isNested = false }) {
       }
 
       if (command === '/distill') {
+        const distillStartedAt = performance.now();
         setChatMessages(prev => [
           ...prev,
           {
@@ -5788,14 +5896,16 @@ export default function ChatTab({ isNested = false }) {
             `- **Unsloth / PEFT 4-bit Config:** \`${data.config_path}\`\n` +
             `- **Target GPU:** NVIDIA GeForce RTX 4090 (24GB VRAM, ~13.5GB Headroom Ceiling)\n` +
             `- **Base Architecture:** \`Qwen/Qwen2.5-Coder-7B-Instruct\` (4-bit NF4, rank=16, alpha=32)\n\n` +
-            `*Nightly pipeline is ready to distill your workspace architecture, port maps, and coding style directly into local weights.*`;
+            `*Dataset and training configuration prepared. Model training and a nightly schedule were not verified by this request.*`;
 
           setChatMessages(prev => [
             ...prev,
             {
               role: 'assistant',
               content: reply,
-              model: 'Sovereign QLoRA Engine'
+              model: 'Sovereign QLoRA Engine',
+              client_elapsed_ms: performance.now() - distillStartedAt,
+              decision_context: { operation: 'Prepare distillation dataset and configuration', route: '/api/executive/distill', status: data.status || `HTTP ${res.status}` }
             }
           ]);
         } catch (err) {
@@ -6664,6 +6774,7 @@ export default function ChatTab({ isNested = false }) {
       let streamingSucceeded = false;
 
       if (useHybridStream) {
+        const streamStartedAt = performance.now();
         // --- HYBRID REASONING ENGINE (STREAMING) ---
         // Push an empty assistant message first
         setChatMessages(prev => [
@@ -6672,7 +6783,8 @@ export default function ChatTab({ isNested = false }) {
             role: 'assistant',
             content: '',
             model: `${targetModel} (Hybrid Stream)`,
-            execution_time_ms: 0
+            execution_time_ms: null,
+            decision_context: { operation: activeContexts.web ? 'Web research requested' : 'Hybrid chat requested', route: '/api/v1/hybrid-chat/stream', status: 'requesting' }
           }
         ]);
 
@@ -6686,7 +6798,7 @@ export default function ChatTab({ isNested = false }) {
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true }),
+            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
             signal: controller.signal,
           });
 
@@ -6728,6 +6840,9 @@ export default function ChatTab({ isNested = false }) {
             }
 
             if (assistantMessage.trim().length > 0) {
+              setChatMessages(prev => prev.map((msg, index) => index === prev.length - 1 && msg.role === 'assistant'
+                ? { ...msg, client_elapsed_ms: performance.now() - streamStartedAt,
+                    decision_context: { ...msg.decision_context, status: 'stream_received' } } : msg));
               streamingSucceeded = true;
               if (autoSpeak) {
                 speakText(assistantMessage);
@@ -6739,6 +6854,9 @@ export default function ChatTab({ isNested = false }) {
               (streamErr.status === 401 || streamErr.status === 403)) throw streamErr;
           console.warn('Streaming failed, engaging fallback endpoint...', streamErr);
           if (assistantMessage.trim().length > 0) {
+            setChatMessages(prev => prev.map((msg, index) => index === prev.length - 1 && msg.role === 'assistant'
+              ? { ...msg, client_elapsed_ms: performance.now() - streamStartedAt,
+                  decision_context: { ...msg.decision_context, status: 'stream_interrupted' } } : msg));
             streamingSucceeded = true;
           } else {
             // Pop the empty placeholder if no tokens received
@@ -6762,6 +6880,8 @@ export default function ChatTab({ isNested = false }) {
           prompt: isPlanMode ? rawText : undefined,
           active_file: isPlanMode ? 'C:\\AI-BS\\backend\\AI_BS_Backend.py' : undefined,
           context_flags: isPlanMode ? activeContexts : undefined,
+          use_web_search: !!activeContexts.web,
+          web_search_query: activeContexts.web ? rawText : undefined,
           target_device: targetDevice,
           stream: false
         });
@@ -6810,7 +6930,9 @@ export default function ChatTab({ isNested = false }) {
             role: 'assistant',
             content: botResponse,
             model: data.model || targetModel,
-            execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : Date.now() - responseStartedAt,
+            execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : null,
+            client_elapsed_ms: Date.now() - responseStartedAt,
+            decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
             tool_trace: data.tool_trace || null,
             planData: planData,
             codingTaskId: data.coding_task?.task_id || null
@@ -7804,7 +7926,12 @@ export default function ChatTab({ isNested = false }) {
 
         {/* Phase 7.1 Control Bar Injected Above Input */}
         <ChatToolControlBar onToolToggle={setActiveTools} />
-        <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+        <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext}
+          onOpenArtifacts={() => setIsArtifactsModalOpen(true)}
+          onOpenTerminal={() => setWorkspacePanel('terminal')}
+          onOpenCodebase={() => setWorkspacePanel('codebase')} />
+        <ChatWorkspaceTools panel={workspacePanel} onClose={closeWorkspacePanel} backendUrl={BACKEND_URL} hasDraft={!!footerInput.trim()}
+          onInsertText={text => {setFooterInput(previous => previous ? `${previous}\n${text}` : text);requestAnimationFrame(() => chatInputRef.current?.focus());}} />
 
         {/* 3-Way Wireless Screen Mirror & Display Cast Hub */}
         {showWirelessCastHub && (

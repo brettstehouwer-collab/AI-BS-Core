@@ -1,3 +1,4 @@
+import AuthenticatedChatMedia from '/src/components/AuthenticatedChatMedia.jsx';
 import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
@@ -665,22 +666,12 @@ function MobileCognitiveThoughtDrawer({ thought, isThinking }) {
 }
 
 // ─── Markdown Content Renderer with Media Proxying ───────────────────────────
-function MobileFormattedContent({ content, role, onImageClick }) {
+export function MobileFormattedContent({ content, role, onImageClick }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
-  if (role === 'user') {
-    return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
-  }
-
-  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
-  const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
-  const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
-
-  const renderMarkdownBlock = (markdownText, key) => (
-    <ReactMarkdown
-      key={key}
-      remarkPlugins={[remarkGfm]}
-      components={{
+  // ReactMarkdown uses renderer functions as component types. Keep them stable
+  // across telemetry/parent renders so previews retain their blob URL/playback.
+  const markdownComponents = React.useMemo(() => ({
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           const codeString = String(children).replace(/\n$/, '');
@@ -711,111 +702,8 @@ function MobileFormattedContent({ content, role, onImageClick }) {
             </code>
           );
         },
-        img({ node, src, alt, ...props }) {
-          let finalSrc = src || '';
-          const isLocalHost = typeof window !== 'undefined' && 
-            (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-          if (finalSrc.includes('127.0.0.1:8188') || finalSrc.includes('localhost:8188') || 
-              finalSrc.includes('127.0.0.1:8189') || finalSrc.includes('localhost:8189')) {
-            if (!isLocalHost) {
-              try {
-                const urlObj = new URL(finalSrc);
-                finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
-              } catch (e) {
-                finalSrc = src;
-              }
-            }
-          } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
-            finalSrc = finalSrc.startsWith('/') ? `${BACKEND_URL}${finalSrc}` : `${BACKEND_URL}/${finalSrc}`;
-          }
-
-          // Automatic Cloudflare tunnel upgrade for mobile/PWA environments
-          const isMobileEnv = typeof window !== 'undefined' && (
-            /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-            window.location.protocol === 'capacitor:' ||
-            window.location.protocol === 'https:' ||
-            !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
-          );
-
-          if (isMobileEnv && (finalSrc.startsWith('http://127.0.0.1') || finalSrc.startsWith('http://localhost'))) {
-            finalSrc = finalSrc.replace(/^http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-          }
-
-          if (finalSrc && (finalSrc.includes('.mp4') || finalSrc.includes('.webm') || finalSrc.includes('.mov'))) {
-            return (
-              <div style={{ margin: '12px 0' }}>
-                <video
-                  src={finalSrc}
-                  controls
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  style={{
-                    width: '100%',
-                    maxHeight: '400px',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(66, 133, 244, 0.4)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                    display: 'block',
-                    background: '#000'
-                  }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: '6px' }}>
-                  <span>🎬 Wan2.1 HD Video</span>
-                  <a
-                    href={finalSrc}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
-                  >
-                    Open Video ↗
-                  </a>
-                </div>
-              </div>
-            );
-          }
-
-          return (
-            <div style={{ margin: '12px 0' }}>
-              <img
-                src={finalSrc}
-                alt={alt || 'Generated Image'}
-                onError={(e) => {
-                  const cur = e.currentTarget.src;
-                  if (cur.includes('127.0.0.1') || cur.includes('localhost')) {
-                    e.currentTarget.src = cur.replace(/http:\/\/(?:127\.0\.0\.1|localhost):(?:\d+)/, 'https://api.brettstehouwer.live');
-                  } else if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && !cur.includes('192.168.4.92')) {
-                    e.currentTarget.src = cur.replace(/http:\/\/[^/]+:(?:8000|8080)/, 'http://192.168.4.92:8080');
-                  }
-                }}
-                style={{
-                  width: '100%',
-                  maxHeight: '420px',
-                  objectFit: 'cover',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(66, 133, 244, 0.4)',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                  cursor: 'pointer',
-                  display: 'block'
-                }}
-                onClick={() => onImageClick ? onImageClick(finalSrc) : window.open(finalSrc, '_blank')}
-                {...props}
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: '6px' }}>
-                <span>🎨 SDXL / Wan Render</span>
-                <a
-                  href={finalSrc}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 'bold' }}
-                >
-                  View Full HD ↗
-                </a>
-              </div>
-            </div>
-          );
+        img({ src, alt }) {
+          return <AuthenticatedChatMedia src={src} backendUrl={BACKEND_URL} alt={alt} />;
         },
         table({ children }) {
           return (
@@ -836,6 +724,9 @@ function MobileFormattedContent({ content, role, onImageClick }) {
           return <p style={{ margin: '6px 0', lineHeight: '1.55' }}>{children}</p>;
         },
         a({ href, children }) {
+          if (typeof href === 'string' && (/\/api\/(?:comfy(?:ui)?\/(?:media|view)|music\/|audio\/|video\/|media\/)/.test(href) || /\/media\//.test(href))) {
+            return <AuthenticatedChatMedia src={href} backendUrl={BACKEND_URL} linkOnly>{children}</AuthenticatedChatMedia>;
+          }
           let finalHref = href;
           if (finalHref && finalHref.startsWith('/')) {
             finalHref = `${BACKEND_URL}${finalHref}`;
@@ -849,7 +740,21 @@ function MobileFormattedContent({ content, role, onImageClick }) {
             </a>
           );
         }
-      }}
+  }), [BACKEND_URL]);
+
+  if (role === 'user') {
+    return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
+  }
+
+  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
+  const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
+  const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
+
+  const renderMarkdownBlock = (markdownText, key) => (
+    <ReactMarkdown
+      key={key}
+      remarkPlugins={[remarkGfm]}
+      components={markdownComponents}
     >
       {markdownText}
     </ReactMarkdown>
@@ -1132,21 +1037,97 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
     setIsUploadingFile(true);
     const newAttachments = [];
 
+    // Helper: read text/code file client-side via FileReader
+    const readLocalFileAsText = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read file client-side'));
+        reader.readAsText(targetFile);
+      });
+    };
+
+    // Helper: read image file client-side as data URL
+    const readLocalFileAsDataUrl = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read image client-side'));
+        reader.readAsDataURL(targetFile);
+      });
+    };
+
     for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
+      const ext = (file.name.includes('.') ? `.${file.name.split('.').pop().toLowerCase()}` : '').trim();
+      const isImage = file.type?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'].includes(ext);
+      const isTextOrCode = file.type?.startsWith('text/') ||
+        ['.txt', '.md', '.py', '.js', '.jsx', '.ts', '.tsx', '.json', '.html', '.css', '.scss',
+         '.c', '.cpp', '.h', '.hpp', '.rs', '.go', '.sql', '.sh', '.bat', '.ps1', '.yaml',
+         '.yml', '.toml', '.xml', '.csv', '.tsv', '.env', '.log', '.diff', '.patch'].includes(ext);
+
+      let uploadSucceeded = false;
 
       try {
+        const formData = new FormData();
+        formData.append('file', file);
+
         const res = await fetch(`${BACKEND_URL}/api/chat/attach`, {
           method: 'POST',
+          headers: {
+            'X-Client-ID': 'stehouwer_publishing'
+          },
           body: formData
         });
-        const data = await res.json();
-        if (res.ok && data.status === 'success') {
+
+        const rawText = await res.text();
+        let data = null;
+        if (rawText && rawText.trim()) {
+          try {
+            data = JSON.parse(rawText);
+          } catch {
+            data = null;
+          }
+        }
+
+        if (res.ok && data && data.status === 'success' && data.file) {
           newAttachments.push(data.file);
+          uploadSucceeded = true;
         }
       } catch (err) {
         console.error('File upload failed:', err);
+      }
+
+      if (!uploadSucceeded) {
+        if (isTextOrCode) {
+          try {
+            const rawContent = await readLocalFileAsText(file);
+            const sanitized = (rawContent || '').replace(/\x00/g, '');
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: false,
+              path: '',
+              content: sanitized
+            });
+          } catch (readErr) {
+            console.error('Local file read failed:', readErr);
+          }
+        } else if (isImage) {
+          try {
+            const dataUrl = await readLocalFileAsDataUrl(file);
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: true,
+              path: '',
+              content: `[IMAGE_ATTACHMENT:${file.name}]\n[Client-Staged Data URL: ${dataUrl.slice(0, 100)}...]`
+            });
+          } catch (readErr) {
+            console.error('Local image read failed:', readErr);
+          }
+        }
       }
     }
 

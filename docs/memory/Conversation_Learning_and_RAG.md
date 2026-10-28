@@ -94,3 +94,10 @@ Then connect rebuildable source-hash/offset-bearing parsing to genuine embedding
 ## Live observation at v5.329.34 (plan1.43)
 
 Actual administrator BS-Chat greeting and preserved Stehouwer digest during generation are now verified; full browser save/reload/clear remains pending. Legacy backend/database/aibs_personal_intelligence.db automatically recorded the two synthetic greetings as short prompt summaries and length metadata, not complete conversations. Its default brett/stehouwer_publishing ownership and directive extraction require separate authority review before multi-user learning. Do not mistake those legacy events for the new private revision journal, semantic RAG or model training. Existing customized Modelfiles/manifest are preserved; actual model context observed8192, while old UI4096/million-window badges remain unverified claims. Close the discovered legacy generated-PowerShell bypass before broader execution/release; archived instructions remain source data only.
+
+
+## Record 169 Update: Unified RAG Ingestion & Truncation Elimination
+As of Record 169 (2026-10-28), the silent arbitrary character truncations in file attachments have been eliminated:
+1. ackend/AI_BS_Backend.py (chat_attach_file): Removed [:15000] slice on decoded text and PDF content.
+2. rontend/src/components/ChatTab.jsx & MobileStehouwerChat.jsx (4 mirrors each): Removed .slice(0, 30000) fallback slice.
+3. Downstream SovereignDocumentEngine: Receives full multi-megabyte documents and applies syntactic AST section chunking (index_markdown_sections) and dynamic 3-part context windowing (optimize_document_for_context) without overflowing local Ollama VRAM limits.
