@@ -1,0 +1,65 @@
+{
+  "schema": "aibs.engineering_handoff.v1",
+  "id": "crypto_execution_controls_20261030T185003Z",
+  "record": 188,
+  "adr": "ADR-115",
+  "created_utc": "2026-10-30T19:22:29Z",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next engineering session (snapshot acknowledgement pending)",
+  "repository": "C:\\AI-BS",
+  "branch": "main",
+  "commit": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732",
+  "version": "v5.329.72",
+  "status": "VERIFIED_OFFLINE_IMPLEMENTATION_LIVE_HELD",
+  "report": "docs/CRYPTO_EXECUTION_CONTROLS_AND_NEWS_2026-10-30.md",
+  "changed_paths": [
+    "backend/core/crypto_execution_controls.py",
+    "backend/trading/__init__.py",
+    "backend/trading/news_schema.py",
+    "backend/daemons/news_catalyst_daemon.py",
+    "backend/routers/news_catalyst_router.py",
+    "scripts/tests/test_crypto_execution_controls.py",
+    "scripts/tests/test_crypto_news_catalysts.py",
+    "docs/CRYPTO_EXECUTION_CONTROLS_AND_NEWS_2026-10-30.md",
+    "backend/AI_BS_Backend.py",
+    "frontend/src/components/CryptoNewsCatalysts.jsx",
+    "frontend/src/components/CryptoLiveStreamTab.jsx",
+    "frontend/components/CryptoNewsCatalysts.jsx",
+    "frontend/components/CryptoLiveStreamTab.jsx",
+    "frontend/src/components/components/CryptoNewsCatalysts.jsx",
+    "frontend/src/components/components/CryptoLiveStreamTab.jsx",
+    "frontend/components/components/CryptoNewsCatalysts.jsx",
+    "frontend/components/components/CryptoLiveStreamTab.jsx",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md"
+  ],
+  "patch": "C:\\AI-BS\\backups\\crypto_execution_controls_20261030T185003Z\\changes.patch",
+  "after_manifest": {
+    "sha256": "176a8ea14fd8c09ab89177db7b46a4048d93a7c6be6d896282076e423ebe1895",
+    "size": 4315
+  },
+  "verification": "C:\\AI-BS\\backups\\crypto_execution_controls_20261030T185003Z\\verification.json",
+  "tests": {
+    "count": 68,
+    "duration_seconds": 6.918,
+    "groups": {
+      "execution_controls": 36,
+      "news_catalysts": 19,
+      "containment": 13
+    },
+    "raw_receipt": {
+      "sha256": "a973a348f2d544f4124d785482fe24f1d32f7c7d7cf66e57483dfd9c2cb1b156",
+      "size": 12748
+    }
+  },
+  "boundaries": {
+    "live_dispatch": false,
+    "runtime_changes": false,
+    "provider_actions": false,
+    "model_or_feed_calls": false,
+    "data_repair": false
+  },
+  "next": "Keep containment; implement authoritative provider recovery/reconciliation and replace optimistic callers before separate live acceptance. News worker/model/feed/browser acceptance remains independent and unrun."
+}

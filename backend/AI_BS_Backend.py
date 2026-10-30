@@ -2064,6 +2064,8 @@ from routers.media_router import router as media_domain_router
 from routers.system_router import router as system_domain_router
 
 from routers.trading_router import router as trading_domain_router
+from routers.news_catalyst_router import router as news_catalyst_router
+app.include_router(news_catalyst_router)
 
 from routers.memory_router import router as memory_domain_router, require_conversation_owner
 
@@ -6076,7 +6078,7 @@ def git_system_pull():
 
 def crypto_liquidate_all():
 
-    return {"status": "success", "message": "Emergency TWAP liquidation sequence triggered."}
+    raise HTTPException(status_code=503, detail="Liquidation held pending reconciled exchange execution; no orders dispatched")
 
 
 

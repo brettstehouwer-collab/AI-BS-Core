@@ -7,15 +7,12 @@ This file tracks completed checkpoints, active bounded tasks, and remaining Phas
 
 
 <!-- AUTO_CHECKPOINT_SUMMARY_START -->
-## Current Authoritative Checkpoint Summary - Record168
-- BS-Chat attachment upload defect investigation & hardening complete; version v5.329.71 unchanged. Option 2 from docs/GEMINI_HANDOFF_2026-10-27.md fully verified.
-- Root cause identified: unguarded res.json() calls in handleFileUpload across ChatTab.jsx, MobileGeminiChat.jsx, and MobileStehouwerChat.jsx triggered SyntaxError: Unexpected end of JSON input on empty response bodies (0 bytes from network drop/timeout) and SyntaxError: Unexpected token on plain-text 401 Unauthorized or HTML error pages.
-- Backend chat_attach_file hardened with os.path.basename(raw_filename).strip() path traversal defense, safe UPLOAD_ATTACHMENTS_DIR creation, two-tier text decoding (UTF-8 with latin-1 fallback), and safe_filename return metadata.
-- Frontend ChatTab.jsx, MobileGeminiChat.jsx, and MobileStehouwerChat.jsx updated with X-Client-ID: stehouwer_publishing, defensive response reading (never calling res.json() directly), and zero-loss client-side FileReader fallback for text/code and image attachments when backend upload fails.
-- 100% SHA-256 byte parity verified across all 4 mirrors of ChatTab.jsx, MobileGeminiChat.jsx, and MobileStehouwerChat.jsx.
-- 15/15 automated tests pass in scripts/tests/test_chat_attachment_upload.py in 0.059s. 23/23 regression tests pass in test_router_mount_integrity.py and test_audio_router_trace.py (38/38 total tests passing offline).
-- Cryptographic hash verification: backend/AI_BS_Backend.py (714d095c682fa38c019b644b79e2961e3fa514fce1d0bbc8a636484d71f72e01), ChatTab.jsx 4 mirrors (4d82e0a1dc582e2b83045f2a10fdadc22d3132671fe608813efa7d66abdb88ca), MobileGeminiChat.jsx 4 mirrors (2400e53157227d5699a50c9d6893d4aee6fe4eb136b7f188741d1670ca5a88a7), MobileStehouwerChat.jsx 4 mirrors (734b5fe3d3b3eab60597d4997ba897489a3b64abf087bb829a9db62f7edfdd2c).
-- Record167 router mount deduplication, Record166 audio catalog trace, Record165 subsystem review, Record164 GPU provision changes, Record163 TextBee delivery monitoring, and Record127 VM isolation gates preserved. Loopback bindings and six disabled activation flags intact. Cloud synchronization pending.
+## Current Authoritative Checkpoint Summary - Record189
+- Authorized local service start and Hosting-only release verified: backend8080, held daemon8007, advisory RSS/local Ollama worker; existing gateway/frontend/Ollama/tunnel preserved. All new process activation flags false, including reply forwarding.
+- https://ai-bs-dashboard.web.app deployed1137 files; remote index/crypto-hub hashes match. Public news API200 with correct CORS/browser headers, two feeds working/three articles analyzed; CoinDesk failure remains bounded and visible.
+- dispatch_enabled=false in loaded8007; offline execution coordinator not connected. No order, cancellation, private exchange action or ledger repair. Both monetary JSON hashes preserved.
+-68 Python tests and7 isolated Go tests pass; APIs compile,19 Python AST, version5.329.72 consistency and four-mirror parity verified. Scoped crypto commit excludes unrelated edits; no push. Build came from current dirty working tree.
+- Report: docs/CRYPTO_SERVICE_FIREBASE_RELEASE_2026-10-30.md; receipts in backups/crypto_release_20261030T193043Z. Live reconciliation/adapter/protective orders, full browser acceptance and earlier campaign/VM/evaluation gates remain separate.
 <!-- AUTO_CHECKPOINT_SUMMARY_END -->
 
 
@@ -2287,3 +2284,34 @@ The current Record165 summary and existing release, VM, provider and protected-d
 - [x] Make `verify_and_connect_guest_runner.py` (`status`, `verify`, `test-all`) and `test_coding_guest_runner.py` 100% non-promoting (`apply_task` completely removed) and zero-mutation on `C:\AI-BS` and `C:\AI-BS\saved_data` (`non_mutating: true`).
 - [x] Verify `status`, `verify`, and `test-all` (**106/106 automated tests passing**: 54 guest runner + core regressions, 23 `RepositorySnapshotTests`, 29 `PreparationTests`).
 - [ ] Phase 4 Windows VM acceptance gate remains open pending completion and enrollment of an independent, licensed, containment-sanitized Windows 11 disposable guest VM via `enroll-vbox --vm-uuid <uuid>`.
+
+### Crypto static audit and containment (Record187; 20261030T184735Z)
+- [x] Review daemon8007, heartbeat/reconnect paths, Python/Go/Kraken order boundaries, signing/secrets, risk/stop/error behavior and zero-mock separation.
+- [x] Inspect corrupt JSON and SQLite counts/arithmetic/provenance read-only, preserve original monetary records and unrelated dirty tree.
+- [x] Apply source-only order/tracking hold and integrity hardening; provide structured findings, exact diff and before/after evidence.
+- [x] Complete13 Python +7 Go focused checks and12 AST syntax checks; preserve initial failure diagnostics.
+- [ ] Before any live reactivation, reconcile authoritative exchange orders/fills/fees/balances and existing exposure; no exchange query made in this audit.
+- [ ] Implement/accept durable unknown/partial recovery, decimal shared limits/slippage/stops/rejection breaker, authenticated controls, signing/rate/supervisor budgets; source contains no live-enable path.
+- [ ] Separately validate loaded runtime/bindings and existing protective orders when requested; existing processes/binaries unchanged. Bounded static task complete, no restart/deployment follows.
+
+
+### Offline crypto controls and dormant news (Record188; 2026-10-30T19:22:29Z)
+- [x] Implement Decimal fill-only accounting with durable immutable receipts, atomic fee/basis/PnL updates and conservative pending reconciliation.
+- [x] Implement durable intent/SUBMITTING/UNKNOWN lookup-only recovery; never expire an ambiguous order reserve or auto-resend.
+- [x] Implement shared persisted policy, atomic reserves, submission rechecks, rejection generations and drawdown holds.
+- [x] Implement first-fill trailing anchor, per-quote durable peaks/triggers and deduplicated inventory-sharing stop exit reservations.
+- [x] Add separate public RSS/local-only Ollama advisory schema/worker, read-only API and four-mirror dashboard panel; no automatic start or trading connection.
+- [x] Complete68 offline tests,10 Python and2 JSX parses; retain exact bytes/diffs/manifests and monetary-file/source-hold hashes. Version v5.329.72 unchanged.
+- [ ] Reconcile authoritative live orders/fills/fees/balances and legacy ledger provenance before live integration. No financial history repaired.
+- [ ] Implement/accept provider identity/time/sequence/signing/nonce/auth/rate handling and replace every optimistic legacy accounting caller with one shared account coordinator.
+- [ ] Validate loaded runtime and exchange-held protections separately; no source hold removed and no stop/order submitted. Existing binaries unverified.
+- [ ] News acceptance: actual configured public feeds, installed local model/server compatibility and dashboard browser behavior remain unrun. Worker dormant and canonical news DB absent.
+- Bounded offline task complete. Earlier Record187 live gates remain; their offline control implementation subtask is superseded by this verified checkpoint, not by live acceptance. Other campaign/VM/evaluation gates unchanged.
+
+
+### Authorized crypto services and Firebase release (Record189)
+- [x] Start controlled backend8080 and held8007 on loopback; preserve existing core services and all disabled activation flags.
+- [x] Start separate advisory public RSS/local-model worker; verify actual local inference and two healthy feeds. CoinDesk remains degraded with bounded retries.
+- [x] Build isolated frontend, deploy existing ai-bs-dashboard Hosting only and compare exact published index/crypto hub hashes; verify public news API/CORS.
+- [x] Re-run68 offline Python tests and7 isolated Go source checks; inspect scoped Git diff and retain exact receipts. No live dispatch or Git push.
+- [ ] Existing exchange reconciliation/protection and live-adapter acceptance remain unverified; browser navigation/sign-in acceptance separate.

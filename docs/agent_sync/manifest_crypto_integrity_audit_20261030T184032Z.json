@@ -1,0 +1,90 @@
+{
+  "schema": "aibs.crypto_integrity_audit.v1",
+  "id": "crypto_integrity_audit_20261030T184032Z",
+  "completed_utc": "20261030T184735Z",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "unassigned",
+  "snapshot_acknowledgement": "pending",
+  "repository": {
+    "branch": "main",
+    "commit": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732"
+  },
+  "backup_directory": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z",
+  "source_manifest_sha256": "fb2ff8e7d404b0208c7a4a28e6c518c87db30862bada864ad3158a771af0462b",
+  "changed_paths": [
+    "Crypto-Swarm/cryptoswarm-desktop/internal/api/server.go",
+    "Crypto-Swarm/cryptoswarm-desktop/internal/daemons/trade_engine.go",
+    "Crypto-Swarm/cryptoswarm-desktop/internal/daemons/trade_engine_safety_test.go",
+    "Crypto-Swarm/cryptoswarm-desktop/internal/daemons/watcher.go",
+    "Crypto-Swarm/drip_trader_daemon.py",
+    "Crypto-Swarm/internal/api/server.go",
+    "Crypto-Swarm/internal/daemons/diamond_hand.go",
+    "Crypto-Swarm/internal/daemons/trade_engine.go",
+    "Crypto-Swarm/internal/daemons/trade_engine_safety_test.go",
+    "Crypto-Swarm/internal/daemons/watcher.go",
+    "Crypto-Swarm/sell_all.py",
+    "backend/AI_BS_Backend.py",
+    "backend/commercial_gateway/crypto_control_router.py",
+    "backend/core/crypto_execution_safety.py",
+    "backend/core/crypto_ledger_io.py",
+    "backend/core/executive_action_dispatcher.py",
+    "backend/core/kraken_service.py",
+    "backend/core/unified_crypto_pearl_watchdog.py",
+    "backend/crypto_trader_bot.py",
+    "backend/routers/trading_router.py",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_TASKS.md",
+    "docs/CRYPTO_SUBSYSTEM_INTEGRITY_AUDIT_2026-10-30.md",
+    "scripts/tests/test_crypto_integrity_containment.py"
+  ],
+  "patch": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\changes.patch",
+  "report": "docs/CRYPTO_SUBSYSTEM_INTEGRITY_AUDIT_2026-10-30.md",
+  "adr": "ADR-114",
+  "checkpoint": "Record187",
+  "verification": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\verification.json",
+  "integrity_evidence": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\integrity_evidence.json",
+  "tests": [
+    {
+      "command": "python -X utf8 -m unittest discover -s scripts/tests -p test_crypto_integrity_containment.py -v",
+      "passed": 13,
+      "returncode": 0,
+      "log": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\python_tests_final.txt"
+    },
+    {
+      "cwd": "Crypto-Swarm",
+      "command": "go test -v ./internal/daemons ./internal/api",
+      "passed": 4,
+      "returncode": 0,
+      "log": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\go_tests_final.txt"
+    },
+    {
+      "cwd": "Crypto-Swarm/cryptoswarm-desktop",
+      "command": "go test -v ./internal/daemons ./internal/api",
+      "passed": 3,
+      "returncode": 0,
+      "log": "C:\\AI-BS\\backups\\crypto_integrity_audit_20261030T184032Z\\go_desktop_tests_final.txt"
+    }
+  ],
+  "source_containment": "held; no live enable path",
+  "incomplete": [
+    "exchange fill/fee/balance reconciliation",
+    "durable order intent and unknown/partial recovery",
+    "shared decimal risk/slippage/stops/rejection breaker",
+    "authentication/signing/rate/supervisor acceptance",
+    "loaded runtime/process/protective-order verification"
+  ],
+  "next_step": "Design and validate reconciled execution before removing any source hold; no restart or activation from this static audit",
+  "mutations_not_performed": [
+    "live_order",
+    "cancellation",
+    "private_exchange_probe",
+    "production_ledger_repair",
+    "service_start_or_restart",
+    "deployment",
+    "activation_flag_or_env_change",
+    "publication",
+    "git_commit"
+  ]
+}

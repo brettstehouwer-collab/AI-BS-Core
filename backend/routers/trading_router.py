@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from core.crypto_execution_safety import execution_status
+from core.crypto_ledger_io import read_ledger as strict_read_ledger, LedgerIntegrityError
 
 logger = logging.getLogger("TradingRouter")
 router = APIRouter(prefix="/api/trading", tags=["Crypto-Swarm & Finance"])
@@ -28,82 +30,48 @@ class TradeOrderRequest(BaseModel):
 async def get_trader_status():
     """Returns Crypto-Swarm bot runtime and safety status."""
     return {
-        "status": "online",
+        "status": "held",
         "engine": "Crypto-Swarm Micro-Drip Engine",
-        "pairs_monitored": ["CRO/USD", "CRO/USDT", "BTC/USDT", "ETH/USDT"],
-        "safety_mode": "enabled",
-        "zero_mock_enforced": True,
-        "max_drawdown_limit_pct": 5.0,
-        "daily_trade_cap_usd": 500.0
+        "runtime_verified": False,
+        "execution": execution_status(),
+        "risk_limits_verified": False,
+        "max_drawdown_limit_pct": None,
+        "daily_trade_cap_usd": None,
     }
 
 
 @router.get("/ledger")
 async def get_trade_ledger(limit: int = 20):
-    """Fetches verified trade executions from drip_ledger.db / aibs_master.db."""
+    """Read historical records without initializing or certifying a ledger."""
+    import sqlite3
+    from contextlib import closing
+    if not 1 <= limit <= 1000:
+        raise HTTPException(status_code=400, detail="Limit must be between 1 and 1000")
     try:
-        from db.connection_pool import get_sqlite_connection
-        conn = get_sqlite_connection(DRIP_LEDGER_PATH)
-        
-        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()]
-        trades = []
-        if "trades" in tables:
-            rows = conn.execute("SELECT * FROM trades ORDER BY timestamp DESC LIMIT ?;", (limit,)).fetchall()
-            trades = [dict(r) for r in rows]
-        elif "ledger" in tables:
-            rows = conn.execute("SELECT * FROM ledger ORDER BY timestamp DESC LIMIT ?;", (limit,)).fetchall()
-            trades = [dict(r) for r in rows]
-        conn.close()
-        
-        return {"status": "success", "count": len(trades), "trades": trades}
-    except Exception as e:
-        logger.error(f"Error querying trade ledger: {e}")
-        return {"status": "success", "count": 0, "trades": [], "note": "Ledger initialized, awaiting trade events"}
+        uri = Path(DRIP_LEDGER_PATH).resolve().as_uri() + "?mode=ro"
+        with closing(sqlite3.connect(uri, uri=True)) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute("SELECT * FROM trades ORDER BY timestamp DESC LIMIT ?", (limit,)).fetchall()
+            trades = [dict(row) for row in rows]
+        return {"status": "historical_unverified", "source": DRIP_LEDGER_PATH,
+                "reconciliation_required": True, "count": len(trades), "trades": trades}
+    except sqlite3.Error:
+        raise HTTPException(status_code=503, detail="Ledger unavailable; reconciliation required")
 
 
 @router.get("/balances")
 async def get_wallet_balances():
     """
-    Returns active monitored token balances strictly sourced from verified on-chain / exchange ledgers.
-    Strict Zero-Mock Enforcement: Never displays synthetic or simulated balances.
+    Return local positions as historical records, not verified exchange balances.
     """
-    balances = []
-    total_portfolio_usd = 0.0
-
-    # Source 1: Real positions from crypto_ledger.json (Crypto.com quantitative ledger)
-    if LEDGER_FILE.exists():
-        try:
-            with open(LEDGER_FILE, "r", encoding="utf-8") as f:
-                ledger_data = json.load(f)
-            positions = ledger_data.get("positions", {})
-            ref_prices = ledger_data.get("reference_prices", {})
-
-            for symbol, pos in positions.items():
-                asset = symbol.split("/")[0]
-                amount = float(pos.get("amount", 0.0))
-                vault = float(pos.get("long_term_vault", 0.0))
-                total_asset = amount + vault
-                price = float(ref_prices.get(symbol, 0.0))
-                usd_val = total_asset * price
-
-                if total_asset > 0.0 or usd_val > 0.0:
-                    balances.append({
-                        "asset": asset,
-                        "free": round(amount, 4),
-                        "locked": round(vault, 4),
-                        "usd_value": round(usd_val, 4)
-                    })
-                    total_portfolio_usd += usd_val
-        except Exception as ex:
-            logger.warning(f"Failed to read crypto_ledger.json: {ex}")
-
-    # Source 2: If unbonded / zero balances, return clean empty slate adhering to Zero-Mock standard
-    return {
-        "status": "success" if balances else "unbonded",
-        "portfolio_total_usd": round(total_portfolio_usd, 4),
-        "balances": balances,
-        "note": "Zero-Mock Clean Fiscal Slate Active. Live balances originate from verified on-chain ledgers and live exchange positions."
-    }
+    try:
+        historical = strict_read_ledger(LEDGER_FILE)
+    except LedgerIntegrityError:
+        raise HTTPException(status_code=503, detail="Ledger unavailable; reconciliation required")
+    return {"status": "historical_unverified", "balance_verified": False,
+            "portfolio_total_usd": None, "balances": [],
+            "historical_positions": historical["positions"],
+            "note": "Local holdings are unverified; exchange fill and fee reconciliation is required."}
 
 
 @router.post("/order")
@@ -113,32 +81,7 @@ async def execute_trade_order(order: TradeOrderRequest):
     Strict Zero-Mock Mandate: Requires verified live exchange credentials and active account collateral.
     Simulated orders and unbacked synthetic fills are strictly prohibited.
     """
-    if order.amount_usd > 500.0:
-        raise HTTPException(status_code=400, detail="Order exceeds safety daily trade cap of $500")
-
-    # Strict Zero-Mock: Validate live credentials and authenticated session before recording monetary operations
-    env_paths = [Path("C:/AI-BS/.env"), Path("C:/AI-BS/backend/.env")]
-    live_key = ""
-    for p in env_paths:
-        if p.exists():
-            with open(p, "r", encoding="utf-8", errors="ignore") as ef:
-                for line in ef:
-                    if line.startswith("CRYPTOCOM_API_KEY=") or line.startswith("EXCHANGE_LIVE_KEY="):
-                        live_key = line.split("=", 1)[1].strip().strip('"')
-                        break
-        if live_key:
-            break
-
-    if not live_key or live_key.startswith("test_") or len(live_key) < 20:
-        raise HTTPException(
-            status_code=400,
-            detail="Live authenticated exchange credentials not detected. Under the Zero-Mock Real Money Rule, simulated orders and synthetic fills are strictly prohibited."
-        )
-
-    raise HTTPException(
-        status_code=503,
-        detail="Live exchange trade execution gateway is standing by. Ensure crypto_trader_bot daemon has completed initial liquidity probing."
-    )
+    raise HTTPException(status_code=503, detail=execution_status())
 
 
 # =====================================================================
@@ -189,6 +132,8 @@ async def execute_kraken_order(req: KrakenOrderRequest):
     Executes a live spot trade order on Kraken.
     Enforces daily cap safety and strict zero-mock execution.
     """
+    raise HTTPException(status_code=503, detail=execution_status())
+    # Retained legacy adapter below is unreachable while reconciliation is required.
     try:
         from core.kraken_service import kraken_service
         return kraken_service.create_order(
