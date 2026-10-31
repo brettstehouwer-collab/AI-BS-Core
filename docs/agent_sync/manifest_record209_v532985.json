@@ -1,0 +1,449 @@
+{
+  "record": 209,
+  "utc": "2026-10-31T21:02:45.406953+00:00",
+  "version": "5.329.85",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next authorized AI-BS agent",
+  "branch": "codex/audit-v532976-20261031",
+  "source_commit": "f53f6e0745beba2c4c7fc7fa2700c2ea973a2d89",
+  "base_commit": "f53527c0440d5e7255ba257ebf86c5315b7a440c",
+  "classification": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODE_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+  "modified_paths": [
+    "frontend/src/components/BroadcastStudio.jsx",
+    "frontend/src/components/OmniStudioTab.jsx",
+    "frontend/components/BroadcastStudio.jsx",
+    "frontend/components/OmniStudioTab.jsx",
+    "frontend/src/components/components/BroadcastStudio.jsx",
+    "frontend/src/components/components/OmniStudioTab.jsx",
+    "frontend/components/components/BroadcastStudio.jsx",
+    "frontend/components/components/OmniStudioTab.jsx",
+    "BroadcastStudioApp/src/components/BroadcastStudio.jsx",
+    "BroadcastStudioApp/src/App.jsx",
+    "BroadcastStudioApp/src/hooks/useOBSTelemetry.js",
+    "BroadcastStudioApp/src/components/daw/MusicDAWStudioTab.jsx",
+    "frontend/src/components/ExecutiveCockpitTab.jsx",
+    "frontend/src/components/LexiconTheatricalDashboard.jsx",
+    "frontend/components/ExecutiveCockpitTab.jsx",
+    "frontend/components/LexiconTheatricalDashboard.jsx",
+    "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+    "frontend/src/components/components/LexiconTheatricalDashboard.jsx",
+    "frontend/components/components/ExecutiveCockpitTab.jsx",
+    "frontend/components/components/LexiconTheatricalDashboard.jsx",
+    "scripts/tests/test_broadcast_debranding209.cjs",
+    "native_studio/engine.py",
+    "native_studio/telemetry_shm.py",
+    "native_studio/telemetry_hub.py",
+    "native_studio/operations_views.py",
+    "native_studio/web_telemetry_view.py",
+    "native_studio/lexicon_view.py",
+    "native_studio/executive_service.py",
+    "native_studio/executive_cockpit_full.py",
+    "native_studio/service_orchestrator.py",
+    "native_studio/dpg_hud.py",
+    "scripts/tests/test_native_broadcast_retirement209.py",
+    "native_studio/omni_broadcast_studio.py",
+    "native_studio/broadcast_secondary_control.py",
+    "native_studio/broadcast_ipc.py",
+    "scripts/verify_native_broadcast_offline.py",
+    "native_studio/broadcast_stream_engine.py",
+    "native_studio/broadcast_preview.py",
+    "scripts/tests/test_preview_ui209.py",
+    "scripts/tests/test_broadcast_preview209.py",
+    "scripts/tests/test_broadcast_ipc_sharing209.py",
+    "version.txt",
+    "package.json",
+    "package-lock.json",
+    "frontend/package.json",
+    "frontend/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/package-lock.json",
+    "release.json",
+    "frontend/public/version.json",
+    "frontend/version.js",
+    "frontend/src/version.js",
+    "frontend/components/version.js",
+    "frontend/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/components/components/version.js",
+    "BroadcastStudioApp/src/version.js",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_HISTORICAL_INDEX.md",
+    "NotebookLM_Records/artifact_history.md",
+    "SAVED_CHECKPOINT.md",
+    "docs/audit/2026-10-30-complete/README.md",
+    "docs/audit/2026-10-30-complete/findings.json",
+    "docs/audit/2026-10-30-complete/coverage.json",
+    "docs/audit/2026-10-30-complete/recovery_gate.json",
+    "docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md",
+    "docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.json",
+    "docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.md",
+    "docs/audit/2026-10-30-complete/INCIDENT_AND_USAGE_REVIEW_RECORD209.json"
+  ],
+  "source_files": [
+    {
+      "path": "frontend/src/components/BroadcastStudio.jsx",
+      "bytes": 151629,
+      "sha256": "3d1aadc4ff7ed491953d988b8f05742e2cfa75f41ae9302d945380d712c175d2"
+    },
+    {
+      "path": "frontend/src/components/OmniStudioTab.jsx",
+      "bytes": 10262,
+      "sha256": "cffce9676317141f4945e3ff88330bf3ebe59bcc3fd33873905efb295900d70d"
+    },
+    {
+      "path": "frontend/components/BroadcastStudio.jsx",
+      "bytes": 151629,
+      "sha256": "3d1aadc4ff7ed491953d988b8f05742e2cfa75f41ae9302d945380d712c175d2"
+    },
+    {
+      "path": "frontend/components/OmniStudioTab.jsx",
+      "bytes": 10262,
+      "sha256": "cffce9676317141f4945e3ff88330bf3ebe59bcc3fd33873905efb295900d70d"
+    },
+    {
+      "path": "frontend/src/components/components/BroadcastStudio.jsx",
+      "bytes": 151629,
+      "sha256": "3d1aadc4ff7ed491953d988b8f05742e2cfa75f41ae9302d945380d712c175d2"
+    },
+    {
+      "path": "frontend/src/components/components/OmniStudioTab.jsx",
+      "bytes": 10262,
+      "sha256": "cffce9676317141f4945e3ff88330bf3ebe59bcc3fd33873905efb295900d70d"
+    },
+    {
+      "path": "frontend/components/components/BroadcastStudio.jsx",
+      "bytes": 151629,
+      "sha256": "3d1aadc4ff7ed491953d988b8f05742e2cfa75f41ae9302d945380d712c175d2"
+    },
+    {
+      "path": "frontend/components/components/OmniStudioTab.jsx",
+      "bytes": 10262,
+      "sha256": "cffce9676317141f4945e3ff88330bf3ebe59bcc3fd33873905efb295900d70d"
+    },
+    {
+      "path": "BroadcastStudioApp/src/components/BroadcastStudio.jsx",
+      "bytes": 150150,
+      "sha256": "1a70f6534e35835b2b60fad2991ad78b5aa12978094a4853c8a32bdecb191d38"
+    },
+    {
+      "path": "BroadcastStudioApp/src/App.jsx",
+      "bytes": 22916,
+      "sha256": "265935eccb19e500a0025c393e9601439b217ea4819a645883c1382836455241"
+    },
+    {
+      "path": "BroadcastStudioApp/src/hooks/useOBSTelemetry.js",
+      "bytes": 395,
+      "sha256": "270d2c5752ec6ebfe6392cdd93425428c019bfa3c058cfeee238181e35bc963a"
+    },
+    {
+      "path": "BroadcastStudioApp/src/components/daw/MusicDAWStudioTab.jsx",
+      "bytes": 24015,
+      "sha256": "179aa052c7a52e88f841e184c6a2b4b20d8be502f4e6bdf555b715c9794c2916"
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "bytes": 67072,
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3"
+    },
+    {
+      "path": "frontend/src/components/LexiconTheatricalDashboard.jsx",
+      "bytes": 5624,
+      "sha256": "a53709e5eecf7057715c2a2212bef763bc0b3cc9d699b49e6305e38678752bcc"
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "bytes": 67072,
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3"
+    },
+    {
+      "path": "frontend/components/LexiconTheatricalDashboard.jsx",
+      "bytes": 5624,
+      "sha256": "a53709e5eecf7057715c2a2212bef763bc0b3cc9d699b49e6305e38678752bcc"
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 67072,
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3"
+    },
+    {
+      "path": "frontend/src/components/components/LexiconTheatricalDashboard.jsx",
+      "bytes": 5624,
+      "sha256": "a53709e5eecf7057715c2a2212bef763bc0b3cc9d699b49e6305e38678752bcc"
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 67072,
+      "sha256": "2e45901a88de1c672117e91c65602063b12a372c7f76c8ef355c0e35288c2cd3"
+    },
+    {
+      "path": "frontend/components/components/LexiconTheatricalDashboard.jsx",
+      "bytes": 5624,
+      "sha256": "a53709e5eecf7057715c2a2212bef763bc0b3cc9d699b49e6305e38678752bcc"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_debranding209.cjs",
+      "bytes": 6452,
+      "sha256": "fdc8f8a4bbd7fa6ba6db45a22907afecdf3b7d5beccf2e7935c81a4d6523302c"
+    },
+    {
+      "path": "native_studio/engine.py",
+      "bytes": 15777,
+      "sha256": "5bbce2e12871dd4ba76c4eccbd316867e8baf8b53b3b5aaa7a7f8c55004ac5e1"
+    },
+    {
+      "path": "native_studio/telemetry_shm.py",
+      "bytes": 4059,
+      "sha256": "9cbc576519a25cc834206a912abad254aa68f9b20f5ea46305b9389a92b5d5b2"
+    },
+    {
+      "path": "native_studio/telemetry_hub.py",
+      "bytes": 7465,
+      "sha256": "4fda9602aed92af095592a6884099691a6aa067cae7506d39872aec0c3750bf8"
+    },
+    {
+      "path": "native_studio/operations_views.py",
+      "bytes": 43221,
+      "sha256": "6be78504435ba3ddaf217aa235a13f7d0f86401ebefd9d148de2cef28ee4c7c7"
+    },
+    {
+      "path": "native_studio/web_telemetry_view.py",
+      "bytes": 15543,
+      "sha256": "fb2bf328f74202a1a7e4de11b94254e512ce0dee309c383748f5bdc20632a34f"
+    },
+    {
+      "path": "native_studio/lexicon_view.py",
+      "bytes": 10128,
+      "sha256": "24b5490168c76d1aae3d8d19f1ff2020f13d95479bf5d31ba9f85bbc9367e37a"
+    },
+    {
+      "path": "native_studio/executive_service.py",
+      "bytes": 7675,
+      "sha256": "a40df62370f3b1da549e593246996181c8b397ea30fee951fecfd895e1fa11bb"
+    },
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "bytes": 21165,
+      "sha256": "7388cf2e577c025c040a61e11d71b05ca62be827d5544ee8283467f7eed6a669"
+    },
+    {
+      "path": "native_studio/service_orchestrator.py",
+      "bytes": 21613,
+      "sha256": "7783fe88e9ec4e6614eb291648a415d749f88582594c0945179dc3351a54812e"
+    },
+    {
+      "path": "native_studio/dpg_hud.py",
+      "bytes": 9177,
+      "sha256": "670eacdf954565a2ff2c469d44a4fcd8919b1891bfd8eee321ad41781b61d063"
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_retirement209.py",
+      "bytes": 2664,
+      "sha256": "6222d06d13d5631a7b1d3b6b4140b03a308ff4d7afefa81ae89ba311d2ac682e"
+    },
+    {
+      "path": "native_studio/omni_broadcast_studio.py",
+      "bytes": 131612,
+      "sha256": "00a87e173539d374e0244631c9331f77457e15c42ef34072366fd1ae9fcfb620"
+    },
+    {
+      "path": "native_studio/broadcast_secondary_control.py",
+      "bytes": 14920,
+      "sha256": "1159e5cd2c6a06f60baa1100d7163a90bb3a047a1bd6955d2e1ab7224feed0da"
+    },
+    {
+      "path": "native_studio/broadcast_ipc.py",
+      "bytes": 8883,
+      "sha256": "a1f244b0c4223634bd978b2ed8929ab051a54084406c0493b656affa40926cf0"
+    },
+    {
+      "path": "scripts/verify_native_broadcast_offline.py",
+      "bytes": 10944,
+      "sha256": "1a8675104999453e4899607e256487bb8044e820af0969f4c65c1e829cffbb23"
+    },
+    {
+      "path": "native_studio/broadcast_stream_engine.py",
+      "bytes": 57404,
+      "sha256": "e74b1d8be7434228d0ba1824e292023b26324cb42781d2f405f5ec90e9914bc9"
+    },
+    {
+      "path": "native_studio/broadcast_preview.py",
+      "bytes": 11461,
+      "sha256": "b7a102d2d21093ec5026953d4e8b2502dd90b3623be506862438d815ddf9dab8"
+    },
+    {
+      "path": "scripts/tests/test_preview_ui209.py",
+      "bytes": 4846,
+      "sha256": "47e53450dc3dc41220ef487c5669c43289796096d183ef19ad5a556e8c369419"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_preview209.py",
+      "bytes": 10257,
+      "sha256": "84fae017903dfe0dce24dfd9e53feb2b626075e46e2f55ba2a07270101af5040"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_ipc_sharing209.py",
+      "bytes": 4894,
+      "sha256": "2bed17c2c76addc3097eae3421bea9d1d562e4e48ecbf0cf2f4a969452765d1d"
+    },
+    {
+      "path": "version.txt",
+      "bytes": 10,
+      "sha256": "714efb28c0fec9a9d49b325d5496e3adf16688399584c332592e3709f0a2fd48"
+    },
+    {
+      "path": "package.json",
+      "bytes": 429,
+      "sha256": "d6bfc275652511d4d555b718f4fe63e02e8f26f3addebc9b4a54eeb809095d2a"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 199,
+      "sha256": "0b11a31f746be2c5533faedd36127a259ce71ca22a789d133759a1456a9c1cc5"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 3582,
+      "sha256": "6f05100278c8a3840416f430836d8b814d05e74a83341144a9b79433d36c3461"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "bytes": 778993,
+      "sha256": "6df606d3ac03f4c3c257a11f5ca22f82458efad7f696967bdc9683ceb2b09925"
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "bytes": 3011,
+      "sha256": "57b07b3d59dc3399c7a69791903d784492afebff8c39de5dbd269804be412069"
+    },
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "bytes": 222035,
+      "sha256": "15d681ffc90c0b3cc907133d7e03f3a04dc9322019de9a5b869908e65fb353eb"
+    },
+    {
+      "path": "release.json",
+      "bytes": 193,
+      "sha256": "109c57d6051f6ce06ec84d70ac64e654c5fbd1cecbb24542a55ef114f4041e5b"
+    },
+    {
+      "path": "frontend/public/version.json",
+      "bytes": 194,
+      "sha256": "3a1d9a19a91a07f3508982c3d65558a9ecfabf7006ce563e62b9d7c5caf7a14b"
+    },
+    {
+      "path": "frontend/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "frontend/src/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "frontend/components/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "bytes": 354,
+      "sha256": "58a9d04eb861e87ccdba24a92c65778c50d2b9f3552dc63526842304ba744795"
+    }
+  ],
+  "source_manifest": {
+    "path": "backups\\record209_source_closure_corrected\\manifest.json",
+    "sha256": "6dc8eb542ff3d90228685beecb021f98828df7b470d8168d7ee3b76e5a83d00e",
+    "cloud_uploaded": false
+  },
+  "document_manifest": {
+    "path": "backups\\record209_close_work\\manifest.json",
+    "sha256": "1b32610d220fb454aa8e1b9520bef1d39958c41cb2651b23614f34cd6a0bafec"
+  },
+  "worktree": {
+    "status": "UNRELATED_EXISTING_DIRTY_AND_UNTRACKED_STATE_PRESERVED",
+    "exact_local_status": "backups\\native_preview_v85_20261031_record209\\worktree_status209.local.txt",
+    "sha256": "c78df5a1c363a2d9998f005fec7f2c7b3fd8879d7da165516799bf109275a2bc",
+    "porcelain_lines": 69977,
+    "source_snapshot_equivalence": "Compared actual C source hashes; no byte equivalence claimed to Git normalized blobs"
+  },
+  "verification": {
+    "native": {
+      "tests": 352,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": 0,
+      "command": "C:/AI-BS/pyppeteer_env/Scripts/python.exe -B scripts/verify_native_broadcast_offline.py"
+    },
+    "javascript": {
+      "tests": 35,
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test scripts/tests/test_broadcast_contracts198.cjs scripts/tests/test_broadcast_truth204.cjs scripts/tests/test_broadcast_debranding209.cjs"
+    },
+    "typescript_no_emit_exit": 0,
+    "windows_exe_sha256": "26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c",
+    "http_decoder_frames": 200,
+    "http_decoder_seconds": 7.25,
+    "restored_sender_soak_seconds": 192.156,
+    "final_game_state": "USER_CLOSED_GAME_NO_VERIFIED_GAME_HOLDING",
+    "final_preview_checkbox": "OFF_LAST_OBSERVED_ON_NOT_VERIFIED",
+    "no_further_screen_control": true
+  },
+  "decisions": [
+    "Read-only delayed preview consumes existing encoded HLS over fixed loopback HTTP9011; no extra source capture or audio output.",
+    "Bounded sharing-error retries preserve terminal failure semantics.",
+    "Reserved SHM bit4455 remains in original25slot layout;24active probes.",
+    "Remove2embedded web stream-key defaults without changing saved settings."
+  ],
+  "completed": [
+    "Native preview source and v85 installation",
+    "OBS UI and active probe retirement in current native/web source",
+    "352native and35JavaScript checks plus TypeScript",
+    "Credential-default removal",
+    "Incident and elapsed-time evidence for user support review"
+  ],
+  "incomplete": [
+    "v85 live-game rendering and final preview ON acceptance not verified; user prohibits further screen control.",
+    "No Firebase deployment or web hosting parity certification this turn.",
+    "No remote RTMP platform dashboard acceptance this turn.",
+    "Existing E recovery-key hardware/custody failure blocks encrypted full recovery upload; no E retries or substitute key."
+  ],
+  "operational_holds": {
+    "live_trading": "DISABLED",
+    "port8007_listener": false,
+    "four_crypto_ledger_hashes": "UNCHANGED",
+    "audio": "GENERATED_SILENCE",
+    "microphone": "UNREQUESTED",
+    "screen_control": "STOPPED_BY_EXPLICIT_USER_INSTRUCTION",
+    "recruitment_dispatch": "DISABLED"
+  },
+  "cloud": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "status": "SANITIZED_UPLOAD_AND_RAW_READBACK_PENDING_SEPARATE_CLOSURE_RECEIPT",
+    "no_source_binary_key_preimage_uploads": true
+  },
+  "next_step": "User may enable Program preview in installed v85 when a game is open. Further agent work uses backend/frontend/offline and read-only checks only; no screen control retries."
+}
