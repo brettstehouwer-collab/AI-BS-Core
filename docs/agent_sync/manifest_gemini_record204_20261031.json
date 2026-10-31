@@ -1,0 +1,353 @@
+{
+  "handoff_id": "gemini-record204-20261031",
+  "utc": "2026-10-31T17:08:48.312076+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next verified session",
+  "repository": "C:/AI-BS",
+  "commit": "5ce8c736f995b9b9ced909a393f1caf7c495d38b",
+  "branch": "codex/audit-v532976-20261031",
+  "source_manifest_path": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\gemini204\\record204_source_manifest.json",
+  "source_manifest_sha256": "f5834512f2e41920a6e28564477b03da0bd966bb1c682d2ba34a6a2ddf9b224d",
+  "source_files": [
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "bytes": 1139700,
+      "sha256": "5e8a8d51f658ec05dac1dd02f0f7c49828997afe62f39ebac149f651aba28880"
+    },
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "bytes": 222035,
+      "sha256": "d3152de8a8139ff3766a19494f243ff468768990778de21692d55015f6f1e01a"
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "bytes": 3011,
+      "sha256": "064b82bff7d2d679c3b27b119d278596ae3c39dcd8992bf5599c3d0f563b63c7"
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "bytes": 114144,
+      "sha256": "15b17099a65e36a301c02675015fab10c21a5bc4f05d05715bc7ad24f0b0c9da"
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "bytes": 99741,
+      "sha256": "61ce353920edd7638f6565280cd7e8829466753e5438fd0bec326417a5ed6080"
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "bytes": 224686,
+      "sha256": "b0cfbebf647a34f78b8ba8266800436d7f4f90a1edfdce391efef92aac1e03cb"
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "bytes": 162779,
+      "sha256": "fff875a23036c9803388fd58414bd9a7aa97561b8e9ccd861f0fa78953cc7fa2"
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "bytes": 13707,
+      "sha256": "e4a08591e712e448044b89cf036c80915262ac523cf84597bd962bdadc18c823"
+    },
+    {
+      "path": "backend/AI_BS_Backend.py",
+      "bytes": 364727,
+      "sha256": "a6e930f3e5d90d2640949d6931de16137dc00626da4a1fd5ae8da4be870b3c2f"
+    },
+    {
+      "path": "backend/AI_BS_Backend_shadow.py",
+      "bytes": 189847,
+      "sha256": "f001c5ab744ee6844111c1452d2d2cd87536595f5df7c93ad82880ec2cd0d879"
+    },
+    {
+      "path": "backend/aibs_broadcast_daemon.py",
+      "bytes": 49429,
+      "sha256": "75a980a2df5df506dd5adc33cb40736b44b53660b60a6b6320f36b527a2ead61"
+    },
+    {
+      "path": "backend/bullshit_sandbox_executor.py",
+      "bytes": 2085,
+      "sha256": "689f6c203ef703cc2d31ad68eff517354e3d5036ac982d7461a04e8d9876cb70"
+    },
+    {
+      "path": "backend/core/ide_orchestrator/patch_promoter.py",
+      "bytes": 8936,
+      "sha256": "cf73be2a144c3306cdf87e2e4fdf84f388c56a2a8674b375a694d76df1ec7ff7"
+    },
+    {
+      "path": "backend/core/ide_orchestrator/sandbox_runner.py",
+      "bytes": 4840,
+      "sha256": "9792ac74c8624248cc53da88de4beeec8e146ae3b73417a062a2e179385bdf77"
+    },
+    {
+      "path": "backend/core/memory_bank.py",
+      "bytes": 11282,
+      "sha256": "88d6be9367bf7abab26c8ec411fd8666ac4be956fc0f147a301432b9ab3327c1"
+    },
+    {
+      "path": "backend/tools/tool_call_contract.py",
+      "bytes": 11085,
+      "sha256": "8a0a2e1e028ba149466fe21675fb39d48e99c988dbb93ab2edef09666a0f6e51"
+    },
+    {
+      "path": "backend/tools/tool_registry.py",
+      "bytes": 294268,
+      "sha256": "62539debf29d3bde36919ac0ec406153fd78593cfd9ad7593e2364a71a7558ec"
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "bytes": 238346,
+      "sha256": "c6a6bdd262444b60a063b1bb58e566673b06879bc88d4f203385cb7a1143b4e0"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "bytes": 1122552,
+      "sha256": "708d921f18118b2b3a9c90c795102e9412c25809186387238836e4e781c0da26"
+    },
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "bytes": 748379,
+      "sha256": "99d7985c77512740f8dcd023712e0f691d7a4a17a6884b456bf7ab725a9d545e"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "bytes": 344546,
+      "sha256": "14efbb80961eb9bea4122756274f3d2d836aa998f0c2ed713a489678287dab5e"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.json",
+      "bytes": 22836,
+      "sha256": "0d4f67df870acd6d98e3e70aeae851c5facbde30607f8cfe9c55b9ded9375c49"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
+      "bytes": 10068,
+      "sha256": "552fa1edf426f692dd4f1d3d0dc200e4b85e6398cfb5fc8598236fa4e721f344"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "bytes": 9512,
+      "sha256": "d24b89c0cc73f9e650aca9b772d74b14ac8584e343069e7f9908e7d7e272ec0f"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "bytes": 14815,
+      "sha256": "a3579aa6bccb845329c20858f0c249a62e58351b824edc38c494ae431c354d4a"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/findings.json",
+      "bytes": 57115,
+      "sha256": "516d1ce168b7da848722138a6408b480c40ec59d1ea8b36cca823990b9a349b1"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/recovery_gate.json",
+      "bytes": 3618,
+      "sha256": "d92ba92f1a666daeb80dde740d63c2b7697dcd39de53072aeaa971f192dc953c"
+    },
+    {
+      "path": "frontend/components/BroadcastStudio.jsx",
+      "bytes": 151398,
+      "sha256": "67964428d43758133756d63f7bf1fa881dcba3fc4edcae1d6405a2c376207c4d"
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "bytes": 68499,
+      "sha256": "2f843894098d5de3e4417db0abadebd07ea6e76202a750596b7d698b7ec7cac5"
+    },
+    {
+      "path": "frontend/components/components/BroadcastStudio.jsx",
+      "bytes": 151398,
+      "sha256": "67964428d43758133756d63f7bf1fa881dcba3fc4edcae1d6405a2c376207c4d"
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 68499,
+      "sha256": "2f843894098d5de3e4417db0abadebd07ea6e76202a750596b7d698b7ec7cac5"
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "frontend/components/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "bytes": 778993,
+      "sha256": "591cc2c611eea3123abd1358eba81e8a586dac9c690a6e29df2be95bf3be1510"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 3582,
+      "sha256": "9903dcaaf3c3c92e9791977d97732f4ad9bad65933b5ee4c530b479386470565"
+    },
+    {
+      "path": "frontend/public/version.json",
+      "bytes": 194,
+      "sha256": "f55ef1b90fe76ecdb3a102ce33e8e17658b53347308567b9a7cc0bcf90819565"
+    },
+    {
+      "path": "frontend/src/components/BroadcastStudio.jsx",
+      "bytes": 151398,
+      "sha256": "67964428d43758133756d63f7bf1fa881dcba3fc4edcae1d6405a2c376207c4d"
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "bytes": 68499,
+      "sha256": "2f843894098d5de3e4417db0abadebd07ea6e76202a750596b7d698b7ec7cac5"
+    },
+    {
+      "path": "frontend/src/components/components/BroadcastStudio.jsx",
+      "bytes": 151398,
+      "sha256": "67964428d43758133756d63f7bf1fa881dcba3fc4edcae1d6405a2c376207c4d"
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "bytes": 68499,
+      "sha256": "2f843894098d5de3e4417db0abadebd07ea6e76202a750596b7d698b7ec7cac5"
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "frontend/src/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "frontend/version.js",
+      "bytes": 354,
+      "sha256": "bf42a80e594dbe76ce255d96f2f93416c6ea1d3c6a24d44621609f3712f46a85"
+    },
+    {
+      "path": "native_studio/broadcast_control.py",
+      "bytes": 3514,
+      "sha256": "09b5f6c034266687587049e645683d89756879ea442472ae15d4cdef2f981606"
+    },
+    {
+      "path": "native_studio/broadcast_stream_engine.py",
+      "bytes": 57472,
+      "sha256": "54017f0cd97e1eed9177004d0eb25ca0f0b4287136f79314d0025f4fbc5e4de0"
+    },
+    {
+      "path": "native_studio/omni_broadcast_studio.py",
+      "bytes": 113683,
+      "sha256": "99862e627ad48f5e7e2453b26ff18276ccc91e65170b4498146487c4e9820b55"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 199,
+      "sha256": "bf319d09b4ac525a399f5d2785bd8e6672213b81bb6b3b2c5b8900ceef09af07"
+    },
+    {
+      "path": "package.json",
+      "bytes": 429,
+      "sha256": "553c024761fa040c2218a98d2f911cde83c3dccc0dd6d906f2f244eb91955d83"
+    },
+    {
+      "path": "release.json",
+      "bytes": 193,
+      "sha256": "84499628c3c671208f18369824f919cab52c1acddf219025bce2b0dd75e7167f"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_daemon_integrity.py",
+      "bytes": 7507,
+      "sha256": "e8596f3a4fbc86f216ad8a5b407ee29c5989616d10bcf42a53b6812f0e0959bd"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_truth204.cjs",
+      "bytes": 11195,
+      "sha256": "df7e313d6173a4600df1f699061af709bcb8e862faf738e43814bda7309b5fd4"
+    },
+    {
+      "path": "scripts/tests/test_executive_status_truth204.cjs",
+      "bytes": 3246,
+      "sha256": "57991bba2c89569dd3bfabafb61f62cffdaeed3b5870eac7bbee1a72eb68bc02"
+    },
+    {
+      "path": "scripts/tests/test_legacy_sandbox_integrity.py",
+      "bytes": 9378,
+      "sha256": "24b9ad9de91fd261dd32890b10b789379d599dbc424a049c8e95d32b1f76c3cc"
+    },
+    {
+      "path": "scripts/tests/test_memory_persistence_integrity.py",
+      "bytes": 6061,
+      "sha256": "739bdeb3e42f0e9973393c293781a6d647599e43450498f8097f788a4f0190a1"
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_truth204.py",
+      "bytes": 11762,
+      "sha256": "a2a27c18b31060c60616ca902906c9887e1288f4496bd8b66bbd58113598055b"
+    },
+    {
+      "path": "scripts/tests/test_tool_call_contract.py",
+      "bytes": 15441,
+      "sha256": "5af66fdf75bc24ae5e50e137b991fa4f4f53b8253d1f9be53ad587e8ba02ab66"
+    },
+    {
+      "path": "version.txt",
+      "bytes": 10,
+      "sha256": "b6d3a5bbc3415232c6536bfa9e7a23dc21510db73e7eef300bc7a8424e5ac2e2"
+    }
+  ],
+  "patch": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\gemini204\\record204_exact_changes.patch",
+  "complete_files_preserved": true,
+  "version": "v5.329.80",
+  "completed": [
+    "strict tool contracts and guest-only code validation",
+    "durable retained memory journal and atomic patch publication",
+    "truthful broadcast acknowledgements and browser-origin protection",
+    "DPAPI profiles/Facebook controls and truthful native/web/mobile observability",
+    "Windows install/Firebase static readback/native authenticated cloud reconstruction"
+  ],
+  "validation": {
+    "combined_python": 157,
+    "failures_errors_skips": 0,
+    "new_web": 26,
+    "focused_web_combined": 82,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "typescript": "PASS",
+    "versions16": "PASS",
+    "cohorts_overlap": true,
+    "source_whitespace_check": "PASS",
+    "runtime_non_generating": 7,
+    "commercial_alias": "AUTH_HELD401",
+    "native_cloud_reconstruction_files": 2257,
+    "final_four_space_web_cleanup": "143compiled artifacts byte-identical to deployedv80"
+  },
+  "holds": {
+    "live_trading": "DISABLED",
+    "port8007": "ABSENT",
+    "desktop_control": "PAUSED",
+    "external_broadcast_test": "NOT_PERFORMED"
+  },
+  "known_open": [
+    "Chroma identity/vector recovery",
+    "real VM/public ingest/full GUI acceptance",
+    "executive aggregate unverified metrics",
+    "two advertised screenplay handlers absent",
+    "learning-loop ignores persistence failure",
+    "local noOrigin broadcast process auth",
+    "unused legacy sandbox/telemetry modules"
+  ],
+  "architectural_decision": "Reuse current storage owner and VM guest adapters; do not create speculative Gemini cache/watcher/HUD or reconstruct Chroma data without authoritative source. Explicit unavailable states preserve truthfulness.",
+  "exact_next_step": "Audit executive aggregate metrics and learning-loop handling of persistence failures; continue recovery investigation against authoritative Chroma backups. Desktop automation remains paused until user resumes.",
+  "google_drive_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "cloud_final_receipt": "reports/record204_final_verification_receipt.json"
+}
