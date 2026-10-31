@@ -1,7 +1,7 @@
 {
   "status": "IN_PROGRESS",
   "client_date": "2026-10-30",
-  "source_version": "v5.329.79",
+  "source_version": "v5.329.80",
   "repository": {
     "checkpoint_parent": "ce1fa4430a069fa5420fa766b8d7687d89025809",
     "branch": "codex/audit-v532976-20261031",
@@ -385,5 +385,12 @@
   "current_native_version": "v5.329.79",
   "current_firebase_version": "v5.329.79",
   "native_signing": "UNSIGNED",
-  "full_gui_acceptance": false
+  "full_gui_acceptance": false,
+  "record204": {
+    "report": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
+    "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
+    "source_paths": 43,
+    "trading": "DISABLED",
+    "desktop_control": "PAUSED"
+  }
 }

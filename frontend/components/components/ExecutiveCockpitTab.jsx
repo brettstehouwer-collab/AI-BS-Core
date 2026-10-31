@@ -4,6 +4,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
 
+function emptyExecutiveMatrix() {
+  return {
+    salad: /** @type {SaladStatus | undefined} */ (undefined),
+    pillars: {
+      salad_engine: /** @type {SaladStatus | undefined} */ (undefined),
+      media_studio: { status: 'UNVERIFIED', nvenc_cfr_gate: 'UNVERIFIED', supported_models: [] },
+      broadcast_kernel: { is_obs_running: /** @type {boolean | null} */ (null), suggested_scene: '', active_studio_apps_count: null },
+      crypto_swarm: { trading_paused: /** @type {boolean | null} */ (null), status: 'UNVERIFIED', daemon_port: 8007, twap_plans_count: null, drip_orders_count: null },
+      ollama_swarm: { status: 'UNVERIFIED', models_count: null, models_sample: [] }
+    },
+    hardware: /** @type {Record<string, number | null>} */ ({ temp_c: null, vram_used_mb: null, vram_total_mb: null, gpu_util_pct: null, ram_used_gb: null, ram_total_gb: null, ram_percent: null, disk_free_gb: null, disk_percent: null }),
+    vault: { sqlite_vault_records: null, media_memory_records: null }
+  };
+}
+
+/** @param {unknown} value @param {string} [unit] */
+function executiveMetric(value, unit = '') {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? `${value.toLocaleString()}${unit}` : 'Unavailable';
+}
+
 /** @param {{BACKEND_URL?: string, backendUrl?: string}} props */
 export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const activeBackend = backendUrl || BACKEND_URL || useAppStore((state) => state.BACKEND_URL) || 'http://localhost:8080';
@@ -21,7 +41,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const [chatMessages, setChatMessages] = useState([
     {
       role: 'assistant',
-      content: "⚡ **Sovereign Executive Command Cockpit Online (v5.327.0)**\n\nDirectorial Voice HUD & Autonomous Sentinel Engine active. 100% Sovereign Local RTX 4090 execution enforced (Zero Cloud Spend: $0.00).\n\nSpeak or issue directives across Media Studio, Broadcast Kernel, Crypto Swarm, Knowledge Vault (305k records), and Local Ollama Swarm.",
+      content: "Executive Command Cockpit. Service status, hardware metrics, model readiness, and spending have not yet been verified. Reported backend values do not prove live execution or trading authorization.",
       tool_calls: /** @type {ExecutiveAction[]} */ ([])
     }
   ]);
@@ -29,35 +49,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Column 2: 4-Pillar Matrix Status
-  const [matrixStatus, setMatrixStatus] = useState({
-    salad: /** @type {SaladStatus | undefined} */ (undefined),
-    pillars: {
-      salad_engine: /** @type {SaladStatus | undefined} */ (undefined),
-      media_studio: { status: 'ONLINE', nvenc_cfr_gate: 'READY', supported_models: ['wan2.1', 'ltx-video'] },
-      broadcast_kernel: { is_obs_running: false, suggested_scene: 'AI-BS Main Dashboard', active_studio_apps_count: 0 },
-      crypto_swarm: { trading_paused: /** @type {boolean | undefined} */ (undefined), status: 'ONLINE', daemon_port: 8007, twap_plans_count: 0, drip_orders_count: 0 },
-      ollama_swarm: { status: 'CONNECTING', models_count: 17, models_sample: ['stehouwer_llm', 'stehouwer_qwen'] }
-    },
-    hardware: {
-      gpu_name: 'NVIDIA GeForce RTX 4090 (24GB)',
-      temp_c: 42,
-      vram_used_mb: 4096,
-      vram_total_mb: 24576,
-      vram_free_mb: 20480,
-      gpu_util_pct: 12,
-      ram_used_gb: 18.4,
-      ram_total_gb: 64.0,
-      ram_percent: 28.7,
-      disk_free_gb: 840.5,
-      disk_total_gb: 1900.0,
-      disk_percent: 55.7
-    },
-    vault: {
-      sqlite_vault_records: 305654,
-      media_memory_records: 12,
-      chromadb_collection: 'stehouwer_media_memory'
-    }
-  });
+  const [matrixStatus, setMatrixStatus] = useState(emptyExecutiveMatrix);
 
   // Column 3: Action Queue & Governance
   const [pendingActions, setPendingActions] = useState(/** @type {ExecutiveAction[]} */ ([]));
@@ -108,14 +100,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const fetchMatrixStatus = async () => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/matrix/status`);
-      if (res.ok) {
-        const data = await res.json();
-        setMatrixStatus(data);
-        if (data.autonomy_mode) {
-          setAutonomyMode(data.autonomy_mode);
-        }
-      }
+      if (!res.ok) throw new Error('Matrix status request rejected');
+      const data = await res.json();
+      if (!data || typeof data !== 'object' || !data.pillars || typeof data.pillars !== 'object' || !data.hardware || typeof data.hardware !== 'object' || !data.vault || typeof data.vault !== 'object') throw new Error('Matrix status contract unavailable');
+      setMatrixStatus(data);
+      if (['SAFE', 'SEMI_AUTO', 'FULL_AUTO'].includes(data.autonomy_mode)) setAutonomyMode(data.autonomy_mode);
     } catch (err) {
+      setMatrixStatus(emptyExecutiveMatrix());
       console.warn('Matrix status fetch warning:', err);
     }
   };
@@ -532,7 +523,7 @@ const handleSetAutonomy = async (mode) => {
                 fontWeight: 700,
                 border: '1px solid rgba(63, 185, 80, 0.3)'
               }}>
-                UNIFIED BUS ONLINE
+                UNIFIED BUS UNVERIFIED
               </span>
               <span style={{
                 background: 'rgba(163, 113, 247, 0.15)',
@@ -1089,7 +1080,7 @@ const handleSetAutonomy = async (mode) => {
               <span style={{ fontSize: '1rem' }}>🌐</span>
               <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>4-Pillar Live Matrix</span>
             </div>
-            <span style={{ fontSize: '0.7rem', color: '#3fb950', fontWeight: 600 }}>● ALL SYSTEMS GREEN</span>
+            <span style={{ fontSize: '0.7rem', color: '#3fb950', fontWeight: 600 }}>Backend reports; verification pending</span>
           </div>
 
           {/* Cards List */}
@@ -1121,14 +1112,14 @@ const handleSetAutonomy = async (mode) => {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  ONLINE
+                  UNVERIFIED
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• NVENC CFR 30fps Gate: <span style={{ color: '#3fb950', fontWeight: 600 }}>PASSING</span></div>
-                <div>• Vertical 9:16 Reframer: <span style={{ color: '#c9d1d9' }}>MediaPipe / Gaze Active</span></div>
+                <div>• NVENC CFR 30fps Gate: <span style={{ color: '#3fb950', fontWeight: 600 }}>UNVERIFIED</span></div>
+                <div>• Vertical 9:16 Reframer: <span style={{ color: '#c9d1d9' }}>Readiness unverified</span></div>
                 <div>• ComfyUI Port: <span style={{ color: '#58a6ff' }}>8188 (Primary) / 8189 (Screenplay)</span></div>
-                <div>• Local Checkpoints: <span style={{ color: '#c9d1d9' }}>Wan2.1 (5.41GB), LTX-2B (5.45GB)</span></div>
+                <div>• Local Checkpoints: <span style={{ color: '#c9d1d9' }}>Inventory unverified</span></div>
               </div>
             </div>
 
@@ -1152,14 +1143,14 @@ const handleSetAutonomy = async (mode) => {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'OBS STREAMING' : 'SOCKET READY'}
+                  {matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'OBS PROCESS REPORTED' : 'OBS UNVERIFIED'}
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• OBS WebSocket Engine: <span style={{ color: '#58a6ff' }}>Port 4455 (v5.x Protocol)</span></div>
                 <div>• Suggested Scene: <span style={{ color: '#c9d1d9' }}>{matrixStatus.pillars?.broadcast_kernel?.suggested_scene || 'AI-BS Main'}</span></div>
                 <div>• Unreal Engine 5 Bridge: <span style={{ color: '#58a6ff' }}>Port 8888 (Signaling Host)</span></div>
-                <div>• Master Audio Mix: <span style={{ color: '#3fb950' }}>48kHz AES3 6-Track Matrix</span></div>
+                <div>• Master Audio Mix: <span style={{ color: '#3fb950' }}>Routing unverified</span></div>
               </div>
             </div>
 
@@ -1178,19 +1169,19 @@ const handleSetAutonomy = async (mode) => {
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 700,
-                  color: matrixStatus.pillars?.crypto_swarm?.trading_paused ? '#f85149' : '#3fb950',
-                  background: matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'rgba(248, 81, 73, 0.15)' : 'rgba(63, 185, 80, 0.15)',
+                  color: '#d29922',
+                  background: 'rgba(210, 153, 34, 0.15)',
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'TRADING PAUSED' : 'PORT 8007 ACTIVE'}
+                  {matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'TRADING PAUSED (REPORTED)' : 'TRADING STATE UNVERIFIED'}
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• Execution Engine: <span style={{ color: '#c9d1d9' }}>TWAP Drip Micro-Allocations</span></div>
-                <div>• Active TWAP Plans: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.pillars?.crypto_swarm?.twap_plans_count ?? 0}</span></div>
-                <div>• Drip Orders in Queue: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.pillars?.crypto_swarm?.drip_orders_count ?? 0}</span></div>
-                <div>• Trailing Stop Guards: <span style={{ color: '#3fb950' }}>ARMED (Max Slippage 0.5%)</span></div>
+                <div>• Active TWAP Plans: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.twap_plans_count)}</span></div>
+                <div>• Drip Orders in Queue: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.drip_orders_count)}</span></div>
+                <div>• Trailing Stop Guards: <span style={{ color: '#3fb950' }}>UNVERIFIED</span></div>
               </div>
             </div>
 
@@ -1204,7 +1195,7 @@ const handleSetAutonomy = async (mode) => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '1.1rem' }}>🧠</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#58a6ff' }}>Ollama Swarm (17 Models)</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#58a6ff' }}>Ollama Swarm (reported)</span>
                 </div>
                 <span style={{
                   fontSize: '0.66rem',
@@ -1214,14 +1205,14 @@ const handleSetAutonomy = async (mode) => {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {matrixStatus.pillars?.ollama_swarm?.status || 'ONLINE'}
+                  {matrixStatus.pillars?.ollama_swarm?.status || 'UNVERIFIED'}
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• Port Matrix: <span style={{ color: '#58a6ff' }}>11434 (C: Drive) & 11435 (E: Drive)</span></div>
-                <div>• Loaded Models: <span style={{ color: '#c9d1d9' }}>stehouwer_llm, stehouwer_qwen, mixtral</span></div>
-                <div>• Vector Memory: <span style={{ color: '#3fb950' }}>ChromaDB (stehouwer_llm_memory)</span></div>
-                <div>• Context Window: <span style={{ color: '#c9d1d9' }}>8,192 tokens with SSD Virtual Swap</span></div>
+                <div>• Loaded Models: <span style={{ color: '#c9d1d9' }}>Inventory unverified</span></div>
+                <div>• Vector Memory: <span style={{ color: '#3fb950' }}>ChromaDB health unverified</span></div>
+                <div>• Context Window: <span style={{ color: '#c9d1d9' }}>Configuration unverified</span></div>
               </div>
             </div>
 
@@ -1245,13 +1236,13 @@ const handleSetAutonomy = async (mode) => {
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
-                  {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'ACTIVE' : 'IDLE'}
+                  {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'PROCESS REPORTED' : 'UNVERIFIED'}
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Workload State: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'idle'}</span></div>
-                <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{(matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps || 0) > 0 ? `${matrixStatus.salad?.bandwidth_mbps || matrixStatus.pillars?.salad_engine?.bandwidth_mbps} Mbps` : 'Online / Listening'}</span></div>
-                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : '#c9d1d9' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Rigel RTX 4090 Mining' : 'RTX 4090 Available'}</span></div>
+                <div>• Workload State: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'UNVERIFIED'}</span></div>
+                <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{executiveMetric(matrixStatus.salad?.bandwidth_mbps ?? matrixStatus.pillars?.salad_engine?.bandwidth_mbps, ' Mbps')}</span></div>
+                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : '#c9d1d9' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Mining process reported' : 'Availability unverified'}</span></div>
                 <div>• Container Disk: <span style={{ color: '#c9d1d9' }}>E:\SaladData\ (Junction on C:\)</span></div>
               </div>
             </div>
@@ -1500,14 +1491,14 @@ const handleSetAutonomy = async (mode) => {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#58a6ff' }}>
-                  NVIDIA GeForce RTX 4090
+                  GPU (reported metrics)
                 </span>
                 <span style={{
                   fontSize: '0.72rem',
                   fontWeight: 700,
                   color: (matrixStatus.hardware?.temp_c || 0) < 70 ? '#3fb950' : '#f85149'
                 }}>
-                  {matrixStatus.hardware?.temp_c || 42}°C
+                  {executiveMetric(matrixStatus.hardware?.temp_c, '°C')}
                 </span>
               </div>
 
@@ -1515,11 +1506,11 @@ const handleSetAutonomy = async (mode) => {
               <div style={{ marginBottom: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
                   <span>VRAM Allocated:</span>
-                  <span>{matrixStatus.hardware?.vram_used_mb || 0} MB / {matrixStatus.hardware?.vram_total_mb || 24576} MB</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.vram_used_mb, ' MB')} / {executiveMetric(matrixStatus.hardware?.vram_total_mb, ' MB')}</span>
                 </div>
                 <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
-                    width: `${Math.min(100, Math.round(((matrixStatus.hardware?.vram_used_mb || 0) / (matrixStatus.hardware?.vram_total_mb || 24576)) * 100))}%`,
+                    width: `${(matrixStatus.hardware?.vram_total_mb ?? 0) > 0 ? Math.max(0, Math.min(100, Math.round(((matrixStatus.hardware?.vram_used_mb ?? 0) / (matrixStatus.hardware?.vram_total_mb || 1)) * 100))) : 0}%`,
                     height: '100%',
                     backgroundColor: '#58a6ff',
                     transition: 'width 0.3s ease'
@@ -1531,11 +1522,11 @@ const handleSetAutonomy = async (mode) => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
                   <span>Core Utilization:</span>
-                  <span>{matrixStatus.hardware?.gpu_util_pct || 0}%</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}</span>
                 </div>
                 <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
-                    width: `${matrixStatus.hardware?.gpu_util_pct || 0}%`,
+                    width: `${executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}`,
                     height: '100%',
                     backgroundColor: '#3fb950',
                     transition: 'width 0.3s ease'
@@ -1559,7 +1550,7 @@ const handleSetAutonomy = async (mode) => {
               <div style={{ marginBottom: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
                   <span>DDR5 RAM:</span>
-                  <span>{matrixStatus.hardware?.ram_used_gb || 0} GB / {matrixStatus.hardware?.ram_total_gb || 64} GB ({matrixStatus.hardware?.ram_percent || 0}%)</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.ram_used_gb, ' GB')} / {executiveMetric(matrixStatus.hardware?.ram_total_gb, ' GB')} ({executiveMetric(matrixStatus.hardware?.ram_percent, '%')})</span>
                 </div>
                 <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
@@ -1575,7 +1566,7 @@ const handleSetAutonomy = async (mode) => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
                   <span>Samsung 990 Pro NVMe:</span>
-                  <span>{matrixStatus.hardware?.disk_free_gb || 0} GB Free</span>
+                  <span>{executiveMetric(matrixStatus.hardware?.disk_free_gb, ' GB Free')}</span>
                 </div>
                 <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
@@ -1602,9 +1593,9 @@ const handleSetAutonomy = async (mode) => {
                 </span>
               </div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• SQLite Vault Records: <span style={{ color: '#58a6ff', fontWeight: 700 }}>{(matrixStatus.vault?.sqlite_vault_records || 305654).toLocaleString()}</span></div>
-                <div>• Media Memory Records: <span style={{ color: '#3fb950', fontWeight: 700 }}>{matrixStatus.vault?.media_memory_records || 0}</span></div>
-                <div>• ChromaDB Vector Heartbeat: <span style={{ color: '#3fb950', fontWeight: 600 }}>ONLINE</span></div>
+                <div>• SQLite Vault Records: <span style={{ color: '#58a6ff', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.sqlite_vault_records)}</span></div>
+                <div>• Media Memory Records: <span style={{ color: '#3fb950', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.media_memory_records)}</span></div>
+                <div>• ChromaDB Vector Heartbeat: <span style={{ color: '#8b949e', fontWeight: 600 }}>UNVERIFIED</span></div>
                 <div>• Multi-Tenant Isolation: <span style={{ color: '#c9d1d9' }}>stehouwer_publishing</span></div>
               </div>
             </div>

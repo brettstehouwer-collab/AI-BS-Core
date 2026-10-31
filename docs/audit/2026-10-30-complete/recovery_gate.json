@@ -65,5 +65,13 @@
   "record200_runtime_before_restart": "record200_runtime_before_restart.aibs",
   "record200_after_and_evidence": "See separate verified receipts after cloud upload",
   "record203": "See encryptedbefore/after/runtime/evidence receipts and native delta full-target reconstruction proof.",
-  "native79_delta_requires_record201_base": true
+  "native79_delta_requires_record201_base": true,
+  "source_version": "v5.329.80",
+  "record204": {
+    "report": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
+    "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
+    "source_paths": 43,
+    "trading": "DISABLED",
+    "desktop_control": "PAUSED"
+  }
 }

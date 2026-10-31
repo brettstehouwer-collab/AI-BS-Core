@@ -79,6 +79,7 @@ from PyQt6.QtWidgets import (
 )
 
 from native_studio.engine import EngineBus, GpuProbe
+from native_studio.broadcast_control import stream_payload, send_broadcast_command
 from native_studio.theme import PALETTE
 from native_studio.broadcast_stream_engine import (
     STREAM_PLATFORM_SPECS,
@@ -212,8 +213,8 @@ class LiveBroadcastCanvas(QWidget):
         self.orientation = "horizontal"  # "horizontal" (16:9) | "vertical" (9:16)
         self.active_source_title = "🎮 Direct3D 11 Zero-Copy Hook: Standby"
         self.resolution_text = "1920x1080 @ 60 FPS"
-        self.bitrate_text = "6,000 kbps"
-        self.latency_text = "0.31 ms NVENC"
+        self.bitrate_text = "Bitrate not measured"
+        self.latency_text = "Not measured"
         self.uptime_seconds = 0
 
         # Layer visibility flags
@@ -506,7 +507,7 @@ class LiveBroadcastCanvas(QWidget):
             if self.safe_areas_enabled:
                 self._draw_safe_areas(painter, prog_rect)
 
-            badge_text = "● LIVE OUTPUT" if self.is_streaming else "● PROGRAM (LIVE)"
+            badge_text = "● SERVICE ACK" if self.is_streaming else "● PROGRAM PREVIEW"
             badge_color = QColor(220, 38, 38, 220) if self.is_streaming else QColor(15, 23, 42, 220)
             painter.setBrush(QBrush(badge_color))
             painter.setPen(QPen(prog_color, 1))
@@ -630,8 +631,8 @@ class LiveBroadcastCanvas(QWidget):
             vu_y = box_y + box_h / 2 - 18
             painter.fillRect(QRectF(vu_x, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
             painter.fillRect(QRectF(vu_x + 6, vu_y, vu_w, vu_h), QColor(15, 23, 42, 180))
-            lvl_l = int(vu_h * (0.55 + 0.35 * math.sin(self._phase * 2.2)))
-            lvl_r = int(vu_h * (0.50 + 0.40 * math.cos(self._phase * 1.8)))
+            lvl_l = 0  # No measured audio producer
+            lvl_r = 0
             painter.fillRect(QRectF(vu_x, vu_y + vu_h - lvl_l, vu_w, lvl_l), QColor("#10b981"))
             painter.fillRect(QRectF(vu_x + 6, vu_y + vu_h - lvl_r, vu_w, lvl_r), QColor("#10b981"))
 
@@ -654,7 +655,7 @@ class LiveBroadcastCanvas(QWidget):
             painter.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
             mins = int(self.uptime_seconds) // 60
             secs = int(self.uptime_seconds) % 60
-            painter.drawText(QRectF(badge_x + 18, badge_y, badge_w - 18, badge_h), Qt.AlignmentFlag.AlignCenter, f"LIVE {mins:02d}:{secs:02d}")
+            painter.drawText(QRectF(badge_x + 18, badge_y, badge_w - 18, badge_h), Qt.AlignmentFlag.AlignCenter, f"ACK {mins:02d}:{secs:02d}")
         else:
             painter.setBrush(QBrush(QColor(15, 23, 42, 220)))
             painter.setPen(QPen(QColor("#334155"), 1))
@@ -1001,7 +1002,7 @@ class AdvancedAudioMixerWidget(QFrame):
         hdr = QHBoxLayout()
         hdr.addWidget(QLabel("<b style='color: #10b981; font-size: 9pt;'>🎚️ ADVANCED BROADCAST AUDIO MIXER</b>"))
         hdr.addStretch()
-        hdr.addWidget(QLabel("<span style='color: #64748b; font-size: 7.5pt;'>WASAPI + ASIO ROUTING • MMCSS P15</span>"))
+        hdr.addWidget(QLabel("<span style='color: #64748b; font-size: 7.5pt;'>Audio levels not measured • Local mixer draft</span>"))
         root.addLayout(hdr)
 
         channels_row = QHBoxLayout()
@@ -1025,17 +1026,13 @@ class AdvancedAudioMixerWidget(QFrame):
         # Pulse Timer for VU Meters
         self._vu_timer = QTimer(self)
         self._vu_timer.timeout.connect(self._animate_vu_meters)
-        self._vu_timer.start(80)
+        # No meter producer is connected; leave the animation timer stopped.
+        self._animate_vu_meters()
 
     def _animate_vu_meters(self) -> None:
         for ch in [self.ch_desktop, self.ch_mic, self.ch_daw, self.ch_guest, self.ch_ai]:
-            if ch.is_muted:
-                ch.meter.set_levels(0.0, 0.0)
-            else:
-                vol_factor = ch.slider.value() / 100.0
-                base_l = (0.4 + 0.5 * random.random()) * vol_factor
-                base_r = (0.35 + 0.55 * random.random()) * vol_factor
-                ch.meter.set_levels(base_l, base_r)
+            ch.meter.set_levels(0.0, 0.0)
+            ch.meter.setToolTip('Audio input levels are not measured. These are local mixer draft controls.')
 
     def shutdown(self) -> None:
         if hasattr(self, "_vu_timer") and self._vu_timer.isActive():
@@ -1310,7 +1307,7 @@ class MultiRtmpSettingsWidget(QFrame):
         lay.addLayout(enc_row)
 
         # Encoder specs banner
-        self.lbl_enc_specs = QLabel("🔒 Rate Control: CBR • GOP: 2.0s (120f) • B-Frames: 2 • Audio: AAC 320k 48kHz • Dual NVENC 0.3ms")
+        self.lbl_enc_specs = QLabel("Encoder settings draft • Runtime encoder and latency not measured")
         self.lbl_enc_specs.setStyleSheet("color: #64748b; font-size: 6.8pt;")
         lay.addWidget(self.lbl_enc_specs)
 
@@ -1361,13 +1358,15 @@ class MultiRtmpSettingsWidget(QFrame):
             d_row.setSpacing(4)
 
             chk = QCheckBox(d_label)
-            chk.setChecked(d_checked)
+            saved_cfg = self._profile_mgr.load()
+            config_key = "sovereign_srt" if d_key == "sovereign" else d_key
+            chk.setChecked(saved_cfg.get("destinations", {}).get(config_key, {}).get("enabled", False))
             chk_color = "#22c55e" if d_key == "sovereign" else "#cbd5e1"
             chk.setStyleSheet(f"color: {chk_color}; font-size: 7.2pt;")
             d_row.addWidget(chk, 1)
             self.dest_checkboxes[d_key] = chk
 
-            b_lbl = QLabel(d_default_ping)
+            b_lbl = QLabel("Not checked")
             b_lbl.setStyleSheet(
                 "background: #0f172a; color: #38bdf8; border: 1px solid #1e293b; border-radius: 3px; font-size: 6.8pt; padding: 1px 4px;"
             )
@@ -1536,8 +1535,8 @@ class UnifiedStreamChatWidget(QFrame):
         hdr.addWidget(QLabel("<b style='color: #c084fc; font-size: 8.5pt;'>💬 TWITCH / IRC STREAM CHAT (PORT 8006)</b>"))
         hdr.addStretch()
 
-        self.chk_ai_sidekick = QCheckBox("🤖 AI Sidekick Active")
-        self.chk_ai_sidekick.setChecked(True)
+        self.chk_ai_sidekick = QCheckBox("Local chat draft (not connected)")
+        self.chk_ai_sidekick.setChecked(False)
         self.chk_ai_sidekick.setStyleSheet("color: #38bdf8; font-size: 7pt; font-weight: bold;")
         hdr.addWidget(self.chk_ai_sidekick)
         lay.addLayout(hdr)
@@ -1546,8 +1545,7 @@ class UnifiedStreamChatWidget(QFrame):
         self.chat_view.setReadOnly(True)
         self.chat_view.setFont(QFont("Consolas", 8))
         self.chat_view.setStyleSheet("background: #05080f; color: #cbd5e1; border: 1px solid #1e293b; border-radius: 4px; padding: 6px;")
-        self.chat_view.append(f"<b style='color: #a855f7;'>[System]</b> Connected to Social Hub IRC Gateway on Port 8006.")
-        self.chat_view.append(f"<b style='color: #38bdf8;'>AI_Sidekick:</b> Sovereign Broadcast Co-Pilot is online and monitoring game state.")
+        self.chat_view.setPlainText('Social Hub connection not checked. Messages below are local drafts; no external delivery is connected.')
         lay.addWidget(self.chat_view)
 
         # Quick Commands Row
@@ -1564,7 +1562,7 @@ class UnifiedStreamChatWidget(QFrame):
         # Input Row
         inp_row = QHBoxLayout()
         self.txt_msg = QLineEdit()
-        self.txt_msg.setPlaceholderText("Send chat message to Twitch & Kick...")
+        self.txt_msg.setPlaceholderText("Write a local chat draft (not sent)...")
         self.txt_msg.setStyleSheet("background: #070b12; color: #f8fafc; border: 1px solid #334155; padding: 5px; border-radius: 3px; font-size: 8pt;")
         self.txt_msg.returnPressed.connect(self._send_chat)
         inp_row.addWidget(self.txt_msg, 1)
@@ -1580,28 +1578,17 @@ class UnifiedStreamChatWidget(QFrame):
         if not msg:
             return
         self.txt_msg.clear()
-        self.chat_view.append(f"<b style='color: #00f0ff;'>You:</b> {msg}")
-
-        # AI Sidekick auto-reply if enabled
-        if self.chk_ai_sidekick.isChecked() and (msg.startswith("!") or "?" in msg):
-            QTimer.singleShot(600, lambda: self._generate_ai_reply(msg))
+        self.chat_view.append('Local draft (not sent):')
+        # insertPlainText keeps user HTML inert.
+        self.chat_view.insertPlainText(msg)
+        self.chat_view.append('External chat delivery and AI replies are not connected.')
 
     def _send_command(self, cmd: str) -> None:
         self.txt_msg.setText(cmd)
         self._send_chat()
 
     def _generate_ai_reply(self, prompt: str) -> None:
-        if "!game" in prompt:
-            ans = "Active Stream: Direct3D 11 Zero-Copy Capture on RTX 4090 Dual NVENC."
-        elif "!specs" in prompt:
-            ans = "Specs: AMD Ryzen 9 9950X (16C/32T), NVIDIA GeForce RTX 4090 24GB VRAM, 64GB DDR5, WASAPI Exclusive Pro Audio."
-        elif "!music" in prompt:
-            ans = "Soundtrack: October 7 Vocal Studio Native DAW (<2.8ms ASIO latency bus)."
-        elif "!uptime" in prompt:
-            ans = "Broadcast Uptime: Stream is healthy with 0 dropped frames."
-        else:
-            ans = f"Acknowledged '{prompt}'. AI-BS Sovereign matrix telemetry is nominal."
-        self.chat_view.append(f"<b style='color: #38bdf8;'>AI_Sidekick:</b> {ans}")
+        self.chat_view.append('AI Sidekick unavailable: no model or live telemetry source is connected.')
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1748,7 +1735,7 @@ class VideoMeetingsWebRtcWidget(QWidget):
         meet_lay = QVBoxLayout(c_meet)
         meet_lay.setSpacing(8)
 
-        meet_lay.addWidget(QLabel("<b style='color: #f8fafc; font-size: 9.5pt;'>Executive Business Review (Room: meet-928-401)</b>"))
+        meet_lay.addWidget(QLabel("<b style='color: #f8fafc; font-size: 9.5pt;'>Video meetings: no session connected</b>"))
 
         # Video feed placeholder
         vid_box = QFrame()
@@ -1756,7 +1743,7 @@ class VideoMeetingsWebRtcWidget(QWidget):
         vid_box.setStyleSheet("background: #05080f; border: 1px solid #00f0ff; border-radius: 6px;")
         vb_lay = QVBoxLayout(vid_box)
         vb_lay.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        lbl_v = QLabel("📹 P2P Encrypted WebRTC Video Feed Active\nParticipants: Brett Stehouwer, Sean Stehouwer, Julie Stehouwer")
+        lbl_v = QLabel("Video feed unavailable\nNo participant roster has been verified")
         lbl_v.setStyleSheet("color: #38bdf8; font-weight: bold; font-size: 8.5pt; text-align: center;")
         lbl_v.setAlignment(Qt.AlignmentFlag.AlignCenter)
         vb_lay.addWidget(lbl_v)
@@ -1765,9 +1752,11 @@ class VideoMeetingsWebRtcWidget(QWidget):
         # Call Controls Bar
         ctrl_bar = QHBoxLayout()
         ctrl_bar.setSpacing(8)
-        for act in ["🎤 Mic: ON", "📹 Camera: ON", "🖥️ Share Screen", "⏺ Record Call", "📞 End Call"]:
+        for act in ["🎤 Microphone", "📹 Camera", "🖥️ Share Screen", "⏺ Record Call", "📞 End Call"]:
             b = QPushButton(act)
             b.setStyleSheet("background: #1e293b; color: #cbd5e1; font-weight: bold; font-size: 7.5pt; border-radius: 4px; padding: 6px 10px;")
+            b.setEnabled(False)
+            b.setToolTip("Unavailable: no meeting provider/session is connected.")
             ctrl_bar.addWidget(b)
         ctrl_bar.addStretch()
         meet_lay.addLayout(ctrl_bar)
@@ -1783,24 +1772,17 @@ class VideoMeetingsWebRtcWidget(QWidget):
 
         sched_lay.addWidget(QLabel("<b style='color: #38bdf8; font-size: 9.5pt;'>📅 Scheduled Executive Meetings</b>"))
 
-        table = QTableWidget(3, 3)
+        table = QTableWidget(0, 3)
         table.setHorizontalHeaderLabels(["Title", "Date / Time", "Status"])
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         table.setStyleSheet("background: #070b12; color: #cbd5e1; border: 1px solid #1e293b; font-size: 7.5pt;")
 
-        meetings = [
-            ("Stehouwer Publishing Q3 Strategy", "Today 02:00 PM", "🟢 IN PROGRESS"),
-            ("Notō Hospitality Enterprise Review", "Tomorrow 10:00 AM", "🟡 UPCOMING"),
-            ("Prestige Wash Fleet Scaling", "Friday 04:00 PM", "⚪ SCHEDULED"),
-        ]
-        for row, (t, dt, st) in enumerate(meetings):
-            table.setItem(row, 0, QTableWidgetItem(t))
-            table.setItem(row, 1, QTableWidgetItem(dt))
-            table.setItem(row, 2, QTableWidgetItem(st))
         sched_lay.addWidget(table)
 
         btn_new_meet = QPushButton("➕ Schedule New Meeting")
         btn_new_meet.setStyleSheet("background: #0284c7; color: #fff; font-weight: bold; border-radius: 4px; padding: 6px;")
+        btn_new_meet.setEnabled(False)
+        btn_new_meet.setToolTip("Unavailable: calendar/meeting provider is not connected.")
         sched_lay.addWidget(btn_new_meet)
         sched_lay.addStretch()
 
@@ -1881,11 +1863,11 @@ class UniversalOmniStudioNativeView(QWidget):
         tb_lay.addStretch()
 
         # Telemetry Badges
-        b1 = QLabel("RTX 4090 DUAL NVENC: 0.3ms")
+        b1 = QLabel("NVENC latency: not measured")
         b1.setStyleSheet("background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid #00f0ff; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
-        b2 = QLabel("OBS WS 4455: READY")
+        b2 = QLabel("OBS WS 4455: not checked")
         b2.setStyleSheet("background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #a855f7; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
-        b3 = QLabel("MMCSS PRO AUDIO: P15")
+        b3 = QLabel("Audio priority: not checked")
         b3.setStyleSheet("background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #059669; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
 
         tb_lay.addWidget(b1)
@@ -1924,6 +1906,7 @@ class UniversalOmniStudioNativeView(QWidget):
             "background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #dc2626, stop:1 #ef4444); "
             "color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;"
         )
+        self.btn_stream.setToolTip("Uses selected destinations and encoder controls. Configure stream keys in Setup Keys. Live ingest is verified separately.")
         self.btn_stream.clicked.connect(self._toggle_stream)
         ar_lay.addWidget(self.btn_stream)
 
@@ -2141,15 +2124,8 @@ class UniversalOmniStudioNativeView(QWidget):
         self.txt_telemetry.setReadOnly(True)
         self.txt_telemetry.setFont(QFont("Consolas", 8))
         self.txt_telemetry.setStyleSheet("background: #05080f; color: #38bdf8; border: 1px solid #1e293b; border-radius: 4px; padding: 6px;")
-        self.txt_telemetry.setPlainText(
-            f"[{time.strftime('%H:%M:%S')}] Stehouwer Publishing Broadcast Topology Initialized.\n"
-            f"[{time.strftime('%H:%M:%S')}] NVENC Streamer: Port 8088 online (RTX 4090 Dual 8th Gen NVENC Ready, 0.3ms latency)\n"
-            f"[{time.strftime('%H:%M:%S')}] Broadcast Daemon: Port 8005 online (aibs_broadcast_daemon.py)\n"
-            f"[{time.strftime('%H:%M:%S')}] OBS WebSocket: Port 4455 protocol ready\n"
-            f"[{time.strftime('%H:%M:%S')}] Low-Latency Audio: MMCSS Pro Audio Priority 15 bound (<2.8ms WASAPI Exclusive)\n"
-            f"[{time.strftime('%H:%M:%S')}] DAW Integration: October 7 Vocal DAW & Neural Voice Bridge Ready\n"
-            f"[{time.strftime('%H:%M:%S')}] Game Hook Engine: Ready to auto-capture DirectX 11 / DXGI foreground applications."
-        )
+        self.txt_telemetry.document().setMaximumBlockCount(2000)
+        self.txt_telemetry.setPlainText('Local broadcast controls initialized. Encoder, OBS, audio priority and remote ingest have not been checked.')
         lc_lay.addWidget(self.txt_telemetry)
         log_split.addWidget(log_card)
 
@@ -2207,11 +2183,11 @@ class UniversalOmniStudioNativeView(QWidget):
     def _on_game_selected(self, game_title: str, hwnd: int = 0) -> None:
         self.canvas.set_target_window(hwnd, game_title)
         mode_desc = f"Window HWND {hwnd}" if hwnd > 0 else "Auto-Foreground Hook"
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Window-Specific Capture attached to: {game_title} ({mode_desc}) • Zero desktop DC contention.")
+        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Window-Specific Capture attached to: {game_title} ({mode_desc}) • Preview selection; capture performance not measured.")
 
     def _on_scene_switched(self, scene: str) -> None:
         self.canvas.set_active_source(scene)
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Switched OBS & Kernel Scene: '{scene}'")
+        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Local preview scene selected: '{scene}'")
         # Dispatch to kernel
         for port, path in [(8088, "/api/kernel/scene/switch"), (8005, "/api/scene/switch")]:
             try:
@@ -2242,52 +2218,73 @@ class UniversalOmniStudioNativeView(QWidget):
         win = self.window()
         if hasattr(win, "jump_to_tab"):
             win.jump_to_tab("music_daw")
-        self.txt_telemetry.append(f"\n[{time.strftime('%H:%M:%S')}] 🎙️ Switched to October 7 Vocal Studio Native DAW (WASAPI Exclusive <2.8ms).")
+        self.txt_telemetry.append(f"\n[{time.strftime('%H:%M:%S')}] 🎙️ Switched to October 7 Vocal Studio Native DAW; audio latency not measured.")
+
+    def _stream_payload(self) -> dict:
+        config=StreamProfileManager.load()
+        for key,checkbox in self.rtmp_settings.dest_checkboxes.items():
+            name='sovereign_srt' if key=='sovereign' else key
+            if name in config['destinations']:
+                config['destinations'][name]['enabled']=checkbox.isChecked()
+        encoder=config['encoder']
+        encoder['codec']=self.rtmp_settings.combo_codec.currentText()
+        encoder['resolution']=self.rtmp_settings.combo_res.currentText().split()[0]
+        encoder['bitrate_kbps']=int(self.rtmp_settings.combo_bitrate.currentText().split()[0].replace(',',''))
+        encoder['fps']=int(self.combo_fps.currentText().split()[0])
+        return stream_payload(config)
 
     def _toggle_stream(self) -> None:
-        self._is_streaming = not self._is_streaming
-        self.canvas.set_streaming(self._is_streaming)
-        if self._is_streaming:
-            self.btn_stream.setText("⏹ Stop Hardware NVENC Broadcast")
-            self.btn_stream.setStyleSheet("background: #059669; color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;")
-            self.txt_telemetry.append(
-                f"\n[{time.strftime('%H:%M:%S')}] 🔴 BROADCAST ACTIVE: Hardware NVENC stream started on Port 8088 @ 60 FPS.\n"
-                f"Codec: {self.rtmp_settings.combo_codec.currentText()} | Resolution: {self.rtmp_settings.combo_res.currentText()}\n"
-                "Multi-RTMP: Dispatched to active endpoints. Dropped frames: 0. Encoding latency: 0.31 ms."
-            )
-            # Dispatch to Port 8005/8088
-            for port, path in [(8088, "/api/kernel/stream/start"), (8005, "/stream/start")]:
-                try:
-                    req = urllib.request.Request(
-                        f"http://127.0.0.1:{port}{path}",
-                        data=json.dumps({"stream_key": "live_475849061", "fps": 60}).encode("utf-8"),
-                        headers={"Content-Type": "application/json"},
-                    )
-                    urllib.request.urlopen(req, timeout=1.0)
-                except Exception:
-                    pass
-        else:
-            self.btn_stream.setText("🔴 Start Hardware NVENC Broadcast")
-            self.btn_stream.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #dc2626, stop:1 #ef4444); color: #ffffff; font-weight: bold; font-size: 8.5pt; border-radius: 4px; padding: 6px 12px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏹ BROADCAST STOPPED: Clean stream teardown completed.")
-            for port, path in [(8088, "/api/kernel/stream/stop"), (8005, "/stream/stop")]:
-                try:
-                    req = urllib.request.Request(f"http://127.0.0.1:{port}{path}", data=b"{}", headers={"Content-Type": "application/json"})
-                    urllib.request.urlopen(req, timeout=1.0)
-                except Exception:
-                    pass
+        self._dispatch_broadcast('stream', not self._is_streaming)
+
+    def _dispatch_broadcast(self, kind: str, starting: bool) -> None:
+        button = self.btn_stream if kind == 'stream' else self.btn_record
+        if not button.isEnabled():
+            return
+        try:
+            payload = self._stream_payload() if kind == 'stream' and starting else {}
+        except (ValueError, TypeError, KeyError):
+            self.txt_telemetry.append('Broadcast held: configure enabled destinations and required keys. Unsupported stream delay must be zero.')
+            return
+        button.setEnabled(False)
+        self.txt_telemetry.append(f'{kind.title()} request pending; destination acceptance and media health are not verified.')
+
+        def unverified(_error=None, *, ambiguous=True):
+            button.setEnabled(True)
+            # A lost start acknowledgement may hide an accepted command. Offer
+            # Stop rather than duplicating a potentially active start.
+            if starting and ambiguous:
+                if kind == 'stream': self._is_streaming = True
+                else: self._is_recording = True
+                button.setText('Stop / reconcile unverified ' + kind)
+            if kind == 'stream': self.canvas.set_streaming(False)
+            else: self.canvas.set_recording(False)
+            self.txt_telemetry.append(f'{kind.title()} state unverified: request failed or was rejected. Check the service before retrying.')
+
+        def complete(result):
+            status = result.get('status') if isinstance(result, dict) else None
+            allowed = {'streaming'} if kind == 'stream' and starting else {'recording'} if starting else {'stopped','inactive'}
+            if not isinstance(status,str) or status.lower() not in allowed:
+                unverified(ambiguous=False)
+                return
+            button.setEnabled(True)
+            if kind == 'stream':
+                self._is_streaming = starting
+                self.canvas.set_streaming(starting)
+                button.setText('Stop Broadcast (daemon acknowledged)' if starting else 'Start Broadcast')
+            else:
+                self._is_recording = starting
+                self.canvas.set_recording(starting)
+                button.setText('Stop Recording (daemon acknowledged)' if starting else 'Record Master')
+            self.txt_telemetry.append(f'{kind.title()} {"start" if starting else "stop"} acknowledged by local service. Platform ingest and saved-file integrity are not verified.')
+        try:
+            self.bus.submit(send_broadcast_command,kind,starting,payload,on_result=complete,on_error=unverified)
+        except Exception:
+            unverified()
+
 
     def _toggle_record(self) -> None:
-        self._is_recording = not self._is_recording
-        self.canvas.set_recording(self._is_recording)
-        if self._is_recording:
-            self.btn_record.setText("⏹ Stop NVENC Recording")
-            self.btn_record.setStyleSheet("background: #b91c1c; color: #ffffff; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏺ MASTER RECORDING STARTED: Saving to 'C:\\AI-BS\\screenplay_projects\\recordings\\master_{int(time.time())}.mkv'.")
-        else:
-            self.btn_record.setText("⏺ Record Master (NVENC MKV)")
-            self.btn_record.setStyleSheet("background: #1e293b; color: #f87171; border: 1px solid #f87171; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] ⏹ Master recording finalized and sealed.")
+        self._dispatch_broadcast('record', not self._is_recording)
+
 
     def _launch_obs(self) -> None:
         bat_path = r"C:\AI-BS\Launch_OBS_Core.bat"
@@ -2302,7 +2299,7 @@ class UniversalOmniStudioNativeView(QWidget):
             self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] Launch_OBS_Core.bat not found at {bat_path}.")
 
     def _launch_ue_signaling(self) -> None:
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal Engine 5.8 Pixel Streaming WebRTC Signaling active on Port 8888.")
+        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal signaling is not checked; this control has no connected launcher.")
 
     def _on_studio_mode_toggled(self, checked: bool) -> None:
         self.canvas.set_studio_mode(checked)
@@ -2366,7 +2363,7 @@ class UniversalOmniStudioNativeView(QWidget):
             self.combo_aspect_preset.setCurrentText("16:9 Standard (1080p)")
 
         self.txt_telemetry.append(
-            f"[{time.strftime('%H:%M:%S')}] 🚀 Applied {platform_id} Stream Profile to NVENC: "
+            f"[{time.strftime('%H:%M:%S')}] Settings draft selected for {platform_id}: "
             f"{spec.get('rate_control', 'CBR')} @ {spec.get('max_video_bitrate_kbps', 6000)} kbps | GOP {spec.get('keyframe_interval_sec', 2.0)}s."
         )
 

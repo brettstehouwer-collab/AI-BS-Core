@@ -64,18 +64,42 @@ from pydantic import BaseModel
 import uvicorn
 from typing import List, Dict, Any, Optional
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] BroadcastDaemon: %(message)s")
 
 app = FastAPI(title="AI-BS Resilient Broadcast & NVENC Daemon")
 
+BROADCAST_ALLOWED_ORIGINS = (
+    "http://localhost:5173", "http://localhost:5174",
+    "http://127.0.0.1:5173", "http://127.0.0.1:5174",
+    "https://ai-bs-dashboard.web.app", "https://ai-bs-dashboard.firebaseapp.com",
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=list(BROADCAST_ALLOWED_ORIGINS),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def enforce_broadcast_origin(request: Request, call_next):
+    """Reject browser-origin dispatch before side effects, including simple POSTs.
+
+    CORS response headers alone do not prevent cross-site form submissions.
+    Native local clients without browser Origin headers remain compatible. This
+    is an origin boundary, not authentication against hostile local processes.
+    """
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        origin = request.headers.get("origin")
+        if (origin is not None and origin not in BROADCAST_ALLOWED_ORIGINS) or (
+            origin is None and request.headers.get("sec-fetch-site") == "cross-site"
+        ):
+            return JSONResponse({"detail": "Broadcast dispatch origin is not allowed."}, status_code=403)
+    return await call_next(request)
 
 def build_encoder_flags(encoder_name: str, preset: str = "p1", tune: str = "ull") -> List[str]:
     enc = encoder_name.lower()
@@ -205,6 +229,15 @@ def escape_tee_url(url: str) -> str:
     for char in ['\\', ':', '|', '[', ']', '=', ',', '%']:
         url = url.replace(char, '\\' + char)
     return url
+
+
+def redact_broadcast_log(line: str, secrets=()) -> str:
+    """Keep diagnostics while withholding destination URLs and stream credentials."""
+    value = str(line)
+    for secret in sorted({str(item) for item in secrets if item}, key=len, reverse=True):
+        value = value.replace(secret, "[REDACTED]")
+        value = value.replace(escape_tee_url(secret), "[REDACTED]")
+    return re.sub(r"(?i)(?:rtmps?|https?|srt)(?:\\)?:\/\/[^\s\"'<>]+", "[REDACTED_STREAM_URL]", value)
 
 def resolve_game_window_title(target_name: str = "") -> Optional[str]:
     """Resolve process name (e.g. cod.exe) or game title to exact HWND visible title, handling unicode zero-width characters."""
@@ -381,6 +414,7 @@ class BroadcastDaemon:
             self.overlay_workers = []
 
         self.is_streaming = False
+        self._stream_secrets = ()
         self.encoder_config = detect_optimal_encoder()
         self.active_game = "Desktop Screen 1"
         
@@ -459,6 +493,10 @@ class BroadcastDaemon:
         if self.is_streaming:
             logging.warning("Stream is already running.")
             return False
+
+        self._stream_secrets = tuple(
+            str(value) for ep in endpoints for value in (ep.get("key"), ep.get("url")) if value
+        )
 
         # Facebook Live Strict Enforcement
         has_facebook = any("facebook.com" in ep.get("url", "").lower() for ep in endpoints)
@@ -693,7 +731,7 @@ class BroadcastDaemon:
                 if ep.get("name") == "Virtual Camera":
                     vcam_url = escape_tee_url('video=OBS Virtual Camera')
                     outputs.append(f"[f=dshow:select=\'v:0\']{vcam_url}")
-                    self.telemetry["endpoints"]["Virtual Camera"] = "STREAMING"
+                    self.telemetry["endpoints"]["Virtual Camera"] = "PENDING_UNVERIFIED"
                     continue
                     
                 if url:
@@ -702,7 +740,7 @@ class BroadcastDaemon:
                         outputs.append(f"[f=hls:hls_time=2:hls_list_size=5:method=POST:select=\\'v:0,a:0\\']{escaped_url}")
                     else:
                         outputs.append(f"[f=flv:onfail=ignore:select=\\'v:0,a:0\\']{escaped_url}")
-                    self.telemetry["endpoints"][ep_name] = "STREAMING"
+                    self.telemetry["endpoints"][ep_name] = "PENDING_UNVERIFIED"
             else:
                 self.telemetry["endpoints"][ep_name] = "DISABLED"
 
@@ -711,7 +749,9 @@ class BroadcastDaemon:
         num_audio_streams = len(audio_inputs) + 1 if len(audio_inputs) > 1 else 1
         select_streams = "\\'v:0," + ",".join([f"a:{i}" for i in range(num_audio_streams)]) + "\\'"
         outputs.append(f"[{rec_mux_flags}:select={select_streams}]{archive_escaped}")
-        self.telemetry["endpoints"]["Local Recording"] = "RECORDING"
+        self.telemetry["endpoints"]["Local Recording"] = "PENDING_UNVERIFIED"
+        self.telemetry["ingest_verified"] = False
+        self.telemetry["archive_verified"] = False
         tee_outputs = "|".join(outputs)
 
         # Build Filter Complex (Video Scaling & Audio Mixing)
@@ -789,7 +829,6 @@ class BroadcastDaemon:
         ])
 
         try:
-            self.is_streaming = True
             logging.info(f"Spawning Hardware FFmpeg Broadcast Pipeline ({encoder_choice.upper()} @ {resolution} {fps}FPS)...")
             self.process = subprocess.Popen(
                 ffmpeg_cmd,
@@ -800,10 +839,21 @@ class BroadcastDaemon:
                 bufsize=1,
                 universal_newlines=True
             )
+            # Popen success proves creation only. Catch an immediate encoder exit;
+            # a running process still does not prove remote ingest or archive validity.
+            time.sleep(0.1)
+            if self.process.poll() is not None:
+                self.is_streaming = False
+                self.telemetry["process_running"] = False
+                self.telemetry["endpoints"] = {name: "START_FAILED" if state != "DISABLED" else state
+                                                for name, state in self.telemetry["endpoints"].items()}
+                return False
+            self.is_streaming = True
+            self.telemetry["process_running"] = True
             threading.Thread(target=self._telemetry_reader, daemon=True).start()
             return True
         except Exception as e:
-            logging.error(f"Failed to start FFmpeg process: {e}")
+            logging.error("Failed to start FFmpeg process (%s)", type(e).__name__)
             self.is_streaming = False
             return False
 
@@ -813,12 +863,13 @@ class BroadcastDaemon:
         speed_pattern = re.compile(r"speed=\s*([\d\.]+x)")
         drop_pattern = re.compile(r"drop=\s*(\d+)")
         
-        with open("C:/AI-BS/backend/ffmpeg.log", "w", encoding="utf-8") as log_f:
-            while self.is_streaming and self.process:
-                line = self.process.stdout.readline()
+        process = self.process
+        with open("C:/AI-BS/backend/ffmpeg.log", "a", encoding="utf-8") as log_f:
+            while self.is_streaming and process and self.process is process:
+                line = process.stdout.readline()
                 if not line:
                     break
-                log_f.write(line)
+                log_f.write(redact_broadcast_log(line, getattr(self, "_stream_secrets", ())))
                 log_f.flush()
                 if "frame=" in line:
                     fps_match = fps_pattern.search(line)
@@ -832,18 +883,31 @@ class BroadcastDaemon:
                         self.telemetry["bitrate"] = self.configured_bitrate
                     if speed_match: self.telemetry["speed"] = speed_match.group(1)
                     if drop_match: self.telemetry["dropped"] = drop_match.group(1)
-        self.is_streaming = False
+        if self.process is process:
+            self.is_streaming = False
+            self.telemetry["process_running"] = process.poll() is None if process else False
 
     def stop_stream(self):
-        if not self.is_streaming or not self.process:
-            return {"status": "stopped", "message": "Stream already offline"}
+        if not self.process:
+            return {"status": "stopped", "message": "No encoder process is owned.", "archive_verified": False}
+        process = self.process
         logging.info("Stopping stream gracefully...")
         try:
-            self.process.stdin.write("q\n")
-            self.process.stdin.flush()
-            self.process.wait(timeout=5)
+            if process.poll() is None:
+                process.stdin.write("q\n")
+                process.stdin.flush()
+                process.wait(timeout=5)
         except Exception:
-            self.process.kill()
+            try:
+                process.kill()
+                process.wait(timeout=2)
+            except Exception:
+                if process.poll() is None:
+                    return {"status": "error", "message": "Encoder termination could not be confirmed.",
+                            "process_running": True, "archive_verified": False}
+        if process.poll() is None:
+            return {"status": "error", "message": "Encoder process is still running.",
+                    "process_running": True, "archive_verified": False}
         self.process = None
         if hasattr(self, 'overlay_workers'):
             for w in self.overlay_workers:
@@ -863,7 +927,8 @@ class BroadcastDaemon:
             "game_name": self.active_game,
             "endpoints": {}
         }
-        return {"status": "stopped", "message": "Stream stopped and archive saved"}
+        return {"status": "stopped", "message": "Encoder stopped; archive validity has not been verified.",
+                "process_running": False, "archive_verified": False}
 
 daemon = BroadcastDaemon()
 
@@ -908,7 +973,9 @@ async def start_stream_endpoint(req: StreamStartRequest):
         format_choice=req.format or "hybrid_mp4",
         sources=req.sources or []
     )
-    return {"status": "streaming" if success else "error"}
+    return {"status": "streaming" if success else "error", "process_running": bool(success),
+            "ingest_verified": False, "archive_verified": False,
+            "verification_scope": "ffmpeg_process_running_only"}
 
 @app.post("/stream/stop")
 async def stop_stream_endpoint():

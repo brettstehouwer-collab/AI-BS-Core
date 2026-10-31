@@ -1,6 +1,6 @@
 {
   "campaign_status": "IN_PROGRESS",
-  "source_version": "v5.329.79",
+  "source_version": "v5.329.80",
   "findings": [
     {
       "id": "B001",
@@ -821,6 +821,88 @@
       "repair": "Reconcile catalogs/aliases/current rendered identities and classify dormant/unknown routes explicitly.",
       "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
       "batch002_remediation": "OPEN_SOURCE_FINDING_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "G204-01",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Malformed model tool calls and permissive capability flags reached dispatch",
+      "change": "Strict shared envelope and declared-argument validation before effectful handler imports; no repair into execution. 129 advertised schemas and154existing dispatch names/aliases accounted.",
+      "paths": [
+        "backend/tools/tool_call_contract.py",
+        "backend/tools/tool_registry.py",
+        "backend/AI_BS_Backend.py",
+        "backend/AI_BS_Backend_shadow.py"
+      ]
+    },
+    {
+      "id": "G204-02",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Generated-code validation silently ran on the host and overstated isolation/promotion",
+      "change": "Existing VM guest adapters only, explicit isolation unavailable when no configured verified guest exists; no host fallback. Promotion uses staged fsync/replace and baseline comparison.",
+      "paths": [
+        "backend/bullshit_sandbox_executor.py",
+        "backend/core/ide_orchestrator/sandbox_runner.py",
+        "backend/core/ide_orchestrator/patch_promoter.py",
+        "backend/tools/tool_registry.py"
+      ]
+    },
+    {
+      "id": "G204-03",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Memory writes rewrote/truncated historical JSON and claimed success after all stores failed",
+      "change": "Retain original JSON bytes; locked append-only fsynced JSONL durability journal; truthful persistence result. No import-time/local Chroma fallback; bounded HTTP reconnect. Journal explicitly unindexed and reconciliation required.",
+      "paths": [
+        "backend/core/memory_bank.py"
+      ]
+    },
+    {
+      "id": "G204-04",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Broadcast starts/stops overclaimed success; credentials leaked to FFmpeg log; browser origins unrestricted",
+      "change": "Explicit process-only acknowledgements, immediate child-exit checks, pending-unverified ingest, no archive completion claims, credential redaction, exact browser-origin policy and pre-dispatch unsafe-method gate. Native noOrigin clients still unauthenticated local clients.",
+      "paths": [
+        "backend/aibs_broadcast_daemon.py",
+        "frontend/src/components/BroadcastStudio.jsx",
+        "native_studio/omni_broadcast_studio.py",
+        "native_studio/broadcast_control.py"
+      ]
+    },
+    {
+      "id": "G204-05",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Stream credential saves were plaintext and failed saves or decryption could destroy state",
+      "change": "Windows CurrentUser DPAPI protection on successful save, atomic config replacement, preserve unreadable original and unavailable ciphertext; failure leaves dialog open and does not emit applied success. Facebook URL/key controls added.",
+      "paths": [
+        "native_studio/broadcast_stream_engine.py"
+      ]
+    },
+    {
+      "id": "G204-06",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Native/web broadcast and cockpit displayed invented readiness, timings, audio levels, meetings and crypto-active defaults",
+      "change": "Unmeasured/unavailable or explicitly backend-reported values, stale telemetry expiry, no random meters, local chat draft labels, unavailable disconnected meeting controls. Existing source records retained in authenticated recovery.",
+      "paths": [
+        "native_studio/omni_broadcast_studio.py",
+        "native_studio/broadcast_stream_engine.py",
+        "frontend/src/components/BroadcastStudio.jsx",
+        "frontend/src/components/ExecutiveCockpitTab.jsx"
+      ]
+    },
+    {
+      "id": "G204-07",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Platform preset crashed on QComboBox.setValue; network settings were silently dropped",
+      "change": "Correct combo selection, save/restore delay and reconnect preferences, distinguish draft settings from live application. Nonzero broadcast delay prevents start until enforced by backend.",
+      "paths": [
+        "native_studio/broadcast_stream_engine.py"
+      ]
     }
   ],
   "additional_review_fixes": [
@@ -1044,5 +1126,12 @@
       "status": "AUTH_HELD_NOT_FUNCTIONAL_LIVE_TEST",
       "finding": "CommercialOpenAIalias correctly rejects local-admincredential; no bypass attempted."
     }
-  ]
+  ],
+  "record204": {
+    "report": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
+    "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
+    "source_paths": 43,
+    "trading": "DISABLED",
+    "desktop_control": "PAUSED"
+  }
 }

@@ -1,3 +1,9 @@
+# Current checkpoint — Record204 / v5.329.80
+
+Firebase and Windowsv80updated;157caseofflinecohort andstandardcampaignchecksPASS. TradingDISABLED;desktopcontrolPAUSED;existingv79windowsnotclosed. Fullreport: docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md. Chroma recovery/fullGUI/realguest/platformingest remain unverified. SameDrivefolder `1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k`; closingcloudreceipt records actualverifiedarchives. Earliercheckpointbelowishistorical.
+
+---
+
 # Latest routing release — v5.329.79 / Record203
 
 2026-10-31T16:18:12.099046+00:00. Windows installed and Firebase web/mobile published79. ComfyUIstatus questions use a non-generating health check; existingv78windows protected by shared backend. Seven livefunctional cases pass; commercialalias AUTH_HELD. Canonical191Python/75clients/TS/version checks pass. Native202desktopaudit remainsPARTIAL afteruserstoppedComputerUse;647buttons classified, not allworkflowscertified. See MEDIA_ROUTING_RELEASE_v5.329.79.md and .json. Tradingdisabled/8007absent; allDriveuploads establishedsinglefolder. Earlier records below are historical.

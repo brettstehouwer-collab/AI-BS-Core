@@ -1,20 +1,31 @@
+"""Compatibility adapter for isolated guest validation, with no host fallback.
+
+A temporary working directory and sanitized environment are not an OS sandbox.
+The legacy class name remains for callers, but generated code is dispatched only
+through the existing VM guest providers. Validation never applies a host patch.
+"""
+from __future__ import annotations
+
+import ast
+import math
 import os
-import sys
-import time
-import subprocess
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Dict
+import tempfile
+import time
+from typing import Optional
+
 
 @dataclass
 class SandboxResult:
-    status: str  # "PASSED", "FAILED", "TIMEOUT", "EXECUTION_ERROR"
+    status: str
     exit_code: int
     execution_time_sec: float
     stdout: str
     stderr: str
     patch_applied: bool
+    isolation_verified: bool = False
+
 
 class SubprocessSandboxRunner:
     def __init__(self, default_timeout_sec: float = 10.0):
@@ -25,94 +36,63 @@ class SubprocessSandboxRunner:
         original_file_path: str,
         modified_code: str,
         test_script_code: Optional[str] = None,
-        timeout_sec: Optional[float] = None
+        timeout_sec: Optional[float] = None,
     ) -> SandboxResult:
-        timeout = timeout_sec or self.default_timeout_sec
-        start_time = time.perf_counter()
+        started = time.perf_counter()
 
-        # 1. Create temporary isolated directory
-        with tempfile.TemporaryDirectory(prefix="ide_sandbox_") as temp_dir:
-            temp_path = Path(temp_dir)
-            target_name = Path(original_file_path).name
-            sandbox_target_file = temp_path / target_name
+        def result(status, message='', *, code=-1, stdout='', isolated=False):
+            return SandboxResult(status, code, round(time.perf_counter()-started, 4),
+                                 stdout, message, False, isolated)
 
-            # 2. Write modified code into sandbox workspace
+        try:
+            ast.parse(modified_code)
+            if test_script_code is not None:
+                ast.parse(test_script_code)
+            timeout = float(self.default_timeout_sec if timeout_sec is None else timeout_sec)
+            if not math.isfinite(timeout) or not 0 < timeout <= 300:
+                raise ValueError('Validation timeout must be finite and between 0 and 300 seconds')
+        except (SyntaxError, TypeError, ValueError) as exc:
+            return result('EXECUTION_ERROR', f'Candidate validation failed: {exc}')
+
+        requested = os.environ.get('AI_BS_EXECUTION_BACKEND', '').strip()
+        if requested not in ('windows_vm', 'wsl2_vm'):
+            return result('ISOLATION_UNAVAILABLE',
+                          'Select a configured windows_vm or wsl2_vm provider. Host execution is not a sandbox.')
+        try:
             try:
-                sandbox_target_file.write_text(modified_code, encoding="utf-8")
-            except Exception as e:
-                return SandboxResult(
-                    status="EXECUTION_ERROR",
-                    exit_code=-1,
-                    execution_time_sec=0.0,
-                    stdout="",
-                    stderr=f"Failed to write candidate code to sandbox: {str(e)}",
-                    patch_applied=False
+                from backend.core.coding_guest_runner import resolve_coding_execution_plan, run_guest_check
+            except ModuleNotFoundError:
+                from core.coding_guest_runner import resolve_coding_execution_plan, run_guest_check
+            plan = resolve_coding_execution_plan(requested)
+            if plan.get('isolation_verified') is not True:
+                return result('ISOLATION_UNAVAILABLE', 'The selected provider did not verify isolation.')
+            with tempfile.TemporaryDirectory(prefix='ide_guest_validation_') as folder:
+                work = Path(folder)
+                # The original path is identity only; never read or modify it.
+                target = Path(original_file_path).name
+                if not target.endswith('.py') or target == '_runner_entrypoint.py':
+                    return result('EXECUTION_ERROR', 'Candidate must have a distinct Python filename.')
+                (work/target).write_text(modified_code, encoding='utf-8')
+                if test_script_code is None:
+                    # runpy handles filenames that are not import identifiers.
+                    test_script_code = f'import runpy\nrunpy.run_path({target!r}, run_name="__candidate__")\n'
+                (work/'_runner_entrypoint.py').write_text(test_script_code, encoding='utf-8')
+                checked = run_guest_check(
+                    plan, ['python', '-B', '_runner_entrypoint.py'], work,
+                    required_paths=(target, '_runner_entrypoint.py'),
+                    timeout_seconds=timeout, output_limit=262144,
                 )
-
-            # 3. Create entrypoint execution script
-            entrypoint_script = temp_path / "_runner_entrypoint.py"
-            if test_script_code:
-                entrypoint_script.write_text(test_script_code, encoding="utf-8")
-            else:
-                # Default sanity check: compile and run simple import test
-                entrypoint_script.write_text(
-                    f"import sys\n"
-                    f"sys.path.insert(0, '.')\n"
-                    f"import {sandbox_target_file.stem}\n"
-                    f"print('Compilation and import successful.')\n",
-                    encoding="utf-8"
-                )
-
-            # 4. Strip environment variables for isolated execution
-            sanitized_env: Dict[str, str] = {
-                "PATH": os.environ.get("PATH", ""),
-                "PYTHONPATH": str(temp_path),
-                "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),  # Required for Windows process startup
-                "USERPROFILE": os.environ.get("USERPROFILE", ""), # Required for Path.home() which chromadb uses
-                "PYTHONUNBUFFERED": "1"
-            }
-
-            # 5. Launch isolated subprocess
-            try:
-                process = subprocess.run(
-                    [sys.executable, str(entrypoint_script)],
-                    cwd=str(temp_path),
-                    env=sanitized_env,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout
-                )
-
-                elapsed_time = time.perf_counter() - start_time
-                status = "PASSED" if process.returncode == 0 else "FAILED"
-
-                return SandboxResult(
-                    status=status,
-                    exit_code=process.returncode,
-                    execution_time_sec=round(elapsed_time, 4),
-                    stdout=process.stdout,
-                    stderr=process.stderr,
-                    patch_applied=True
-                )
-
-            except subprocess.TimeoutExpired as e:
-                elapsed_time = time.perf_counter() - start_time
-                return SandboxResult(
-                    status="TIMEOUT",
-                    exit_code=-1,
-                    execution_time_sec=round(elapsed_time, 4),
-                    stdout=e.stdout.decode("utf-8") if e.stdout and isinstance(e.stdout, bytes) else (e.stdout or ""),
-                    stderr=f"Execution timed out after {timeout} seconds.",
-                    patch_applied=True
-                )
-
-            except Exception as e:
-                elapsed_time = time.perf_counter() - start_time
-                return SandboxResult(
-                    status="EXECUTION_ERROR",
-                    exit_code=-1,
-                    execution_time_sec=round(elapsed_time, 4),
-                    stdout="",
-                    stderr=f"Subprocess runner error: {str(e)}",
-                    patch_applied=False
-                )
+            isolated = checked.get('isolated') is True
+            if not isolated:
+                return result('ISOLATION_UNAVAILABLE', 'Guest response did not verify isolation.')
+            exit_code = checked.get('returncode')
+            error = checked.get('error')
+            if error:
+                return result('TIMEOUT' if 'timeout' in str(error).lower() else 'EXECUTION_ERROR',
+                              str(error), stdout=str(checked.get('stdout', '')), isolated=isolated)
+            passed = type(exit_code) is int and exit_code == 0
+            return result('PASSED' if passed else 'FAILED', str(checked.get('stderr', '')),
+                          code=exit_code if type(exit_code) is int else -1,
+                          stdout=str(checked.get('stdout', '')), isolated=isolated)
+        except Exception as exc:
+            return result('ISOLATION_UNAVAILABLE', f'Isolated validation unavailable: {exc}')

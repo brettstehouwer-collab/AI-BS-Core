@@ -1,3 +1,9 @@
+# Current checkpoint — Record204 / v5.329.80
+
+Firebase and Windowsv80updated;157caseofflinecohort andstandardcampaignchecksPASS. TradingDISABLED;desktopcontrolPAUSED;existingv79windowsnotclosed. Fullreport: docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md. Chroma recovery/fullGUI/realguest/platformingest remain unverified. SameDrivefolder `1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k`; closingcloudreceipt records actualverifiedarchives. Earliercheckpointbelowishistorical.
+
+---
+
 # Current checkpoint — Record203 / v5.329.79
 
 2026-10-31T16:18:12.099046+00:00. Windows/native andFirebase web/mobile79 released. Statusquestions no longergenerate;7livefunctionalchecks+commercialAUTH_HELD,canonical191/75/TS/versionpass. Native79installed2256files/3launchers;v78windowsleftopen,desktopcontrolpaused. Live trading disabled/8007absent/paymentsoutreachheld. WholeauditPARTIAL; Native202fixture53views/647buttons classified,45completednativefixes retained; unsupported14controls/Chromaidentity/routeownershipremainopen. Report docs/audit/2026-10-30-complete/MEDIA_ROUTING_RELEASE_v5.329.79.md . Driveallrecords sameestablishedfolder. Previouscheckpointbelowhistorical.

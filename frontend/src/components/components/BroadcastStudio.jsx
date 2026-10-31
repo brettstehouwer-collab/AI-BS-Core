@@ -16,6 +16,31 @@ function describeBroadcastError(value, field) {
   return field === 'name' ? 'Error' : String(value);
 }
 
+/** @returns {{fps: string | null, bitrate: string | null, speed: string | null, dropped: string | null, game_name: string | null}} */
+function emptyBroadcastTelemetry() {
+  return { fps: null, bitrate: null, speed: null, dropped: null, game_name: null };
+}
+
+/** Only scalar measurements from the daemon are displayable; missing values stay unavailable.
+ * @param {Record<string, unknown> | null} data
+ */
+function normalizeBroadcastTelemetry(data) {
+  const metrics = emptyBroadcastTelemetry();
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return metrics;
+  for (const [key, pattern, maximum] of /** @type {[keyof typeof metrics, RegExp, number][]} */ ([
+    ['fps', /^\d+(?:\.\d+)?$/, 1000], ['bitrate', /^\d+(?:\.\d+)?kbits\/s$/, 10000000],
+    ['speed', /^\d+(?:\.\d+)?x$/, 1000], ['dropped', /^\d+$/, Number.MAX_SAFE_INTEGER]
+  ])) {
+    const value = data[key];
+    if ((typeof value === 'string' || typeof value === 'number') && pattern.test(String(value))) {
+      const numeric = parseFloat(String(value));
+      if (Number.isFinite(numeric) && numeric <= maximum) metrics[key] = String(value);
+    }
+  }
+  if (typeof data.game_name === 'string' && data.game_name.length <= 256) metrics.game_name = data.game_name;
+  return metrics;
+}
+
 /** @type {import('flexlayout-react').IJsonModel} */
 const layoutConfig = {
   global: {
@@ -122,15 +147,14 @@ const BroadcastStudio = () => {
   const backendUrl = getApiBase();
   const [model] = useState(Model.fromJson(layoutConfig));
   const [isStreaming, setIsStreaming] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const [streamStateUnknown, setStreamStateUnknown] = useState(true);
+  const [requiresStreamStop, setRequiresStreamStop] = useState(false);
+  const [isStreamRequestPending, setIsStreamRequestPending] = useState(false);
+  const streamRequestRef = useRef(false);
+  const stopRequestedRef = useRef(false);
+  const [isRecording] = useState(false);
   const [isVirtualCamActive, setIsVirtualCamActive] = useState(false);
-  const [telemetry, setTelemetry] = useState({ 
-    fps: "60.0", 
-    bitrate: "6000kbits/s", 
-    speed: "1.0x", 
-    dropped: "0", 
-    game_name: "Desktop Screen 1" 
-  });
+  const [telemetry, setTelemetry] = useState(emptyBroadcastTelemetry);
   const [statusMessage, setStatusMessage] = useState('Standby');
   const [, setDaemonConnected] = useState(false);
 
@@ -373,8 +397,7 @@ const BroadcastStudio = () => {
 
   // Unified Chat & Live Sidekick
   const [chatMessages, setChatMessages] = useState(/** @type {import('/types/broadcast').BroadcastChatMessage[]} */ ([
-    { id: 1, user: 'AI-BS Bot', badge: 'SYSTEM', text: 'Social Hub & AI Sidekick connected (Port 8006).', time: '12:00', platform: 'system' },
-    { id: 2, user: 'Sidekick', badge: 'AI CO-HOST', text: 'Ready! Chat with me or type !joke, !hype, !sentiment.', time: '12:01', platform: 'ai' }
+    { id: 1, user: 'AI-BS', badge: 'SYSTEM', text: 'Chat connection and Sidekick model readiness have not been verified.', time: '', platform: 'system' }
   ]));
   const [chatInput, setChatInput] = useState('');
   const chatSocketRef = useRef(/** @type {WebSocket | null} */ (null));
@@ -432,7 +455,14 @@ const BroadcastStudio = () => {
     let ws = null;
     /** @type {ReturnType<typeof setTimeout> | null} */
     let reconnectTimeout = null;
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    let freshnessTimeout = null;
     let isMounted = true;
+
+    const invalidateTelemetry = () => {
+      setTelemetry(emptyBroadcastTelemetry());
+      setStreamStateUnknown(true);
+    };
 
     const connectWs = () => {
       if (!isMounted) return;
@@ -449,25 +479,34 @@ const BroadcastStudio = () => {
         ws.onmessage = (event) => {
           if (!isMounted) return;
           try {
+            if (typeof event.data !== 'string' || event.data.length > 65536) throw new Error('Invalid telemetry frame');
             const data = JSON.parse(event.data);
-            setTelemetry(prev => ({ ...prev, ...data }));
-            if (autoDetectGame && data.game_name && data.game_name !== "None Detected") {
-              setSelectedGameSource(data.game_name);
+            const metrics = normalizeBroadcastTelemetry(data);
+            setTelemetry(metrics);
+            if (freshnessTimeout !== null) clearTimeout(freshnessTimeout);
+            freshnessTimeout = setTimeout(() => {
+              if (isMounted) invalidateTelemetry();
+            }, 6000);
+            if (autoDetectGame && metrics.game_name && metrics.game_name !== "None Detected") {
+              setSelectedGameSource(metrics.game_name);
             }
-          } catch (e) {}
+          } catch (e) { invalidateTelemetry(); }
         };
         ws.onclose = () => {
           if (!isMounted) return;
           setDaemonConnected(false);
+          invalidateTelemetry();
           reconnectTimeout = setTimeout(connectWs, 3000);
         };
         ws.onerror = () => {
           if (!isMounted) return;
           setDaemonConnected(false);
+          invalidateTelemetry();
         };
       } catch (err) {
         if (!isMounted) return;
         setDaemonConnected(false);
+        invalidateTelemetry();
         reconnectTimeout = setTimeout(connectWs, 3000);
       }
     };
@@ -476,6 +515,7 @@ const BroadcastStudio = () => {
     return () => {
       isMounted = false;
       if (reconnectTimeout !== null) clearTimeout(reconnectTimeout);
+      if (freshnessTimeout !== null) clearTimeout(freshnessTimeout);
       if (ws) {
         if (ws.readyState === WebSocket.OPEN) {
           ws.close();
@@ -559,7 +599,7 @@ const BroadcastStudio = () => {
             e.preventDefault();
             // We use the functional form if possible, but startStream/stopStream aren't setState.
             // We'll rely on the outer scope isStreaming since this is recreated when isStreaming changes.
-            if (isStreaming) {
+            if (isStreaming || requiresStreamStop) {
               stopStream();
             } else {
               startStream();
@@ -567,8 +607,7 @@ const BroadcastStudio = () => {
             break;
           case 'r':
             e.preventDefault();
-            setIsRecording(prev => !prev);
-            setStatusMessage(prev => prev.includes('Recording') ? 'Recording Stopped' : 'Recording Started');
+            setStatusMessage('Standalone recording control is unavailable. Verify the broadcast archive separately.');
             break;
           case 'm':
             e.preventDefault();
@@ -597,20 +636,7 @@ const BroadcastStudio = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isStreaming, isRecording]);
-
-  // Audio Mixer Meter Animation Loop
-  useEffect(() => {
-    const meterInterval = setInterval(() => {
-      setAudioChannels(prev => prev.map(ch => {
-        if (ch.mute) return { ...ch, peak: 0 };
-        const jitter = (Math.random() - 0.5) * 15;
-        const target = Math.max(10, Math.min(95, ch.volume + jitter));
-        return { ...ch, peak: Math.round(target) };
-      }));
-    }, 120);
-    return () => clearInterval(meterInterval);
-  }, []);
+  }, [isStreaming, isRecording, requiresStreamStop]);
 
   // Aspect-Ratio Preserving Containment & Letterbox Helper
   /** @param {CanvasRenderingContext2D} ctx @param {HTMLVideoElement} video @param {number} destX @param {number} destY @param {number} destW @param {number} destH */
@@ -923,11 +949,19 @@ const BroadcastStudio = () => {
   };
 
   const startStream = async () => {
-    setStatusMessage('Starting hardware-accelerated broadcast...');
+    if (streamRequestRef.current) return;
+    streamRequestRef.current = true;
+    setIsStreamRequestPending(true);
+    setRequiresStreamStop(true);
+    setStreamStateUnknown(true);
+    setStatusMessage('Requesting broadcast start; awaiting daemon acknowledgement...');
+    const controller = new AbortController();
+    const deadline = setTimeout(() => controller.abort(), 8000);
     const activeGame = selectedGameSource === 'Custom Manual Hook...' ? customProcessName : selectedGameSource;
     try {
       const response = await fetch('http://127.0.0.1:8005/stream/start', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           game_name: activeGame || 'AI-BS Broadcast',
@@ -948,38 +982,63 @@ const BroadcastStudio = () => {
         }),
       });
       const data = await response.json();
-      if (data.status === 'streaming' || response.ok) {
-        setIsStreaming(true);
-        setStatusMessage(`Streaming LIVE (${hardwareEncoder.toUpperCase()} ${videoFramerate} FPS)`);
-      } else {
-        setIsStreaming(true);
-        setStatusMessage('Broadcasting (Direct In-App Stream)');
-      }
-    } catch (error) {
+      if (!response.ok || data?.status !== 'streaming') throw new Error('Start acknowledgement rejected');
       setIsStreaming(true);
-      setStatusMessage('Broadcasting Live (In-App Stream Active)');
+      setStreamStateUnknown(false);
+      setStatusMessage('Daemon acknowledged streaming. Platform ingest and archive integrity remain unverified.');
+    } catch (error) {
+      setStatusMessage('Broadcast start unverified. Use Stop to resolve uncertain dispatch before retrying.');
+    } finally {
+      clearTimeout(deadline);
+      streamRequestRef.current = false;
+      setIsStreamRequestPending(false);
+      if (stopRequestedRef.current) {
+        stopRequestedRef.current = false;
+        await stopStream();
+      }
     }
   };
 
   const stopStream = async () => {
-    setStatusMessage('Stopping stream & saving recording...');
+    if (streamRequestRef.current) {
+      stopRequestedRef.current = true;
+      return;
+    }
+    streamRequestRef.current = true;
+    stopRequestedRef.current = false;
+    setIsStreamRequestPending(true);
+    setRequiresStreamStop(true);
+    setStreamStateUnknown(true);
+    setStatusMessage('Requesting broadcast stop; awaiting daemon acknowledgement...');
+    const controller = new AbortController();
+    const deadline = setTimeout(() => controller.abort(), 8000);
     try {
-      await fetch('http://127.0.0.1:8005/stream/stop', { method: 'POST' });
-    } catch (error) {}
-    setIsStreaming(false);
-    setStatusMessage('Stream Offline. Archive Saved.');
+      const response = await fetch('http://127.0.0.1:8005/stream/stop', { method: 'POST', signal: controller.signal });
+      const data = await response.json();
+      if (!response.ok || data?.status !== 'stopped') throw new Error('Stop acknowledgement rejected');
+      setIsStreaming(false);
+      setStreamStateUnknown(false);
+      setRequiresStreamStop(false);
+      setStatusMessage('Daemon acknowledged stop. Archive integrity remains unverified.');
+    } catch (error) {
+      setStatusMessage('Broadcast stop unverified. The remote output may still be running; retry Stop.');
+    } finally {
+      clearTimeout(deadline);
+      streamRequestRef.current = false;
+      setIsStreamRequestPending(false);
+      if (stopRequestedRef.current) {
+        stopRequestedRef.current = false;
+        await stopStream();
+      }
+    }
   };
 
   const panicStop = async () => {
-    setStatusMessage('PANIC STOP TRIGGERED.');
-    try {
-      await fetch('http://127.0.0.1:8005/stream/stop', { method: 'POST' });
-    } catch (e) {}
     if (screenStream) screenStream.getTracks().forEach(t => t.stop());
     if (webcamStream) webcamStream.getTracks().forEach(t => t.stop());
     setScreenStream(null);
     setWebcamStream(null);
-    setIsStreaming(false);
+    await stopStream();
   };
 
   /** @param {React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>} e */
@@ -1102,7 +1161,10 @@ const BroadcastStudio = () => {
               </button>
 
               <button 
-                onClick={() => setIsVirtualCamActive(!isVirtualCamActive)}
+                onClick={() => {
+                  setIsVirtualCamActive(!isVirtualCamActive);
+                  setStatusMessage('Virtual camera selection is a local draft; device activation is unverified.');
+                }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '5px',
                   background: isVirtualCamActive ? '#8b5cf6' : '#1e293b',
@@ -1111,7 +1173,7 @@ const BroadcastStudio = () => {
                 }}
                 title="Virtual Camera for Discord & Zoom"
               >
-                <Camera size={13} /> {isVirtualCamActive ? 'Virtual Cam ON' : 'Virtual Cam'}
+                <Camera size={13} /> {isVirtualCamActive ? 'Virtual Cam selected (unverified)' : 'Virtual Cam'}
               </button>
 
               <button 
@@ -1226,10 +1288,10 @@ const BroadcastStudio = () => {
                 PROGRAM {isVertical ? '[9:16 VERTICAL]' : '[16:9 MASTER]'}
               </span>
 
-              {isStreaming && (
+              {isStreaming && !streamStateUnknown && (
                 <div style={{ position: 'absolute', top: 8, right: 8, backgroundColor: '#ef4444', color: '#fff', padding: '3px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#fff' }}></span>
-                  LIVE ON AIR
+                  DAEMON ACKNOWLEDGED; INGEST UNVERIFIED
                 </div>
               )}
             </div>
@@ -1274,7 +1336,7 @@ const BroadcastStudio = () => {
                     <div style={{ fontSize: '10px', color: '#94a3b8' }}>1-Click Live Broadcast Triggers</div>
                   </div>
                   <span style={{ fontSize: '10px', background: isStreaming ? '#ef4444' : '#1e293b', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
-                    {isStreaming ? 'ON AIR' : 'STANDBY'}
+                    {streamStateUnknown ? 'STATE UNVERIFIED' : (isStreaming ? 'DAEMON STREAMING' : 'STOP ACKNOWLEDGED')}
                   </span>
                 </div>
 
@@ -1282,7 +1344,7 @@ const BroadcastStudio = () => {
                   <button onClick={handleToggleScreenCapture} style={{ background: screenStream ? 'rgba(56, 189, 248, 0.15)' : '#0f172a', border: screenStream ? '1px solid #38bdf8' : '1px solid #1e293b', borderRadius: '8px', padding: '12px', color: '#f1f5f9', cursor: 'pointer', textAlign: 'left' }}>
                     <ScreenShare size={18} style={{ marginBottom: '6px', color: '#38bdf8' }} />
                     <div style={{ fontSize: '11px', fontWeight: 'bold' }}>Screen Capture</div>
-                    <div style={{ fontSize: '9px', color: '#64748b' }}>{screenStream ? 'Live (60fps)' : 'Off'}</div>
+                    <div style={{ fontSize: '9px', color: '#64748b' }}>{screenStream ? 'Local preview; FPS unmeasured' : 'Off'}</div>
                   </button>
 
                   <button onClick={() => handleToggleWebcam()} style={{ background: webcamStream ? 'rgba(74, 222, 128, 0.15)' : '#0f172a', border: webcamStream ? '1px solid #4ade80' : '1px solid #1e293b', borderRadius: '8px', padding: '12px', color: '#f1f5f9', cursor: 'pointer', textAlign: 'left' }}>
@@ -1476,15 +1538,15 @@ const BroadcastStudio = () => {
     // 5. Advanced Audio Mixer (6 Isolated Stem Channels)
     if (component === "mixer") {
       return (
-        <div style={{ height: '100%', backgroundColor: '#090d16', padding: '10px', display: 'flex', gap: '12px', overflowX: 'auto', alignItems: 'center' }}>
+        <div title="Mixer controls edit the local draft. Audio levels and hardware routing are not measured here." style={{ height: '100%', backgroundColor: '#090d16', padding: '10px', display: 'flex', gap: '12px', overflowX: 'auto', alignItems: 'center' }}>
           {audioChannels.map((ch) => (
             <div key={ch.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '68px', height: '100%', justifyContent: 'space-between' }}>
               <div style={{ fontSize: '9px', color: '#94a3b8', textAlign: 'center', height: '26px', overflow: 'hidden' }}>{ch.name}</div>
               
-              <div style={{ flex: 1, width: '28px', backgroundColor: '#020617', border: '1px solid #1e293b', borderRadius: '4px', position: 'relative', margin: '4px 0', overflow: 'hidden' }}>
+              <div title="Meter unavailable" style={{ flex: 1, width: '28px', backgroundColor: '#020617', border: '1px solid #1e293b', borderRadius: '4px', position: 'relative', margin: '4px 0', overflow: 'hidden' }}>
                 <div 
                   style={{
-                    position: 'absolute', bottom: 0, width: '100%', height: `${ch.peak}%`,
+                    position: 'absolute', bottom: 0, width: '100%', height: '0%',
                     background: ch.peak > 85 ? 'linear-gradient(to top, #10b981 70%, #f59e0b 85%, #ef4444 100%)' : 'linear-gradient(to top, #10b981, #06b6d4)',
                     transition: 'height 0.1s ease', opacity: ch.mute ? 0.2 : 0.85
                   }}
@@ -1492,6 +1554,7 @@ const BroadcastStudio = () => {
                 <div style={{ position: 'absolute', bottom: `${ch.volume}%`, width: '100%', height: '2px', backgroundColor: '#fff', zIndex: 5 }} />
               </div>
 
+              <span style={{ fontSize: '8px', color: '#94a3b8' }}>Not measured</span>
               <input 
                 type="range" min="0" max="100" value={ch.volume}
                 onChange={(e) => {
@@ -1545,7 +1608,7 @@ const BroadcastStudio = () => {
 
           {endpoints.map((ep, idx) => {
             const probe = probeResults[ep.name];
-            const isTargetStreaming = isStreaming && ep.enabled && (ep.key || ep.name === 'Virtual Camera');
+            const isTargetStreaming = isStreaming && !streamStateUnknown && ep.enabled && (ep.key || ep.name === 'Virtual Camera');
             
             return (
               <div key={ep.name} style={{ marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px solid #1e293b' }}>
@@ -1554,7 +1617,7 @@ const BroadcastStudio = () => {
                     <strong style={{ color: ep.enabled ? '#38bdf8' : '#64748b' }}>{ep.name}</strong>
                     {isTargetStreaming ? (
                       <span style={{ fontSize: '9px', background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '1px 5px', borderRadius: '3px', border: '1px solid #10b981', fontWeight: 'bold' }}>
-                        ● LIVE INGEST
+                        Daemon acknowledged; ingest unverified
                       </span>
                     ) : probe ? (
                       <span 
@@ -1570,7 +1633,7 @@ const BroadcastStudio = () => {
                       </span>
                     ) : (
                       <span style={{ fontSize: '9px', color: ep.enabled ? '#64748b' : '#475569' }}>
-                        {ep.enabled ? '○ Ready' : 'Disabled'}
+                        {ep.enabled ? 'Configured; unverified' : 'Disabled'}
                       </span>
                     )}
                   </div>
@@ -1615,7 +1678,7 @@ const BroadcastStudio = () => {
               <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#f8fafc' }}>Sidekick AI Co-Host</span>
             </div>
             <span style={{ fontSize: '9px', background: 'rgba(234,179,8,0.15)', color: '#eab308', padding: '1px 6px', borderRadius: '3px', border: '1px solid #eab308' }}>
-              llama3.2 Active
+              Model unverified
             </span>
           </div>
 
@@ -1658,39 +1721,39 @@ const BroadcastStudio = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #1e293b', paddingBottom: '4px' }}>
             <span style={{ fontWeight: 'bold', color: '#f8fafc' }}>LIVE EGRESS TELEMETRY</span>
             <span style={{ color: isStreaming ? '#10b981' : '#64748b', fontWeight: 'bold' }}>
-              {isStreaming ? '● STREAMING' : '○ OFFLINE'}
+              {streamStateUnknown ? '○ STATE UNVERIFIED' : (isStreaming ? '● DAEMON STREAMING' : '○ STOP ACKNOWLEDGED')}
             </span>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: '#94a3b8' }}>Source/Game:</span> 
-            <span style={{ color: '#00e5ff', fontWeight: 'bold' }}>{telemetry.game_name}</span>
+            <span style={{ color: '#00e5ff', fontWeight: 'bold' }}>{telemetry.game_name ?? 'Unavailable'}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: '#94a3b8' }}>Frame Rate:</span> 
-            <span style={{ color: '#10b981', fontWeight: 'bold' }}>{telemetry.fps} FPS</span>
+            <span style={{ color: '#10b981', fontWeight: 'bold' }}>{telemetry.fps === null ? 'Unavailable' : `${telemetry.fps} FPS`}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: '#94a3b8' }}>Bitrate:</span> 
-            <span style={{ color: '#00e5ff', fontWeight: 'bold' }}>{telemetry.bitrate}</span>
+            <span style={{ color: '#00e5ff', fontWeight: 'bold' }}>{telemetry.bitrate ?? 'Unavailable'}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: '#94a3b8' }}>Encoder:</span> 
+            <span style={{ color: '#94a3b8' }}>Configured encoder:</span>
             <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>{hardwareEncoder.toUpperCase()}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: '#94a3b8' }}>Dropped Frames:</span> 
-            <span style={{ color: telemetry.dropped === "0" ? '#10b981' : '#ef4444', fontWeight: 'bold' }}>{telemetry.dropped}</span>
+            <span style={{ color: telemetry.dropped === null ? '#94a3b8' : (telemetry.dropped === "0" ? '#10b981' : '#ef4444'), fontWeight: 'bold' }}>{telemetry.dropped ?? 'Unavailable'}</span>
           </div>
 
           <div style={{ marginTop: '4px', paddingTop: '6px', borderTop: '1px solid #1e293b' }}>
-            <div style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold', marginBottom: '4px' }}>ACTIVE PLATFORMS ({activeTargets.length})</div>
+            <div style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold', marginBottom: '4px' }}>CONFIGURED PLATFORMS ({activeTargets.length})</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
               {activeTargets.map(ep => (
                 <div key={ep.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#020617', padding: '3px 6px', borderRadius: '3px', fontSize: '10px' }}>
                   <span style={{ color: '#cbd5e1' }}>{ep.name}</span>
                   <span style={{ color: isStreaming ? '#10b981' : '#38bdf8' }}>
-                    {isStreaming ? '● Sending' : '✓ Ready'}
+                    Ingest unverified
                   </span>
                 </div>
               ))}
@@ -1751,7 +1814,8 @@ const BroadcastStudio = () => {
           </button>
           
           <button 
-            onClick={isStreaming ? stopStream : startStream}
+            onClick={isStreaming || requiresStreamStop ? stopStream : startStream}
+            disabled={isStreamRequestPending}
             style={{ 
               backgroundColor: isStreaming ? '#475569' : '#00e5ff', 
               color: isStreaming ? '#fff' : '#000', 
@@ -1760,7 +1824,7 @@ const BroadcastStudio = () => {
               boxShadow: isStreaming ? 'none' : '0 0 12px rgba(0,229,255,0.4)'
             }}
           >
-            {isStreaming ? 'STOP STREAMING' : 'START STREAMING'}
+            {isStreamRequestPending ? 'AWAITING ACKNOWLEDGEMENT' : (isStreaming || requiresStreamStop ? 'STOP / VERIFY OUTPUT' : 'START STREAMING')}
           </button>
         </div>
       </div>
