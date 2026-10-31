@@ -1,7 +1,7 @@
 {
   "status": "IN_PROGRESS",
   "client_date": "2026-10-30",
-  "source_version": "v5.329.78",
+  "source_version": "v5.329.79",
   "repository": {
     "checkpoint_parent": "ce1fa4430a069fa5420fa766b8d7687d89025809",
     "branch": "codex/audit-v532976-20261031",
@@ -188,7 +188,7 @@
     "Provider credential rotation/readiness and browser acceptance remain separate, with dispatch held."
   ],
   "coverage_limit": "Static sites and metadata are inventories, not proof every action or provider works.",
-  "updated_utc": "2026-10-31T07:47:42Z",
+  "updated_utc": "2026-10-31T16:18:12.099046+00:00",
   "online_policy": "ALLOWED_BY_USER; unit tests remain isolated",
   "sqlite_integrity": {
     "repaired_fts_stores": [
@@ -334,11 +334,56 @@
     "published_this_record": false,
     "reason": "Prior CLI credential exposure was retired. Fresh Firebase sign-in required for any future CLI deployment; OpenAI API key does not authenticate Firebase."
   },
-  "last_operational_record": 200,
+  "last_operational_record": 203,
   "verification_limits": [
     "Ten new empty C-root UUID fixture directories were created by native Win32 calls bypassing Python audit hooks; verified task-owned and removed nonrecursively. No existing data removal observed; no OS-wide ACL attestation.",
     "One failed FE Express fixture may have read the exact local-service credential profile via native Windows APIs. No value was printed or network sent; corrected accepted fixture uses explicit inert credentials.",
     "Git path length and sqlite3.Row comparison instrumentation defects corrected only in E: harnesses. Historical false negatives and intentional corruption fixtures retained.",
     "Python effect screening is not an operating-system sandbox. Eleven unsafe integration files remain held."
-  ]
+  ],
+  "full_system_audit_status": "PARTIAL",
+  "routing203": {
+    "client_node": 64,
+    "client_native_related": 10,
+    "endpoint_adapters": 8,
+    "new_backend_policy": 16,
+    "existing_safe_backend_media_cases": 2,
+    "actual_policy_endpoint_composition": 9,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "canonical_four_jobs_exit_zero": true,
+    "strict_typescript": true,
+    "versions": true,
+    "native202_focused_cases": 45,
+    "overlapping_cohorts_not_added": true
+  },
+  "routing203_runtime": {
+    "passed": 7,
+    "auth_held": 1,
+    "desktop_control": false
+  },
+  "native202": {
+    "status": "PARTIAL_DESKTOP_AUDIT_USER_STOPPED_COMPUTER_USE",
+    "master_hubs": 4,
+    "canonical_subtabs": 53,
+    "fixture_view_constructors_passed": 53,
+    "runtime_button_instances": 647,
+    "pure_local_clicks_passed": 73,
+    "workflow_buttons_held": 481,
+    "disabled_buttons": 16,
+    "qt_internal_buttons": 38,
+    "valid_menu_hosts": 5,
+    "stateful_check_radio_inputs": 20,
+    "unbound_mixer_toggles_open": 8,
+    "dead_meeting_controls_open": 6,
+    "nested_tabs_selected": 10,
+    "qt_callback_errors": 0,
+    "construction_is_not_full_workflow_acceptance": true,
+    "computer_use_paused_on_user_request": true,
+    "no_computer_use_for_routing203": true
+  },
+  "current_native_version": "v5.329.79",
+  "current_firebase_version": "v5.329.79",
+  "native_signing": "UNSIGNED",
+  "full_gui_acceptance": false
 }

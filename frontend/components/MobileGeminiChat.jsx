@@ -1,3 +1,4 @@
+import { isComfyStatusQuery } from '/src/utils/chatRequestIntent.js';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -442,21 +443,97 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) 
     setIsUploadingFile(true);
     const newAttachments = [];
 
+    // Helper: read text/code file client-side via FileReader
+    const readLocalFileAsText = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read file client-side'));
+        reader.readAsText(targetFile);
+      });
+    };
+
+    // Helper: read image file client-side as data URL
+    const readLocalFileAsDataUrl = (targetFile) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result || '');
+        reader.onerror = () => reject(reader.error || new Error('Failed to read image client-side'));
+        reader.readAsDataURL(targetFile);
+      });
+    };
+
     for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
+      const ext = (file.name.includes('.') ? `.${file.name.split('.').pop().toLowerCase()}` : '').trim();
+      const isImage = file.type?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'].includes(ext);
+      const isTextOrCode = file.type?.startsWith('text/') ||
+        ['.txt', '.md', '.py', '.js', '.jsx', '.ts', '.tsx', '.json', '.html', '.css', '.scss',
+         '.c', '.cpp', '.h', '.hpp', '.rs', '.go', '.sql', '.sh', '.bat', '.ps1', '.yaml',
+         '.yml', '.toml', '.xml', '.csv', '.tsv', '.env', '.log', '.diff', '.patch'].includes(ext);
+
+      let uploadSucceeded = false;
 
       try {
+        const formData = new FormData();
+        formData.append('file', file);
+
         const res = await fetch(`${BACKEND_URL}/api/chat/attach`, {
           method: 'POST',
+          headers: {
+            'X-Client-ID': 'stehouwer_publishing'
+          },
           body: formData
         });
-        const data = await res.json();
-        if (res.ok && data.status === 'success') {
+
+        const rawText = await res.text();
+        let data = null;
+        if (rawText && rawText.trim()) {
+          try {
+            data = JSON.parse(rawText);
+          } catch {
+            data = null;
+          }
+        }
+
+        if (res.ok && data && data.status === 'success' && data.file) {
           newAttachments.push(data.file);
+          uploadSucceeded = true;
         }
       } catch (err) {
         console.error('File upload failed:', err);
+      }
+
+      if (!uploadSucceeded) {
+        if (isTextOrCode) {
+          try {
+            const rawContent = await readLocalFileAsText(file);
+            const sanitized = (rawContent || '').replace(/\x00/g, '').slice(0, 30000);
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: false,
+              path: '',
+              content: sanitized
+            });
+          } catch (readErr) {
+            console.error('Local file read failed:', readErr);
+          }
+        } else if (isImage) {
+          try {
+            const dataUrl = await readLocalFileAsDataUrl(file);
+            newAttachments.push({
+              name: file.name,
+              size: file.size,
+              ext: ext,
+              is_image: true,
+              path: '',
+              content: `[IMAGE_ATTACHMENT:${file.name}]\n[Client-Staged Data URL: ${dataUrl.slice(0, 100)}...]`
+            });
+          } catch (readErr) {
+            console.error('Local image read failed:', readErr);
+          }
+        }
       }
     }
 
@@ -526,7 +603,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) 
       let streamingSucceeded = false;
 
       // Stream via hybrid chat if stehouwer_llm
-      if (selectedModel === 'stehouwer_llm') {
+      if (selectedModel === 'stehouwer_llm' || isComfyStatusQuery(rawText)) {
         setChatMessages(prev => [
           ...prev,
           { role: 'assistant', content: '', model: 'Stehouwer LLM' }
@@ -537,7 +614,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) 
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, stream: true }),
+            body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', stream: true }),
             signal: AbortSignal.timeout ? AbortSignal.timeout(5400000) : undefined
           });
 
@@ -582,6 +659,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser }) 
 
       if (!streamingSucceeded) {
         const payloadBody = JSON.stringify({
+          user_prompt: rawText || 'Please review and analyze the attached files.',
           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
           model: selectedModel,
           stream: false

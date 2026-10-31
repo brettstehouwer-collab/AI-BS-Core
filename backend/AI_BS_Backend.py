@@ -8923,10 +8923,12 @@ async def execute_ide_plan(request: Request):
 
 
 
-from pydantic import StrictBool
+from pydantic import Field, StrictBool, StrictStr
 
 
 class HybridStreamPayload(BaseModel):
+
+    user_prompt: Optional[StrictStr] = Field(default=None, min_length=1, max_length=128000)
 
     use_web_search: StrictBool = False
 
@@ -8956,6 +8958,8 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
 
     """Real-time token streaming endpoint for BS-CHAT Stehouwer LLM."""
 
+    from fastapi.responses import StreamingResponse
+
     body = {}
 
     if payload:
@@ -8975,6 +8979,11 @@ async def hybrid_chat_stream_endpoint(request: Request, payload: Optional[Hybrid
             body = {}
 
 
+
+    from core.media_intent_policy import resolve_media_status
+    service_reply = await resolve_media_status(body)
+    if service_reply is not None:
+        return StreamingResponse(iter([service_reply]), media_type="text/plain")
 
     from core.optional_web_search import web_search_response
     research = await web_search_response(body)
@@ -9635,6 +9644,19 @@ async def chat_endpoint(request: Request):
                 payload_data = payload_data["rawFallback"]
 
 
+
+    from core.media_intent_policy import resolve_media_status
+    service_reply = await resolve_media_status(payload_data)
+    if service_reply is not None:
+        status_message = {"role": "assistant", "content": service_reply}
+        if payload_data.get("stream", False):
+            from fastapi.responses import StreamingResponse
+            async def service_status_events():
+                yield "data: " + json.dumps({"choices": [{"delta": status_message, "finish_reason": "stop"}]}) + "\n\n"
+                yield "data: [DONE]\n\n"
+            return StreamingResponse(service_status_events(), media_type="text/event-stream")
+        return {"object": "chat.completion", "model": "local-service-status",
+                "choices": [{"message": status_message, "finish_reason": "stop"}]}
 
     from core.optional_web_search import web_search_response
     research = await web_search_response(payload_data)
@@ -10583,7 +10605,8 @@ async def chat_endpoint(request: Request):
 
         from core.hybrid_reasoning_engine import detect_tool_intent
 
-        detected_tool, detected_args = detect_tool_intent(last_user_msg)
+        from core.media_intent_policy import intent_text
+        detected_tool, detected_args = detect_tool_intent(intent_text(payload_data) or "")
 
 
 

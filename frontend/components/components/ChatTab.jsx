@@ -9,6 +9,7 @@ import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { isComfyStatusQuery } from '/src/utils/chatRequestIntent.js';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
@@ -6814,7 +6815,7 @@ const extLangMap = {
     try {
       const isPlanMode = activeTools?.plan_and_review;
       const targetModel = selectedModel || 'stehouwer_llm';
-      const useHybridStream = !isPlanMode;
+      const useHybridStream = !isPlanMode || isComfyStatusQuery(rawText);
 
       const reqHeaders = await chatAuthHeaders({
         'Content-Type': 'application/json',
@@ -6849,7 +6850,7 @@ const extLangMap = {
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
+            body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', messages: recentHistory, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
             signal: controller.signal,
           });
 
@@ -6926,6 +6927,7 @@ const extLangMap = {
         const endpoint = isPlanMode ? '/v1/ide/plan' : '/api/chat';
         
         const payloadBody = JSON.stringify({
+          user_prompt: rawText || 'Please review and analyze the attached files.',
           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
           model: targetModel,
           prompt: isPlanMode ? rawText : undefined,

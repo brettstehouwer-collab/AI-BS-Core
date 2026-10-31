@@ -7,6 +7,7 @@ import CodingPreparationPanel from './CodingPreparationPanel';
 import React, { useState, useRef, useEffect } from 'react';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { isComfyStatusQuery } from '/src/utils/chatRequestIntent.js';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -1258,8 +1259,8 @@ let attachmentBadges = [];
         'http://100.104.31.50:8080'
       ].filter((u, idx, arr) => u && arr.indexOf(u) === idx && (!isMobileClient || (!u.includes('127.0.0.1') && !u.includes('localhost') && !u.includes('192.168.'))));
 
-      const pLower = (formattedPrompt || '').toLowerCase().trim();
-      const isVisualOrMediaIntent = (
+      const pLower = (rawText || '').toLowerCase().trim();
+      const isVisualOrMediaIntent = !isComfyStatusQuery(rawText) && (
         pLower.startsWith('/imagine') || pLower.startsWith('/render') || pLower.startsWith('/image') ||
         pLower.startsWith('/draw') || pLower.startsWith('/paint') || pLower.startsWith('/generate') ||
         pLower.startsWith('t2i:') || pLower.startsWith('txt2img:') ||
@@ -1268,7 +1269,7 @@ let attachmentBadges = [];
       );
 
       // Prefer streaming hybrid-chat if stehouwer_llm OR any visual/image creation request
-      if (selectedModel === 'stehouwer_llm' || isVisualOrMediaIntent) {
+      if (selectedModel === 'stehouwer_llm' || isVisualOrMediaIntent || isComfyStatusQuery(rawText)) {
         setChatMessages(prev => [
           ...prev,
           { role: 'assistant', content: '', model: isVisualOrMediaIntent ? 'Stehouwer Vision • ComfyUI' : 'Stehouwer LLM' }
@@ -1284,7 +1285,7 @@ let attachmentBadges = [];
             const streamRes = await fetch(`${targetBase}/api/v1/hybrid-chat/stream`, {
               method: 'POST',
               headers: reqHeaders,
-              body: JSON.stringify({ prompt: formattedPrompt, messages: recentHistory, stream: true, enable_rag: true }),
+              body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', messages: recentHistory, stream: true, enable_rag: true }),
               signal: controller.signal
             });
 
@@ -1360,6 +1361,7 @@ let attachmentBadges = [];
 
       if (!streamingSucceeded) {
         const payloadBody = JSON.stringify({
+          user_prompt: rawText || 'Please review and analyze the attached files.',
           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
           model: selectedModel
         });
@@ -1392,7 +1394,7 @@ let attachmentBadges = [];
               const fbRes = await fetch(`${targetBase}/api/v1/hybrid-chat/stream`, {
                 method: 'POST',
                 headers: reqHeaders,
-                body: JSON.stringify({ prompt: formattedPrompt, stream: false }),
+                body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', stream: false }),
                 signal: AbortSignal.timeout ? AbortSignal.timeout(fallbackTimeout) : undefined
               });
               if ([401, 403].includes(fbRes?.status)) {

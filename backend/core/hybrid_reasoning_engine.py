@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import AsyncGenerator, Tuple, Optional, Dict, Any
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, StrictBool, StrictStr
 from core.safety_guardrails import STEHOUWER_SAFETY_DIRECTIVE, inject_safety_directive, audit_prompt_safety
 
 router = APIRouter(prefix="/api/v1/hybrid-chat", tags=["Simultaneous Hybrid Reasoning"])
@@ -16,7 +16,10 @@ PRIMARY_OLLAMA_URL = os.environ.get("OLLAMA_HOST_GEN", "http://127.0.0.1:11434/a
 SHADOW_OLLAMA_URL = os.environ.get("OLLAMA_HOST_EDRIVE_GEN", "http://127.0.0.1:11435/api/generate")
 
 class ChatRequest(BaseModel):
+    use_web_search: StrictBool = False
+    web_search_query: str = ""
     prompt: str
+    user_prompt: Optional[StrictStr] = Field(default=None, min_length=1, max_length=128000)
     mode: Optional[str] = None
     plan_only: bool = False
     execution_backend: Optional[str] = None
@@ -89,7 +92,23 @@ def clean_tool_prompt(raw: str) -> str:
 
 def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
     """Inspects the prompt for explicit tool calls or visual/database generation intents across multiple directives."""
+    from core.media_intent_policy import classify_media_message
+    media_category = classify_media_message(prompt)
+    if media_category == 'comfy_status':
+        return 'comfy_service_status', {}
+    if media_category in {'media_inquiry', 'media_denied'}:
+        return None, None
     p_lower = prompt.lower().strip()
+    # A pasted tool error is diagnostic data, never another generation request.
+    diagnostic = prompt.strip()
+    if diagnostic.startswith('```'):
+        diagnostic = re.sub(r'^```(?:json)?\s*|\s*```$', '', diagnostic).strip()
+    try:
+        report = json.loads(diagnostic)
+    except (ValueError, TypeError):
+        report = None
+    if isinstance(report, dict) and report.get('status') in {'error', 'failed', 'timeout', 'queued', 'pending'}:
+        return None, None
     
     # -10. PowerShell, Bash, Pip & CLI Execution Intent (/ps, /powershell, /cmd, /sh, /bash, /pip, cmdlets, developer CLI)
     if p_lower.startswith(("/bash ", "/sh ", "bash ", "sh ")):
@@ -406,15 +425,16 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
         if dur_match:
             try:
                 parsed_sec = int(dur_match.group(1))
-                args["duration_seconds"] = max(7, min(15, parsed_sec))
+                args["duration_seconds"] = parsed_sec
             except Exception:
-                args["duration_seconds"] = 10
+                args["duration_seconds"] = 3
         else:
-            args["duration_seconds"] = 10
+            args["duration_seconds"] = 3
         return "generate_comfy_video", args
 
     # 4. 3D Mesh / Model Intent
-    if any(kw in p_lower for kw in ["generate_comfy_3d_model", "generate 3d", "create 3d model", "render 3d", "3d mesh"]):
+    if (any(kw in p_lower for kw in ["generate_comfy_3d_model", "generate 3d", "create 3d model", "render 3d", "3d mesh"])
+            or re.search(r'\b(?:create|generate|render)\s+(?:a\s+)?3d\s+(?:model|mesh)\b', p_lower)):
         return "generate_comfy_3d_model", {"prompt": clean_tool_prompt(prompt)}
 
     # 5. Media & Text-to-Image Generation Intent (Multi-Keyword Directives & Autonomous Routing)
@@ -745,7 +765,7 @@ async def stream_shadow_coder_response(prompt: str, messages: Optional[list] = N
             yield chunk
 
 
-async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list] = None) -> AsyncGenerator[str, None]:
+async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list] = None, *, intent_prompt: Optional[str] = None) -> AsyncGenerator[str, None]:
     """
     Gathers tool intents, shadow co-processor briefings, and streams the response 
     directly through Stehouwer LLM's authentic voice with live rendered media.
@@ -756,8 +776,15 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
         yield f"⚠️ **Sovereign Engine Refusal:** {refusal}\n"
         return
 
-    # Check for direct tool intents (ComfyUI Image/Video, DB Queries, Memory)
-    t_name, t_args = detect_tool_intent(prompt)
+    # Availability/informational questions never enter model/tool dispatch.
+    from core.media_intent_policy import resolve_media_status
+    intent = intent_prompt if intent_prompt is not None else prompt
+    observed = await resolve_media_status({'prompt': intent})
+    if observed is not None:
+        yield observed
+        return
+    # Only current user input authorizes tools; attached context is not authority.
+    t_name, t_args = detect_tool_intent(intent)
     
     # Check for dedicated coding sub-agent intent
     is_code, clean_code_prompt = is_coding_intent(prompt)
@@ -770,7 +797,7 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
         if t_name in ["generate_comfy_image", "generate_comfy_video", "generate_comfy_3d_model"]:
             clean_prompt = t_args.get("prompt", "futuristic AI server matrix room")
             media_noun = "video" if t_name == "generate_comfy_video" else "media"
-            yield f"Alright, let's get this done! Firing up the RTX 4090 ComfyUI engine on Port 8189 now for: **{clean_prompt}**... 🎨⚡\n\n"
+            yield f"Submitting your explicit ComfyUI request for: **{clean_prompt}**. Completion is not yet confirmed.\n\n"
             
             # Execute tool safely with periodic keep-alive progress updates to prevent socket timeout
             from tools.tool_registry import ToolRegistry
@@ -780,56 +807,21 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
                 await asyncio.sleep(5)
                 elapsed += 5
                 if elapsed % 15 == 0 and t_name == "generate_comfy_video":
-                    yield f"⏳ *Synthesizing video frames on RTX 4090... ({elapsed}s elapsed)*\n\n"
+                    yield f"ComfyUI request is still pending ({elapsed}s); completion has not been confirmed.\n\n"
             
             tool_result = await task
             
-            img_url = tool_result.get("image_url")
-            filename = tool_result.get("filename")
-            
-            if not img_url and filename:
-                img_url = f"/api/comfy/media?filename={filename}&subfolder=&type=output"
-                
-            if img_url:
-                safe_alt = re.sub(r'[\r\n\[\]"\'`]+', ' ', clean_prompt).strip()[:70] or "Generated ComfyUI Media"
-                is_video = (
-                    t_name == "generate_comfy_video"
-                    or (filename and any(filename.lower().endswith(ext) for ext in [".mp4", ".webm", ".mov", ".mkv"]))
-                    or any(ext in (img_url or "").lower() for ext in [".mp4", ".webm", ".mov", ".mkv"])
-                )
-                if is_video:
-                    dur_sec = tool_result.get("duration_seconds")
-                    fps_val = tool_result.get("fps", 16)
-                    frames_val = tool_result.get("num_frames")
-                    dur_info = f" ({dur_sec}s @ {fps_val}fps, {frames_val} frames)" if dur_sec else ""
-                    media_markdown = f"<video controls autoPlay loop muted playsinline src='{img_url}' style='max-width:100%; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.5);'></video>"
-                    yield f"🎬 **Generated ComfyUI Video Output{dur_info}:**\n\n{media_markdown}\n\n[📥 Direct Video Download / High-Res View]({img_url})\n\n---\n*Rendered in cinematic HD via RTX 4090 Wan2.1 pipeline ({dur_sec or '3-8'}s duration).* What's our next creative shot?"
-                else:
-                    media_markdown = f"![{safe_alt}]({img_url})"
-                    yield f"🎬 **Generated ComfyUI Image:**\n\n{media_markdown}\n\n[📥 Direct Image Download / High-Res View]({img_url})\n\n---\n*Rendered in high resolution (SDXL 1024x1024) via local RTX 4090.* Razor sharp and ready to roll! What are we building next?"
-            else:
-                err_msg = tool_result.get("message")
-                if err_msg:
-                    yield f"⚠️ **ComfyUI Execution Alert:** {err_msg}\n\n```json\n{json.dumps(tool_result, indent=2)}\n```\n\nVerify Port 8189 ComfyUI service status."
-                else:
-                    yield f"⚠️ **ComfyUI Task Status:**\n\n```json\n{json.dumps(tool_result, indent=2)}\n```\n\nComfyUI dispatched prompt. If image doesn't appear, verify Port 8189."
+            from core.media_delivery import format_media_result
+            yield format_media_result(tool_result, clean_prompt)
             return
 
         elif t_name == "generate_comfy_img2img":
             clean_prompt = t_args.get("prompt", "transformed image")
-            yield f"Firing up the RTX 4090 ComfyUI Image-to-Image engine on Port 8189 for: **{clean_prompt}**... 🎨⚡\n\n"
+            yield f"Submitting your explicit image-variation request for: **{clean_prompt}**. Completion is not yet confirmed.\n\n"
             from tools.tool_registry import ToolRegistry
             tool_result = await asyncio.to_thread(ToolRegistry.execute_tool, t_name, t_args)
-            img_url = tool_result.get("image_url")
-            filename = tool_result.get("filename")
-            if not img_url and filename:
-                img_url = f"/api/comfy/media?filename={filename}&subfolder=&type=output"
-            if img_url:
-                safe_alt = re.sub(r'[\r\n\[\]"\'`]+', ' ', clean_prompt).strip()[:70] or "Recreated ComfyUI Image"
-                media_markdown = f"![{safe_alt}]({img_url})"
-                yield f"🎬 **Recreated ComfyUI Image (img2img):**\n\n{media_markdown}\n\n[📥 Direct Image Download / High-Res View]({img_url})\n\n---\n*Rendered locally via RTX 4090 SDXL img2img pipeline (denoise: {tool_result.get('denoise', 0.65)}).* Transformed and ready! What's next?"
-            else:
-                yield f"⚠️ **ComfyUI img2img Task Status:**\n\n```json\n{json.dumps(tool_result, indent=2)}\n```\n\nComfyUI img2img dispatched. If output doesn't appear, verify Port 8189."
+            from core.media_delivery import format_media_result
+            yield format_media_result(tool_result, clean_prompt)
             return
 
         elif t_name == "interrogate_image":
@@ -1394,6 +1386,14 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 @router.post("/stream")
 async def chat_hybrid_endpoint(req: ChatRequest):
     body = req.model_dump() if hasattr(req, 'model_dump') else req.dict()
+    from core.media_intent_policy import media_status_response
+    observation = await media_status_response(body)
+    if observation is not None:
+        return observation
+    from core.optional_web_search import web_search_response
+    research = await web_search_response(body)
+    if research is not None:
+        return research
     mode = body.get("mode")
     mode = mode.strip().lower() if isinstance(mode, str) else mode
     if body.get("plan_only") is True or mode in ("plan", "plan_only", "review"):
@@ -1425,7 +1425,8 @@ async def chat_hybrid_endpoint(req: ChatRequest):
             else "INVALID_EXECUTION_BACKEND: unsupported execution backend."
         )
         return StreamingResponse(iter([reason + " No host tool or model was invoked.\n"]), media_type="text/plain")
-    return StreamingResponse(
-        stream_stehouwer_hybrid_response(req.prompt, messages=req.messages),
-        media_type="text/event-stream"
-    )
+    async def events():
+        messages = list(req.messages or [])
+        async for chunk in stream_stehouwer_hybrid_response(req.prompt, messages=messages, intent_prompt=req.user_prompt):
+            yield chunk
+    return StreamingResponse(events(), media_type="text/event-stream")
