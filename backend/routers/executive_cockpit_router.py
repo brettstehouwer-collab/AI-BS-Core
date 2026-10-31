@@ -32,8 +32,9 @@ if root_dir not in sys.path:
 import psutil
 import httpx
 from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Query, Path as FPath, Body
+from fastapi import APIRouter, HTTPException, Query, Path as FPath, Body, Request
 from pydantic import BaseModel, Field
+from security.host_control_access import AdminHostControlRoute, HOST_CONTROL_PRIVATE_HEADERS
 
 from core.executive_action_dispatcher import executive_dispatcher, TOOL_MANIFEST
 from core.obs_broadcast_controller import ObsBroadcastController
@@ -45,7 +46,8 @@ WORKSPACE_ROOT = Path("C:/AI-BS") if Path("C:/AI-BS").exists() else Path(__file_
 
 logger = logging.getLogger("ExecutiveCockpitRouter")
 
-router = APIRouter(prefix="/api/v1/executive", tags=["Executive Command Cockpit"])
+router = APIRouter(prefix="/api/v1/executive", tags=["Executive Command Cockpit"],
+                   route_class=AdminHostControlRoute)
 
 
 # =========================================================================
@@ -679,52 +681,26 @@ class VibeCheckpointRequest(BaseModel):
 
 @router.post("/vibe-checkpoint")
 async def create_vibe_checkpoint(req: VibeCheckpointRequest = Body(...)):
-    """
-    Creates an ultra-fast (<370ms) non-destructive Git snapshot of source code and docs.
-    Protects against LLM hallucination and multi-file code regressions.
-    """
-    import subprocess
-    t0 = time.time()
-    try:
-        subprocess.run(["git", "reset"], cwd=str(WORKSPACE_ROOT), capture_output=True)
-        subprocess.run(["git", "add", "-u"], cwd=str(WORKSPACE_ROOT), capture_output=True)
-        subprocess.run(
-            ["git", "add", "frontend/src/", "frontend/components/", "go-core/", "scripts/", "docs/", "*.md"],
-            cwd=str(WORKSPACE_ROOT), capture_output=True
-        )
-        msg = f"Vibe-Checkpoint: {req.label} [{time.strftime('%Y-%m-%d %H:%M:%S')}]"
-        res = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=str(WORKSPACE_ROOT))
-        has_changes = (res.returncode != 0)
-        commit_hash = "HEAD"
-        if has_changes:
-            subprocess.run(["git", "commit", "-m", msg], cwd=str(WORKSPACE_ROOT), capture_output=True)
-            r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=str(WORKSPACE_ROOT), capture_output=True, text=True)
-            commit_hash = r.stdout.strip()
-        elapsed_ms = round((time.time() - t0) * 1000, 1)
-        return {
-            "status": "success",
-            "checkpoint": commit_hash,
-            "created": has_changes,
-            "elapsed_ms": elapsed_ms,
-            "label": req.label
-        }
-    except Exception as e:
-        logger.error(f"Vibe Checkpoint failed: {e}")
-        return {"status": "error", "message": str(e)}
+    """Keep shared-tree Git mutation held until scoped recoverable snapshots exist."""
+    raise HTTPException(
+        status_code=503,
+        detail="Legacy Git checkpoint is unavailable pending a scoped, recoverable workflow.",
+        headers=dict(HOST_CONTROL_PRIVATE_HEADERS),
+    )
 
 
 @router.post("/vibe-rollback")
 async def rollback_vibe_checkpoint():
-    """
-    Performs a 1-click clean rollback of uncommitted changes to restore the last safe Vibe Checkpoint.
-    """
-    import subprocess
-    try:
-        subprocess.run(["git", "reset", "--hard", "HEAD"], cwd=str(WORKSPACE_ROOT), capture_output=True)
-        subprocess.run(["git", "clean", "-fd", "--", "frontend/src/", "frontend/components/"], cwd=str(WORKSPACE_ROOT), capture_output=True)
-        return {"status": "success", "message": "Successfully rolled back to last safe Vibe-Checkpoint."}
-    except Exception as e:
-        logger.error(f"Vibe Rollback failed: {e}")
-        return {"status": "error", "message": str(e)}
+    """Keep destructive reset/clean held until scoped recoverable rollback exists."""
+    raise HTTPException(
+        status_code=503,
+        detail="Legacy Git rollback is unavailable pending a scoped, recoverable workflow.",
+        headers=dict(HOST_CONTROL_PRIVATE_HEADERS),
+    )
 
 
+@router.get("/route-audit")
+async def get_route_audit(request: Request):
+    """Report bounded runtime registration metadata without invoking endpoints."""
+    from core.plugin_loader import collect_route_metadata
+    return collect_route_metadata(request.app.routes)

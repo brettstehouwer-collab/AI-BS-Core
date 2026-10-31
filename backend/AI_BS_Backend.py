@@ -158,6 +158,8 @@ from bullshit_polyglot import execute_polyglot_command
 
 from fastapi.middleware.cors import CORSMiddleware
 from security.firebase_auth import verify_admin_credentials, get_admin_principal
+from security.host_control_access import require_host_admin, limit_host_upload, HOST_CONTROL_PRIVATE_HEADERS, AdminWebSocketBoundaryMiddleware
+from security.contained_file_access import write_bounded_upload, validate_upload_filename
 
 from fastapi.responses import StreamingResponse, JSONResponse, FileResponse
 
@@ -956,6 +958,10 @@ async def lifespan(app: FastAPI):
                 await asyncio.sleep(2.0)
 
         owned_tasks.append(asyncio.create_task(telemetry_broadcast_loop()))
+        # Independently authorized staff copies; never activates campaign sending.
+        if os.environ.get('RECDEBUT_REPLY_FORWARDING_ENABLED', '').lower() == 'true':
+            from recdebut_reply_forwarding import poll_loop as recdebut_reply_poll_loop
+            owned_tasks.append(asyncio.create_task(recdebut_reply_poll_loop()))
         # The current Windows user can open the private native client without
         # entering/copying a developer key. Never publish before we own8080.
         if os.name == 'nt':
@@ -1770,7 +1776,8 @@ class AdminExecutionBoundaryMiddleware(BaseHTTPMiddleware):
         "/api/v1/system/powershell", "/api/v1/agent-harness", "/api/tools/execute",
         "/api/chat", "/v1/chat/completions", "/api/v1/hybrid-chat",
         "/api/memory", "/api/memory-lab", "/api/artifacts", "/v1/ide/plan", "/api/comfy", "/api/media",
-        "/api/executive", "/api/terminal", "/api/execute-code",
+        "/api/executive", "/api/v1/executive", "/api/v1/media", "/api/v1/audio/demucs",
+        "/api/usb-recovery", "/api/terminal", "/api/execute-code",
         "/polyglot-execution-engine", "/ai-bs-core/execute", "/stage-engine/orchestrate",
         "/v1/ide/execute-plan", "/v1/agent/execute-system", "/api/video/unreal",
         "/api/unreal", "/unreal", "/api/security/backups", "/api/v1/jobs",
@@ -1785,6 +1792,7 @@ class AdminExecutionBoundaryMiddleware(BaseHTTPMiddleware):
         "/api/v1/swarm", "/api/v1/updater", "/api/v1/hardware/flashrom",
         "/api/v1/steam/launch", "/api/v1/mining", "/api/v1/pearl",
         "/api/v1/unreal", "/api/comfyui/workspace",
+        "/api/v1/emails",
     )
 
     async def dispatch(self, request: Request, call_next):
@@ -1814,24 +1822,33 @@ class AdminExecutionBoundaryMiddleware(BaseHTTPMiddleware):
         from security.document_access import is_document_path, document_request_allowed
         if is_document_path(path):
             if not await asyncio.to_thread(document_request_allowed, request):
-                return JSONResponse(status_code=403, content={"detail": "Administrator authorization is required for documents and shared-drive access."})
+                return JSONResponse(status_code=403, content={"detail": "Administrator authorization is required for documents and shared-drive access."}, headers=HOST_CONTROL_PRIVATE_HEADERS)
+            try:
+                await limit_host_upload(request)
+            except HTTPException as exc:
+                return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail}, headers=HOST_CONTROL_PRIVATE_HEADERS)
         sensitive = any(path.startswith(prefix) for prefix in self.SENSITIVE_PREFIXES)
         if sensitive:
             supplied = request.headers.get("x-admin-key", "") or request.headers.get("x-api-key", "")
             auth = request.headers.get("authorization", "")
             principal = await asyncio.to_thread(get_admin_principal, supplied, auth)
             if principal is None:
-                return JSONResponse(status_code=403, content={"detail": "Admin authorization required for execution/control routes."})
+                return JSONResponse(status_code=403, content={"detail": "Admin authorization required for execution/control routes."}, headers=HOST_CONTROL_PRIVATE_HEADERS)
             from core.personal_memory_scope import bind_memory_principal, reset_memory_principal
             try:
                 token = bind_memory_principal(principal)
             except PermissionError:
-                return JSONResponse(status_code=403, content={"detail": "Verified memory ownership is unavailable."})
+                return JSONResponse(status_code=403, content={"detail": "Verified memory ownership is unavailable."}, headers=HOST_CONTROL_PRIVATE_HEADERS)
             try:
-                return await call_next(request)
+                response = await call_next(request)
+                response.headers.update(HOST_CONTROL_PRIVATE_HEADERS)
+                return response
             finally:
                 reset_memory_principal(token)
-        return await call_next(request)
+        response = await call_next(request)
+        if is_document_path(path):
+            response.headers.update(HOST_CONTROL_PRIVATE_HEADERS)
+        return response
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -1928,11 +1945,12 @@ try:
 
     app.include_router(audit_ledger_router)
 
-    from modules.audit_ledger_watcher import cdz_watcher
-
-    cdz_watcher.start()
-
-    print("[CDZ] audit_ledger_router mounted & cdz_watcher active")
+    if os.getenv("AI_BS_BACKEND_BACKGROUND_ENABLED", "false").strip().lower() == "true":
+        from modules.audit_ledger_watcher import cdz_watcher
+        cdz_watcher.start()
+        print("[CDZ] audit_ledger_router mounted & cdz_watcher active")
+    else:
+        print("[CDZ] audit_ledger_router mounted; background ingestion disabled")
 
 except Exception as e:
 
@@ -3207,6 +3225,9 @@ class HSTSMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(HSTSMiddleware)
+
+# Outermost admission prevents denied sockets being recorded as accepted telemetry.
+app.add_middleware(AdminWebSocketBoundaryMiddleware)
 
 
 
@@ -4759,112 +4780,8 @@ class ApproveSendRequest(BaseModel):
 @app.post("/api/v1/emails/outbox/approve-send")
 
 async def approve_and_send_email(payload: ApproveSendRequest):
-
-    """Thoughtful Friction Gate: Approves and dispatches email via Gmail OAuth API."""
-
-    outbox_path = os.path.join(_backend_dir, "core", "email_outbox_queue.json")
-
-    if not os.path.exists(outbox_path):
-
-        return JSONResponse(
-
-            status_code=404,
-
-            content={"status": "error", "message": "Outbox queue empty."},
-
-        )
-
-    try:
-
-        with open(outbox_path, "r", encoding="utf-8") as f:
-
-            items = json.load(f)
-
-
-
-        target = next(
-
-            (item for item in items if item.get("id") == payload.draft_id), None
-
-        )
-
-        if not target:
-
-            return JSONResponse(
-
-                status_code=404,
-
-                content={"status": "error", "message": "Draft ID not found."},
-
-            )
-
-
-
-        from core.email_nlp_daemon import get_gmail_service
-
-        import base64
-
-        from email.mime.text import MIMEText
-
-
-
-        service = get_gmail_service()
-
-        message = MIMEText(target["body"])
-
-        message["to"] = target["recipient"]
-
-        message["subject"] = target["subject"]
-
-        raw_msg = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
-
-
-        sent_res = (
-
-            service.users()
-
-            .messages()
-
-            .send(userId="me", body={"raw": raw_msg})
-
-            .execute()
-
-        )
-
-
-
-        target["status"] = "SENT"
-
-        target["sent_timestamp"] = datetime.now().isoformat()
-
-        target["gmail_id"] = sent_res.get("id")
-
-
-
-        with open(outbox_path, "w", encoding="utf-8") as f:
-
-            json.dump(items, f, indent=4)
-
-
-
-        return {
-
-            "status": "success",
-
-            "message": f"Email dispatched to {target['recipient']}",
-
-            "gmail_id": sent_res.get("id"),
-
-        }
-
-    except Exception as e:
-
-        return JSONResponse(
-
-            status_code=500, content={"status": "error", "message": str(e)}
-
-        )
+    """Hold Gmail dispatch before reading drafts or loading provider credentials."""
+    raise HTTPException(status_code=503, detail="Email dispatch is held pending verified delivery and reconciliation controls.")
 
 
 
@@ -8054,7 +7971,7 @@ class EmailSendPayload(BaseModel):
 
 async def send_email_relay(payload: EmailSendPayload):
 
-    return {"status": "success", "message": f"Email queued for delivery to {payload.to}", "id": f"em_{int(time.time())}"}
+    raise HTTPException(status_code=503, detail="Email dispatch is held pending verified delivery and reconciliation controls.")
 
 
 
@@ -12760,7 +12677,6 @@ def memory_recall(query: Optional[str] = None, limit: int = 5, payload: Optional
 
 VAULT_DOCS_DIR = os.path.join(get_base_dir(), "AI-BS_Knowledge_Vaults", "Docs")
 
-os.makedirs(VAULT_DOCS_DIR, exist_ok=True)
 
 
 
@@ -12768,27 +12684,12 @@ os.makedirs(VAULT_DOCS_DIR, exist_ok=True)
 
 @app.get("/documents/list")
 
-def list_documents():
-
+async def list_documents(request: Request):
+    await require_host_admin(request)
     files = glob.glob(os.path.join(VAULT_DOCS_DIR, "*"))
-
-    docs = [
-
-        {
-
-            "name": os.path.basename(f),
-
-            "size": os.path.getsize(f),
-
-            "type": os.path.splitext(f)[1],
-
-        }
-
-        for f in files
-
-    ]
-
-    return {"status": "success", "documents": docs}
+    docs = [{"name": os.path.basename(f), "size": os.path.getsize(f),
+             "type": os.path.splitext(f)[1]} for f in files if os.path.isfile(f)]
+    return JSONResponse({"status": "success", "documents": docs}, headers=HOST_CONTROL_PRIVATE_HEADERS)
 
 
 
@@ -12796,53 +12697,22 @@ def list_documents():
 
 @app.post("/documents/upload")
 
-async def upload_document(file: UploadFile = File(...), vault: str = Form(default="")):
-
-    target_dir = VAULT_DOCS_DIR
-
-    if vault and vault in [
-
-        "NoCo_Ventures",
-
-        "Fire_Writing",
-
-        "Marketing",
-
-        "AI_Architecture",
-
-        "Trading_Algos",
-
-        "Personal_Journal",
-
-        "Code_Snippets",
-
-        "System_Logs",
-
-    ]:
-
-        target_dir = os.path.join(VAULT_DOCS_DIR, vault)
-
-        if not os.path.exists(target_dir):
-
-            os.makedirs(target_dir, exist_ok=True)
-
-
-
-    safe_filename = file.filename or "uploaded_file.bin"
-
-    file_location = os.path.join(target_dir, safe_filename)
-
-    with open(file_location, "wb+") as file_object:
-
-        file_object.write(file.file.read())
-
-    return {
-
-        "status": "success",
-
-        "message": f"Saved {safe_filename} to Vault: {vault if vault else 'Root'}.",
-
-    }
+async def upload_document(request: Request, file: UploadFile = File(...), vault: str = Form(default="")):
+    await require_host_admin(request)
+    allowed_vaults = {"NoCo_Ventures", "Fire_Writing", "Marketing", "AI_Architecture",
+                      "Trading_Algos", "Personal_Journal", "Code_Snippets", "System_Logs"}
+    if vault and vault not in allowed_vaults:
+        raise HTTPException(400, "Unknown document vault.", headers=HOST_CONTROL_PRIVATE_HEADERS)
+    safe_filename = validate_upload_filename(file.filename)
+    target_dir = os.path.join(VAULT_DOCS_DIR, vault) if vault else VAULT_DOCS_DIR
+    try:
+        _, size = await write_bounded_upload(file, target_dir, safe_filename)
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(500, "Document upload could not be saved.", headers=HOST_CONTROL_PRIVATE_HEADERS) from None
+    return JSONResponse({"status": "success", "filename": safe_filename, "size_bytes": size,
+                         "message": "Document saved."}, headers=HOST_CONTROL_PRIVATE_HEADERS)
 
 
 

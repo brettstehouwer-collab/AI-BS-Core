@@ -22,18 +22,15 @@ from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr
 import requests
+from security.host_control_access import AdminHostControlRoute
 
-router = APIRouter(prefix="/api/v1/emails", tags=["Business Email"])
+router = APIRouter(prefix="/api/v1/emails", tags=["Business Email"], route_class=AdminHostControlRoute)
 
 # File & Directory Paths
 BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BASE_DIR = os.path.abspath(os.path.join(BACKEND_DIR, ".."))
 CACHE_FILE = os.path.join(BACKEND_DIR, "core", "emails_cache.json")
 OUTBOX_FILE = os.path.join(BACKEND_DIR, "core", "email_outbox_queue.json")
-
-# Ensure core directory exists
-os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
-
 
 def _load_env_credentials():
     """Extracts email credentials from .env safely."""
@@ -623,108 +620,11 @@ async def sync_emails_from_imap():
 
 @router.post("/send")
 async def send_email(payload: SendEmailPayload):
-    """Transmits real outbound email via authenticated SMTP over TLS (port 587)."""
-    creds = _load_env_credentials()
-    imap_user = creds["IMAP_USER"]
-    app_pwd = creds["IMAP_APP_PASSWORD"]
-
-    if not imap_user or not app_pwd:
-        return JSONResponse(
-            status_code=400,
-            content={
-                "status": "error",
-                "message": "SMTP credentials not configured. Please set IMAP_USER and IMAP_APP_PASSWORD in .env.",
-            },
-        )
-
-    # Clean from/to addresses
-    from_addr = payload.from_email or "brett@stehouwer-publishing.com"
-    if "@" not in from_addr:
-        from_addr = f"{from_addr}@stehouwer-publishing.com"
-
-    from_name = payload.from_name or "Brett Stehouwer"
-    formatted_from = f"{from_name} <{from_addr}>"
-
-    # Build MIME message
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = payload.subject
-    msg["From"] = formatted_from
-    msg["To"] = payload.to
-    msg["Reply-To"] = from_addr
-    msg["Date"] = email.utils.formatdate(localtime=True)
-
-    if payload.cc:
-        msg["Cc"] = payload.cc
-
-    # Attach body
-    text_part = MIMEText(payload.body, "plain", "utf-8")
-    msg.attach(text_part)
-
-    if payload.is_html:
-        html_part = MIMEText(f"<html><body><p>{payload.body.replace(chr(10), '<br>')}</p></body></html>", "html", "utf-8")
-        msg.attach(html_part)
-
-    recipients = [payload.to]
-    if payload.cc:
-        recipients.extend([c.strip() for c in payload.cc.split(",") if c.strip()])
-    if payload.bcc:
-        recipients.extend([b.strip() for b in payload.bcc.split(",") if b.strip()])
-
-    try:
-        # Connect to SMTP server with TLS
-        server = smtplib.SMTP(creds["SMTP_HOST"], int(creds["SMTP_PORT"]), timeout=15.0)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(imap_user, app_pwd)
-        server.sendmail(imap_user, recipients, msg.as_string())
-        server.quit()
-
-        # Record sent email in local cache
-        sent_id = f"em-sent-{int(time.time() * 1000)}"
-        sent_record = {
-            "id": sent_id,
-            "account": from_addr,
-            "sender": from_name,
-            "email": payload.to,
-            "subject": payload.subject,
-            "snippet": payload.body[:180],
-            "body": payload.body,
-            "time": datetime.now().strftime("%I:%M %p"),
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "category": "Primary",
-            "folder": "Sent",
-            "starred": False,
-            "read": True,
-            "label": f"[Imap]/{from_name.split()[0]}",
-        }
-
-        emails = _get_cached_emails()
-        emails.insert(0, sent_record)
-        _save_cached_emails(emails)
-
-        return {
-            "status": "success",
-            "message": f"Email successfully dispatched to {payload.to} from {formatted_from}",
-            "data": sent_record,
-        }
-
-    except smtplib.SMTPAuthenticationError as auth_err:
-        err_msg = str(auth_err)
-        return JSONResponse(
-            status_code=401,
-            content={
-                "status": "error",
-                "code": "SMTP_AUTH_ERROR",
-                "message": "SMTP Authentication Failed. Google requires a 16-character App Password. Please generate one at myaccount.google.com/apppasswords and update IMAP_APP_PASSWORD in .env.",
-                "raw_error": err_msg,
-            },
-        )
-    except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": f"SMTP Dispatch Error: {str(e)}"},
-        )
+    """Hold outbound SMTP until durable delivery reconciliation is implemented."""
+    raise HTTPException(
+        status_code=503,
+        detail="Email dispatch is held pending verified delivery and reconciliation controls.",
+    )
 
 
 # ==============================================================================

@@ -1,3 +1,4 @@
+from security.host_control_access import AdminHostControlRoute
 import os
 import sys
 import logging
@@ -12,7 +13,7 @@ from core.crypto_execution_safety import execution_status
 from core.crypto_ledger_io import read_ledger as strict_read_ledger, LedgerIntegrityError
 
 logger = logging.getLogger("TradingRouter")
-router = APIRouter(prefix="/api/trading", tags=["Crypto-Swarm & Finance"])
+router = APIRouter(route_class=AdminHostControlRoute, prefix="/api/trading", tags=["Crypto-Swarm & Finance"])
 
 MASTER_DB = "C:/AI-BS/backend/aibs_master.db"
 DRIP_LEDGER_PATH = MASTER_DB if os.path.exists(MASTER_DB) else "C:/AI-BS/backend/drip_ledger.db"
@@ -43,6 +44,7 @@ async def get_trader_status():
 @router.get("/ledger")
 async def get_trade_ledger(limit: int = 20):
     """Read historical records without initializing or certifying a ledger."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     import sqlite3
     from contextlib import closing
     if not 1 <= limit <= 1000:
@@ -64,6 +66,7 @@ async def get_wallet_balances():
     """
     Return local positions as historical records, not verified exchange balances.
     """
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         historical = strict_read_ledger(LEDGER_FILE)
     except LedgerIntegrityError:
@@ -99,6 +102,7 @@ class KrakenOrderRequest(BaseModel):
 @router.get("/kraken/status")
 async def get_kraken_status():
     """Returns Kraken exchange API connection and zero-mock status."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_status()
@@ -109,6 +113,7 @@ async def get_kraken_status():
 @router.get("/kraken/balance")
 async def get_kraken_balance():
     """Fetches real-time non-zero wallet balances from Kraken (Strict Zero-Mock)."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_balance()
@@ -119,6 +124,7 @@ async def get_kraken_balance():
 @router.get("/kraken/ticker")
 async def get_kraken_ticker(symbol: str = "SOL/USD"):
     """Fetches real-time ticker data (bid, ask, last price) for a pair on Kraken."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_ticker(symbol)
@@ -150,6 +156,7 @@ async def execute_kraken_order(req: KrakenOrderRequest):
 @router.get("/kraken/orders/open")
 async def get_kraken_open_orders(symbol: Optional[str] = None):
     """Returns open orders on Kraken."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_open_orders(symbol)
@@ -160,6 +167,7 @@ async def get_kraken_open_orders(symbol: Optional[str] = None):
 @router.get("/kraken/trades")
 async def get_kraken_trade_history(symbol: Optional[str] = None, limit: int = 50):
     """Returns verified trade history from Kraken."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_trade_history(symbol, limit=limit)
@@ -170,6 +178,7 @@ async def get_kraken_trade_history(symbol: Optional[str] = None, limit: int = 50
 @router.get("/kraken/deposit_address")
 async def get_kraken_deposit_address(asset: str = "SOL"):
     """Returns wallet deposit address for transferring from other accounts to Kraken."""
+    raise HTTPException(503, "Trading reads held: account ownership, provider read authorization and ledger reconciliation are required.")
     try:
         from core.kraken_service import kraken_service
         return kraken_service.get_deposit_address(asset)

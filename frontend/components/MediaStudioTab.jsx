@@ -11,14 +11,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const [studioMode, setStudioMode] = useState('canvas');
 
   // ── HARDWARE GOVERNANCE & TELEMETRY STATE ─────────────────────────────────
-  const [telemetry, setTelemetry] = useState({
-    device_name: 'NVIDIA GeForce RTX 4090',
-    total_mb: 24564.0,
-    free_mb: 21850.0,
-    used_mb: 2714.0,
-    used_percent: 11.0,
-    allocated_shared_buffers: []
-  });
+  const [telemetry, setTelemetry] = useState({ device_name: null, total_mb: null, free_mb: null, used_mb: null, used_percent: null, allocated_shared_buffers: [] });
   const [isFlushingVram, setIsFlushingVram] = useState(false);
   const [isAllocatingBuffer, setIsAllocatingBuffer] = useState(false);
 
@@ -221,7 +214,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
 
   // ── SHARED EXECUTION LOGS ────────────────────────────────────────────────
   const [executionLogs, setExecutionLogs] = useState([
-    { timestamp: new Date().toLocaleTimeString(), tag: 'STUDIO', message: 'Autonomous Media Studio Initialized with RTX 4090 Zero-Copy Acceleration' }
+    { timestamp: new Date().toLocaleTimeString(), tag: 'STUDIO', message: 'Draft media editing workspace initialized. Hardware and output verification unavailable until confirmed by a connected source.' }
   ]);
   const [isLogDrawerOpen, setIsLogDrawerOpen] = useState(false);
   const logsEndRef = useRef(null);
@@ -238,13 +231,17 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   // ── HARDWARE TELEMETRY POLLING ───────────────────────────────────────────
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/media/vram/telemetry`);
-      if (res.ok) {
-        const data = await res.json();
-        setTelemetry(data);
-      }
+      const res = await fetch(`${activeBackend}/api/v1/media/vram/telemetry`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Telemetry rejected (HTTP ${res.status})`);
+      const data = await res.json();
+      const valid = data && data.available !== false && ['total_mb', 'free_mb', 'used_mb', 'used_percent'].every(key => Number.isFinite(data[key]) && data[key] >= 0)
+        && data.total_mb > 0 && data.used_mb <= data.total_mb && data.free_mb <= data.total_mb && data.used_percent <= 100;
+      if (!valid) throw new Error('Telemetry data unavailable');
+      setTelemetry(data);
+      return data;
     } catch {
-      // Offline fallback telemetry keeps display functional
+      setTelemetry({ device_name: null, total_mb: null, free_mb: null, used_mb: null, used_percent: null, allocated_shared_buffers: [] });
+      return null;
     }
   };
 
@@ -259,8 +256,9 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
     addLog('VRAM', 'Flushing CUDA cache & IPC memory surfaces...');
     try {
       const res = await fetch(`${activeBackend}/api/v1/media/vram/flush`, { method: 'POST' });
+      if (!res.ok) throw new Error(`VRAM flush rejected (HTTP ${res.status})`);
       const data = await res.json();
-      addLog('VRAM', data.message || 'Cache evicted successfully', data);
+      addLog('VRAM', 'Flush request acknowledged; hardware completion remains unverified.', data);
       await fetchTelemetry();
     } catch (e) {
       addLog('ERROR', 'Failed to flush VRAM: ' + e.message);
@@ -279,8 +277,9 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: bufName, shape: [1080, 1920, 3], dtype: 'uint8' })
       });
+      if (!res.ok) throw new Error(`IPC allocation rejected (HTTP ${res.status})`);
       const data = await res.json();
-      addLog('IPC', data.message || 'Buffer mapped into DDR5 shared RAM', data);
+      addLog('IPC', 'Allocation request acknowledged; buffer mapping remains unverified.', data);
       await fetchTelemetry();
     } catch (e) {
       addLog('ERROR', 'IPC Allocation failed: ' + e.message);
@@ -540,27 +539,15 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   };
 
   const handleTriggerInpaint = () => {
-    addLog('INPAINT', 'Triggering LaMa Neural Inpainting on marked mask coordinates...');
-    setTimeout(() => {
-      setInpaintMaskPoints([]);
-      addLog('INPAINT', '✅ Temporal inpainting completed. Artifact removed with clean fill.');
-    }, 1200);
+    addLog('INPAINT', 'Inpainting unavailable: no verified renderer is connected. Editing inputs retained.');
   };
 
   const handleSelectSubject = () => {
-    addLog('MATTING', 'Running BiRefNet Sub-Pixel Alpha Defringing on foreground subject...');
-    setTimeout(() => {
-      addLog('MATTING', '✅ Foreground subject isolated with transparent alpha edge feathering.');
-    }, 900);
+    addLog('MATTING', 'Subject isolation unavailable: no verified renderer is connected. Editing inputs retained.');
   };
 
   const handleTriggerOutpaint = () => {
-    setIsOutpainting(true);
-    addLog('COMFYUI', `Executing generative canvas outpainting: "${outpaintPrompt}" (+${outpaintBounds.left}px left, +${outpaintBounds.right}px right)...`);
-    setTimeout(() => {
-      setIsOutpainting(false);
-      addLog('COMFYUI', '✅ Generative outpainting rendered. Seamless border continuity achieved.');
-    }, 1500);
+    addLog('COMFYUI', 'Outpainting unavailable: no verified renderer is connected. Editing inputs retained.');
   };
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -670,19 +657,12 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
 
   // 1-Click Strip Silence
   const handleStripSilence = () => {
-    addLog('SILENCE', `Stripping ${silenceGaps.length} dead audio pauses (< -32dB) and rippling clips leftward...`);
-    setTimeout(() => {
-      setSilenceGaps([]);
-      addLog('SILENCE', '✅ Stripped 4.4 seconds of dead silence. Timeline rippled seamlessly.');
-    }, 800);
+    addLog('SILENCE', 'Silence removal unavailable: no verified renderer is connected. Editing inputs retained.');
   };
 
   // 1-Click Snap to Beats
   const handleSnapToBeats = () => {
-    addLog('BEATS', `Snapping timeline cuts to closest 124.0 BPM LibROSA audio transients...`);
-    setTimeout(() => {
-      addLog('BEATS', '✅ Timeline cuts locked to rhythmic transient grid.');
-    }, 700);
+    addLog('BEATS', 'Beat detection and snapping unavailable: no verified renderer is connected. Editing inputs retained.');
   };
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -694,49 +674,8 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const handleExecuteCopilot = async (cmdText = null) => {
     const text = (cmdText || copilotCommand).trim();
     if (!text) return;
-    setIsExecutingCopilot(true);
-    addLog('DIRECTOR', `Directorial Copilot Directive: "${text}"`);
-
-    try {
-      if (text.startsWith('/vram')) {
-        await fetchTelemetry();
-        addLog('DIRECTOR', `RTX 4090: ${telemetry.free_mb}MB free / ${telemetry.total_mb}MB total (${telemetry.used_percent}% used)`);
-      } else if (text.startsWith('/auto-shorts')) {
-        addLog('DIRECTOR', 'Executing 1-Click Viral Shorts Pipeline (CFR Ingest ➔ 9:16 Reframe ➔ Silence Strip ➔ Ducking ➔ Whisper Karaoke ➔ VMAF QC)...');
-        setCropBox(prev => ({ ...prev, aspect: '9:16', width: 280, height: 497 }));
-        setSilenceGaps([]);
-        setTimeout(() => {
-          addLog('DIRECTOR', '✅ Viral 9:16 Short rendered and verified at 94.2 VMAF.');
-        }, 1600);
-      } else if (text.startsWith('/create-cover')) {
-        addLog('DIRECTOR', 'Assembling 8K Print-Ready Book Jacket (Pyvips 300 DPI CMYK ➔ HarfBuzz Typography ➔ Pre-Press QC)...');
-        setStudioMode('canvas');
-        setSelectedLayerId('layer_text');
-        setTimeout(() => {
-          addLog('DIRECTOR', '✅ 300 DPI CMYK Book Jacket composite generated successfully.');
-        }, 1400);
-      } else {
-        // Natural language execution via FastAPI
-        const res = await fetch(`${activeBackend}/api/v1/media/pipeline/execute`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            recipe: {
-              title: text,
-              stages: [{ domain: 9, action: 'directorial_command', params: { directive: text } }]
-            },
-            job_id: `copilot_${Date.now()}`
-          })
-        });
-        const data = await res.json();
-        addLog('DIRECTOR', data.message || 'Directive executed', data);
-      }
-    } catch (e) {
-      addLog('ERROR', 'Directive execution failed: ' + e.message);
-    } finally {
-      setIsExecutingCopilot(false);
-      setCopilotCommand('');
-    }
+    addLog('DIRECTOR', `Directive held as draft: "${text}". Execution and output verification are unavailable; external dispatch is disabled.`);
+    setIsExecutingCopilot(false);
   };
 
   // Format Timecode Helper
@@ -982,17 +921,17 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
             border: '1px solid rgba(255,255,255,0.08)',
             fontSize: '0.75rem'
           }}>
-            <span style={{ color: '#10b981', fontWeight: '700' }}>⚡ RTX 4090</span>
+            <span style={{ color: '#10b981', fontWeight: '700' }}>{telemetry.device_name || 'GPU unavailable'}</span>
             <div style={{ width: '80px', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{
-                width: `${telemetry.used_percent || 15}%`,
+                width: `${telemetry.used_percent ?? 0}%`,
                 height: '100%',
-                background: (telemetry.used_percent || 15) > 85 ? '#ef4444' : '#10b981',
+                background: (telemetry.used_percent ?? 0) > 85 ? '#ef4444' : '#10b981',
                 transition: 'width 0.3s ease'
               }} />
             </div>
             <span style={{ color: '#9ca3af', fontFamily: 'monospace' }}>
-              {((telemetry.used_mb || 2700) / 1024).toFixed(1)} / 24GB
+              {telemetry.used_mb === null ? 'Telemetry unavailable' : `${(telemetry.used_mb / 1024).toFixed(1)} / ${(telemetry.total_mb / 1024).toFixed(1)} GB`}
             </span>
           </div>
 

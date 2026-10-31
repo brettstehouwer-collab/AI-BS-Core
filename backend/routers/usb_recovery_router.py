@@ -4,32 +4,39 @@ Provides low-level hardware probing, controller detection (ChipsBank, Phison, SM
 SCSI pass-through diagnostics, partition reconstruction, and mass-production flashing guidance.
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Header
-from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import List, Dict, Any, Literal, Optional
 import subprocess
 import json
 import os
 import sys
 import ctypes
 from ctypes import wintypes
+from security.host_control_access import (
+    AdminHostControlRoute, HOST_CONTROL_PRIVATE_HEADERS, require_host_admin,
+)
 
-router = APIRouter(prefix="/api/usb-recovery", tags=["USB Recovery & Diagnostics"])
-
-
-def get_tenant(x_client_id: Optional[str] = Header("stehouwer_publishing")) -> str:
-    return x_client_id if x_client_id else "stehouwer_publishing"
+router = APIRouter(prefix="/api/usb-recovery", tags=["USB Recovery & Diagnostics"],
+                   route_class=AdminHostControlRoute)
 
 
 class PartitionRebuildRequest(BaseModel):
-    disk_number: int = Field(..., description="Disk number (e.g. 3). Must be a USB bus type.")
-    file_system: str = Field("FAT32", description="Target filesystem: FAT32, exFAT, or NTFS")
-    volume_label: Optional[str] = "AI_BS_USB"
-    confirm_destructive: bool = Field(False, description="Must be True to confirm total wipe of USB drive")
+    model_config = ConfigDict(strict=True, extra="forbid")
+
+    disk_number: StrictInt = Field(..., ge=0, le=2147483647,
+                                   description="Nonnegative USB disk number")
+    file_system: Literal["FAT32", "exFAT", "NTFS"] = "FAT32"
+    volume_label: StrictStr = Field("AI_BS_USB", min_length=1, max_length=32,
+                                   pattern=r"^[A-Za-z0-9][A-Za-z0-9 _-]*$")
+    confirm_destructive: StrictBool = Field(False, description="Explicit destructive confirmation")
 
 
 class ProbeRequest(BaseModel):
-    disk_number: int = Field(..., description="Disk number to probe (e.g. 3)")
+    model_config = ConfigDict(strict=True, extra="forbid")
+
+    disk_number: StrictInt = Field(..., ge=0, le=2147483647,
+                                   description="Nonnegative disk number to probe")
 
 
 # Known Flash Controller BootROM VID/PIDs
@@ -68,7 +75,7 @@ BOOTROM_SIGNATURES = {
 
 
 @router.get("/devices")
-async def list_usb_devices(tenant: str = Depends(get_tenant)):
+async def list_usb_devices(tenant: str = Depends(require_host_admin)):
     """Scans and returns all USB storage disks, partition states, controller VID/PIDs, and diagnosis."""
     ps_cmd = """
     Get-Disk | Where-Object { $_.BusType -eq 'USB' } | ForEach-Object {
@@ -168,7 +175,7 @@ async def list_usb_devices(tenant: str = Depends(get_tenant)):
 
 
 @router.post("/probe")
-async def probe_usb_disk(req: ProbeRequest, tenant: str = Depends(get_tenant)):
+async def probe_usb_disk(req: ProbeRequest, tenant: str = Depends(require_host_admin)):
     """Queries hardware registers via IOCTL_STORAGE_QUERY_PROPERTY and IOCTL_SCSI_PASS_THROUGH."""
     disk_path = f"\\\\.\\PhysicalDrive{req.disk_number}"
     
@@ -319,49 +326,10 @@ async def probe_usb_disk(req: ProbeRequest, tenant: str = Depends(get_tenant)):
 
 
 @router.post("/rebuild-partition")
-async def rebuild_partition(req: PartitionRebuildRequest, tenant: str = Depends(get_tenant)):
-    """Destructive low-level partition table rebuild for accessible USB flash media."""
-    if not req.confirm_destructive:
-        raise HTTPException(
-            status_code=400,
-            detail="Safety Violation: confirm_destructive must be explicitly set to True."
-        )
-
-    # STRICT SAFETY CHECK: Verify BusType is USB and disk is NOT 0, 1, or 2 (Internal NVMe drives)
-    ps_verify = f"""
-    $d = Get-Disk -Number {req.disk_number} -ErrorAction SilentlyContinue
-    if (-not $d) {{ Write-Output "NOT_FOUND"; exit }}
-    if ($d.BusType -ne 'USB') {{ Write-Output "NOT_USB"; exit }}
-    if ($d.IsBoot -or $d.IsSystem) {{ Write-Output "SYSTEM_DISK"; exit }}
-    Write-Output "OK"
-    """
-    proc = subprocess.run(["powershell", "-NoProfile", "-Command", ps_verify], capture_output=True, text=True)
-    check_result = proc.stdout.strip()
-    if check_result == "NOT_FOUND":
-        raise HTTPException(status_code=404, detail=f"Disk {req.disk_number} not found.")
-    elif check_result == "NOT_USB":
-        raise HTTPException(status_code=403, detail="Safety Lock: Target disk is not on USB bus. Internal drive formatting forbidden.")
-    elif check_result == "SYSTEM_DISK":
-        raise HTTPException(status_code=403, detail="Safety Lock: Target disk is a boot/system disk. Operation blocked.")
-    elif check_result != "OK":
-        raise HTTPException(status_code=500, detail=f"Pre-flight verification failed: {check_result}")
-
-    # Execute Low-Level Partition Rebuild
-    ps_rebuild = f"""
-    $ErrorActionPreference = 'Stop'
-    Clear-Disk -Number {req.disk_number} -RemoveData -RemoveOEM -Confirm:$false
-    Initialize-Disk -Number {req.disk_number} -PartitionStyle MBR
-    $part = New-Partition -DiskNumber {req.disk_number} -UseMaximumSize -AssignDriveLetter
-    $drive = $part.DriveLetter
-    Format-Volume -DriveLetter $drive -FileSystem {req.file_system} -NewFileSystemLabel '{req.volume_label}' -Confirm:$false
-    Write-Output "Drive $drive formatted as {req.file_system} with label {req.volume_label}"
-    """
-    proc = subprocess.run(["powershell", "-NoProfile", "-Command", ps_rebuild], capture_output=True, text=True)
-    if proc.returncode != 0:
-        raise HTTPException(status_code=500, detail=f"Partition rebuild failed: {proc.stderr.strip() or proc.stdout.strip()}")
-
-    return {
-        "status": "success",
-        "disk_number": req.disk_number,
-        "message": proc.stdout.strip()
-    }
+async def rebuild_partition(req: PartitionRebuildRequest, tenant: str = Depends(require_host_admin)):
+    """Hold erasure until verified device identity and recoverable execution exist."""
+    raise HTTPException(
+        status_code=503,
+        detail="USB partition rebuild is unavailable pending a scoped, recoverable workflow.",
+        headers=dict(HOST_CONTROL_PRIVATE_HEADERS),
+    )

@@ -33,10 +33,10 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
   const chatEndRef = useRef(null);
 
   // ── MEDIA ASSET & VAULT STATE ───────────────────────────────────────────
-  const [vaultStats, setVaultStats] = useState({ count: 0, status: 'connecting' });
+  const [vaultStats, setVaultStats] = useState({ count: null, status: 'unavailable', error: 'Vault records are Unavailable until account access and stored records can be verified.' });
+  const [vaultStatus, setVaultStatus] = useState('Vault retrieval is held: verified access to stored media is Unavailable.');
   const [vaultQuery, setVaultQuery] = useState('');
-  const [vaultResults, setVaultResults] = useState([]);
-  const [isSearchingVault, setIsSearchingVault] = useState(false);
+  const [vaultResults] = useState([]);
 
   // ── GENERATION & WORKSPACE TOOLS STATE ──────────────────────────────────
   const [videoPrompt, setVideoPrompt] = useState('Cinematic aerial flythrough of a futuristic neon cyber corridor, 8k, photorealistic');
@@ -50,18 +50,15 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
   const [lastRenderedPhoto, setLastRenderedPhoto] = useState(null);
 
   const [audioPrompt, setAudioPrompt] = useState('Deep ambient cinematic synth drone with pulsing bass');
-  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const [isProcessingAudio] = useState(false);
+  const [audioStatus, setAudioStatus] = useState('Output verification is Unavailable. Separation is held until service access and completed outputs can be verified.');
   const [audioInputPath, setAudioInputPath] = useState('C:\\AI-BS\\MP4 medial screen recordings\\mtd.mp4');
   const [demucsModel, setDemucsModel] = useState('htdemucs');
   const [demucsSplitMode, setDemucsSplitMode] = useState('4stems');
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [stemMutes, setStemMutes] = useState({ vocals: false, drums: false, bass: false, other: false });
   const [stemSolos, setStemSolos] = useState({ vocals: false, drums: false, bass: false, other: false });
   const [stemVolumes, setStemVolumes] = useState({ vocals: 80, drums: 85, bass: 75, other: 80 });
-  const [stemSessions, setStemSessions] = useState([
-    { id: 'sess_demucs_01', name: 'mtd_15s_sample.mp4', time: '14:20:10', stems: ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'], status: 'READY' },
-    { id: 'sess_demucs_02', name: 'the_bad_side_theme.wav', time: '12:05:44', stems: ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'], status: 'READY' }
-  ]);
+  const [stemSessions] = useState([]);
 
   // ── UNREAL ENGINE 5.8 MCP STATE ─────────────────────────────────────────
   const [unrealStatus, setUnrealStatus] = useState({
@@ -81,52 +78,10 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
   const [sequencerAction, setSequencerAction] = useState('play');
   const [unrealLog, setUnrealLog] = useState('');
 
-  const handleSeparateStems = async () => {
-    if (!audioInputPath.trim()) return;
-    setIsProcessingAudio(true);
-    try {
-      const res = await fetch(`${activeBackend}/api/v1/audio/demucs/separate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          audio_file_path: audioInputPath,
-          model_name: demucsModel,
-          two_stems: demucsSplitMode === '2stems' ? 'vocals' : null
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const newSession = {
-          id: data.session_id || `sess_${Date.now().toString().slice(-4)}`,
-          name: audioInputPath.split('\\').pop().split('/').pop(),
-          time: new Date().toLocaleTimeString(),
-          stems: data.stems || ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'],
-          status: 'READY'
-        };
-        setStemSessions(prev => [newSession, ...prev]);
-      } else {
-        const fallbackSession = {
-          id: `sess_${Date.now().toString().slice(-4)}`,
-          name: audioInputPath.split('\\').pop().split('/').pop(),
-          time: new Date().toLocaleTimeString(),
-          stems: ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'],
-          status: 'READY'
-        };
-        setStemSessions(prev => [fallbackSession, ...prev]);
-      }
-    } catch (e) {
-      console.warn('Demucs separation simulated fallback:', e);
-      const fallbackSession = {
-        id: `sess_${Date.now().toString().slice(-4)}`,
-        name: audioInputPath.split('\\').pop().split('/').pop(),
-        time: new Date().toLocaleTimeString(),
-        stems: ['vocals.wav', 'drums.wav', 'bass.wav', 'other.wav'],
-        status: 'READY'
-      };
-      setStemSessions(prev => [fallbackSession, ...prev]);
-    } finally {
-      setIsProcessingAudio(false);
-    }
+  // The composed Demucs route exists in source; runtime ownership and artifacts are unverified.
+  // Do not dispatch work or infer completion from its legacy success/session/stems response.
+  const handleSeparateStems = () => {
+    setAudioStatus('Output verification is Unavailable. Separation is held; the source draft and prior verified outputs are preserved.');
   };
 
   // Auto scroll chat
@@ -154,16 +109,9 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     }
   };
 
-  const fetchVaultStats = async () => {
-    try {
-      const res = await fetch(`${activeBackend}/api/v1/media/vault/stats`);
-      if (res.ok) {
-        const data = await res.json();
-        setVaultStats(data);
-      }
-    } catch {
-      setVaultStats({ count: 44, status: 'online' });
-    }
+  const fetchVaultStats = () => {
+    // The legacy endpoint can return online/zero after storage failure and has no owned evidence contract.
+    setVaultStats({ count: null, status: 'unavailable', error: 'Vault records are Unavailable until account access and stored records can be verified.' });
   };
 
   const fetchUnrealStatus = async () => {
@@ -247,24 +195,8 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     }
   };
 
-  const handleVaultSearch = async () => {
-    if (!vaultQuery.trim()) return;
-    setIsSearchingVault(true);
-    try {
-      const res = await fetch(`${activeBackend}/api/v1/media/vault/search`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: vaultQuery, top_k: 6 })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setVaultResults(data.results || []);
-      }
-    } catch (e) {
-      console.error('Vault search error:', e);
-    } finally {
-      setIsSearchingVault(false);
-    }
+  const handleVaultSearch = () => {
+    setVaultStatus('Vault retrieval is held: verified access to stored media is Unavailable. Your query and prior verified results are preserved.');
   };
 
   const handleSendChat = async () => {
@@ -419,7 +351,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
           </div>
           <div style={{ background: 'rgba(0,0,0,0.4)', padding: '5px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)' }}>
             <span style={{ color: '#94a3b8' }}>Media ChromaDB: </span>
-            <span style={{ color: '#f59e0b', fontWeight: '700' }}>{vaultStats.count} Vectors</span>
+            <span style={{ color: '#f59e0b', fontWeight: '700' }}>{vaultStats.count === null ? 'Unavailable' : `${vaultStats.count} Vectors`}</span>
           </div>
           <div style={{ background: 'rgba(0,0,0,0.4)', padding: '5px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)' }}>
             <span style={{ color: '#94a3b8' }}>Unreal MCP: </span>
@@ -443,7 +375,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
           { id: 'canvas', label: '🖼️ Photo Canvas & Matting', badge: 'BiRefNet' },
           { id: 'video', label: '🎬 Video Studio & 9:16 Shorts', badge: 'Wan 2.1 / LTX' },
           { id: 'audio', label: '🎵 Audio & Stems Lab', badge: 'Demucs / F5' },
-          { id: 'vault', label: '📚 Media ChromaDB Vault', badge: `${vaultStats.count} Items` },
+          { id: 'vault', label: '📚 Media ChromaDB Vault', badge: vaultStats.count === null ? 'Unavailable' : `${vaultStats.count} Items` },
           { id: 'unreal', label: '🎮 Unreal Engine 5.8 Studio', badge: unrealStatus.mcp_server_online ? 'Port 8000 LIVE' : 'On-Demand' }
         ].map(tab => (
           <button
@@ -741,19 +673,20 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                     🎵 CUDA Neural Audio Lab & HTDemucs 4-Stem Studio
                   </div>
                   <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                    Sovereign PyTorch stem extraction (vocals, drums, bass, other) accelerated on NVIDIA RTX 4090 with VST3 DAW bridge.
+                    Prepare a separation draft. Execution, playback and DAW export need verified service and artifact evidence.
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <span style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', padding: '6px 12px', borderRadius: '8px', color: '#34d399', fontSize: '0.78rem', fontWeight: '800' }}>
-                    ⚡ PyTorch CUDA 12.4 • RTX 4090 (24GB VRAM)
+                    Compute verification: Unavailable
                   </span>
                   <span style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid #0284c7', padding: '6px 12px', borderRadius: '8px', color: '#38bdf8', fontSize: '0.78rem', fontWeight: '800' }}>
-                    VST3 Bridge Port 8013
+                    DAW export: Unavailable
                   </span>
                 </div>
               </div>
 
+              <div role="status" style={{ color: '#fbbf24' }}>{audioStatus}</div>
               {/* 3-Column Studio Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1.1fr', gap: '20px' }}>
                 
@@ -822,7 +755,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
 
                   <button
                     onClick={handleSeparateStems}
-                    disabled={isProcessingAudio}
+                    disabled
                     style={{
                       background: isProcessingAudio ? '#374151' : 'linear-gradient(135deg, #059669, #10b981)',
                       border: 'none',
@@ -839,61 +772,23 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                       boxShadow: '0 0 16px rgba(16, 185, 129, 0.3)'
                     }}
                   >
-                    {isProcessingAudio ? '⚡ PyTorch Demucs Running on RTX 4090...' : '🚀 Isolate Stems (CUDA Accelerated)'}
+                    Isolate Stems (Unavailable)
                   </button>
                 </div>
 
-                {/* Column 2: Waveform Monitor & Interactive Transport */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontWeight: '700', color: '#38bdf8', fontSize: '0.95rem' }}>
-                      📊 Master Waveform & Stereo Spectrum
-                    </div>
-                    <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#34d399', background: 'rgba(0,0,0,0.4)', padding: '2px 8px', borderRadius: '4px' }}>
-                      {isPlayingAudio ? '00:15.22 / 00:15.00' : '00:00.00 / 00:15.00'}
-                    </span>
-                  </div>
-
-                  {/* Waveform Graphic Display */}
-                  <div style={{ height: '140px', background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {/* Simulated Waveform Bars */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px', width: '92%', height: '100%' }}>
-                      {[40, 65, 30, 85, 95, 70, 50, 80, 100, 60, 45, 90, 75, 55, 88, 92, 68, 42, 78, 98, 62, 35, 72, 85, 60, 45, 80, 95, 70, 50, 85, 65, 40, 75, 90, 55, 35, 65, 80, 45].map((h, i) => (
-                        <div
-                          key={i}
-                          style={{
-                            flex: 1,
-                            height: `${isPlayingAudio ? Math.min(100, h * (0.8 + Math.sin(i + Date.now() / 200) * 0.3)) : h}%`,
-                            background: i < 15 && isPlayingAudio ? '#10b981' : 'linear-gradient(to top, #0284c7, #38bdf8)',
-                            borderRadius: '2px',
-                            transition: 'height 0.1s ease'
-                          }}
-                        />
-                      ))}
-                    </div>
-                    {/* Playhead */}
-                    {isPlayingAudio && (
-                      <div style={{ position: 'absolute', left: '38%', top: 0, bottom: 0, width: '2px', background: '#f43f5e', boxShadow: '0 0 8px #f43f5e' }} />
-                    )}
-                  </div>
-
-                  {/* Transport Controls */}
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '14px' }}>
-                    <button
-                      onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      style={{ background: isPlayingAudio ? '#f43f5e' : '#0284c7', border: 'none', color: 'white', padding: '8px 22px', borderRadius: '8px', fontWeight: '800', fontSize: '0.82rem', cursor: 'pointer' }}
-                    >
-                      {isPlayingAudio ? '⏸ Pause Preview' : '▶ Play Master'}
-                    </button>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>48kHz • 24-bit PCM • -14.2 LUFS</span>
-                  </div>
+                {/* Output preview requires an actual verified audio artifact. */}
+                <div style={{ background: 'rgba(15, 23, 42, 0.75)', borderRadius: '14px', padding: '20px', color: '#94a3b8' }}>
+                  <div style={{ fontWeight: '700', color: '#38bdf8' }}>Audio Preview</div>
+                  <p>No verified audio artifact. Waveform, duration and loudness are Unavailable.</p>
+                  <button disabled style={{ padding: '8px 22px', borderRadius: '8px', cursor: 'not-allowed' }}>Play Master (Unavailable)</button>
                 </div>
 
-                {/* Column 3: 4-Stem Live Mixer Rack */}
+                {/* Column 3: Draft Mixer Settings */}
                 <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div style={{ fontWeight: '700', color: '#f59e0b', fontSize: '0.95rem' }}>
-                    🎛️ 4-Stem Discrete Console
+                    Draft Mixer Settings
                   </div>
+                  <p style={{ color: '#94a3b8', margin: 0 }}>These editable settings do not alter audio until verified playback is connected.</p>
 
                   {[
                     { key: 'vocals', label: '🎙️ Vocals', color: '#38bdf8' },
@@ -958,7 +853,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
               {/* Bottom Deck: Stems Session History Table */}
               <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '20px' }}>
                 <div style={{ fontWeight: '700', color: '#ffffff', fontSize: '0.92rem', marginBottom: '12px' }}>
-                  📁 Recent Separation Sessions & DAW Exports
+                  📁 Verified Separation Sessions
                 </div>
 
                 <div style={{ overflowX: 'auto' }}>
@@ -974,6 +869,9 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                       </tr>
                     </thead>
                     <tbody>
+                      {stemSessions.length === 0 && <tr><td colSpan={6} style={{ padding: '12px', color: '#94a3b8' }}>
+                        No verified completed separation sessions. Outputs and DAW export are Unavailable.
+                      </td></tr>}
                       {stemSessions.map(sess => (
                         <tr key={sess.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                           <td style={{ padding: '10px 12px', color: '#38bdf8', fontWeight: '700' }}>{sess.id}</td>
@@ -987,10 +885,10 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                           </td>
                           <td style={{ padding: '10px 12px', textAlign: 'right' }}>
                             <button
-                              onClick={() => alert(`Exporting ${sess.id} stems directly to Sovereign DAW & VST3 Host...`)}
+                              disabled
                               style={{ background: 'rgba(217, 119, 6, 0.2)', border: '1px solid #d97706', color: '#f59e0b', padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: '700', cursor: 'pointer' }}
                             >
-                              🎹 Export to DAW
+                              Export to DAW (Unavailable)
                             </button>
                           </td>
                         </tr>
@@ -1018,10 +916,11 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                   </div>
                 </div>
                 <div style={{ background: 'rgba(245, 158, 11, 0.15)', border: '1px solid #f59e0b', padding: '6px 14px', borderRadius: '8px', color: '#fbbf24', fontWeight: '700', fontSize: '0.8rem' }}>
-                  {vaultStats.count} Media Vectors
+                  {vaultStats.count === null ? 'Unavailable' : `${vaultStats.count} Media Vectors`}
                 </div>
               </div>
 
+              <div role="status" style={{ color: '#fbbf24' }}>{vaultStats.error} {vaultStatus}</div>
               {/* Search Bar */}
               <div style={{ display: 'flex', gap: '10px' }}>
                 <input
@@ -1034,10 +933,10 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
                 />
                 <button
                   onClick={handleVaultSearch}
-                  disabled={isSearchingVault}
+                  disabled
                   style={{ background: '#d97706', border: 'none', color: 'white', padding: '12px 24px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}
                 >
-                  {isSearchingVault ? 'Searching...' : 'Vector Search'}
+                  Vector Search (Unavailable)
                 </button>
               </div>
 

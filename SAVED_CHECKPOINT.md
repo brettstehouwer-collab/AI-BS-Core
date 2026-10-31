@@ -1,10 +1,37 @@
+# Current audit checkpoint — source v5.329.76
+
+Campaign IN PROGRESS; Record197/ADR122; 2026-10-31T03:54:25Z. Resume keyword RESUME_FULL_AUDIT_V532976.
+Online checks allowed. Read docs/audit/2026-10-30-complete/README.md and coverage.json.
+151Python/66client tests and production build pass. Full TypeScript FAIL9584baseline;0new normalized diagnostics.
+Fresh loopback8080 source verified; trading8007 stopped; payment/outreach/background holds remain.
+Two preserved Chroma FTS indexes fail integrity;158/160candidate clones pass; no repair/history mutation.
+All Drive uploads in one folder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k; runtime6049file authenticated cloud restore verified.
+Incident/credential retirement and deployment receipts are in restricted E: evidence; no secret values in records.
+Next: isolated Chroma recovery, complete bounded route catalog, remaining deep-link/IPC/navigation/daemon tracing.
+Previous checkpoint text is historical, including old port/version claims.
+
+---
+
+# Current audit checkpoint — 2026-10-30
+
+Source v5.329.75. **IN PROGRESS; offline verification, runtime not reactivated after unexpected reboot.**
+Resume keyword: RESUME_FULL_AUDIT_V532975.
+Read docs/audit/2026-10-30-complete/README.md and coverage.json first.
+Verified encrypted Drive recovery gate: E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/recovery/batch_001_gate.json.
+111Python/207subtests,11client tests pass; build passed; full typecheck FAILED9589diagnostics.
+Trading/financial dispatch held; monetary ledgers unchanged. Remaining27-source-finding ledger and external integration roadmap retained.
+Next: durable post-change/history upload, Record195 source backfill, remaining high-risk repairs and controlled runtime validation.
+Previous checkpoint below is historical and is not the current port/version claim.
+
+---
+
 # AI-BS Active State Recovery Checkpoint
-**Last Synchronized:** 2026-10-21 19:37:00 EDT
-**Status:** ALL PORTS ACTIVE | DEDICATED FE EXPRESS WORKSPACE MOVED OUT OF CLIENT SUITE | V5.335.0 ACTIVE
-**Resume Keyword:** RESUME_DEDICATED_FE_EXPRESS_TAB_V5335
+**Last Synchronized:** 2026-10-27 20:34:00 EDT
+**Status:** ALL PORTS ACTIVE | BS-CHAT ATTACHMENT DEFECT FIXED | ROUTER DEDUP VERIFIED | V5.329.72 ACTIVE
+**Resume Keyword:** RESUME_BS_CHAT_UPLOAD_AND_ROUTER_DEDUP_V532972
 
 ## Active Subsystem State
-- **System Version**: v5.335.0.
+- **System Version**: v5.329.72.
 - **Dedicated Independent Workspace for FE Express (`tab=fe_express`)**:
   - Successfully moved out of the nested `ClientsModule` dropdown into a sovereign first-class workspace tab.
   - Registered as `Component: FEExpressDispatcherTab` in `App.jsx` and authorized in `accessControl.js`.

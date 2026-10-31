@@ -1,3 +1,5 @@
+from security.financial_auth import require_financial_owner
+from security.host_control_access import AdminHostControlRoute
 """
 AI-BS Phone & Tablet Repair Knowledge Subsystem API Router
 Provides REST endpoints for device teardown guides, diagnostic troubleshooting trees,
@@ -15,13 +17,14 @@ if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
 from core.phone_repair_knowledge import phone_repair_engine
-from core.personal_intelligence_memory import personal_memory
 
-router = APIRouter(prefix="/api/repair", tags=["Phone & Tablet Repair"])
+router = APIRouter(route_class=AdminHostControlRoute, prefix="/api/repair", tags=["Phone & Tablet Repair"])
 
 
-def get_tenant(x_client_id: Optional[str] = Header("stehouwer_publishing")) -> str:
-    return x_client_id if x_client_id else "stehouwer_publishing"
+def get_tenant(owner: str = Depends(require_financial_owner)) -> str:
+    """Compatibility dependency: only a verified principal may supply identity."""
+    return owner
+
 
 
 class CreateTicketRequest(BaseModel):
@@ -169,6 +172,7 @@ async def get_tools_and_chemical_reference():
 @router.get("/tickets")
 async def get_repair_tickets(client_id: str = Depends(get_tenant)):
     """Fetches customer repair ticket logs."""
+    raise HTTPException(503, "Repair tickets held: durable verified ownership and decimal pricing evidence require reconciliation.")
     try:
         tickets = phone_repair_engine.get_repair_tickets(client_id=client_id)
         return {
@@ -184,6 +188,7 @@ async def get_repair_tickets(client_id: str = Depends(get_tenant)):
 @router.post("/tickets/create")
 async def create_repair_ticket(req: CreateTicketRequest, client_id: str = Depends(get_tenant)):
     """Creates a new customer repair ticket and logs into episodic lore."""
+    raise HTTPException(503, "Repair tickets held: durable verified ownership and decimal pricing evidence require reconciliation.")
     try:
         ticket = phone_repair_engine.create_repair_ticket({
             "client_id": client_id,
@@ -212,6 +217,7 @@ async def create_repair_ticket(req: CreateTicketRequest, client_id: str = Depend
 @router.put("/tickets/{ticket_id}/status")
 async def update_ticket_status(ticket_id: int, req: UpdateTicketStatusRequest):
     """Updates ticket lifecycle status."""
+    raise HTTPException(503, "Repair tickets held: durable verified ownership and decimal pricing evidence require reconciliation.")
     try:
         updated = phone_repair_engine.update_ticket_status(
             ticket_id=ticket_id,

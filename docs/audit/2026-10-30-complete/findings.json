@@ -1,0 +1,917 @@
+{
+  "campaign_status": "IN_PROGRESS",
+  "source_version": "v5.329.76",
+  "findings": [
+    {
+      "id": "B001",
+      "severity": "critical",
+      "title": "Executive host controls bypass the direct Python administrator boundary",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/executive_cockpit_router.py",
+          "line": 48,
+          "reason": "Router has no verified-administrator dependency."
+        },
+        {
+          "file": "backend/routers/executive_cockpit_router.py",
+          "line": 681,
+          "reason": "Checkpoint handler resets/stages shared work and can commit it."
+        },
+        {
+          "file": "backend/routers/executive_cockpit_router.py",
+          "line": 717,
+          "reason": "Rollback handler invokes destructive Git reset/clean."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 1479,
+          "reason": "Explicit router mount; dynamic plugin discovery is additional."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 1773,
+          "reason": "Guard protects the unversioned executive alias, not this versioned family."
+        }
+      ],
+      "impact": "Unverified callers reaching the direct API can request destructive source changes, approve actions, change autonomy and alter cloud settings.",
+      "ingress": "Direct Python gap. Go proxy has an /exec substring counter-boundary at go-core/pkg/telemetry/security.go:166; remote loaded reachability not exercised.",
+      "proposed_remediation": "Require verified administration inside the router and private/no-store; hold legacy shared-tree Git mutation until a scoped recovery-aware contract exists.",
+      "safe_offline_fixture": "AST-extract handlers with synthetic identities and forbidden subprocess/dispatcher fakes; assert anonymous/spoofed denial and authenticated destructive503 before effects.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B002",
+      "severity": "critical",
+      "title": "Raw document-upload alias permits unconstrained host writes",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 12803,
+          "reason": "Upload alias has no verified-owner dependency."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 12841,
+          "reason": "Client filename is assigned as safe without normalization or root containment."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 12847,
+          "reason": "Joined path is opened for overwrite."
+        },
+        {
+          "file": "backend/security/document_access.py",
+          "line": 19,
+          "reason": "Document path guard covers /api/documents, not /documents."
+        }
+      ],
+      "impact": "Traversal or rooted upload names can escape the intended vault and overwrite host files under process permissions; body/file-size bounds are absent.",
+      "ingress": "Direct Python source gap; Go gateway does not proxy bare /documents by its normal /api and /v1 catchalls.",
+      "proposed_remediation": "Protect every alias with verified document authority; enforce size, selected roots, path/alias rules, safe handles and conflict-preserving publication.",
+      "safe_offline_fixture": "Extract handler into temporary vault; synthetic traversal/rooted/ADS/reserved/case-collision filenames must be rejected before any writer; prove existing canary bytes unchanged.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B003",
+      "severity": "critical",
+      "title": "Versioned media namespace exposes arbitrary host reads and script writes",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/media_render_router.py",
+          "line": 14,
+          "reason": "Versioned media router lacks authentication."
+        },
+        {
+          "file": "backend/routers/media_render_router.py",
+          "line": 49,
+          "reason": "Stream serves any existing supplied path via FileResponse."
+        },
+        {
+          "file": "backend/routers/media_render_router.py",
+          "line": 314,
+          "reason": "Manim endpoint forwards user code and output name."
+        },
+        {
+          "file": "backend/core/media_render_engine.py",
+          "line": 1217,
+          "reason": "Output name enters a script path without root containment before writing."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 1467,
+          "reason": "Media router explicitly mounted; global guard uses /api/media rather than /api/v1/media."
+        }
+      ],
+      "impact": "Potential credential/private-file disclosure and arbitrary Python-file overwrite. Script generation is not proof of immediate execution; rendering routines also have unsupported completion claims.",
+      "ingress": "Direct Python source gap; individual Go paths containing /execute receive a counter-boundary, while /stream and /render/manim/scene do not.",
+      "proposed_remediation": "Add router-level verified authority and bounded owner/root-scoped artifacts; hold raw code paths or route them through approved isolated execution; return truthful prepared/unavailable states.",
+      "safe_offline_fixture": "Temporary-file read/write canaries, forbidden process fixtures and untrusted output names; no production file or renderer execution.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B004",
+      "severity": "critical",
+      "title": "USB rebuild bypasses destructive-mode policy and interpolates command input",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/usb_recovery_router.py",
+          "line": 17,
+          "reason": "Router uses caller client label, not verified authority."
+        },
+        {
+          "file": "backend/routers/usb_recovery_router.py",
+          "line": 26,
+          "reason": "Filesystem and volume label are unconstrained strings."
+        },
+        {
+          "file": "backend/routers/usb_recovery_router.py",
+          "line": 322,
+          "reason": "Caller confirmation is the only initial action gate."
+        },
+        {
+          "file": "backend/routers/usb_recovery_router.py",
+          "line": 352,
+          "reason": "PowerShell clears/rebuilds disk and interpolates request strings; no global destructive flag check."
+        }
+      ],
+      "impact": "Unverified callers can request real USB erasure; command text permits injection. USB/non-system preflight does not replace caller authorization or eliminate identity races.",
+      "ingress": "Neither current Python control prefixes nor Go sensitive fragments cover /api/usb-recovery.",
+      "proposed_remediation": "Require verified host administration; hold rebuild until device identity, exact command schema and recovery are verified; use strict enums/labels and no string interpolation.",
+      "safe_offline_fixture": "Extracted schema/router with forbidden subprocess/ctypes fakes; unauthenticated/spoofed requests deny; even admin confirmation must not reach destructive preflight/format during containment.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B005",
+      "severity": "high",
+      "title": "Repair-ticket privacy and object ownership can be bypassed",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/phone_repair_router.py",
+          "line": 24,
+          "reason": "Tenant comes from caller header."
+        },
+        {
+          "file": "backend/routers/phone_repair_router.py",
+          "line": 170,
+          "reason": "Ticket listing accepts that label."
+        },
+        {
+          "file": "backend/routers/phone_repair_router.py",
+          "line": 213,
+          "reason": "Status update has no caller/owner dependency."
+        },
+        {
+          "file": "backend/core/phone_repair_knowledge.py",
+          "line": 1385,
+          "reason": "Update predicate uses ticket ID without owner."
+        }
+      ],
+      "impact": "Customer/contact/device records can be read via spoofed tenant labels and modified by guessed IDs; creation also propagates unverified records to memory.",
+      "ingress": "Mounted /api/repair family has no applicable Python global boundary.",
+      "proposed_remediation": "Verified administrator/owner admission, owner-scoped immutable identifiers and explicit legacy ownership migration; no adoption of header labels.",
+      "safe_offline_fixture": "Two synthetic owners and temporary tables; guessed-ID read/update must404 and preserve the other owner; no production rows.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B006",
+      "severity": "high",
+      "title": "Legacy storefront credits/leads remain unowned and fabricate success",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/commercial_gateway/storefront_router.py",
+          "line": 14,
+          "reason": "Tenant is an arbitrary header/default."
+        },
+        {
+          "file": "backend/commercial_gateway/storefront_router.py",
+          "line": 53,
+          "reason": "Import initializes live schema."
+        },
+        {
+          "file": "backend/commercial_gateway/storefront_router.py",
+          "line": 66,
+          "reason": "Balance GET creates credits and reports fabricated credits on storage error."
+        },
+        {
+          "file": "backend/commercial_gateway/storefront_router.py",
+          "line": 100,
+          "reason": "Generation deducts credits before model success, outside a durable idempotent workflow."
+        },
+        {
+          "file": "backend/commercial_gateway/storefront_router.py",
+          "line": 165,
+          "reason": "Lead reads are scoped only by the caller label."
+        }
+      ],
+      "impact": "Cross-account CRM access, invented entitlements, duplicate/lost credit accounting and false generated success on transport failure.",
+      "ingress": "Explicitly mounted /api/storefront is not covered by existing financial router-level protection.",
+      "proposed_remediation": "Contain paid/credit admission; require verified ownership, exact durable idempotent accounting and explicit unavailable states; preserve legacy rows without adopting them.",
+      "safe_offline_fixture": "AST/fake transport and temporary DB; anonymous denial before IO, no balance initialization on GET, rollback on failures, durable same-key retry, owner-isolation checks.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B007",
+      "severity": "high",
+      "title": "NDA signing/integrity claims lack verified signer authority and safe key configuration",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/nda_signer_router.py",
+          "line": 31,
+          "reason": "NDA router has no verified authority dependency."
+        },
+        {
+          "file": "backend/routers/nda_signer_router.py",
+          "line": 37,
+          "reason": "Sensitive HMAC environment setting has a nonempty source fallback; value omitted."
+        },
+        {
+          "file": "backend/routers/nda_signer_router.py",
+          "line": 558,
+          "reason": "Caller-asserted signer/IP/verification fields produce sealed documents and disk copies."
+        }
+      ],
+      "impact": "Anonymous asserted identities can create signed/protected artifacts; absent secret configuration has publicly knowable fallback material. Actual credential configuration and legal validity not assessed.",
+      "ingress": "Mounted /api/v1/nda not covered by current generic administrator/document guard families.",
+      "proposed_remediation": "Verified signer/admin provenance and fail-closed secret configuration; distinguish draft, consent, signature and tamper-evidence states; no legal-validity claims from hashes.",
+      "safe_offline_fixture": "Synthetic document bytes/signers, fake PDF renderer and temporary output only; missing secret/identity denies before generation/write.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B008",
+      "severity": "high",
+      "title": "Independent Node proxy permits arbitrary URL fetching and shared provider use",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/server.js",
+          "line": 9,
+          "reason": "Wildcard CORS and no authentication middleware."
+        },
+        {
+          "file": "backend/server.js",
+          "line": 19,
+          "reason": "Fetch action can consume configured shared provider credentials."
+        },
+        {
+          "file": "backend/server.js",
+          "line": 101,
+          "reason": "Untrusted target text contributes to an output filename."
+        },
+        {
+          "file": "backend/server.js",
+          "line": 119,
+          "reason": "Group-ID utility fetches caller URL without destination/redirect constraints."
+        },
+        {
+          "file": "backend/server.js",
+          "line": 143,
+          "reason": "Independent loopback listener, outside FastAPI guards."
+        }
+      ],
+      "impact": "Server-side access to private network targets, unbounded fetches, shared-key resource use and output paths outside intended scope are possible.",
+      "ingress": "Separate Node port3001 source; actual process/ingress not exercised.",
+      "proposed_remediation": "Verified owner admission, allowed public destinations with DNS/redirect pinning, time/size budgets, explicit provider-spend policy and safe artifact IDs.",
+      "safe_offline_fixture": "Fake fetch/DNS/filesystem; loopback/private/redirect targets deny before transport, timeout/oversize fail, output containment and owner transitions.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B009",
+      "severity": "high",
+      "title": "Genkit paid-model action has no independent caller/spend boundary",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "genkit_server/index.ts",
+          "line": 35,
+          "reason": "Action invokes hosted model generation."
+        },
+        {
+          "file": "genkit_server/index.ts",
+          "line": 54,
+          "reason": "Wildcard CORS precedes an unauthenticated HTTP action."
+        },
+        {
+          "file": "genkit_server/index.ts",
+          "line": 69,
+          "reason": "Listener does not explicitly bind loopback."
+        }
+      ],
+      "impact": "Potential unauthenticated use of configured provider credentials and resource spending; no owner, budget or bounded recovery is visible in this service.",
+      "ingress": "Independent Express service; deployment/configuration/credential validity not checked.",
+      "proposed_remediation": "Default-held external generation, verified identity/budget policy, explicit loopback binding and bounded schema/time/output; no reliance on Python middleware.",
+      "safe_offline_fixture": "Fake ai.generate and request identity; absent identity/config/budget must deny without provider invocation; controlled timeout/error responses.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B010",
+      "severity": "high",
+      "title": "Media pipeline certifies stages without executing them",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/core/media_render_engine.py",
+          "line": 844,
+          "reason": "Pipeline saves initialization as completed."
+        },
+        {
+          "file": "backend/core/media_render_engine.py",
+          "line": 860,
+          "reason": "Each supplied stage is marked COMPLETED without dispatching its domain operation."
+        },
+        {
+          "file": "backend/routers/media_render_router.py",
+          "line": 185,
+          "reason": "API returns this result as successful execution."
+        }
+      ],
+      "impact": "Phantom completion/checkpoints and misleading resume/output claims; multiple neighboring transforms also return invented output metadata.",
+      "ingress": "Mounted media namespace; source behavior confirmed, no pipeline executed.",
+      "proposed_remediation": "Separate plans from executed artifacts; only immutable artifact receipts may complete a stage; failed/unimplemented stages remain held/unavailable.",
+      "safe_offline_fixture": "Fake stage registry/checkpoint store; missing operation, failed operation and absent/mismatched output cannot mark completion or report success.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B011",
+      "severity": "medium",
+      "title": "Self-healing router requests an export absent from its owning source",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/self_healing_router.py",
+          "line": 17,
+          "reason": "Imports get_self_healing_sentinel."
+        },
+        {
+          "file": "backend/core/self_healing_sentinel.py",
+          "line": 1,
+          "reason": "Owning module defines an AST quality gate and sanitizer, but no requested factory export."
+        }
+      ],
+      "impact": "Ordinary fresh import cannot satisfy the router dependency; declarations and UI may advertise unavailable functionality. Do not restore unsafe autonomous editing merely to hide this gap.",
+      "ingress": "Explicit mount and plugin discovery catch import errors; loaded in-memory state not inspected.",
+      "proposed_remediation": "Resolve the intended ownership contract; keep unsupported healer operations explicitly unavailable until isolated repair/recovery is proven.",
+      "safe_offline_fixture": "Static export/import assertion or extracted minimal import fixture with no application/module side effects; absent implementation reports unavailable, never successful healing.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B012",
+      "severity": "high",
+      "title": "Legacy crypto reads/manual ledgers bypass owner admission while trading stays held",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/routers/trading_router.py",
+          "line": 109,
+          "reason": "Private balance adapter lacks verified caller dependency."
+        },
+        {
+          "file": "backend/routers/trading_router.py",
+          "line": 150,
+          "reason": "Open-order/trade/deposit-address adapters call configured private exchange service."
+        },
+        {
+          "file": "backend/routers/cro_ledger_router.py",
+          "line": 56,
+          "reason": "Caller floats enter an unowned trade ledger without fill evidence."
+        },
+        {
+          "file": "backend/core/cro_quantitative_ledger.py",
+          "line": 117,
+          "reason": "Schema initialization executes at module import."
+        }
+      ],
+      "impact": "Private exchange/ledger data disclosure, caller-asserted financial history and import-time financial-store mutation; this does not establish that held order dispatch executes.",
+      "ingress": "Go /crypto fragment protects CRO proxy requests; direct Python /api/crypto lacks equivalent generic boundary. /api/trading is a separate namespace.",
+      "proposed_remediation": "Verified financial owner admission and held private provider reads pending explicit read authorization; label manual legacy rows unreconciled and prevent implicit initialization.",
+      "safe_offline_fixture": "Fake exchange and temporary records only; anonymous calls cannot import provider or read ledger, false fills cannot become verified metrics; retain all current order holds.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B013",
+      "severity": "high",
+      "title": "Dynamic package can enter a protected financial namespace without its owner boundary",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/modules/master_accounting/__init__.py",
+          "line": 14,
+          "reason": "Separate router shares /api/accounting without verified owner dependency."
+        },
+        {
+          "file": "backend/modules/master_accounting/__init__.py",
+          "line": 25,
+          "reason": "Draft creates invoice identifiers/events from unowned float/caller labels."
+        },
+        {
+          "file": "backend/core/plugin_loader.py",
+          "line": 65,
+          "reason": "Dynamic loader mounts eligible package router independently of canonical accounting router."
+        }
+      ],
+      "impact": "Canonical router protection does not protect neighboring routes under the same prefix; unverified financial events can be emitted.",
+      "ingress": "Source dynamic package mount candidate, not observed runtime registration.",
+      "proposed_remediation": "Inventory all namespace owners and apply consistent verified admission; keep draft events explicitly unverified and separate from receipts/entitlements.",
+      "safe_offline_fixture": "Compose extracted canonical/package routers in an offline FastAPI fixture; every financial route denies anonymous/spoofed identity before event/storage work.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "B014",
+      "severity": "medium",
+      "title": "Dynamic plugin registration and lifespan replacement obscure active coverage",
+      "status": "CONFIRMED_SOURCE; RUNTIME_UNVERIFIED",
+      "evidence": [
+        {
+          "file": "backend/core/plugin_loader.py",
+          "line": 28,
+          "reason": "Discovers and imports all valid modules/routers."
+        },
+        {
+          "file": "backend/core/plugin_loader.py",
+          "line": 63,
+          "reason": "Replaces router lifespan with no-op before including it."
+        },
+        {
+          "file": "backend/core/plugin_loader.py",
+          "line": 82,
+          "reason": "Optional initialization hook executes on discovery."
+        },
+        {
+          "file": "backend/AI_BS_Backend.py",
+          "line": 1903,
+          "reason": "Loader runs during main module initialization in addition to explicit mounts."
+        }
+      ],
+      "impact": "Duplicate/changed lifecycles, import-side effects and silently skipped plugins are unresolved. Static declaration counts are not active endpoint counts.",
+      "ingress": "Source-only candidates; no import or route registration performed in discovery.",
+      "proposed_remediation": "Use explicit deterministic plugin manifests and reviewed lifecycle ownership; reconcile source graph with authenticated metadata-only loaded-route inventory after gate.",
+      "safe_offline_fixture": "Synthetic plugins/canary initializers, deterministic order, exact mount/prefix deduplication and lifecycle start/stop ownership; no discovery of real plugins in tests.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "PARTIAL_RUNTIME_CATALOG_VERIFIED_IMPORT_SIDE_EFFECTS_OPEN"
+    },
+    {
+      "id": "FE-001",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED_BACKEND_IMPACT_UNVERIFIED",
+      "title": "Frontend subscription gate admits lower tiers to enterprise-permitted tools",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\accessControl.js",
+          "line": 191
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\accessControl.js",
+          "line": 224
+        }
+      ],
+      "dataflow": "currentUser/tier -> getUserTier/canAccessTab -> App ActiveComponent visibility",
+      "impact": "No-user/unknown-plan handling defaults to enterprise tier, and allowed enterprise permission admits unrelated tiers. This does not prove a backend authorization bypass.",
+      "repair": "Use verified entitlement state and compare the actual caller tier. Keep server authorization independently authoritative.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-002",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Money Track presents seeded balances, fills and active workloads as current records",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MoneyTrackTab.jsx",
+          "line": 6
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MoneyTrackTab.jsx",
+          "line": 59
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MoneyTrackTab.jsx",
+          "line": 71
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MoneyTrackTab.jsx",
+          "line": 79
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MoneyTrackTab.jsx",
+          "line": 104
+        }
+      ],
+      "dataflow": "hardcoded React state/current-time formatting -> portfolio/order/mining cards; failed reads retain defaults",
+      "impact": "Refresh can make fixture orders look recent, while failed telemetry leaves an active workload claim. All original numeric/customer literals are intentionally omitted.",
+      "repair": "Replace unsupported financial/operational values and order history with explicit unavailable states; admit only verified owned records, preserve zero as distinct from missing, use owner-bound requests.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-003",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Media separation failure manufactures READY output sessions",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\BsMediaCreatorTab.jsx",
+          "line": 61
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\BsMediaCreatorTab.jsx",
+          "line": 108
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\BsMediaCreatorTab.jsx",
+          "line": 118
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\BsMediaCreatorTab.jsx",
+          "line": 165
+        }
+      ],
+      "dataflow": "separation POST or failed vault GET -> catch/non-2xx fallback -> synthetic output names/session or online vault state -> readiness badge",
+      "impact": "Unavailable/failed work is displayed as completed output. A successful HTTP response also falls back to invented artifacts when metadata is absent.",
+      "repair": "Remove seeded and failure-generated sessions; persist visible errors and unknown outcomes; mark ready only using a confirmed owning API completion/artifact contract. Missing vault records remain unavailable.",
+      "batch001_remediation": "CONTAINED_SOURCE_OFFLINE_VERIFIED_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-004",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Cluster workspace reports timer-only execution and benchmark completion",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\ClusterEngineDashboard.jsx",
+          "line": 5
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\ClusterEngineDashboard.jsx",
+          "line": 28
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\ClusterEngineDashboard.jsx",
+          "line": 41
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\ClusterEngineDashboard.jsx",
+          "line": 62
+        }
+      ],
+      "dataflow": "button -> local timers/log state -> workflow/benchmark/cleanup success claims without system acknowledgement",
+      "repair": "Hold unsupported actions or label explicit demonstrations; expose actual authenticated system receipts before completion claims.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-005",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Native traffic dashboard fabricates successful packets and hash identifiers",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\native_studio\\web_telemetry_view.py",
+          "line": 74
+        },
+        {
+          "file": "C:\\AI-BS\\native_studio\\web_telemetry_view.py",
+          "line": 77
+        },
+        {
+          "file": "C:\\AI-BS\\native_studio\\web_telemetry_view.py",
+          "line": 401
+        },
+        {
+          "file": "C:\\AI-BS\\native_studio\\web_telemetry_view.py",
+          "line": 418
+        }
+      ],
+      "dataflow": "view construction/QTimer -> seeded or random traffic/status/latency -> generated hash -> live-looking table",
+      "repair": "Replace with verified owned telemetry or unavailable states; isolate any deliberate fixture mode and never label synthetic hashes as captured packet evidence.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-006",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Media editing controls claim completed transformations and quality checks without rendering",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MediaStudioTab.jsx",
+          "line": 542
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MediaStudioTab.jsx",
+          "line": 553
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\MediaStudioTab.jsx",
+          "line": 712
+        }
+      ],
+      "dataflow": "inpaint/matting/director control -> local timer -> completed output/quality claim",
+      "repair": "Use accepted/running/completed states from a versioned job/artifact contract, otherwise hold output verification.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-007",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Expo action deck reports unexecuted probes/harvest and mislabels failed flush",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\mobile-app\\App.tsx",
+          "line": 1067
+        },
+        {
+          "file": "C:\\AI-BS\\mobile-app\\App.tsx",
+          "line": 1112
+        },
+        {
+          "file": "C:\\AI-BS\\mobile-app\\App.tsx",
+          "line": 1129
+        }
+      ],
+      "dataflow": "mobile onPress -> local status/timer or rejected HTTP -> completed/sent status",
+      "repair": "Report unavailable or explicit simulation for unimplemented actions; reject non-2xx and require actual acknowledgement; no provider calls needed for regression tests.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-008",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Broadcast service probing treats opaque or non-success HTTP as online",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\BroadcastStudioApp\\src\\App.jsx",
+          "line": 62
+        },
+        {
+          "file": "C:\\AI-BS\\BroadcastStudioApp\\src\\App.jsx",
+          "line": 70
+        }
+      ],
+      "dataflow": "no-cors fetch resolves -> unconditional online service status",
+      "repair": "Use an authenticated/versioned readable health response or unknown state; clear all timeout handles and distinguish reachable HTTP from healthy service.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-009",
+      "priority": "P1",
+      "status": "SOURCE_CONFIRMED_BACKEND_IMPACT_UNVERIFIED",
+      "title": "Standalone storefront fabricates actor/production state and carries independent stale crypto copy",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\apps\\digital_storefront_mobile\\src\\App.jsx",
+          "line": 5
+        },
+        {
+          "file": "C:\\AI-BS\\apps\\digital_storefront_mobile\\src\\App.jsx",
+          "line": 18
+        },
+        {
+          "file": "C:\\AI-BS\\apps\\digital_storefront_mobile\\src\\App.jsx",
+          "line": 45
+        },
+        {
+          "file": "C:\\AI-BS\\apps\\digital_storefront_mobile\\src\\components\\DigitalStorefrontTab.jsx",
+          "line": 48
+        },
+        {
+          "file": "C:\\AI-BS\\apps\\digital_storefront_mobile\\src\\components\\CryptoSwarmMobileController.jsx",
+          "line": 34
+        }
+      ],
+      "dataflow": "bundled identity/default profile -> email-scoped balance/control fetches; missing crypto values -> numeric zero formatting",
+      "impact": "Frontend actor/production labels do not establish authentication or live service readiness. Server authorization and deployed build identity were not exercised.",
+      "repair": "Use verified identity/no-store owned requests, explicit held trading states and unavailable missing values; track this independent app separately from the main four mirrors.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-010",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED",
+      "title": "Several nested hubs/client selector do not synchronize deep-link state",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\UnifiedCalendarHub.jsx",
+          "line": 7
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\UnifiedOsintHub.jsx",
+          "line": 8
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\clients\\ClientsModule.jsx",
+          "line": 9
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\clients\\ClientsModule.jsx",
+          "line": 19
+        }
+      ],
+      "dataflow": "URL query -> initial useState only or ignored -> local selection without URL/back/forward synchronization",
+      "repair": "Define supported nested route keys, initialize/synchronize them and show unknown-state notices instead of unrelated fallback screens.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "OPEN_SOURCE_FINDING_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "FE-011",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED_RACE_NOT_EXECUTED",
+      "title": "Global token interceptor lacks account-generation validation after asynchronous token lookup",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\main.jsx",
+          "line": 63
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\main.jsx",
+          "line": 76
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\main.jsx",
+          "line": 85
+        }
+      ],
+      "dataflow": "captured currentUser -> await token -> originalFetch without owner recheck/cancellation",
+      "impact": "A pending request may dispatch with the prior account after identity changes. Existing feature-specific financial boundaries are stronger; other consumers need reconciliation.",
+      "repair": "Use account-bound sessions/current-identity checks and suppress stale responses; prove with delayed-token and delayed-response synthetic fixtures.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "CONTAINED_SOURCE_AND_FOCUSED_TESTS"
+    },
+    {
+      "id": "FE-012",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED_PRIVILEGED_BOUNDARY_REVIEW_REQUIRED",
+      "title": "Trainer exposes a broad IPC command bridge and listener lifetime lacks scoped disposal",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\trainer_frontend\\src\\preload\\index.ts",
+          "line": 6
+        },
+        {
+          "file": "C:\\AI-BS\\trainer_frontend\\src\\preload\\index.ts",
+          "line": 7
+        },
+        {
+          "file": "C:\\AI-BS\\trainer_frontend\\src\\renderer\\src\\App.tsx",
+          "line": 72
+        },
+        {
+          "file": "C:\\AI-BS\\trainer_frontend\\src\\main\\index.ts",
+          "line": 156
+        }
+      ],
+      "dataflow": "renderer control -> generic IPC payload -> host daemon; callback replaces all listeners rather than returning scoped unsubscribe",
+      "repair": "Audit sender/frame and command schema at the host boundary, preserve allowed local controls, and return scoped listener cleanup. Do not exercise memory/process actions during discovery.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "OPEN_SOURCE_FINDING_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "FE-013",
+      "priority": "P2",
+      "status": "SOURCE_CONFIRMED_INVENTORY_GAP",
+      "title": "Static navigation counts and fallback routing disagree across surfaces",
+      "evidence": [
+        {
+          "file": "C:\\AI-BS\\frontend\\components\\navigationConfig.js",
+          "line": 21
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\App.jsx",
+          "line": 204
+        },
+        {
+          "file": "C:\\AI-BS\\frontend\\src\\components\\EnterpriseIndustryHubTab.jsx",
+          "line": 106
+        },
+        {
+          "file": "C:\\AI-BS\\native_studio\\navigation_registry.py",
+          "line": 55
+        },
+        {
+          "file": "C:\\AI-BS\\native_studio\\app.py",
+          "line": 988
+        }
+      ],
+      "dataflow": "default catalog/aliases/dynamic module cards -> renderer fallback; native registry comments and dispatcher differ",
+      "impact": "Default web navigation has44 entries, actual web registration72, industry cards71, native subtabs53; counts alone are not acceptance. Native unknown keys fall back to cockpit.",
+      "repair": "Reconcile catalogs/aliases/current rendered identities and classify dormant/unknown routes explicitly.",
+      "batch001_remediation": "OPEN_SOURCE_FINDING_RUNTIME_UNVERIFIED",
+      "batch002_remediation": "OPEN_SOURCE_FINDING_ACCEPTANCE_PENDING"
+    }
+  ],
+  "additional_review_fixes": [
+    "pre-parser upload request budget",
+    "pinned Windows directory/file identities",
+    "no-replace bounded uploads",
+    "single HTTP media ranges and handle cleanup",
+    "shell-free ffprobe over verified input handle"
+  ],
+  "limits": [
+    "Full campaign remains in progress; source-tested containment does not implement held functionality.",
+    "Runtime checks were bounded read-only admission/metadata checks; no provider/device/dispatch acceptance.",
+    "Browser WebSocket credential adapter and remaining deep links/IPC/navigation issues remain open.",
+    "Metadata census is not semantic review of every discovered file."
+  ],
+  "updated_utc": "2026-10-31T03:54:25Z",
+  "additional_findings": [
+    {
+      "id": "R197-WS",
+      "severity": "HIGH",
+      "status": "CONTAINED",
+      "finding": "HTTP guards did not cover private WebSocket handlers; legacy telemetry selected historical rows and changed SQLite journal mode.",
+      "remediation": "Outermost verified-admin ASGI socket admission; legacy unproven producer explicitly unavailable; no legacy DB access.",
+      "evidence": "151 focused tests; anonymous runtime socket handshakes403."
+    },
+    {
+      "id": "R197-EMAIL",
+      "severity": "HIGH",
+      "status": "CONTAINED",
+      "finding": "Independent SMTP and Gmail outbox paths could dispatch; duplicate relay manufactured queued success.",
+      "remediation": "Admin admission across email namespace; both send implementations and duplicate relay unconditionally503 before provider/draft effects.",
+      "evidence": "Forbidden transport/source-definition tests; no runtime send invoked."
+    },
+    {
+      "id": "R197-WATCHER",
+      "severity": "HIGH",
+      "status": "CONTAINED",
+      "finding": "Audit ingestion thread started outside background-disabled policy.",
+      "remediation": "Gate before watcher import/start; fresh API reports background ingestion disabled."
+    },
+    {
+      "id": "R197-STALE",
+      "severity": "HIGH",
+      "status": "CONTAINED",
+      "finding": "Restart auto-launched old interpreter process while source repairs were not loaded.",
+      "remediation": "Verified canonical stale8080 owner stopped; fresh loopback single-worker process loaded current sources under explicit holds."
+    },
+    {
+      "id": "R197-FTS-1",
+      "severity": "HIGH",
+      "status": "OPEN_PRESERVED",
+      "path": "database/ChromaDB_local/chroma.sqlite3",
+      "finding": "Isolated clone integrity_check reports embedding_fulltext_search FTS index inconsistency.",
+      "remediation": "Original preserved; recover complete directory into new isolated store from independently verified same-store snapshot/documents, validate segments and retrieval before adopting. No repair/REINDEX/VACUUM attempted."
+    },
+    {
+      "id": "R197-FTS-2",
+      "severity": "HIGH",
+      "status": "OPEN_PRESERVED",
+      "path": "chroma_db/chroma.sqlite3",
+      "finding": "Separate legacy root store has embedding_fulltext_search FTS index inconsistency.",
+      "remediation": "Preserve exact original and sidecars; resolve actual daemon ownership before activation. Distinct from healthy backend/chroma_db and stehouwer_vector_memory."
+    },
+    {
+      "id": "R197-CLI",
+      "severity": "HIGH",
+      "status": "MITIGATED_REVOCATION_ACCEPTED_LOCAL_SESSION_CLEARED",
+      "finding": "Firebase CLI JSON login-status command exposed CLI credential fields in tool output.",
+      "remediation": "Google OAuth revocation accepted HTTP200; local Firebase CLI session and generated default credential cleared. Future CLI sign-in required. No credential values copied into source, staged hosting, records or Drive.",
+      "evidence": "No raw credential values included in this report."
+    },
+    {
+      "id": "R197-REGISTRY",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "finding": "Actual route inventory reaches its1000route safety cap and includes179duplicate registration records; one chef plugin import fails.",
+      "remediation": "Continue bounded pagination and first-match registration/subsystem acceptance; registration alone does not establish functionality."
+    },
+    {
+      "id": "R197-TS",
+      "severity": "MEDIUM",
+      "status": "OPEN_BASELINE",
+      "finding": "Full strict-JS TypeScript check fails9584 diagnostics.",
+      "remediation": "No new normalized diagnostics versus9588 baseline; fix existing debt in scoped batches. Build success does not close type errors."
+    },
+    {
+      "id": "R197-FIXTURE",
+      "severity": "MEDIUM",
+      "status": "CORRECTED_HARNESS_INCIDENT",
+      "finding": "Initial financial fixture allowed local imports before guard; Kraken balance/deposit read activity from that first attempt is unverified.",
+      "remediation": "Guard local imports/effects before definition execution; corrected tests pass. Original diagnostics retained."
+    }
+  ]
+}

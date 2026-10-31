@@ -25,18 +25,17 @@ class PhoneRepairEngine:
         return cls._instance
 
     def __init__(self):
-        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-        self._init_db()
-        self._seed_repair_data_if_empty()
+        # Opening knowledge references must never initialize or seed customer stores.
+        pass
 
     def _get_connection(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(DB_PATH, timeout=10.0)
+        from pathlib import Path
+        conn = sqlite3.connect(Path(DB_PATH).resolve().as_uri() + "?mode=ro", uri=True, timeout=10.0)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode = WAL;")
-        conn.execute("PRAGMA synchronous = NORMAL;")
         return conn
 
     def _init_db(self):
+        raise RuntimeError("Legacy repair store held: verified ownership and explicit recovery migration required.")
         with self._get_connection() as conn:
             # 1. Guides Table
             conn.execute("""
@@ -110,6 +109,7 @@ class PhoneRepairEngine:
             conn.commit()
 
     def _seed_repair_data_if_empty(self):
+        raise RuntimeError("Legacy repair store held: verified ownership and explicit recovery migration required.")
         with self._get_connection() as conn:
             # Seed or update guides
             guides = [
@@ -1355,6 +1355,7 @@ class PhoneRepairEngine:
             return ics
 
     def create_repair_ticket(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        raise RuntimeError("Legacy repair store held: verified ownership and explicit recovery migration required.")
         with self._get_connection() as conn:
             cursor = conn.execute("""
                 INSERT INTO repair_tickets (
@@ -1383,6 +1384,7 @@ class PhoneRepairEngine:
             return dict(row)
 
     def update_ticket_status(self, ticket_id: int, new_status: str, qa_passed: int = 0) -> Optional[Dict[str, Any]]:
+        raise RuntimeError("Legacy repair store held: verified ownership and explicit recovery migration required.")
         with self._get_connection() as conn:
             conn.execute("""
                 UPDATE repair_tickets 
@@ -1394,10 +1396,16 @@ class PhoneRepairEngine:
             return dict(row) if row else None
 
     def get_repair_tickets(self, client_id: str = "stehouwer_publishing") -> List[Dict[str, Any]]:
+        raise RuntimeError("Legacy repair store held: verified ownership and explicit recovery migration required.")
         with self._get_connection() as conn:
             rows = conn.execute("SELECT * FROM repair_tickets WHERE client_id = ? ORDER BY ticket_id DESC;", (client_id,)).fetchall()
             return [dict(r) for r in rows]
 
 
 # Global singleton instance
-phone_repair_engine = PhoneRepairEngine.get_instance()
+class _LazyPhoneRepairEngine:
+    """Compatibility proxy without import-time store initialization."""
+    def __getattr__(self, name):
+        return getattr(PhoneRepairEngine.get_instance(), name)
+
+phone_repair_engine = _LazyPhoneRepairEngine()

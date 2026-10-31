@@ -1,24 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function ClusterEngineDashboard() {
-  const [activeWorkflow, setActiveWorkflow] = useState(null);
-  const [logs, setLogs] = useState([
-    '⚡ Sovereign Cluster Engine initialized across 6 high-performance tiers.',
-    '• Tier 1: Granian (Rust/Tokio) active on Port 8080 with Uvicorn fallback.',
-    '• Tier 2: NATS JetStream message broker streaming on Port 4222.',
-    '• Tier 3: Temporal.io zero-loss durable workflow state machine ready.',
-    '• Tier 4: Dragonfly multi-threaded in-memory cache active on Port 6379.',
-    '• Tier 5: gRPC binary Protocol Buffers IPC binding Go (Port 8000) & Python.',
-    '• Tier 6: Mediasoup WebRTC C++ SFU media relay attached to Node Gateway (Port 3001).'
-  ]);
-  const [kpiStats, setKpiStats] = useState({
-    granianRps: '124,500',
-    natsLatency: '0.42ms',
-    temporalWorkflows: '14 Active',
-    dragonflyHitRate: '99.4%',
-    grpcLatency: '18µs',
-    mediasoupTracks: '12 Streams'
-  });
+  const [logs, setLogs] = useState(['Cluster telemetry unavailable: no verified telemetry source is connected.']);
+  const kpiStats = { granianRps: 'Unavailable', natsLatency: 'Unavailable', temporalWorkflows: 'Unavailable', dragonflyHitRate: 'Unavailable', grpcLatency: 'Unavailable', mediasoupTracks: 'Unavailable' };
 
   const appendLog = (msg) => {
     const time = new Date().toLocaleTimeString();
@@ -26,45 +10,23 @@ export default function ClusterEngineDashboard() {
   };
 
   const runTemporalWorkflow = () => {
-    appendLog('🚀 [TEMPORAL] Dispatching durable workflow: wan2.1_render...');
-    appendLog('  >> Step 1/4: Parsing screenplay cues & scene boundaries.');
-    setTimeout(() => {
-      appendLog('  >> Step 2/4: Allocating 16.0 GB VRAM headroom via vram_arbiter.');
-    }, 400);
-    setTimeout(() => {
-      appendLog('  >> Step 3/4: Executing diffusion sampling on ComfyUI Port 8189.');
-    }, 800);
-    setTimeout(() => {
-      appendLog('  >> Step 4/4: Hardware NVENC 4K muxing complete. Status: SUCCESS (Zero State Loss).');
-    }, 1200);
+    appendLog('Workflow dispatch held: no authenticated execution and receipt contract is connected.');
   };
 
   const runNatsBenchmark = () => {
-    appendLog('⚡ [NATS JETSTREAM] Publishing burst of 10,000 sequence-verified telemetry packets...');
-    setTimeout(() => {
-      appendLog('  >> 10,000/10,000 packets acknowledged by JetStream store in 4.12ms (avg: 41µs/msg).');
-    }, 500);
+    appendLog('NATS benchmark held: no authenticated execution and receipt contract is connected.');
   };
 
   const testDragonflyCache = () => {
-    appendLog('💾 [DRAGONFLY] Testing 32-core parallel read/write latency on Port 6379...');
-    setTimeout(() => {
-      appendLog('  >> Set/Get 5,000 vector embeddings: 100% HIT. Average latency: 17.8 microseconds.');
-    }, 400);
+    appendLog('Cache benchmark held: no authenticated execution and receipt contract is connected.');
   };
 
   const testGrpcHandshake = () => {
-    appendLog('🌐 [gRPC IPC] Initiating binary Protobuf round-trip between Go (Port 8000) & Python...');
-    setTimeout(() => {
-      appendLog('  >> Protobuf TelemetryPacket deserialized in 14 microseconds. HTTP/2 multiplexing verified.');
-    }, 350);
+    appendLog('gRPC probe held: no authenticated execution and receipt contract is connected.');
   };
 
   const sweepZombieNodes = () => {
-    appendLog('🧹 [ZOMBIE SWEEP] Auditing ecosystem for defunct nodes and orphaned processes...');
-    setTimeout(() => {
-      appendLog('  >> Scanned 430 host PIDs. Terminated 0 orphan processes. Ecosystem 100% verified clean.');
-    }, 400);
+    appendLog('Process cleanup held: no authenticated execution and receipt contract is connected.');
   };
 
   return (
@@ -81,7 +43,7 @@ export default function ClusterEngineDashboard() {
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <span style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid #059669', borderRadius: '6px', padding: '6px 12px', fontSize: '8pt', fontWeight: 'bold' }}>
-            ● CLUSTER STATE: OPTIMAL
+            ● CLUSTER STATE: UNAVAILABLE
           </span>
         </div>
       </div>
@@ -154,7 +116,7 @@ export default function ClusterEngineDashboard() {
       <div style={{ background: '#05080f', border: '1px solid #1e293b', borderRadius: '10px', padding: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
           <span style={{ fontSize: '8pt', fontWeight: 'bold', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            LIVE CLUSTER TELEMETRY & WORKFLOW LOGS
+            LOCAL ACTION LOG — TELEMETRY UNAVAILABLE
           </span>
           <button onClick={() => setLogs([])} style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', borderRadius: '4px', padding: '2px 8px', fontSize: '7pt', cursor: 'pointer' }}>
             Clear Log

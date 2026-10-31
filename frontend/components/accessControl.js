@@ -169,50 +169,29 @@ export const ADMIN_UIDS = [
  * Determine a user's active tier based on auth profile, simulated tier, or local environment.
  */
 export const getUserTier = (currentUser, simulatedTier = null) => {
-  if (simulatedTier) {
-    return USER_TIERS[simulatedTier] || USER_TIERS.FREE_DEMO;
-  }
-
-  // Local admin override
-  if (typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.protocol === 'file:'
-  )) {
-    // In local dev, check if admin chose a simulated preview tier in localStorage
-    const savedPreview = localStorage.getItem('aibs_preview_tier');
-    if (savedPreview && USER_TIERS[savedPreview]) {
-      return USER_TIERS[savedPreview];
-    }
-    return USER_TIERS.ADMIN;
-  }
-
-  if (!currentUser) {
-    return USER_TIERS.ENTERPRISE_ALL_ACCESS;
-  }
-
+  // These tiers control presentation only. Protected APIs independently authorize every request.
+  if (!currentUser) return USER_TIERS.FREE_DEMO;
   const email = (currentUser.email || '').toLowerCase().trim();
   const uid = currentUser.uid || '';
-  if (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid)) {
-    return USER_TIERS.ADMIN;
-  }
+  const isAdmin = Boolean(currentUser.emailVerified && uid && (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid)));
+  if (isAdmin) return simulatedTier ? (USER_TIERS[simulatedTier] || USER_TIERS.FREE_DEMO) : USER_TIERS.ADMIN;
 
   // Check custom user claims / subscription plan saved in profile
   const userPlan = (currentUser.plan || currentUser.subscriptionTier || '').toUpperCase();
-  if (USER_TIERS[userPlan]) {
+  if (currentUser.uid && currentUser.emailVerified && userPlan !== 'ADMIN' && USER_TIERS[userPlan]) {
     return USER_TIERS[userPlan];
   }
 
-  return USER_TIERS.ENTERPRISE_ALL_ACCESS;
+  return USER_TIERS.FREE_DEMO;
 };
 
 /**
  * Check if a tier has permission to view a specific tab.
  */
 export const canAccessTab = (tierId, tabKey) => {
-  if (tierId === 'admin' || tierId === 'enterprise_all_access') return true;
+  if (tierId === 'admin') return true;
   const allowedTiers = TAB_PERMISSIONS[tabKey] || [];
-  return allowedTiers.includes(tierId) || allowedTiers.includes('free_demo') || allowedTiers.includes('enterprise_all_access');
+  return allowedTiers.includes(tierId);
 };
 
 /**
