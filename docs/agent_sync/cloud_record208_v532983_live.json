@@ -1,0 +1,41 @@
+{
+  "utc": "2026-10-31T19:53:18Z",
+  "record": 208,
+  "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "all_parent_size_download_hash_checks_passed": true,
+  "files": [
+    {
+      "id": "1GE5Js7g5nQVMpakmqePgpKYBL45SkTEC",
+      "path": "C:/AI-BS/docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+      "bytes": 4582,
+      "sha256": "910ffd081e4715e26d92429b4a2fc0c2f259e43e4af30133736d722196094abd",
+      "same_folder": true,
+      "raw_download_matches": true
+    },
+    {
+      "id": "10-chkxDaOPrvGvJc6nRe8p2mScuWCf6a",
+      "path": "C:/AI-BS/backups/windows_v83_live_verification_20261031_record208/Record208_v5.329.83_Windows_Fortnite_Verification.zip",
+      "bytes": 4007647,
+      "sha256": "93137f081b1333ed6da0df152b5ad3219f25e13384bd19f67aab2d423cabb426",
+      "same_folder": true,
+      "raw_download_matches": true
+    },
+    {
+      "id": "1sj6tIw83cUWc8B8FziT4nMOtEAlJBJ7B",
+      "path": "C:/AI-BS/docs/agent_sync/manifest_record208_v532983_live.json",
+      "bytes": 7691,
+      "sha256": "f027c2dc48bdbe755eb2a4a5ee4a22fd578114c83cf398b467ff49b8606a00fe",
+      "same_folder": true,
+      "raw_download_matches": true
+    },
+    {
+      "id": "1X9sAttJoM6KtOBXcAh7IS3XZLPZVPOS8",
+      "path": "C:/AI-BS/backups/windows_v83_live_verification_20261031_record208/drive_index_updated208.md",
+      "bytes": 23949,
+      "sha256": "d9729af8e462f723727172be4723555439bb2c84549e80ec9b1966f7abb69790",
+      "same_folder": true,
+      "raw_download_matches": true
+    }
+  ],
+  "keys_or_source_binary_archives_uploaded": false
+}
