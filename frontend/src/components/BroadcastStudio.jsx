@@ -280,12 +280,12 @@ const BroadcastStudio = () => {
   useStickyState(true, 'aibs_daw_loopback');
 
   // Modals & Drawers State
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showWebCaptureSettings, setShowWebCaptureSettings] = useState(false);
   const [showAddSourceModal, setShowAddSourceModal] = useState(false);
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [showOverlayDesigner, setShowOverlayDesigner] = useState(false);
   const [guideActiveSection, setGuideActiveSection] = useState('quickstart');
-  const [activeSettingsTab, setActiveSettingsTab] = useState('video');
+  const [activeWebCaptureTab, setActiveWebCaptureTab] = useState('video');
   const [editingSource, setEditingSource] = useState(/** @type {import('/types/broadcast').BroadcastSource | null} */ (null));
   const [editingOverlay, setEditingOverlay] = useState(/** @type {import('/types/broadcast').BroadcastOverlay | null} */ (null));
 
@@ -1177,14 +1177,14 @@ const BroadcastStudio = () => {
               </button>
 
               <button 
-                onClick={() => setShowSettingsModal(true)} 
+                onClick={() => setShowWebCaptureSettings(true)} 
                 style={{
                   display: 'flex', alignItems: 'center', gap: '5px',
                   background: '#334155', color: '#38bdf8', border: '1px solid #475569',
                   padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px'
                 }}
               >
-                <SlidersHorizontal size={13} /> OBS Settings
+                <SlidersHorizontal size={13} /> Web capture settings
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#0f172a', border: '1px solid #0284c7', borderRadius: '4px', padding: '3px 8px' }}>
@@ -1772,9 +1772,9 @@ const BroadcastStudio = () => {
       <div style={{ minHeight: '48px', backgroundColor: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', borderBottom: '1px solid #1e293b' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Monitor size={18} color="#00e5ff" />
-          <span style={{ color: '#00e5ff', fontWeight: 'bold', fontSize: '15px' }}>AI-BS Broadcast Studio (OBS Engine)</span>
+          <span style={{ color: '#00e5ff', fontWeight: 'bold', fontSize: '15px' }}>AI-BS Broadcast Studio</span>
           <span style={{ fontSize: '11px', background: 'rgba(0,229,255,0.1)', color: '#38bdf8', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(0,229,255,0.2)' }}>
-            NVENC Zero-Copy • 6-Track Audio Stems
+            Web controls • Windows broadcasts stay in the Windows app
           </span>
         </div>
 
@@ -1800,10 +1800,10 @@ const BroadcastStudio = () => {
           </button>
 
           <button 
-            onClick={() => setShowSettingsModal(true)}
+            onClick={() => setShowWebCaptureSettings(true)}
             style={{ backgroundColor: '#1e293b', color: '#38bdf8', border: '1px solid #38bdf8', padding: '6px 12px', borderRadius: '4px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
           >
-            <SlidersHorizontal size={13} /> Source & OBS Settings
+            <SlidersHorizontal size={13} /> Web capture settings
           </button>
 
           <button 
@@ -1835,9 +1835,9 @@ const BroadcastStudio = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* ⚙️ FULL OBS-STYLE SETTINGS & CODEC CONFIGURATOR MODAL                       */}
+      {/* ⚙️ APP-OWNED WEB CAPTURE SETTINGS                       */}
       {/* ========================================================================= */}
-      {showSettingsModal && (
+      {showWebCaptureSettings && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 9999,
           backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)',
@@ -1853,9 +1853,9 @@ const BroadcastStudio = () => {
             <div style={{ padding: '16px 20px', background: '#090d16', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <SlidersHorizontal size={20} color="#00e5ff" />
-                <h3 style={{ margin: 0, color: '#f8fafc', fontSize: '16px' }}>Master OBS-Style Broadcast & Codec Settings</h3>
+                <div><h3 style={{ margin: 0, color: '#f8fafc', fontSize: '16px' }}>Web capture & audio settings</h3><p style={{ margin: '6px 0 0', color: '#94a3b8', fontSize: '12px' }}>Local web drafts only. Manage the Windows broadcast in the Windows app; these controls do not change its running stream.</p></div>
               </div>
-              <button onClick={() => setShowSettingsModal(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+              <button onClick={() => setShowWebCaptureSettings(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
             </div>
@@ -1874,17 +1874,17 @@ const BroadcastStudio = () => {
                   key={tab.key}
                   onClick={() => {
                     if (tab.key === 'guide') {
-                      setShowSettingsModal(false);
+                      setShowWebCaptureSettings(false);
                       setShowGuideModal(true);
                     } else {
-                      setActiveSettingsTab(tab.key);
+                      setActiveWebCaptureTab(tab.key);
                     }
                   }}
                   style={{
-                    flex: 1, padding: '10px 14px', background: activeSettingsTab === tab.key ? '#0f172a' : 'transparent',
-                    border: 'none', borderBottom: activeSettingsTab === tab.key ? '2px solid #00e5ff' : '2px solid transparent',
-                    color: tab.key === 'guide' ? '#00e5ff' : (activeSettingsTab === tab.key ? '#00e5ff' : '#94a3b8'),
-                    fontWeight: activeSettingsTab === tab.key ? 'bold' : 'normal',
+                    flex: 1, padding: '10px 14px', background: activeWebCaptureTab === tab.key ? '#0f172a' : 'transparent',
+                    border: 'none', borderBottom: activeWebCaptureTab === tab.key ? '2px solid #00e5ff' : '2px solid transparent',
+                    color: tab.key === 'guide' ? '#00e5ff' : (activeWebCaptureTab === tab.key ? '#00e5ff' : '#94a3b8'),
+                    fontWeight: activeWebCaptureTab === tab.key ? 'bold' : 'normal',
                     cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', whiteSpace: 'nowrap'
                   }}
                 >
@@ -1897,7 +1897,7 @@ const BroadcastStudio = () => {
             <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               
               {/* Tab 1: Video & Canvas */}
-              {activeSettingsTab === 'video' && (
+              {activeWebCaptureTab === 'video' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '6px' }}>
@@ -1981,7 +1981,7 @@ const BroadcastStudio = () => {
               )}
 
               {/* Tab 2: Codecs & NVENC AV1 */}
-              {activeSettingsTab === 'encoder' && (
+              {activeWebCaptureTab === 'encoder' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                     <div>
@@ -2095,7 +2095,7 @@ const BroadcastStudio = () => {
               )}
 
               {/* Tab 3: 6-Track Isolated Audio Stems */}
-              {activeSettingsTab === 'audio' && (
+              {activeWebCaptureTab === 'audio' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div style={{ background: '#020617', padding: '12px', borderRadius: '6px', border: '1px solid #1e293b' }}>
                     <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '6px' }}>6-Track Isolated Stem Recording Map</div>
@@ -2127,7 +2127,7 @@ const BroadcastStudio = () => {
               )}
 
               {/* Tab 4: Twitch & Sidekick Bot */}
-              {activeSettingsTab === 'twitch' && (
+              {activeWebCaptureTab === 'twitch' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#020617', padding: '12px', borderRadius: '6px', border: '1px solid #1e293b' }}>
                     <div>
@@ -2164,7 +2164,7 @@ const BroadcastStudio = () => {
               )}
 
               {/* Tab 5: Global Hotkeys */}
-              {activeSettingsTab === 'hotkeys' && (
+              {activeWebCaptureTab === 'hotkeys' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#38bdf8' }}>In-Game Global Keybindings</div>
                   {[
@@ -2187,10 +2187,10 @@ const BroadcastStudio = () => {
             {/* Modal Footer */}
             <div style={{ padding: '14px 20px', background: '#090d16', borderTop: '1px solid #1e293b', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button 
-                onClick={() => setShowSettingsModal(false)}
+                onClick={() => setShowWebCaptureSettings(false)}
                 style={{ background: '#00e5ff', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}
               >
-                Apply & Save OBS Settings
+                Close web settings
               </button>
             </div>
           </div>
@@ -2488,13 +2488,13 @@ const BroadcastStudio = () => {
                     <h2 style={{ color: '#00e5ff', marginTop: 0, fontSize: '18px', borderBottom: '1px solid #1e293b', paddingBottom: '8px' }}>
                       📹 Preview & Program Monitors
                     </h2>
-                    <p style={{ color: '#cbd5e1' }}>The studio utilizes a professional dual-canvas OBS architecture:</p>
+                    <p style={{ color: '#cbd5e1' }}>The web workspace provides preview and program canvases. Their local state does not verify encoder output:</p>
                     
                     <ul style={{ paddingLeft: '18px', color: '#cbd5e1', fontSize: '12px' }}>
                       <li style={{ marginBottom: '8px' }}><strong>Preview [Staging] Canvas:</strong> Lets you test angles, camera lighting, and framing before placing them on-air.</li>
                       <li style={{ marginBottom: '8px' }}><strong>Program [Master] Canvas:</strong> The live, composited video pixel buffer rendered at 60 FPS and piped into the NVENC encoder.</li>
                       <li style={{ marginBottom: '8px' }}><strong>16:9 Studio vs 9:16 Vertical:</strong> Toggle to swap from 1920x1080 horizontal (Twitch/YouTube) to 1080x1920 vertical with automatic intelligent center-cropping for TikTok Live and YouTube Shorts.</li>
-                      <li style={{ marginBottom: '8px' }}><strong>Virtual Cam:</strong> Outputs the composited video feed directly to DirectShow, allowing Discord, Zoom, or TikTok Live Studio to see your broadcast as a webcam.</li>
+                      <li style={{ marginBottom: '8px' }}><strong>Virtual Cam:</strong> A local selection does not verify virtual camera activation or change the Windows coordinator.</li>
                     </ul>
                   </div>
                 )}
@@ -2672,12 +2672,12 @@ const BroadcastStudio = () => {
 
             {/* Guide Footer */}
             <div style={{ padding: '12px 20px', background: '#090d16', borderTop: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', color: '#64748b' }}>AI-BS Studio v5.327.0 • OBS Hardware Engine</span>
+              <span style={{ fontSize: '11px', color: '#64748b' }}>AI-BS Broadcast Workspace • local web controls</span>
               <button 
                 onClick={() => setShowGuideModal(false)}
                 style={{ background: '#00e5ff', color: '#000', border: 'none', padding: '7px 22px', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}
               >
-                Got It, Let's Stream!
+                Close guide
               </button>
             </div>
           </div>

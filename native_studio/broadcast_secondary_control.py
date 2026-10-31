@@ -198,6 +198,11 @@ def read_broadcast_status():
                   'can_select':bool(modern and fresh)}
         if modern:
             result.update(protocol_version=2,session_id=raw['session_id'])
+            # _verified_owner has checked these epochs against the actual fixed
+            # coordinator and its direct FFmpeg child. Legacy files expose none.
+            for name in ('controller_create_time','encoder_create_time'):
+                value=raw.get(name)
+                if type(value) in (int,float) and math.isfinite(value) and value>0:result[name]=value
             result['source_mode'] = raw.get('source_mode') if raw.get('source_mode') in {'auto_game','window','screen'} else 'unknown'
             state = raw.get('capture_state')
             result['capture_state'] = state if fresh and state in {'holding','capturing'} else 'unavailable'

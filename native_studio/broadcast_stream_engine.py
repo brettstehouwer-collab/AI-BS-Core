@@ -1,8 +1,7 @@
 """
 AI-BS Broadcast Studio Advanced Stream Engine & Platform Ingest Telemetry
 Provides comprehensive platform specifications, real-time socket ping diagnostics,
-hardware NVENC encoding profiles, and professional streaming options matching OBS Studio,
-vMix, Restream, and Wirecast.
+hardware NVENC encoding profiles, and native streaming configuration.
 """
 
 from __future__ import annotations
@@ -539,7 +538,7 @@ class StreamProfileManager:
 # ══════════════════════════════════════════════════════════════════════════
 
 class StreamRequirementsDialog(QDialog):
-    """Full-featured streaming dialog matching professional broadcast setups (OBS/vMix/Restream).
+    """Native broadcast configuration, platform requirements, and ingest probes.
 
     Includes live ping probes, platform compliance checks, hardware NVENC controls, and stream keys.
     """

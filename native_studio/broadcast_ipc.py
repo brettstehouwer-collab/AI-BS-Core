@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import uuid
+import time
 
 _FULL = 0x1f01ff
 _PROTECTED = 0x1000
@@ -129,10 +130,46 @@ def _decode_json(raw,max_bytes):
     return value
 
 
+def read_shared_bytes(path,max_bytes=65536):
+    """Bounded read that permits a producer's atomic replacement on Windows.
+
+    Callers enforce their own path/ACL policy before this generic file reader.
+    An opened handle continues reading its original file after replacement.
+    """
+    if type(max_bytes) is not int or not 1<=max_bytes<=65536: raise ValueError('IPC_LIMIT_INVALID')
+    import win32file,win32con,pywintypes
+    try:
+        handle=win32file.CreateFile(str(path),win32con.GENERIC_READ,
+            win32con.FILE_SHARE_READ|win32con.FILE_SHARE_WRITE|win32con.FILE_SHARE_DELETE,
+            None,win32con.OPEN_EXISTING,win32con.FILE_ATTRIBUTE_NORMAL,None)
+        try:
+            status,raw=win32file.ReadFile(handle,max_bytes+1)
+            if status!=0: raise OSError('IPC_READ_UNAVAILABLE')
+            if len(raw)>max_bytes: raise ValueError('IPC_TOO_LARGE')
+            return raw
+        finally:handle.Close()
+    except pywintypes.error as error:
+        translated=OSError('SHARED_READ_UNAVAILABLE');translated.winerror=error.winerror
+        raise translated from None
+
+
+def _replace_shared(source,target):
+    # Windows readers outside our control may briefly deny rename/delete.
+    # Limit both attempts and the total planned delay; permanent errors fail.
+    deadline=time.monotonic()+.2
+    delays=(.005,.01,.02,.03,.04)
+    for attempt in range(len(delays)+1):
+        try:return os.replace(source,target)
+        except OSError as error:
+            if (getattr(error,'winerror',None) not in (5,32,33) or attempt>=len(delays)
+                    or time.monotonic()+delays[attempt]>deadline):raise
+            time.sleep(delays[attempt])
+
+
 def read_private_json(path,max_bytes=16384):
     if type(max_bytes) is not int or not 1<=max_bytes<=16384: raise ValueError('IPC_LIMIT_INVALID')
     path=Path(path);validate_private_path(path,allow_missing=False)
-    with path.open('rb') as source: raw=source.read(max_bytes+1)
+    raw=read_shared_bytes(path,max_bytes)
     return _decode_json(raw,max_bytes)
 
 
@@ -156,6 +193,6 @@ def write_private_json(path,data,max_bytes=16384):
             win32file.FlushFileBuffers(handle)
         finally: handle.Close()
         validate_private_path(path,allow_missing=True)
-        os.replace(temporary,path)
+        _replace_shared(temporary,path)
         validate_private_path(path,allow_missing=False)
     finally: temporary.unlink(missing_ok=True)

@@ -9,7 +9,7 @@ publishes it two ways, both local to the machine's RAM:
 Sources (all pre-existing AI-BS components, called directly, no HTTP):
 * ``engine.GpuProbe``          NVML: temp / util / VRAM / power / fan / clocks
 * ``engine.sample_system``     psutil: CPU, RAM
-* ``engine.probe_ports``       the immutable 20-port collision matrix
+* ``engine.probe_ports``       the active service collision matrix
 * ``engine.ollama_inventory``  loaded models on :11434 / :11435
 * ``audio_kernel.AudioEngine`` measured WASAPI latency / callback timing
 * ``ai_compute.AiComputeWorker`` live iteration time, GFLOPS, loss
@@ -31,7 +31,7 @@ from PyQt6.QtCore import QThread, pyqtSignal
 from native_studio.engine import PORT_MATRIX, GpuProbe, ollama_inventory, probe_ports, sample_system
 from native_studio.telemetry_shm import PORT_ORDER, TelemetryWriter
 
-if tuple(p for p, _ in PORT_ORDER) != tuple(PORT_MATRIX):
+if tuple(p for p, _ in PORT_ORDER if p != 4455) != tuple(PORT_MATRIX):
     raise RuntimeError("telemetry_shm.PORT_ORDER drifted from engine.PORT_MATRIX")
 
 MIN_FREE_VRAM_GB = 3.5
@@ -97,7 +97,7 @@ class TelemetryHub(QThread):
         ports_cache: dict[int, dict[str, Any]] = {}
         ports_ts = ollama_ts = 0.0
         ollama_loaded = 0
-        order = list(PORT_MATRIX)
+        order = [port for port, _ in PORT_ORDER]  # preserve the V1 mask ABI
         while not self._stop.is_set():
             t0 = time.time()
             v: dict[str, float] = {}
@@ -129,11 +129,11 @@ class TelemetryHub(QThread):
                 except Exception:  # noqa: BLE001
                     pass
             if ports_cache:
-                mask = sum(1 << i for i, p in enumerate(order) if ports_cache.get(p, {}).get("online"))
-                v.update(ports_online=bin(mask).count("1"), ports_total=len(order), ports_mask=mask,
+                mask = sum(1 << i for i, p in enumerate(order) if p in PORT_MATRIX and ports_cache.get(p, {}).get("online"))
+                v.update(ports_online=bin(mask).count("1"), ports_total=len(PORT_MATRIX), ports_mask=mask,
                          ollama_gpu_online=1 if ports_cache.get(11434, {}).get("online") else 0,
                          ollama_cpu_online=1 if ports_cache.get(11435, {}).get("online") else 0)
-                snap["ports"] = ports_cache
+                snap["ports"] = {port: state for port, state in ports_cache.items() if port in PORT_MATRIX}
                 if t0 - ollama_ts > 10.0 and ports_cache.get(11434, {}).get("online"):
                     ollama_ts = t0
                     try:

@@ -38,7 +38,6 @@ from native_studio.theme import PALETTE
 PORTS_18 = [
     ("80", "Nginx Gateway", "UNAVAILABLE", "#94a3b8"),
     ("3001", "Node Backend", "UNAVAILABLE", "#94a3b8"),
-    ("4455", "OBS WebSocket", "UNAVAILABLE", "#94a3b8"),
     ("5173", "Vite Dev & Desktop Studio", "UNAVAILABLE", "#94a3b8"),
     ("8000", "Go Gateway", "UNAVAILABLE", "#94a3b8"),
     ("8002", "ChromaDB Vector Store", "UNAVAILABLE", "#94a3b8"),

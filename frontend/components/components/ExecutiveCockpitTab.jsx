@@ -10,7 +10,7 @@ function emptyExecutiveMatrix() {
     pillars: {
       salad_engine: /** @type {SaladStatus | undefined} */ (undefined),
       media_studio: { status: 'UNVERIFIED', nvenc_cfr_gate: 'UNVERIFIED', supported_models: [] },
-      broadcast_kernel: { is_obs_running: /** @type {boolean | null} */ (null), suggested_scene: '', active_studio_apps_count: null },
+      broadcast_kernel: { status: 'UNVERIFIED' },
       crypto_swarm: { trading_paused: /** @type {boolean | null} */ (null), status: 'UNVERIFIED', daemon_port: 8007, twap_plans_count: null, drip_orders_count: null },
       ollama_swarm: { status: 'UNVERIFIED', models_count: null, models_sample: [] }
     },
@@ -466,7 +466,6 @@ const handleSetAutonomy = async (mode) => {
   // =========================================================================
   const PRESET_COMMANDS = [
     { label: '🎬 Reframe 9:16 Short', prompt: 'Generate 9:16 Short from mtd.mp4' },
-    { label: '🎥 Switch OBS Scene', prompt: 'Switch OBS to Camera 1' },
     { label: '⚡ Crypto Scalp Status', prompt: 'Query CRO Scalp Status' },
     { label: '🏛️ Query Vault (305k)', prompt: 'Search Vault for Bio-Intelligence' },
     { label: '💰 Stage CRO Buy Order', prompt: 'Stage a $50 CRO limit buy order at 0.125' },
@@ -1123,34 +1122,13 @@ const handleSetAutonomy = async (mode) => {
               </div>
             </div>
 
-            {/* Pillar 2: Broadcast Kernel & OBS Studio */}
-            <div style={{
-              backgroundColor: '#161b22',
-              borderRadius: '7px',
-              border: '1px solid #30363d',
-              padding: '12px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '1.1rem' }}>📡</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#a371f7' }}>Broadcast Kernel (OBS / UE5)</span>
-                </div>
-                <span style={{
-                  fontSize: '0.66rem',
-                  fontWeight: 700,
-                  color: matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? '#3fb950' : '#8b949e',
-                  background: matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'rgba(63, 185, 80, 0.15)' : 'rgba(139, 148, 158, 0.15)',
-                  padding: '2px 6px',
-                  borderRadius: '4px'
-                }}>
-                  {matrixStatus.pillars?.broadcast_kernel?.is_obs_running ? 'OBS PROCESS REPORTED' : 'OBS UNVERIFIED'}
-                </span>
-              </div>
+            {/* Pillar 2: Native Broadcast Studio */}
+            <div style={{ backgroundColor: '#161b22', borderRadius: '7px', border: '1px solid #30363d', padding: '12px' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#a371f7', marginBottom: '8px' }}>📡 Native Broadcast Studio</div>
               <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• OBS WebSocket Engine: <span style={{ color: '#58a6ff' }}>Port 4455 (v5.x Protocol)</span></div>
-                <div>• Suggested Scene: <span style={{ color: '#c9d1d9' }}>{matrixStatus.pillars?.broadcast_kernel?.suggested_scene || 'AI-BS Main'}</span></div>
-                <div>• Unreal Engine 5 Bridge: <span style={{ color: '#58a6ff' }}>Port 8888 (Signaling Host)</span></div>
-                <div>• Master Audio Mix: <span style={{ color: '#3fb950' }}>Routing unverified</span></div>
+                <div>Stream status unverified here.</div>
+                <div>Manage capture and output in the Windows app: Creative Media → Universal AV.</div>
+                <div>Audio routing unverified here.</div>
               </div>
             </div>
 

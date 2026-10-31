@@ -2626,3 +2626,23 @@ VERIFIED actual GUI launch19:44:16UTC of83/SHA5ce8d96b7152ab62f81926ef51693d6c86
 ### Record208 final output classification and workspace
 
 Current encoder43860 bounded-session review finds no fixed muxer/open/permission/HTTP403/404/handshake/broken-pipe/negative-error failure classes. Credential-free index mapping0Twitch/1YouTube/2Kick/3Facebook/4recording/5HLS verified; ALL RTMP dashboards remain UNVERIFIED. Earlier Facebook rejection is historical, not confirmed this session. Old stop caller UNKNOWN. Root verifies70native+version71 source pins and4crypto hashes unchanged; no304 suite rerun. Focus returned to Fortnite, Windows app left open, no gameplay input sent. Record208 is docs/actualGUI/media verification only; root close/upload receipts follow in the same audit folder.
+
+
+## Record209 — Native program preview, retirement and corrective v5.329.85
+
+VERIFIED_V85_INSTALLED_GUI_HELD_HTTP_DECODE_352_OFFLINE_FINAL_TOGGLE_UNVERIFIED. One read-only Qt player/video sink displays delayed existing HLS, with private owner/creation/progress/freshness gates, no second capture or audio output. Current native/web OBS controls, fake scene/process placeholders and active 4455 probes retired; browser A/V controls and existing handlers preserved. SHM V1 keeps 25 legacy bits, 4455 reserved, 24 active. Final guarded native 352 tests/28 groups PASS 0failures/errors/denials; 32 JS PASS; TypeScript 0; version 85/16 mirrors verified. 84 preview initially worked; later 52852/43860 failed STATUS_WRITE_UNAVAILABLE without root Stop. Windows non-delete-sharing read/atomic-replace defect reproduced; 85 uses shared-delete reads/bounded replace retry/fixed loopback HTTP preview. No uninterrupted claim. Final actual acceptance: "v5.329.85 installed (2256 files; SHA-256 26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c). GUI correctly held blank without a game. Independent HTTP probe decoded 200 black holding frames in 7.25 seconds, no audio output. 352 native  tests/28 groups, 32 JS checks and TypeScript exit 0. Controller 36868/encoder 31084 remained holding. Final preview ON/after-toggle and 85 live-game GUI rendering remain UNVERIFIED. User intentionally closed games; no game or broadcast restart for final acceptance.". Trading/recruitment remain disabled, audio silent. No Firebase deployment/hosting parity or RTMP dashboard certification. C preimages/patches retained; encrypted recovery blocked by existing E-key custody. Root uploads sanitized records only into the existing single folder. Report: docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md.
+
+
+### Record209 final acceptance — v5.329.85
+
+VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED. Initial installed GUI ON/held/blank verified; preview then observed OFF. Final ON blocked twice by concurrent user-input guard, root stopped inputs and advised manual enabling. User source drafts not assumed applied. HTTP decoder 200 black holding frames/7.25 seconds/no audio independently verified; actual 85 live-game GUI rendering and final ON/after-toggle remain unverified. No game or broadcast restart for final acceptance. No OpenAI outage or measured task-cost claim.
+
+
+### Final user constraint and read-only state
+
+No more screen/cursor control or GUI retries are authorized. Root stopped all computer-use input; remaining work is backend/frontend code, offline tests and read-only checks. At 20:50:17 UTC the same controller 36868/encoder 31084 remained active in NO_VERIFIED_GAME holding, advanced to 36009 frames/media 1200.3 seconds, preview last observed OFF. The later read-only sample is not a completed ON toggle. Port 8007 listeners 0, OBS processes 0, all four crypto/ledger hashes unchanged. No game, source-apply or start/stop command was sent.
+
+
+### Final credential-default cleanup and verification
+
+Two pre-existing hardcoded Twitch/Facebook stream-key defaults in the standalone broadcast component were replaced with empty strings. Exact AST reconstruction verifies only those two literal substitutions; saved settings and handlers are unchanged. The count-only RED found 2 credential-family literals; final broader JavaScript bundle passed 35 tests (contracts198 + truth204 + debranding209), TypeScript exit 0. The narrower 33-case bundle is included, not an extra run. Native 352/28 groups and the installed 85 package are unchanged. No credential rotation, historical exposure conclusion or clean-Git-history claim. Original source, private preimages and raw patches stay C-only and are never uploaded.

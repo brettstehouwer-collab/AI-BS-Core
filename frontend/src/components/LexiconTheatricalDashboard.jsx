@@ -39,13 +39,13 @@ export default function LexiconTheatricalDashboard() {
   return (
     <div style={{ padding: '20px', color: '#c9d1d9', height: '100%', overflowY: 'auto' }}>
       <h2 style={{ color: '#58a6ff', marginBottom: '10px' }}>🎭 Theatrical Lexicon Engine Dashboard</h2>
-      <p style={{ marginBottom: '20px', color: '#8b949e' }}>Real-time semantic expansion and Persona trigger visualization.</p>
+      <p style={{ marginBottom: '20px', color: '#8b949e' }}>Semantic expansion and lexicon lookup.</p>
       
       <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
         
         {/* Left Column: Input & Expansion */}
         <div style={{ flex: '1 1 500px', background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-          <h3 style={{ color: '#3fb950' }}>Semantic Expansion (Live Stream Simulator)</h3>
+          <h3 style={{ color: '#3fb950' }}>Semantic Expansion</h3>
           <textarea 
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
@@ -79,7 +79,7 @@ export default function LexiconTheatricalDashboard() {
           )}
         </div>
 
-        {/* Right Column: Direct Lookup & OBS Triggers */}
+        {/* Right Column: Direct Lookup */}
         <div style={{ flex: '1 1 400px', background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
           <h3 style={{ color: '#d2a8ff' }}>Raw Lexicon Lookup</h3>
           <div style={{ display: 'flex', gap: '10px', marginTop: '10px', marginBottom: '10px' }}>
@@ -110,12 +110,7 @@ export default function LexiconTheatricalDashboard() {
             </div>
           )}
 
-          <div style={{ marginTop: '30px', padding: '15px', border: '1px dashed #d2a8ff', borderRadius: '4px' }}>
-            <h4 style={{ color: '#d2a8ff', marginBottom: '10px' }}>⚡ Coming in Phase 2</h4>
-            <p style={{ fontSize: '0.9em', color: '#8b949e' }}>
-              The expansion map data visualized here will be bound to the <strong>OBS Orchestrator</strong>. Specific semantic hits (e.g. aggressive words) will automatically trigger OBS WebSocket scene swaps and ComfyUI overlays.
-            </p>
-          </div>
+
         </div>
 
       </div>

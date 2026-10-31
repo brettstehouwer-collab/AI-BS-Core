@@ -1285,7 +1285,8 @@
       "id": "R207-UNSUPPORTED",
       "severity": "LOW",
       "status": "CLEAR_UNAVAILABLE",
-      "finding": "Whole-screen sharing/native video preview unavailable; audio intentionally silent; every workflow not certified."
+      "finding": "Whole-screen sharing/native video preview unavailable; audio intentionally silent; every workflow not certified.",
+      "later_record209_note": "Historical native-preview-unavailable statement is superseded by delayed read-only program preview. Whole-screen sharing remains held and audio intentionally silent; original207finding text/status retained."
     },
     {
       "id": "R207-MSIX-PROFILE",
@@ -1314,5 +1315,75 @@
     "source_pins": "71_MATCH_AND4_CRYPTO_HASHES_UNCHANGED",
     "app_left_open": true,
     "focus_returned_to_game": true
-  }
+  },
+  "record209": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md",
+    "status": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+    "tests": 352,
+    "test_groups": 28,
+    "guard_denials": 0,
+    "javascript_tests": 35,
+    "typescript_exit": 0,
+    "native_version": "5.329.85",
+    "version_mirrors": 16,
+    "actual_release": "v5.329.85 installed (2256 files; SHA-256 26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c). GUI correctly held blank without a game. Independent HTTP probe decoded 200 black holding frames in 7.25 seconds, no audio output. 352 native tests/28 groups, 32 JS checks and TypeScript exit 0. Controller 36868/encoder 31084 remained holding. Final preview ON/after-toggle and 85 live-game GUI rendering remain UNVERIFIED. User intentionally closed games; no game or broadcast restart for final acceptance.",
+    "prior84_failure": "STATUS_WRITE_UNAVAILABLE_NO_ROOT_STOP_CORRECTIVE85_RESTORE_SEPARATE",
+    "continuity": "NOT_UNINTERRUPTED",
+    "preview": "READ_ONLY_DELAYED_FIXED_LOOPBACK_HTTP_EXISTING_HLS_NO_SECOND_CAPTURE",
+    "audio": "SILENT_NO_MIC_OR_AUDIO_CONFIGURATION_CHANGE",
+    "trading": "DISABLED",
+    "firebase_deployed": false,
+    "hosting_parity": "NOT_CLAIMED",
+    "encrypted_recovery": "BLOCKED_E_KEY_UNREADABLE",
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "preview_last_observed": "OFF",
+    "final_ON": "UNCONFIRMED_CONCURRENT_INPUT_HOLD",
+    "user_source_drafts_applied": false,
+    "no_more_screen_cursor_control": true,
+    "last_readonly_utc": "2026-10-31T20:50:17.913779+00:00",
+    "last_frames": 36009,
+    "last_media_seconds": 1200.3,
+    "completed_ON_toggle": false,
+    "credential_defaults_removed": 2,
+    "credential_rotation": false,
+    "old_git_history_clean_claim": false
+  },
+  "record209_findings": [
+    {
+      "id": "R209-PREVIEW",
+      "status": "REPAIRED_INSTALLED_HELD_GUI_HTTP_DECODER_VERIFIED_LIVE_GAME_UNVERIFIED",
+      "severity": "MEDIUM",
+      "finding": "Native broadcast canvas lacked actual delayed program playback."
+    },
+    {
+      "id": "R209-OBS",
+      "status": "REPAIRED_SOURCE_AND_FOCUSED_TESTS_VERIFIED",
+      "severity": "MEDIUM",
+      "finding": "Retired external-engine labels, probes and fake scene-control/status placeholders remained in current native/web surfaces."
+    },
+    {
+      "id": "R209-HLS-ACL",
+      "status": "OPEN",
+      "severity": "MEDIUM",
+      "finding": "Shared local HLS source ACL and replacement TOCTOU are not a cross-user security guarantee. Preview uses fixed local admission/freshness gates; no global Qt protocol policy changed."
+    },
+    {
+      "id": "R209-IMPORT",
+      "status": "REPAIRED_TYPESCRIPT_AND_IMPORT_RESOLUTION_VERIFIED",
+      "severity": "LOW",
+      "finding": "Omni relative component imports resolved through a nonexistent nested src directory; canonical /src aliases now resolve across mirrors."
+    },
+    {
+      "id": "R209-WINDOWS-SHARING",
+      "status": "REPAIRED_FIXTURES_AND192SECOND_RESTORED_SOAK_VERIFIED",
+      "severity": "HIGH",
+      "finding": "Windows readers without delete sharing blocked atomic private-status/HLS publication.84preview worked initially but prior52852/43860sender later failed STATUS_WRITE_UNAVAILABLE; root sent no Stop."
+    },
+    {
+      "id": "R209-CREDENTIAL-DEFAULTS",
+      "severity": "HIGH",
+      "status": "REPAIRED_CURRENT_SOURCE_DEFAULTS_EMPTY_AST_RED_GREEN_VERIFIED",
+      "finding": "Two hardcoded Twitch/Facebook stream-key defaults existed in the standalone broadcast component. Exactly those defaults are now empty; saved settings and handlers are preserved. No credential rotation, historical exposure assessment or clean-old-history claim is made. Original source/preimages remain private C-only and are excluded from cloud."
+    }
+  ]
 }

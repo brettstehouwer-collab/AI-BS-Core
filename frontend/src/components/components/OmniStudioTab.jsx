@@ -3,14 +3,14 @@ import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'reac
 import { Radio, Music, Mic, Video, Columns, Grid } from "lucide-react";
 
 // Importing the individual studio components
-import VideoStreamingTab from './VideoStreamingTab.jsx';
-import BroadcastStudio from '../src/components/BroadcastStudio.jsx';
-import NeuralAudioStudioTab from './NeuralAudioStudioTab.jsx';
-import MusicDAWStudioTab from '../src/components/daw/MusicDAWStudioTab.jsx';
-import ThematicVstVisualizer from '../src/components/ThematicVstVisualizer.jsx';
+import VideoStreamingTab from '/src/components/VideoStreamingTab.jsx';
+import BroadcastStudio from '/src/components/BroadcastStudio.jsx';
+import NeuralAudioStudioTab from '/src/components/NeuralAudioStudioTab.jsx';
+import MusicDAWStudioTab from '/src/components/daw/MusicDAWStudioTab.jsx';
+import ThematicVstVisualizer from '/src/components/ThematicVstVisualizer.jsx';
 
 const STUDIO_TABS = [
-  { id: 'broadcast', label: 'Broadcast Studio (OBS)', icon: Radio, color: '#00e5ff', desc: 'OBS DXGI Hook, NVENC RTMP, Scene Switcher' },
+  { id: 'broadcast', label: 'Broadcast Studio', icon: Radio, color: '#00e5ff', desc: 'Broadcast workspace, local canvases and output status' },
   { id: 'daw', label: 'Music DAW & VST3 Studio', icon: Music, color: '#10b981', desc: '16-Step Arranger, Tone.js Workstation, DSP FX' },
   { id: 'neural', label: 'Neural Voice & Audio AI', icon: Mic, color: '#a855f7', desc: 'F5-TTS, Voice Cloner, Zero-Shot Vocals' },
   { id: 'video', label: 'Video Meetings & WebRTC', icon: Video, color: '#3b82f6', desc: 'P2P Encrypted Video Calls & Screen Share' },

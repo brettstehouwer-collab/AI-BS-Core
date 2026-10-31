@@ -54,6 +54,8 @@ import tempfile
 tempfile.tempdir = str(TEMP)
 sys.path.insert(0, str(ROOT))
 ALLOWED = (str(WORK).replace('\\', '/').casefold(), str(ROOT / 'backups/native_broadcast207_work/atomic_fixtures').replace('\\', '/').casefold())
+# Dedicated, verified C-only synthetic Win32 sharing fixtures.
+ALLOWED += (str(ROOT / 'backups/native_broadcast_preview209_work/ipc_hotfix209/fixtures').replace('\\', '/').casefold(),)
 DENIED_NAMES = {'.env', 'stream_profiles.json', 'drip_ledger.json', 'crypto_ledger.json', 'broadcast_secondary_status.json', 'broadcast_secondary_command.json', 'broadcast_secondary.stop'}
 denials = []
 
@@ -160,9 +162,27 @@ for name in ('OpenInputDesktop', 'EnumWindows', 'EnumDesktopWindows', 'GetForegr
     setattr(user32, name, lambda *a, _name=name, **kw: deny('user32.' + _name))
 from PyQt6.QtGui import QScreen
 QScreen.grabWindow = lambda *a, **kw: deny('QScreen.grabWindow')
+from PyQt6.QtMultimedia import QMediaPlayer
+QMediaPlayer.setSource = lambda *a, **kw: deny('QMediaPlayer.setSource')
+QMediaPlayer.play = lambda *a, **kw: deny('QMediaPlayer.play')
+
 from backend.core import native_window_capture
 native_window_capture._capture_class = lambda: deny('WGC.capture')
+# Old UI fixtures use a fake decoder; actual preview tests inject fake media.
+# Keep the real preview module available for its independent contract tests.
+from scripts.tests.test_preview_ui209 import FakeNativePreview
+from native_studio import omni_broadcast_studio as preview_studio
+preview_studio.NativeBroadcastPreview = FakeNativePreview
 GROUPS = ('scripts.tests.test_native_broadcast_truth204', 'scripts.tests.test_native_broadcast_validation205', 'scripts.tests.test_native_broadcast_setup205', 'scripts.tests.test_native_broadcast_preview205', 'scripts.tests.test_broadcast_service205', 'scripts.tests.test_native_broadcast_coordinator207', 'scripts.tests.test_private_broadcast_ipc207', 'scripts.tests.test_broadcast_ipc_atomic207', 'scripts.tests.test_game_capture_selection206', 'scripts.tests.test_game_selection_sampler207', 'scripts.tests.test_game_follow_capture207', 'scripts.tests.test_secondary_control207', 'scripts.tests.test_broadcast_secondary206', 'scripts.tests.test_broadcast_relay206', 'scripts.tests.test_broadcast_daemon_integrity', 'scripts.tests.test_broadcast_capture_inputs205', 'scripts.tests.test_window_capture_pipe205', 'scripts.tests.test_native_window_capture205', 'scripts.tests.test_legacy_broadcast_guard207', 'scripts.tests.test_native_connection_diagnostics')
+
+GROUPS += ('scripts.tests.test_preview_ui209',
+           'scripts.tests.test_broadcast_preview209',
+           'scripts.tests.test_native_broadcast_retirement209',
+           'scripts.tests.test_native_executive_service',
+           'scripts.tests.test_native_executive_view',
+           'scripts.tests.test_native_telemetry_truth',
+           'scripts.tests.test_native_window_shutdown',
+           'scripts.tests.test_broadcast_ipc_sharing209')
 
 def main():
     names = sys.argv[1:] or list(GROUPS)

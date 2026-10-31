@@ -1,17 +1,7 @@
-"""Universal AV Omni-Broadcast Studio & Hardware NVENC 4K/8K Video Streamer.
+"""Native broadcast controls and a read-only, delayed program monitor.
 
-Direct Win32 Direct2D / DirectX GUI with 100% feature parity with http://localhost:5173 BroadcastStudio & OmniStudioTab:
-1. Master Studio Navigation & Multi-View Layouts (Broadcast, Music DAW, Neural Audio F5-TTS, Video Meetings & 4-Grid Matrix).
-2. Live Program/Preview Canvas with 16:9 Landscape vs 9:16 Shorts/TikTok orientation toggle, live waveform, scanlines, and active game hook.
-3. Live Scenes Manager (Add/Remove scenes, Cut/Fade/Swipe transitions, OBS WebSocket Port 4455 & Kernel Port 8088 dispatch).
-4. Live Sources Layer Manager (Add/Remove sources, eye visibility toggle, opacity slider, source volume, layer reordering).
-5. Running Windows & Active Game Auto-Detection (continuous polling of Port 8005 /api/windows & /api/game/active every 2.5s).
-6. Advanced 5-Channel Multi-Track Audio Mixer (Desktop WASAPI, Mic/Aux, DAW Master Bus, WebRTC Guest, AI Sidekick Voice with real-time VU Peak Meters).
-7. Multi-Destination RTMP Streaming & Endpoints (Twitch, YouTube Live 4K, Kick, Facebook Live, Custom RTMP, Sovereign HLS Port 8089).
-8. Unified Twitch / IRC Social Hub Chat & AI Sidekick (Port 8006).
-9. Neural Voice & Audio AI Suite (F5-TTS Voice Profiles, Zero-Shot Synthesis, Suno Music Generator).
-10. Video Meetings & WebRTC Executive Strategy Hub (Call controls, screen share, scheduled meetings).
-11. Real Broadcast & Hardware Kernel Dispatch (Start/Stop stream on Port 8005/8088, NVENC MKV recording, OBS Virtual Cam, UE5 signaling).
+The coordinator owns capture and dispatch. The monitor decodes its local HLS
+output independently; scene drafts and preview controls do not change capture.
 """
 
 from __future__ import annotations
@@ -39,6 +29,7 @@ from PyQt6.QtGui import (
     QCursor,
     QFont,
     QGuiApplication,
+    QImage,
     QLinearGradient,
     QMouseEvent,
     QPainter,
@@ -81,6 +72,7 @@ from PyQt6.QtWidgets import (
 from native_studio.engine import EngineBus, GpuProbe
 from native_studio.broadcast_control import stream_payload, send_broadcast_command
 from native_studio.broadcast_secondary_control import read_broadcast_status, select_broadcast_source, validate_source
+from native_studio.broadcast_preview import NativeBroadcastPreview
 from native_studio.theme import PALETTE
 from native_studio.broadcast_stream_engine import (
     STREAM_PLATFORM_SPECS,
@@ -229,6 +221,7 @@ class LiveBroadcastCanvas(QWidget):
         self.is_streaming = False
         self.is_recording = False
         self._coordinator_preview_unavailable = False
+        self._program_preview_image: Optional[QImage] = None
         self.orientation = "horizontal"  # "horizontal" (16:9) | "vertical" (9:16)
         self.active_source_title = "🎮 Direct3D 11 Zero-Copy Hook: Standby"
         self.resolution_text = "1920x1080 @ 60 FPS"
@@ -398,6 +391,7 @@ class LiveBroadcastCanvas(QWidget):
         if hasattr(self, "_capture_timer"):
             self._capture_timer.stop()
         self._clear_capture_frame()
+        self.clear_program_preview()
 
     def closeEvent(self, event: Any) -> None:
         self.shutdown()
@@ -421,6 +415,17 @@ class LiveBroadcastCanvas(QWidget):
 
     def set_coordinator_preview_unavailable(self) -> None:
         self._coordinator_preview_unavailable=True
+        self.update()
+
+    def set_program_preview_image(self, image: QImage) -> None:
+        """Own a decoded program frame; never select or capture a window."""
+        if self._preview_shutdown:
+            return
+        self._program_preview_image = image.copy() if isinstance(image, QImage) and not image.isNull() else None
+        self.update()
+
+    def clear_program_preview(self) -> None:
+        self._program_preview_image = None
         self.update()
 
     def set_recording(self, recording: bool) -> None:
@@ -478,6 +483,16 @@ class LiveBroadcastCanvas(QWidget):
         painter.fillRect(0, 0, w, h, QColor("#05080f"))
 
         if self._coordinator_preview_unavailable:
+            image = self._program_preview_image
+            if image is not None and not image.isNull():
+                available_h = max(1, h - 26)
+                scale = min(w / image.width(), available_h / image.height())
+                iw, ih = image.width() * scale, image.height() * scale
+                painter.drawImage(QRectF((w-iw)/2, (available_h-ih)/2, iw, ih), image)
+                painter.setPen(QPen(QColor('#cbd5e1')))
+                painter.setFont(QFont('Segoe UI', 9))
+                painter.drawText(QRectF(6, h-25, w-12, 24), Qt.AlignmentFlag.AlignCenter, 'Program preview (delayed)')
+                return
             painter.setPen(QPen(QColor('#cbd5e1')))
             painter.setFont(QFont('Segoe UI',12,QFont.Weight.Bold))
             painter.drawText(QRectF(12,h/2-32,w-24,28),Qt.AlignmentFlag.AlignCenter,'Preview unavailable')
@@ -1193,7 +1208,7 @@ class ActiveGameDiscoveryWidget(QFrame):
         c_row.addWidget(self.chk_auto)
 
         self.txt_custom = QLineEdit()
-        self.txt_custom.setPlaceholderText("Filter: chrome / cod / obs / daw")
+        self.txt_custom.setPlaceholderText("Filter windows by title")
         self.txt_custom.setStyleSheet("background: #070b12; color: #f8fafc; border: 1px solid #1e293b; padding: 3px 6px; font-size: 7.5pt; border-radius: 3px;")
         self.txt_custom.textChanged.connect(self._on_filter_changed)
         c_row.addWidget(self.txt_custom)
@@ -2010,7 +2025,7 @@ class UniversalOmniStudioNativeView(QWidget):
         # Mode Buttons
         self.mode_buttons: Dict[str, QPushButton] = {}
         modes = [
-            ("broadcast", "📡 Broadcast Studio (OBS)"),
+            ("broadcast", "📡 Broadcast Studio"),
             ("daw", "🎵 Music DAW & VST3 Studio"),
             ("neural", "🎙️ Neural Voice & Audio AI"),
             ("video", "📹 Video Meetings & WebRTC"),
@@ -2037,7 +2052,7 @@ class UniversalOmniStudioNativeView(QWidget):
         # Telemetry Badges
         b1 = QLabel("NVENC latency: not measured")
         b1.setStyleSheet("background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid #00f0ff; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
-        b2 = QLabel("OBS WS 4455: not checked")
+        b2 = self.lbl_preview_status = QLabel("Preview: waiting")
         b2.setStyleSheet("background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #a855f7; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
         b3 = QLabel("Audio priority: not checked")
         b3.setStyleSheet("background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #059669; border-radius: 4px; padding: 4px 8px; font-size: 7.5pt; font-weight: bold;")
@@ -2088,11 +2103,10 @@ class UniversalOmniStudioNativeView(QWidget):
         self.btn_record.clicked.connect(self._toggle_record)
         ar_lay.addWidget(self.btn_record)
 
-        # OBS Studio Core Launcher
-        self.btn_obs = QPushButton("🎬 Launch OBS Studio Core (Port 4455)")
-        self.btn_obs.setStyleSheet("background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; font-weight: bold; font-size: 8pt; border-radius: 4px; padding: 6px 10px;")
-        self.btn_obs.clicked.connect(self._launch_obs)
-        ar_lay.addWidget(self.btn_obs)
+        self.chk_program_preview = QCheckBox("Program preview")
+        self.chk_program_preview.setChecked(True)
+        self.chk_program_preview.setToolTip("Read-only local program playback (delayed). This does not start, stop or change the broadcast.")
+        ar_lay.addWidget(self.chk_program_preview)
 
         # Unreal Engine WebRTC Bridge
         btn_ue = QPushButton("🎮 Unreal Engine 5 Signaling (Port 8888)")
@@ -2108,7 +2122,7 @@ class UniversalOmniStudioNativeView(QWidget):
         self.btn_orientation.clicked.connect(self._toggle_orientation)
         ar_lay.addWidget(self.btn_orientation)
 
-        for btn in [self.btn_october7, self.btn_stream, self.btn_record, self.btn_obs, btn_ue, self.btn_orientation]:
+        for btn in [self.btn_october7, self.btn_stream, self.btn_record, btn_ue, self.btn_orientation]:
             btn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             btn.setMinimumWidth(btn.fontMetrics().horizontalAdvance(btn.text()) + 26)
 
@@ -2249,6 +2263,12 @@ class UniversalOmniStudioNativeView(QWidget):
 
         self.canvas = LiveBroadcastCanvas()
         self.canvas.set_coordinator_preview_unavailable()
+        self._program_preview = NativeBroadcastPreview(self)
+        self._program_preview.hide()
+        self._program_preview.frame_ready.connect(self.canvas.set_program_preview_image)
+        self._program_preview.cleared.connect(self.canvas.clear_program_preview)
+        self._program_preview.state_changed.connect(self._apply_preview_status)
+        self.chk_program_preview.toggled.connect(self._program_preview.set_preview_enabled)
         cp_lay.addWidget(self.canvas, 1)
 
         top_split.addWidget(canvas_panel)
@@ -2311,7 +2331,7 @@ class UniversalOmniStudioNativeView(QWidget):
         self.txt_telemetry.setFont(QFont("Consolas", 8))
         self.txt_telemetry.setStyleSheet("background: #05080f; color: #38bdf8; border: 1px solid #1e293b; border-radius: 4px; padding: 6px;")
         self.txt_telemetry.document().setMaximumBlockCount(2000)
-        self.txt_telemetry.setPlainText('Local broadcast controls initialized. Encoder, OBS, audio priority and remote ingest have not been checked.')
+        self.txt_telemetry.setPlainText('Native broadcast controls initialized. Program preview is read-only and delayed; remote ingest remains unverified.')
         lc_lay.addWidget(self.txt_telemetry)
         log_split.addWidget(log_card)
 
@@ -2373,7 +2393,7 @@ class UniversalOmniStudioNativeView(QWidget):
         self._selected_capture_pid=getattr(discovery,'_window_pid_by_handle',{}).get(hwnd)
         self.canvas.set_target_window(0)
         self.canvas.set_desktop_capture_enabled(False)
-        self.txt_telemetry.append('Window source draft selected. Press Apply source to request the exact verified window. Coordinator video preview is not connected here.')
+        self.txt_telemetry.append('Window source draft selected. Press Apply source to request the exact verified window. Program preview follows accepted coordinator output; source draft has not been applied.')
 
     def _on_scene_switched(self, scene: str) -> None:
         self.canvas.set_active_source(scene)
@@ -2473,7 +2493,10 @@ class UniversalOmniStudioNativeView(QWidget):
         self.canvas.set_streaming(False)
         self.canvas.set_target_window(0)
         self.canvas.set_desktop_capture_enabled(False)
-        self.canvas.active_source_title='Coordinator video preview unavailable here; website /live provides playback.'
+        self.canvas.active_source_title='Program preview shows the current coordinator output; source drafts are separate.'
+        preview = getattr(self, '_program_preview', None)
+        if preview is not None:
+            preview.set_coordinator_state(state)
         pending=getattr(self,'_pending_source_request',None)
         if pending and pending==state.get('last_command_id'):
             command_status=state.get('command_status')
@@ -2557,17 +2580,12 @@ class UniversalOmniStudioNativeView(QWidget):
         self.txt_telemetry.append('Local archive accompanies the broadcast automatically. This control does not start a second recorder; saved-file integrity remains unverified.')
 
 
-    def _launch_obs(self) -> None:
-        bat_path = r"C:\AI-BS\Launch_OBS_Core.bat"
-        if os.path.exists(bat_path):
-            try:
-                flags = subprocess.CREATE_NEW_PROCESS_GROUP if hasattr(subprocess, "CREATE_NEW_PROCESS_GROUP") else 0
-                subprocess.Popen([bat_path], cwd=os.path.dirname(bat_path), creationflags=flags)
-                self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎬 Launched portable OBS Core via {bat_path}.")
-            except Exception as e:
-                QMessageBox.warning(self, "OBS Launch Error", str(e))
-        else:
-            self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] Launch_OBS_Core.bat not found at {bat_path}.")
+    def _apply_preview_status(self, state: dict) -> None:
+        labels = {'waiting': 'Preview: waiting', 'buffering': 'Preview: buffering',
+                  'showing': 'Preview: delayed', 'held': 'Preview: held',
+                  'stale': 'Preview: stale', 'disabled': 'Preview: off',
+                  'unavailable': 'Preview: unavailable', 'closed': 'Preview: off'}
+        self.lbl_preview_status.setText(labels.get(state.get('state'), 'Preview: unavailable'))
 
     def _launch_ue_signaling(self) -> None:
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal signaling is not checked; this control has no connected launcher.")
@@ -2640,6 +2658,9 @@ class UniversalOmniStudioNativeView(QWidget):
         )
 
     def shutdown(self) -> None:
+        preview = getattr(self, '_program_preview', None)
+        if preview is not None:
+            preview.shutdown()
         if hasattr(self, "canvas") and hasattr(self.canvas, "shutdown"):
             self._broadcast_closed=True
             if hasattr(self,'_coordinator_timer'): self._coordinator_timer.stop()

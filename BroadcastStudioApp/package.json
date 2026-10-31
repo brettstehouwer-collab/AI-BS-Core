@@ -1,7 +1,7 @@
 {
   "name": "bs-studio",
   "private": true,
-  "version": "5.329.83",
+  "version": "5.329.85",
   "description": "BS-Studio - Unified Broadcast & Neural Music DAW Workstation",
   "author": "Brett Stehouwer",
   "type": "module",

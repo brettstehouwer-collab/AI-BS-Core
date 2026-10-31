@@ -1,3 +1,21 @@
+
+
+### Final credential-default cleanup and verification
+
+Two pre-existing hardcoded Twitch/Facebook stream-key defaults in the standalone broadcast component were replaced with empty strings. Exact AST reconstruction verifies only those two literal substitutions; saved settings and handlers are unchanged. The count-only RED found 2 credential-family literals; final broader JavaScript bundle passed 35 tests (contracts198 + truth204 + debranding209), TypeScript exit 0. The narrower 33-case bundle is included, not an extra run. Native 352/28 groups and the installed 85 package are unchanged. No credential rotation, historical exposure conclusion or clean-Git-history claim. Original source, private preimages and raw patches stay C-only and are never uploaded.
+
+
+### Final user constraint and read-only state
+
+No more screen/cursor control or GUI retries are authorized. Root stopped all computer-use input; remaining work is backend/frontend code, offline tests and read-only checks. At 20:50:17 UTC the same controller 36868/encoder 31084 remained active in NO_VERIFIED_GAME holding, advanced to 36009 frames/media 1200.3 seconds, preview last observed OFF. The later read-only sample is not a completed ON toggle. Port 8007 listeners 0, OBS processes 0, all four crypto/ledger hashes unchanged. No game, source-apply or start/stop command was sent.
+# Record209 final acceptance — v5.329.85
+
+VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED. Last observed Program preview OFF; ON attempts held for concurrent user input. GUI correctly held blank without game; independent HTTP decoder 200 holding frames passed. Actual 85 live-game GUI rendering/final ON unverified. No game or broadcast restart. Details: docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md.
+
+# Current Record209 — v5.329.85
+
+VERIFIED_V85_INSTALLED_GUI_HELD_HTTP_DECODE_352_OFFLINE_FINAL_TOGGLE_UNVERIFIED. 352 guarded native tests and 32 JS checks pass; TypeScript exits 0. Delayed native preview is read-only/silent, current native/web external-engine placeholders retired. 84 failure and 85 corrective restore retained separately; continuity not uninterrupted. Actual acceptance: "v5.329.85 installed (2256 files; SHA-256 26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c). GUI correctly held blank without a game. Independent HTTP probe decoded 200 black holding frames in 7.25 seconds, no audio output. 352 native tests/28 groups, 32 JS checks and TypeScript exit 0. Controller 36868/encoder 31084 remained holding. Final preview ON/after-toggle and 85 live-game GUI rendering remain UNVERIFIED. User intentionally closed games; no game or broadcast restart for final acceptance.". Encrypted recovery remains blocked by E-key custody. Details: docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md.
+
 # Current checkpoint — Record208 / actual Windows v5.329.83 game capture
 
 2026-10-31T19:49:24.767265+00:00. Actual native83 GUI launched and one Start created4540→21188→52852→43860. Fresh owned Auto Fortnite/publicHLS verified at19:47:27–31: frames1250→1341, sequences15→16, exact segment21/CPU genuine game picture; silent AAC192000samples zero, no mic change. No OBS/4455 or8007. Earlier stale/stopped proof and unknown caller preserved, not live success. Source unchanged;304 cases prior historical, no rerun. No all-RTMP/full-GUI/all-game claim. Trading disabled; same Drive folder; root close/upload receipts follow. Report WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md. Older checkpoints below are historical.

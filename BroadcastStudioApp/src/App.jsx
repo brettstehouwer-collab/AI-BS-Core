@@ -12,7 +12,7 @@ import MusicDAWStudioTab from './components/daw/MusicDAWStudioTab.jsx';
 import ThematicVstVisualizer from './components/ThematicVstVisualizer.jsx';
 
 const STUDIO_TABS = [
-  { id: 'broadcast', label: 'Broadcast Studio', icon: Radio, color: '#00e5ff', desc: 'OBS DXGI Hook, NVENC RTMP Hardware Ingest, Scene Switcher, Audio Mixer' },
+  { id: 'broadcast', label: 'Broadcast Studio', icon: Radio, color: '#00e5ff', desc: 'Broadcast workspace, local canvases and output status' },
   { id: 'daw', label: 'Music DAW', icon: Music, color: '#10b981', desc: '16-Step Arranger, Tone.js Workstation, Multi-Track Mixer, DSP FX' },
 ];
 
@@ -37,8 +37,7 @@ export default function App() {
     { name: 'VST3 DSP Theme Bridge', port: 8013, url: 'http://127.0.0.1:8013/api/vst/theme-state', status: 'pending', latency: '--', desc: 'Hardware DSP Audio Theme Sync Daemon' },
     { name: 'ComfyUI Neural Studio', port: 8188, url: 'http://127.0.0.1:8188/system_stats', status: 'pending', latency: '--', desc: 'Local SDXL/Flux Image & Video Diffusion Matrix' },
     { name: 'Ollama Host GPU Master', port: 11434, url: 'http://127.0.0.1:11434/api/version', status: 'pending', latency: '--', desc: 'Local RTX 4090 Ollama Large Language Model Server' },
-    { name: 'ChromaDB Vector Store', port: 8002, url: 'http://127.0.0.1:8002/api/v2/heartbeat', status: 'pending', latency: '--', desc: 'Long-Term Episodic Vector Memory Database' },
-    { name: 'OBS Core WebSocket', port: 4455, url: 'http://127.0.0.1:4455', status: 'pending', latency: '--', desc: 'OBS Studio v30 WebSocket Remote Control Bridge' }
+    { name: 'ChromaDB Vector Store', port: 8002, url: 'http://127.0.0.1:8002/api/v2/heartbeat', status: 'pending', latency: '--', desc: 'Long-Term Episodic Vector Memory Database' }
   ]);
 
   // Auto-unlock Tone.js Web Audio context on first user interaction
