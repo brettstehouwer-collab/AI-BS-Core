@@ -1,0 +1,326 @@
+{
+  "handoff_id": "record200_20261031T074909Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "utc": "2026-10-31T07:49:09Z",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next Codex or Antigravity executor",
+  "source_commit": "420ea1c89c170a457e777f9018c44035e587f3b4",
+  "branch": "codex/audit-v532976-20261031",
+  "version": "v5.329.78",
+  "verification_status": "PARTIAL_VERIFICATION",
+  "source_manifest_sha256": "fd702ae8094fc05cc759bc7fe4471df361cc635da7f9edb2cc48134aedf6a49a",
+  "source_files": [
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "sha256": "70395d5e36173b2987ef14ec027b26d5f5a946a1c110a66e381abbe92c75f109",
+      "bytes": 1134560
+    },
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "sha256": "3e638cbf6e287cdb4237d9735f90ee3196af479751fba62859aa3ba5b8aba674",
+      "bytes": 222035
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "sha256": "6645fe85f3195005234517302145296a086f41db38d9bb35cc2c893a2814b59a",
+      "bytes": 3011
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "sha256": "420a54d1ec7d82009467a316d4e8557668aed0375d4789e6a3884b22ec6701dc",
+      "bytes": 109004
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "sha256": "42a619bb6dfff24f2c6cd08f7515227aed7825fa2a321c3182d0644468b8181f",
+      "bytes": 94601
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "sha256": "dad5e0026c1e1be78f3f6c381b22fef8eeeb7de696f0b4eaa7019121d2246d0e",
+      "bytes": 219546
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "sha256": "493a9b31147920615dce74dbfb4fc03a9e322597a5463e2cd6fcd0c4cd6dd421",
+      "bytes": 157639
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "sha256": "e0973ca86a6b941c6e268411ecc1f3cb5734e31b1e1197c9a6b950755b1ad726",
+      "bytes": 11906
+    },
+    {
+      "path": "backend/core/chroma_native_integrity.py",
+      "sha256": "74ad0040c7ebe248a3289de932499c55ace2d6ed827365e7eef7624d8e2abb0e",
+      "bytes": 17709
+    },
+    {
+      "path": "backend/core/outbound_messaging_policy.py",
+      "sha256": "ce59e8997de657a476d9238a16fca710a9c949130944feeff9edc0aa26942174",
+      "bytes": 1545
+    },
+    {
+      "path": "backend/core/plugin_loader.py",
+      "sha256": "9d3940b2233892925ab5aacd76630f3bf89ed088ebbc3919baf06b088ff7d834",
+      "bytes": 12222
+    },
+    {
+      "path": "backend/routers/executive_cockpit_router.py",
+      "sha256": "41a44d21ecc0fbebba3ae86b29edc1f894e25746a64302933f988b1704844168",
+      "bytes": 28424
+    },
+    {
+      "path": "backend/tests/test_personal_memory_authority.py",
+      "sha256": "4a8c960890cb71ab84cce4947b40f4ed6a9c5315919b6da5d6c887b6c31a908d",
+      "bytes": 16412
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "sha256": "5a5d7cd19bfeaaee6f5049d8cddc28a20996713038cfa45e420816f159fa45f4",
+      "bytes": 233206
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "sha256": "9cc1e3d7bb2af27f5d04070562a36a1c61229f103085720a4859932f78947c82",
+      "bytes": 1117412
+    },
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "sha256": "b7879db5595fe24d372fefdb6bdf3db890404c088e515fca0da4707874093c3f",
+      "bytes": 743239
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "sha256": "a3a9792d7c0f824a6c111981e8e9aca2b9dd558778cc05b905c4e21349ee1bf1",
+      "bytes": 339406
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/INVESTIGATION_AND_VERIFICATION_v5.329.78.md",
+      "sha256": "b2b067e99127a7a765b237dc4601359ed25f92b01075a962c75a8f49443234e1",
+      "bytes": 7837
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "sha256": "2950bb09601b6fa64228cf04cf441fddecdfd7d3083f409be64e60a1cbc0662a",
+      "bytes": 8381
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/VERIFICATION_v5.329.78.json",
+      "sha256": "709ff9435c283035d7af68e68d0bd07a92748249be03375bf859055f058eab1f",
+      "bytes": 8464
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "sha256": "081a17060eb6402e5c518b82ab28ab28405cd46f6d0653eea4046f919483a89b",
+      "bytes": 13096
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/findings.json",
+      "sha256": "1a88b60c3aafe9688fc564ed776cd2e101d5e9fd9cee1efcd28a781524a985c2",
+      "bytes": 51322
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/recovery_gate.json",
+      "sha256": "4f70218152f5bf68b921ad96570eeaabea3d9356412c0052ec2514fd1d36a70a",
+      "bytes": 3149
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/components/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "34cdbec820473269d7df9373faaad75dcfab052f1c0dfa34ebe650f97df8c407",
+      "bytes": 778993
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "fcfc159d31307ad8d687f4f97aea7f212d04d764e6143b97b3ca47cc7d467819",
+      "bytes": 3582
+    },
+    {
+      "path": "frontend/public/version.json",
+      "sha256": "86d987bf81bb446e43dae1accfbb7f4f34e66ec8d5f753342835877e6303808a",
+      "bytes": 194
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/src/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/version.js",
+      "sha256": "ee7c9292a82d3203447986d4d6abc280284634ab3beb143d5c705ede0225a073",
+      "bytes": 354
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "32b7ac559731590f5c3e7406b1d79ec480b2b75eb7f59b31ecb652731bbe3cad",
+      "bytes": 199
+    },
+    {
+      "path": "package.json",
+      "sha256": "d16d34af2413da29448aaeadc67094047af371c5b4341b3f0566d3baede19fd1",
+      "bytes": 429
+    },
+    {
+      "path": "release.json",
+      "sha256": "03590af93d6ad296e74bd4de1b022fe7403aa127a2da246e37b7fdeb76f516fb",
+      "bytes": 193
+    },
+    {
+      "path": "scripts/Run-AIBSAuditBatch.ps1",
+      "sha256": "a14557d95e5dd7e4511c6fde82bce807bbba4a06ff25c6dba9d857335fa58f4b",
+      "bytes": 5295
+    },
+    {
+      "path": "scripts/inspect_chroma_store.py",
+      "sha256": "629d86718c0abab425869c0ee2d2edaed7e48769de67a12b3957725298b1e66a",
+      "bytes": 1876
+    },
+    {
+      "path": "scripts/tests/test_chroma_inspector_cli.py",
+      "sha256": "b54f8e1956d94899ecd156263dda36b190576ba15490ae505a7d61ca6f4df4eb",
+      "bytes": 4354
+    },
+    {
+      "path": "scripts/tests/test_chroma_native_integrity.py",
+      "sha256": "f8f5e4e8d5713f9108c49f4e4ee5e1028898e1d060c721b190f2108c0cac50e1",
+      "bytes": 14494
+    },
+    {
+      "path": "scripts/tests/test_conversation_memory_context.mjs",
+      "sha256": "d2b1fc295928b1011ccb12e3148b1fbb10f91e22c1b7c44c699342ed61821dd2",
+      "bytes": 11593
+    },
+    {
+      "path": "scripts/tests/test_route_registration_integrity.py",
+      "sha256": "edee55dd077d90b7668a299aabe0ba35e07634c2c1147e162bc1c88d2a40e3be",
+      "bytes": 22425
+    },
+    {
+      "path": "version.txt",
+      "sha256": "5c161f90be3f1249e6b4290f08a6830e57ddede02077f2f5ef1c5bc00cf0b309",
+      "bytes": 10
+    }
+  ],
+  "dependency_configuration_hashes": [
+    {
+      "path": "frontend/package.json",
+      "sha256": "fcfc159d31307ad8d687f4f97aea7f212d04d764e6143b97b3ca47cc7d467819"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "34cdbec820473269d7df9373faaad75dcfab052f1c0dfa34ebe650f97df8c407"
+    },
+    {
+      "path": "package.json",
+      "sha256": "d16d34af2413da29448aaeadc67094047af371c5b4341b3f0566d3baede19fd1"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "32b7ac559731590f5c3e7406b1d79ec480b2b75eb7f59b31ecb652731bbe3cad"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "88929fc96893e0f7f93b2340e5886aa0f057952734fbbd9186fd529b5db89213"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "3efe8f0a2049e82941ab9d38016b529b60bd3e9dd9debff67da9c19c319f763e"
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "7c3ea4b93011bfc2b26de56458387bbe880735cae1ae7caeac7e221322aac3e6"
+    }
+  ],
+  "working_tree": {
+    "dirty": true,
+    "porcelain_entries": 53832,
+    "raw_status_sha256": "e2fc449ee5f94071f467da52f2752a2afb2fba3bf1adcc4c744babe1151d4ab2",
+    "full_status_in_encrypted_evidence": "evidence/record200_worktree_status.z",
+    "unrelated_changes_preserved": true
+  },
+  "patches_in_encrypted_evidence": [
+    "evidence/record200_exact_source.patch",
+    "evidence/record200_staged.patch"
+  ],
+  "verification": {
+    "accepted_python": 1378,
+    "accepted_node": 226,
+    "total": 1604,
+    "skips": 0,
+    "accepted_guard_denials": 0,
+    "held_files": 11,
+    "held_attempted_cases_excluded": 114,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "strict_typescript": true,
+    "versions": true,
+    "build_modules": 5678,
+    "build_files": 143,
+    "retained_sqlite_fixtures": 337,
+    "cohort_basis": "Full accepted110-file run plus targeted27-case refresh replacing25; canonical batch overlaps and is not added."
+  },
+  "completed": [
+    "Bounded inert Chroma structural diagnostic and CLI;22+5tests",
+    "RecDebut review hard hold restored;108related tests",
+    "Stable bounded registry pagination/global conflict metadata;2300runtime rows/943duplicate records",
+    "Stale owned auth fixtures corrected without reducing assertions",
+    "Nine ledger prefixes preserved with exact preimages",
+    "Controlled8080restart after authenticated raw runtime snapshot"
+  ],
+  "known_failures": [
+    "NativeHNSWaccessviolation and structural corruption remain;2338identity/vector associations require authoritative evidence",
+    "Eleven unsafe integration test files held; full-system verification incomplete",
+    "Duplicate handler ownership/plugin import effects and missing chef analytics dependency remain open",
+    "Python hooks are not an OS sandbox: ten task-owned empty C-root directories cleaned nonrecursively; one failed fixture mayreadlocalcredentialprofile without printing or sending a value"
+  ],
+  "architectural_decisions": [
+    "ADR-124: preserve original data/queued facts; static checks do not establish native health; bound metadata pagination without dispatch changes"
+  ],
+  "test_commands": [
+    "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Run-AIBSAuditBatch.ps1 (reviewed fixed offline jobs)",
+    "E: bootstrap/rerun_accepted200.py --version v5.329.78 (reviewed accepted-only guarded runner)",
+    "Read-only admin runtime catalog/admission probes; no business handlers invoked"
+  ],
+  "deployment": {
+    "firebase_last_verified": "v5.329.77",
+    "new_version_published": false,
+    "controlled_backend_loaded": true
+  },
+  "holds": {
+    "live_trading": "DISABLED",
+    "crypto8007": "ABSENT",
+    "DRY_RUN": true,
+    "HOLD_DISPATCH": true,
+    "payment_mode": "disabled",
+    "outreach_background": "HELD"
+  },
+  "next_step": "Obtain authoritative backup/mapping for damagedHNSWidentities; review duplicate route ownership and import effects; isolate held native/provider tests in an OS sandbox before executing.",
+  "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "keys_or_credentials_included": false,
+  "source_equivalence": "All43listed raw-file SHA256 values verified against Cbefore handoff. No claim is made about unrelated dirty paths."
+}
