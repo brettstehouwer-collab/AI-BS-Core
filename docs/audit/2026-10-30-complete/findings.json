@@ -1293,5 +1293,26 @@
       "status": "REPAIRED_ACTUAL_INSTALLED_FROZEN_AND_COMPILED_IPC_VERIFIED",
       "finding": "Frozen v82 diagnostic cannot resolve physical IPC under MSIX LocalAppData redirection; quiet diagnostic failure handling also required."
     }
-  ]
+  ],
+  "record208": {
+    "report": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+    "status": "ACTUAL_NATIVE_GUI_START_AND_FRESH_FORTNITE_PUBLIC_HLS_VERIFIED",
+    "source_unchanged": true,
+    "actual_native_gui_started": true,
+    "actual_start_clicks": 1,
+    "controller_pid": 52852,
+    "encoder_pid": 43860,
+    "public_hls": "FRESH_ADVANCING_EXACT_BYTES_AND_ACTUAL_GAME_VERIFIED",
+    "audio": "GENERATED_SILENCE_NO_MIC_CHANGE",
+    "trading": "DISABLED",
+    "initial_stale_output": "FAILED_RETAINED_CALLER_UNKNOWN",
+    "prior304_tests": "HISTORICAL_NOT_RERUN",
+    "full_gui_acceptance": false,
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "per_output_fixed_errors": "NONE_OBSERVED_CURRENT_ENCODER43860",
+    "rtmp_dashboard_acceptance": "UNVERIFIED_ALL_TARGETS",
+    "source_pins": "71_MATCH_AND4_CRYPTO_HASHES_UNCHANGED",
+    "app_left_open": true,
+    "focus_returned_to_game": true
+  }
 }

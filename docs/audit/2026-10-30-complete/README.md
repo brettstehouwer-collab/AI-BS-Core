@@ -1,3 +1,9 @@
+# Current checkpoint — Record208 / actual Windows v5.329.83 game capture
+
+2026-10-31T19:49:24.767265+00:00. Actual native83 GUI launched and one Start created4540→21188→52852→43860. Fresh owned Auto Fortnite/publicHLS verified at19:47:27–31: frames1250→1341, sequences15→16, exact segment21/CPU genuine game picture; silent AAC192000samples zero, no mic change. No OBS/4455 or8007. Earlier stale/stopped proof and unknown caller preserved, not live success. Source unchanged;304 cases prior historical, no rerun. No all-RTMP/full-GUI/all-game claim. Trading disabled; same Drive folder; root close/upload receipts follow. Report WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md. Older checkpoints below are historical.
+
+---
+
 # Current checkpoint — Record207 / v5.329.83 installed
 
 2026-10-31T19:36:05.697658+00:00. V83 installed: all 2,256 hashes / 552,588,185 bytes and four shortcuts verified; EXE 5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52. Frozen connection diagnostic exits0 quietly/ready and installed PYZ control reads physical .aibs-private IPC with owner/DACL checks. Full GUI and separate cross-host launch remain unverified. Current coordinator42344/encoder10552 advances in Auto HOLDING, no game open, game_frame_verified=false; earlier automatic Fortnite/publicHLS proof on46560/44780 retained historically. Final304 tests/20groups PASS0operational denials,23 build fixtures/TS/16versions pass (overlaps not summed). Trading DISABLED, silent audio/no microphone, four protected pins match. V82 install/MSIX failure and test STOP incidents retained. HIGH OPEN source ACL/E key custody; encrypted source/binary cloud backup blocked. Source commit/final sanitized report upload are root closing receipts; same Drive folder only. Report NATIVE_BROADCAST_INTEGRATION_v5.329.83.md. Older checkpoints below are historical.

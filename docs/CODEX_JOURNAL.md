@@ -2818,3 +2818,13 @@ Safe reviewed command from C:\AI-BS: python -B scripts/verify_native_broadcast_o
 
 ## Record207 acceptance addendum - 2026-10-31 19:39:31 UTC
 Installed v5.329.83 sender 42344/10552 automatically reacquired Fortnite after the earlier no-game hold, without a source command or runtime restart. Verified game frames and encoded counters advanced 11594 to11655; media time386466667 to388500000. Audio generated silence; microphone deferred; live trading DISABLED. Exact evidence: docs/agent_sync/automatic_game_acceptance_record207_v532983.json. Earlier hold/build/incident receipts remain historical and unchanged.
+
+
+## Record208 — Actual Windows v5.329.83 live verification — 2026-10-31T19:49:24.767265+00:00
+
+VERIFIED actual GUI launch19:44:16UTC of83/SHA5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52, PID4540, Creative Media→Omni→Universal AV→Broadcast. Initial19:45 proof was stale/stopped output; caller unknown, original evidence retained. One actual GUI Start at19:46:40.502UTC created ancestry4540→21188→52852→43860. Fresh19:47:27–31 owned Auto capture frames1250→1341/media41.666667→44.714667s; local/public HLS15→16; segment21 exact916312bytes SHA77ec84060e91969e26c52f18e30b5c2ecd248d5f5a7b612336b5b55675ff39f7. CPU H264720p frame visually genuine Fortnite Thrills & Chills, no desktop. AAC192000samples exactly zero, no mic changes. No OBS process/ancestry/4455 listener and no8007 listener; child DRY_RUN/HOLD true, LIVE_TRADING/RECDEBUT false. GUI capture/remote-ingest-unverified/fixed720p30H2644500/preview-unavailable states truthful. Public HLS verified; no all RTMP dashboard/game/tab/workflow claim. Source unchanged from dedea53af3a130697bd21f68047b983b3ccf8a78;304 tests cited as prior historical, not rerun. Live trading disabled/audio intentionally silent. Records/old prefixes retained on C; root commit/upload receipts follow, same Drive folder only. Report docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md.
+
+
+### Record208 final output classification and workspace
+
+Current encoder43860 bounded-session review finds no fixed muxer/open/permission/HTTP403/404/handshake/broken-pipe/negative-error failure classes. Credential-free index mapping0Twitch/1YouTube/2Kick/3Facebook/4recording/5HLS verified; ALL RTMP dashboards remain UNVERIFIED. Earlier Facebook rejection is historical, not confirmed this session. Old stop caller UNKNOWN. Root verifies70native+version71 source pins and4crypto hashes unchanged; no304 suite rerun. Focus returned to Fortnite, Windows app left open, no gameplay input sent. Record208 is docs/actualGUI/media verification only; root close/upload receipts follow in the same audit folder.

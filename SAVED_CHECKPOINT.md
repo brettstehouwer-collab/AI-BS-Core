@@ -1,3 +1,9 @@
+# Current checkpoint — Record208 / actual Windows v5.329.83 game capture
+
+2026-10-31T19:49:24.767265+00:00. Actual native83 GUI launched and one Start created4540→21188→52852→43860. Fresh owned Auto Fortnite/publicHLS verified at19:47:27–31: frames1250→1341, sequences15→16, exact segment21/CPU genuine game picture; silent AAC192000samples zero, no mic change. No OBS/4455 or8007. Earlier stale/stopped proof and unknown caller preserved, not live success. Source unchanged;304 cases prior historical, no rerun. No all-RTMP/full-GUI/all-game claim. Trading disabled; same Drive folder; root close/upload receipts follow. Report WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md. Older checkpoints below are historical.
+
+---
+
 # Latest Record207 acceptance - v5.329.83
 2026-10-31 19:39:31 UTC: Fortnite automatically attached to installed83 sender42344/10552 after no-game holding, with no new source command or restart. Game frame verified and counters advancing. Silent audio, microphone deferred, live trading disabled. Evidence: docs/agent_sync/automatic_game_acceptance_record207_v532983.json. Older checkpoints below remain historical.
 
