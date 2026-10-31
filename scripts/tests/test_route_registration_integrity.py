@@ -173,5 +173,189 @@ class RegistrationTests(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(limited['truncated'])
                 self.assertEqual(len(limited['routes']),1000)
 
+class RouteCatalogPagingTests(unittest.IsolatedAsyncioTestCase):
+    def loader(self, name='fixture_paging_loader'):
+        return load('backend/core/plugin_loader.py', name)
+
+    def audit_app(self):
+        self.loader('core.plugin_loader')
+        module = load('backend/routers/executive_cockpit_router.py', 'fixture_paging_executive')
+        app = FastAPI()
+        app.include_router(module.router)
+        return app
+
+    async def test_second_page_reaches_tail_with_global_indexes(self):
+        with isolated_dependencies():
+            app = self.audit_app()
+            app.router.routes.extend(Route(f'/paging/{n}', forbidden, methods=['GET']) for n in range(1205))
+            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+                first = (await client.get('/api/v1/executive/route-audit', headers={'x-admin-key':'test-only'})).json()
+                response = await client.get('/api/v1/executive/route-audit',
+                    params={'offset':1000,'expected_snapshot':first['snapshot']}, headers={'x-admin-key':'test-only'})
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(response.headers['cache-control'],'private, no-store')
+            second = response.json()
+            self.assertEqual(len(first['routes']),1000)
+            self.assertEqual(first['pagination']['next_offset'],1000)
+            self.assertEqual(second['routes'][0]['index'],1000)
+            self.assertIn('/paging/1204',{r['path'] for r in second['routes']})
+            self.assertFalse({r['index'] for r in first['routes']} & {r['index'] for r in second['routes']})
+            self.assertEqual(first['snapshot'],second['snapshot'])
+            self.assertEqual(second['pagination']['total_routes'],len(first['routes'])+len(second['routes']))
+            self.assertIsNone(second['pagination']['next_offset'])
+            self.assertTrue(second['pagination']['complete'])
+            self.assertFalse(second['pagination']['traversal_truncated'])
+            self.assertEqual(set(second['routes'][0]),{'index','kind','path','name','methods','depth'})
+
+    async def test_cross_page_duplicate_retains_first_global_index(self):
+        with isolated_dependencies():
+            app = self.audit_app()
+            loader = self.loader('core.plugin_loader')
+            first_index = len(loader.collect_route_metadata(app.routes)['routes'])
+            app.router.routes.append(Route('/paging-shared',forbidden,methods=['GET']))
+            app.router.routes.extend(Route(f'/paging-gap/{n}',forbidden,methods=['GET']) for n in range(1050))
+            app.router.routes.append(Route('/paging-shared',forbidden,methods=['GET']))
+            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://test') as client:
+                response = await client.get('/api/v1/executive/route-audit',params={'offset':1000},headers={'x-admin-key':'test-only'})
+            data = response.json()
+            duplicate = next(r for r in data['duplicates'] if r['path']=='/paging-shared' and r['method']=='GET')
+            self.assertEqual(duplicate['first_index'],first_index)
+            self.assertEqual(duplicate['index'],first_index+1051)
+            self.assertTrue(any(r['index']==duplicate['index'] for r in data['routes']))
+
+    async def test_query_bounds_and_snapshot_format_follow_admission(self):
+        with isolated_dependencies():
+            app = self.audit_app()
+            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://test') as client:
+                for params in [{'offset':-1},{'offset':10001},{'offset':'wrong'},{'limit':0},{'limit':1001},
+                               {'limit':'wrong'},{'expected_snapshot':'not-a-snapshot'},{'expected_snapshot':'F'*64}]:
+                    with self.subTest(params=params):
+                        denied = await client.get('/api/v1/executive/route-audit',params=params)
+                        invalid = await client.get('/api/v1/executive/route-audit',params=params,headers={'x-admin-key':'test-only'})
+                        self.assertEqual(denied.status_code,403)
+                        self.assertEqual(invalid.status_code,422)
+                        self.assertEqual(denied.headers['cache-control'],'private, no-store')
+                        self.assertEqual(invalid.headers['cache-control'],'private, no-store')
+
+    async def test_changed_catalog_rejects_stale_snapshot_without_route_data(self):
+        with isolated_dependencies():
+            app = self.audit_app()
+            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),base_url='http://test') as client:
+                first = (await client.get('/api/v1/executive/route-audit',params={'limit':3},headers={'x-admin-key':'test-only'})).json()
+                app.router.routes.append(Route('/paging-added',forbidden,methods=['GET']))
+                params = {'offset':3,'limit':3,'expected_snapshot':first['snapshot']}
+                denied = await client.get('/api/v1/executive/route-audit',params=params)
+                stale = await client.get('/api/v1/executive/route-audit',params=params,headers={'x-admin-key':'test-only'})
+                refreshed = (await client.get('/api/v1/executive/route-audit',headers={'x-admin-key':'test-only'})).json()
+                current = await client.get('/api/v1/executive/route-audit',
+                    params={'offset':3,'limit':3,'expected_snapshot':refreshed['snapshot']},headers={'x-admin-key':'test-only'})
+            self.assertEqual(denied.status_code,403)
+            self.assertEqual(stale.status_code,409)
+            self.assertEqual(stale.headers['cache-control'],'private, no-store')
+            self.assertNotIn('routes',stale.json())
+            self.assertNotIn('snapshot',stale.json())
+            self.assertNotEqual(first['snapshot'],refreshed['snapshot'])
+            self.assertEqual(current.status_code,200)
+
+    def test_conflict_after_first_page_is_reported_without_hooks(self):
+        loader = self.loader()
+        app = FastAPI()
+        app.router.routes.extend(Route(f'/existing/{n}',forbidden,methods=['GET']) for n in range(1005))
+        app.router.routes.append(Route('/late-conflict',forbidden,methods=['GET']))
+        router = APIRouter()
+        router.add_api_route('/late-conflict',forbidden,methods=['GET'])
+        module = types.SimpleNamespace(router=router,init_module=forbidden)
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory,'paging_plugin.py').write_text('')
+            with patch.dict(os.environ,{'AI_BS_BACKEND_BACKGROUND_ENABLED':'false'}),patch.dict(sys.modules,{'paging_plugin':module}):
+                rows = loader.PluginRegistry().discover_and_mount_plugins(app,[directory])
+        self.assertEqual(rows[0]['registration_status'],'registered')
+        self.assertEqual(rows[0]['init_status'],'skipped_policy')
+        conflict = next(c for c in rows[0]['conflicts'] if c['path']=='/late-conflict' and c['method']=='GET')
+        self.assertGreater(conflict['existing_indices'][0],1000)
+        self.assertFalse(rows[0]['conflicts_truncated'])
+
+    def test_incoming_plugin_tail_conflicts_are_also_reported(self):
+        loader = self.loader()
+        app = FastAPI()
+        app.router.routes.append(Route('/incoming-tail',forbidden,methods=['GET']))
+        router = APIRouter()
+        for n in range(1005):
+            router.add_api_route(f'/incoming/{n}',forbidden,methods=['GET'])
+        router.add_api_route('/incoming-tail',forbidden,methods=['GET'])
+        module = types.SimpleNamespace(router=router,init_module=forbidden)
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory,'incoming_plugin.py').write_text('')
+            with patch.dict(os.environ,{'AI_BS_BACKEND_BACKGROUND_ENABLED':'false'}),patch.dict(sys.modules,{'incoming_plugin':module}):
+                rows = loader.PluginRegistry().discover_and_mount_plugins(app,[directory])
+        self.assertTrue(any(c['path']=='/incoming-tail' for c in rows[0]['conflicts']))
+        self.assertFalse(rows[0]['conflicts_truncated'])
+
+    def test_depth_cycles_and_repeated_sibling_mounts_stay_bounded(self):
+        loader = self.loader()
+        cycle = Mount('/cycle',routes=[])
+        cycle.routes.append(cycle)
+        shared = Mount('/shared',routes=[Route('/leaf',forbidden,methods=['GET'])])
+        deep = Route('/bottom',forbidden,methods=['GET'])
+        for _ in range(12):
+            deep = Mount('/level',routes=[deep])
+        catalog = loader.collect_route_metadata([cycle,shared,shared,deep])
+        self.assertTrue(catalog['truncated'])
+        self.assertTrue(catalog['pagination']['traversal_truncated'])
+        self.assertTrue(catalog['pagination']['truncation_reasons']['cycle'])
+        self.assertTrue(catalog['pagination']['truncation_reasons']['depth'])
+        self.assertFalse(catalog['pagination']['truncation_reasons']['visits'])
+        self.assertIsNone(catalog['pagination']['total_routes'])
+        self.assertFalse(catalog['pagination']['complete'])
+        self.assertLessEqual(max(r['depth'] for r in catalog['routes']),8)
+        self.assertEqual(sum(r['path']=='/shared/leaf' for r in catalog['routes']),2)
+        self.assertTrue(any(r['path']=='/shared/leaf' for r in catalog['duplicates']))
+        self.assertEqual(catalog['snapshot'],loader.collect_route_metadata([cycle,shared,shared,deep])['snapshot'])
+
+    def test_global_visit_budget_cannot_claim_an_unvisited_total(self):
+        loader = self.loader()
+        produced = []
+        def routes():
+            for n in range(loader.ROUTE_AUDIT_MAX_VISITS+20):
+                produced.append(n)
+                yield Route(f'/visit-budget/{n}',forbidden,methods=['GET'])
+        catalog = loader.collect_route_metadata(routes(),offset=9000)
+        self.assertLessEqual(len(produced),loader.ROUTE_AUDIT_MAX_VISITS+1)
+        self.assertEqual(catalog['pagination']['visits'],loader.ROUTE_AUDIT_MAX_VISITS)
+        self.assertEqual(len(catalog['routes']),1000)
+        self.assertEqual(catalog['routes'][0]['index'],9000)
+        self.assertEqual(catalog['routes'][-1]['index'],9999)
+        self.assertTrue(catalog['pagination']['truncation_reasons']['visits'])
+        self.assertIsNone(catalog['pagination']['total_routes'])
+        self.assertFalse(catalog['pagination']['complete'])
+
+    def test_snapshot_covers_full_names_and_paths_beyond_display_bounds(self):
+        loader = self.loader()
+        first = Route('/'+'p'*2050+'left',forbidden,methods=['GET'],name='n'*260+'left')
+        second = Route('/'+'p'*2050+'right',forbidden,methods=['GET'],name='n'*260+'right')
+        left = loader.collect_route_metadata([first])
+        right = loader.collect_route_metadata([second])
+        self.assertEqual(left['routes'],right['routes'])
+        self.assertNotEqual(left['snapshot'],right['snapshot'])
+
+    def test_empty_tail_and_invalid_direct_bounds_are_explicit(self):
+        loader = self.loader()
+        empty = loader.collect_route_metadata([])
+        self.assertEqual(empty['routes'],[])
+        self.assertEqual(empty['pagination']['total_routes'],0)
+        self.assertTrue(empty['pagination']['complete'])
+        tail = loader.collect_route_metadata([Route('/one',forbidden)],offset=10000,limit=1)
+        self.assertEqual(tail['routes'],[])
+        self.assertIsNone(tail['pagination']['next_offset'])
+        self.assertEqual(tail['pagination']['total_routes'],1)
+        class MustNotIterate:
+            def __iter__(self):
+                forbidden()
+        for options in [{'offset':-1},{'offset':10001},{'offset':True},{'offset':1.5},
+                        {'limit':0},{'limit':1001},{'limit':True},{'limit':'10'}]:
+            with self.subTest(options=options),self.assertRaises(ValueError):
+                loader.collect_route_metadata(MustNotIterate(),**options)
+
+
 if __name__ == '__main__':
     unittest.main()

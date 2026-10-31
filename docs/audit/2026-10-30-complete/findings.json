@@ -1,6 +1,6 @@
 {
   "campaign_status": "IN_PROGRESS",
-  "source_version": "v5.329.77",
+  "source_version": "v5.329.78",
   "findings": [
     {
       "id": "B001",
@@ -836,7 +836,7 @@
     "Browser WebSocket credential adapter and remaining deep links/IPC/navigation issues remain open.",
     "Metadata census is not semantic review of every discovered file."
   ],
-  "updated_utc": "2026-10-31T05:41:25Z",
+  "updated_utc": "2026-10-31T07:47:42Z",
   "additional_findings": [
     {
       "id": "R197-WS",
@@ -897,9 +897,10 @@
     {
       "id": "R197-REGISTRY",
       "severity": "MEDIUM",
-      "status": "OPEN",
+      "status": "PARTIAL_PAGINATION_REPAIRED_OWNERSHIP_OPEN",
       "finding": "Actual route inventory reaches its1000route safety cap and includes179duplicate registration records; one chef plugin import fails.",
-      "remediation": "Continue bounded pagination and first-match registration/subsystem acceptance; registration alone does not establish functionality."
+      "remediation": "Continue bounded pagination and first-match registration/subsystem acceptance; registration alone does not establish functionality.",
+      "record200_resolution": "Runtime pages cover2300records/943duplicate registrations under stable snapshot. Owner/import/chef acceptance remains open."
     },
     {
       "id": "R197-TS",
@@ -943,9 +944,10 @@
     {
       "id": "R198-VECTOR-NATIVE",
       "severity": "HIGH",
-      "status": "OPEN_ISOLATED_REPRODUCTION",
+      "status": "OPEN_STRUCTURAL_HNSW_CORRUPTION_CONFIRMED",
       "finding": "Root Chroma native API traversal exits1 after32/34collections on two independent offline clones.",
-      "remediation": "Stopped repetition under two-strike rule; retained complete store originals. FTS integrity is repaired; full vector traversal/readiness is not certified. No Chroma service activated."
+      "remediation": "Stopped repetition under two-strike rule; retained complete store originals. FTS integrity is repaired; full vector traversal/readiness is not certified. No Chroma service activated.",
+      "record200_resolution": "Specific graph corruption and2338identity/vector authority gaps diagnosed; originals preserved. No data repair promoted."
     },
     {
       "id": "R198-TRUTH",
@@ -975,6 +977,36 @@
       "status": "REPAIRED_VERIFIED",
       "finding": "Blind Invoke-Expression over all available skills/scripts would execute unrelated capabilities and obscure partial failures.",
       "remediation": "Fixed four-job allowlist, explicit executable argument arrays, dispatch holds, per-job evidence and aggregate nonzero exit. No arbitrary command interpretation."
+    }
+  ],
+  "record200_findings": [
+    {
+      "id": "R200-NATIVE",
+      "severity": "HIGH",
+      "status": "INVESTIGATED_RECOVERY_OPEN",
+      "finding": "Malformed upper links and duplicate active labels cause unsafe replay; native access violation reproduced on complete clone.",
+      "remediation": "Read-only diagnostic added; no guesswork/data promotion; authoritative identity recovery still required."
+    },
+    {
+      "id": "R200-OUTREACH",
+      "severity": "HIGH",
+      "status": "SOURCE_AND_OFFLINE_VERIFIED_LOADED_UNDER_HOLDS",
+      "finding": "Review hold was false and activation flags could enable RecDebut in test contracts.",
+      "remediation": "Hard review hold restored;108affected cases pass; backend restarted with explicit holds."
+    },
+    {
+      "id": "R200-REGISTRY",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_VERIFIED_PAGINATION",
+      "finding": "Catalog and plugin conflicts missed routes after1000.",
+      "remediation": "Bounded stable pagination/globalconflict metadata; full observed2300record runtime traversal. Duplicate ownership still open."
+    },
+    {
+      "id": "R200-HARNESS",
+      "severity": "MEDIUM",
+      "status": "INCIDENTS_ACCOUNTED_INTEGRATION_HELD",
+      "finding": "Native filesystem and credential APIs bypass Python audit hooks.",
+      "remediation": "Task-created empty dirs safely removed; inert credential fixture; unsafe integration groups held. No OS-sandbox claim."
     }
   ]
 }

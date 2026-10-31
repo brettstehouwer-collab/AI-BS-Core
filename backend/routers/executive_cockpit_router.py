@@ -700,7 +700,19 @@ async def rollback_vibe_checkpoint():
 
 
 @router.get("/route-audit")
-async def get_route_audit(request: Request):
-    """Report bounded runtime registration metadata without invoking endpoints."""
+async def get_route_audit(
+    request: Request,
+    offset: int = Query(0, ge=0, le=10000),
+    limit: int = Query(1000, ge=1, le=1000),
+    expected_snapshot: Optional[str] = Query(None, min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$"),
+):
+    """Page private registration metadata; reject stale multi-page snapshots."""
     from core.plugin_loader import collect_route_metadata
-    return collect_route_metadata(request.app.routes)
+    result = collect_route_metadata(request.app.routes, offset=offset, limit=limit)
+    if expected_snapshot is not None and result["snapshot"] != expected_snapshot:
+        raise HTTPException(
+            status_code=409,
+            detail="Route registration changed; restart the audit from its first page.",
+            headers=dict(HOST_CONTROL_PRIVATE_HEADERS),
+        )
+    return result

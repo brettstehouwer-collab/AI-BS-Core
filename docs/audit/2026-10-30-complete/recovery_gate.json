@@ -60,5 +60,8 @@
   },
   "source_backup_note": "typescript198_before includes3758existing files and2absent targets. Earlier runtime local Chroma snapshot omitted4vector files; fresh complete5file local package now verified. Root vector preimage remains in runtime package.",
   "repaired_delta_note": "Repaired143870863byte encrypted delta contains only2SQLite files; overlay requires matching original complete stores/vectors.167vector files verified unchanged.",
-  "record198_after_packages": "Manifest and separate remote restore receipts in restricted campaign; source handoff names exact commit."
+  "record198_after_packages": "Manifest and separate remote restore receipts in restricted campaign; source handoff names exact commit.",
+  "record200_before": "record200_before.aibs",
+  "record200_runtime_before_restart": "record200_runtime_before_restart.aibs",
+  "record200_after_and_evidence": "See separate verified receipts after cloud upload"
 }

@@ -1,8 +1,10 @@
 """Deterministic registration; initialization is separately and truthfully reported."""
 import contextlib
 import copy
+import hashlib
 import importlib
 import inspect
+import json
 import logging
 import os
 import pkgutil
@@ -16,10 +18,16 @@ logger = logging.getLogger("AIBS_PluginLoader")
 async def _held_lifespan(app):
     yield
 
-def collect_route_metadata(routes):
-    """Read bounded registration structure, including FastAPI lazy include slots.
+ROUTE_AUDIT_MAX_PAGE = 1000
+ROUTE_AUDIT_MAX_DEPTH = 8
+ROUTE_AUDIT_MAX_VISITS = 10000
 
-    Never build effective route/dependency contexts or invoke endpoint handlers.
+
+def _collect_route_catalog(routes):
+    """Observe a finite registration catalog without invoking handlers or hooks.
+
+    The visit budget covers lazy include slots as well as rendered route rows.
+    A page-size bound must not hide late conflicts from plugin registration.
     """
     from itertools import islice
     from starlette.routing import Mount, Route, WebSocketRoute
@@ -28,32 +36,43 @@ def collect_route_metadata(routes):
         included_types = (_IncludedRouter,)
     except ImportError:
         included_types = ()
-    max_routes, max_depth, max_visits = 1000, 8, 4000
     rows, duplicates, seen = [], [], {}
-    truncated = False
+    reasons = {"depth": False, "cycle": False, "visits": False}
     visits = 0
+    snapshot = hashlib.sha256()
 
     def walk(items, prefix="", depth=0, ancestors=frozenset()):
-        nonlocal truncated, visits
-        for route in islice(items, max_visits + 1):
+        nonlocal visits
+        for route in islice(items, ROUTE_AUDIT_MAX_VISITS + 1):
+            if visits >= ROUTE_AUDIT_MAX_VISITS:
+                reasons["visits"] = True
+                return
             visits += 1
-            if visits > max_visits or len(rows) >= max_routes:
-                truncated = True
-                break
             if isinstance(route, included_types):
-                if depth >= max_depth or id(route) in ancestors:
-                    truncated = True
+                if id(route) in ancestors:
+                    reasons["cycle"] = True
+                elif depth >= ROUTE_AUDIT_MAX_DEPTH:
+                    reasons["depth"] = True
                 else:
                     walk(route.original_router.routes, prefix + route.include_context.prefix,
                          depth + 1, ancestors | {id(route)})
+                if reasons["visits"]:
+                    return
                 continue
             path = prefix + str(getattr(route, "path", ""))
             kind = "mount" if isinstance(route, Mount) else "websocket" if isinstance(route, WebSocketRoute) else "http" if isinstance(route, Route) else "other"
             methods = sorted(route.methods or []) if kind == "http" else []
+            name = str(getattr(route, "name", "") or "")
             index = len(rows)
             rows.append({"index": index, "kind": kind, "path": path[:2048],
-                         "name": str(getattr(route, "name", "") or "")[:256],
+                         "name": name[:256],
                          "methods": methods, "depth": depth})
+            # Fingerprint full observed names/paths even when presentation fields
+            # are bounded. This is metadata identity, not endpoint-code identity.
+            encoded = json.dumps((index, kind, path, name, methods, depth),
+                                 ensure_ascii=True, separators=(",", ":")).encode("utf-8")
+            snapshot.update(len(encoded).to_bytes(8, "big"))
+            snapshot.update(encoded)
             for method in methods or [kind]:
                 key = (kind, method, path)
                 if key in seen:
@@ -62,13 +81,50 @@ def collect_route_metadata(routes):
                 else:
                     seen[key] = index
             if kind == "mount":
-                if depth >= max_depth or id(route) in ancestors:
-                    truncated = True
+                if id(route) in ancestors:
+                    reasons["cycle"] = True
+                elif depth >= ROUTE_AUDIT_MAX_DEPTH:
+                    reasons["depth"] = True
                 else:
                     walk(route.routes, path, depth + 1, ancestors | {id(route)})
+                if reasons["visits"]:
+                    return
     walk(routes)
-    return {"routes": rows, "duplicates": duplicates, "truncated": truncated,
-            "limits": {"routes": max_routes, "depth": max_depth, "visits": max_visits}}
+    snapshot.update(json.dumps((visits, reasons, ROUTE_AUDIT_MAX_VISITS,
+                                ROUTE_AUDIT_MAX_DEPTH), sort_keys=True).encode("utf-8"))
+    return {"routes": rows, "duplicates": duplicates,
+            "traversal_truncated": any(reasons.values()), "truncation_reasons": reasons,
+            "visits": visits, "snapshot": snapshot.hexdigest(),
+            "limits": {"routes": ROUTE_AUDIT_MAX_PAGE, "depth": ROUTE_AUDIT_MAX_DEPTH,
+                       "visits": ROUTE_AUDIT_MAX_VISITS}}
+
+
+def collect_route_metadata(routes, *, offset=0, limit=ROUTE_AUDIT_MAX_PAGE):
+    """Return one bounded page with global indexes and cross-page conflicts.
+
+    A metadata snapshot covers the observed finite catalog. Structural truncation
+    is reported separately; no total is claimed for unvisited routes.
+    """
+    if type(offset) is not int or not 0 <= offset <= ROUTE_AUDIT_MAX_VISITS:
+        raise ValueError("Route audit offset is outside the permitted range.")
+    if type(limit) is not int or not 1 <= limit <= ROUTE_AUDIT_MAX_PAGE:
+        raise ValueError("Route audit limit is outside the permitted range.")
+    catalog = _collect_route_catalog(routes)
+    end = offset + limit
+    page = catalog["routes"][offset:end]
+    next_offset = end if end < len(catalog["routes"]) else None
+    traversal_truncated = catalog["traversal_truncated"]
+    return {"routes": page,
+            "duplicates": [row for row in catalog["duplicates"] if offset <= row["index"] < end],
+            "truncated": traversal_truncated or next_offset is not None,
+            "limits": catalog["limits"], "snapshot": catalog["snapshot"],
+            "pagination": {"offset": offset, "limit": limit, "returned": len(page),
+                           "next_offset": next_offset,
+                           "total_routes": None if traversal_truncated else len(catalog["routes"]),
+                           "traversal_truncated": traversal_truncated,
+                           "truncation_reasons": catalog["truncation_reasons"],
+                           "visits": catalog["visits"],
+                           "complete": not traversal_truncated and next_offset is None}}
 
 class PluginRegistry:
     def __init__(self):
@@ -112,12 +168,13 @@ class PluginRegistry:
                             mounted.on_startup = []
                             mounted.on_shutdown = []
                         existing = {}
-                        existing_audit = collect_route_metadata(app.routes)
-                        info["conflicts_truncated"] = existing_audit["truncated"]
+                        existing_audit = _collect_route_catalog(app.routes)
+                        plugin_audit = _collect_route_catalog(router.routes)
+                        info["conflicts_truncated"] = existing_audit["traversal_truncated"] or plugin_audit["traversal_truncated"]
                         for row in existing_audit["routes"]:
                             for method in row["methods"] or [row["kind"]]:
                                 existing.setdefault((row["path"], method), []).append(row["index"])
-                        for row in collect_route_metadata(router.routes)["routes"]:
+                        for row in plugin_audit["routes"]:
                             for method in row["methods"] or [row["kind"]]:
                                 key = (row["path"], method)
                                 if key in existing:

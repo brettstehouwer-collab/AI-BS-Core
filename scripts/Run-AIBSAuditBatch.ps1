@@ -25,7 +25,8 @@ $jobs = @(
             'scripts.tests.test_media_pipeline_and_signing_integrity','scripts.tests.test_route_registration_integrity',
             'scripts.tests.test_creation_document_save','scripts.tests.test_document_revision_safety',
             'scripts.tests.test_crypto_integrity_containment','scripts.tests.test_crypto_execution_controls',
-            'scripts.tests.test_audit_batch_runner198')
+            'scripts.tests.test_audit_batch_runner198','scripts.tests.test_chroma_native_integrity',
+            'scripts.tests.test_chroma_inspector_cli')
     },
     @{
         Name = 'Clients'; Executable = $nodeExecutable

@@ -1,0 +1,266 @@
+{
+  "record": 200,
+  "source_version": "v5.329.78",
+  "updated_utc": "2026-10-31T07:47:42Z",
+  "status": "PARTIAL_VERIFICATION",
+  "accepted": {
+    "python_files": 88,
+    "python_testcases": 1378,
+    "python_skips": 0,
+    "node_files": 22,
+    "node_testcases": 226,
+    "node_skips": 0,
+    "guard_denials": 0
+  },
+  "accepted_total": 1604,
+  "inventory": {
+    "canonical_test_files": 121,
+    "python_files": 99,
+    "node_files": 22,
+    "all_parsed_without_application_collection": true,
+    "specialized_archive_fixture_files": 30
+  },
+  "held": {
+    "files": 11,
+    "attempted_cases_not_counted_as_accepted": 114,
+    "not_all_declared_cases_reached": true
+  },
+  "held_files": [
+    {
+      "path": "backend/tests/test_theatrical_ancestor_policy.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 13
+    },
+    {
+      "path": "backend/tests/test_theatrical_storage_blobs.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 16
+    },
+    {
+      "path": "backend/tests/test_theatrical_storage_roots.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 14
+    },
+    {
+      "path": "backend/tests/test_website_phone_pin.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 12
+    },
+    {
+      "path": "scripts/tests/test_coding_guest_runner.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 9
+    },
+    {
+      "path": "scripts/tests/test_commercial_access.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 6
+    },
+    {
+      "path": "scripts/tests/test_mobile_media_delivery.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 7
+    },
+    {
+      "path": "scripts/tests/test_native_startup_imports.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 1
+    },
+    {
+      "path": "scripts/tests/test_native_wav_export.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 19
+    },
+    {
+      "path": "scripts/tests/test_router_mount_integrity.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 7
+    },
+    {
+      "path": "scripts/tests/test_sync_gateway_evidence.py",
+      "kind": "python",
+      "status": "HELD_ISOLATION",
+      "testcases": 10
+    }
+  ],
+  "baseline_reviewed_batch": {
+    "path": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\verification200\\membership_baseline\\batch_20261031T074306Z_53e5a271",
+    "python_tests": 191,
+    "client_tests": 75,
+    "all_four_jobs_exit_zero": true,
+    "double_counted": false
+  },
+  "sqlite_fixtures": {
+    "retained_databases_checked": 337,
+    "passed": 337,
+    "read_only_bytes_unchanged": true,
+    "scope": "Retained synthetic E: fixtures; not an economic reconciliation or assertion that every historical database is healthy."
+  },
+  "native_chroma": {
+    "status": "CORRUPTION_DIAGNOSED_RECOVERY_OPEN",
+    "source_files_unchanged": 169,
+    "bad_segment": "2e1c203a-a4ae-42c8-995e-7703aea48a4d",
+    "native_exception": "0xC0000005",
+    "duplicate_active_labels": 1169,
+    "upper_link_offset": 18524,
+    "upper_link_bytes": 7340,
+    "required_level_multiple": 68,
+    "missing_identity_vectors": 1169,
+    "ambiguous_identity_vectors": 1169,
+    "queue_has_authoritative_replacements": false,
+    "data_repair_promoted": false,
+    "diagnostic_clones_promoted": false,
+    "native_health_claimed": false
+  },
+  "runtime_registry": {
+    "status": "VERIFIED_PAGINATION",
+    "utc": "2026-10-31T07:28:28Z",
+    "snapshot": "50069f81b6209b47f2d76c983838089f063b905cbf434f56fd1b7e6f8c71b5a6",
+    "pages": [
+      {
+        "offset": 0,
+        "rows": 1000,
+        "duplicates": 179,
+        "pagination": {
+          "offset": 0,
+          "limit": 1000,
+          "returned": 1000,
+          "next_offset": 1000,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": false
+        }
+      },
+      {
+        "offset": 1000,
+        "rows": 1000,
+        "duplicates": 663,
+        "pagination": {
+          "offset": 1000,
+          "limit": 1000,
+          "returned": 1000,
+          "next_offset": 2000,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": false
+        }
+      },
+      {
+        "offset": 2000,
+        "rows": 300,
+        "duplicates": 101,
+        "pagination": {
+          "offset": 2000,
+          "limit": 1000,
+          "returned": 300,
+          "next_offset": null,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": true
+        }
+      }
+    ],
+    "catalog_rows_observed": 2300,
+    "duplicate_registration_records_observed": 943,
+    "full_observed_catalog_traversal_complete": true,
+    "admission": {
+      "anonymous_invalid_query": 403,
+      "admin_invalid_query": 422,
+      "admin_stale_snapshot": 409
+    },
+    "private_no_store": true,
+    "dispatch_invoked": false,
+    "registered_handlers_invoked": false,
+    "credential_values_logged": false,
+    "limits": "Catalog metadata only; no proof of per-handler ownership/provider functionality. Global10000visit/depth8 bounds retained."
+  },
+  "runtime_admission": {
+    "probes": 14,
+    "all_expected": true,
+    "dispatch_invocations": 0
+  },
+  "build": {
+    "version": "v5.329.78",
+    "modules": 5678,
+    "files": 143,
+    "status": "VERIFIED",
+    "published": false
+  },
+  "source_changes": [
+    "BroadcastStudioApp/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/src/version.js",
+    "backend/core/chroma_native_integrity.py",
+    "backend/core/outbound_messaging_policy.py",
+    "backend/core/plugin_loader.py",
+    "backend/routers/executive_cockpit_router.py",
+    "backend/tests/test_personal_memory_authority.py",
+    "frontend/components/components/version.js",
+    "frontend/components/version.js",
+    "frontend/package-lock.json",
+    "frontend/package.json",
+    "frontend/public/version.json",
+    "frontend/src/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/version.js",
+    "frontend/version.js",
+    "package-lock.json",
+    "package.json",
+    "release.json",
+    "scripts/Run-AIBSAuditBatch.ps1",
+    "scripts/inspect_chroma_store.py",
+    "scripts/tests/test_chroma_inspector_cli.py",
+    "scripts/tests/test_chroma_native_integrity.py",
+    "scripts/tests/test_conversation_memory_context.mjs",
+    "scripts/tests/test_route_registration_integrity.py",
+    "version.txt"
+  ],
+  "live_trading": "DISABLED",
+  "payments_outreach_background": "HELD",
+  "recdebut_review_hold_restored": true,
+  "existing_firebase_release": "v5.329.77",
+  "scope_incidents": [
+    "Ten new empty C-root UUID fixture directories were created by native Win32 calls bypassing Python audit hooks; verified task-owned and removed nonrecursively. No existing data removal observed; no OS-wide ACL attestation.",
+    "One failed FE Express fixture may have read the exact local-service credential profile via native Windows APIs. No value was printed or network sent; corrected accepted fixture uses explicit inert credentials.",
+    "Git path length and sqlite3.Row comparison instrumentation defects corrected only in E: harnesses. Historical false negatives and intentional corruption fixtures retained."
+  ],
+  "guard_limit": "Python effect screening is not an operating-system sandbox. Eleven unsafe integration files remain held.",
+  "remaining": [
+    "Authoritative Chroma vector identity recovery",
+    "Duplicate registration ownership and plugin import effects",
+    "Missing chef analytics dependency",
+    "Native/VM/provider integration fixtures",
+    "Deep links, trainer IPC and server-session ownership",
+    "Provider credential rotation"
+  ],
+  "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "credentials_or_recovery_keys_included": false
+}

@@ -1,3 +1,13 @@
+# Current checkpoint — Record200 / v5.329.78
+
+2026-10-31T07:47:42Z. NativeChroma corruptiondiagnosed; originals preserved; authoritativevectorrecoveryOPEN.
+1604acceptedcasespass;11integrationfilesheld; wholeverificationPARTIAL. Registrypagination2300rows/943duplicateregistrations verified; reviewholdrestored.
+StrictTS/version/buildpass;8080sourcefreshunderholds;trading8007disabled. Firebase remainslastverifiedv77; sourcecandidatev78.
+Report docs/audit/2026-10-30-complete/INVESTIGATION_AND_VERIFICATION_v5.329.78.md . AllDriveuploadsremainestablishedsinglefolder.
+Previouscheckpointtextbelowishistorical. Next: vectorrecovery/duplicateownership/importeffects andisolationfortheheldnative/provider tests.
+
+---
+
 # Current deployment checkpoint — Record199 / v5.329.77
 
 2026-10-31T06:19:50Z; Firebasev77VERIFIED_DEPLOYED https://ai-bs-dashboard.web.app .

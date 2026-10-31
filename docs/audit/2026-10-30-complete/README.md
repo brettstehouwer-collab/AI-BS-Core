@@ -1,3 +1,13 @@
+# Current audit checkpoint — v5.329.78 / Record200
+
+2026-10-31T07:47:42Z. Verification PARTIAL: 1604 accepted cases pass;11 unsafe integration files held. StrictTypeScript/version checks/build pass.
+Native Chroma damage is diagnosed and preserved;2,338identity/vector associations need authoritative recovery. No repaired data promoted.
+Review hold restored; paginated runtime catalog observes2,300records/943duplicate registrations with admission and snapshot checks.
+See INVESTIGATION_AND_VERIFICATION_v5.329.78.md and VERIFICATION_v5.329.78.json for full limits and incidents.
+Live trading disabled;8007absent. Source/buildv78; Firebase last verifiedv77. Earlier records below are historical.
+
+---
+
 # Current Hosting checkpoint — v5.329.77 / Record199
 
 Firebase deployment is VERIFIED at https://ai-bs-dashboard.web.app (2026-10-31T06:19:50Z).
