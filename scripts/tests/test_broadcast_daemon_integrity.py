@@ -42,6 +42,12 @@ def load_daemon():
           'logging': Mock(), 'threading': types.SimpleNamespace(Thread=Mock()),
           'build_encoder_flags': lambda *a, **k: [], 'detect_microphone': lambda: 'fixture microphone',
           'OBSOrchestrator': None, 'open': Mock(return_value=opened)}
+    def capture_fixture(hwnd,pid,title,**kwargs):
+        return types.SimpleNamespace(width=2,height=2,fps=kwargs.get('fps',30),
+            start=Mock(return_value={'provider':'fixture_wgc','frame_available':True}),
+            read_frame=Mock(return_value=b'\x01'*16),stop=Mock(return_value=True))
+    ns['NativeWindowCapture']=Mock(side_effect=capture_fixture)
+    ns['WindowCapturePipe']=Mock(side_effect=lambda *a,**k:types.SimpleNamespace(start=Mock(),stop=Mock(return_value=True)))
     exec(compile(ast.Module(selected, type_ignores=[]), str(SOURCE), 'exec'), ns)
     daemon = object.__new__(ns['BroadcastDaemon'])
     daemon.process = process

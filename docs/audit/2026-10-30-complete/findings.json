@@ -1,6 +1,6 @@
 {
   "campaign_status": "IN_PROGRESS",
-  "source_version": "v5.329.80",
+  "source_version": "v5.329.81",
   "findings": [
     {
       "id": "B001",
@@ -903,6 +903,62 @@
       "paths": [
         "native_studio/broadcast_stream_engine.py"
       ]
+    },
+    {
+      "id": "G205-01",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_AND_ACTUAL_SURFACE_VERIFIED",
+      "title": "Lost capture identity or implicit desktop/foreground fallback",
+      "change": "Carry exact raw title, HWND and selection-time PID. Preserve caption whitespace; reject closed/minimized/changed identity. Selected-window WGC replaces occlusion-dependent GDI capture; no monitor/GDI/OBS fallback."
+    },
+    {
+      "id": "G205-02",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_AND_RUNTIME_CONTROL_VERIFIED",
+      "title": "Native broadcast service startup/cleanup lacked verified ownership",
+      "change": "Fixed localhost8005 single worker, bounded mutex/environment holds, exact command/socket/health PID and virtualenv ancestry checks, bounded cleanup only for the captured launcher and proven child."
+    },
+    {
+      "id": "G205-03",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Missing DAW or audio device could open an unrequested microphone",
+      "change": "Explicit microphone intent and actual enumeration only; unavailable/unselected audio becomes a valid silent AAC track. Accepted Facebook session intentionally uses silence."
+    },
+    {
+      "id": "G205-04",
+      "severity": "HIGH",
+      "status": "FIXED_EMPIRICALLY_AND_USER_INGEST_CONFIRMED",
+      "title": "Tee FLV/fMP4 lacked codec headers and produced invalid video/archive",
+      "change": "Add +global_header. CPU-only local fixture reproduced decode failure without it and passed both outputs after it. Actual readable WGC H.2641080+AAC game frame and subsequent Facebook LIVE screenshots confirm the corrected path."
+    },
+    {
+      "id": "G205-05",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Stale FFmpeg progress overwrote current-session telemetry",
+      "change": "Newline progress pipe, current captured-process/epoch ownership and parsed measured values."
+    },
+    {
+      "id": "G205-06",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Generic credential validation and stale destination/preset controls blocked a configured target",
+      "change": "Aggregate fixed platform names without private URL/key echo; explain unsupported local SRT/HLS; synchronize saved controls and retain explicit destination selections."
+    },
+    {
+      "id": "G205-07",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED_LIVE_PREVIEW_LIMITED",
+      "title": "Worker-thread QScreen preview could remain blank or stale",
+      "change": "GUI-owned100ms timer, explicit selected-window/separate desktop opt-in, inactive offscreen capture, unavailable-frame clearing and shutdown. QScreen occlusion/layered-window limitations remain."
+    },
+    {
+      "id": "G205-STORAGE",
+      "severity": "HIGH",
+      "status": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED",
+      "title": "Recent E audit writes could not be trusted on readback",
+      "change": "Release-summary read failed via Python Errno22 and .NET device-does-not-exist. Newly written close script subsequently read as NUL bytes. E writes stopped. Complete current source, exact verified old preimages, readable receipts and safe user screenshots were copied/readback-verified on C. E health/new archive integrity remain unverified."
     }
   ],
   "additional_review_fixes": [
@@ -1133,5 +1189,14 @@
     "source_paths": 43,
     "trading": "DISABLED",
     "desktop_control": "PAUSED"
+  },
+  "record205": {
+    "report": "docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md",
+    "status": "FACEBOOK_USER_CONFIRMED_C_LOCAL_CLOSE_PREPARED_ROOT_COMMIT_CLOUD_PENDING",
+    "facebook": "USER_CONFIRMED_SCREENSHOT",
+    "broadcast": "LEFT_RUNNING",
+    "trading": "DISABLED",
+    "tests": 255,
+    "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
   }
 }

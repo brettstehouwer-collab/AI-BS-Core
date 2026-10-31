@@ -12,17 +12,30 @@ def stream_payload(config: dict) -> dict:
     if network.get('stream_delay_sec', 0):
         raise ValueError('Broadcast delay is not enforced by the connected daemon; start held.')
     endpoints = []
+    problems = []
+    labels={'twitch':'Twitch','youtube':'YouTube','facebook':'Facebook','kick':'Kick','tiktok':'TikTok','sovereign_srt':'Local SRT'}
     for name, destination in config.get('destinations', {}).items():
         if destination.get('enabled') is not True:
             continue
-        url = destination.get('url', '').strip()
-        parsed = urlsplit(url)
+        label=labels.get(name,'Destination')
+        url = destination.get('url', '')
+        if not isinstance(url,str):
+            problems.append(label+': invalid server URL.');continue
+        url=url.strip()
+        try:parsed = urlsplit(url)
+        except ValueError:
+            problems.append(label+': invalid server URL.');continue
+        if parsed.scheme in {'srt','hls'}:
+            problems.append(label+': SRT/HLS output is not supported by this RTMP broadcaster. Disable it or use its dedicated output.');continue
         if parsed.scheme not in {'rtmp', 'rtmps'} or not parsed.hostname or parsed.username or parsed.password:
-            raise ValueError('An enabled destination needs a valid RTMP/RTMPS URL.')
-        key = destination.get('key', '').strip()
-        if not key:
-            raise ValueError('An enabled destination is missing its stream key.')
+            problems.append(label+': enter a valid RTMP/RTMPS server URL.');continue
+        key = destination.get('key', '')
+        if not isinstance(key,str) or not key.strip():
+            problems.append(label+': stream key missing. Add it in Setup Keys or disable this destination.');continue
+        key=key.strip()
         endpoints.append({'name':name, 'url':url, 'key':key, 'enabled':True})
+    if problems:
+        raise ValueError(' '.join(problems))
     if not endpoints:
         raise ValueError('Configure and enable a destination before starting a broadcast.')
     encoder = config.get('encoder', {})
@@ -47,6 +60,11 @@ def send_broadcast_command(kind: str, starting: bool, payload: dict) -> dict:
     """One fixed local command, no fallback/retry that could duplicate a start."""
     if kind not in {'stream','record'} or type(starting) is not bool:
         raise ValueError('Unknown broadcast command.')
+    if kind=='stream' and starting:
+        from native_studio.broadcast_service import ensure_broadcast_service_online
+        ready=ensure_broadcast_service_online()
+        if ready.get('status')!='ready':
+            return {'status':'service_unavailable','error_code':ready.get('code','SERVICE_UNAVAILABLE')}
     suffix = 'start' if starting else 'stop'
     url = f'http://127.0.0.1:8005/stream/{suffix}' if kind=='stream' else f'http://127.0.0.1:8088/api/kernel/record/{suffix}'
     request = urllib.request.Request(url, data=json.dumps(payload,allow_nan=False).encode('utf-8'), headers={'Content-Type':'application/json'}, method='POST')

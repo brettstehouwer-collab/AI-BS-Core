@@ -117,9 +117,9 @@ def get_desktop_capture_windows() -> List[Dict[str, Any]]:
                 if length > 0:
                     buff = ctypes.create_unicode_buffer(length + 1)
                     user32.GetWindowTextW(hwnd, buff, length + 1)
-                    title = buff.value.strip()
+                    title = buff.value
                     ignored = {"Program Manager", "Windows Input Experience", "Default IME", "MSCTFIME UI"}
-                    if title and title not in ignored:
+                    if title.strip() and title not in ignored:
                         rect = wintypes.RECT()
                         user32.GetWindowRect(hwnd, ctypes.byref(rect))
                         w = rect.right - rect.left
@@ -238,30 +238,93 @@ class LiveBroadcastCanvas(QWidget):
         self._anim_timer.timeout.connect(self._on_anim_tick)
         self._anim_timer.start(50)  # 20 FPS monitor refresh for HUD animations
 
-        # Live capture thread with window-specific hook and scaling cache
+        # QScreen and QPixmap are GUI objects. Capture on this widget's GUI
+        # thread through a bounded timer, never through the legacy QThread.
         self._current_frame: Optional[QPixmap] = None
         self._cached_scaled_frame: Optional[QPixmap] = None
         self._cached_scaled_size: tuple[int, int] = (0, 0)
-        self._capture_thread = NativeScreenCaptureThread(target_fps=30, parent=self)
-        self._capture_thread.frame_ready.connect(self._on_frame_received)
-        if os.environ.get("QT_QPA_PLATFORM") != "offscreen":
-            self._capture_thread.start()
+        self._capture_thread = None  # compatibility identity; never instantiated
+        self._capture_hwnd = 0
+        self._desktop_capture_enabled = False
+        self._preview_shutdown = False
+        self.preview_capture_status = "Select a window to preview."
+        self._capture_timer = QTimer(self)
+        self._capture_timer.setInterval(100)  # at most 10 preview grabs per second
+        self._capture_timer.timeout.connect(self._capture_preview_frame)
 
     def set_target_window(self, hwnd: int, title: str = "") -> None:
-        """Sets the specific window HWND to capture directly, eliminating desktop DC contention."""
-        self._capture_thread.set_target_window(hwnd, title)
+        """Select an explicit HWND; zero never authorizes foreground capture."""
+        self._capture_hwnd = hwnd if type(hwnd) is int and hwnd > 0 else 0
+        self._clear_capture_frame()
+        self._sync_capture_timer()
         if title:
             clean_title = title if (title.startswith("🎮") or title.startswith("⚡")) else f"🎮 {title}"
             self.active_source_title = clean_title
         self.update()
 
     def _on_frame_received(self, pixmap: QPixmap) -> None:
+        if pixmap is None or pixmap.isNull():
+            self._clear_capture_frame()
+            return
         self._current_frame = pixmap
         self._cached_scaled_frame = None  # Invalidate cached scaled pixmap
         self.update()
 
+    def set_desktop_capture_enabled(self, enabled: bool) -> None:
+        """Opt into screen preview separately from selecting a window."""
+        self._desktop_capture_enabled = enabled is True
+        self._clear_capture_frame()
+        self._sync_capture_timer()
+
+    def _clear_capture_frame(self) -> None:
+        self._current_frame = None
+        self._cached_scaled_frame = None
+        self._cached_scaled_size = (0, 0)
+        self.update()
+
+    def _sync_capture_timer(self) -> None:
+        selected = (self._game_capture_enabled and self._capture_hwnd > 0) or self._desktop_capture_enabled
+        if (self._preview_shutdown or not selected
+                or QGuiApplication.platformName().lower() in {"offscreen", "minimal"}
+                or os.environ.get("QT_QPA_PLATFORM", "").lower() in {"offscreen", "minimal"}):
+            self._capture_timer.stop()
+            return
+        self._capture_timer.start()
+
+    def _capture_preview_frame(self) -> None:
+        """One GUI-thread grab of only the selected window or opted-in screen."""
+        if QThread.currentThread() != self.thread() or self._preview_shutdown:
+            return
+        target = self._capture_hwnd if self._game_capture_enabled and self._capture_hwnd > 0 else None
+        if target is None and self._desktop_capture_enabled:
+            target = 0
+        if target is None:
+            self.preview_capture_status = "Select a window to preview."
+            self._clear_capture_frame()
+            return
+        try:
+            if target > 0:
+                user32 = ctypes.windll.user32 if ctypes is not None else None
+                if (user32 is None or not user32.IsWindow(target)
+                        or not user32.IsWindowVisible(target) or user32.IsIconic(target)):
+                    raise ValueError("Selected preview window is unavailable")
+            screen = QGuiApplication.primaryScreen()
+            if screen is None:
+                raise ValueError("Preview screen is unavailable")
+            pixmap = screen.grabWindow(target)
+            if pixmap.isNull() or pixmap.width() <= 10 or pixmap.height() <= 10:
+                raise ValueError("Preview pixels are unavailable")
+            self.preview_capture_status = "Selected window preview." if target else "Explicit screen preview."
+            self._on_frame_received(pixmap)
+        except Exception:
+            self.preview_capture_status = "Preview unavailable; no frame captured."
+            self._clear_capture_frame()
+
     def set_game_capture_enabled(self, enabled: bool) -> None:
         self._game_capture_enabled = enabled
+        if not enabled:
+            self._clear_capture_frame()
+        self._sync_capture_timer()
         self.update()
 
     def set_pip_camera_enabled(self, enabled: bool) -> None:
@@ -312,9 +375,10 @@ class LiveBroadcastCanvas(QWidget):
     def shutdown(self) -> None:
         if hasattr(self, "_anim_timer") and self._anim_timer.isActive():
             self._anim_timer.stop()
-        if hasattr(self, "_capture_thread") and self._capture_thread.isRunning():
-            self._capture_thread.stop()
-            self._capture_thread.wait(1000)
+        self._preview_shutdown = True
+        if hasattr(self, "_capture_timer"):
+            self._capture_timer.stop()
+        self._clear_capture_frame()
 
     def closeEvent(self, event: Any) -> None:
         self.shutdown()
@@ -869,7 +933,8 @@ class LiveScenesAndSourcesWidget(QWidget):
         item, ok = QInputDialog.getItem(self, "Add Broadcast Source", "Select Source Type:", types, 0, False)
         if ok and item:
             new_id = f"s{len(self.sources_list) + 1}"
-            self.sources_list.append({"id": new_id, "name": f"➕ {item}", "type": "custom", "enabled": True})
+            source_type = {"Game Hook (DirectX 11)":"game", "Webcam / UVC Device":"cam", "Screen / Display Capture":"screen", "DAW Audio Stems":"daw", "ComfyUI Visual Stream":"comfy", "Text / Chat HUD":"text"}[item]
+            self.sources_list.append({"id": new_id, "name": f"➕ {item}", "type": source_type, "enabled": True})
             self._refresh_sources_ui()
 
 
@@ -884,10 +949,10 @@ class ChannelVuMeter(QWidget):
         super().__init__(parent)
         self.setFixedWidth(16)
         self.setFixedHeight(110)
-        self.left_peak = 0.65
-        self.right_peak = 0.60
-        self.target_l = 0.65
-        self.target_r = 0.60
+        self.left_peak = 0.0
+        self.right_peak = 0.0
+        self.target_l = 0.0
+        self.target_r = 0.0
 
     def set_levels(self, l: float, r: float) -> None:
         self.target_l = max(0.0, min(1.0, l))
@@ -1057,6 +1122,8 @@ class ActiveGameDiscoveryWidget(QFrame):
         self.bus = bus
         self.setStyleSheet("background: #0d121d; border: 1px solid #1e293b; border-radius: 8px; padding: 10px;")
         self._window_map: Dict[str, int] = {}
+        self._window_title_by_handle: Dict[int, str] = {}
+        self._window_pid_by_handle: Dict[int, int] = {}
         self._current_window_items: List[tuple[str, int]] = []
         self._daemon_games: List[str] = []
         self._probe_inflight = False
@@ -1109,11 +1176,14 @@ class ActiveGameDiscoveryWidget(QFrame):
     def _on_game_changed(self, idx: int) -> None:
         selected_text = self.combo_games.currentText()
         hwnd = self._window_map.get(selected_text, 0)
-        self.game_selected.emit(selected_text, hwnd)
+        raw_title=self._window_title_by_handle.get(hwnd,selected_text)
+        self.game_selected.emit(raw_title, hwnd)
 
     def fetch_active_windows(self) -> None:
         """Queries OS desktop windows directly and queries Port 8005/8088 asynchronously for running games."""
         real_windows = get_desktop_capture_windows()
+        self._window_title_by_handle={w["hwnd"]:w["title"] for w in real_windows}
+        self._window_pid_by_handle={w["hwnd"]:w["pid"] for w in real_windows if type(w.get("pid")) is int}
         filter_kw = self.txt_custom.text().strip().lower() if hasattr(self, "txt_custom") else ""
 
         auto_label = "⚡ Auto-Detect Foreground Game/Window"
@@ -1225,6 +1295,7 @@ class MultiRtmpSettingsWidget(QFrame):
         self._probe_thread: Optional[PlatformPingProbeThread] = None
         self._profile_mgr = StreamProfileManager()
         self._build_ui()
+        self.load_saved_settings(self._profile_mgr.load())
 
     def _build_ui(self) -> None:
         lay = QVBoxLayout(self)
@@ -1423,17 +1494,7 @@ class MultiRtmpSettingsWidget(QFrame):
         else:
             self.combo_res.setCurrentIndex(0)
 
-        # 4. Check the appropriate destination
-        if platform_id == "Twitch":
-            self.chk_tw.setChecked(True)
-        elif platform_id == "YouTube Live":
-            self.chk_yt.setChecked(True)
-        elif platform_id == "Kick":
-            self.chk_kick.setChecked(True)
-        elif platform_id == "TikTok Live" and "tiktok" in self.dest_checkboxes:
-            self.dest_checkboxes["tiktok"].setChecked(True)
-        elif platform_id == "Sovereign Broadcast":
-            self.chk_hls.setChecked(True)
+        # Encoder profiles do not change the user-selected destinations.
 
         gop_sec = spec.get("keyframe_interval_sec", 2.0)
         rc = spec.get("rate_control", "CBR")
@@ -1499,12 +1560,25 @@ class MultiRtmpSettingsWidget(QFrame):
     def _auto_select_best(self) -> None:
         self.apply_platform_preset("YouTube Live")
 
+    def load_saved_settings(self, config: dict) -> None:
+        for key, checkbox in self.dest_checkboxes.items():
+            name='sovereign_srt' if key=='sovereign' else key
+            checkbox.setChecked(config.get('destinations',{}).get(name,{}).get('enabled') is True)
+        encoder=config.get('encoder',{})
+        values=[(self.combo_codec,str(encoder.get('codec','H.264 (CBR Studio Standard)'))),
+                (self.combo_res,str(encoder.get('resolution','1920x1080'))),
+                (self.combo_bitrate,f"{int(encoder.get('bitrate_kbps',6000)):,} kbps")]
+        for combo,value in values:
+            index=next((i for i in range(combo.count()) if combo.itemText(i)==value or combo.itemText(i).startswith(value+' ')), -1)
+            if index<0:
+                combo.addItem(value);index=combo.count()-1
+            combo.setCurrentIndex(index)
+
     def _open_requirements_dialog(self) -> None:
         dlg = StreamRequirementsDialog(parent=self)
+        dlg.profile_applied.connect(self.load_saved_settings)
         if dlg.exec() == QDialog.DialogCode.Accepted:
-            applied = dlg.get_selected_platform_profile()
-            if applied:
-                self.apply_platform_preset(applied)
+            self.load_saved_settings(dlg.cfg)
 
     def shutdown(self) -> None:
         if self._probe_thread and self._probe_thread.isRunning():
@@ -2181,6 +2255,10 @@ class UniversalOmniStudioNativeView(QWidget):
             self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🖥️ Canvas switched to 16:9 Landscape (YouTube/Twitch).")
 
     def _on_game_selected(self, game_title: str, hwnd: int = 0) -> None:
+        self._selected_capture_hwnd = hwnd
+        self._selected_capture_title = game_title
+        discovery=getattr(self,'game_discovery',None)
+        self._selected_capture_pid=getattr(discovery,'_window_pid_by_handle',{}).get(hwnd)
         self.canvas.set_target_window(hwnd, game_title)
         mode_desc = f"Window HWND {hwnd}" if hwnd > 0 else "Auto-Foreground Hook"
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Window-Specific Capture attached to: {game_title} ({mode_desc}) • Preview selection; capture performance not measured.")
@@ -2204,9 +2282,10 @@ class UniversalOmniStudioNativeView(QWidget):
         state = "ENABLED" if enabled else "DISABLED"
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎛️ Layer '{source_name}' {state}.")
         s_lower = source_name.lower()
-        if "game" in s_lower:
-            self.canvas.set_game_capture_enabled(enabled)
-        elif "sony" in s_lower or "cam" in s_lower:
+        primary=next((s for s in self.scenes_sources.sources_list if s.get('enabled') is True and s.get('type') in {'game','window','screen','desktop'}),None)
+        self.canvas.set_game_capture_enabled(primary is not None)
+        self.canvas.set_desktop_capture_enabled(primary is not None and primary.get('type') in {'screen','desktop'})
+        if "sony" in s_lower or "cam" in s_lower:
             self.canvas.set_pip_camera_enabled(enabled)
         elif "daw" in s_lower or "audio" in s_lower or "stems" in s_lower:
             self.canvas.set_audio_hud_enabled(enabled)
@@ -2231,7 +2310,30 @@ class UniversalOmniStudioNativeView(QWidget):
         encoder['resolution']=self.rtmp_settings.combo_res.currentText().split()[0]
         encoder['bitrate_kbps']=int(self.rtmp_settings.combo_bitrate.currentText().split()[0].replace(',',''))
         encoder['fps']=int(self.combo_fps.currentText().split()[0])
-        return stream_payload(config)
+        payload=stream_payload(config)
+        sources=[]
+        hwnd=getattr(self,'_selected_capture_hwnd',0)
+        title=getattr(self,'_selected_capture_title','')
+        for source in self.scenes_sources.sources_list:
+            if source.get('enabled') is not True: continue
+            kind=source.get('type')
+            if kind in {'game','window'}:
+                if type(hwnd) is not int or hwnd<=0:
+                    raise ValueError('Select a window in Window-Specific Capture Engine, or add an explicit Screen / Display Capture source.')
+                selected={'type':'window','hwnd':hwnd,'name':title,'enabled':True}
+                pid=getattr(self,'_selected_capture_pid',None)
+                if type(pid) is int and pid>0: selected['pid']=pid
+                sources.append(selected)
+            elif kind in {'screen','desktop'}:
+                sources.append({'type':'screen','name':'Desktop Screen 1','enabled':True})
+            elif kind in {'mic','daw','guest','desktop_audio'}:
+                sources.append(dict(source))
+            elif kind=='cam' and source.get('deviceId'):
+                sources.append(dict(source))
+        if not any(source['type'] in {'window','screen','cam'} for source in sources):
+            raise ValueError('Enable a selected window or explicit Screen / Display Capture source before starting.')
+        payload.update(game_name=title if hwnd else 'Desktop Screen 1',sources=sources)
+        return payload
 
     def _toggle_stream(self) -> None:
         self._dispatch_broadcast('stream', not self._is_streaming)
@@ -2242,8 +2344,12 @@ class UniversalOmniStudioNativeView(QWidget):
             return
         try:
             payload = self._stream_payload() if kind == 'stream' and starting else {}
-        except (ValueError, TypeError, KeyError):
-            self.txt_telemetry.append('Broadcast held: configure enabled destinations and required keys. Unsupported stream delay must be zero.')
+        except ValueError as exc:
+            # Payload errors are fixed labels and never contain URLs/credentials.
+            self.txt_telemetry.append('Broadcast held: ' + str(exc))
+            return
+        except (TypeError, KeyError):
+            self.txt_telemetry.append('Broadcast held: saved settings are invalid. Review Setup Keys and capture selection.')
             return
         button.setEnabled(False)
         self.txt_telemetry.append(f'{kind.title()} request pending; destination acceptance and media health are not verified.')
@@ -2346,10 +2452,11 @@ class UniversalOmniStudioNativeView(QWidget):
 
     def _open_stream_requirements_dialog(self) -> None:
         dlg = StreamRequirementsDialog(parent=self)
+        dlg.profile_applied.connect(self.rtmp_settings.load_saved_settings)
         if dlg.exec() == QDialog.DialogCode.Accepted:
-            applied = dlg.get_selected_platform_profile()
-            if applied and hasattr(self, "rtmp_settings"):
-                self.rtmp_settings.apply_platform_preset(applied)
+            self.rtmp_settings.load_saved_settings(dlg.cfg)
+            fps=str(dlg.cfg.get('encoder',{}).get('fps',60))+' FPS'
+            self.combo_fps.setCurrentText(fps)
 
     def _on_platform_preset_selected(self, platform_id: str, spec: dict) -> None:
         max_res = spec.get("max_resolution", "1920x1080")

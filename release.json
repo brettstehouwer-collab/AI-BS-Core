@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "version": "5.329.80",
-  "release_tag": "v5.329.80",
+  "version": "5.329.81",
+  "release_tag": "v5.329.81",
   "release_date": "2026-10-31",
   "version_authority": "version.txt",
   "artifact_scope": "application-source"

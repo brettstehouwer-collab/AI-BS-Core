@@ -1,7 +1,7 @@
 {
   "status": "IN_PROGRESS",
   "client_date": "2026-10-30",
-  "source_version": "v5.329.80",
+  "source_version": "v5.329.81",
   "repository": {
     "checkpoint_parent": "ce1fa4430a069fa5420fa766b8d7687d89025809",
     "branch": "codex/audit-v532976-20261031",
@@ -392,5 +392,14 @@
     "source_paths": 43,
     "trading": "DISABLED",
     "desktop_control": "PAUSED"
+  },
+  "record205": {
+    "report": "docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md",
+    "status": "FACEBOOK_USER_CONFIRMED_C_LOCAL_CLOSE_PREPARED_ROOT_COMMIT_CLOUD_PENDING",
+    "facebook": "USER_CONFIRMED_SCREENSHOT",
+    "broadcast": "LEFT_RUNNING",
+    "trading": "DISABLED",
+    "tests": 255,
+    "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
   }
 }

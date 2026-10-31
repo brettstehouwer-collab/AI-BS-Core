@@ -66,12 +66,21 @@
   "record200_after_and_evidence": "See separate verified receipts after cloud upload",
   "record203": "See encryptedbefore/after/runtime/evidence receipts and native delta full-target reconstruction proof.",
   "native79_delta_requires_record201_base": true,
-  "source_version": "v5.329.80",
+  "source_version": "v5.329.81",
   "record204": {
     "report": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
     "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
     "source_paths": 43,
     "trading": "DISABLED",
     "desktop_control": "PAUSED"
+  },
+  "record205": {
+    "report": "docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md",
+    "status": "FACEBOOK_USER_CONFIRMED_C_LOCAL_CLOSE_PREPARED_ROOT_COMMIT_CLOUD_PENDING",
+    "facebook": "USER_CONFIRMED_SCREENSHOT",
+    "broadcast": "LEFT_RUNNING",
+    "trading": "DISABLED",
+    "tests": 255,
+    "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
   }
 }
