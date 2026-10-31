@@ -222,6 +222,7 @@ class LiveBroadcastCanvas(QWidget):
         self.is_recording = False
         self._coordinator_preview_unavailable = False
         self._program_preview_image: Optional[QImage] = None
+        self._program_preview_state = 'unavailable'
         self.orientation = "horizontal"  # "horizontal" (16:9) | "vertical" (9:16)
         self.active_source_title = "🎮 Direct3D 11 Zero-Copy Hook: Standby"
         self.resolution_text = "1920x1080 @ 60 FPS"
@@ -428,6 +429,10 @@ class LiveBroadcastCanvas(QWidget):
         self._program_preview_image = None
         self.update()
 
+    def set_program_preview_status(self, state: str) -> None:
+        self._program_preview_state = state
+        self.update()
+
     def set_recording(self, recording: bool) -> None:
         self.is_recording = recording
         self.update()
@@ -495,7 +500,11 @@ class LiveBroadcastCanvas(QWidget):
                 return
             painter.setPen(QPen(QColor('#cbd5e1')))
             painter.setFont(QFont('Segoe UI',12,QFont.Weight.Bold))
-            painter.drawText(QRectF(12,h/2-32,w-24,28),Qt.AlignmentFlag.AlignCenter,'Preview unavailable')
+            labels = {'disabled': 'Program preview is off', 'closed': 'Program preview is off',
+                      'held': 'Waiting for a verified source', 'waiting': 'Waiting for program preview',
+                      'buffering': 'Program preview is buffering', 'stale': 'Program preview is stale'}
+            painter.drawText(QRectF(12,h/2-32,w-24,28),Qt.AlignmentFlag.AlignCenter,
+                             labels.get(self._program_preview_state, 'Preview unavailable'))
             painter.setFont(QFont('Segoe UI',9))
             painter.drawText(QRectF(12,h/2+4,w-24,24),Qt.AlignmentFlag.AlignCenter,'Output 1280x720 30 FPS')
             return
@@ -2166,9 +2175,11 @@ class UniversalOmniStudioNativeView(QWidget):
         pb_lay.setContentsMargins(4, 2, 4, 2)
         pb_lay.setSpacing(6)
 
-        # Studio Mode A/B Button
-        self.btn_studio_mode = QPushButton("🎛️ Studio Mode: OFF")
+        # This prominent control shares the real decoder intent with the checkbox.
+        self.btn_studio_mode = QPushButton("Program preview: ON")
         self.btn_studio_mode.setCheckable(True)
+        self.btn_studio_mode.setChecked(True)
+        self.btn_studio_mode.setToolTip("Read-only delayed program monitor. This does not change or restart the broadcast.")
         self.btn_studio_mode.setStyleSheet(
             "QPushButton { background: #111827; color: #94a3b8; font-size: 7.2pt; font-weight: bold; border: 1px solid #334155; border-radius: 3px; padding: 2px 7px; }"
             "QPushButton:checked { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }"
@@ -2268,7 +2279,7 @@ class UniversalOmniStudioNativeView(QWidget):
         self._program_preview.frame_ready.connect(self.canvas.set_program_preview_image)
         self._program_preview.cleared.connect(self.canvas.clear_program_preview)
         self._program_preview.state_changed.connect(self._apply_preview_status)
-        self.chk_program_preview.toggled.connect(self._program_preview.set_preview_enabled)
+        self.chk_program_preview.toggled.connect(self._on_program_preview_toggled)
         cp_lay.addWidget(self.canvas, 1)
 
         top_split.addWidget(canvas_panel)
@@ -2585,16 +2596,27 @@ class UniversalOmniStudioNativeView(QWidget):
                   'showing': 'Preview: delayed', 'held': 'Preview: held',
                   'stale': 'Preview: stale', 'disabled': 'Preview: off',
                   'unavailable': 'Preview: unavailable', 'closed': 'Preview: off'}
-        self.lbl_preview_status.setText(labels.get(state.get('state'), 'Preview: unavailable'))
+        preview_state = state.get('state') if self.chk_program_preview.isChecked() else 'disabled'
+        self.lbl_preview_status.setText(labels.get(preview_state, 'Preview: unavailable'))
+        self.canvas.set_program_preview_status(preview_state)
+
+    def _on_program_preview_toggled(self, checked: bool) -> None:
+        previous = self.btn_studio_mode.blockSignals(True)
+        try:
+            self.btn_studio_mode.setChecked(checked)
+            self.btn_studio_mode.setText('Program preview: ON' if checked else 'Program preview: OFF')
+        finally:
+            self.btn_studio_mode.blockSignals(previous)
+        self._program_preview.set_preview_enabled(checked)
+        if not checked:
+            self.canvas.clear_program_preview()
+        self._apply_preview_status(self._program_preview.preview_status())
 
     def _launch_ue_signaling(self) -> None:
         self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎮 Unreal signaling is not checked; this control has no connected launcher.")
 
     def _on_studio_mode_toggled(self, checked: bool) -> None:
-        self.canvas.set_studio_mode(checked)
-        self.btn_studio_mode.setText("🎛️ Studio Mode: ON" if checked else "🎛️ Studio Mode: OFF")
-        mode_str = "DUAL A/B (Preview Staging + Program Live)" if checked else "SINGLE MONITOR (Program Live)"
-        self.txt_telemetry.append(f"[{time.strftime('%H:%M:%S')}] 🎛️ Broadcast Output Mode switched to: {mode_str}.")
+        self.chk_program_preview.setChecked(checked)
 
     def _on_safe_areas_toggled(self, checked: bool) -> None:
         self.canvas.set_safe_areas_enabled(checked)

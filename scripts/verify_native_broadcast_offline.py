@@ -184,6 +184,8 @@ GROUPS += ('scripts.tests.test_preview_ui209',
            'scripts.tests.test_native_window_shutdown',
            'scripts.tests.test_broadcast_ipc_sharing209')
 
+GROUPS += ('scripts.tests.test_preview_ui210',)
+
 def main():
     names = sys.argv[1:] or list(GROUPS)
     if any((not any((name == group or name.startswith(group + '.') for group in GROUPS)) for name in names)):

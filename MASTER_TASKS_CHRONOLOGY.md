@@ -641,3 +641,8 @@ No more screen/cursor control or GUI retries are authorized. Root stopped all co
 ### Final credential-default cleanup and verification
 
 Two pre-existing hardcoded Twitch/Facebook stream-key defaults in the standalone broadcast component were replaced with empty strings. Exact AST reconstruction verifies only those two literal substitutions; saved settings and handlers are unchanged. The count-only RED found 2 credential-family literals; final broader JavaScript bundle passed 35 tests (contracts198 + truth204 + debranding209), TypeScript exit 0. The narrower 33-case bundle is included, not an extra run. Native 352/28 groups and the installed 85 package are unchanged. No credential rotation, historical exposure conclusion or clean-Git-history claim. Original source, private preimages and raw patches stay C-only and are never uploaded.
+
+
+## Record210 — Program preview controls, v5.329.86
+
+VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE. Toolbar/checkbox now share the real decoder flag; explicit OFF and correct held/buffering/stale labels persist. Core unchanged; eligible probe 73 accepted/222 raw frames and actual 85 video verified before 86 release. 356 guarded tests PASS 0 errors/denials; focused 15 overlap. Build exit 0 in 120.668 seconds; 2256 files installed, 71 native modules verified; Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON. Trading disabled, audio silent. Unattributed Bad Request message is not proof of an outage. C exact preimages retained; full encrypted cloud recovery remains E-key blocked. Report: docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md.

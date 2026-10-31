@@ -1,3 +1,7 @@
+# Record210 — v5.329.86
+
+VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE. Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON. Toolbar preview controls synchronized; core unchanged. 356 guarded tests pass; trading disabled/audio silent. docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md
+
 
 
 ### Final credential-default cleanup and verification

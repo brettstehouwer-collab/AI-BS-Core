@@ -423,8 +423,8 @@
     "prior_public_hls": "VERIFIED_46560_44780_2026_10_31T191830Z",
     "current_game_frame_verified": false
   },
-  "native_candidate_version": "v5.329.85",
-  "native_functional_acceptance": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+  "native_candidate_version": "v5.329.86",
+  "native_functional_acceptance": "VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE",
   "record208": {
     "report": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
     "status": "ACTUAL_NATIVE_GUI_START_AND_FRESH_FORTNITE_PUBLIC_HLS_VERIFIED",
@@ -477,5 +477,19 @@
     "credential_defaults_removed": 2,
     "credential_rotation": false,
     "old_git_history_clean_claim": false
+  },
+  "record210": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md",
+    "status": "VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE",
+    "version": "5.329.86",
+    "tests": 356,
+    "groups": 29,
+    "guard_denials": 0,
+    "core_source_unchanged": true,
+    "installed_GUI": "Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON",
+    "trading": "DISABLED",
+    "audio": "GENERATED_SILENCE",
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "encrypted_recovery": "BLOCKED_PRIOR_E_KEY_CUSTODY"
   }
 }
