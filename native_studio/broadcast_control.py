@@ -57,26 +57,10 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def send_broadcast_command(kind: str, starting: bool, payload: dict) -> dict:
-    """One fixed local command, no fallback/retry that could duplicate a start."""
+    """Route native broadcast intent to the same coordinator; never fallback."""
     if kind not in {'stream','record'} or type(starting) is not bool:
         raise ValueError('Unknown broadcast command.')
-    if kind=='stream' and starting:
-        from native_studio.broadcast_service import ensure_broadcast_service_online
-        ready=ensure_broadcast_service_online()
-        if ready.get('status')!='ready':
-            return {'status':'service_unavailable','error_code':ready.get('code','SERVICE_UNAVAILABLE')}
-    suffix = 'start' if starting else 'stop'
-    url = f'http://127.0.0.1:8005/stream/{suffix}' if kind=='stream' else f'http://127.0.0.1:8088/api/kernel/record/{suffix}'
-    request = urllib.request.Request(url, data=json.dumps(payload,allow_nan=False).encode('utf-8'), headers={'Content-Type':'application/json'}, method='POST')
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
-    with opener.open(request, timeout=5) as response:
-        if response.status != 200:
-            raise ValueError('Broadcast command was not acknowledged.')
-        raw=response.read(65537)
-    if len(raw)>65536:
-        raise ValueError('Oversized broadcast response.')
-    data=json.loads(raw)
-    if not isinstance(data,dict):
-        raise ValueError('Invalid broadcast acknowledgement.')
-    # Never return backend error text or paths containing credentials to the UI.
-    return {'status':data.get('status')}
+    if kind == 'record':
+        return {'status':'archive_accompanies_broadcast'}
+    from native_studio import broadcast_secondary_control as coordinator
+    return coordinator.start_broadcast(payload) if starting else coordinator.stop_broadcast()

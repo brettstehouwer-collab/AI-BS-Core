@@ -1,6 +1,6 @@
 {
   "campaign_status": "IN_PROGRESS",
-  "source_version": "v5.329.81",
+  "source_version": "v5.329.83",
   "findings": [
     {
       "id": "B001",
@@ -1198,5 +1198,100 @@
     "trading": "DISABLED",
     "tests": 255,
     "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
-  }
+  },
+  "record207": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+    "status": "VERIFIED_V83_INSTALLED_FROZEN_DIAGNOSTIC_COMPILED_PHYSICAL_IPC_CURRENT_NO_GAME_HOLD",
+    "audit_status": "IN_PROGRESS",
+    "tests": 304,
+    "operational_guard_denials": 0,
+    "native_installation": "VERIFIED_2256_EXACT_HASHES_4_SHORTCUTS",
+    "runtime_capture": "CURRENT42344_10552_AUTO_HOLDING_NO_GAME_PRIOR_AUTO_GAME_HLS_PROOF_RETAINED",
+    "trading": "DISABLED",
+    "audio": "GENERATED_SILENCE_NO_MIC",
+    "incident": "LEGACY_STOP_ACCOUNTED_RESTORED",
+    "encrypted_cloud_recovery": "BLOCKED_E_KEY_UNREADABLE",
+    "public_hls": "VERIFIED_INDEPENDENT_EXACT_BYTES_AND_GAME_FRAME",
+    "automatic_proof_cloud": "VERIFIED_FOUR_FILES_SAME_FOLDER_METADATA_AND_RAW_DOWNLOAD_SHA",
+    "test_groups": 20,
+    "source_version_checks": "PASS_16_MIRRORS_5.329.83",
+    "frozen_diagnostic": "VERIFIED_QUIET_READY_PHYSICAL_PROFILE",
+    "compiled_control_read": "VERIFIED_PHYSICAL_IPC_OWNER_DACL_ADVANCING",
+    "prior_public_hls": "VERIFIED_46560_44780_2026_10_31T191830Z",
+    "current_game_frame_verified": false
+  },
+  "record207_findings": [
+    {
+      "id": "R207-IPC-ACL",
+      "severity": "HIGH",
+      "status": "REPAIRED_VERIFIED",
+      "finding": "Shared writable source mailbox replaced by private user/SYSTEM protected IPC."
+    },
+    {
+      "id": "R207-SOURCE-OWNERSHIP",
+      "severity": "HIGH",
+      "status": "REPAIRED_VERIFIED",
+      "finding": "Exact source identity, manual priority, async handover and late cleanup ownership enforced."
+    },
+    {
+      "id": "R207-DISCOVERY",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_VERIFIED_ONE_ACTUAL_AUTO_GAME",
+      "finding": "Generic registered XboxGames/Content discovery fixes omitted catalog; one reopened game acquired automatically."
+    },
+    {
+      "id": "R207-ATOMIC-WRITE",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_RED_GREEN",
+      "finding": "Short Win32 writes preserve prior IPC command before atomic publication."
+    },
+    {
+      "id": "R207-NATIVE-LIFECYCLE",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_VERIFIED",
+      "finding": "Worker-backed controls, failed/legacy reconciliation, scene side effects and desktop handle leak fixed."
+    },
+    {
+      "id": "R207-TEST-ISOLATION",
+      "severity": "HIGH",
+      "status": "INCIDENT_ACCOUNTED_GUARDED_PASS",
+      "finding": "One unguarded mock escape issued legacy Stop; root restored and all later tests use pre-import effect guard."
+    },
+    {
+      "id": "R207-LEGACY-DISPATCH",
+      "severity": "HIGH",
+      "status": "REPAIRED_ACTUAL_HELD",
+      "finding": "Legacy start is held while modern coordinator owns dispatch."
+    },
+    {
+      "id": "R207-REPOSITORY-ACL",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "finding": "Repository/shared data inherit Authenticated Users Modify; whole-host cross-user integrity unverified."
+    },
+    {
+      "id": "R207-E-KEY-CUSTODY",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "finding": "Unreadable E key custody blocks encrypted source/binary cloud recovery; no retry or new key."
+    },
+    {
+      "id": "R207-LOCAL-AUTH",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "finding": "Coordinator-active dispatch hold is not general authentication of every older local API."
+    },
+    {
+      "id": "R207-UNSUPPORTED",
+      "severity": "LOW",
+      "status": "CLEAR_UNAVAILABLE",
+      "finding": "Whole-screen sharing/native video preview unavailable; audio intentionally silent; every workflow not certified."
+    },
+    {
+      "id": "R207-MSIX-PROFILE",
+      "severity": "HIGH",
+      "status": "REPAIRED_ACTUAL_INSTALLED_FROZEN_AND_COMPILED_IPC_VERIFIED",
+      "finding": "Frozen v82 diagnostic cannot resolve physical IPC under MSIX LocalAppData redirection; quiet diagnostic failure handling also required."
+    }
+  ]
 }

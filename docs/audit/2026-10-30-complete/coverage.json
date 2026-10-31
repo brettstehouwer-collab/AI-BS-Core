@@ -1,7 +1,7 @@
 {
   "status": "IN_PROGRESS",
   "client_date": "2026-10-30",
-  "source_version": "v5.329.81",
+  "source_version": "v5.329.83",
   "repository": {
     "checkpoint_parent": "ce1fa4430a069fa5420fa766b8d7687d89025809",
     "branch": "codex/audit-v532976-20261031",
@@ -382,8 +382,8 @@
     "computer_use_paused_on_user_request": true,
     "no_computer_use_for_routing203": true
   },
-  "current_native_version": "v5.329.79",
-  "current_firebase_version": "v5.329.79",
+  "current_native_version": "v5.329.83",
+  "current_firebase_version": "v5.329.81",
   "native_signing": "UNSIGNED",
   "full_gui_acceptance": false,
   "record204": {
@@ -401,5 +401,28 @@
     "trading": "DISABLED",
     "tests": 255,
     "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
-  }
+  },
+  "record207": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+    "status": "VERIFIED_V83_INSTALLED_FROZEN_DIAGNOSTIC_COMPILED_PHYSICAL_IPC_CURRENT_NO_GAME_HOLD",
+    "audit_status": "IN_PROGRESS",
+    "tests": 304,
+    "operational_guard_denials": 0,
+    "native_installation": "VERIFIED_2256_EXACT_HASHES_4_SHORTCUTS",
+    "runtime_capture": "CURRENT42344_10552_AUTO_HOLDING_NO_GAME_PRIOR_AUTO_GAME_HLS_PROOF_RETAINED",
+    "trading": "DISABLED",
+    "audio": "GENERATED_SILENCE_NO_MIC",
+    "incident": "LEGACY_STOP_ACCOUNTED_RESTORED",
+    "encrypted_cloud_recovery": "BLOCKED_E_KEY_UNREADABLE",
+    "public_hls": "VERIFIED_INDEPENDENT_EXACT_BYTES_AND_GAME_FRAME",
+    "automatic_proof_cloud": "VERIFIED_FOUR_FILES_SAME_FOLDER_METADATA_AND_RAW_DOWNLOAD_SHA",
+    "test_groups": 20,
+    "source_version_checks": "PASS_16_MIRRORS_5.329.83",
+    "frozen_diagnostic": "VERIFIED_QUIET_READY_PHYSICAL_PROFILE",
+    "compiled_control_read": "VERIFIED_PHYSICAL_IPC_OWNER_DACL_ADVANCING",
+    "prior_public_hls": "VERIFIED_46560_44780_2026_10_31T191830Z",
+    "current_game_frame_verified": false
+  },
+  "native_candidate_version": "v5.329.83",
+  "native_functional_acceptance": "FROZEN_DIAGNOSTIC_AND_COMPILED_IPC_VERIFIED_FULL_GUI_UNVERIFIED"
 }

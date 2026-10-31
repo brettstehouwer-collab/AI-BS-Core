@@ -1,3 +1,27 @@
+# Current checkpoint — Record207 / v5.329.83 installed
+
+2026-10-31T19:36:05.697658+00:00. V83 installed: all 2,256 hashes / 552,588,185 bytes and four shortcuts verified; EXE 5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52. Frozen connection diagnostic exits0 quietly/ready and installed PYZ control reads physical .aibs-private IPC with owner/DACL checks. Full GUI and separate cross-host launch remain unverified. Current coordinator42344/encoder10552 advances in Auto HOLDING, no game open, game_frame_verified=false; earlier automatic Fortnite/publicHLS proof on46560/44780 retained historically. Final304 tests/20groups PASS0operational denials,23 build fixtures/TS/16versions pass (overlaps not summed). Trading DISABLED, silent audio/no microphone, four protected pins match. V82 install/MSIX failure and test STOP incidents retained. HIGH OPEN source ACL/E key custody; encrypted source/binary cloud backup blocked. Source commit/final sanitized report upload are root closing receipts; same Drive folder only. Report NATIVE_BROADCAST_INTEGRATION_v5.329.83.md. Older checkpoints below are historical.
+
+---
+
+# Current checkpoint — Record207 / corrective v5.329.83 pending
+
+V82 Stage3 installed with2,256 exact hashes/four shortcuts, then frozen connection diagnostic FAILED/timedout25s due MSIX physical-profile IPC redirection. All v82 history retained. Correctivev83 physical profile/quiet diagnostics only is pending final build/tests/install acceptance; same Record207 despite native_profile208_work folder name. Actual automatic game/public HLS remains verified; live trading disabled and audio silent/no mic. Current report NATIVE_BROADCAST_INTEGRATION_v5.329.83.md. Older checkpoints below are historical.
+
+---
+
+# Record207 acceptance update — 2026-10-31T19:16:14Z
+
+Actual Automatic game acquisition VERIFIED for user-reopened Fortnite on unchanged controller46560 / encoder44780, without new source request/restart. Silent audio/no microphone; trading DISABLED. Prior holding evidence preserved. Stage3 build/final PE/PYZ/install/activation pending after Stage2 preset-label clipping was caught before installation. See NATIVE_BROADCAST_INTEGRATION_v5.329.82.md. Older checkpoint entries below are historical.
+
+---
+
+# Current checkpoint — Record207 / v5.329.82
+
+2026-10-31T19:15:33.197891+00:00. Full-system audit IN_PROGRESS; 298 guarded cases PASS with no operational denials, 23 build/signing fixtures plus TypeScript/version checks PASS. Native Stage2 build succeeded; final PE/PYZ/install/activation acceptance is pending root receipt. Coordinator46560 / encoder44780 advances in Automatic game holding with no game open; earlier manual Fortnite window WGC verified. Generic Xbox registration omission repaired; actual open-game Auto reacquisition unverified. Silent audio, no microphone; live trading DISABLED and four protected pins match. Legacy dispatch actually HELD COORDINATOR_ACTIVE. Test STOP incident and restoration failures/success retained; no uninterrupted-stream claim. HIGH OPEN repository ACL and E/key custody; C history/preimages retained, encrypted source/binary cloud backup blocked. Same Drive folder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k. Full report: docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.md. Older checkpoints below are historical.
+
+---
+
 # Current checkpoint — Record205 / v5.329.81
 
 Facebook LIVE Fortnite USER_CONFIRMED_SCREENSHOT (~29fps,5.6–5.8Mbps); user reports no lag. Working stream LEFT RUNNING. TradingDISABLED.255guardedoffline cases PASS. HIGHOPEN E storage read/write anomaly; audit-close E writes stopped (live encoder untouched), verified source/history/evidence fallback on C. Root commit/cloud close pending separately, sameDrivefolder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k. Fullreport:docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md. Record206 relay next; older checkpoints below are historical.

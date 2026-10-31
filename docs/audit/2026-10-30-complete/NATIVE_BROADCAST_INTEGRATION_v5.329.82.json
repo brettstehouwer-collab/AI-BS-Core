@@ -1,0 +1,471 @@
+{
+  "record": 207,
+  "version": "v5.329.82",
+  "utc": "2026-10-31T19:22:52.203493+00:00",
+  "audit_status": "IN_PROGRESS",
+  "release_status": "SUPERSEDED_BY_CORRECTIVE_V83_AFTER_V82_HASH_VERIFIED_INSTALL_DIAGNOSTIC_FAILURE",
+  "report": "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.md",
+  "repository": {
+    "base_commit": "4c3bf3e4ac9566da88d12656c991f9d8fbff503f",
+    "branch": "codex/audit-v532976-20261031",
+    "source_commit": "PENDING_ROOT_COMMIT"
+  },
+  "verification": {
+    "full_guarded": {
+      "groups": [
+        "scripts.tests.test_native_broadcast_truth204",
+        "scripts.tests.test_native_broadcast_validation205",
+        "scripts.tests.test_native_broadcast_setup205",
+        "scripts.tests.test_native_broadcast_preview205",
+        "scripts.tests.test_broadcast_service205",
+        "scripts.tests.test_native_broadcast_coordinator207",
+        "scripts.tests.test_private_broadcast_ipc207",
+        "scripts.tests.test_broadcast_ipc_atomic207",
+        "scripts.tests.test_game_capture_selection206",
+        "scripts.tests.test_game_selection_sampler207",
+        "scripts.tests.test_game_follow_capture207",
+        "scripts.tests.test_secondary_control207",
+        "scripts.tests.test_broadcast_secondary206",
+        "scripts.tests.test_broadcast_relay206",
+        "scripts.tests.test_broadcast_daemon_integrity",
+        "scripts.tests.test_broadcast_capture_inputs205",
+        "scripts.tests.test_window_capture_pipe205",
+        "scripts.tests.test_native_window_capture205",
+        "scripts.tests.test_legacy_broadcast_guard207"
+      ],
+      "tests": 298,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": [],
+      "stdlib_local_self_pipe_events": {
+        "socket.__new__": 24,
+        "socket.bind": 12,
+        "socket.connect": 12
+      },
+      "runner_error": null,
+      "passed": true,
+      "evidence": "C:\\AI-BS\\backups\\native_broadcast207_work\\guarded_native\\run_1793474011251201000",
+      "real_runtime_actions_authorized": false
+    },
+    "build_signing_fixtures": {
+      "passed": 23,
+      "authority": "parent reported; final build receipt pending"
+    },
+    "typescript_no_emit": "PASS_PARENT_REPORTED",
+    "version_paths_82": "PASS_PARENT_REPORTED",
+    "overlapping_cohorts_not_summed": true,
+    "prior_strict_guard_run": {
+      "cases": 296,
+      "result": "FAILED_STRICT_STDLIB_SELF_PIPE_GUARD",
+      "guard_denials": 7,
+      "retained": true,
+      "production_failure": false
+    },
+    "allowed_stdlib_only_sockets": {
+      "socket.__new__": 24,
+      "socket.bind": 12,
+      "socket.connect": 12,
+      "scope": "Pinned standard-library Windows asyncio self-pipe only; no operational network sockets admitted"
+    },
+    "hls_initial_probe": "urllib403 retained; requests no-cache retry succeeded without changing service/source/capture"
+  },
+  "native_build": {
+    "stage1": "RETAINED_UNINSTALLED",
+    "stage1_semantic_defect": "HUD/preset truthfulness defect found before installation",
+    "stage2_build_exit": 0,
+    "stage2_build_utc": "2026-10-31T19:12:39Z",
+    "pe_pyz_verification": "PENDING",
+    "installed": "PENDING",
+    "activated": "PENDING",
+    "signing": "UNSIGNED_UNLESS_FINAL_RECEIPT_PROVES_OTHERWISE",
+    "stage2": "RETAINED_UNINSTALLED_AFTER_PRESET_LABEL_CLIPPING",
+    "stage3": "BUILDING_COMPACT_LABEL_FIX_WITH_WIDTH_FIXTURE",
+    "v82_stage3_install": {
+      "status": "INSTALLED_HASH_VERIFIED_FUNCTIONAL_DIAGNOSTIC_FAILED",
+      "files": 2256,
+      "all_hashes_match": true,
+      "shortcuts_retargeted": 4,
+      "check_local_connection": "TIMED_OUT_25S_WITH_UNHANDLED_DIAGNOSTIC_PATH_ERROR",
+      "root_cause": "MSIX LocalAppData physical-path redirection",
+      "authority": "parent actual verification",
+      "retained": true
+    }
+  },
+  "runtime": {
+    "latest_observation": {
+      "utc": "2026-10-31T19:16:14Z",
+      "result": "VERIFIED_AUTOMATIC_GAME_ACQUISITION",
+      "state": {
+        "status": "running_unverified",
+        "active": true,
+        "controller_pid": 46560,
+        "encoder_pid": 44780,
+        "capture_state": "capturing",
+        "source_mode": "auto_game",
+        "game_frame_verified": true,
+        "holding_reason": "VERIFIED_GAME",
+        "frames_encoded": 8951,
+        "out_time_us": 298389333,
+        "audio_mode": "generated_silence"
+      },
+      "source_change_request_sent": false,
+      "runtime_restart_for_game_open": false,
+      "manual_override_previous_verified": true,
+      "additional_games_tested": false,
+      "audio_mode": "generated_silence"
+    },
+    "legacy_dispatch_guard": {
+      "utc": "2026-10-31T19:12:57Z",
+      "result": "VERIFIED_LEGACY_START_HELD_BEFORE_DISPATCH",
+      "old_control_service_pid": 37508,
+      "old_control_cleanup_confirmed": true,
+      "new_control_service_pid": 35720,
+      "legacy_post_status": "held",
+      "legacy_error_code": "COORDINATOR_ACTIVE",
+      "modern_encoder_pid_preserved": 44780,
+      "modern_frames_advancing": true,
+      "microphone_requested": false,
+      "keys_in_request": false
+    },
+    "manual_window_capture": "VERIFIED_EARLIER_ROOT_WGC_RESTORATION",
+    "automatic_open_game_capture": "VERIFIED_ONE_FORTNITE_REOPEN_WITHOUT_REQUEST_OR_RESTART",
+    "platform_ingest": "PUBLIC_HLS_VERIFIED_RTMP_PLATFORM_DASHBOARDS_NOT_NEWLY_CERTIFIED",
+    "audio_mode": "generated_silence",
+    "microphone_requested": false,
+    "no_game_hold_observation": {
+      "utc": "2026-10-31T19:12:27Z",
+      "result": "VERIFIED_HOLDING_WITH_NO_GAME_OPEN",
+      "window69414_exists": false,
+      "process38640_exists": false,
+      "registered_xbox_catalog_now_contains_fortnite": true,
+      "runtime": {
+        "status": "running_unverified",
+        "active": true,
+        "controller_pid": 46560,
+        "encoder_pid": 44780,
+        "capture_state": "holding",
+        "source_mode": "auto_game",
+        "game_frame_verified": false,
+        "holding_reason": "NO_VERIFIED_GAME",
+        "frames_encoded": 2155,
+        "out_time_us": 71833333,
+        "audio_mode": "generated_silence"
+      },
+      "automatic_game_acquisition_pending_open_game": true,
+      "microphone_requested": false
+    },
+    "fresh_hls_visual_acceptance": "VERIFIED_INDEPENDENT_LOCAL_PUBLIC_BYTES_CPU_GAME_FRAME",
+    "hls_proof": {
+      "started_utc": "2026-10-31T19:18:30.008996+00:00",
+      "mode": "read-only-observation",
+      "public_playlist": "https://stehouwer-publishing.com/hls/native/index.m3u8",
+      "ipc_writes": false,
+      "service_actions": false,
+      "source_changes": false,
+      "new_capture": false,
+      "decode": "CPU software only one frame",
+      "samples": [
+        {
+          "utc": "2026-10-31T19:18:30.579518+00:00",
+          "local": {
+            "sequence": 211,
+            "segments": [
+              "segment_000000211.ts",
+              "segment_000000212.ts",
+              "segment_000000213.ts",
+              "segment_000000214.ts",
+              "segment_000000215.ts",
+              "segment_000000216.ts"
+            ],
+            "ended": false
+          },
+          "public": {
+            "sequence": 211,
+            "segments": [
+              "segment_000000211.ts",
+              "segment_000000212.ts",
+              "segment_000000213.ts",
+              "segment_000000214.ts",
+              "segment_000000215.ts",
+              "segment_000000216.ts"
+            ],
+            "ended": false
+          },
+          "status": {
+            "source_mode": "auto_game",
+            "capture_state": "capturing",
+            "game_frame_verified": true,
+            "holding_reason": "VERIFIED_GAME",
+            "frames_encoded": 13064,
+            "out_time_us": 435477333,
+            "audio_mode": "generated_silence",
+            "process_running": true
+          }
+        },
+        {
+          "utc": "2026-10-31T19:18:33.656254+00:00",
+          "local": {
+            "sequence": 213,
+            "segments": [
+              "segment_000000213.ts",
+              "segment_000000214.ts",
+              "segment_000000215.ts",
+              "segment_000000216.ts",
+              "segment_000000217.ts",
+              "segment_000000218.ts"
+            ],
+            "ended": false
+          },
+          "public": {
+            "sequence": 213,
+            "segments": [
+              "segment_000000213.ts",
+              "segment_000000214.ts",
+              "segment_000000215.ts",
+              "segment_000000216.ts",
+              "segment_000000217.ts",
+              "segment_000000218.ts"
+            ],
+            "ended": false
+          },
+          "status": {
+            "source_mode": "auto_game",
+            "capture_state": "capturing",
+            "game_frame_verified": true,
+            "holding_reason": "VERIFIED_GAME",
+            "frames_encoded": 13156,
+            "out_time_us": 438533333,
+            "audio_mode": "generated_silence",
+            "process_running": true
+          }
+        }
+      ],
+      "local_advancing": true,
+      "public_advancing": true,
+      "encoder_advancing": true,
+      "segment": {
+        "name": "segment_000000218.ts",
+        "bytes_public": 1085136,
+        "bytes_local": 1085136,
+        "sha256_public": "f74898594ecfdca0498379b839cc6a08ee4863baa7f4549fde549852d02ac085",
+        "sha256_local": "f74898594ecfdca0498379b839cc6a08ee4863baa7f4549fde549852d02ac085",
+        "exact_bytes_equal": true
+      },
+      "codecs": {
+        "programs": [
+          {
+            "streams": [
+              {
+                "index": 0,
+                "codec_name": "h264",
+                "codec_type": "video",
+                "width": 1280,
+                "height": 720
+              },
+              {
+                "index": 1,
+                "codec_name": "aac",
+                "codec_type": "audio",
+                "channels": 2
+              }
+            ]
+          }
+        ],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "2.016000"
+        }
+      },
+      "cpu_decode": {
+        "returncode": 0,
+        "frame_exists": true,
+        "frame_path": "C:\\AI-BS\\backups\\broadcast_game_follow207_work\\actual_proof\\20261031T191829Z\\verified_game_frame.png"
+      },
+      "checks_passed": true,
+      "finished_utc": "2026-10-31T19:18:34.651086+00:00"
+    },
+    "silent_audio_proof": {
+      "method": "CPU software decode from alreadyverified public2secondsegment",
+      "samples": 192000,
+      "max_abs_sample": 0.0,
+      "all_samples_exact_zero": true,
+      "sample_rate": 48000,
+      "channels": 2
+    },
+    "automatic_proof_cloud": {
+      "record": 207,
+      "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+      "folder_name": "AI-BS Complete Audit 2026-10-30",
+      "all_four_uploaded_to_exact_existing_folder": true,
+      "all_metadata_sizes_and_parents_verified": true,
+      "all_four_raw_download_sha256_match_local": true,
+      "files": [
+        {
+          "id": "1bJv5ruJ1oocOP_2VZ1eniUU6KBvxFZ6G",
+          "name": "Record207_AutoGame_20261031T191829Z_proof.json",
+          "mime_type": "application/json",
+          "url": "https://drive.google.com/file/d/1bJv5ruJ1oocOP_2VZ1eniUU6KBvxFZ6G/view?usp=drivesdk",
+          "bytes": 3609,
+          "sha256": "57e1d9e903222123a196032fbe7ae4e78c3ced3a68ff39f76183683d96d3adde",
+          "parent_ids": [
+            "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+          ],
+          "parent_verified": true,
+          "metadata_size_verified": true,
+          "raw_download_sha256_verified": true
+        },
+        {
+          "id": "1vogXZvZ1DhCXxQwK6X2Apoiws-EJgHiz",
+          "name": "Record207_AutoGame_20261031T191829Z_frame.png",
+          "mime_type": "image/png",
+          "url": "https://drive.google.com/file/d/1vogXZvZ1DhCXxQwK6X2Apoiws-EJgHiz/view?usp=drivesdk",
+          "bytes": 574308,
+          "sha256": "6172abd90d098bec9916c58a700103b127f85e98c935c9becd5b6c1c18c46f6f",
+          "parent_ids": [
+            "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+          ],
+          "parent_verified": true,
+          "metadata_size_verified": true,
+          "raw_download_sha256_verified": true
+        },
+        {
+          "id": "1JmWtaI78ZYHxyHN9owT_huFriAX9FIBO",
+          "name": "Record207_AutoGame_20261031T191829Z_segment218.ts",
+          "mime_type": "video/mp2t",
+          "url": "https://drive.google.com/file/d/1JmWtaI78ZYHxyHN9owT_huFriAX9FIBO/view?usp=drivesdk",
+          "bytes": 1085136,
+          "sha256": "f74898594ecfdca0498379b839cc6a08ee4863baa7f4549fde549852d02ac085",
+          "parent_ids": [
+            "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+          ],
+          "parent_verified": true,
+          "metadata_size_verified": true,
+          "raw_download_sha256_verified": true
+        },
+        {
+          "id": "1146BQOb0de9SUkZOG8p6f2uXWWFIJmKl",
+          "name": "Record207_AutoGame_20261031T191829Z_filtered_status.json",
+          "mime_type": "application/json",
+          "url": "https://drive.google.com/file/d/1146BQOb0de9SUkZOG8p6f2uXWWFIJmKl/view?usp=drivesdk",
+          "bytes": 730,
+          "sha256": "518993e1eb0aba7c3c64b9b0e013c35b99d4f58a336a0be6cc09d3ef0045316f",
+          "parent_ids": [
+            "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+          ],
+          "parent_verified": true,
+          "metadata_size_verified": true,
+          "raw_download_sha256_verified": true
+        }
+      ],
+      "proof_scope": "Actual Fortnite automatic acquisition and advancing public/local HLS, exact newest segment bytes, one CPU video frame and decoded zero audio.",
+      "privacy": "Only sanitized proof JSON, filtered status JSON and already-public game PNG/TS uploaded. No program source, executable, private IPC/session data, keys or E-drive recovery material uploaded.",
+      "first_403_diagnostic": "Retained locally in actual_proof/20261031T191732Z; corrected requests/no-cache format passed once.",
+      "runtime_actions": false,
+      "ipc_writes": false,
+      "application_source_changes": false
+    },
+    "facebook_previous_rejection": "PARENT_OBSERVED_IN_RECORD206_NOT_CLAIMED_RESOLVED_BY_COORDINATOR"
+  },
+  "incident": {
+    "utc": "2026-10-31T18:54:37Z",
+    "effect": "Unguarded composition fixture reached real legacy STOP; encoder11256 stopped",
+    "cause": "sys.modules-only mock escaped through cached native package attribute",
+    "correction": "Patch package attribute and module cache; pre-import operational-effect guard on all later native tests",
+    "first_restoration": "FAILED_IPC_OWNER_MISMATCH_BEFORE_DISPATCH",
+    "restoration": "VERIFIED_PROTOCOL2_PRIVATE_NAMESPACE_2026-10-31T18:58:57Z",
+    "uninterrupted_stream_claim": false
+  },
+  "recovery": {
+    "C_preimages": "backups/record207_close_work/preimages",
+    "C_exact_source_and_recovery": "PARENT_PREPARED_C_BACKED",
+    "E_storage": "OPEN_UNREADABLE_KEY_CUSTODY_NO_RETRY",
+    "key_id": "df96242fbdf6b117",
+    "new_or_substitute_key_generated": false,
+    "encrypted_source_binary_cloud_backup": "BLOCKED",
+    "public_sanitized_uploads": {
+      "automatic_proof_four": "VERIFIED_SAME_FOLDER_METADATA_AND_RAW_SHA",
+      "final_report_and_summary": "PENDING_ROOT_RECEIPT"
+    },
+    "keys_uploaded": false,
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+  },
+  "safety": {
+    "live_trading": "DISABLED",
+    "protected_crypto_ledger_hashes": "4_BASELINE_PINS_MATCH_PARENT_VERIFIED",
+    "operational_credentials_in_selected_records": false,
+    "microphone_capture": false,
+    "all_games_tabs_buttons_certified": false
+  },
+  "independent_review": "backups/record207_close_work/independent_review_final.json",
+  "xbox_registration_fix": {
+    "utc": "2026-10-31T19:02:52.768687+00:00",
+    "state": "FROZEN_OFFLINE_ROOT_RUNTIME_ACCEPTANCE_PENDING",
+    "cause": "Catalog covered AppModel Repository packages but omitted system-drive .GamingRoot registered XboxGames/Content installations.",
+    "authorized_real_metadata_reads": [
+      "C:/.GamingRoot",
+      "C:/XboxGames/Fortnite/Content/MicrosoftGame.config"
+    ],
+    "observed_registration_format": "RGBX magic, little-endian version1, UTF-16LE null-terminated relative library path",
+    "observed_layout": "RegisteredLibrary/InstalledGame/Content/MicrosoftGame.config with valid Game Identity and GDK launch bootstrap",
+    "fix": "Bounded generic registered-library Content discovery and strict metadata parser; no title or actual game executable whitelist.",
+    "tests": {
+      "selector": 40,
+      "sampler": 18,
+      "combined": 58,
+      "result": "PASS",
+      "guard_effect_attempts": 0,
+      "red": "red.log",
+      "green": "green58.log",
+      "guard_receipt": "../final_guarded.json"
+    },
+    "files": [
+      {
+        "path": "backend/core/game_capture_selection.py",
+        "sha256": "03bd5d77efb4fe44ecc14c38e28a69020910ae6072d1ed87919cbf29ed9d74c7",
+        "before_sha256": "c90f96461774b14cb6775afc198b92f463722b9630e94eeb184400243cc59c0b",
+        "bytes": 28761
+      },
+      {
+        "path": "scripts/tests/test_game_capture_selection206.py",
+        "sha256": "dbcc1b748e3f3792af470d49d8a89a088dc243d8ba3cbfd0c08758fc39b7ad8c",
+        "before_sha256": "f28ff537726d8b6f6f6376324f06db9f3a438b4d8268b0b7e0bbb2a5e432949f",
+        "bytes": 24716
+      }
+    ],
+    "limits": [
+      "Default automatic registration lookup is system drive only; extra known healthy drives/libraries can be supplied explicitly.",
+      "No E scans, network, capture, process dispatch or operational IPC by this agent.",
+      "Parent root owns runtime reload and actual Auto acceptance; old failed Auto evidence must remain intact.",
+      "The earlier54-case result remains historical in green54.log; current final_guarded.json supersedes it with58 cases."
+    ]
+  },
+  "open_limits": [
+    "Manual whole-screen capture is unsupported and explicitly held.",
+    "Native coordinator video preview is unavailable; website /live is the playback view.",
+    "The sender intentionally outputs fixed720p30 H.264 at4500kb/s with generated silent AAC.",
+    "Actual Auto acquisition is verified for one reopened Fortnite window; all-game and fresh platform acceptance are not certified.",
+    "Synthetic multi-launcher fixtures plus one actual Fortnite window WGC do not certify every game.",
+    "Shared repository/source permissions allow Authenticated Users Modify; private IPC does not certify whole-host cross-user integrity.",
+    "Earlier unauthenticated localhost8005 no-Origin boundary is not generally closed; coordinator-active order dispatch is now held.",
+    "E storage/key custody, authoritative Chroma vector recovery, unsupported workflows and remaining full-system audit work stay open.",
+    "Current platform ingest/archive finalization are distinct from local process/encoder status."
+  ],
+  "next_step": "Root finalizes Stage3 PE/PYZ/install/activation and final guarded test receipt; preserve running automatic sender, silent audio and trading holds; complete scoped commit/sanitized same-folder uploads.",
+  "corrective_report": "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+  "historical_record_retained": true
+}

@@ -76,12 +76,14 @@ class NativeBroadcastTruthTests(unittest.TestCase):
             mixer._animate_vu_meters()
         self.assertIn('not measured', ' '.join(x.text() for x in mixer.findChildren(QLabel)).lower())
 
-    def test_record_control_has_actual_dispatch_and_no_fabricated_file(self):
+    def test_archive_control_explains_shared_recording_without_fabricated_file(self):
         tree = ast.parse((ROOT/'native_studio/omni_broadcast_studio.py').read_text(encoding='utf-8-sig'))
         cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name=='UniversalOmniStudioNativeView')
         method = next(n for n in cls.body if isinstance(n, ast.FunctionDef) and n.name=='_toggle_record')
         text = ast.unparse(method)
-        self.assertIn('_dispatch_broadcast', text)
+        self.assertNotIn('_dispatch_broadcast', text)
+        self.assertIn('archive accompanies', text)
+        self.assertIn('integrity remains unverified', text)
         self.assertNotIn('master_', text)
 
     def test_dispatch_does_not_optimistically_set_live(self):

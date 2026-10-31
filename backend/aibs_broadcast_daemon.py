@@ -417,9 +417,48 @@ def scan_system_windows_and_games() -> Dict[str, Any]:
     windows.sort(key=lambda x: (not x.get("is_foreground", False), not x["is_game"], x["title"]))
     return {"windows": windows, "open_windows": windows, "active_game": active_game}
 
+def legacy_coordinator_guard():
+    """Probe an existing modern lease without touching capture or credentials."""
+    try:
+        import win32event
+        import win32api
+    except Exception:
+        return "OWNER_UNVERIFIED"
+    try:
+        handle = win32event.OpenMutex(0x00100001, False, r"Local\AI_BS_Secondary_Broadcast206")
+    except Exception as exc:
+        return None if getattr(exc, "winerror", None) == 2 else "OWNER_UNVERIFIED"
+    acquired = False
+    result = "OWNER_UNVERIFIED"
+    try:
+        status = win32event.WaitForSingleObject(handle, 0)
+        acquired = status in (0, 0x80)
+        if status == 0:
+            result = None
+        elif status == 258:
+            result = "COORDINATOR_ACTIVE"
+    except Exception:
+        result = "OWNER_UNVERIFIED"
+    finally:
+        if acquired:
+            try:win32event.ReleaseMutex(handle)
+            except Exception:result = "OWNER_UNVERIFIED"
+        try:win32api.CloseHandle(handle)
+        except Exception:result = "OWNER_UNVERIFIED"
+    return result
+
+
 class BroadcastDaemon:
 
-    def __init__(self):
+    def __init__(self, *, secondary_outputs=False):
+        if type(secondary_outputs) is not bool:
+            raise ValueError("Secondary output mode must be explicit")
+        # A separate controller can opt into fixed C-backed outputs. The
+        # original service instance keeps its existing configuration and PID.
+        self._secondary_outputs = secondary_outputs
+        self._archive_root_override = "C:/AI-BS/recordings/secondary" if secondary_outputs else None
+        self._telemetry_log_override = "C:/AI-BS/logs/secondary_ffmpeg.log" if secondary_outputs else None
+        self._secondary_hls_dir = "C:/AI-BS/saved_data/broadcast_hls/secondary" if secondary_outputs else None
         self.process = None
         if hasattr(self, 'overlay_workers'):
             for w in self.overlay_workers:
@@ -513,6 +552,11 @@ class BroadcastDaemon:
         overlays: Optional[List[Dict[str, Any]]] = None,
         enable_6_track: bool = True
     ):
+        if getattr(self, "_secondary_outputs", False) is not True:
+            guard_code = legacy_coordinator_guard()
+            if guard_code is not None:
+                self.telemetry["capture_error_code"] = guard_code
+                return False
         if self.is_streaming or (getattr(self, "_owns_process", False) and self.process is not None and self.process.poll() is None):
             logging.warning("Stream is already running.")
             return False
@@ -564,7 +608,7 @@ class BroadcastDaemon:
         self.configured_bitrate = video_bitrate
 
         clean_game_name = "".join(x for x in game_name if x.isalnum() or x in " _-").strip(" .") or "General"
-        base_record_dir = "E:/Recordings" if os.path.exists("E:/") else "C:/AI-BS/recordings"
+        base_record_dir = getattr(self, "_archive_root_override", None) or ("E:/Recordings" if os.path.exists("E:/") else "C:/AI-BS/recordings")
         archive_dir = f"{base_record_dir}/{clean_game_name}"
         os.makedirs(archive_dir, exist_ok=True)
         
@@ -582,7 +626,8 @@ class BroadcastDaemon:
         is_vertical = (target_w == 1080 and target_h == 1920)
 
         # Build FFmpeg Command (We need inputs before building tee outputs)
-        ffmpeg_cmd = ["ffmpeg", "-y", "-nostats", "-stats_period", "1", "-progress", "pipe:2"]
+        ffmpeg_executable = "C:/Users/footb/AppData/Local/Microsoft/WinGet/Links/ffmpeg.EXE" if getattr(self, "_secondary_outputs", False) else "ffmpeg"
+        ffmpeg_cmd = [ffmpeg_executable, "-y", "-nostats", "-stats_period", "1", "-progress", "pipe:2"]
         video_inputs = []
         audio_inputs = []
         input_idx = 0
@@ -610,6 +655,36 @@ class BroadcastDaemon:
         expected_title = selected_source.get("title", selected_source.get("name"))
         expected_pid = selected_source.get("pid")
 
+        internal_follow = selected_source.get("capture_policy") == "verified_game_follow"
+        if internal_follow:
+            # This object exists only inside the isolated coordinator. HTTP
+            # payloads cannot supply providers or authorize a desktop fallback.
+            capture = getattr(self, "_capture_provider_override", None)
+            if (getattr(self, "_secondary_outputs", False) is not True or capture is None
+                    or len(active_sources) != 1 or selected_source.get("type") != "game"
+                    or selected_hwnd is not None):
+                self.telemetry["capture_error_code"] = "internal_follow_provider_unavailable"
+                return False
+            try:
+                if (capture.width != target_w or capture.height != target_h or capture.fps != fps):
+                    raise ValueError("Follow provider format differs from encoder input")
+                self._window_capture = capture
+                capture.start(timeout=3)
+                frame = capture.read_frame(timeout=0.5)
+                if type(frame) is not bytes or len(frame) != target_w * target_h * 4:
+                    raise ValueError("Invalid follow provider frame")
+                ffmpeg_cmd.extend(["-thread_queue_size", "2", "-f", "rawvideo", "-pixel_format", "bgra",
+                                   "-video_size", f"{target_w}x{target_h}", "-framerate", str(fps), "-i", "pipe:0"])
+                primary_input_configured = True
+                self._rawvideo_input = True
+                self.telemetry["capture_mode"] = "verified_game_follow_or_explicit_holding"
+            except Exception:
+                self.telemetry["capture_error_code"] = "internal_follow_provider_unavailable"
+                try:
+                    if capture.stop(timeout=1) is True:self._window_capture = None
+                except Exception:pass
+                return False
+
         def require_selected_window():
             if type(selected_hwnd) is not int or not 0 < selected_hwnd < 2**64:
                 raise ValueError("Invalid capture window handle")
@@ -624,7 +699,7 @@ class BroadcastDaemon:
         if selected_source.get("type") == "window" and selected_hwnd in (None, 0):
             self.telemetry["capture_error"] = "Choose a valid window handle before starting."
             return False
-        if selected_hwnd not in (None, 0):
+        if not internal_follow and selected_hwnd not in (None, 0):
             try:
                 require_selected_window()
                 if NativeWindowCapture is None or WindowCapturePipe is None:
@@ -787,7 +862,8 @@ class BroadcastDaemon:
                     if url.startswith("https://"):
                         outputs.append(f"[f=hls:hls_time=2:hls_list_size=5:method=POST:select=\\'v:0,a:0\\']{escaped_url}")
                     else:
-                        outputs.append(f"[f=flv:onfail=ignore:select=\\'v:0,a:0\\']{escaped_url}")
+                        transport = ":rw_timeout=8000000:tls_verify=1" if getattr(self, "_secondary_outputs", False) else ""
+                        outputs.append(f"[f=flv:onfail=ignore{transport}:select=\\'v:0,a:0\\']{escaped_url}")
                     self.telemetry["endpoints"][ep_name] = "PENDING_UNVERIFIED"
             else:
                 self.telemetry["endpoints"][ep_name] = "DISABLED"
@@ -798,6 +874,17 @@ class BroadcastDaemon:
         select_streams = "\\'v:0," + ",".join([f"a:{i}" for i in range(num_audio_streams)]) + "\\'"
         outputs.append(f"[{rec_mux_flags}:select={select_streams}]{archive_escaped}")
         self.telemetry["endpoints"]["Local Recording"] = "PENDING_UNVERIFIED"
+        hls_dir = getattr(self, "_secondary_hls_dir", None)
+        if hls_dir:
+            os.makedirs(hls_dir, exist_ok=True)
+            # The drive colon is nested in tee options and needs two parsing
+            # layers of escaping. No credential or destination URL enters HLS.
+            segment_path = f"{hls_dir}/segment_%09d.ts".replace(":", "\\\\\\:")
+            playlist = escape_tee_url(f"{hls_dir}/index.m3u8")
+            outputs.append("[f=hls:onfail=ignore:hls_time=2:hls_list_size=6:"
+                           "hls_flags=delete_segments+independent_segments+temp_file:"
+                           f"hls_segment_filename={segment_path}:select=\\'v:0,a:0\\']{playlist}")
+            self.telemetry["endpoints"]["Local HLS"] = "PENDING_UNVERIFIED"
         self.telemetry["ingest_verified"] = False
         self.telemetry["archive_verified"] = False
         tee_outputs = "|".join(outputs)
@@ -881,6 +968,14 @@ class BroadcastDaemon:
             if selected_hwnd not in (None, 0):
                 require_selected_window()
             logging.info(f"Spawning Hardware FFmpeg Broadcast Pipeline ({encoder_choice.upper()} @ {resolution} {fps}FPS)...")
+            process_options = {}
+            if getattr(self, "_secondary_outputs", False):
+                permitted_env = {"SYSTEMROOT", "WINDIR", "PATH", "PATHEXT", "TEMP", "TMP", "USERPROFILE", "LOCALAPPDATA", "APPDATA"}
+                child_env = {name: value for name, value in os.environ.items() if name.upper() in permitted_env}
+                child_env.update(DRY_RUN="true", HOLD_DISPATCH="true", LIVE_TRADING_ENABLED="false",
+                                 RECDEBUT_SENDING_ENABLED="false", AI_BS_BACKEND_MANAGE_DAEMONS="false",
+                                 AI_BS_BACKEND_BACKGROUND_ENABLED="false", AIBS_PAYMENT_MODE="disabled")
+                process_options["env"] = child_env
             self.process = subprocess.Popen(
                 ffmpeg_cmd,
                 creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0),
@@ -889,7 +984,8 @@ class BroadcastDaemon:
                 stderr=subprocess.STDOUT,
                 text=not self._rawvideo_input,
                 bufsize=0 if self._rawvideo_input else 1,
-                universal_newlines=not self._rawvideo_input
+                universal_newlines=not self._rawvideo_input,
+                **process_options
             )
             self._owns_process = True
             process = self.process
@@ -958,7 +1054,8 @@ class BroadcastDaemon:
             return self.process is process and getattr(self, "_stream_session", None) == session
         if not process or not current():return
         pending = {}
-        with open("C:/AI-BS/backend/ffmpeg.log", "a", encoding="utf-8") as log_f:
+        log_path = getattr(self, "_telemetry_log_override", None) or "C:/AI-BS/backend/ffmpeg.log"
+        with open(log_path, "a", encoding="utf-8") as log_f:
             if session is not None:
                 log_f.write(f"[SESSION pid={session[0]} epoch={session[1]}]\n")
                 log_f.flush()
@@ -1130,8 +1227,10 @@ async def start_stream_endpoint(req: StreamStartRequest):
         format_choice=req.format or "hybrid_mp4",
         sources=req.sources
     )
-    return {"status": "streaming" if success else "error", "process_running": bool(success),
-            "error_code": None if success else getattr(daemon, "telemetry", {}).get("capture_error_code"),
+    error_code = None if success else getattr(daemon, "telemetry", {}).get("capture_error_code")
+    status = "streaming" if success else "held" if error_code in {"COORDINATOR_ACTIVE", "OWNER_UNVERIFIED"} else "error"
+    return {"status": status, "process_running": bool(success),
+            "error_code": error_code,
             "ingest_verified": False, "archive_verified": False,
             "verification_scope": "ffmpeg_process_running_only"}
 

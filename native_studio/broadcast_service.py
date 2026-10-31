@@ -1,7 +1,9 @@
-"""Start only the local broadcast control service after explicit user intent.
+"""Legacy local control-service management and shared safe child environment.
 
 Importing this module does no I/O. Service readiness proves a matching local
 control endpoint, never a running encoder, accepted ingest, or finalized file.
+Native broadcast actions use broadcast_secondary_control; they do not invoke
+this legacy 8005 startup path. Importing this module starts neither service.
 """
 from __future__ import annotations
 

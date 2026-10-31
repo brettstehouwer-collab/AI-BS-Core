@@ -41,6 +41,7 @@ def load_daemon():
           'os': types.SimpleNamespace(path=types.SimpleNamespace(exists=lambda _: False), makedirs=Mock()),
           'logging': Mock(), 'threading': types.SimpleNamespace(Thread=Mock()),
           'build_encoder_flags': lambda *a, **k: [], 'detect_microphone': lambda: 'fixture microphone',
+          'legacy_coordinator_guard': lambda: None,
           'OBSOrchestrator': None, 'open': Mock(return_value=opened)}
     def capture_fixture(hwnd,pid,title,**kwargs):
         return types.SimpleNamespace(width=2,height=2,fps=kwargs.get('fps',30),

@@ -53,11 +53,11 @@ class NativeBroadcastSetup205Tests(unittest.TestCase):
             windows=studio.get_desktop_capture_windows()
         self.assertEqual(windows[0]['title'],'FixtureWindow  ')
 
-    def test_explicit_display_source_remains_visible_when_game_layer_disabled(self):
+    def test_layer_draft_does_not_authorize_unverified_coordinator_screen_preview(self):
         view=SimpleNamespace(canvas=Mock(),txt_telemetry=Mock(),scenes_sources=SimpleNamespace(sources_list=[{'type':'game','enabled':False},{'type':'screen','enabled':True}]))
         studio.UniversalOmniStudioNativeView._on_source_toggled(view,'Screen / Display Capture',True)
-        view.canvas.set_game_capture_enabled.assert_called_with(True)
-        view.canvas.set_desktop_capture_enabled.assert_called_with(True)
+        view.canvas.set_game_capture_enabled.assert_called_with(False)
+        view.canvas.set_desktop_capture_enabled.assert_called_with(False)
 
     def widget(self, cfg):
         with patch.object(profiles.StreamProfileManager, 'load', return_value=copy.deepcopy(cfg)), \
@@ -103,7 +103,7 @@ class NativeBroadcastSetup205Tests(unittest.TestCase):
         widget.apply_platform_preset('Twitch')
         self.assertEqual({name: checkbox.isChecked() for name, checkbox in widget.dest_checkboxes.items()}, before)
 
-    def test_selected_window_handle_and_title_are_carried_to_daemon_payload(self):
+    def test_selected_window_identity_is_carried_to_secret_free_coordinator_payload(self):
         cfg = self.fixture_config()
         settings = self.widget(cfg)
         view = SimpleNamespace(
@@ -111,13 +111,14 @@ class NativeBroadcastSetup205Tests(unittest.TestCase):
             combo_fps=SimpleNamespace(currentText=lambda: '60 FPS'),
             canvas=Mock(), txt_telemetry=Mock(),
             scenes_sources=SimpleNamespace(sources_list=[{'type': 'game', 'enabled': True}]),
+            game_discovery=SimpleNamespace(_window_pid_by_handle={2468:77},
+                source_selection=lambda:('window',{'hwnd':2468,'pid':77,'title':'FixtureWindow'})),
         )
         studio.UniversalOmniStudioNativeView._on_game_selected(view, 'FixtureWindow', 2468)
         with patch.object(profiles.StreamProfileManager, 'load', return_value=copy.deepcopy(cfg)):
             payload = studio.UniversalOmniStudioNativeView._stream_payload(view)
-        self.assertEqual(payload.get('game_name'), 'FixtureWindow')
-        self.assertIn({'type': 'window', 'hwnd': 2468, 'name': 'FixtureWindow', 'enabled': True}, payload.get('sources', []))
-        self.assertFalse(any(source.get('type') in {'screen', 'desktop'} for source in payload.get('sources', [])))
+        self.assertEqual(payload,{'source_mode':'window','source':{'hwnd':2468,'pid':77,'title':'FixtureWindow'},'targets':['facebook']})
+        self.assertNotIn('key',payload)
 
     def test_window_selection_emits_raw_win32_title_for_exact_identity(self):
         rows = [{'hwnd': 2468, 'title': 'FixtureWindow', 'width': 1280, 'height': 720, 'pid': 77}]
