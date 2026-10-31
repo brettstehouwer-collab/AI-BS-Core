@@ -2814,3 +2814,7 @@ Final focused 304 cases / 20 groups PASS, zero failures/errors/operational denia
 ### Record207 reproducible guard and final runtime boundary
 
 Safe reviewed command from C:\AI-BS: python -B scripts/verify_native_broadcast_offline.py. Versioned runner is byte-identical to the tested304 runner (SHA e33d21072d81c227d1123926266a61d40cd0dc02af831fc42fadcf49c21646eb); no unguarded suite is substituted. Actual19:35:49UTC: port8007 listeners0;42344/10552 Auto HOLD/NO_VERIFIED_GAME, frame5017/media167.233333s. Native normal UI not launched; frozen backend check passed. Source commit/final handoff identity is in docs/agent_sync/manifest_record207_v532983.json, populated after first scoped commit; no circular hash claim.
+
+
+## Record207 acceptance addendum - 2026-10-31 19:39:31 UTC
+Installed v5.329.83 sender 42344/10552 automatically reacquired Fortnite after the earlier no-game hold, without a source command or runtime restart. Verified game frames and encoded counters advanced 11594 to11655; media time386466667 to388500000. Audio generated silence; microphone deferred; live trading DISABLED. Exact evidence: docs/agent_sync/automatic_game_acceptance_record207_v532983.json. Earlier hold/build/incident receipts remain historical and unchanged.
