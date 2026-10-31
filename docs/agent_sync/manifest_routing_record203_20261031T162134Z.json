@@ -1,0 +1,743 @@
+{
+  "handoff_id": "routing_record203",
+  "protocol": "AI-BS-UADP-1.0",
+  "utc": "2026-10-31T16:21:34.181527+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next Codex or Antigravity executor",
+  "branch": "codex/audit-v532976-20261031",
+  "source_commit": "30d23c202641201e48f5e014e0fc12c94c2200cd",
+  "version": "v5.329.79",
+  "source_manifest_sha256": "f37da04020a3adefd0e37562f5e5bbde8fa5cd51541bd1ef74f4e9ab390e2c90",
+  "changed_source_and_documentation_files": [
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "bytes": 1138409,
+      "sha256": "7e21237b715387bc362edf6c091c65e4c1c8f0fc4c543543b5d704c76eaea630"
+    },
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "bytes": 222035,
+      "sha256": "a9bd687020cc9177e86a3222df3898503415381e119b337e08136fbb76514e15"
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "bytes": 3011,
+      "sha256": "4fb5e937f98aee59c3df21e3e00be4c4791b6bcdc6ba966923b0e69927a539d0"
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "bytes": 112853,
+      "sha256": "92da9e0f90feadadf7e5fcdf035ad969d324842aaecb3f7943f07614e97a8646"
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "bytes": 98450,
+      "sha256": "eb4c9db8c7cba1c52648b7a83ec79663dac2d15844bab411cc2d566ab4dbff7b"
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "bytes": 223395,
+      "sha256": "eb7741348ac1fe5dfc69bf82607d8c35fbecabfebea21c714043def5f34f1f06"
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "bytes": 161488,
+      "sha256": "6618729d844c7d7a7b8fff06be9dc40107fab7535a890d637c2fa150a8299a07"
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "bytes": 13215,
+      "sha256": "292a70e59fd3b29b734f7dcfc8014ffe12ff4a07c92a043ce7d7697ef72bc585"
+    },
+    {
+      "path": "backend/AI_BS_Backend.py",
+      "bytes": 368023,
+      "sha256": "b790f735e1130bd66eefc62edd0a426a11125ffb046553bbcf3522b97c417ecd"
+    },
+    {
+      "path": "backend/core/hybrid_reasoning_engine.py",
+      "bytes": 81582,
+      "sha256": "5286ea74ca685150142a7b34ae1ad8c15a620a3a037b57d0d333fa7b319c2d4c"
+    },
+    {
+      "path": "backend/core/media_intent_policy.py",
+      "bytes": 9616,
+      "sha256": "d10730aeed6757da491b566b365bf346e0043a52493d4792204cbfc44a0f7d51"
+    },
+    {
+      "path": "backend/routers/chat_router.py",
+      "bytes": 13370,
+      "sha256": "825ea504e83a030892f6ca3523d32f60ce1f136bbd1b29ad6f32ee527f17327d"
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "bytes": 237055,
+      "sha256": "18cab00ac993a93d07fee8d7449a7dd07f3db06c7807e256ef798b53567c5a67"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "bytes": 1121261,
+      "sha256": "ea4e4435bdf6f044af4fbe28555f1f7420990c67500c5599644a8e4469fc1be6"
+    },
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "bytes": 747088,
+      "sha256": "5d8ba588dd9fb48ba4565aeeb00d67ad4ae6a5c4e9cd65a3069714eab7543bd1"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "bytes": 343255,
+      "sha256": "af3ee444df9c31ffbac4288734a21a0488db56b66d492d2f9bb2a1227ccb1f80"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/MEDIA_ROUTING_RELEASE_v5.329.79.json",
+      "bytes": 11680,
+      "sha256": "0f1ca9e79445e46306bf3a32660720fd33d10ebdd970e01ae5753a014aa0e6b1"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/MEDIA_ROUTING_RELEASE_v5.329.79.md",
+      "bytes": 7439,
+      "sha256": "32d9ac6267f317efb19c242a61ee0d54c6f8a1eab5f5c4314cca44c8d7368a6d"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "bytes": 9020,
+      "sha256": "fda3a14a43fe15476e927080af56e2bcbc4286944024f6f69231a166e5d849e7"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "bytes": 14550,
+      "sha256": "ab86432f78a2225fb46d88176981942c7fa2934a1030c907fa80edbb188a5892"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/findings.json",
+      "bytes": 52570,
+      "sha256": "de3c05252bc9a47fe18e1616af308241f0707f86f49f69d5b54a948395928596"
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/recovery_gate.json",
+      "bytes": 3320,
+      "sha256": "9871648ec7cb22ce6fe2146f6e3bcfe88e05c121a5d85f5c503a27fad415c561"
+    },
+    {
+      "path": "frontend/components/ChatTab.jsx",
+      "bytes": 418400,
+      "sha256": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0"
+    },
+    {
+      "path": "frontend/components/MobileGeminiChat.jsx",
+      "bytes": 66680,
+      "sha256": "bc1b2c2700d49d2e393e55084c002f4bca196c010a57512994051a8578fd091b"
+    },
+    {
+      "path": "frontend/components/MobileStehouwerChat.jsx",
+      "bytes": 108150,
+      "sha256": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec"
+    },
+    {
+      "path": "frontend/components/components/ChatTab.jsx",
+      "bytes": 418400,
+      "sha256": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0"
+    },
+    {
+      "path": "frontend/components/components/MobileGeminiChat.jsx",
+      "bytes": 66680,
+      "sha256": "bc1b2c2700d49d2e393e55084c002f4bca196c010a57512994051a8578fd091b"
+    },
+    {
+      "path": "frontend/components/components/MobileStehouwerChat.jsx",
+      "bytes": 108150,
+      "sha256": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec"
+    },
+    {
+      "path": "frontend/components/components/hooks/useStehouwerHybrid.js",
+      "bytes": 1950,
+      "sha256": "a544f146a34b9027dc9e3ae931ed9193aeadd9fe4369117fdb894d957a53cdc8"
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "frontend/components/hooks/useStehouwerHybrid.js",
+      "bytes": 1950,
+      "sha256": "a544f146a34b9027dc9e3ae931ed9193aeadd9fe4369117fdb894d957a53cdc8"
+    },
+    {
+      "path": "frontend/components/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "bytes": 778993,
+      "sha256": "27f2d37dc074c9701d4cc3a489e0c952c2d75c46a5982c4e0b2c011af00a89dc"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 3582,
+      "sha256": "04b38a23c9d5618bc704624e1f1208bbc7c679b3854b2ba3eed2939cf7ab0c79"
+    },
+    {
+      "path": "frontend/public/version.json",
+      "bytes": 194,
+      "sha256": "ab531e3a66bb9898e9f48e93c0994294699c4155ca9bcdcce574bf6eb0226839"
+    },
+    {
+      "path": "frontend/src/components/ChatTab.jsx",
+      "bytes": 418400,
+      "sha256": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0"
+    },
+    {
+      "path": "frontend/src/components/MobileGeminiChat.jsx",
+      "bytes": 66680,
+      "sha256": "bc1b2c2700d49d2e393e55084c002f4bca196c010a57512994051a8578fd091b"
+    },
+    {
+      "path": "frontend/src/components/MobileStehouwerChat.jsx",
+      "bytes": 108150,
+      "sha256": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec"
+    },
+    {
+      "path": "frontend/src/components/components/ChatTab.jsx",
+      "bytes": 418400,
+      "sha256": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0"
+    },
+    {
+      "path": "frontend/src/components/components/MobileGeminiChat.jsx",
+      "bytes": 66680,
+      "sha256": "bc1b2c2700d49d2e393e55084c002f4bca196c010a57512994051a8578fd091b"
+    },
+    {
+      "path": "frontend/src/components/components/MobileStehouwerChat.jsx",
+      "bytes": 108150,
+      "sha256": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec"
+    },
+    {
+      "path": "frontend/src/components/components/hooks/useStehouwerHybrid.js",
+      "bytes": 1950,
+      "sha256": "a544f146a34b9027dc9e3ae931ed9193aeadd9fe4369117fdb894d957a53cdc8"
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "frontend/src/components/hooks/useStehouwerHybrid.js",
+      "bytes": 1950,
+      "sha256": "a544f146a34b9027dc9e3ae931ed9193aeadd9fe4369117fdb894d957a53cdc8"
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "frontend/src/hooks/useStehouwerHybrid.js",
+      "bytes": 1950,
+      "sha256": "a544f146a34b9027dc9e3ae931ed9193aeadd9fe4369117fdb894d957a53cdc8"
+    },
+    {
+      "path": "frontend/src/utils/chatRequestIntent.js",
+      "bytes": 969,
+      "sha256": "0a0608a3fbfeb0ac5fb96ddb1be335f7474cf0013657a8c03ac9efbaeff94bea"
+    },
+    {
+      "path": "frontend/src/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "frontend/version.js",
+      "bytes": 354,
+      "sha256": "adad7c3cc8ac6a032a05ce50461c3ffffb33d9c14bc1c2da7b8666421fb418b6"
+    },
+    {
+      "path": "native_studio/app.py",
+      "bytes": 48109,
+      "sha256": "8df411edee9e1ea19c7c298994c9d0fb18884f5741eb62a39f6abfc4cb20aa5d"
+    },
+    {
+      "path": "native_studio/chat_service.py",
+      "bytes": 6612,
+      "sha256": "bcf4390594b813b91571a988c94fe89cca44e689113edd0464aa345858e76225"
+    },
+    {
+      "path": "native_studio/crypto_swarm_view.py",
+      "bytes": 13382,
+      "sha256": "d9beb2055093661ab588109ac02264b65c667e577432903fd3baf4009b3b030c"
+    },
+    {
+      "path": "native_studio/system_health_view.py",
+      "bytes": 22054,
+      "sha256": "ac75dfe57160d49c63f18eca98bf2f9d170f65ae61cb9a70667da1f62d853284"
+    },
+    {
+      "path": "native_studio/telemetry_hub.py",
+      "bytes": 7321,
+      "sha256": "2684fae78d249050d78a15ad00ddfcc5db187ee9c716238c2fcf029a02011b0c"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 199,
+      "sha256": "a9b22dd9d54cb35e8fdcc9ff69408d6ae0bbe67111f79127baf91618a73ac264"
+    },
+    {
+      "path": "package.json",
+      "bytes": 429,
+      "sha256": "229e45c3d5f17a4d098e8a919965a0936c839f34f8ed2a3f03ac229f231f0f09"
+    },
+    {
+      "path": "release.json",
+      "bytes": 193,
+      "sha256": "51774cb83f7aeed6def8ad998a1c8b8c98fc351ff456f3463838ff748854d84d"
+    },
+    {
+      "path": "scripts/tests/test_chat_current_intent.mjs",
+      "bytes": 7800,
+      "sha256": "af92e4dfe45ba64ff60e3f22cfe3f87fe52f0422fa47f6accb5cb62d20761a7e"
+    },
+    {
+      "path": "scripts/tests/test_comfy_status_routing.py",
+      "bytes": 11636,
+      "sha256": "86c3ed1ba21ece439beac33981b7d56771d536ef0877c047222095c26cfa9f00"
+    },
+    {
+      "path": "scripts/tests/test_media_status_endpoint_priority.py",
+      "bytes": 7415,
+      "sha256": "b365c5fb9238eb7255e43179c7e5ec0ce42ee1cd8f68d5999e96e9ad92133085"
+    },
+    {
+      "path": "scripts/tests/test_native_crypto_truth.py",
+      "bytes": 9117,
+      "sha256": "e59fd4773cb5209d8ccc000477ac21edaa92d86e5ecf88dbd3f5985e61b17490"
+    },
+    {
+      "path": "scripts/tests/test_native_navigation_widgets.py",
+      "bytes": 3542,
+      "sha256": "a9d985c358a02a92a4aa81fe4a4def715dd1331c0dee08c013c91973ef9cdd9a"
+    },
+    {
+      "path": "scripts/tests/test_native_service_intent_payload.py",
+      "bytes": 1819,
+      "sha256": "a3c396d7effd844f7d8b12445ceda3d9b887e1e22001771d56793e6213e442aa"
+    },
+    {
+      "path": "scripts/tests/test_native_system_health_truth.py",
+      "bytes": 8019,
+      "sha256": "eee6c8700a65de3554ac0f6ee1d896b4ae24547eda36bd22536a4a0d9e1b62b7"
+    },
+    {
+      "path": "scripts/tests/test_native_telemetry_shutdown.py",
+      "bytes": 6326,
+      "sha256": "79e7bda4cead6114906aef879fd555f955d7aafea433512519d5747ec5bf4687"
+    },
+    {
+      "path": "scripts/tests/test_native_window_shutdown.py",
+      "bytes": 3808,
+      "sha256": "fe7fd97bff2e51ca6e68c20ea5afd46961d8ddf118173763bd008e021b97862a"
+    },
+    {
+      "path": "version.txt",
+      "bytes": 10,
+      "sha256": "42c36f54ada24f9279dcc902dfae5e4a020e47fe71c2a609cccc87ecfb87543a"
+    }
+  ],
+  "native_frozen_source_files": [
+    {
+      "path": "native_studio/__init__.py",
+      "sha256": "731235db95122aef1ec73f5585a84556c6b942b26e14b44931842899fd1edafc",
+      "bytes": 779
+    },
+    {
+      "path": "native_studio/accounting_view.py",
+      "sha256": "225df8b8f7e2f0ca34d3e9386a1a84661418418be2d95c3741bd0a7f86488e94",
+      "bytes": 51983
+    },
+    {
+      "path": "native_studio/ai_compute.py",
+      "sha256": "5e7054e6e838892bff9c7a4eef6558a0a04a99c839276c1d258c74bdf6c2145e",
+      "bytes": 6454
+    },
+    {
+      "path": "native_studio/app.py",
+      "sha256": "8df411edee9e1ea19c7c298994c9d0fb18884f5741eb62a39f6abfc4cb20aa5d",
+      "bytes": 48109
+    },
+    {
+      "path": "native_studio/audio_kernel.py",
+      "sha256": "271409cf43cc6b67ab6d10475f7b8289c8a14c82475b88d4ec55a0acf14cf60d",
+      "bytes": 23916
+    },
+    {
+      "path": "native_studio/automation_console_view.py",
+      "sha256": "29f13dddf285365c8341329ca22d22897b03c64984bb9866235e6490e86394b5",
+      "bytes": 15636
+    },
+    {
+      "path": "native_studio/banquet_cad_view.py",
+      "sha256": "9ba22277a2a9170b9acfd567a8dad690785d1ee9790d4b0ead5728823df743d1",
+      "bytes": 11802
+    },
+    {
+      "path": "native_studio/bible_hub_view.py",
+      "sha256": "fe1ff00f596d6fe59d798467162081d2e21a857955c34278aee0dfdd0fd1cbe8",
+      "bytes": 11382
+    },
+    {
+      "path": "native_studio/broadcast_stream_engine.py",
+      "sha256": "e4820c27150507d4c3cdb2f465d97da1f4300c6886a4bae1437bbc7858ddebdb",
+      "bytes": 52178
+    },
+    {
+      "path": "native_studio/bs_chat_ide_full.py",
+      "sha256": "eefa887c39ef824d1e2389bc0b191101bb7dff107e2b8962e51bc2a9f9e83f19",
+      "bytes": 118766
+    },
+    {
+      "path": "native_studio/calendar_view.py",
+      "sha256": "ffe4a865df5d91633a07abd70de0a48aa0f52defc8f4db0f185a6f459b5d3450",
+      "bytes": 12413
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "sha256": "6e1b348424a5fabece9c54a2c1ace216db928a7450854bcde8cc466f459e05a7",
+      "bytes": 14634
+    },
+    {
+      "path": "native_studio/chat_service.py",
+      "sha256": "bcf4390594b813b91571a988c94fe89cca44e689113edd0464aa345858e76225",
+      "bytes": 6612
+    },
+    {
+      "path": "native_studio/clients_crm_view.py",
+      "sha256": "a20651607add30276b3da18b22f6b944c6039cce9271c595219355023d90a60e",
+      "bytes": 20973
+    },
+    {
+      "path": "native_studio/cloud_drive_view.py",
+      "sha256": "2d1e69dff38ea0ddf3d27f3cdc933427b4fb33e5434c76dc771e7d08264f5bcc",
+      "bytes": 15563
+    },
+    {
+      "path": "native_studio/cluster_view.py",
+      "sha256": "05cbea1cf35a7a3f6fe8f4e285a7e813786b2c22fae0d1ed16625132711c43d5",
+      "bytes": 11206
+    },
+    {
+      "path": "native_studio/comfy_workspace_view.py",
+      "sha256": "539c9c3cc22a1266ef04a112667700b705abd214ab6b8b9e50365db1ac9e5df6",
+      "bytes": 19793
+    },
+    {
+      "path": "native_studio/compute_view.py",
+      "sha256": "1981813679862ca173791c2ea4e83026a1e3b0ba257c26990f55544253e6fdb8",
+      "bytes": 9119
+    },
+    {
+      "path": "native_studio/creation_suite_subtools.py",
+      "sha256": "d89c6dc7f9b287c5522d2fcb918896f1e9d9d8d73c11198326ecf4bb3e39dbf8",
+      "bytes": 63121
+    },
+    {
+      "path": "native_studio/creative_suite_views.py",
+      "sha256": "64727f0e413de460d62e793dcf679f677f18d88d4ad35cccdba07b2eacd8bf93",
+      "bytes": 52581
+    },
+    {
+      "path": "native_studio/crypto_swarm_view.py",
+      "sha256": "d9beb2055093661ab588109ac02264b65c667e577432903fd3baf4009b3b030c",
+      "bytes": 13382
+    },
+    {
+      "path": "native_studio/daw_subviews.py",
+      "sha256": "858974a2cb8b57258019c8ddc4566f37c8a714b43b223e538f218b944993be25",
+      "bytes": 36491
+    },
+    {
+      "path": "native_studio/dpg_hud.py",
+      "sha256": "1019acfcbd4c189700191f407549f693e52c235bbe61c2e1f238597286cf4a2c",
+      "bytes": 9065
+    },
+    {
+      "path": "native_studio/ecosystem_blueprint_view.py",
+      "sha256": "d72735a76803edf83fca5cee5f753b0bebbfa250d2f4c36751da1c76e1911f70",
+      "bytes": 35850
+    },
+    {
+      "path": "native_studio/email_client_view.py",
+      "sha256": "472db27f6fcd0b801bedd954062f360ffa4fc2de52042b2d4ac81e391eebf036",
+      "bytes": 54364
+    },
+    {
+      "path": "native_studio/engine.py",
+      "sha256": "555c344377a1594ef937555f366099e774a890bb24d77fb43a013cad3dd80608",
+      "bytes": 15823
+    },
+    {
+      "path": "native_studio/engineering_views.py",
+      "sha256": "6d6e6ff17b68b0877d533bc469de99a7269e796606d2ca0ff0afab8f653b4dec",
+      "bytes": 9530
+    },
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "sha256": "c4a967d5ba65e33781ceb131bdfd4582a88e46595a6a98e115aebcee7855797b",
+      "bytes": 21090
+    },
+    {
+      "path": "native_studio/executive_service.py",
+      "sha256": "a3368adb053af9f68466fb4f26ddcdd0439b0b8a8ab4b239c042a9000f3a0380",
+      "bytes": 7680
+    },
+    {
+      "path": "native_studio/fe_express_service.py",
+      "sha256": "ac517c3cee9a9ddf40470ce13bc4abf0babd505f23f18a8a635751452ab83e8d",
+      "bytes": 6659
+    },
+    {
+      "path": "native_studio/fe_express_view.py",
+      "sha256": "21beec2e8158c63d75f1e7dc9fb91ac4e60b87f0e270b5c4b9e9afd89ef8aefa",
+      "bytes": 51261
+    },
+    {
+      "path": "native_studio/intelligence_views.py",
+      "sha256": "b9515abae45991c9a8462a2ce227748cc1fe9d48ba61fcf9a19f9d19d3d60df7",
+      "bytes": 108559
+    },
+    {
+      "path": "native_studio/lexicon_view.py",
+      "sha256": "884343be5574cbc5b937ab043a5c57495961b0a9fabaa09f0d03049e4e810797",
+      "bytes": 12329
+    },
+    {
+      "path": "native_studio/local_connection.py",
+      "sha256": "e0c25f3215754f69f0491ec1621440e57b44b4afc3136a51a56bd86ca6166975",
+      "bytes": 10945
+    },
+    {
+      "path": "native_studio/media_client.py",
+      "sha256": "69c1f7cb349fccb996faa9024b56cfc4993bded218c3e53fd3d227deeeba7377",
+      "bytes": 7472
+    },
+    {
+      "path": "native_studio/media_view.py",
+      "sha256": "668472dcb189ba3aa0da3a7ec23af896af1ae9c6139b9b2edc591e55deedb906",
+      "bytes": 7199
+    },
+    {
+      "path": "native_studio/music_daw_view.py",
+      "sha256": "c3abafef24418ba8c9ca91bc2d75a2a1292af03497c941f090d40f05c6b8424b",
+      "bytes": 65960
+    },
+    {
+      "path": "native_studio/navigation_registry.py",
+      "sha256": "4b9913e2b528bdd132a9c1198c935f713775076ac6805332871ad1930d61e86e",
+      "bytes": 12217
+    },
+    {
+      "path": "native_studio/neural_swarm_router.py",
+      "sha256": "637ecd121ed499f8e0700a02ccae8b5b752477101329380c8bbbd0d0e243bb53",
+      "bytes": 16739
+    },
+    {
+      "path": "native_studio/noto_inventory_view.py",
+      "sha256": "563f5303463726cc1ee75e386cb5dc0db1594599c5815427d9bf85f3a4b5d873",
+      "bytes": 13524
+    },
+    {
+      "path": "native_studio/nutrition_view.py",
+      "sha256": "cc79e6d16f8a32adc40ccd46e5bd45aaf4ee64fa4d1c98c57eb35e1beded31a6",
+      "bytes": 24164
+    },
+    {
+      "path": "native_studio/omni_broadcast_studio.py",
+      "sha256": "d5fd30d65d6a5640d58bfe508e7e6cd8a43f10defcec9a3ac51a9d3b7581c809",
+      "bytes": 112340
+    },
+    {
+      "path": "native_studio/onboarding_view.py",
+      "sha256": "ccbd18f2385e6117300f93165ac8e7fea1748cefbd0bce412385216ce5a276a8",
+      "bytes": 18116
+    },
+    {
+      "path": "native_studio/operations_views.py",
+      "sha256": "d2abd08e9b46f752a5f073c83d226144759bcc7651d03aed628105ddfc5bb5fa",
+      "bytes": 43215
+    },
+    {
+      "path": "native_studio/pattern_export.py",
+      "sha256": "74bd78996af6de43fd189a18ea28b65cba62b436621f47b574f96d65d0b60b5a",
+      "bytes": 5547
+    },
+    {
+      "path": "native_studio/phone_repair_view.py",
+      "sha256": "51988d47f520ce3038f25c332d3993b54a12d1210391dad2f03c0381b30b3752",
+      "bytes": 11052
+    },
+    {
+      "path": "native_studio/power_washing_view.py",
+      "sha256": "966843a584539739da0f9fccebf69e336c12bc456b0d63a20cda66a2fdc427b3",
+      "bytes": 13994
+    },
+    {
+      "path": "native_studio/rec_debut_view.py",
+      "sha256": "93f4bc97159daace83589621b054662ceb2e343e2a346fbe4686d9dbcdd504a2",
+      "bytes": 22741
+    },
+    {
+      "path": "native_studio/runtime_policy.py",
+      "sha256": "fd116e82955dc271a6a8108acf5ab237c55bf9ae7c898abfc0e290f51927e5ad",
+      "bytes": 1908
+    },
+    {
+      "path": "native_studio/screen_mirror_view.py",
+      "sha256": "34ca616805eecf629b1ceac5b415488e7e73d61432eee7d98f0df7c1831bade6",
+      "bytes": 10219
+    },
+    {
+      "path": "native_studio/screenplay_client.py",
+      "sha256": "c452d8bc4d03e9bbbee31d52443599b081d8f2296f511b88bc02aad2a358bb73",
+      "bytes": 18411
+    },
+    {
+      "path": "native_studio/screenwriting_modals.py",
+      "sha256": "3071739f28c7cf3a04a1a206a388b17595ad5dea3aa159d51076078a161307ea",
+      "bytes": 255035
+    },
+    {
+      "path": "native_studio/screenwriting_view.py",
+      "sha256": "6b9a4c346283ab9cae90422bfd6acfdf37ef47fc4488717e7a24411e18ce7e44",
+      "bytes": 129545
+    },
+    {
+      "path": "native_studio/service_orchestrator.py",
+      "sha256": "37ee7f04037a8f3093aa28bee778f2d26cc396758b520de7ceb329d364b129b8",
+      "bytes": 21664
+    },
+    {
+      "path": "native_studio/steam_gaming_view.py",
+      "sha256": "7f88b078644ac4d425fbb4541395cc19dd0d53d3d53b5e6a7c3d9503f4717bf2",
+      "bytes": 20748
+    },
+    {
+      "path": "native_studio/subsystem_views.py",
+      "sha256": "6877cb52c5d100ad7353f8c8a039b57fc00b7ec84318b45353eecb8eea0cd85e",
+      "bytes": 11411
+    },
+    {
+      "path": "native_studio/syndication_view.py",
+      "sha256": "9fd9eb878dc9ccd9b26e084eaba3f5ace39f6a107bf41c4a2b4fc3f3e1618bc4",
+      "bytes": 20439
+    },
+    {
+      "path": "native_studio/system_health_view.py",
+      "sha256": "ac75dfe57160d49c63f18eca98bf2f9d170f65ae61cb9a70667da1f62d853284",
+      "bytes": 22054
+    },
+    {
+      "path": "native_studio/telemetry_hub.py",
+      "sha256": "2684fae78d249050d78a15ad00ddfcc5db187ee9c716238c2fcf029a02011b0c",
+      "bytes": 7321
+    },
+    {
+      "path": "native_studio/telemetry_shm.py",
+      "sha256": "47f202f9d0a5d21354f129d748c010b1476ddb128d3054cc60bd05edc2a79ff4",
+      "bytes": 4036
+    },
+    {
+      "path": "native_studio/theme.py",
+      "sha256": "19461f62e63eff93482f1affd56e7129a7a1bf273cd70a133a25273816a37492",
+      "bytes": 8451
+    },
+    {
+      "path": "native_studio/updater.py",
+      "sha256": "438b16bc19203301c459baf0dbaad6b3347aac82ad26157254ce2dbca0809897",
+      "bytes": 18061
+    },
+    {
+      "path": "native_studio/views.py",
+      "sha256": "9d9ecd5f601b784f15cb137364406044a59f5c18a93906288ba5afd75057f6b6",
+      "bytes": 22133
+    },
+    {
+      "path": "native_studio/web_telemetry_view.py",
+      "sha256": "b39b61b3948f36d94cb802884e160f520f01fa2d412f1c52c81be4229f40fcca",
+      "bytes": 15600
+    },
+    {
+      "path": "native_studio/widgets.py",
+      "sha256": "5e6f173a78d65c39488d12289e9803ca665e3ab30989e3deb03247b489f2943c",
+      "bytes": 4594
+    },
+    {
+      "path": "native_studio/widgets_web_parity.py",
+      "sha256": "91a02d3a0055d458858e26eaa1e30b0d3b2d8e33b830aaf64c83446435cc8228",
+      "bytes": 4861
+    }
+  ],
+  "working_tree": {
+    "dirty": true,
+    "raw_status_sha256": "9d5dc55261e17efcc90d1db24e085a915d122e4ed35da1f2e863362e9d426ca7",
+    "full_status_in_encrypted_evidence": "evidence/routing203/worktree_after.z",
+    "unrelated_changes_preserved": true
+  },
+  "completed": [
+    "Rawintentcurrent-userboundary across33web/1nativepayloadsites",
+    "Boundedread-onlyComfyUIstatus beforeweb/coding/model/media dispatch",
+    "Backward-compatiblechat/OpenAI/plain adapters; explicitgenerationpreserved",
+    "Windows79installed2256files/3launchers; web79staticliveverified",
+    "Native202completed45-testrepairs retained; wholeGUIaudit remains partial",
+    "Nineledgerprefixes preserved; both stoppedruntime states encrypted"
+  ],
+  "verification": {
+    "fresh_python_cohort": 79,
+    "node_cases": 64,
+    "existing_safe_media_cases_separate": 2,
+    "actual_policy_endpoint_composition": 9,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "strict_typescript": true,
+    "versions": true,
+    "cohorts_overlap_not_added": true,
+    "live_status_cases": 7,
+    "live_auth_held_aliases": 1,
+    "native_full_gui_tested": false,
+    "signing": "UNSIGNED"
+  },
+  "decisions": [
+    "ADR-126: status is observation; creation requires explicitcurrentuserauthority; contexts do not authorize actions; preserveauth/formats/windows/history"
+  ],
+  "known_failures_limits": [
+    "Commercial/v1alias AUTH_HELD foradmincredential; functionalpath notlivecertified",
+    "FullGUI/allworkflows pausedbyuser; 14dead/unboundcontrols andmediareadiness remainopen",
+    "Chromaidentity/vectorrecovery andduplicaterouteownership remainopen",
+    "Native delta requires authenticatedRecord201base; notstandalone",
+    "Inherited stagedwhitespace ifany classifiedinrestrictedreceipt; exactpreimages retained"
+  ],
+  "test_commands": [
+    "scripts/Run-AIBSAuditBatch.ps1 fixedofflinefourjobs",
+    "Ebootstrap/final_combined_regressions203.py (documentedactualrunner infinal79receipt)",
+    "Ebootstrap/verify_status203.py (7statuscases+commercialauthboundary,no generation)",
+    "Erelease staticcompiled/version readback andfrozenconnection support"
+  ],
+  "release": {
+    "windows": "v5.329.79",
+    "firebase": "v5.329.79",
+    "existing_v78_windows_not_closed": true,
+    "hosted_app_javascript_executed": false
+  },
+  "holds": {
+    "live_trading": "DISABLED",
+    "crypto8007": "ABSENT",
+    "payment_outreach_background": "HELD"
+  },
+  "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "next_step": "Usecorrectedstatusroute; resumeComputerUseonlywhenuserpermits. Continueunsupportedworkflow/Chroma/routeownershipaudit withoutclaimingfullpass."
+}
