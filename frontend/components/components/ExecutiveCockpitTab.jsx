@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{action_id?: string, pillar: string, action_name?: string, action?: string, tier?: number, status?: string, parameters?: unknown, result?: unknown}} ExecutiveAction */
+/** @typedef {{severity: string, category: string, title: string, message: string, metadata?: {file_hash?: string}}} SentinelAlert */
+/** @typedef {{running?: boolean, status?: string, bandwidth_mbps?: number, rigel_mining?: boolean}} SaladStatus */
+import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
 
+/** @param {{BACKEND_URL?: string, backendUrl?: string}} props */
 export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   const activeBackend = backendUrl || BACKEND_URL || useAppStore((state) => state.BACKEND_URL) || 'http://localhost:8080';
 
@@ -18,18 +22,20 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
     {
       role: 'assistant',
       content: "⚡ **Sovereign Executive Command Cockpit Online (v5.327.0)**\n\nDirectorial Voice HUD & Autonomous Sentinel Engine active. 100% Sovereign Local RTX 4090 execution enforced (Zero Cloud Spend: $0.00).\n\nSpeak or issue directives across Media Studio, Broadcast Kernel, Crypto Swarm, Knowledge Vault (305k records), and Local Ollama Swarm.",
-      tool_calls: []
+      tool_calls: /** @type {ExecutiveAction[]} */ ([])
     }
   ]);
   const [isSendingChat, setIsSendingChat] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Column 2: 4-Pillar Matrix Status
   const [matrixStatus, setMatrixStatus] = useState({
+    salad: /** @type {SaladStatus | undefined} */ (undefined),
     pillars: {
+      salad_engine: /** @type {SaladStatus | undefined} */ (undefined),
       media_studio: { status: 'ONLINE', nvenc_cfr_gate: 'READY', supported_models: ['wan2.1', 'ltx-video'] },
       broadcast_kernel: { is_obs_running: false, suggested_scene: 'AI-BS Main Dashboard', active_studio_apps_count: 0 },
-      crypto_swarm: { status: 'ONLINE', daemon_port: 8007, twap_plans_count: 0, drip_orders_count: 0 },
+      crypto_swarm: { trading_paused: /** @type {boolean | undefined} */ (undefined), status: 'ONLINE', daemon_port: 8007, twap_plans_count: 0, drip_orders_count: 0 },
       ollama_swarm: { status: 'CONNECTING', models_count: 17, models_sample: ['stehouwer_llm', 'stehouwer_qwen'] }
     },
     hardware: {
@@ -54,34 +60,34 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   });
 
   // Column 3: Action Queue & Governance
-  const [pendingActions, setPendingActions] = useState([]);
-  const [actionHistory, setActionHistory] = useState([]);
+  const [pendingActions, setPendingActions] = useState(/** @type {ExecutiveAction[]} */ ([]));
+  const [actionHistory, setActionHistory] = useState(/** @type {ExecutiveAction[]} */ ([]));
   const [isResolving, setIsResolving] = useState(false);
   const [resolvingActionIds, setResolvingActionIds] = useState(new Set());
   const [isHalting, setIsHalting] = useState(false);
 
   // Column 4: Polling & Auto-refresh
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [lastRefreshed, setLastRefreshed] = useState(Date.now());
+  const [, setLastRefreshed] = useState(Date.now());
 
   // v5.299.0: Directorial Voice HUD State
   const [isListening, setIsListening] = useState(false);
   const [voiceAudioEnabled, setVoiceAudioEnabled] = useState(true);
-  const [voiceStatus, setVoiceStatus] = useState({
+  const [, setVoiceStatus] = useState({
     web_speech_api_available: true,
     f5_tts_eligible: false,
     active_mode: 'Web Speech API (Zero-Overhead Hybrid Fallback)'
   });
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef(/** @type {import("/types/aibs").SpeechRecognitionController | null} */ (null));
 
   // v5.299.0: Autonomous Sentinel Engine State
-  const [sentinelAlerts, setSentinelAlerts] = useState([]);
-  const [sentinelStatus, setSentinelStatus] = useState(null);
+  const [sentinelAlerts, setSentinelAlerts] = useState(/** @type {SentinelAlert[]} */ ([]));
+  const [, setSentinelStatus] = useState(null);
   const [isScanningSentinel, setIsScanningSentinel] = useState(false);
   const [expandingHashes, setExpandingHashes] = useState(new Set());
 
   // v5.299.0: Sovereign GPU Execution ($0.00 spend lock)
-  const [cloudStatus, setCloudStatus] = useState({
+  const [, setCloudStatus] = useState({
     sovereign_local_exclusive: true,
     cloud_burst_enabled: false,
     daily_spend_limit_usd: 5.0,
@@ -202,7 +208,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   }, [activeBackend, autoRefresh]);
 
   // 8. Directorial Voice Feedback
-  const speakDirectorialResponse = (text) => {
+  /** @param {string} text */
+const speakDirectorialResponse = (text) => {
     if (!voiceAudioEnabled || !('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
@@ -274,7 +281,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 11. Expand Media Asset Non-destructively
-  const handleExpandMedia = async (fileHash, action = 'reframe_9_16') => {
+  /** @param {string | undefined} fileHash @param {string} [action] */
+const handleExpandMedia = async (fileHash, action = 'reframe_9_16') => {
+    if (!fileHash) return;
     setExpandingHashes((prev) => new Set(prev).add(fileHash));
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/expand-media`, {
@@ -298,11 +307,12 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 12. Send Prompt to Executive Copilot
-  const handleSendMessage = async (textToSend) => {
+  /** @param {string | null} [textToSend] */
+const handleSendMessage = async (textToSend) => {
     const text = textToSend || chatInput;
     if (!text.trim() || isSendingChat) return;
 
-    const userMsg = { role: 'user', content: text, tool_calls: [] };
+    const userMsg = { role: 'user', content: text, tool_calls: /** @type {ExecutiveAction[]} */ ([]) };
     setChatMessages((prev) => [...prev, userMsg]);
     setChatInput('');
     setIsSendingChat(true);
@@ -335,13 +345,13 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       } else {
         setChatMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: `❌ Error ${res.status}: Failed to dispatch executive action.`, tool_calls: [] }
+          { role: 'assistant', content: `❌ Error ${res.status}: Failed to dispatch executive action.`, tool_calls: /** @type {ExecutiveAction[]} */ ([]) }
         ]);
       }
     } catch (err) {
       setChatMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `❌ Connection Error: ${err.message}`, tool_calls: [] }
+        { role: 'assistant', content: `❌ Connection Error: ${errorMessage(err)}`, tool_calls: /** @type {ExecutiveAction[]} */ ([]) }
       ]);
     } finally {
       setIsSendingChat(false);
@@ -349,7 +359,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 6. Resolve Pending Action (Approve / Reject)
-  const handleResolveAction = async (actionId, decision) => {
+  /** @param {string} actionId @param {string} decision */
+const handleResolveAction = async (actionId, decision) => {
     setIsResolving(true);
     setResolvingActionIds((prev) => new Set(prev).add(actionId));
     try {
@@ -376,7 +387,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   };
 
   // 7. Toggle Autonomy Mode
-  const handleSetAutonomy = async (mode) => {
+  /** @param {string} mode */
+const handleSetAutonomy = async (mode) => {
     setIsUpdatingAutonomy(true);
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/settings/autonomy`, {
@@ -731,7 +743,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
               </span>
               {sentinelAlerts[0]?.metadata?.file_hash && (
                 <button
-                  onClick={() => handleExpandMedia(sentinelAlerts[0].metadata.file_hash, 'reframe_9_16')}
+                  onClick={() => handleExpandMedia(sentinelAlerts[0]?.metadata?.file_hash, 'reframe_9_16')}
                   disabled={expandingHashes.has(sentinelAlerts[0].metadata.file_hash)}
                   style={{
                     background: 'linear-gradient(180deg, #238636 0%, #2ea043 100%)',
@@ -979,9 +991,9 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                                 {isQueued ? `[TIER ${tc.tier} - QUEUED FOR APPROVAL]` : `[TIER ${tc.tier} - ${tc.status}]`}
                               </span>
                             </div>
-                            {tc.result && (
+                            {Boolean(tc.result) && (
                               <div style={{ fontSize: '0.7rem', color: '#8b949e', marginTop: '2px' }}>
-                                {tc.result.message || JSON.stringify(tc.result)}
+                                {typeof tc.result === 'object' && tc.result !== null && 'message' in tc.result && typeof tc.result.message === 'string' ? tc.result.message : JSON.stringify(tc.result)}
                               </div>
                             )}
                           </div>
@@ -1363,7 +1375,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                       return (
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <button
-                            onClick={() => handleResolveAction(action.action_id, 'APPROVE')}
+                            onClick={() => action.action_id && handleResolveAction(action.action_id, 'APPROVE')}
                             disabled={isThisResolving}
                             style={{
                               flex: 1,
@@ -1381,7 +1393,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
                             {isThisResolving ? '⏳ EXECUTING...' : '✓ APPROVE & EXECUTE'}
                           </button>
                           <button
-                            onClick={() => handleResolveAction(action.action_id, 'REJECT')}
+                            onClick={() => action.action_id && handleResolveAction(action.action_id, 'REJECT')}
                             disabled={isThisResolving}
                             style={{
                               background: isThisResolving ? '#21262d' : '#da3633',
@@ -1602,4 +1614,10 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

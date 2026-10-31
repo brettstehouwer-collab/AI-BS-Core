@@ -1,6 +1,6 @@
 {
   "campaign_status": "IN_PROGRESS",
-  "source_version": "v5.329.76",
+  "source_version": "v5.329.77",
   "findings": [
     {
       "id": "B001",
@@ -836,7 +836,7 @@
     "Browser WebSocket credential adapter and remaining deep links/IPC/navigation issues remain open.",
     "Metadata census is not semantic review of every discovered file."
   ],
-  "updated_utc": "2026-10-31T03:54:25Z",
+  "updated_utc": "2026-10-31T05:41:25Z",
   "additional_findings": [
     {
       "id": "R197-WS",
@@ -871,18 +871,20 @@
     {
       "id": "R197-FTS-1",
       "severity": "HIGH",
-      "status": "OPEN_PRESERVED",
+      "status": "REPAIRED_VERIFIED_FTS_ONLY",
       "path": "database/ChromaDB_local/chroma.sqlite3",
       "finding": "Isolated clone integrity_check reports embedding_fulltext_search FTS index inconsistency.",
-      "remediation": "Original preserved; recover complete directory into new isolated store from independently verified same-store snapshot/documents, validate segments and retrieval before adopting. No repair/REINDEX/VACUUM attempted."
+      "remediation": "Original preserved; recover complete directory into new isolated store from independently verified same-store snapshot/documents, validate segments and retrieval before adopting. No repair/REINDEX/VACUUM attempted.",
+      "record198_resolution": "Transactional FTS5 rebuild; full SQLite/FTS integrity, non-FTS data and vector hashes verified. Separate native vector-service readiness remains unverified."
     },
     {
       "id": "R197-FTS-2",
       "severity": "HIGH",
-      "status": "OPEN_PRESERVED",
+      "status": "REPAIRED_VERIFIED_FTS_ONLY",
       "path": "chroma_db/chroma.sqlite3",
       "finding": "Separate legacy root store has embedding_fulltext_search FTS index inconsistency.",
-      "remediation": "Preserve exact original and sidecars; resolve actual daemon ownership before activation. Distinct from healthy backend/chroma_db and stehouwer_vector_memory."
+      "remediation": "Preserve exact original and sidecars; resolve actual daemon ownership before activation. Distinct from healthy backend/chroma_db and stehouwer_vector_memory.",
+      "record198_resolution": "Transactional FTS5 rebuild; full SQLite/FTS integrity, non-FTS data and vector hashes verified. Separate native vector-service readiness remains unverified."
     },
     {
       "id": "R197-CLI",
@@ -902,9 +904,10 @@
     {
       "id": "R197-TS",
       "severity": "MEDIUM",
-      "status": "OPEN_BASELINE",
+      "status": "REPAIRED_VERIFIED",
       "finding": "Full strict-JS TypeScript check fails9584 diagnostics.",
-      "remediation": "No new normalized diagnostics versus9588 baseline; fix existing debt in scoped batches. Build success does not close type errors."
+      "remediation": "No new normalized diagnostics versus9588 baseline; fix existing debt in scoped batches. Build success does not close type errors.",
+      "record198_resolution": "9584 strict diagnostics reduced to zero, using project-owned compiler with strict/checkJs settings retained."
     },
     {
       "id": "R197-FIXTURE",
@@ -912,6 +915,66 @@
       "status": "CORRECTED_HARNESS_INCIDENT",
       "finding": "Initial financial fixture allowed local imports before guard; Kraken balance/deposit read activity from that first attempt is unverified.",
       "remediation": "Guard local imports/effects before definition execution; corrected tests pass. Original diagnostics retained."
+    }
+  ],
+  "record198_findings": [
+    {
+      "id": "R198-CREDENTIALS",
+      "severity": "HIGH",
+      "status": "SOURCE_REMOVED_PROVIDER_ROTATION_UNVERIFIED",
+      "finding": "Broadcast stream-key seeds in four mirrored clients, a browser SMTP password fallback, and six server SMTP fallback literals were embedded in source.",
+      "remediation": "Removed source defaults, disabled default stream destinations, held credential test without explicit input; existing browser/provider credentials preserved. Source removal does not revoke provider credentials.",
+      "remaining": "Rotate credentials at their providers if valid, including any still present in published v76 assets. Values omitted from reports; historical preimages/diffs encrypted."
+    },
+    {
+      "id": "R198-AUTOSTART",
+      "severity": "HIGH",
+      "status": "CONTAINED_VERIFIED_OFFLINE",
+      "finding": "Mining mount and learning controls could start background workloads; video scheduling could reach external email effects.",
+      "remediation": "Hold audited start/tick/mitigation/scheduling/invite actions before dispatch; preserve drafts and read-only views. Forbidden-effect fixtures pass."
+    },
+    {
+      "id": "R198-SMTP-DRYRUN",
+      "severity": "HIGH",
+      "status": "REPAIRED_VERIFIED_OFFLINE",
+      "finding": "Single-recipient SMTP dry_run could continue into delivery logic if outreach was later enabled.",
+      "remediation": "Explicit preview contract before credentials, database, MIME, tracking or transport; existing batch delegation retained. Email/SMS fixtures assert zero effects. Runtime remains held."
+    },
+    {
+      "id": "R198-VECTOR-NATIVE",
+      "severity": "HIGH",
+      "status": "OPEN_ISOLATED_REPRODUCTION",
+      "finding": "Root Chroma native API traversal exits1 after32/34collections on two independent offline clones.",
+      "remediation": "Stopped repetition under two-strike rule; retained complete store originals. FTS integrity is repaired; full vector traversal/readiness is not certified. No Chroma service activated."
+    },
+    {
+      "id": "R198-TRUTH",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_VERIFIED_OFFLINE",
+      "finding": "Unsupported SHM/GPU/vector/AEO/Comfy outcomes were displayed as measured or queued success.",
+      "remediation": "Validate available ring counters; unsupported metrics null/unavailable, disconnect clears state, genuine zero retained; no fabricated results."
+    },
+    {
+      "id": "R198-UI-CONTRACTS",
+      "severity": "MEDIUM",
+      "status": "REPAIRED_VERIFIED_OFFLINE",
+      "finding": "DAW MIDI argument order, negative PCM conversion, missing solo target, VST acknowledgement, screenwriting forced restart and financial candidate rounding had concrete defects.",
+      "remediation": "Targeted state/guard/math/event fixes, title/cast FDX serialization parity, exact bigint receipt cents, escaped SEO model HTML, preserved profile/draft hydration. VM/AST fixtures pass."
+    },
+    {
+      "id": "R198-USER-SESSION",
+      "severity": "MEDIUM",
+      "status": "PARTIAL_CLIENT_REPAIRED",
+      "finding": "Client session telemetry could use localStorage/default administrator identity and bypass authenticated fetch on unload.",
+      "remediation": "Require provided current profile, authenticated keepalive and one close event; anonymous fixture sends nothing.",
+      "remaining": "Server-side owner binding requires its own audit; TypeScript annotations are not authorization."
+    },
+    {
+      "id": "R198-BATCH",
+      "severity": "LOW",
+      "status": "REPAIRED_VERIFIED",
+      "finding": "Blind Invoke-Expression over all available skills/scripts would execute unrelated capabilities and obscure partial failures.",
+      "remediation": "Fixed four-job allowlist, explicit executable argument arrays, dispatch holds, per-job evidence and aggregate nonzero exit. No arbitrary command interpretation."
     }
   ]
 }

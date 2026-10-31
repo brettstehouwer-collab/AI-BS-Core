@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  KNOWN_TEAM_MEMBERS, 
-  sendTeamMessage, 
-  subscribeToChannelMessages, 
-  subscribeToPresence,
-  getFriendlyUserName,
-  getFriendlyUserRole,
-  getFriendlyUserAvatar,
-  toggleMessageReaction
-} from './collaborationService';
+import { KNOWN_TEAM_MEMBERS, sendTeamMessage, subscribeToChannelMessages, subscribeToPresence, getFriendlyUserName, getFriendlyUserAvatar, toggleMessageReaction } from "./collaborationService";
 import './TeamLiveChatModal.css';
 
 const TEAM_CHANNELS = [
@@ -80,13 +71,15 @@ function playMessageChime() {
   } catch (_) {}
 }
 
-function getDayKey(timestamp) {
+/** @param {string | number | undefined} timestamp */
+function getDayKey( timestamp) {
   if (!timestamp) return '';
   const d = new Date(timestamp);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-function formatDayLabel(timestamp) {
+/** @param {string | number | undefined} timestamp */
+function formatDayLabel( timestamp) {
   if (!timestamp) return '';
   const date = new Date(timestamp);
   const now = new Date();
@@ -110,6 +103,7 @@ function formatDayLabel(timestamp) {
   }
 }
 
+/** @param {{"isOpen": boolean, "onClose"?: () => void, "currentUser": import('firebase/auth').User | null, "activeTab"?: string, "onNavigateTab"?: (arg0: string) => void}} props */
 export default function TeamLiveChatModal({ 
   isOpen, 
   onClose, 
@@ -118,18 +112,18 @@ export default function TeamLiveChatModal({
   onNavigateTab 
 }) {
   const [activeChannel, setActiveChannel] = useState('general_team');
-  const [messages, setMessages] = useState([]);
-  const [presenceList, setPresenceList] = useState([]);
+  const [messages, setMessages] = useState(/** @type {import('/components/collaborationService').TeamMessage[]} */ ([]));
+  const [presenceList, setPresenceList] = useState(/** @type {import('/components/collaborationService').TeamPresence[]} */ ([]));
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [searchFilter, setSearchFilter] = useState('');
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [mobileView, setMobileView] = useState('chat'); // 'channels' | 'chat'
-  const [activeReactionMsgId, setActiveReactionMsgId] = useState(null);
+  const [activeReactionMsgId, setActiveReactionMsgId] = useState(/** @type {string | null} */ (null));
 
-  const messagesEndRef = useRef(null);
-  const textareaRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const textareaRef = useRef(/** @type {HTMLTextAreaElement | null} */ (null));
   const prevMessagesCountRef = useRef(0);
 
   const getMyMemberId = () => {
@@ -138,7 +132,8 @@ export default function TeamLiveChatModal({
     return found ? found.id : myEmail.replace(/[^a-zA-Z0-9]/g, '_') || 'admin';
   };
 
-  const isUserMine = (msg) => {
+  /** @param {import('/components/collaborationService').TeamMessage} msg */
+const isUserMine = ( msg) => {
     const myEmail = (currentUser?.email || '').toLowerCase().trim();
     const senderEmail = (msg.senderEmail || '').toLowerCase().trim();
     if (!myEmail) return false;
@@ -155,7 +150,8 @@ export default function TeamLiveChatModal({
       setPresenceList(KNOWN_TEAM_MEMBERS.map(m => ({ ...m, status: 'offline', currentTab: 'Offline' })));
       return;
     }
-    const unsubscribe = subscribeToPresence((list) => {
+    const unsubscribe = subscribeToPresence(/** @param {typeof presenceList} list */
+( list) => {
       setPresenceList(list);
     });
     return () => unsubscribe && unsubscribe();
@@ -167,7 +163,8 @@ export default function TeamLiveChatModal({
       return;
     }
     prevMessagesCountRef.current = 0;
-    const unsubscribe = subscribeToChannelMessages(activeChannel, (msgs) => {
+    const unsubscribe = subscribeToChannelMessages(activeChannel, /** @param {typeof messages} msgs */
+( msgs) => {
       // Audio notification if new incoming message from someone else
       if (prevMessagesCountRef.current > 0 && msgs.length > prevMessagesCountRef.current) {
         const lastMsg = msgs[msgs.length - 1];
@@ -182,7 +179,8 @@ export default function TeamLiveChatModal({
     return () => unsubscribe && unsubscribe();
   }, [isOpen, currentUser, activeChannel, soundEnabled]);
 
-  const handleSendMessage = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} [e] */
+const handleSendMessage = async ( e) => {
     e?.preventDefault();
     if (!inputMessage.trim() || isSending) return;
 
@@ -205,13 +203,14 @@ export default function TeamLiveChatModal({
         textareaRef.current.style.height = 'auto';
       }
     } catch (err) {
-      alert('Failed to send message: ' + err.message);
+      alert('Failed to send message: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsSending(false);
     }
   };
 
-  const handleShareWorkspace = async (targetTab, targetName, targetIcon) => {
+  /** @param {string} [targetTab] @param {string | null} [targetName] @param {string} [targetIcon] */
+const handleShareWorkspace = async ( targetTab,  targetName,  targetIcon) => {
     const tabKey = targetTab || activeTab;
     const tabName = (targetName || tabKey.replace(/_/g, ' ')).toUpperCase();
     const toolUrl = `${window.location.origin}${window.location.pathname}?tab=${tabKey}`;
@@ -227,7 +226,8 @@ export default function TeamLiveChatModal({
     setShowWorkspaceMenu(false);
   };
 
-  const handleToggleReaction = async (messageId, emoji) => {
+  /** @param {string} messageId @param {string} emoji */
+const handleToggleReaction = async ( messageId,  emoji) => {
     const userEmail = currentUser?.email || 'admin@stehouwer.live';
     try {
       await toggleMessageReaction(messageId, emoji, userEmail);
@@ -235,14 +235,16 @@ export default function TeamLiveChatModal({
     setActiveReactionMsgId(null);
   };
 
-  const handleKeyDown = (e) => {
+  /** @param {import('react').KeyboardEvent<HTMLElement>} e */
+const handleKeyDown = ( e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
-  const handleInputResize = (e) => {
+  /** @param {import('react').ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e */
+const handleInputResize = ( e) => {
     setInputMessage(e.target.value);
     e.target.style.height = 'auto';
     e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
@@ -306,7 +308,8 @@ export default function TeamLiveChatModal({
     <div className="messenger-backdrop" onClick={onClose}>
       <div 
         className={`messenger-modal glass-panel mobile-view-${mobileView}`} 
-        onClick={(e) => e.stopPropagation()}
+        onClick={
+( e) => e.stopPropagation()}
       >
         {/* Contacts Sidebar */}
         <div className="messenger-sidebar">
@@ -331,7 +334,8 @@ export default function TeamLiveChatModal({
               type="text" 
               placeholder="Search channels & team..." 
               value={searchFilter}
-              onChange={(e) => setSearchFilter(e.target.value)}
+              onChange={
+( e) => setSearchFilter(e.target.value)}
             />
             {searchFilter && (
               <button className="clear-search-btn" onClick={() => setSearchFilter('')}>✕</button>
@@ -510,7 +514,8 @@ export default function TeamLiveChatModal({
                 </div>
               </div>
             ) : (
-              messages.map((msg, index) => {
+              messages.map(
+( msg, index) => {
                 const isMine = isUserMine(msg);
                 const prevMsg = messages[index - 1];
                 const currentDayKey = getDayKey(msg.timestamp);
@@ -519,9 +524,9 @@ export default function TeamLiveChatModal({
                 
                 const sameSenderAsPrev = !isNewDay && prevMsg && 
                   prevMsg.senderEmail?.toLowerCase() === msg.senderEmail?.toLowerCase() &&
-                  (msg.timestamp - (prevMsg.timestamp || 0)) < 3 * 60 * 1000;
+                  ((msg.timestamp ?? 0) - (prevMsg.timestamp ?? 0)) < 3 * 60 * 1000;
 
-                const timeFormatted = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const timeFormatted = msg.timestamp == null ? 'Time unavailable' : new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                 return (
                   <React.Fragment key={msg.id || index}>
@@ -571,8 +576,8 @@ export default function TeamLiveChatModal({
                               <div 
                                 className="msg-tool-card"
                                 onClick={() => {
-                                  if (onNavigateTab) onNavigateTab(msg.toolLink.tab);
-                                  onClose();
+                                  if (msg.toolLink) onNavigateTab?.(msg.toolLink.tab);
+                                  onClose?.();
                                 }}
                               >
                                 <div className="tool-card-icon">{msg.toolLink.icon || '🚀'}</div>
@@ -587,7 +592,8 @@ export default function TeamLiveChatModal({
                           {/* Quick Reaction Button Trigger */}
                           <button 
                             className="msg-add-reaction-btn"
-                            onClick={(e) => {
+                            onClick={
+( e) => {
                               e.stopPropagation();
                               setActiveReactionMsgId(activeReactionMsgId === msg.id ? null : msg.id);
                             }}
@@ -598,8 +604,10 @@ export default function TeamLiveChatModal({
 
                           {/* Reaction Picker Popover */}
                           {activeReactionMsgId === msg.id && (
-                            <div className="reaction-popover" onClick={(e) => e.stopPropagation()}>
-                              {QUICK_EMOJIS.map(emoji => (
+                            <div className="reaction-popover" onClick={
+( e) => e.stopPropagation()}>
+                              {QUICK_EMOJIS.map( 
+emoji => (
                                 <button 
                                   key={emoji}
                                   className="reaction-popover-item"
@@ -617,7 +625,7 @@ export default function TeamLiveChatModal({
                           <div className="msg-reactions-row">
                             {Object.entries(msg.reactions).map(([emoji, users]) => {
                               if (!users || users.length === 0) return null;
-                              const hasReacted = users.includes(currentUser?.email?.toLowerCase());
+                              const hasReacted = users.includes(currentUser?.email?.toLowerCase() || '');
                               return (
                                 <button 
                                   key={emoji}
@@ -647,7 +655,8 @@ export default function TeamLiveChatModal({
           {/* Quick Reaction Pill Bar */}
           <div className="quick-reactions-ribbon">
             <span className="ribbon-label">Quick Reactions:</span>
-            {QUICK_EMOJIS.map(emoji => (
+            {QUICK_EMOJIS.map( 
+emoji => (
               <button 
                 key={emoji} 
                 className="quick-emoji-btn"

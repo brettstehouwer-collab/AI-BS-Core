@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
+/** @param {{"BACKEND_URL"?: string, "backendUrl"?: string}} props */
 export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: propLowerBackendUrl }) {
   const BACKEND_URL = propBackendUrl || propLowerBackendUrl || `${window.location.protocol}//${window.location.hostname}:8000`;
   const [activeTab, setActiveTab] = useState("marketing");
@@ -8,29 +9,29 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
   // -- Marketing State --
   const [bulkMarketingLocation, setBulkMarketingLocation] = useState("");
   const [isMarketingLoading, setIsMarketingLoading] = useState(false);
-  const [marketingResultsArray, setMarketingResultsArray] = useState([]);
-  const [marketingHistory, setMarketingHistory] = useState([]);
+  const [marketingResultsArray, setMarketingResultsArray] = useState(/** @type {Array<{"property_address": string, "zillow_url": string, "results": {"zillow": string, "facebook": string, "linkedin": string}}>} */ ([]));
+  const [marketingHistory, setMarketingHistory] = useState(/** @type {Array<{"property_address": string, "created_at": number}>} */ ([]));
 
   // -- Search State --
   const [searchLocation, setSearchLocation] = useState("Grand Rapids, MI");
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState(/** @type {Array<{"address": string, "price": number, "status": string, "beds": string, "baths": string, "sqft": string, "propertyType": string, "zillow_url": string}> | null} */ (null));
 
   // -- Vault State --
   const [vaultNote, setVaultNote] = useState("");
   const [vaultTags, setVaultTags] = useState("");
   const [isVaultLoading, setIsVaultLoading] = useState(false);
-  const [vaultNotes, setVaultNotes] = useState([]);
+  const [vaultNotes, setVaultNotes] = useState(/** @type {Array<{"note": string, "metadata": {"tags": string, "timestamp": number}}>} */ ([]));
 
   // -- Enrichment State --
   const [bulkData, setBulkData] = useState("");
   const [isEnriching, setIsEnriching] = useState(false);
-  const [enrichedLeads, setEnrichedLeads] = useState([]);
+  const [enrichedLeads, setEnrichedLeads] = useState(/** @type {Array<{"id": string, "logo_url": string, "name": string, "domain": string, "linkedin_url": string, "comments": Array<{"comment": string, "timestamp": string, "post_url": string}>}>} */ ([]));
 
   // -- Database State --
   const [databaseLocations, setDatabaseLocations] = useState("");
   const [isScraping, setIsScraping] = useState(false);
-  const [masterDatabase, setMasterDatabase] = useState([]);
+  const [masterDatabase, setMasterDatabase] = useState(/** @type {Array<{"zillowUrl": string, "address": string, "price": number, "bedrooms": string, "bathrooms": string, "listingStatus": string, "agentName": string}>} */ ([]));
 
   // -- Telecom State --
   const [leadName, setLeadName] = useState("");
@@ -41,10 +42,10 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
   // -- Reactivation State --
   const [csvContent, setCsvContent] = useState("");
   const [isReactivating, setIsReactivating] = useState(false);
-  const [reactivationCampaigns, setReactivationCampaigns] = useState([]);
+  const [reactivationCampaigns, setReactivationCampaigns] = useState(/** @type {Array<{"name": string, "phone": string, "purchase_date": string, "sms_generated": string}>} */ ([]));
 
   // -- Virtual Staging State --
-  const [stagingImage, setStagingImage] = useState(null);
+  const [stagingImage, setStagingImage] = useState(/** @type {string | null} */ (null));
   const [stagingStyle, setStagingStyle] = useState("Modern Farmhouse");
   const [stagingRoom, setStagingRoom] = useState("Living Room");
   const [stagingCustomPrompt, setStagingCustomPrompt] = useState("A bright, inviting modern farmhouse living room. A plush, white linen sectional sofa facing the large center window. A rustic natural wood coffee table resting on a subtle, textured cream area rug over the hardwood floors. Minimalist, tasteful decor with a tall potted olive tree in the corner to complement the natural sunlight. High-end, photorealistic 8k architectural photography.");
@@ -52,7 +53,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
   const [stagedResultUrl, setStagedResultUrl] = useState("");
   const [generationMode, setGenerationMode] = useState("Image");
   const [stagedVideoUrl, setStagedVideoUrl] = useState("");
-  const [telemetryLogs, setTelemetryLogs] = useState([]);
+  const [telemetryLogs, setTelemetryLogs] = useState(/** @type {Array<{"timestamp": string, "agent": string, "details": string}>} */ ([]));
 
   // -- Spaces State --
   const [spaces, setSpaces] = useState([
@@ -157,7 +158,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Failed to generate: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsMarketingLoading(false);
   };
@@ -184,7 +185,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Search failed: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsSearchLoading(false);
   };
@@ -211,7 +212,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Failed to save note: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsVaultLoading(false);
   };
@@ -260,7 +261,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Bulk Enrichment failed: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsEnriching(false);
   };
@@ -294,7 +295,7 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Scraping failed: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsScraping(false);
   };
@@ -326,17 +327,18 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Failed: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsWhispering(false);
   };
 
-  const handleCsvUpload = (e) => {
-    const file = e.target.files[0];
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleCsvUpload = ( e) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (evt) => {
-        setCsvContent(evt.target.result);
+        if (typeof evt.target?.result === 'string') setCsvContent(evt.target.result);
       };
       reader.readAsText(file);
     }
@@ -362,17 +364,18 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Reactivation failed: " + (data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsReactivating(false);
   };
 
-  const handleStagingUpload = (e) => {
-    const file = e.target.files[0];
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleStagingUpload = ( e) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (evt) => {
-        setStagingImage(evt.target.result);
+        if (typeof evt.target?.result === 'string') setStagingImage(evt.target.result);
       };
       reader.readAsDataURL(file); // Needs base64 for API
     }
@@ -390,8 +393,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
     
     try {
       const endpoint = generationMode === "Video" 
-        ? `${backendUrl}/api/clients/joey_hamilton/virtual-staging/video-tour`
-        : `${backendUrl}/api/clients/joey_hamilton/virtual-staging/generate`;
+        ? `${BACKEND_URL}/api/clients/joey_hamilton/virtual-staging/video-tour`
+        : `${BACKEND_URL}/api/clients/joey_hamilton/virtual-staging/generate`;
 
       const payload = generationMode === "Video" 
         ? {
@@ -421,12 +424,13 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
         alert("Virtual staging failed: " + (data.error || data.detail || "Unknown error"));
       }
     } catch (e) {
-      alert("API Error: " + e.message);
+      alert("API Error: " + (e instanceof Error ? e.message : String(e)));
     }
     setIsStaging(false);
   };
 
-  const tabStyle = (id) => ({
+  /** @param {string} id */
+const tabStyle = ( id) => ({
     padding: '8px 15px',
     cursor: 'pointer',
     backgroundColor: activeTab === id ? '#D4AF37' : '#2a2a35',
@@ -456,7 +460,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
              <input 
               type="password"
               value={rapidApiKey}
-              onChange={(e) => setRapidApiKey(e.target.value)}
+              onChange={
+( e) => setRapidApiKey(e.target.value)}
               placeholder="API Key..."
               style={{ width: '130px', padding: '4px 8px', borderRadius: '4px', border: '1px solid #444', backgroundColor: '#222', color: '#fff', fontSize: '12px' }}
             />
@@ -485,7 +490,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
           <div style={{ width: '240px', backgroundColor: '#fff', borderRadius: '6px', padding: '15px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ margin: '0 0 15px 0', fontSize: '14px', color: '#1a1a2e', textTransform: 'uppercase' }}>Workspaces</h3>
             <div style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
-              <input type="text" value={newSpaceName} onChange={e => setNewSpaceName(e.target.value)} placeholder="New project space..." style={{ flex: 1, padding: '6px 8px', fontSize: '12px', border: '1px solid #ddd', borderRadius: '4px' }} />
+              <input type="text" value={newSpaceName} onChange={ 
+e => setNewSpaceName(e.target.value)} placeholder="New project space..." style={{ flex: 1, padding: '6px 8px', fontSize: '12px', border: '1px solid #ddd', borderRadius: '4px' }} />
               <button onClick={() => { if(newSpaceName) { setSpaces([...spaces, {id: Date.now(), name: newSpaceName, files: []}]); setNewSpaceName(""); } }} style={{ padding: '6px 10px', backgroundColor: '#1a1a2e', color: '#D4AF37', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
             </div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -524,7 +530,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             <input 
               type="text" 
               value={bulkMarketingLocation}
-              onChange={(e) => setBulkMarketingLocation(e.target.value)}
+              onChange={
+( e) => setBulkMarketingLocation(e.target.value)}
               placeholder="e.g. Grandville, MI" 
               style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '15px', boxSizing: 'border-box' }} 
             />
@@ -590,7 +597,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             <input 
               type="text" 
               value={searchLocation}
-              onChange={(e) => setSearchLocation(e.target.value)}
+              onChange={
+( e) => setSearchLocation(e.target.value)}
               placeholder="e.g. Grandville, MI" 
               style={{ flex: 1, padding: '12px', borderRadius: '5px', border: '1px solid #ccc' }} 
             />
@@ -647,14 +655,16 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             
             <textarea 
               value={vaultNote}
-              onChange={(e) => setVaultNote(e.target.value)}
+              onChange={
+( e) => setVaultNote(e.target.value)}
               placeholder="Enter secure client note, lead details, or preferences..." 
               style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '10px', height: '120px', resize: 'vertical', boxSizing: 'border-box' }} 
             />
             <input 
               type="text" 
               value={vaultTags}
-              onChange={(e) => setVaultTags(e.target.value)}
+              onChange={
+( e) => setVaultTags(e.target.value)}
               placeholder="Tags (e.g., lead, budget, urgent)" 
               style={{ width: '100%', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '15px', boxSizing: 'border-box' }} 
             />
@@ -696,7 +706,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             <p style={{ fontSize: '11px', color: '#999', margin: '0 0 10px 0', fontStyle: 'italic' }}>apple.com, https://linkedin.com/in/elsa...</p>
 
             <textarea 
-              value={bulkData} onChange={(e) => setBulkData(e.target.value)}
+              value={bulkData} onChange={
+( e) => setBulkData(e.target.value)}
               placeholder="apple.com, https://www.linkedin.com/in/elsa-jaubert-bb726b134/&#10;microsoft.com, https://www.linkedin.com/in/williamhgates/" 
               style={{ width: '100%', height: '150px', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '15px', boxSizing: 'border-box', fontFamily: 'monospace', whiteSpace: 'pre' }} 
             />
@@ -761,7 +772,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             
             <p style={{ fontSize: '12px', fontWeight: 'bold', margin: '0 0 5px 0' }}>Format (One per line):</p>
             <textarea 
-              value={databaseLocations} onChange={(e) => setDatabaseLocations(e.target.value)}
+              value={databaseLocations} onChange={
+( e) => setDatabaseLocations(e.target.value)}
               placeholder="Grand Rapids, MI&#10;Wyoming, MI&#10;49503" 
               style={{ width: '100%', height: '150px', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '15px', boxSizing: 'border-box', fontFamily: 'monospace', whiteSpace: 'pre' }} 
             />
@@ -839,17 +851,20 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>Lead Name</label>
-              <input type="text" value={leadName} onChange={(e) => setLeadName(e.target.value)} placeholder="e.g. David Smith" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+              <input type="text" value={leadName} onChange={
+( e) => setLeadName(e.target.value)} placeholder="e.g. David Smith" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
             </div>
 
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>Lead Phone Number</label>
-              <input type="text" value={leadPhone} onChange={(e) => setLeadPhone(e.target.value)} placeholder="e.g. 555-0199" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+              <input type="text" value={leadPhone} onChange={
+( e) => setLeadPhone(e.target.value)} placeholder="e.g. 555-0199" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
             </div>
 
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '5px' }}>Property of Interest</label>
-              <input type="text" value={propertyInterest} onChange={(e) => setPropertyInterest(e.target.value)} placeholder="e.g. 20 Acres Vacant Land" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
+              <input type="text" value={propertyInterest} onChange={
+( e) => setPropertyInterest(e.target.value)} placeholder="e.g. 20 Acres Vacant Land" style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} />
             </div>
 
             <button 
@@ -875,7 +890,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             
             <p style={{ fontSize: '12px', fontWeight: 'bold', margin: '0 0 5px 0' }}>Or Paste CSV Content:</p>
             <textarea 
-              value={csvContent} onChange={(e) => setCsvContent(e.target.value)}
+              value={csvContent} onChange={
+( e) => setCsvContent(e.target.value)}
               placeholder="Name, Phone, Email, PurchaseDate, PurchasePrice&#10;David Smith, 555-0199, david@test.com, 2018-05-12, $250000" 
               style={{ width: '100%', height: '100px', padding: '12px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '15px', boxSizing: 'border-box', fontFamily: 'monospace', whiteSpace: 'pre', fontSize: '11px' }} 
             />
@@ -946,7 +962,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             {generationMode === "Image" && (
               <>
                 <p style={{ fontSize: '12px', fontWeight: 'bold', margin: '0 0 5px 0' }}>3. Select Room Type:</p>
-                <select value={stagingRoom} onChange={(e) => setStagingRoom(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc' }}>
+                <select value={stagingRoom} onChange={
+( e) => setStagingRoom(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc' }}>
                   <option value="Living Room">Living Room</option>
                   <option value="Master Bedroom">Master Bedroom</option>
                   <option value="Dining Room">Dining Room</option>
@@ -954,7 +971,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
                 </select>
                 
                 <p style={{ fontSize: '12px', fontWeight: 'bold', margin: '0 0 5px 0' }}>4. Select Furniture Style:</p>
-                <select value={stagingStyle} onChange={(e) => setStagingStyle(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc' }}>
+                <select value={stagingStyle} onChange={
+( e) => setStagingStyle(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc' }}>
                   <option value="Modern Farmhouse">Modern Farmhouse</option>
                   <option value="Mid-Century Modern">Mid-Century Modern</option>
                   <option value="Contemporary Minimalist">Contemporary Minimalist</option>
@@ -965,7 +983,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             
             <p style={{ fontSize: '12px', fontWeight: 'bold', margin: '0 0 5px 0' }}>{generationMode === "Image" ? "5." : "3."} Custom Description (Optional):</p>
             <textarea 
-              value={stagingCustomPrompt} onChange={(e) => setStagingCustomPrompt(e.target.value)}
+              value={stagingCustomPrompt} onChange={
+( e) => setStagingCustomPrompt(e.target.value)}
               placeholder={generationMode === "Image" ? "e.g. Add a red velvet couch, lots of plants..." : "e.g. Cinematic slow pan around a modern farmhouse living room..."} 
               style={{ width: '100%', height: '60px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', marginBottom: '25px', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'vertical' }} 
             />
@@ -1069,7 +1088,8 @@ export default function JoeyHamilton({ BACKEND_URL: propBackendUrl, backendUrl: 
             <input 
               type="text" 
               value={directorySearch}
-              onChange={(e) => setDirectorySearch(e.target.value)}
+              onChange={
+( e) => setDirectorySearch(e.target.value)}
               placeholder="Search leads by name, domain, or address..." 
               style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' }} 
             />

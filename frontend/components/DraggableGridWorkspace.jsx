@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -12,6 +12,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
  * A wrapper component that applies a 24-column draggable grid layout
  * and provides a global DND Context for dragging items within or between modules.
  */
+/** @param {{tabKey:string,defaultLayout:import("react-grid-layout").Layout,children:import("react").ReactNode,onDragEnd?:(event:import("@dnd-kit/core").DragEndEvent)=>void}} props */
 export default function DraggableGridWorkspace({ tabKey, defaultLayout, children, onDragEnd }) {
   const { isEditingLayout, globalWidgetLayouts, saveGlobalLayout } = useAppStore();
   const [layoutLoaded, setLayoutLoaded] = useState(false);
@@ -43,7 +44,7 @@ export default function DraggableGridWorkspace({ tabKey, defaultLayout, children
     setLayoutLoaded(true);
   }, []);
 
-  const handleLayoutChange = (newLayout, allLayouts) => {
+  const handleLayoutChange = (/** @type {import("react-grid-layout").Layout} */ newLayout) => {
     if (!isEditingLayout) return;
     saveGlobalLayout(tabKey, newLayout);
   };

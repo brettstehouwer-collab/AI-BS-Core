@@ -2,6 +2,7 @@ import { readChatHttpResponse } from './chatHttpResponse.js';
 
 // Confirm source preservation only. A disk write is not an embedding/indexing
 // or full-context retrieval receipt, and must never be presented as one.
+/** @param {{backendUrl: string; text: string}} options */
 export async function stageRagSource({ backendUrl, text }) {
   if (typeof backendUrl !== 'string' || typeof text !== 'string' || !text.length) {
     throw new Error('A selected backend and nonempty source are required.');
@@ -21,6 +22,7 @@ export async function stageRagSource({ backendUrl, text }) {
   });
   const data = await readChatHttpResponse(response);
   const result = data?.result;
+  /** @param {unknown} value */
   const normalized = value => typeof value === 'string' ? value.replace(/\//g, '\\').toLowerCase() : '';
   if (data?.status !== 'success' || result?.status !== 'success' ||
       normalized(result.path) !== normalized(path) || result.bytes_written !== bytes.length || result.sha256 !== sha256) {

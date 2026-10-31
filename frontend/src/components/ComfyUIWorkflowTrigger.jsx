@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function ComfyUIWorkflowTrigger() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
@@ -8,9 +8,9 @@ export default function ComfyUIWorkflowTrigger() {
   const [steps, setSteps] = useState(30);
   const [cfg, setCfg] = useState(7.0);
   const [isTriggering, setIsTriggering] = useState(false);
-  const [lastStatus, setLastStatus] = useState(null);
+  const [lastStatus, setLastStatus] = useState(/** @type {{status:string,workflow:string,vram_allocation_mb?:number|null}|null} */ (null));
 
-  const handleTrigger = async (e) => {
+  const handleTrigger = async (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault();
     if (!prompt.trim()) return;
     setIsTriggering(true);
@@ -25,8 +25,8 @@ export default function ComfyUIWorkflowTrigger() {
         setLastStatus(data);
       }
     } catch (err) {
-      console.warn('Backend ComfyUI workflow trigger using offline fallback.', err);
-      setLastStatus({ status: 'QUEUED (LOCAL_FALLBACK)', workflow: workflowType, steps, vram_allocation_mb: 18432 });
+      console.warn('ComfyUI workflow request failed.', err);
+      setLastStatus({ status: 'Unavailable: request failed; no queue acknowledgement', workflow: workflowType, vram_allocation_mb: null });
     } finally {
       setIsTriggering(false);
     }
@@ -133,7 +133,7 @@ export default function ComfyUIWorkflowTrigger() {
           fontSize: '11px',
           color: '#7ee787'
         }}>
-          ✅ Render Request Dispatched to GPU Queue | Status: {lastStatus.status} | Model: {lastStatus.workflow} | VRAM: {lastStatus.vram_allocation_mb} MB
+          Render request outcome | Status: {lastStatus.status} | Model: {lastStatus.workflow} | VRAM: {lastStatus.vram_allocation_mb ?? 'Unavailable'} MB
         </div>
       )}
     </div>

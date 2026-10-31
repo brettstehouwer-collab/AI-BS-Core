@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
+/** @param {{"backendUrl"?: string}} props */
 const TheatricalMicClient = ({ backendUrl: propBackendUrl }) => {
     const backendUrl = propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
     const wsBase = backendUrl.replace(/^http/, 'ws');
     
     const [isRecording, setIsRecording] = useState(false);
     const [status, setStatus] = useState("Microphone disconnected.");
-    const mediaRecorderRef = useRef(null);
-    const wsRef = useRef(null);
+    const mediaRecorderRef = useRef(/** @type {MediaRecorder | null} */ (null));
+    const wsRef = useRef(/** @type {WebSocket | null} */ (null));
 
     const startRecording = async () => {
         try {
@@ -23,8 +24,8 @@ const TheatricalMicClient = ({ backendUrl: propBackendUrl }) => {
                 mediaRecorderRef.current = new MediaRecorder(stream, { mimeType: 'audio/webm' });
                 
                 mediaRecorderRef.current.ondataavailable = (event) => {
-                    if (event.data.size > 0 && wsRef.current.readyState === WebSocket.OPEN) {
-                        wsRef.current.send(event.data);
+                    if (event.data.size > 0 && wsRef.current?.readyState === WebSocket.OPEN) {
+                        wsRef.current?.send(event.data);
                     }
                 };
                 

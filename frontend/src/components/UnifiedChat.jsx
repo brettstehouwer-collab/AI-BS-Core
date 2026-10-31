@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
+/** @param {{"isOverlay"?: boolean}} props */
 const UnifiedChat = ({ isOverlay = false }) => {
-  const [messages, setMessages] = useState([]);
-  const ws = useRef(null);
-  const messagesEndRef = useRef(null);
+  const [messages, setMessages] = useState(/** @type {Array<{"type": string, "message": string, "platform": string, "color": string, "username": string}>} */ ([]));
+  const ws = useRef(/** @type {WebSocket | null} */ (null));
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   useEffect(() => {
     ws.current = new WebSocket('ws://127.0.0.1:8006/ws/chat');
@@ -29,7 +30,8 @@ const UnifiedChat = ({ isOverlay = false }) => {
     }
   }, [messages]);
 
-  const getPlatformIcon = (platform) => {
+  /** @param {string} platform */
+const getPlatformIcon = ( platform) => {
     switch(platform) {
       case 'twitch': return 'â—¥';
       case 'youtube': return 'â–¶';
@@ -39,7 +41,8 @@ const UnifiedChat = ({ isOverlay = false }) => {
     }
   };
 
-  const getPlatformColor = (platform) => {
+  /** @param {string} platform */
+const getPlatformColor = ( platform) => {
     switch(platform) {
       case 'twitch': return '#9146FF';
       case 'youtube': return '#FF0000';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { 
   Activity, Apple, Flame, ShoppingBag, ShieldCheck, 
   ChevronDown, ChevronUp, Copy, Check, Clock, Sparkles, 
@@ -6,10 +6,11 @@ import {
 } from 'lucide-react';
 
 export default function NutritionSubsystemLedger() {
-  const [openSection, setOpenSection] = useState(0);
+  const [openSection, setOpenSection] = useState(/** @type {number | null} */ (0));
   const [copiedRaw, setCopiedRaw] = useState(false);
 
-  const toggleSection = (index) => {
+  /** @param {number} index */
+const toggleSection = ( index) => {
     setOpenSection(openSection === index ? null : index);
   };
 

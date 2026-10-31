@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './GlobalWalkthroughGuide.css';
 
 export const AI_BS_TOOL_GUIDES = [
@@ -440,6 +440,7 @@ export const AI_BS_TOOL_GUIDES = [
   }
 ];
 
+/** @param {{isOpen: boolean, onClose: () => void, onNavigateTab?: (tab: string) => void, initialTab?: string, onStartTour?: (tool:string) => void}} props */
 export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab, initialTab = 'dashboard', onStartTour }) {
   const [activeTabMode, setActiveTabMode] = useState('guide'); // 'guide' | 'ai_helper' | 'sandbox'
   const [selectedHub, setSelectedHub] = useState('all');
@@ -449,7 +450,7 @@ export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab,
 
   // AI Helper Conversational State
   const [helperQuery, setHelperQuery] = useState('');
-  const [helperResults, setHelperResults] = useState([]);
+  const [helperResults, setHelperResults] = useState(/** @type {typeof AI_BS_TOOL_GUIDES} */ ([]));
 
   // Sandbox Calculator States
   // 1. Softwash Chemical Calc
@@ -507,7 +508,7 @@ export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab,
   const activeTool = AI_BS_TOOL_GUIDES.find(t => t.key === selectedToolKey) || filteredTools[0] || AI_BS_TOOL_GUIDES[0];
 
   // Copy Direct Link for this exact guide modal view
-  const handleCopyToolLink = (toolKey) => {
+  const handleCopyToolLink = (/** @type {string} */ toolKey) => {
     const shareUrl = `${window.location.origin}${window.location.pathname}?guide=true&tool=${toolKey}&mode=${activeTabMode}`;
     navigator.clipboard.writeText(shareUrl).then(() => {
       setCopiedUrl(true);
@@ -516,7 +517,7 @@ export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab,
   };
 
   // AI Helper Natural Language Q&A Search
-  const handleAskHelper = (e) => {
+  const handleAskHelper = (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault();
     if (!helperQuery.trim()) return;
 
@@ -536,7 +537,7 @@ export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab,
   // 1. Softwash Bleach Mix
   const targetShPct = sbSubstrate === 'roof' ? 3.5 : sbSubstrate === 'concrete' ? 5.0 : 1.25;
   const gallonsBleachNeeded = ((targetShPct / sbBleachPct) * sbTankGal).toFixed(1);
-  const gallonsWaterNeeded = (sbTankGal - gallonsBleachNeeded).toFixed(1);
+  const gallonsWaterNeeded = (sbTankGal - Number(gallonsBleachNeeded)).toFixed(1);
   const surfactantOz = (sbTankGal * 0.5).toFixed(1);
 
   // 2. GVWR Rig Weight
@@ -545,7 +546,7 @@ export default function GlobalWalkthroughGuide({ isOpen, onClose, onNavigateTab,
   const waterWeight = sbWaterGal * 8.34;
   const shWeight = sbShGal * 10.05;
   const totalGrossWeight = (curbWeight + equipmentWeight + waterWeight + shWeight).toFixed(0);
-  const isGvwrLegal = totalGrossWeight <= 14000;
+  const isGvwrLegal = Number(totalGrossWeight) <= 14000;
 
   // 3. Screenplay Runtime
   const estimatedMinutes = Math.round(sbPageCount * (1 + (sbDialoguePct - 50) * 0.005));

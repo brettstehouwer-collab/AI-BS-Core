@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Users, Clock, Loader2 } from 'lucide-react';
 
 export default function ClientsTab() {
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState(/** @type {{id:string,companyName?:string,clientName?:string,techStack?:string,deploymentPreference?:string,status?:string,createdAt?:string|number}[]} */ ([]));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function ClientsTab() {
               <tbody className="divide-y divide-slate-700">
                 {clients.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="p-8 text-center text-slate-500">
+                    <td colSpan={6} className="p-8 text-center text-slate-500">
                       No clients found. Use the Onboarding Portal to add a client.
                     </td>
                   </tr>
@@ -84,7 +84,7 @@ export default function ClientsTab() {
                         </span>
                       </td>
                       <td className="p-4 text-sm text-slate-400">
-                        {new Date(client.createdAt).toLocaleString()}
+                        {client.createdAt !== undefined ? new Date(client.createdAt).toLocaleString() : 'Unavailable'}
                       </td>
                     </tr>
                   ))

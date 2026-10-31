@@ -30,6 +30,7 @@ export const getApiBase = () => {
   return 'http://127.0.0.1:8080';
 };
 
+/** @param {string} url */
 export const setApiBase = (url) => {
   if (url) {
     currentApiBase = url;

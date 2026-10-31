@@ -8,11 +8,13 @@
 const SCENE_HEADING_REGEX = /^(INT\.|EXT\.|INT\/EXT\.|I\/E\.|EST\.)/i;
 const TRANSITION_REGEX = /^(FADE IN:|FADE OUT\.|CUT TO:|DISSOLVE TO:|SMASH CUT TO:|MATCH CUT TO:|JUMP CUT TO:)$|( TO:)$|^>/;
 
+/** @param {string} fountainText @returns {import("/types/domain").ScreenplayBlock[]} */
 export function fountainToAST(fountainText) {
   if (!fountainText || typeof fountainText !== 'string') {
     return [{ id: crypto.randomUUID(), type: "Action", text: "" }];
   }
 
+  /** @type {import("/types/domain").ScreenplayBlock[]} */
   const ast = [];
   // Normalize newlines
   const rawLines = fountainText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
@@ -151,6 +153,7 @@ export function fountainToAST(fountainText) {
   return ast;
 }
 
+/** @param {import("/types/domain").ScreenplayBlock[]} ast */
 export function astToFountain(ast) {
   if (!Array.isArray(ast)) return "";
   let text = "";

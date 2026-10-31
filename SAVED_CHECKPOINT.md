@@ -1,3 +1,17 @@
+# Current checkpoint — v5.329.77 / Record198 / ADR-123
+
+Campaign IN_PROGRESS; 2026-10-31T05:41:25Z. Resume RESUME_FULL_AUDIT_V532977.
+Both FTS indexes repaired; original records/vector files preserved. Root native vector traversal remains OPEN.
+154Python/75client tests; strictTypeScript0;16version paths;5678module build. Trading8007disabled.
+Fresh8080 under dispatch/payment/background holds;14read-only probes pass. No production provider activation.
+All Drive uploads in one folder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k. Existing.env untouched.
+Sourcev77candidate, Firebasev76published; future CLI deployment needs fresh sign-in.
+Embedded provider defaults removed; provider credential rotation remains unverified.
+Read docs/audit/2026-10-30-complete/README.md, coverage.json and exact handoff manifest.
+Next: disposable root native vector diagnosis, remaining runtime/control audit. Older text below is historical.
+
+---
+
 # Current audit checkpoint — source v5.329.76
 
 Campaign IN PROGRESS; Record197/ADR122; 2026-10-31T03:54:25Z. Resume keyword RESUME_FULL_AUDIT_V532976.

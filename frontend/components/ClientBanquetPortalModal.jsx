@@ -1,27 +1,28 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import './ClientBanquetPortalModal.css';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
+/** @param {{isOpen: boolean, onClose: () => void, eventId?: string}} props */
 export default function ClientBanquetPortalModal({
   isOpen,
-  onClose,
-  eventId = 'notos_gala_2026'
+  onClose
 }) {
   const [guestCount, setGuestCount] = useState(150);
   const [selectedRoom, setSelectedRoom] = useState('Grand Ballroom & Tuscan Terrace');
   const [selectedMenu, setSelectedMenu] = useState('executive');
   const [selectedBar, setSelectedBar] = useState('premium');
   const [specialDietary, setSpecialDietary] = useState('');
-  const [clientName, setClientName] = useState('Mr. & Mrs. Anderson');
-  const [clientEmail, setClientEmail] = useState('client@example.com');
+  const [clientName] = useState('Mr. & Mrs. Anderson');
+  const [clientEmail] = useState('client@example.com');
   const [isSigned, setIsSigned] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
   const [isDrawing, setIsDrawing] = useState(false);
 
   // Menu Options
+  /** @type {Record<string,{name:string,price:number,desc:string}>} */
   const menuOptions = {
     classic: { name: 'Classic Tuscan Italian Feast', price: 55.00, desc: 'House lasagna, chicken marsala, seasonal risotto, garlic foccacia, caesar salad.' },
     executive: { name: 'Executive Plated Filet Mignon & Sea Bass', price: 85.00, desc: 'Center-cut 8oz filet mignon, pan-seared Chilean sea bass, asparagus, truffle mash.' },
@@ -29,6 +30,7 @@ export default function ClientBanquetPortalModal({
   };
 
   // Bar Options
+  /** @type {Record<string,{name:string,price:number}>} */
   const barOptions = {
     none: { name: 'Non-Alcoholic Artisanal Beverages Only', price: 10.00 },
     beer_wine: { name: 'Noto\'s Selected Italian Beers & House Wines', price: 22.00 },
@@ -47,11 +49,12 @@ export default function ClientBanquetPortalModal({
   const balanceDue = total - deposit;
 
   // Signature Pad Handlers
-  const startDrawing = (e) => {
+  const startDrawing = (/** @type {import("react").MouseEvent<HTMLCanvasElement>} */ e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#1e293b';
@@ -60,11 +63,13 @@ export default function ClientBanquetPortalModal({
     setIsDrawing(true);
   };
 
-  const draw = (e) => {
+  const draw = (/** @type {import("react").MouseEvent<HTMLCanvasElement>} */ e) => {
     if (!isDrawing) return;
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
     ctx.stroke();
   };
@@ -80,6 +85,7 @@ export default function ClientBanquetPortalModal({
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
+    if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       setIsSigned(false);
     }
@@ -125,7 +131,7 @@ export default function ClientBanquetPortalModal({
         alert('Could not download BEO document.');
       }
     } catch (e) {
-      alert(`Export error: ${e.message}`);
+      alert(`Export error: ${errorMessage(e)}`);
     } finally {
       setIsExporting(false);
     }
@@ -311,4 +317,10 @@ export default function ClientBanquetPortalModal({
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

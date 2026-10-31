@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { masterHubs, getAllToolsFlatList } from './navigationConfig';
 import { subscribeToTeamActivity, subscribeToPresence } from './collaborationService';
 import './SimpleDashboardPortal.css';
 
-export default function SimpleDashboardPortal({ 
-  onNavigateTab, 
-  onOpenGuide, 
-  onStartTour,
-  onSwitchToProMode,
-  currentUser 
-}) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedHubFilter, setSelectedHubFilter] = useState('all');
-  const [recentActivities, setRecentActivities] = useState([]);
-  const [onlineMembers, setOnlineMembers] = useState([]);
+/** @param {{"onNavigateTab"?: (arg0: string) => void, "onOpenGuide"?: () => void, "onStartTour"?: () => void, "onSwitchToProMode"?: () => void, "currentUser"?: import('firebase/auth').User | null}} props */
+export default function SimpleDashboardPortal({ onNavigateTab, onOpenGuide, onStartTour, onSwitchToProMode }) {
+  const [searchQuery] = useState('');
+  const [selectedHubFilter] = useState('all');
+  const [recentActivities, setRecentActivities] = useState(/** @type {import('/components/collaborationService').TeamActivity[]} */ ([]));
+  const [onlineMembers, setOnlineMembers] = useState(/** @type {import('/components/collaborationService').TeamPresence[]} */ ([]));
   const allTools = getAllToolsFlatList();
 
   useEffect(() => {
-    const unsubActivity = subscribeToTeamActivity((acts) => {
+    const unsubActivity = subscribeToTeamActivity(/** @param {typeof recentActivities} acts */
+( acts) => {
       setRecentActivities(acts);
     }, 6);
-    const unsubPresence = subscribeToPresence((mems) => {
-      setOnlineMembers(mems.filter(m => m.status === 'online'));
+    const unsubPresence = subscribeToPresence(
+( mems) => {
+      setOnlineMembers(mems.filter( 
+m => m.status === 'online'));
     });
     return () => {
       unsubActivity && unsubActivity();
@@ -29,7 +27,7 @@ export default function SimpleDashboardPortal({
     };
   }, []);
 
-  const filteredTools = allTools.filter(tool => {
+  (allTools.filter(tool => {
     const matchesHub = selectedHubFilter === 'all' || tool.hubKey === selectedHubFilter;
     const q = searchQuery.toLowerCase().trim();
     if (!q) return matchesHub;
@@ -39,9 +37,9 @@ export default function SimpleDashboardPortal({
        (tool.description && tool.description.toLowerCase().includes(q)) ||
        tool.hubLabel.toLowerCase().includes(q))
     );
-  });
+  }));
 
-  const starterSteps = [
+  ([
     {
       id: 'step-drive',
       icon: '☁️',
@@ -82,7 +80,7 @@ export default function SimpleDashboardPortal({
       tab: 'unified_calendar',
       cta: 'Open Master Calendar'
     }
-  ];
+  ]);
 
   return (
     <div className="simple-dashboard-container">
@@ -105,7 +103,8 @@ export default function SimpleDashboardPortal({
             {onlineMembers.length === 0 ? (
               <span style={{ fontSize: '0.78rem', color: '#38bdf8' }}>🟢 You are online (Admin)</span>
             ) : (
-              onlineMembers.map((m, idx) => (
+              onlineMembers.map(
+( m, idx) => (
                 <span key={m.email || m.id || idx} style={{ fontSize: '0.78rem', color: '#f8fafc', background: '#1e293b', border: '1px solid #334155', padding: '3px 8px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span>🟢</span>
                   <span>{m.name}</span>
@@ -269,13 +268,13 @@ export default function SimpleDashboardPortal({
                   <span>{act.userAvatar || '👤'}</span>
                   <strong style={{ fontSize: '0.85rem', color: '#f8fafc' }}>{act.userName}</strong>
                   <span style={{ fontSize: '0.7rem', color: '#64748b', marginLeft: 'auto' }}>
-                    {new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {act.timestamp == null ? 'Time unavailable' : new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
                 <p style={{ margin: '0 0 8px 0', fontSize: '0.82rem', color: '#94a3b8' }}>{act.action}</p>
                 {act.tabKey && (
                   <button 
-                    onClick={() => onNavigateTab && onNavigateTab(act.tabKey)}
+                    onClick={() => onNavigateTab && act.tabKey && onNavigateTab(act.tabKey)}
                     style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid #38bdf8', borderRadius: '4px', padding: '4px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 'bold' }}
                   >
                     👁️ View in {act.toolName || 'Workspace'} →
@@ -297,7 +296,7 @@ export default function SimpleDashboardPortal({
 
       <div className="simple-hubs-grid">
         {masterHubs.map((hub, idx) => (
-          <div key={hub.key || hub.id || idx} className="simple-hub-card">
+          <div key={hub.key || idx} className="simple-hub-card">
             <div className="hub-card-header">
               <div className="hub-badge-group">
                 <span className="hub-main-icon">{hub.icon}</span>
@@ -312,7 +311,7 @@ export default function SimpleDashboardPortal({
               {hub.subTabs.slice(0, 4).map(sub => (
                 <button
                   key={sub.key}
-                  onClick={() => onNavigateTab(sub.key)}
+                  onClick={() => onNavigateTab?.(sub.key)}
                   className="subtab-chip-btn"
                   title={sub.description}
                 >
@@ -327,7 +326,7 @@ export default function SimpleDashboardPortal({
 
             <div className="hub-card-footer">
               <button
-                onClick={() => onNavigateTab(hub.subTabs[0]?.key || 'dashboard')}
+                onClick={() => onNavigateTab?.(hub.subTabs[0]?.key || 'dashboard')}
                 className="hub-launch-btn"
               >
                 <span>Launch {hub.label.split(' ')[0]} Hub →</span>

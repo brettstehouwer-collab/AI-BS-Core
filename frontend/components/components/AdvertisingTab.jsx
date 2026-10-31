@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+/** @typedef {{id: string, business_name: string, contact: string, url: string, email: string, status: string, value: string, heuristic_match: string, date_acquired: string}} AdvertisingLead */
+/** @typedef {{keywords?:string[],text?:string,hook?:string,caption?:string,offer?:string,schema_title?: string, meta_description?: string, local_keywords?: string[], headline?: string, body?: string, cta?: string, hashtags?: string, caption_hook?: string, hook_text?: string, script?: string, caption_keywords?: string, tweet?: string, card_title?: string, card_description?: string, pin_title?: string, pin_description?: string, title?: string, description?: string, business_description?: string, category_tags?: string[], special_offer?: string, error?: string}} PlatformPost */
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // ─── Canonical lead shape ────────────────────────────────────────────────────
 // { id, business_name, contact, url, email, status, value, heuristic_match, date_acquired }
@@ -10,12 +12,13 @@ const LEADS_LS_KEY = 'advertising_leads_v2';   // v2 to avoid conflict with old 
 const BUDGETS_LS_KEY = 'advertising_budgets';
 const SAVE_DEBOUNCE_MS = 800;
 
+/** @param {{backendUrl: string, selectedModel?: string}} props */
 const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
   const [activeSubTab, setActiveSubTab] = useState('leads');
-  const [leads, setLeads] = useState([]);
+  const [leads, setLeads] = useState(/** @type {AdvertisingLead[]} */ ([]));
   const [leadsLoaded, setLeadsLoaded] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');       // 'saving' | 'saved' | 'offline'
-  const saveTimerRef = useRef(null);
+  const saveTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
   const isFirstLeadLoad = useRef(true);
 
   // AI Campaign Generator
@@ -30,7 +33,7 @@ const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
   const [postIndustry, setPostIndustry] = useState('Marketing / Advertising Agency');
   const [postCounty, setPostCounty] = useState('Ottawa County');
   const [postPromo, setPostPromo] = useState('We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients — call us today and get a custom strategy built for your neighborhood.');
-  const [generatedPosts, setGeneratedPosts] = useState(null);
+  const [generatedPosts, setGeneratedPosts] = useState(/** @type {Record<string, PlatformPost | string | undefined> & {error?: string} | null} */ (null));
   const [isGeneratingPosts, setIsGeneratingPosts] = useState(false);
   const [copiedPlatform, setCopiedPlatform] = useState('');
 
@@ -38,7 +41,7 @@ const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
   // Budget Tracker
   const [budgets, setBudgets] = useState(() => {
     const saved = localStorage.getItem(BUDGETS_LS_KEY);
-    return saved ? JSON.parse(saved) : [{ id: 1, event: 'Summer SEO Push', spent: 1500, roi: 4500 }];
+    return /** @type {{id: number, event: string, spent: number, roi: number}[]} */ (saved ? JSON.parse(saved) : [{ id: 1, event: 'Summer SEO Push', spent: 1500, roi: 4500 }]);
   });
 
   // ── Load leads from backend on mount, fall back to localStorage ─────────────
@@ -70,7 +73,7 @@ const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
     if (!leadsLoaded) return;
     if (isFirstLeadLoad.current) { isFirstLeadLoad.current = false; return; }
 
-    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current !== null && clearTimeout(saveTimerRef.current);
     setSaveStatus('saving');
     saveTimerRef.current = setTimeout(async () => {
       try {
@@ -89,7 +92,7 @@ const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
       }
     }, SAVE_DEBOUNCE_MS);
 
-    return () => clearTimeout(saveTimerRef.current);
+    return () => { if (saveTimerRef.current !== null) clearTimeout(saveTimerRef.current); };
   }, [leads, leadsLoaded, backendUrl]);
 
   // Budgets stay localStorage-only (no backend endpoint yet)
@@ -113,10 +116,12 @@ const AdvertisingTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
     setLeads(prev => [newLead, ...prev]);
   };
 
-  const updateLead = (id, field, value) =>
+  /** @param {string} id @param {keyof AdvertisingLead} field @param {string} value */
+const updateLead = (id, field, value) =>
     setLeads(prev => prev.map(l => l.id === id ? { ...l, [field]: value } : l));
 
-  const deleteLead = (id) =>
+  /** @param {string} id */
+const deleteLead = (id) =>
     setLeads(prev => prev.filter(l => l.id !== id));
 
   // ── Campaign generator ───────────────────────────────────────────────────────
@@ -210,13 +215,13 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
         setGeneratedPosts({ error: 'No JSON in AI response — try again.' });
       }
     } catch (e) {
-      setGeneratedPosts({ error: `Backend error: ${e.message}` });
+      setGeneratedPosts({ error: `Backend error: ${errorMessage(e)}` });
     }
     setIsGeneratingPosts(false);
   };
 
 
-  const handleCopyPost = (key, text) => {
+  const handleCopyPost = (/** @type {string} */ key, /** @type {string} */ text) => {
     navigator.clipboard.writeText(text);
     setCopiedPlatform(key);
     setTimeout(() => setCopiedPlatform(''), 2000);
@@ -326,7 +331,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
 
               <div className="form-group">
                 <label>Campaign Goal / Key Selling Point</label>
-                <textarea rows="4" placeholder="e.g. We offer 24/7 emergency pipe repair with 0 callout fees." value={campaignGoal} onChange={e => setCampaignGoal(e.target.value)} />
+                <textarea rows={4} placeholder="e.g. We offer 24/7 emergency pipe repair with 0 callout fees." value={campaignGoal} onChange={e => setCampaignGoal(e.target.value)} />
               </div>
 
               {genError && <p style={{ color: '#ef4444', fontSize: '0.85em', margin: '8px 0' }}>{genError}</p>}
@@ -438,7 +443,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '🔍',
                   color: '#4285F4',
                   algoTip: 'Geo-intent keywords · NAP-consistent · <60 char title · <155 char meta',
-                  content: g => {
+                  content: (/** @type {PlatformPost} */ g) => {
                     const title = g.schema_title || g.title || '';
                     const desc = g.meta_description || g.description || '';
                     const kws = (g.local_keywords || g.keywords || []).join(' · ');
@@ -453,7 +458,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '📘',
                   color: '#1877F2',
                   algoTip: '90-char hook visible · 3-5 targeted hashtags · comment-bait CTA for 3x reach',
-                  content: f => [f.headline, f.body || f.text, f.cta, f.hashtags].filter(Boolean).join('\n\n')
+                  content: (/** @type {PlatformPost} */ f) => [f.headline, f.body || f.text, f.cta, f.hashtags].filter(Boolean).join('\n\n')
                 },
                 {
                   key: 'instagram',
@@ -462,7 +467,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '📸',
                   color: '#E1306C',
                   algoTip: '125-char preview · 3-5 niche hashtags (2024 algo) · hook drives retention',
-                  content: i => [
+                  content: (/** @type {PlatformPost} */ i) => [
                     i.caption_hook || i.hook,
                     i.body || i.caption,
                     i.hashtags
@@ -475,7 +480,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '🎵',
                   color: '#69C9D0',
                   algoTip: 'Spoken keywords indexed by audio · search-phrase caption · loop-completion hook',
-                  content: t => [
+                  content: (/** @type {PlatformPost} */ t) => [
                     t.hook_text || t.hook,
                     t.script,
                     t.caption_keywords || t.caption
@@ -488,7 +493,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '𝕏',
                   color: '#e7e9ea',
                   algoTip: '<220 chars · no external links · reply-bait for 30-min velocity',
-                  content: t => t.tweet || t.text || ''
+                  content: (/** @type {PlatformPost} */ t) => t.tweet || t.text || ''
                 },
                 {
                   key: 'pinterest',
@@ -497,7 +502,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '📌',
                   color: '#E60023',
                   algoTip: 'Keyword front-loaded in title · used 2-3x in description · search-intent driven',
-                  content: p => [p.pin_title || p.title, p.pin_description || p.description].filter(Boolean).join('\n\n')
+                  content: /** @param {PlatformPost} p */ p => [p.pin_title || p.title, p.pin_description || p.description].filter(Boolean).join('\n\n')
                 },
                 {
                   key: 'yelp',
@@ -506,7 +511,7 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                   icon: '⭐',
                   color: '#d32323',
                   algoTip: 'Category-exact language · county mentioned 2-3x · Check-In Offer format',
-                  content: y => {
+                  content: (/** @type {PlatformPost} */ y) => {
                     const desc = y.business_description || y.description || '';
                     const offer = y.special_offer || y.offer || '';
                     return [desc, offer ? `🎁 ${offer}` : ''].filter(Boolean).join('\n\n');
@@ -514,7 +519,8 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
                 },
               ].map(({ key, label, url, icon, color, algoTip, content }) => {
 
-                const data = generatedPosts?.[key];
+                const entry = generatedPosts?.[key];
+                const data = entry && typeof entry === 'object' ? entry : undefined;
                 const text = data && !generatedPosts?.error ? content(data) : '';
                 return (
                   <div key={key} style={{ padding: 16, background: 'rgba(0,0,0,0.35)', borderRadius: 14, border: `1px solid ${data ? color + '55' : 'rgba(255,255,255,0.06)'}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -549,3 +555,9 @@ Respond ONLY with a single, raw, valid JSON object with NO markdown, NO code blo
 
 export default AdvertisingTab;
 
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

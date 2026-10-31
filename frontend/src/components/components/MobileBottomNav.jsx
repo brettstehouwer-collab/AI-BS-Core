@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 
 /**
  * MobileBottomNav: Native-feeling bottom tab bar for smartphone screens (<= 768px).
@@ -9,6 +9,7 @@ import React from 'react';
  * - ⚡ Cockpit (Executive Cockpit & Command Center)
  * - ☰ More (Opens the full categorized tool drawer)
  */
+/** @param {{activeTab: string, onTabChange?: (tab: string) => void, onOpenDrawer: () => void, unreadCount?: number}} props */
 export default function MobileBottomNav({
   activeTab,
   onTabChange,
@@ -85,7 +86,7 @@ export default function MobileBottomNav({
           if (item.isAction && item.action) {
             item.action();
           } else {
-            onTabChange(item.key);
+            onTabChange?.(item.key);
           }
         };
 

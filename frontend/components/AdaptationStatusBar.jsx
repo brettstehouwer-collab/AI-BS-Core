@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{projectName: string, status: string, progress?: number, current_chunk?: number, total_chunks?: number, adaptation_type?: string, book_style?: string, error?: string, previous_summary?: string}} AdaptationJob */
+import { useState, useEffect, useRef } from 'react';
 import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
 
 /**
@@ -6,11 +7,12 @@ import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSou
  * Prominent, real-time AI Adaptation Job Status & Progress Bar.
  * Automatically discovers active jobs, listens to SSE streams, and provides cancel/restart controls.
  */
+/** @param {{backendUrl?: string, onSwitchToProject?: (project: string) => void, onRefreshScreenplay?: (project: string) => void}} props */
 export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onRefreshScreenplay }) {
   const baseUrl = backendUrl || 'http://127.0.0.1:8000';
-  const [activeJob, setActiveJob] = useState(null);
+  const [activeJob, setActiveJob] = useState(/** @type {AdaptationJob | null} */ (null));
   const [isDismissed, setIsDismissed] = useState(false);
-  const eventSourceRef = useRef(null);
+  const eventSourceRef = useRef(/** @type {ReturnType<typeof createAuthenticatedEventSource> | null} */ (null));
 
   // Poll for active jobs on mount and when not connected to SSE
   useEffect(() => {
@@ -59,7 +61,8 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
     };
   }, [baseUrl]);
 
-  const connectStream = (projectName) => {
+  /** @param {string} projectName */
+const connectStream = (projectName) => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
     }
@@ -113,7 +116,7 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
       if (eventSourceRef.current) eventSourceRef.current.close();
       setTimeout(() => setActiveJob(null), 3000);
     } catch (err) {
-      alert(`Failed to cancel: ${err.message}`);
+      alert(`Failed to cancel: ${errorMessage(err)}`);
     }
   };
 
@@ -129,7 +132,7 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
       if (eventSourceRef.current) eventSourceRef.current.close();
       alert(`Reset adaptation state for "${activeJob.projectName}". You can now start a fresh adaptation.`);
     } catch (err) {
-      alert(`Failed to reset: ${err.message}`);
+      alert(`Failed to reset: ${errorMessage(err)}`);
     }
   };
 
@@ -338,4 +341,10 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

@@ -1,56 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Gamepad2,
-  Cpu,
-  RefreshCw,
-  Zap,
-  Shield,
-  Coins,
-  Heart,
-  Sliders,
-  Terminal,
-  Activity,
-  CheckCircle2,
-  AlertTriangle,
-  Layers,
-  ArrowRight,
-  RotateCcw,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  Minimize2,
-  Maximize2
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Gamepad2, Cpu, RefreshCw, Zap, Shield, Coins, Heart, Sliders, Terminal, Activity, CheckCircle2, AlertTriangle, Layers, RotateCcw, ExternalLink, Eye, EyeOff, Minimize2, Maximize2 } from "lucide-react";
 
+/** @param {{"backendUrl"?: string}} props */
 export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:8080' }) {
   const [activeSubTab, setActiveSubTab] = useState('gaming'); // 'gaming' or 'inspector'
-  const [selectedProfile, setSelectedProfile] = useState('btd6');
+  const [selectedProfile] = useState('btd6');
 
   // Process Telemetry State
-  const [processes, setProcesses] = useState([]);
-  const [procSearch, setProcSearch] = useState('');
+  const [processes, setProcesses] = useState(/** @type {Array<{"pid": number, "name": string, "memory_mb": string}>} */ ([]));
+  const [procSearch] = useState('');
   const [selectedProc, setSelectedProc] = useState('BloonsTD6.exe');
-  const [status, setStatus] = useState({ attached: false, pid: null, base_address: '0x0' });
+  const [status, setStatus] = useState(/** @type {{attached: boolean, pid: number | null, base_address: string, btd6_trainer?: {cash_addresses: string[], cash_candidates_count: number, coins_addresses: string[], coins_candidates_count: number, [field: string]: unknown}}} */ ({ attached: false, pid: null, base_address: '0x0' }));
   const [isAttaching, setIsAttaching] = useState(false);
-  const [notice, setNotice] = useState(null);
+  const [notice, setNotice] = useState(/** @type {{"type": string, "text": string} | null} */ (null));
 
   // Floating Translucent HUD Overlay State
   const [showWebOverlay, setShowWebOverlay] = useState(true);
   const [overlayMinimized, setOverlayMinimized] = useState(false);
 
   // Quick Key Features State (for BTD6)
-  const [quickKeys, setQuickKeys] = useState({
+  const [quickKeys, setQuickKeys] = useState(/** @type {Record<string, boolean>} */ ({
     unlimitedCash: false,
     unlimitedLives: false,
     unlimitedCoins: false,
     zeroCostPlacement: false,
     instantCooldowns: false,
-  });
+  }));
 
   // Manual Memory Inspector State
   const [readAddress, setReadAddress] = useState('0x7FF6B0C40000');
   const [readType, setReadType] = useState('int32');
-  const [readValue, setReadValue] = useState(null);
+  const [readValue, setReadValue] = useState(/** @type {string | null} */ (null));
   const [writeAddress, setWriteAddress] = useState('');
   const [writeType, setWriteType] = useState('int32');
   const [writeValue, setWriteValue] = useState('');
@@ -96,7 +76,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
     return () => clearInterval(interval);
   }, []);
 
-  const handleAttach = async (target) => {
+  /** @param {string} target */
+const handleAttach = async ( target) => {
     setIsAttaching(true);
     setNotice(null);
     try {
@@ -113,7 +94,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Failed to attach to process.' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     } finally {
       setIsAttaching(false);
     }
@@ -129,7 +110,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
     }
   };
 
-  const toggleFeature = async (featureName, stateKey) => {
+  /** @param {string} featureName @param {string} stateKey */
+const toggleFeature = async ( featureName,  stateKey) => {
     const nextState = !quickKeys[stateKey];
     setQuickKeys((prev) => ({ ...prev, [stateKey]: nextState }));
 
@@ -151,11 +133,12 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
       }
     } catch (e) {
       setQuickKeys((prev) => ({ ...prev, [stateKey]: !nextState }));
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
-  const triggerOneShot = async (featureName) => {
+  /** @param {string} featureName */
+const triggerOneShot = async ( featureName) => {
     try {
       const res = await fetch(`${backendUrl}/api/memory-lab/profile/action`, {
         method: 'POST',
@@ -173,7 +156,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
@@ -300,10 +283,11 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
 
   // Listen to messages from pop-out HUD
   useEffect(() => {
-    const handleMsg = (e) => {
-      if (e.data?.action === 'toggle') {
+    /** @param {MessageEvent<{action?: string, feature?: string, key?: string, amount?: number}>} e */
+const handleMsg = ( e) => {
+      if (e.data?.action === 'toggle' && typeof e.data.feature === 'string' && typeof e.data.key === 'string') {
         toggleFeature(e.data.feature, e.data.key);
-      } else if (e.data?.action === 'trigger') {
+      } else if (e.data?.action === 'trigger' && typeof e.data.feature === 'string') {
         triggerOneShot(e.data.feature);
       } else if (e.data?.action === 'directCoins') {
         handleSetCoinsDirect(e.data.amount || 99999);
@@ -332,7 +316,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
@@ -354,7 +338,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
@@ -385,7 +369,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Scan failed' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     } finally {
       setIsScanningCash(false);
     }
@@ -423,7 +407,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Filter scan failed' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     } finally {
       setIsFilteringCash(false);
     }
@@ -444,7 +428,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Failed to inject cash' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
@@ -463,7 +447,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Failed to inject Monkey Money' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     }
   };
 
@@ -498,7 +482,7 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
         setNotice({ type: 'error', text: data.detail || 'Coins scan failed' });
       }
     } catch (e) {
-      setNotice({ type: 'error', text: e.message });
+      setNotice({ type: 'error', text: (e instanceof Error ? e.message : String(e)) });
     } finally {
       setIsScanningCoins(false);
     }
@@ -610,7 +594,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
             <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '4px' }}>TARGET EXECUTABLE</div>
             <select
               value={selectedProc}
-              onChange={(e) => setSelectedProc(e.target.value)}
+              onChange={
+( e) => setSelectedProc(e.target.value)}
               style={{
                 background: '#0f172a',
                 border: '1px solid #475569',
@@ -742,9 +727,9 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                 </span>
               </div>
               <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                Status: <strong style={{ color: status?.btd6_trainer?.cash_addresses?.length > 0 ? '#4ade80' : '#f87171' }}>
-                  {status?.btd6_trainer?.cash_addresses?.length > 0
-                    ? `Locked (${status.btd6_trainer.cash_addresses.length} addrs)`
+                Status: <strong style={{ color: (status?.btd6_trainer?.cash_addresses?.length ?? 0) > 0 ? '#4ade80' : '#f87171' }}>
+                  {(status?.btd6_trainer?.cash_addresses?.length ?? 0) > 0
+                    ? `Locked (${status.btd6_trainer?.cash_addresses.length} addrs)`
                     : 'Not Locked Yet'}
                 </strong>
               </div>
@@ -779,7 +764,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                   <input
                     type="number"
                     value={scanCashVal}
-                    onChange={(e) => setScanCashVal(e.target.value)}
+                    onChange={
+( e) => setScanCashVal(e.target.value)}
                     placeholder="650"
                     style={{
                       flex: 1,
@@ -846,14 +832,14 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                     ⚡ $99.9k
                   </button>
                 </div>
-                {status?.btd6_trainer?.cash_candidates_count > 0 && (!status?.btd6_trainer?.cash_addresses || status?.btd6_trainer?.cash_addresses.length === 0) && (
+                {(status?.btd6_trainer?.cash_candidates_count ?? 0) > 0 && (!status?.btd6_trainer?.cash_addresses || status?.btd6_trainer?.cash_addresses.length === 0) && (
                   <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#f59e0b' }}>
-                    Candidates: {status.btd6_trainer.cash_candidates_count} found (Spend cash in-game and click Next Scan)
+                    Candidates: {status.btd6_trainer?.cash_candidates_count} found (Spend cash in-game and click Next Scan)
                   </div>
                 )}
-                {status?.btd6_trainer?.cash_addresses?.length > 0 && (
+                {(status?.btd6_trainer?.cash_addresses?.length ?? 0) > 0 && (
                   <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#4ade80', fontFamily: 'monospace' }}>
-                    Locked: {status.btd6_trainer.cash_addresses.join(', ')}
+                    Locked: {status.btd6_trainer?.cash_addresses.join(', ')}
                   </div>
                 )}
               </div>
@@ -867,7 +853,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                   <input
                     type="number"
                     value={scanCoinsVal}
-                    onChange={(e) => setScanCoinsVal(e.target.value)}
+                    onChange={
+( e) => setScanCoinsVal(e.target.value)}
                     placeholder="99999"
                     style={{
                       flex: 1,
@@ -914,9 +901,9 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                     🪙 99,999
                   </button>
                 </div>
-                {status?.btd6_trainer?.coins_addresses?.length > 0 && (
+                {(status?.btd6_trainer?.coins_addresses?.length ?? 0) > 0 && (
                   <div style={{ marginTop: '8px', fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace' }}>
-                    Locked: {status.btd6_trainer.coins_addresses.join(', ')}
+                    Locked: {status.btd6_trainer?.coins_addresses.join(', ')}
                   </div>
                 )}
               </div>
@@ -1254,7 +1241,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                 <input
                   type="text"
                   value={readAddress}
-                  onChange={(e) => setReadAddress(e.target.value)}
+                  onChange={
+( e) => setReadAddress(e.target.value)}
                   placeholder="0x7FF6B0C40000"
                   style={{
                     width: '100%',
@@ -1273,7 +1261,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                   <label style={{ fontSize: '0.78rem', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Data Type</label>
                   <select
                     value={readType}
-                    onChange={(e) => setReadType(e.target.value)}
+                    onChange={
+( e) => setReadType(e.target.value)}
                     style={{
                       width: '100%',
                       background: '#0f172a',
@@ -1333,7 +1322,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                 <input
                   type="text"
                   value={writeAddress}
-                  onChange={(e) => setWriteAddress(e.target.value)}
+                  onChange={
+( e) => setWriteAddress(e.target.value)}
                   placeholder="0x7FF6B0C40000"
                   style={{
                     width: '100%',
@@ -1352,7 +1342,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                   <label style={{ fontSize: '0.78rem', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>Data Type</label>
                   <select
                     value={writeType}
-                    onChange={(e) => setWriteType(e.target.value)}
+                    onChange={
+( e) => setWriteType(e.target.value)}
                     style={{
                       width: '100%',
                       background: '#0f172a',
@@ -1376,7 +1367,8 @@ export default function ProcessMemoryLabTab({ backendUrl = 'http://localhost:808
                   <input
                     type="text"
                     value={writeValue}
-                    onChange={(e) => setWriteValue(e.target.value)}
+                    onChange={
+( e) => setWriteValue(e.target.value)}
                     placeholder="9999999"
                     style={{
                       width: '100%',

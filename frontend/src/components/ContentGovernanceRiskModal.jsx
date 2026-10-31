@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getApiBase } from '../config/api';
 import './ContentGovernanceRiskModal.css';
 
+/** @param {{isOpen: boolean, onClose: () => void, initialText?: string, onApplyRefinement?: (text: string) => void}} props */
 export default function ContentGovernanceRiskModal({ 
   isOpen, 
   onClose, 
@@ -13,8 +14,8 @@ export default function ContentGovernanceRiskModal({
   const [audience, setAudience] = useState('external_client');
   const [threshold, setThreshold] = useState(45.0);
   const [loading, setLoading] = useState(false);
-  const [analysis, setAnalysis] = useState(null);
-  const [copiedIndex, setCopiedIndex] = useState(null);
+  const [analysis, setAnalysis] = useState(/** @type {{status_color:string,quantifiable_risk_score:number,threshold:number,status:string,vector_breakdown:Record<string,number>,executive_summary:string,refinements:{original:string,refined:string,reason:string}[]}|null} */ (null));
+  const [copiedIndex, setCopiedIndex] = useState(/** @type {number|null} */ (null));
 
   useEffect(() => {
     if (initialText) {
@@ -39,7 +40,7 @@ export default function ContentGovernanceRiskModal({
           text,
           context_category: category,
           target_audience: audience,
-          custom_threshold: parseFloat(threshold)
+          custom_threshold: Number(threshold)
         })
       });
       if (!response.ok) {
@@ -54,6 +55,7 @@ export default function ContentGovernanceRiskModal({
     }
   };
 
+  /** @param {{original:string,refined:string}} refinement */
   const handleApplyRefinement = (refinement) => {
     let updatedText = text;
     if (refinement.original && updatedText.includes(refinement.original)) {
@@ -71,6 +73,7 @@ export default function ContentGovernanceRiskModal({
     }, 100);
   };
 
+  /** @param {string} refinedText @param {number} idx */
   const handleCopyRefinement = (refinedText, idx) => {
     navigator.clipboard.writeText(refinedText);
     setCopiedIndex(idx);
@@ -79,6 +82,7 @@ export default function ContentGovernanceRiskModal({
 
   if (!isOpen) return null;
 
+  /** @type {Record<string,string>} */
   const vectorLabels = {
     litigation_legal: 'Litigation & Legal Liability',
     harassment_hr: 'Harassment & HR Policy Risk',
@@ -245,7 +249,7 @@ export default function ContentGovernanceRiskModal({
                       ✨ No high-risk terminology detected. Communication aligns with corporate compliance standards!
                     </div>
                   ) : (
-                    analysis.refinements.map((ref, idx) => (
+                    analysis.refinements.map(/** @param {{"original": string, "refined": string, "reason": string}} ref @param {number} idx */ (ref, idx) => (
                       <div key={idx} className="governance-refinement-box">
                         <div className="refinement-original">
                           Original: "{ref.original}"

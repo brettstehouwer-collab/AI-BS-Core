@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 export default function NocoCeaAgriHud() {
   // VPD Environmental Inputs
@@ -7,28 +7,28 @@ export default function NocoCeaAgriHud() {
   const [relativeHumidity, setRelativeHumidity] = useState(68); // %
 
   // Hydroponics & NFT Reservoir
-  const [ecTarget, setEcTarget] = useState(1.4); // mS/cm
-  const [ecCurrent, setEcCurrent] = useState(1.42);
-  const [phCurrent, setPhCurrent] = useState(6.15);
-  const [waterTemp, setWaterTemp] = useState(19.2); // °C
-  const [dissolvedOxygen, setDissolvedOxygen] = useState(8.6); // mg/L
-  const [koiWasteDosage, setKoiWasteDosage] = useState(85); // %
+  const [ecTarget] = useState(1.4); // mS/cm
+  const [ecCurrent] = useState(1.42);
+  const [phCurrent] = useState(6.15);
+  const [waterTemp] = useState(19.2); // °C
+  const [dissolvedOxygen] = useState(8.6); // mg/L
+  const [koiWasteDosage] = useState(85); // %
 
   // High-Pressure Aeroponics (HPA)
-  const [hpaPressure, setHpaPressure] = useState(85); // PSI (80 - 100 PSI)
-  const [sprayDurationSec, setSprayDurationSec] = useState(5);
-  const [dwellDurationSec, setDwellDurationSec] = useState(180);
+  const [hpaPressure] = useState(85); // PSI (80 - 100 PSI)
+  const [sprayDurationSec] = useState(5);
+  const [dwellDurationSec] = useState(180);
   const [isHpaPumping, setIsHpaPumping] = useState(false);
 
   // Livestock & Poultry Telemetry
-  const [sheepPastureMoisture, setSheepPastureMoisture] = useState(72); // %
-  const [sheepBarnFloorTemp, setSheepBarnFloorTemp] = useState(18.0); // °C
-  const [alpacaShelterHumidity, setAlpacaShelterHumidity] = useState(58); // %
-  const [poultryDoorOpen, setPoultryDoorOpen] = useState(true);
-  const [dailyEggsCount, setDailyEggsCount] = useState(28);
+  const [sheepPastureMoisture] = useState(72); // %
+  const [sheepBarnFloorTemp] = useState(18.0); // °C
+  const [alpacaShelterHumidity] = useState(58); // %
+  const [poultryDoorOpen] = useState(true);
+  const [dailyEggsCount] = useState(28);
 
   // Dosing Action Alerts
-  const [dosingMessage, setDosingMessage] = useState(null);
+  const [dosingMessage, setDosingMessage] = useState(/** @type {string | null} */ (null));
 
   // Calculate Vapor Pressure Deficit (VPD)
   // SVP (Saturation Vapor Pressure) in kPa = 0.61078 * exp((17.27 * T) / (T + 237.3))
@@ -38,7 +38,8 @@ export default function NocoCeaAgriHud() {
   const vpdKpa = Number((svpLeaf - avpAir).toFixed(2));
 
   // Determine VPD Zone
-  const getVpdZone = (val) => {
+  /** @param {number} val */
+const getVpdZone = ( val) => {
     if (val < 0.4) return { label: '⚠️ UNDER-TRANSPIRING (Fungal/Mold Risk)', color: '#ef4444' };
     if (val >= 0.4 && val < 0.8) return { label: '🌱 EARLY PROPAGATION / ROOTING', color: '#38bdf8' };
     if (val >= 0.8 && val <= 1.2) return { label: '✅ OPTIMAL VEGETATIVE VIGOR (0.8–1.2 kPa)', color: '#10b981' };
@@ -49,7 +50,8 @@ export default function NocoCeaAgriHud() {
   const vpdStatus = getVpdZone(vpdKpa);
 
   // Interactive Dosing Triggers
-  const triggerDose = (nutrient) => {
+  /** @param {string} nutrient */
+const triggerDose = ( nutrient) => {
     setDosingMessage(`🧪 Automated micro-dosing pump activated: Injected 45mL of ${nutrient}. Re-balancing EC/pH...`);
     setTimeout(() => {
       setDosingMessage(`✅ Closed-loop nutrient balance restored. EC: 1.40 mS/cm | pH: 6.12`);

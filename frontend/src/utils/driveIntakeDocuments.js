@@ -1,15 +1,18 @@
+/** @param {string} path */
 function intakeOriginalMatch(path) {
   return String(path || '').replace(/\\/g, '/').match(/^(.*(?:^|\/)Documents\/Drive_Intake\/[^/]+\/)(?:Originals|Previous_Versions)(?:\/(.*))?$/i);
 }
 
+/** @param {string} path */
 export function isDriveIntakeOriginal(path) {
   return !!intakeOriginalMatch(path);
 }
 
+/** @param {string} path @param {string} extension @param {string} id */
 export function driveIntakeWorkingCopyPath(path, extension, id) {
   const match = intakeOriginalMatch(path);
   if (!match || !match[2]) throw new Error('Select a downloaded original first.');
-  const filename = match[2].split('/').pop();
+  const filename = match[2].split('/').pop() || '';
   const folders = match[2].split('/').slice(0, -1).join('/');
   const stem = filename.replace(/\.[^.]+$/, '');
   if (!/^[a-z0-9]+$/i.test(extension) || !/^[a-z0-9-]+$/i.test(id)) throw new Error('Invalid working-copy name.');
@@ -18,9 +21,10 @@ export function driveIntakeWorkingCopyPath(path, extension, id) {
 
 // Make an explicitly requested copy. The original is read only and remains at its
 // existing path. DOCX conversion extracts paragraphs; it is not a layout roundtrip.
+/** @param {{backendUrl: string; path: string; fetcher?: typeof fetch; id?: string}} options */
 export async function createIntakeWorkingCopy({ backendUrl, path, fetcher = fetch, id = crypto.randomUUID() }) {
   if (!isDriveIntakeOriginal(path)) throw new Error('Select a downloaded original first.');
-  const extension = path.split('.').pop().toLowerCase();
+  const extension = (path.split('.').pop() || '').toLowerCase();
   let content;
   if (extension === 'docx') {
     const response = await fetcher(`${backendUrl}/api/drive/download?path=${encodeURIComponent(path)}`);

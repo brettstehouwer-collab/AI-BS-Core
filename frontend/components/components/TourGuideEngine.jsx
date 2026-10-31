@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import './TourGuideEngine.css';
 
 // Pre-configured Guided Spotlight Tours per Tab
+/** @type {Record<string, {"title": string, "steps": Array<{"targetSelector": string, "title": string, "content": string}>}>} */
+/** @type {Record<string, {title: string, steps: Array<{targetSelector: string, title: string, content: string}>}>} */
 export const TAB_TOURS = {
   power_washing: {
     title: 'Prestige Mobile Services (Power Washing Suite) Tour',
@@ -105,10 +107,11 @@ export const TAB_TOURS = {
   }
 };
 
+/** @param {{"activeTab": string, "isOpen": boolean, "onClose"?: () => void}} props */
 export default function TourGuideEngine({ activeTab, isOpen, onClose }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [targetRect, setTargetRect] = useState(null);
-  const popoverRef = useRef(null);
+  const [targetRect, setTargetRect] = useState(/** @type {{"viewportTop": number, "viewportLeft": number, "width": number, "height": number, "top": number, "left": number} | null} */ (null));
+  const popoverRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   const activeTour = TAB_TOURS[activeTab] || {
     title: `AI-BS Tab Guide: ${activeTab ? activeTab.replace('_', ' ').toUpperCase() : 'Workspace'}`,
@@ -143,7 +146,8 @@ export default function TourGuideEngine({ activeTab, isOpen, onClose }) {
       
       let el = null;
       if (currentStep.targetSelector) {
-        const selectors = currentStep.targetSelector.split(',').map(s => s.trim());
+        const selectors = currentStep.targetSelector.split(',').map( 
+s => s.trim());
         for (const sel of selectors) {
           try {
             el = document.querySelector(sel);
@@ -186,14 +190,15 @@ export default function TourGuideEngine({ activeTab, isOpen, onClose }) {
   // Keyboard navigation: Esc to close, Left/Right arrow to navigate
   useEffect(() => {
     if (!isOpen) return;
-    const handleKeyDown = (e) => {
+    /** @param {KeyboardEvent} e */
+const handleKeyDown = ( e) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose?.();
       } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
         if (currentStepIndex < steps.length - 1) {
           setCurrentStepIndex(prev => prev + 1);
         } else {
-          onClose();
+          onClose?.();
         }
       } else if (e.key === 'ArrowLeft') {
         if (currentStepIndex > 0) {
@@ -219,7 +224,8 @@ export default function TourGuideEngine({ activeTab, isOpen, onClose }) {
             width: `${targetRect.width + 12}px`,
             height: `${targetRect.height + 12}px`
           }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={
+( e) => e.stopPropagation()}
         />
       )}
 
@@ -227,7 +233,8 @@ export default function TourGuideEngine({ activeTab, isOpen, onClose }) {
       <div
         className="tour-popover-card"
         ref={popoverRef}
-        onClick={(e) => e.stopPropagation()}
+        onClick={
+( e) => e.stopPropagation()}
         style={
           targetRect
             ? {

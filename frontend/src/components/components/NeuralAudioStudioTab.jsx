@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Mic, Music, Sliders, Volume2, Play, Pause, Download, 
-  Sparkles, RefreshCw, Layers, Radio, UserCheck, PlusCircle, 
-  Zap, Check, Shield, FileAudio, Disc
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Mic, Music, Sliders, Download, RefreshCw, UserCheck, Zap } from "lucide-react";
 import './NeuralAudioStudioTab.css';
 
-export default function NeuralAudioStudioTab({ backendUrl }) {
+/** @param {{"backendUrl"?: string}} props */
+export default function NeuralAudioStudioTab({ backendUrl = '' }) {
   const baseUrl = backendUrl || import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
   // Active Sub-Tab: 'tts_zero_shot' | 'suno_music' | 'voice_vault' | 'mastering'
@@ -26,10 +23,10 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
   const [ttsText, setTtsText] = useState(
     '[Spoken] [Triumphant Celebratory Speech] (Ecstatic, celebratory) And you know what the best part is? This beautiful AI-BS architecture isn’t just for the ristorante! It scales horizontally! We\'re talking mobile wash fleets, Hollywood screenwriting, cloud drives—everything! It’s the ultimate operational stack for the family empire that wants to grow, grow, grow! [Sound effect: champagne pop] Salute to the future!'
   );
-  const [emotionTag, setEmotionTag] = useState('triumphant');
-  const [speed, setSpeed] = useState(1.0);
+  const [emotionTag] = useState('triumphant');
+  const [speed] = useState(1.0);
   const [isGeneratingTts, setIsGeneratingTts] = useState(false);
-  const [ttsAudioResult, setTtsAudioResult] = useState(null);
+  const [ttsAudioResult, setTtsAudioResult] = useState(/** @type {{"voice_profile": string, "duration_seconds": number, "audio_data_url": string, "audio_url"?: string, "filename": string, "status": string, "sampling_rate": number} | null} */ (null));
 
   // 2. Suno Music Generator State
   const [lyricsPrompt, setLyricsPrompt] = useState(
@@ -39,12 +36,12 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
   const [bpm, setBpm] = useState(120);
   const [keySig, setKeySig] = useState('C Major');
   const [isGeneratingMusic, setIsGeneratingMusic] = useState(false);
-  const [musicResult, setMusicResult] = useState(null);
+  const [musicResult, setMusicResult] = useState(/** @type {{"genre": string, "audio_data_url": string, "song_url": string, "status": string, "duration_seconds": number, "bpm": number, "key": string} | null} */ (null));
 
   // 3. New Voice Clone State
   const [newProfileId, setNewProfileId] = useState('');
   const [newProfileName, setNewProfileName] = useState('');
-  const [newGender, setNewGender] = useState('male');
+  const [newGender] = useState('male');
 
   // Fetch Voice Profiles on Mount
   useEffect(() => {
@@ -95,7 +92,8 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     const wavHeader = new ArrayBuffer(44 + numSamples * 2);
     const view = new DataView(wavHeader);
 
-    const writeString = (offset, string) => {
+    /** @param {number} offset @param {string} string */
+const writeString = ( offset,  string) => {
       for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
       }
@@ -208,7 +206,7 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     setIsGeneratingMusic(false);
   };
 
-  const handleCloneVoice = async () => {
+  (async () => {
     if (!newProfileId.trim() || !newProfileName.trim()) return;
     try {
       const res = await fetch(`${baseUrl}/api/audio/voice_profiles/clone`, {
@@ -229,9 +227,10 @@ export default function NeuralAudioStudioTab({ backendUrl }) {
     } catch (err) {
       console.error("Voice clone error:", err);
     }
-  };
+  });
 
-  const addEmotionTag = (tag) => {
+  /** @param {string} tag */
+const addEmotionTag = ( tag) => {
     setTtsText(prev => `${tag} ${prev}`);
   };
 

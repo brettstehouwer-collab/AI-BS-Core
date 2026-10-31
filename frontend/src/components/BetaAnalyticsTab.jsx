@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{timestamp: number, sensor_type: string, frequency_band: string, channel: number, signal_pct: number, ssid_name: string, bssid_mac: string, radio_type: string, beacon_hash: string}} AirRecord */
+/** @typedef {{timestamp: number, ip_address: string, page_path: string, severity: string, event_type: string, details: unknown}} PublishingEvent */
+/** @typedef {{id: string | number, timestamp: number, method?: string, protocol?: string, record_type?: string, origin_domain?: string, endpoint?: string, path?: string, src_endpoint?: string, status_code?: number, flow_id?: string, payload_sha256?: string, payload_sha256_in?: string, payload_sha256_out?: string, frame_payload_sha256?: string, asgi_duration_ms?: number, duration_ms?: number, bytes_in?: number, bytes_out?: number, body_bytes_in?: number, body_bytes_out?: number, captured_frame_bytes?: number, captured_overhead_bytes?: number, frame_bytes?: number, header_bytes?: number, payload_bytes?: number, transport_payload_bytes?: number, is_stehouwer_publishing?: boolean}} WireRecord */
+/** @typedef {{block_index: number, domain: string, event: string, detail: string, full_hash: string, hash: string, prev_hash: string, id?: string, timestamp: number, timestamp_iso?: string}} AuditBlock */
+import { useState, useEffect, useRef } from 'react';
 import { loadAnalyticsSnapshot, emptyTrafficData, emptyApiData } from '/src/utils/analyticsData.js';
 import { getApiBase } from '../config/api';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
@@ -26,6 +30,7 @@ const JULIE_EMAILS = [
   'julie@stehouwer-publishing.com'
 ];
 
+/** @param {{backendUrl?: string, currentUser?: import("firebase/auth").User | null}} props */
 export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   // Determine if running locally or on local home network (LAN)
   const isLocalDev = typeof window !== 'undefined' && (
@@ -58,7 +63,8 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handlePasswordUnlock = (e) => {
+  /** @param {import("react").FormEvent} e */
+const handlePasswordUnlock = (e) => {
     e?.preventDefault();
     setPasswordError('');
     if (!enteredPassword.trim()) {
@@ -94,10 +100,13 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   const [trafficData, setTrafficData] = useState(emptyTrafficData);
 
   // 2. Wire Packet Hashes & ASGI Gateway State
-  const [wireRecordType, setWireRecordType] = useState('ALL');
-  const [correlationModalData, setCorrelationModalData] = useState(null);
-  const [isLoadingCorrelation, setIsLoadingCorrelation] = useState(false);
+  const [wireRecordType] = useState('ALL');
+  const [correlationModalData, setCorrelationModalData] = useState(/** @type {{flow_id: string, l7_transaction?: WireRecord, wire_frames?: {inbound_sha256?: string, outbound_sha256?: string}} | null} */ (null));
+  const [, setIsLoadingCorrelation] = useState(false);
   const [wireSummary, setWireSummary] = useState({
+    wire_frames: /** @type {{total_count?: number, wire_bandwidth_kb?: number, payload_bandwidth_kb?: number, captured_overhead_bytes?: number, active_flows_count?: number, tcp_flags_distribution?: Record<string, number>} | undefined} */ (undefined),
+    transactions: /** @type {{total_count?: number, bandwidth_in_kb?: number, bandwidth_out_kb?: number, asgi_duration?: {avg_ms?: number, p95_ms?: number}} | undefined} */ (undefined),
+    flows: /** @type {{active_count?: number, tcp_active?: number, udp_active?: number, idle_timeout_seconds?: number} | undefined} */ (undefined),
     total_requests: 0,
     total_bytes_in: 0,
     total_bytes_out: 0,
@@ -113,43 +122,43 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       bytes_out: 0,
       bandwidth_in_kb: 0,
       bandwidth_out_kb: 0,
-      recent_packet_hashes: []
+      recent_packet_hashes: /** @type {{method: string, path: string, status_code: number, hash_in?: string, hash_out?: string}[]} */ ([])
     }
   });
-  const [wireTraffic, setWireTraffic] = useState([]);
+  const [wireTraffic, setWireTraffic] = useState(/** @type {WireRecord[]} */ ([]));
   const [wireFilterStehouwer, setWireFilterStehouwer] = useState(false);
   const [wireFilterHasHash, setWireFilterHasHash] = useState(false);
   const [wireSearchDomain, setWireSearchDomain] = useState('');
   const [wireLimit, setWireLimit] = useState(50);
-  const [captureInterfaces, setCaptureInterfaces] = useState([]);
-  const [selectedInterface, setSelectedInterface] = useState('');
-  const [bpfFilterInput, setBpfFilterInput] = useState('tcp or udp');
+  const [, setCaptureInterfaces] = useState([]);
+  const [, setSelectedInterface] = useState('');
+  const [, setBpfFilterInput] = useState('tcp or udp');
   const [wireFilterEngine, setWireFilterEngine] = useState('ALL');
-  const [engineFeedback, setEngineFeedback] = useState(null);
-  const [isSwitchingEngine, setIsSwitchingEngine] = useState(false);
+  useState(/** @type {{type: string, text: string} | null} */ (null));
+  useState(false);
 
   // 3. Over-The-Air Wave Hardware Sensors State
   const [airSummary, setAirSummary] = useState({
     total_records: 0,
     unique_beacon_hashes: 0,
     avg_signal_pct: 0,
-    band_distribution: {},
-    sensor_distribution: {},
+    band_distribution: /** @type {Record<string, number>} */ ({}),
+    sensor_distribution: /** @type {Record<string, number>} */ ({}),
     recent_hashes: []
   });
-  const [airRecords, setAirRecords] = useState([]);
+  const [airRecords, setAirRecords] = useState(/** @type {AirRecord[]} */ ([]));
   const [isScanningAir, setIsScanningAir] = useState(false);
   const [airFilterType, setAirFilterType] = useState('ALL'); // 'ALL' | 'WIFI_RF' | 'BLUETOOTH_BLE'
   const [airFilterBand, setAirFilterBand] = useState('ALL'); // 'ALL' | '2.4GHz_ISM' | '5GHz_UNII' | '6GHz_WIFI6E'
   const [airSearchHash, setAirSearchHash] = useState('');
-  const [airLimit, setAirLimit] = useState(50);
-  const [airScanAlert, setAirScanAlert] = useState(null);
+  const [airLimit] = useState(50);
+  const [airScanAlert, setAirScanAlert] = useState(/** @type {string | null} */ (null));
 
   // 4. API Compute & Security State
   const [apiData, setApiData] = useState(emptyApiData);
-  const [pubSecurityEvents, setPubSecurityEvents] = useState([]);
-  const [analyticsError, setAnalyticsError] = useState(null);
-  const privateRequest = useRef(null);
+  const [pubSecurityEvents, setPubSecurityEvents] = useState(/** @type {PublishingEvent[]} */ ([]));
+  const [analyticsError, setAnalyticsError] = useState(/** @type {string | null} */ (null));
+  const privateRequest = useRef(/** @type {AbortController | null} */ (null));
   const privateGeneration = useRef(0);
 
   const clearPrivateAnalytics = () => {
@@ -177,7 +186,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     } catch (error) {
       if (controller.signal.aborted || generation !== privateGeneration.current) return;
       clearPrivateAnalytics();
-      setAnalyticsError(error.message || 'Web analytics could not refresh.');
+      setAnalyticsError(errorMessage(error) || 'Web analytics could not refresh.');
     } finally {
       if (privateRequest.current === controller) privateRequest.current = null;
     }
@@ -191,25 +200,26 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     genesis_hash: '0000000000000000',
     is_valid: true,
     tampered_at: null,
-    domain_breakdown: {},
-    event_breakdown: {},
+    domain_breakdown: /** @type {Record<string, number>} */ ({}),
+    event_breakdown: /** @type {Record<string, number>} */ ({}),
     recent_blocks: [],
-    watcher: {}
+    watcher: /** @type {{running?: boolean, total_scans?: number}} */ ({})
   });
-  const [cdzBlocks, setCdzBlocks] = useState([]);
+  const [cdzBlocks, setCdzBlocks] = useState(/** @type {AuditBlock[]} */ ([]));
   const [cdzTotal, setCdzTotal] = useState(0);
   const [cdzFilterDomain, setCdzFilterDomain] = useState('ALL');
   const [cdzFilterEvent, setCdzFilterEvent] = useState('ALL');
   const [cdzSearch, setCdzSearch] = useState('');
-  const [cdzLimit, setCdzLimit] = useState(50);
+  const [cdzLimit] = useState(50);
   const [isScanningCdz, setIsScanningCdz] = useState(false);
-  const [cdzScanAlert, setCdzScanAlert] = useState(null);
+  const [cdzScanAlert, setCdzScanAlert] = useState(/** @type {string | null} */ (null));
 
   const [isLoading, setIsLoading] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState(null);
-  const [copiedHash, setCopiedHash] = useState(null);
+  const [lastRefreshed, setLastRefreshed] = useState(/** @type {string | null} */ (null));
+  const [copiedHash, setCopiedHash] = useState(/** @type {string | null} */ (null));
 
-  const copyToClipboard = (text, label) => {
+  /** @param {string | undefined} text @param {string} label */
+const copyToClipboard = (text, label) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopiedHash(label);
@@ -254,13 +264,14 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         setCdzScanAlert('Failed to trigger CDZ scan.');
       }
     } catch (e) {
-      setCdzScanAlert(`Error triggering CDZ scan: ${e.message}`);
+      setCdzScanAlert(`Error triggering CDZ scan: ${errorMessage(e)}`);
     } finally {
       setIsScanningCdz(false);
     }
   };
 
-  const handleFetchCorrelation = async (flowId, txId) => {
+  /** @param {string | undefined} flowId @param {string | number | undefined} txId */
+const handleFetchCorrelation = async (flowId, txId) => {
     setIsLoadingCorrelation(true);
     try {
       let u = `${apiHost}/api/network-telemetry/correlation?`;
@@ -320,44 +331,9 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     }
   };
 
-  const handleApplyInterface = async () => {
-    try {
-      const res = await fetch(`${apiHost}/api/network-telemetry/set-interface`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ interface_name: selectedInterface, bpf_filter: bpfFilterInput })
-      });
-      if (res.ok) {
-        fetchInterfaces();
-      }
-    } catch (e) {
-      console.warn('Failed to apply interface config:', e);
-    }
-  };
+  
 
-  const handleSwitchEngine = async (targetEngine) => {
-    setIsSwitchingEngine(true);
-    setEngineFeedback(null);
-    try {
-      const res = await fetch(`${apiHost}/api/network-telemetry/engine/switch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engine: targetEngine })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setEngineFeedback({ type: 'success', text: `Engine successfully switched to: ${targetEngine} (Active: ${data.active_engine})` });
-        await fetchWireTelemetry();
-      } else {
-        setEngineFeedback({ type: 'error', text: `Failed to switch engine: ${data.detail || data.message || 'Unknown error'}` });
-      }
-    } catch (e) {
-      setEngineFeedback({ type: 'error', text: `Engine switch error: ${e.message}` });
-    } finally {
-      setIsSwitchingEngine(false);
-      setTimeout(() => setEngineFeedback(null), 5000);
-    }
-  };
+  
 
   const fetchAirTelemetry = async () => {
     try {
@@ -396,7 +372,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         await fetchAirTelemetry();
       }
     } catch (e) {
-      setAirScanAlert(`Air scan error: ${e.message}`);
+      setAirScanAlert(`Air scan error: ${errorMessage(e)}`);
     } finally {
       setIsScanningAir(false);
     }
@@ -1542,7 +1518,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {isFrame ? (
                               <span style={{ color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>— (Wire)</span>
                             ) : (
-                              <span style={{ fontWeight: '700', color: t.status_code < 300 ? '#4ade80' : t.status_code < 400 ? '#38bdf8' : '#ef4444' }}>
+                              <span style={{ fontWeight: '700', color: (t.status_code || 0) < 300 ? '#4ade80' : (t.status_code || 0) < 400 ? '#38bdf8' : '#ef4444' }}>
                                 {t.status_code}
                               </span>
                             )}
@@ -1561,7 +1537,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {isFrame ? (
                               (t.frame_payload_sha256 || t.payload_sha256) ? (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#a855f7' }}>
-                                  <span>FRM: {(t.frame_payload_sha256 || t.payload_sha256).slice(0, 12)}...</span>
+                                  <span>FRM: {(t.frame_payload_sha256 || t.payload_sha256 || '').slice(0, 12)}...</span>
                                   <button
                                     onClick={() => copyToClipboard(t.frame_payload_sha256 || t.payload_sha256, `row_frm_${idx}`)}
                                     style={{ background: 'none', border: 'none', color: '#8b949e', cursor: 'pointer', fontSize: '10px' }}
@@ -1602,7 +1578,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                           <td style={{ padding: '8px', textAlign: 'center' }}>
                             {t.flow_id ? (
                               <button
-                                onClick={() => handleFetchCorrelation(isFrame ? t.flow_id : null, isFrame ? null : t.id)}
+                                onClick={() => handleFetchCorrelation(isFrame ? t.flow_id || undefined : undefined, isFrame ? undefined : t.id)}
                                 style={{ background: '#21262d', color: '#38bdf8', border: '1px solid #30363d', borderRadius: '4px', padding: '3px 8px', fontSize: '10px', cursor: 'pointer', fontWeight: '600' }}
                               >
                                 🔗 Flow
@@ -1892,7 +1868,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {pev.severity}
                           </span>
                         </td>
-                        <td style={{ padding: '8px', color: '#e2e8f0', fontFamily: 'monospace' }}>{pev.details}</td>
+                        <td style={{ padding: '8px', color: '#e2e8f0', fontFamily: 'monospace' }}>{typeof pev.details === 'string' ? pev.details : JSON.stringify(pev.details)}</td>
                       </tr>
                     ))
                   )}
@@ -2150,4 +2126,10 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

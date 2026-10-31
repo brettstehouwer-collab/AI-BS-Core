@@ -1,20 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Gamepad2,
-  Users,
-  Cpu,
-  ExternalLink,
-  Share2,
-  RefreshCw,
-  Globe,
-  Smartphone,
-  Layers,
-  Sparkles,
-  Maximize2
-} from 'lucide-react';
+import { useState } from 'react';
+import { Gamepad2, Users, Cpu, ExternalLink, Share2, RefreshCw } from 'lucide-react';
 import SteamGamingHubTab from './SteamGamingHubTab.jsx';
 import ProcessMemoryLabTab from './ProcessMemoryLabTab.jsx';
 
+/** @param {{backendUrl?: string}} props */
 export default function CentralGamingHubTab({ backendUrl = 'http://localhost:8080' }) {
   const [activeSection, setActiveSection] = useState('dyadic'); // 'dyadic' | 'steam' | 'trainer'
   const [dyadicSource, setDyadicSource] = useState('local'); // 'local' | 'cloud'

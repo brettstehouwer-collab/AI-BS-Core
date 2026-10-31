@@ -1,8 +1,14 @@
+/** @typedef {{status: string, message?: string, stdout?: string, stderr?: string, returncode?: number, execution_time_ms?: number, result?: unknown}} ExecutionResult */
+/** @typedef {{attempt: number, root_cause?: string, fix_explanation?: string, timestamp: string}} HealAttempt */
+/** @typedef {{display_name?: string, model?: string, device?: string, reason?: string, coding_task_id?: string, steps?: {id?: string, name: string}[]}} CognitiveMeta */
+/** @typedef {{vram_used_gb?: number, vram_total_gb?: number, core_temp_c?: number, power_usage_w?: number, gpu_util_pct?: number, sys_ram_used_gb?: number, sys_ram_total_gb?: number, core_clock_mhz?: number, fan_speed_pct?: number, timestamp?: string}} CognitiveTelemetry */
+/** @typedef {{name: string, arguments?: {command?: string, timeout_seconds?: number, distro?: string, code?: string, script_path?: string, file_path?: string, content?: string, old_path?: string, new_name?: string, new_path?: string, dir_path?: string, action?: string, port?: number}}} ToolCall */
 import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
 import { stageRagSource } from '/src/utils/ragSourceStage.js';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
@@ -24,23 +30,24 @@ import ArtifactsAndToolsModal from './ArtifactsAndToolsModal';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
 import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 
-const CodeBlock = React.memo(function CodeBlock({ language, code }) {
+const CodeBlock = React.memo(/** @param {{language: string, code: string}} props */
+function CodeBlock({ language, code }) {
   const [activeCode, setActiveCode] = useState(code);
   const [copied, setCopied] = useState(false);
   const [isExecutingUE, setIsExecutingUE] = useState(false);
-  const [ueResult, setUeResult] = useState(null);
+  const [ueResult, setUeResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [showViewport, setShowViewport] = useState(false);
   const [isExecutingScript, setIsExecutingScript] = useState(false);
-  const [scriptResult, setScriptResult] = useState(null);
+  const [scriptResult, setScriptResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isValidatingSyntax, setIsValidatingSyntax] = useState(false);
-  const [syntaxResult, setSyntaxResult] = useState(null);
+  const [syntaxResult, setSyntaxResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isPatching, setIsPatching] = useState(false);
-  const [patchResult, setPatchResult] = useState(null);
+  const [patchResult, setPatchResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [isMirrorSyncing, setIsMirrorSyncing] = useState(false);
-  const [mirrorResult, setMirrorResult] = useState(null);
+  const [mirrorResult, setMirrorResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [autoHealEnabled, setAutoHealEnabled] = useState(true);
   const [isAutoHealing, setIsAutoHealing] = useState(false);
-  const [healHistory, setHealHistory] = useState([]);
+  const [healHistory, setHealHistory] = useState(/** @type {HealAttempt[]} */ ([]));
 
   useEffect(() => {
     setActiveCode(code);
@@ -78,7 +85,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         });
       }
     } catch (err) {
-      setSyntaxResult({ status: 'error', message: `Validation failed: ${err.message}` });
+      setSyntaxResult({ status: 'error', message: `Validation failed: ${errorMessage(err)}` });
     } finally {
       setIsValidatingSyntax(false);
     }
@@ -125,7 +132,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setPatchResult({ status: 'error', message: `⚠️ Patch failed: ${toolRes.message || 'Verification failed'}` });
       }
     } catch (err) {
-      setPatchResult({ status: 'error', message: `Patch error: ${err.message}` });
+      setPatchResult({ status: 'error', message: `Patch error: ${errorMessage(err)}` });
     } finally {
       setIsPatching(false);
     }
@@ -170,7 +177,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setMirrorResult({ status: 'error', message: `⚠️ Mirror sync failed: ${toolRes.message || 'Error'}` });
       }
     } catch (err) {
-      setMirrorResult({ status: 'error', message: `Mirror sync error: ${err.message}` });
+      setMirrorResult({ status: 'error', message: `Mirror sync error: ${errorMessage(err)}` });
     } finally {
       setIsMirrorSyncing(false);
     }
@@ -188,7 +195,8 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
     activeCode.includes('import ') || activeCode.includes('def ') || activeCode.includes('Get-') || activeCode.includes('pip install') || activeCode.includes('console.log(') || activeCode.includes('package main') || activeCode.includes('fn main()')
   );
 
-  const detectRuntimeType = (lang, snippet) => {
+  /** @param {string} lang @param {string} snippet */
+const detectRuntimeType = (lang, snippet) => {
     const s = typeof snippet === 'string' ? snippet : '';
     if (['powershell', 'ps1', 'ps'].includes(lang) || (!lang && s.includes('Get-'))) return 'powershell';
     if (['cmd', 'batch', 'bat'].includes(lang)) return 'cmd';
@@ -203,7 +211,8 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
   };
 
   // Autonomous Self-Healing Execution Loop (Up to 3 Retries on Stderr/Failure)
-  const handleExecuteScript = async (codeToRun = null, retryCount = 0) => {
+  /** @param {string | null} [codeToRun] @param {number} [retryCount] */
+const handleExecuteScript = async (codeToRun = null, retryCount = 0) => {
     let currentCode = codeToRun !== null ? codeToRun : activeCode;
     const runtimeType = detectRuntimeType(normLang, currentCode);
 
@@ -288,7 +297,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
 
       setScriptResult(data);
     } catch (err) {
-      setScriptResult({ status: 'error', message: err.message });
+      setScriptResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsExecutingScript(false);
       setIsAutoHealing(false);
@@ -331,7 +340,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         alert(`Auto-heal warning: ${healData.message || 'Could not generate patch'}`);
       }
     } catch (err) {
-      alert(`Auto-heal error: ${err.message}`);
+      alert(`Auto-heal error: ${errorMessage(err)}`);
     } finally {
       setIsAutoHealing(false);
     }
@@ -354,7 +363,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
         setUeResult({ status: 'error', message: `⚠️ ${data.message || 'Execution completed with warnings'}` });
       }
     } catch (e) {
-      setUeResult({ status: 'error', message: `❌ Error: ${e.message}` });
+      setUeResult({ status: 'error', message: `❌ Error: ${errorMessage(e)}` });
     } finally {
       setIsExecutingUE(false);
     }
@@ -370,7 +379,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
       const data = await res.json();
       alert(data.message || '🎮 Unreal Engine 5.8 Editor Launched on your Desktop!');
     } catch (e) {
-      alert(`Error launching Unreal Editor: ${e.message}`);
+      alert(`Error launching Unreal Editor: ${errorMessage(e)}`);
     }
   };
 
@@ -487,7 +496,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
                 const data = await res.json();
                 alert(`✅ Vibe-Checkpoint [${data.checkpoint}] created in ${data.elapsed_ms}ms.`);
               } catch (e) {
-                alert(`Checkpoint failed: ${e.message}`);
+                alert(`Checkpoint failed: ${errorMessage(e)}`);
               }
             }}
             style={{
@@ -815,6 +824,7 @@ const CodeBlock = React.memo(function CodeBlock({ language, code }) {
   );
 });
 
+/** @param {string} rawPath */
 function resolveHostCPath(rawPath) {
   if (!rawPath) return 'C:\\AI-BS\\scratch\\test_chat.txt';
   let p = String(rawPath).trim().replace(/^file:\/\/\/?/i, '');
@@ -828,6 +838,7 @@ function resolveHostCPath(rawPath) {
   return 'C:\\AI-BS\\' + p;
 }
 
+/** @param {string | undefined} str */
 function isLikelyHostFilePath(str) {
   if (!str || typeof str !== 'string') return false;
   const s = str.trim();
@@ -839,8 +850,9 @@ function isLikelyHostFilePath(str) {
   return false;
 }
 
+/** @param {{targetPath: string, displayLabel?: string, backendUrl: string}} props */
 function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
-  const [ctxMenu, setCtxMenu] = useState(null);
+  const [ctxMenu, setCtxMenu] = useState(/** @type {{x: number, y: number} | null} */ (null));
   const [toast, setToast] = useState('');
   const fullCPath = resolveHostCPath(targetPath);
   const apiBase = backendUrl || 'http://127.0.0.1:8080';
@@ -852,7 +864,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     return () => window.removeEventListener('click', closeMenu);
   }, [ctxMenu]);
 
-  const handleOpenInIde = (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleOpenInIde = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -863,7 +876,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     }));
   };
 
-  const handleShowInExplorer = async (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleShowInExplorer = async (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -890,7 +904,8 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
     setTimeout(() => setToast(''), 2500);
   };
 
-  const handleCopyPath = (e) => {
+  /** @param {import("react").MouseEvent<HTMLElement>} e */
+const handleCopyPath = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -1051,6 +1066,7 @@ function InteractiveFileLinkPill({ targetPath, displayLabel, backendUrl }) {
 }
 
 // ─── Cognitive Parser & Desktop Architecture Components ──────────────────────
+/** @param {string} rawContent */
 function parseCognitiveContent(rawContent) {
   if (typeof rawContent !== 'string') {
     return { meta: null, thought: null, body: rawContent, isThinking: false };
@@ -1092,6 +1108,7 @@ function parseCognitiveContent(rawContent) {
   return { meta, thought, body, isThinking };
 }
 
+/** @param {{meta: CognitiveMeta | null}} props */
 function DesktopCognitiveMetaHeader({ meta }) {
   const [showWhy, setShowWhy] = useState(false);
   const [showStepper, setShowStepper] = useState(false);
@@ -1099,7 +1116,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
   if (!meta) return null;
 
   // Legacy inline metadata is a response claim, not an authenticated runtime receipt.
-  const t = null;
+  const t = /** @type {CognitiveTelemetry | null} */ (null);
   const steps = Array.isArray(meta.steps) ? meta.steps.map(step => ({
     id: step.id, name: step.name, status: 'unverified',
     detail: 'Reported stage; no runtime completion receipt attached.'
@@ -1321,6 +1338,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
   );
 }
 
+/** @param {{thought: string | null, isThinking: boolean}} props */
 function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
   const [isOpen, setIsOpen] = useState(isThinking);
 
@@ -1419,6 +1437,7 @@ function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
   );
 }
 
+/** @param {{content: string, role: string}} props */
 function FormattedMessageContent({ content, role }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
@@ -1430,17 +1449,18 @@ function FormattedMessageContent({ content, role }) {
   const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
   const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
 
-  const renderMarkdownBlock = (markdownText, key) => (
+  /** @param {string} markdownText @param {string | number} key */
+const renderMarkdownBlock = (markdownText, key) => (
     <ReactMarkdown
       key={key}
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ node, inline, className, children, ...props }) {
+        code({ node, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           const codeString = String(children).replace(/\n$/, '');
           const isMultiLine = codeString.includes('\n');
 
-          if (!inline && (match || isMultiLine)) {
+          if (match || isMultiLine) {
             return (
               <CodeBlock
                 language={match ? match[1] : ''}
@@ -1483,7 +1503,7 @@ function FormattedMessageContent({ content, role }) {
                 const urlObj = new URL(finalSrc);
                 finalSrc = `${BACKEND_URL}/api/comfyui/view${urlObj.search}`;
               } catch (e) {
-                finalSrc = src;
+                finalSrc = src || '';
               }
             }
           } else if (!finalSrc.startsWith('http') && !finalSrc.startsWith('data:')) {
@@ -1588,9 +1608,10 @@ function FormattedMessageContent({ content, role }) {
           return <td style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', color: '#e2e8f0' }}>{children}</td>;
         },
         blockquote({ node, children }) {
-          const isThoughtTrace = node?.children?.[0]?.children?.[0]?.value?.includes('THOUGHT:') || 
-                                 node?.children?.[0]?.children?.[0]?.value?.includes('💭') ||
-                                 node?.children?.[0]?.children?.[0]?.value?.includes('SWARM PASS');
+          const paragraph = node?.children?.[0];
+          const first = paragraph && 'children' in paragraph ? paragraph.children[0] : undefined;
+          const text = first && 'value' in first ? String(first.value) : '';
+          const isThoughtTrace = text.includes('THOUGHT:') || text.includes('💭') || text.includes('SWARM PASS');
           return (
             <blockquote style={{
               borderLeft: isThoughtTrace ? '4px solid #c084fc' : '4px solid #60a5fa',
@@ -1625,7 +1646,7 @@ function FormattedMessageContent({ content, role }) {
             const target = (href && href.startsWith('file:')) ? href.replace(/^file:\/\/\/?/i, '') : (isLikelyHostFilePath(childStr) ? childStr : href);
             return (
               <InteractiveFileLinkPill
-                targetPath={target}
+                targetPath={target || ''}
                 displayLabel={childStr || target}
                 backendUrl={BACKEND_URL}
               />
@@ -1658,7 +1679,7 @@ function FormattedMessageContent({ content, role }) {
           <TapToRunCanvas
             key={`canvas-${idx}`}
             label={label}
-            stagedPayloads={stagedPayloads}
+            stagedPayloads={stagedPayloads || undefined}
             backendUrl={BACKEND_URL}
           />
         );
@@ -1685,12 +1706,15 @@ function FormattedMessageContent({ content, role }) {
   );
 }
 
+/** @param {{msg: import('/types/domain').ChatMessage}} props */
 function ReasoningInspector({ msg }) {
   const [isOpen, setIsOpen] = useState(false);
-  const clientDuration = Number.isFinite(msg.client_elapsed_ms) && msg.client_elapsed_ms >= 0;
-  const reportedDuration = Number.isFinite(msg.execution_time_ms) && msg.execution_time_ms > 0;
-  const duration = clientDuration ? `${Math.round(msg.client_elapsed_ms)} ms (client measured)`
-    : reportedDuration ? `${Math.round(msg.execution_time_ms)} ms (reported)` : 'Not recorded';
+  const clientElapsed = msg.client_elapsed_ms;
+  const clientDuration = typeof clientElapsed === 'number' && Number.isFinite(clientElapsed) && clientElapsed >= 0;
+  const reportedElapsed = msg.execution_time_ms;
+  const reportedDuration = typeof reportedElapsed === 'number' && Number.isFinite(reportedElapsed) && reportedElapsed > 0;
+  const duration = clientDuration ? `${Math.round(clientElapsed)} ms (client measured)`
+    : reportedDuration ? `${Math.round(reportedElapsed)} ms (reported)` : 'Not recorded';
   const dispatch = msg.decision_context;
 
   return (
@@ -1734,9 +1758,9 @@ function ReasoningInspector({ msg }) {
 
           {dispatch && (
             <div style={{ color: '#94a3b8', marginBottom: '8px' }}>
-              <div>Client request: {dispatch.operation || 'Not recorded'}</div>
-              <div>Endpoint: {dispatch.route || 'Not recorded'}</div>
-              <div>Client state: {dispatch.status || 'Not recorded'}</div>
+              <div>Client request: {typeof dispatch.operation === 'string' ? dispatch.operation : 'Not recorded'}</div>
+              <div>Endpoint: {typeof dispatch.route === 'string' ? dispatch.route : 'Not recorded'}</div>
+              <div>Client state: {typeof dispatch.status === 'string' ? dispatch.status : 'Not recorded'}</div>
               <div>Request routing does not confirm the action completed.</div>
             </div>
           )}
@@ -1774,6 +1798,7 @@ function ReasoningInspector({ msg }) {
   );
 }
 
+/** @param {string} text @returns {ToolCall | null} */
 function extractToolCall(text) {
   if (!text || typeof text !== 'string') return null;
   const tcMatch = text.match(/\{\s*"tool_call"\s*:\s*\{[\s\S]*?\}\s*\}/);
@@ -1800,10 +1825,11 @@ function extractToolCall(text) {
   return null;
 }
 
+/** @param {{toolCall: ToolCall|null, onExecuted?: (result: ExecutionResult) => void}} props */
 function ExecutiveActionCard({ toolCall, onExecuted }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const [isRunning, setIsRunning] = useState(false);
-  const [execResult, setExecResult] = useState(null);
+  const [execResult, setExecResult] = useState(/** @type {ExecutionResult | null} */ (null));
   const [showArgs, setShowArgs] = useState(false);
 
   if (!toolCall || !toolCall.name) return null;
@@ -1811,7 +1837,8 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
   const toolName = toolCall.name;
   const toolArgs = toolCall.arguments || {};
 
-  const getActionBadge = (name) => {
+  /** @param {string} name */
+const getActionBadge = (name) => {
     switch (name) {
       case 'execute_powershell_command':
         return { label: '⚡ EXECUTE POWERSHELL', bg: '#1e3a8a', border: '#3b82f6', color: '#93c5fd' };
@@ -1853,7 +1880,8 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
     setIsRunning(true);
     setExecResult({ status: 'running', message: '⚡ Dispatching command to Executive Engine with root host privileges...' });
     try {
-      let payload = {
+      /** @type {{command_type: string, target: string, payload?: ToolCall["arguments"]}} */
+let payload = {
         command_type: 'tool',
         target: toolName,
         payload: toolArgs
@@ -1933,7 +1961,7 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
       setExecResult(data);
       if (onExecuted) onExecuted(data);
     } catch (err) {
-      setExecResult({ status: 'error', message: err.message });
+      setExecResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsRunning(false);
     }
@@ -2107,7 +2135,7 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
               </pre>
             )}
 
-            {execResult.result && (
+            {Boolean(execResult.result) && (
               <pre style={{
                 margin: '4px 0 0 0',
                 background: '#040812',
@@ -2135,11 +2163,12 @@ function ExecutiveActionCard({ toolCall, onExecuted }) {
   );
 }
 
+/** @param {{editorData: {path: string, content: string, lines?: number}, onClose?: () => void}} props */
 function FileEditorDrawer({ editorData, onClose }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const [content, setContent] = useState(editorData.content || '');
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState(null);
+  const [saveStatus, setSaveStatus] = useState(/** @type {string | null} */ (null));
   const [copied, setCopied] = useState(false);
   const fullCPath = resolveHostCPath(editorData.path);
 
@@ -2168,7 +2197,7 @@ function FileEditorDrawer({ editorData, onClose }) {
         setSaveStatus(`⚠️ ${data.message || 'Save error'}`);
       }
     } catch (err) {
-      setSaveStatus(`❌ Error saving: ${err.message}`);
+      setSaveStatus(`❌ Error saving: ${errorMessage(err)}`);
     } finally {
       setIsSaving(false);
       setTimeout(() => setSaveStatus(null), 5000);
@@ -2192,7 +2221,7 @@ function FileEditorDrawer({ editorData, onClose }) {
       });
       setSaveStatus(`✅ Opened in Windows File Explorer: ${fullCPath}`);
     } catch (err) {
-      setSaveStatus(`⚠️ Explorer error: ${err.message}`);
+      setSaveStatus(`⚠️ Explorer error: ${errorMessage(err)}`);
     }
     setTimeout(() => setSaveStatus(null), 3500);
   };
@@ -3081,12 +3110,12 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const storedChatMessages = useAppStore(state => state.chatMessages);
   const storedFooterInput = useAppStore(state => state.footerInput);
-  const messageFeedRef = useAppStore(state => state.messageFeedRef);
+  const messageFeedRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const selectedModel = useAppStore(state => state.selectedModel);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendDisabled, setIsBackendDisabled] = useState(false);
-  const abortControllerRef = useRef(null);
+  const abortControllerRef = useRef(/** @type {AbortController | null} */ (null));
   const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
   const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
   const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
@@ -3119,31 +3148,32 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   const [isListening, setIsListening] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
-  const [errorPopup, setErrorPopup] = useState(null);
+  const [errorPopup, setErrorPopup] = useState(/** @type {string | null} */ (null));
   const [showTips, setShowTips] = useState(false);
   const [starterCategory, setStarterCategory] = useState('All');
   const [copiedChatUrl, setCopiedChatUrl] = useState(false);
   const [showCommandsDropdown, setShowCommandsDropdown] = useState(false);
   const [commandSearchQuery, setCommandSearchQuery] = useState('');
   const [selectedCommandCategory, setSelectedCommandCategory] = useState('All');
-  const commandsDropdownRef = useRef(null);
-  const chatInputRef = useRef(null);
+  const commandsDropdownRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const chatInputRef = useRef(/** @type {HTMLTextAreaElement | null} */ (null));
 
   // File Upload State (GPT Style)
-  const [attachments, setAttachments] = useState([]);
+  const [attachments, setAttachments] = useState(/** @type {import('/types/domain').ChatAttachment[]} */ ([]));
   const [isUploadingFile, setIsUploadingFile] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
-  const [activeTools, setActiveTools] = useState({});
+  const [activeTools, setActiveTools] = useState(/** @type {Record<string, boolean>} */ ({}));
   const [isGovernanceOpen, setIsGovernanceOpen] = useState(false);
   const [isStressTestOpen, setIsStressTestOpen] = useState(false);
   const [isArtifactsModalOpen, setIsArtifactsModalOpen] = useState(false);
   const [isPortMeshModalOpen, setIsPortMeshModalOpen] = useState(false);
-  const [stressResult, setStressResult] = useState(null);
+  const [stressResult, setStressResult] = useState(/** @type {{status?: string, accuracy_score?: number, character_count?: number, latency_ms?: number, message?: string, model_response?: string, num_ctx_allocated?: number, tokens_per_sec?: number} | null} */ (null));
   const [isRunningStress, setIsRunningStress] = useState(false);
   const [stressTier, setStressTier] = useState('4k');
 
-  const handleRunStressTest = async (tier) => {
+  /** @param {string} tier */
+const handleRunStressTest = async (tier) => {
     setIsRunningStress(true);
     setStressResult(null);
     try {
@@ -3155,7 +3185,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       const data = await res.json();
       setStressResult(data);
     } catch (err) {
-      setStressResult({ status: 'error', message: err.message || 'Stress test request failed' });
+      setStressResult({ status: 'error', message: errorMessage(err) || 'Stress test request failed' });
     } finally {
       setIsRunningStress(false);
     }
@@ -3189,14 +3219,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       });
       setMemoryToast(saved.cleared ? 'Archived to SQLite & cleared.' : 'Archived snapshot; current chat kept.');
     } catch (err) {
-      setMemoryToast('Archive not confirmed; chat kept. ' + err.message);
+      setMemoryToast('Archive not confirmed; chat kept. ' + errorMessage(err));
     } finally {
       setIsSavingMemory(false);
       setTimeout(() => setMemoryToast(''), 5000);
     }
   };
 
-  const [workspacePanel, setWorkspacePanel] = useState(null);
+  const [workspacePanel, setWorkspacePanel] = useState(/** @type {'terminal' | 'codebase' | null} */ (null));
   const closeWorkspacePanel = useCallback(() => setWorkspacePanel(null), []);
   const [activeContexts, setActiveContexts] = useState({
     file: false,
@@ -3211,7 +3241,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   const [dpiScaleProfile, setDpiScaleProfile] = useState(() => {
     try { return localStorage.getItem('aibs_dpi_profile') || 'desktop_native'; } catch (e) { return 'desktop_native'; }
   });
-  const [mobileTelemetry, setMobileTelemetry] = useState(null);
+  const [mobileTelemetry, setMobileTelemetry] = useState(/** @type {{display?:{width:number,height:number,refresh_rate_hz:number},remote_and_input?:{parsec_running?:boolean,rustdesk_running?:boolean}}|null} */ (null));
 
   const uiDpiZoom = dpiScaleProfile === 'mobile_1080p_150' ? 1.18 : dpiScaleProfile === 'mobile_1440p_125' ? 1.10 : 1.0;
 
@@ -3235,7 +3265,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     }
   }, [mobileSynergyMode, dpiScaleProfile, BACKEND_URL]);
 
-  const handleSwitchDpiProfile = async (profileId, applyOsResolution = false) => {
+  /** @param {string} profileId @param {boolean} [applyOsResolution] */
+const handleSwitchDpiProfile = async (profileId, applyOsResolution = false) => {
     setDpiScaleProfile(profileId);
     try {
       localStorage.setItem('aibs_dpi_profile', profileId);
@@ -3273,18 +3304,18 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   // --- 3-Way Wireless Screen Mirror & Display Cast State & Handlers ---
   const [showWirelessCastHub, setShowWirelessCastHub] = useState(false);
-  const [wirelessCastStatus, setWirelessCastStatus] = useState(null);
+  const [wirelessCastStatus, setWirelessCastStatus] = useState(/** @type {{primary_lan_ip?:string,phone_to_pc?:{scrcpy_installed?:boolean},urls?:{pc_to_phone_workspace_lan?:string,pc_to_phone_live_screen_viewer?:string}}|null} */ (null));
   const [wirelessCastFeedback, setWirelessCastFeedback] = useState('');
   const [phoneIpInput, setPhoneIpInput] = useState(() => {
     try { return localStorage.getItem('aibs_phone_ip') || ''; } catch (e) { return ''; }
   });
   const [pairPortInput, setPairPortInput] = useState('');
   const [pairCodeInput, setPairCodeInput] = useState('');
-  const [nearbyScanResult, setNearbyScanResult] = useState(null);
+  const [nearbyScanResult, setNearbyScanResult] = useState(/** @type {{pnp_displays_and_endpoints?:{name:string}[],wifi_lan_peers?:{ip:string}[]}|null} */ (null));
   const [isScanningNearby, setIsScanningNearby] = useState(false);
   const [isLiveScreenCasting, setIsLiveScreenCasting] = useState(false);
-  const screenCastIntervalRef = useRef(null);
-  const screenCastStreamRef = useRef(null);
+  const screenCastIntervalRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
+  const screenCastStreamRef = useRef(/** @type {MediaStream | null} */ (null));
 
   const refreshWirelessCastStatus = async () => {
     try {
@@ -3323,7 +3354,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     return () => window.removeEventListener('aibs-toggle-wireless-cast', onToggleCast);
   }, []);
 
-  const handleWirelessCastAction = async (action, extra = {}) => {
+  /** @param {string} action @param {Record<string, string | number | boolean>} [extra] */
+const handleWirelessCastAction = async (action, extra = {}) => {
     if (action === 'scan_nearby') setIsScanningNearby(true);
     setWirelessCastFeedback(`⏳ Executing ${action}...`);
     try {
@@ -3362,8 +3394,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       await refreshWirelessCastStatus();
       return data;
     } catch (err) {
-      setWirelessCastFeedback(`❌ Error: ${err.message}`);
-      return { status: 'error', message: err.message };
+      setWirelessCastFeedback(`❌ Error: ${errorMessage(err)}`);
+      return { status: 'error', message: errorMessage(err) };
     } finally {
       if (action === 'scan_nearby') setIsScanningNearby(false);
     }
@@ -3403,6 +3435,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
+      if (!ctx) { stream.getTracks().forEach(track => track.stop()); throw new Error('Screen capture canvas unavailable.'); }
 
       stream.getVideoTracks()[0].onended = () => {
         if (screenCastIntervalRef.current) clearInterval(screenCastIntervalRef.current);
@@ -3436,13 +3469,15 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       const lanIp = wirelessCastStatus?.primary_lan_ip || '192.168.4.26';
       setWirelessCastFeedback(`🟢 LIVE STREAMING PC Screen! Open http://${lanIp}:8000/api/executive/wireless-cast/viewer on your Phone or Smart TV!`);
     } catch (err) {
-      setWirelessCastFeedback(`⚠️ Screen capture cancelled or blocked: ${err.message}`);
+      setWirelessCastFeedback(`⚠️ Screen capture cancelled or blocked: ${errorMessage(err)}`);
     }
   };
 
-  const toggleContext = (ctx) => setActiveContexts(p => ({ ...p, [ctx]: !p[ctx] }));
+  /** @param {keyof typeof activeContexts} ctx */
+const toggleContext = (ctx) => setActiveContexts(p => ({ ...p, [ctx]: !p[ctx] }));
 
-  const handleExecutePlan = async (plan_id, steps) => {
+  /** @param {string} plan_id @param {number[]} steps */
+const handleExecutePlan = async (plan_id, steps) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/v1/ide/execute-plan`, {
@@ -3456,13 +3491,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         { role: 'assistant', content: `🚀 Plan Execution Result:\n\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\`` }
       ]);
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to execute plan.');
+      setErrorPopup(errorMessage(err) || 'Failed to execute plan.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGrillRespond = async (grillId, response) => {
+  /** @param {string} grillId @param {string} response */
+const handleGrillRespond = async (grillId, response) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/grill-respond`, {
@@ -3498,13 +3534,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         ]);
       }
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to submit grill response');
+      setErrorPopup(errorMessage(err) || 'Failed to submit grill response');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGrillConclude = async (grillId) => {
+  /** @param {string} grillId */
+const handleGrillConclude = async (grillId) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/mission/grill-conclude`, {
@@ -3531,13 +3568,14 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         setErrorPopup(data.message || 'Failed to conclude grill session');
       }
     } catch (err) {
-      setErrorPopup(err.message || 'Failed to conclude grill session');
+      setErrorPopup(errorMessage(err) || 'Failed to conclude grill session');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const triggerGrillProposal = async (proposalText) => {
+  /** @param {string} proposalText */
+const triggerGrillProposal = async (proposalText) => {
     if (!proposalText || isLoading) return;
     const userMsg = {
       role: 'user',
@@ -3577,16 +3615,17 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     } catch (err) {
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `❌ **Grill Session Error:** ${err.message}` }
+        { role: 'assistant', content: `❌ **Grill Session Error:** ${errorMessage(err)}` }
       ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef(/** @type {import("/types/aibs").SpeechRecognitionController | null} */ (null));
 
-  const speakText = (text) => {
+  /** @param {string} text */
+const speakText = (text) => {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const cleanText = text.replace(/[*_#`\[\]()]/g, ' ');
@@ -3597,8 +3636,9 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
   // Close commands & options dropdown on click outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (commandsDropdownRef.current && !commandsDropdownRef.current.contains(event.target)) {
+    /** @param {MouseEvent} event */
+const handleClickOutside = (event) => {
+      if (commandsDropdownRef.current && !commandsDropdownRef.current.contains(event.target instanceof Node ? event.target : null)) {
         setShowCommandsDropdown(false);
       }
     };
@@ -3606,7 +3646,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleInputChange = (e) => {
+  /** @param {import("react").ChangeEvent<HTMLTextAreaElement>} e */
+const handleInputChange = (e) => {
     const val = e.target.value;
     setFooterInput(val);
     if (val.startsWith('/') && !val.includes('\n')) {
@@ -3618,42 +3659,46 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   };
 
   // Auto-scroll on new messages
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   useEffect(() => {
     if (messagesEndRef.current && chatMessages.length > 0) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [chatMessages, isLoading]);
 
-  const handleFileUpload = async (e) => {
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
+const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
     setIsUploadingFile(true);
-    const newAttachments = [];
+    /** @type {import("/types/domain").ChatAttachment[]} */
+const newAttachments = [];
 
     // Helper: read text/code file client-side via FileReader
-    const readLocalFileAsText = (targetFile) => {
+    /** @param {File} targetFile @returns {Promise<string>} */
+const readLocalFileAsText = (targetFile) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result || '');
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
         reader.onerror = () => reject(reader.error || new Error('Failed to read file client-side'));
         reader.readAsText(targetFile);
       });
     };
 
     // Helper: read image file client-side as data URL
-    const readLocalFileAsDataUrl = (targetFile) => {
+    /** @param {File} targetFile @returns {Promise<string>} */
+const readLocalFileAsDataUrl = (targetFile) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result || '');
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
         reader.onerror = () => reject(reader.error || new Error('Failed to read image client-side'));
         reader.readAsDataURL(targetFile);
       });
     };
 
     for (const file of files) {
-      const ext = (file.name.includes('.') ? `.${file.name.split('.').pop().toLowerCase()}` : '').trim();
+      const ext = (file.name.includes('.') ? `.${(file.name.split('.').pop() || '').toLowerCase()}` : '').trim();
       const isImage = file.type?.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'].includes(ext);
       const isTextOrCode = file.type?.startsWith('text/') ||
         ['.txt', '.md', '.py', '.js', '.jsx', '.ts', '.tsx', '.json', '.html', '.css', '.scss',
@@ -3699,7 +3744,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       } catch (err) {
         // Network / connection error; fallback will attempt client-side extraction if text/image
         if (!isTextOrCode && !isImage) {
-          setErrorPopup(`Upload error for ${file.name}: ${err.message || 'Network error'}`);
+          setErrorPopup(`Upload error for ${file.name}: ${errorMessage(err) || 'Network error'}`);
         }
       }
 
@@ -3712,6 +3757,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             newAttachments.push({
               name: file.name,
               size: file.size,
+              type: file.type,
               ext: ext,
               is_image: false,
               path: '',
@@ -3719,7 +3765,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             });
             uploadSucceeded = true;
           } catch (readErr) {
-            setErrorPopup(`Failed to read ${file.name} locally: ${readErr.message}`);
+            setErrorPopup(`Failed to read ${file.name} locally: ${errorMessage(readErr)}`);
           }
         } else if (isImage) {
           try {
@@ -3727,6 +3773,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             newAttachments.push({
               name: file.name,
               size: file.size,
+              type: file.type,
               ext: ext,
               is_image: true,
               path: '',
@@ -3734,7 +3781,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             });
             uploadSucceeded = true;
           } catch (readErr) {
-            setErrorPopup(`Failed to read image ${file.name} locally: ${readErr.message}`);
+            setErrorPopup(`Failed to read image ${file.name} locally: ${errorMessage(readErr)}`);
           }
         }
       }
@@ -3745,11 +3792,13 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const removeAttachment = (index) => {
+  /** @param {number} index */
+const removeAttachment = (index) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSendMessage = async (customText = null) => {
+  /** @param {string | null} [customText] */
+const handleSendMessage = async (customText = null) => {
     if (!conversationMemory.viewReady) return;
     const rawText = customText !== null ? customText : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
@@ -3776,15 +3825,16 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
     // Format attachments into prompt context
     let formattedPrompt = rawText;
-    let attachmentBadges = [];
+    /** @type {import("/types/domain").ChatAttachment[]} */
+let attachmentBadges = [];
 
     if (attachments.length > 0) {
       let attachmentText = attachments.map(att => (
-        `\n[ATTACHED FILE: ${att.name} (${(att.size/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${att.content}\n\`\`\`\n`
+        `\n[ATTACHED FILE: ${att.name} (${((att.size ?? 0)/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${att.content}\n\`\`\`\n`
       )).join('\n');
 
       formattedPrompt = `${attachmentText}\n[USER PROMPT]:\n${rawText || 'Please review and analyze the attached files in detail.'}`;
-      attachmentBadges = attachments.map(att => ({ name: att.name, size: att.size, is_image: att.is_image }));
+      attachmentBadges = attachments.map(att => ({ name: att.name, type: att.type, size: att.size, is_image: att.is_image }));
     }
 
     const userMsg = {
@@ -3812,11 +3862,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
     await new Promise(r => setTimeout(r, 100));
 
-    const reqHeaders = {
+    const reqHeaders = await chatAuthHeaders({
       'Content-Type': 'application/json',
       
       'X-Client-ID': 'stehouwer_publishing'
-    };
+    });
 
     // --- BS-CHAT SLASH COMMAND INTERCEPTORS (Zero-Mock Host Management) ---
     if (rawText.startsWith('/')) {
@@ -3862,7 +3912,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           if (daemonsList) {
             reply += '| Port | Daemon Name | Status |\n';
             reply += '|---|---|---|\n';
-            daemonsList.forEach(d => {
+            daemonsList.forEach(/** @param {{"status": string, "port": number, "name": string}} d */ d => {
               const icon = (d.status === 'running' || d.status === 'ONLINE') ? '🟢 Online' : '⚪ Standby';
               reply += `| \`${d.port || '—'}\` | **${d.name}** | ${icon} |\n`;
             });
@@ -3875,7 +3925,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Status check error: ${err.message}` }
+            { role: 'assistant', content: `❌ Status check error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3919,7 +3969,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Oversight telemetry error: ${err.message}` }
+            { role: 'assistant', content: `❌ Oversight telemetry error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3939,7 +3989,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           let reply = '### 📦 All 43 Supervised Master Hub Modules & Tabs\n\n';
           reply += '| # | ID / Tab Key | Module Title | Operational Domain |\n';
           reply += '|---|---|---|---|\n';
-          modules.forEach((m, i) => {
+          modules.forEach(/** @param {{"key": string, "id": string, "tab_key": string, "name": string, "domain": string}} m @param {number} i */ (m, i) => {
             const keyDisplay = m.key || m.id || m.tab_key || '—';
             reply += `| ${i + 1} | \`${keyDisplay}\` | **${m.name}** | ${m.domain} |\n`;
           });
@@ -3951,7 +4001,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Failed to list modules: ${err.message}` }
+            { role: 'assistant', content: `❌ Failed to list modules: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -3983,7 +4033,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Failed to switch tab: ${err.message}` }
+            { role: 'assistant', content: `❌ Failed to switch tab: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4015,7 +4065,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Spaces overview error: ${err.message}` }
+            { role: 'assistant', content: `❌ Spaces overview error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4060,7 +4110,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Space retrieval error: ${err.message}` }
+            { role: 'assistant', content: `❌ Space retrieval error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4101,7 +4151,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ Space ingestion error: ${err.message}` }
+            { role: 'assistant', content: `❌ Space ingestion error: ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4145,7 +4195,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Sovereign Business Email Engine' }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Email command failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Email command failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4187,7 +4237,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const reply = statusIcon + ' **Pre-Flight Syntax Validation (' + lang.toUpperCase() + '):**\n```json\n' + JSON.stringify(toolRes, null, 2) + '\n```';
           setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Autonomous Coding Agent' }]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Syntax validation failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Syntax validation failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4218,7 +4268,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const reply = '🔍 **Symbol Index Lookup Results for "' + rest.trim() + '" (' + (toolRes.match_count || 0) + ' matches, ' + (toolRes.execution_time_ms || 0) + ' ms):**\n```json\n' + JSON.stringify(toolRes.matches || [], null, 2) + '\n```';
           setChatMessages(prev => [...prev, { role: 'assistant', content: reply, model: 'Fast Codebase Symbol Indexer' }]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Symbol lookup failed: ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ Symbol lookup failed: ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4237,7 +4287,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         }
 
         const ext = (scriptName.split('.').pop() || '').toLowerCase();
-        const extLangMap = {
+        /** @type {Record<string, string>} */
+const extLangMap = {
           py: 'python', js: 'node', mjs: 'node', ts: 'ts',
           ps1: 'powershell', bat: 'cmd', cmd: 'cmd',
           sh: 'bash', go: 'go', rs: 'rust', cpp: 'cpp', c: 'c'
@@ -4270,7 +4321,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Failed to execute script:** ${err.message}`,
+              content: `❌ **Failed to execute script:** ${errorMessage(err)}`,
               model: 'BS-Chat Ecosystem Engine'
             }
           ]);
@@ -4320,7 +4371,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Mission Execution Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Mission Execution Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4374,7 +4425,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Grill Session Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Grill Session Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4409,7 +4460,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Grill Conclude Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Grill Conclude Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4436,7 +4487,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Audit Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Audit Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4464,7 +4515,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **TDD Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **TDD Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4490,7 +4541,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Diff Review Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Diff Review Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4517,7 +4568,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Snapshot Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Snapshot Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4560,7 +4611,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Rollback Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Rollback Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -4590,7 +4641,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Compilation Error:** ${data.detail || data.message || 'Error'}` }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Request Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Typst Request Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4629,7 +4680,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Separation Error:** ${data.detail || data.message || 'Error'}` }]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Request Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Demucs Request Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4670,7 +4721,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **PowerShell Manager Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **PowerShell Manager Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4710,7 +4761,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           }
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TShark Telemetry Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TShark Telemetry Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4743,7 +4794,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Matting Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Matting Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4776,7 +4827,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Upscaling Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Upscaling Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4792,7 +4843,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             body: JSON.stringify({ raw_lyrics: lyricText, bpm: 140 })
           });
           const data = await res.json();
-          const barRows = (data.mapped_bars || []).map(b => `  - **Bar ${b.bar_number}:** \`${b.text}\` (${b.syllable_count} syl, [${b.rhyme_scheme_tag}], ${b.cadence_status})`).join('\n');
+          const barRows = (data.mapped_bars || []).map(/** @param {{"bar_number": number, "text": string, "syllable_count": number, "rhyme_scheme_tag": string, "cadence_status": string}} b */ b => `  - **Bar ${b.bar_number}:** \`${b.text}\` (${b.syllable_count} syl, [${b.rhyme_scheme_tag}], ${b.cadence_status})`).join('\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4802,7 +4853,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Prosody Mapping Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Prosody Mapping Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4827,7 +4878,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **DuckDB Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **DuckDB Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4852,7 +4903,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TA Indicators Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **TA Indicators Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4876,7 +4927,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **NOCO Spatial Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **NOCO Spatial Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4899,7 +4950,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **OBS Controller Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **OBS Controller Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4924,7 +4975,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Bench Diagnostics Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Bench Diagnostics Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4939,8 +4990,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           });
           const data = await res.json();
           const s = data.summary || {};
-          const onlineCore = (data.core_matrix || []).filter(m => m.status === 'ONLINE');
-          const tableRows = onlineCore.map(m => `| \`${m.port}\` | **${m.service}** | \`${m.process_name || 'Daemon'}\` | ${m.cpu_pct}% | ${m.mem_mb} MB | \`${m.type}\` |`).join('\n');
+          const onlineCore = (data.core_matrix || []).filter(/** @param {{"status": string}} m */ m => m.status === 'ONLINE');
+          const tableRows = onlineCore.map(/** @param {{"port": number, "service": string, "process_name": string, "cpu_pct": number, "mem_mb": number, "type": string}} m */ m => `| \`${m.port}\` | **${m.service}** | \`${m.process_name || 'Daemon'}\` | ${m.cpu_pct}% | ${m.mem_mb} MB | \`${m.type}\` |`).join('\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4950,7 +5001,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Telemetry Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Telemetry Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -4968,7 +5019,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const data = await res.json();
           const services = Object.values(data.discovered_services || {});
           const totalTools = services.reduce((acc, s) => acc + (s.tools_count || 0), 0);
-          const srvDetails = services.map(s => `* **Port ${s.port} (${s.service_title}):** \`${s.tools_count}\` tools [${s.protocol}]\n  ${(s.tools || []).slice(0, 3).map(t => `  - \`${t.method} ${t.endpoint}\`: ${t.summary}`).join('\n')}`).join('\n\n');
+          const srvDetails = services.map(s => `* **Port ${s.port} (${s.service_title}):** \`${s.tools_count}\` tools [${s.protocol}]\n  ${(s.tools || []).slice(0, 3).map(/** @param {{"method": string, "endpoint": string, "summary": string}} t */ t => `  - \`${t.method} ${t.endpoint}\`: ${t.summary}`).join('\n')}`).join('\n\n');
           setChatMessages(prev => [
             ...prev,
             {
@@ -4978,7 +5029,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Tool Discovery Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Tool Discovery Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5013,7 +5064,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Dispatch Failed:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Port Dispatch Failed:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5038,7 +5089,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             }
           ]);
         } catch (err) {
-          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Specialist Crew Error:** ${err.message}` }]);
+          setChatMessages(prev => [...prev, { role: 'assistant', content: `❌ **Specialist Crew Error:** ${errorMessage(err)}` }]);
         } finally {
           setIsLoading(false);
         }
@@ -5056,7 +5107,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const tempStr = data.temperature_celsius !== null && data.temperature_celsius !== undefined ? `${data.temperature_celsius}°C` : 'N/A';
           const pwrStr = data.power_draw_watts !== null && data.power_draw_watts !== undefined ? `${data.power_draw_watts}W` : 'N/A';
           const vramStr = `${data.vram_used_mb || 'N/A'} MB / ${data.vram_total_mb || 'N/A'} MB (${data.vram_pct || 'N/A'}%)`;
-          const warnText = data.warnings && data.warnings.length > 0 ? `\n\n⚠️ **Warnings:**\n${data.warnings.map(w => `- ${w}`).join('\n')}` : '';
+          const warnText = data.warnings && data.warnings.length > 0 ? `\n\n⚠️ **Warnings:**\n${data.warnings.map(/** @param {unknown} w */ w => `- ${w}`).join('\n')}` : '';
           const md = `### ${statusIcon} Host Hardware Clamping & Watchdog Status\n- **Device:** \`${data.gpu_name || 'NVIDIA GPU'}\`\n- **State:** **${(data.status || 'unknown').toUpperCase()}** (Safe: \`${data.safe_to_execute}\`)\n- **Temperature:** \`${tempStr}\` *(Threshold: <83°C)*\n- **Power Draw:** \`${pwrStr}\`\n- **VRAM Utilized:** \`${vramStr}\` *(Threshold: <95%)*${warnText}`;
           setChatMessages(prev => [
             ...prev,
@@ -5069,7 +5120,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Hardware Probe Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Hardware Probe Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5098,7 +5149,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Port Probe Error:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Port Probe Error:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5128,7 +5179,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const rawContent = data.result.content || '';
             const lines = data.result.lines || 0;
             const sizeKb = (data.result.size_bytes ? (data.result.size_bytes / 1024).toFixed(1) : '0.0');
-            const ext = targetPath.split('.').pop().toLowerCase();
+            const ext = (targetPath.split('.').pop() || '').toLowerCase();
             const preview = rawContent.length > 30000 ? rawContent.substring(0, 30000) + `\n\n... [Truncated: showing 30,000 of ${rawContent.length} characters]` : rawContent;
             
             setChatMessages(prev => [
@@ -5148,7 +5199,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error reading file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error reading file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5205,7 +5256,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Error opening editor drawer:** ${err.message}` }
+              { role: 'assistant', content: `❌ **Error opening editor drawer:** ${errorMessage(err)}` }
             ]);
           } finally {
             setIsLoading(false);
@@ -5258,7 +5309,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error writing file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error writing file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5282,7 +5333,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           if (r.status === 'success') {
             const treeItems = r.tree || [];
             let md = `### 📁 Host Directory: \`${r.root || targetDir}\`\n\n| Type | Name | Size |\n|---|---|---|\n`;
-            treeItems.slice(0, 40).forEach(item => {
+            treeItems.slice(0, 40).forEach(/** @param {{"type": string, "size_bytes": number, "name": string}} item */ item => {
               const itype = item.type === 'directory' ? '📁 DIR' : '📄 FILE';
               const isize = item.type !== 'directory' && item.size_bytes >= 0 ? `${(item.size_bytes / 1024).toFixed(1)} KB` : '-';
               md += `| ${itype} | \`${item.name}\` | ${isize} |\n`;
@@ -5304,7 +5355,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error scanning directory:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error scanning directory:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5362,7 +5413,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Error reading file:** ${err.message}` }
+            { role: 'assistant', content: `❌ **Error reading file:** ${errorMessage(err)}` }
           ]);
         } finally {
           setIsLoading(false);
@@ -5408,7 +5459,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Command error:** ${err.message}`,
+              content: `❌ **Command error:** ${errorMessage(err)}`,
               model: `Executive ${shellLabel} Engine`
             }
           ]);
@@ -5466,7 +5517,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **WSL command error:** ${err.message}`,
+              content: `❌ **WSL command error:** ${errorMessage(err)}`,
               model: 'WSL2 Executive Engine'
             }
           ]);
@@ -5515,7 +5566,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Bash command error:** ${err.message}`,
+              content: `❌ **Bash command error:** ${errorMessage(err)}`,
               model: 'Executive Bash Engine'
             }
           ]);
@@ -5556,7 +5607,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Pip command error:** ${err.message}`,
+              content: `❌ **Pip command error:** ${errorMessage(err)}`,
               model: 'Executive Pip Engine'
             }
           ]);
@@ -5607,7 +5658,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Project build error:** ${err.message}`,
+              content: `❌ **Project build error:** ${errorMessage(err)}`,
               model: 'Executive Build Engine'
             }
           ]);
@@ -5639,7 +5690,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             if (progs.length === 0) {
               reply += '*No programs found in `saved_data/built_programs`. Build one with `/program build <name>`.*';
             } else {
-              progs.forEach(p => {
+              progs.forEach(/** @param {{"build": {"status": string}, "display_name": string, "project_name": string, "language": string, "description": string, "project_dir": string}} p */ p => {
                 const bStr = p.build ? ` [Build: ${p.build.status}]` : '';
                 reply += `- **${p.display_name || p.project_name}** (\`${p.language}\`${bStr}) — *${p.description || 'No description'}*\n  *Path:* \`${p.project_dir}\`\n`;
               });
@@ -5651,7 +5702,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Failed to list programs:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Failed to list programs:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5699,7 +5750,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Program build error:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Program build error:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5739,7 +5790,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           } catch (err) {
             setChatMessages(prev => [
               ...prev,
-              { role: 'assistant', content: `❌ **Execution error:** ${err.message}`, model: 'Autonomous Program Builder' }
+              { role: 'assistant', content: `❌ **Execution error:** ${errorMessage(err)}`, model: 'Autonomous Program Builder' }
             ]);
           } finally {
             setIsLoading(false);
@@ -5790,7 +5841,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             
             if (data.impacted_components?.length > 0) {
               formatted += `#### 🖥️ Impacted Frontend UI Tabs/Components (${data.impacted_components.length}):\n`;
-              data.impacted_components.slice(0, 10).forEach(c => {
+              data.impacted_components.slice(0, 10).forEach(/** @param {{"name": string, "file_path": string, "relation": string, "depth": string}} c */ c => {
                 formatted += `- **${c.name}** (\`${c.file_path}\`) — *${c.relation}* (Depth: ${c.depth})\n`;
               });
               if (data.impacted_components.length > 10) {
@@ -5801,7 +5852,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
             if (data.impacted_routes?.length > 0) {
               formatted += `#### ⚡ Impacted Backend Routes (${data.impacted_routes.length}):\n`;
-              data.impacted_routes.slice(0, 10).forEach(r => {
+              data.impacted_routes.slice(0, 10).forEach(/** @param {{"name": string, "file_path": string, "relation": string}} r */ r => {
                 formatted += `- \`${r.name}\` (\`${r.file_path}\`) — *${r.relation}*\n`;
               });
               formatted += `\n`;
@@ -5809,7 +5860,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
             if (data.impacted_modules?.length > 0) {
               formatted += `#### 📦 Impacted Router Modules (${data.impacted_modules.length}):\n`;
-              data.impacted_modules.slice(0, 8).forEach(m => {
+              data.impacted_modules.slice(0, 8).forEach(/** @param {{"name": string, "file_path": string}} m */ m => {
                 formatted += `- \`${m.name}\` (\`${m.file_path}\`)\n`;
               });
             }
@@ -5830,7 +5881,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Blast-Radius Error:** ${err.message}`,
+              content: `❌ **Blast-Radius Error:** ${errorMessage(err)}`,
               model: 'AST Blast-Radius Engine'
             }
           ]);
@@ -5863,7 +5914,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Graph Build Error:** ${err.message}`,
+              content: `❌ **Graph Build Error:** ${errorMessage(err)}`,
               model: 'AST Blast-Radius Engine'
             }
           ]);
@@ -5913,7 +5964,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Distillation pipeline error:** ${err.message}`,
+              content: `❌ **Distillation pipeline error:** ${errorMessage(err)}`,
               model: 'Sovereign QLoRA Engine'
             }
           ]);
@@ -5987,7 +6038,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Mobile DPI Engine Error:** ${err.message}`, model: 'Mobile Workstation Engine' }
+            { role: 'assistant', content: `❌ **Mobile DPI Engine Error:** ${errorMessage(err)}`, model: 'Mobile Workstation Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6043,8 +6094,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ]);
           } else if (['scan', 'nearby', 'devices'].includes(sub)) {
             const data = await handleWirelessCastAction('scan_nearby');
-            const pnp = (data.scan?.pnp_displays_and_endpoints || []).map(d => `- **[${d.class}]** \`${d.name}\``).join('\n') || '- *(None)*';
-            const peers = (data.scan?.wifi_lan_peers || []).map(p => `- \`${p.ip}\` (MAC: \`${p.mac}\`)`).join('\n') || '- *(None)*';
+            const pnp = (data.scan?.pnp_displays_and_endpoints || []).map(/** @param {{"class": string, "name": string}} d */ d => `- **[${d.class}]** \`${d.name}\``).join('\n') || '- *(None)*';
+            const peers = (data.scan?.wifi_lan_peers || []).map(/** @param {{"ip": string, "mac": string}} p */ p => `- \`${p.ip}\` (MAC: \`${p.mac}\`)`).join('\n') || '- *(None)*';
             setChatMessages(prev => [
               ...prev,
               {
@@ -6058,7 +6109,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const lanIp = st?.primary_lan_ip || '192.168.4.26';
             const ideUrl = st?.urls?.pc_to_phone_workspace_lan || `http://${lanIp}:5173/?tab=ide`;
             const viewerUrl = st?.urls?.pc_to_phone_live_screen_viewer || `http://${lanIp}:8000/api/executive/wireless-cast/viewer`;
-            const adbDevs = (st?.phone_to_pc?.adb_devices || []).map(d => `\`${d.serial}\` (${d.model} - ${d.state})`).join(', ') || 'None connected yet';
+            const adbDevs = (st?.phone_to_pc?.adb_devices || []).map(/** @param {{"serial": string, "model": string, "state": string}} d */ d => `\`${d.serial}\` (${d.model} - ${d.state})`).join(', ') || 'None connected yet';
 
             const reply =
               `### 📡 3-Way Wireless Screen Mirror & Display Cast Hub\n\n` +
@@ -6081,7 +6132,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Wireless Cast Error:** ${err.message}`, model: '3-Way Wireless Cast Engine' }
+            { role: 'assistant', content: `❌ **Wireless Cast Error:** ${errorMessage(err)}`, model: '3-Way Wireless Cast Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6120,7 +6171,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const ls = data.live_state || {};
             const ts = data.two_strike_governance || {};
             const arch = data.archival_payload || {};
-            const tiers = (arch.privilege_tiers_mapped || []).map(t => `- **${t}**`).join('\n');
+            const tiers = (arch.privilege_tiers_mapped || []).map(/** @param {unknown} t */ t => `- **${t}**`).join('\n');
             const reply =
               `### 🛡️ AI-BS Sovereign Execution & Privilege Directive (\`AIBS-DIR-000-ROOT-AUTHORITY\`)\n\n` +
               `- **Spec File:** [\`${data.directive_file}\`](file:///C:/AI-BS/directives/AIBS_SOVEREIGN_PRIVILEGE_DIRECTIVE.md)\n` +
@@ -6140,7 +6191,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setChatMessages(prev => [
             ...prev,
-            { role: 'assistant', content: `❌ **Directive Engine Error:** ${err.message}`, model: 'Sovereign Privilege Engine' }
+            { role: 'assistant', content: `❌ **Directive Engine Error:** ${errorMessage(err)}`, model: 'Sovereign Privilege Engine' }
           ]);
         } finally {
           setIsLoading(false);
@@ -6167,7 +6218,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
           const res = await fetch(`${BACKEND_URL}/api/memory/recall?query=${encodeURIComponent(queryText)}&limit=4`);
           const data = await res.json();
           if (data.status === 'success' && data.results && data.results.length > 0) {
-            const list = data.results.map((r, i) => {
+            const list = data.results.map(/** @param {{"document": string, "thinking": string, "content": string, "prompt": string, "category": string, "type": string, "source": string, "distance": number, "title": string, "id": string}} r @param {number} i */ (r, i) => {
               const snippet = (r.document || r.thinking || r.content || r.prompt || '').substring(0, 240).replace(/\n/g, ' ');
               const cat = r.category || r.type || r.source || 'memory';
               const dist = r.distance !== undefined && r.distance > 0 ? `*(Sim: ${(1 - r.distance).toFixed(3)})*` : '';
@@ -6197,7 +6248,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Memory Recall Error:** ${err.message}`,
+              content: `❌ **Memory Recall Error:** ${errorMessage(err)}`,
               model: 'Sovereign Memory Recall'
             }
           ]);
@@ -6247,7 +6298,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Deployment failed:** ${err.message}`,
+              content: `❌ **Deployment failed:** ${errorMessage(err)}`,
               model: 'Executive Deployment Daemon'
             }
           ]);
@@ -6296,7 +6347,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Process termination error:** ${err.message}`,
+              content: `❌ **Process termination error:** ${errorMessage(err)}`,
               model: 'Executive Process Engine'
             }
           ]);
@@ -6328,7 +6379,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Diagnostic scan error:** ${err.message}`,
+              content: `❌ **Diagnostic scan error:** ${errorMessage(err)}`,
               model: 'Matrix Doctor'
             }
           ]);
@@ -6363,7 +6414,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Service manager error:** ${err.message}`,
+              content: `❌ **Service manager error:** ${errorMessage(err)}`,
               model: 'BS-Chat Ecosystem Engine'
             }
           ]);
@@ -6384,7 +6435,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             const data = await res.json();
             if (data.status === 'success') {
               const b = data.balance || {};
-              const nonZero = Object.entries(b.total || {}).filter(([k, v]) => Number(v) > 0);
+              const nonZero = Object.entries(b.total || {}).filter(([, v]) => Number(v) > 0);
               let table = '| Asset | Free | Used | Total |\n| :--- | :--- | :--- | :--- |\n';
               if (nonZero.length === 0) {
                 table += '| *(All Assets)* | 0.00 | 0.00 | 0.00 |\n';
@@ -6450,7 +6501,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 reply = `### 📋 Kraken Open Orders\nNo active open orders currently resting on Kraken.`;
               } else {
                 let table = '| Order ID | Symbol | Side | Amount | Price | Status |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n';
-                orders.forEach(o => {
+                orders.forEach(/** @param {{"id": string, "symbol": string, "side": string, "amount": number, "price": number, "status": string}} o */ o => {
                   table += `| \`${o.id}\` | \`${o.symbol}\` | **${(o.side || '').toUpperCase()}** | \`${o.amount}\` | \`${o.price}\` | \`${o.status}\` |\n`;
                 });
                 reply = `### 📋 Kraken Open Orders (${orders.length})\n\n${table}`;
@@ -6467,7 +6518,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 reply = `### 📜 Kraken Trade History\nNo executed trades found in account trade history.`;
               } else {
                 let table = '| ID | Timestamp | Symbol | Side | Amount | Price | Cost |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n';
-                trades.slice(0, 10).forEach(t => {
+                trades.slice(0, 10).forEach(/** @param {{"id": string, "datetime": string, "symbol": string, "side": string, "amount": number, "price": number, "cost": string}} t */ t => {
                   table += `| \`${t.id}\` | ${t.datetime || ''} | \`${t.symbol}\` | **${(t.side || '').toUpperCase()}** | \`${t.amount}\` | \`$${t.price}\` | \`$${t.cost}\` |\n`;
                 });
                 reply = `### 📜 Kraken Trade History (Last ${trades.length})\n\n${table}`;
@@ -6496,7 +6547,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Kraken Gateway Error:** ${err.message}`,
+              content: `❌ **Kraken Gateway Error:** ${errorMessage(err)}`,
               model: 'Kraken Sovereign Gateway'
             }
           ]);
@@ -6547,7 +6598,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Pip command error:** ${err.message}`,
+              content: `❌ **Pip command error:** ${errorMessage(err)}`,
               model: 'Executive Pip Engine'
             }
           ]);
@@ -6588,7 +6639,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             ...prev,
             {
               role: 'assistant',
-              content: `❌ **Bash command error:** ${err.message}`,
+              content: `❌ **Bash command error:** ${errorMessage(err)}`,
               model: 'Executive Bash Engine'
             }
           ]);
@@ -6613,8 +6664,8 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
         } catch (err) {
           setFooterInput(current => current || rawText);
           setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
-            content:'Source staging was not confirmed; analysis stopped and input was retained. ' + err.message }]);
-          setErrorPopup(err.message);
+            content:'Source staging was not confirmed; analysis stopped and input was retained. ' + errorMessage(err) }]);
+          setErrorPopup(errorMessage(err));
           clearTimeout(timeoutId);
           setIsLoading(false);
           return;
@@ -6765,11 +6816,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       const targetModel = selectedModel || 'stehouwer_llm';
       const useHybridStream = !isPlanMode;
 
-      const reqHeaders = {
+      const reqHeaders = await chatAuthHeaders({
         'Content-Type': 'application/json',
         
         'X-Client-ID': 'stehouwer_publishing'
-      };
+      });
 
       let streamingSucceeded = false;
 
@@ -6932,7 +6983,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
             model: data.model || targetModel,
             execution_time_ms: typeof data.execution_time_ms === 'number' ? data.execution_time_ms : null,
             client_elapsed_ms: Date.now() - responseStartedAt,
-            decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
+            decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res?.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
             tool_trace: data.tool_trace || null,
             planData: planData,
             codingTaskId: data.coding_task?.task_id || null
@@ -6945,10 +6996,10 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
       }
     } catch (err) {
       console.error('Chat error:', err);
-      setErrorPopup(err.message || 'Failed to reach AI-BS backend.');
+      setErrorPopup(errorMessage(err) || 'Failed to reach AI-BS backend.');
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `❌ **Error:** ${err.message}` }
+        { role: 'assistant', content: `❌ **Error:** ${errorMessage(err)}` }
       ]);
     } finally {
       clearTimeout(timeoutId);
@@ -6969,6 +7020,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
     }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
@@ -7758,7 +7810,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                         fontSize: '0.75rem', background: 'rgba(255,255,255,0.15)',
                         padding: '4px 10px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '6px',
                       }}>
-                        {att.is_image ? '🖼️' : '📎'} {att.name} ({(att.size/1024).toFixed(1)} KB)
+                        {att.is_image ? '🖼️' : '📎'} {att.name} ({((att.size ?? 0)/1024).toFixed(1)} KB)
                       </div>
                     ))}
                   </div>
@@ -7787,7 +7839,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                   <AgentPlanReviewCard 
                     planData={msg.planData} 
                     onExecutePlan={(plan_id, steps) => handleExecutePlan(plan_id, steps)}
-                    onRequestRevisions={() => { setFooterInput(`@Developer revise plan ${msg.planData.plan_id}: `); document.querySelector('textarea')?.focus(); }}
+                    onRequestRevisions={() => { setFooterInput(`@Developer revise plan ${msg.planData?.plan_id}: `); document.querySelector('textarea')?.focus(); }}
                   />
                 ) : (
                   <>
@@ -7802,7 +7854,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                           <span>Launch Architectural Grill with Preset Proposal:</span>
                         </div>
                         <div className="flex flex-col gap-2">
-                          {msg.grillHelpExamples.map((ex, exIdx) => (
+                          {msg.grillHelpExamples.map(/** @param {string} ex @param {number} exIdx */ (ex, exIdx) => (
                             <button
                               key={exIdx}
                               onClick={() => triggerGrillProposal(ex)}
@@ -7827,7 +7879,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
                 )}
 
                 {(msg.codingTaskId || msg.meta?.coding_task_id) && (
-                  <CodingTaskReviewCard taskId={msg.codingTaskId || msg.meta?.coding_task_id} />
+                  <CodingTaskReviewCard taskId={msg.codingTaskId || msg.meta?.coding_task_id || ''} />
                 )}
 
                 {/* Reasoning Inspector for Assistant Messages */}
@@ -7868,7 +7920,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               }}>
                 <span>{att.is_image ? '🖼️' : '📄'}</span>
                 <span style={{ fontWeight: 600 }}>{att.name}</span>
-                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>({(att.size / 1024).toFixed(1)} KB)</span>
+                <span style={{ color: '#64748b', fontSize: '0.72rem' }}>({((att.size || 0) / 1024).toFixed(1)} KB)</span>
                 <button
                   onClick={() => removeAttachment(index)}
                   style={{ background: 'none', border: 'none', color: '#fca5a5', cursor: 'pointer', marginLeft: '4px', fontSize: '0.9rem' }}
@@ -8267,11 +8319,11 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
               }}>
                 <div>
                   <strong style={{ color: '#38bdf8' }}>📺 Detected Display/Audio Endpoints:</strong>{' '}
-                  {(nearbyScanResult.pnp_displays_and_endpoints || []).slice(0, 6).map(d => d.name).join(' • ') || 'None'}
+                  {(nearbyScanResult.pnp_displays_and_endpoints || []).slice(0, 6).map(/** @param {{"name": string}} d */ d => d.name).join(' • ') || 'None'}
                 </div>
                 <div>
                   <strong style={{ color: '#34d399' }}>📶 Nearby Wi-Fi Subnet Peers (Click to target Phone IP):</strong>{' '}
-                  {(nearbyScanResult.wifi_lan_peers || []).map(p => (
+                  {(nearbyScanResult.wifi_lan_peers || []).map(/** @param {{"ip": string}} p */ p => (
                     <button
                       key={p.ip}
                       onClick={() => setPhoneIpInput(`${p.ip}:5555`)}
@@ -9322,3 +9374,9 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
 
 
 
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

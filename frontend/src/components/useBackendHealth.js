@@ -35,7 +35,8 @@ export function useBackendHealth(intervalMs = 10000) {
 
     const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
 
-    const markOnline = (targetUrl) => {
+    /** @param {typeof backendUrl} targetUrl */
+const markOnline = ( targetUrl) => {
       if (!isMounted) return;
       setApiBase(targetUrl);
       setBackendUrl(targetUrl);

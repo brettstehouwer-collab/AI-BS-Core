@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{name:string,gender?:string,role?:string,voice_tag?:string,vocal_tone?:string,vocal_pitch?:string,accent?:string,personality?:string,bio?:string,speaking_style?:string}} VaultCharacter */
+import { useState, useEffect, useRef } from 'react';
 import './ScreenwritingTab.css';
 
+/** @param {{backendUrl:string,projectName:string,onClose:()=>void,onCharactersUpdate?:(characters:VaultCharacter[],project:string)=>void}} props */
 export default function CharacterVaultModal({ backendUrl, projectName, onClose, onCharactersUpdate }) {
-  const [characters, setCharacters] = useState([]);
+  const [characters, setCharacters] = useState(/** @type {VaultCharacter[]} */ ([]));
   const [isLoading, setIsLoading] = useState(false);
-  const [editingChar, setEditingChar] = useState(null);
+  const [editingChar, setEditingChar] = useState(/** @type {VaultCharacter|null} */ (null));
   const [error, setError] = useState('');
   const projectNameRef = useRef(projectName);
   projectNameRef.current = projectName;
@@ -41,7 +43,7 @@ export default function CharacterVaultModal({ backendUrl, projectName, onClose, 
       }
     } catch (err) {
       console.error('Failed to load characters', err);
-      if (isCurrent()) setError(err.message);
+      if (isCurrent()) setError(errorMessage(err));
     } finally {
       if (isCurrent()) setIsLoading(false);
     }
@@ -90,13 +92,13 @@ export default function CharacterVaultModal({ backendUrl, projectName, onClose, 
       }
     } catch (err) {
       console.error('Failed to save character', err);
-      if (isCurrent()) setError(err.message);
+      if (isCurrent()) setError(errorMessage(err));
     } finally {
       if (isCurrent()) setIsLoading(false);
     }
   };
 
-  const handleDelete = async (charName) => {
+  const handleDelete = async (/** @type {string} */ charName) => {
     const project = projectName;
     if (!project || !mountedRef.current || isLoading) return;
     if (!window.confirm(`Delete character ${charName}?`)) return;
@@ -118,7 +120,7 @@ export default function CharacterVaultModal({ backendUrl, projectName, onClose, 
       }
     } catch (err) {
       console.error('Failed to delete character', err);
-      if (isCurrent()) setError(err.message);
+      if (isCurrent()) setError(errorMessage(err));
     } finally {
       if (isCurrent()) setIsLoading(false);
     }
@@ -138,7 +140,7 @@ export default function CharacterVaultModal({ backendUrl, projectName, onClose, 
     setSpeakingStyle('');
   };
 
-  const selectCharacter = (char) => {
+  const selectCharacter = (/** @type {VaultCharacter} */ char) => {
     setEditingChar(char);
     setName(char.name || '');
     setGender(char.gender || 'Male');
@@ -336,4 +338,10 @@ export default function CharacterVaultModal({ backendUrl, projectName, onClose, 
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

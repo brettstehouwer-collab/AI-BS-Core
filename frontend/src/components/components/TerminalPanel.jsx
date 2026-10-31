@@ -1,20 +1,23 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
 
 // injectRef: a React ref whose .current is set to a function (cmd) => void
 // that types the command into the terminal and executes it.
+
+/** @param {{backendUrl: string, injectRef?: import('react').MutableRefObject<((command: string) => void) | null>}} props */
 export default function TerminalPanel({ backendUrl, injectRef }) {
-  const terminalRef = useRef(null);
-  const xtermRef = useRef(null);
-  const fitAddonRef = useRef(null);
+  const terminalRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const xtermRef = useRef(/** @type {Terminal | null} */ (null));
+  const fitAddonRef = useRef(/** @type {FitAddon | null} */ (null));
   const commandRef = useRef('');
 
   useEffect(() => {
     if (!terminalRef.current) return;
 
     let isDisposed = false;
+    /** @type {number | null} */
     let rafId = null;
 
     const term = new Terminal({
@@ -46,9 +49,7 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
           terminalRef.current &&
           terminalRef.current.clientWidth > 0 &&
           terminalRef.current.clientHeight > 0 &&
-          term._core &&
-          term._core._renderService &&
-          term._core._renderService.dimensions
+          term.element
         ) {
           fitAddon.fit();
         }
@@ -57,7 +58,8 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
 
     const PROMPT = 'PS C:\\AI-BS> ';
 
-    const runCommand = async (cmd) => {
+    /** @param {string} cmd */
+const runCommand = async ( cmd) => {
       term.write('\r\n');
       commandRef.current = '';
       if (!cmd.trim()) {
@@ -71,6 +73,7 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ command: cmd })
         });
+        /** @type {{detail?: string | Array<{msg?: string}>, error?: string, stdout?: string, stderr?: string, exit_code?: number}} */
         let result = {};
         try {
           result = await res.json();
@@ -81,7 +84,8 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
           const errMsg = typeof result.detail === 'string'
             ? result.detail
             : (Array.isArray(result.detail)
-              ? result.detail.map(d => d.msg || JSON.stringify(d)).join(', ')
+              ? result.detail.map( 
+d => d.msg || JSON.stringify(d)).join(', ')
               : (result.error || `HTTP ${res.status} ${res.statusText || 'Error'}`));
           term.writeln(`\x1b[1;31m[API Error ${res.status}]: ${errMsg}\x1b[0m`);
         } else if (result.error) {
@@ -89,11 +93,13 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
         }
         if (result.stdout) {
           const lines = result.stdout.split('\n');
-          lines.forEach(l => term.writeln(l.replace(/\r/g, '')));
+          lines.forEach( 
+l => term.writeln(l.replace(/\r/g, '')));
         }
         if (result.stderr && result.stderr.trim()) {
           const lines = result.stderr.split('\n');
-          lines.forEach(l => {
+          lines.forEach( 
+l => {
             if (l.trim()) term.writeln(`\x1b[1;31m${l.replace(/\r/g, '')}\x1b[0m`);
           });
         }
@@ -101,7 +107,7 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
           term.writeln(`\x1b[2;31m[exit code: ${result.exit_code}]\x1b[0m`);
         }
       } catch (e) {
-        term.writeln(`\x1b[1;31mConnection error: ${e.message}\x1b[0m`);
+        term.writeln(`\x1b[1;31mConnection error: ${(e instanceof Error ? e.message : String(e))}\x1b[0m`);
         term.writeln(`\x1b[2;31mMake sure the AI-BS backend is running on ${backendUrl}\x1b[0m`);
       }
       term.write(PROMPT);
@@ -142,7 +148,8 @@ export default function TerminalPanel({ backendUrl, injectRef }) {
 
     // Expose inject function to parent via ref
     if (injectRef) {
-      injectRef.current = async (cmd) => {
+      injectRef.current = /** @param {string} cmd */
+async ( cmd) => {
         if (isDisposed) return;
         // Echo what we're about to run
         commandRef.current = cmd;

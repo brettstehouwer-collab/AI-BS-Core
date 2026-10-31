@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{amount:number,avg_buy_price:number,long_term_vault:number}} StreamPosition */
+import { useState, useEffect, useRef } from 'react';
 import CryptoNewsCatalysts from './CryptoNewsCatalysts';
 
 const getEffectiveApiBase = () => {
@@ -23,23 +24,24 @@ const getBotBase = () => {
   return `${apiBase}/api/proxy/8007`;
 };
 
+/** @param {{backendUrl?: string}} props */
 export default function CryptoLiveStreamTab({ backendUrl }) {
   // Real-time market data & WebSocket state
-  const [telemetry, setTelemetry] = useState(null);
-  const [orderbook, setOrderbook] = useState(null);
+  const [telemetry, setTelemetry] = useState(/** @type {{ledger?:{positions?:Record<string,StreamPosition>,last_action?:string,total_profit_usd?:number,reference_prices?:Record<string,number>},usd_balance?:number,action_cooldown_sec?:number,max_trades_per_min?:number,fast_scalp_window_sec?:number}|null} */ (null));
+  const [orderbook, setOrderbook] = useState(/** @type {{bids:[number,number][],asks:[number,number][]}|null} */ (null));
   const [wsConnected, setWsConnected] = useState(false);
   const [tickCounter, setTickCounter] = useState(0);
-  const [lastTickTime, setLastTickTime] = useState(Date.now());
+  const [, setLastTickTime] = useState(Date.now());
   const [huntsPerMin, setHuntsPerMin] = useState(1200);
 
   // Quick Strategy Parameter State
-  const [takeProfitPct, setTakeProfitPct] = useState(0.85);
-  const [buyDipPct, setBuyDipPct] = useState(0.75);
-  const [tradeUsdAmount, setTradeUsdAmount] = useState(1.10);
+  const [takeProfitPct, setTakeProfitPct] = useState(/** @type {number|string} */ (0.85));
+  const [buyDipPct, setBuyDipPct] = useState(/** @type {number|string} */ (0.75));
+  const [tradeUsdAmount, setTradeUsdAmount] = useState(/** @type {number|string} */ (1.10));
   const [saveStatus, setSaveStatus] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  const wsRef = useRef(null);
+  const wsRef = useRef(/** @type {WebSocket|null} */ (null));
 
   // Poll telemetry every 1 second
   useEffect(() => {
@@ -87,8 +89,8 @@ export default function CryptoLiveStreamTab({ backendUrl }) {
 
   // WebSocket connection for live orderbook streaming on Port 8007
   useEffect(() => {
-    let ws = null;
-    let reconnectTimeout = null;
+    let ws = /** @type {WebSocket|null} */ (null);
+    let reconnectTimeout = /** @type {ReturnType<typeof setTimeout>|null} */ (null);
     let isMounted = true;
     let lastUiUpdate = 0;
 
@@ -181,22 +183,23 @@ export default function CryptoLiveStreamTab({ backendUrl }) {
         } else if (ws.readyState === WebSocket.CONNECTING) {
           // If still connecting during React StrictMode unmount, close safely once open
           ws.onopen = () => {
-            try { ws.close(); } catch {}
+            try { ws?.close(); } catch {}
           };
         }
       }
     };
   }, []);
 
+  /** @param {import("react").FormEvent} e */
   const handleSaveParams = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     setSaveStatus('Saving...');
     try {
       const payload = {
-        take_profit_pct: parseFloat(takeProfitPct) / 100.0,
-        buy_dip_pct: parseFloat(buyDipPct) / 100.0,
-        trade_usd_amount: parseFloat(tradeUsdAmount)
+        take_profit_pct: Number(takeProfitPct) / 100.0,
+        buy_dip_pct: parseFloat(String(buyDipPct)) / 100.0,
+        trade_usd_amount: parseFloat(String(tradeUsdAmount))
       };
       const botBase = getBotBase();
       let res = await fetch(`${botBase}/api/crypto/set-parameters`, {
@@ -221,7 +224,7 @@ export default function CryptoLiveStreamTab({ backendUrl }) {
         setSaveStatus('❌ Failed to update');
       }
     } catch (err) {
-      setSaveStatus(`❌ Error: ${err.message}`);
+      setSaveStatus(`❌ Error: ${errorMessage(err)}`);
     } finally {
       setIsSaving(false);
     }
@@ -232,12 +235,12 @@ export default function CryptoLiveStreamTab({ backendUrl }) {
   const croPos = positions['CRO/USD'] || { amount: 0.0, avg_buy_price: 0.0, long_term_vault: 0.0 };
   const lastAction = ledger?.last_action || 'Standing by for trigger';
   const totalProfit = ledger?.total_profit_usd !== undefined ? Number(ledger.total_profit_usd).toFixed(4) : '--';
-  const currentRef = ledger?.reference_prices?.['CRO/USD'] || croPos.avg_buy_price || null;
+  (ledger?.reference_prices?.['CRO/USD'] || croPos.avg_buy_price || null);
   const usdBalance = telemetry?.usd_balance !== undefined ? Number(telemetry.usd_balance).toFixed(2) : '--';
 
   // Compute Take Profit Price Level
   const takeProfitTarget = croPos.avg_buy_price > 0 
-    ? (croPos.avg_buy_price * (1 + (parseFloat(takeProfitPct) / 100.0))).toFixed(5)
+    ? (croPos.avg_buy_price * (1 + (Number(takeProfitPct) / 100.0))).toFixed(5)
     : '--';
 
   const bids = orderbook?.bids?.slice(0, 10) || [];
@@ -757,4 +760,10 @@ export default function CryptoLiveStreamTab({ backendUrl }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

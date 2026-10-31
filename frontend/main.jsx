@@ -58,7 +58,7 @@ window.fetch = async function (resource, config = {}) {
   const generation = authGeneration;
   const userEmail = (user?.email || '').toLowerCase().trim();
   const isAdmin = Boolean(user && user.emailVerified && (ADMIN_EMAILS.includes(userEmail) || ADMIN_UIDS.includes(user.uid)));
-  if (!(localApi || localDevProxy || hostedApi) || !isAdmin) return originalFetch.call(window, resource, config);
+  if (!(localApi || localDevProxy || hostedApi) || !isAdmin || !user) return originalFetch.call(window, resource, config);
 
   const signal = config.signal || (resource instanceof Request ? resource.signal : null);
   const ensureCurrent = () => {
@@ -82,7 +82,9 @@ window.fetch = async function (resource, config = {}) {
   return response;
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Missing application root element.');
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

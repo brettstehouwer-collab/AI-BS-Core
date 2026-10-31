@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import DocumentsTab from './DocumentsTab';
+import './StudioLayout.css';
 
-export default function StudioWorkspaceTab(props) {
+
+/** @param {import('react').ComponentProps<typeof DocumentsTab>} props */
+export default function StudioWorkspaceTab( props) {
   const { backendUrl, sharedContent, setSharedContent, sharedActiveDoc, setSharedActiveDoc } = props;
   const [activeMode, setActiveMode] = useState('documents'); // 'documents', 'firewriting'
 
@@ -37,9 +40,9 @@ export default function StudioWorkspaceTab(props) {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100%', width: '100%', background: 'var(--bg-main, #0d1117)' }}>
+    <div className="studio-workspace" style={{ display: 'flex', height: '100%', width: '100%', background: 'var(--bg-main, #0d1117)' }}>
       {/* Studio Sub-Navigation Sidebar */}
-      <div style={{ 
+      <div className="studio-mode-nav" style={{ 
         width: '60px', 
         background: 'var(--bg-panel, #161b22)', 
         borderRight: '1px solid var(--border-color, #30363d)', 

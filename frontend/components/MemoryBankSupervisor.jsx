@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{is_running?:boolean|null,iteration?:number,uptime_seconds?:number,memory_bank?:{master_memory_blocks?:number,master_memory_path?:string,chroma_heuristics_count?:number,chroma_online?:boolean},telemetry?:{vram_used_mb?:number,vram_total_mb?:number,system_ram_used_mb?:number,system_ram_total_mb?:number,cpu_percent?:number}|null,recent_heuristics?:{text:string,timestamp:number}[]}} MemoryStatus */
+import { useState, useEffect, useRef } from 'react';
 
+/** @param {{backendUrl?: string}} props */
 export default function MemoryBankSupervisor({ backendUrl }) {
-  const [status, setStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(/** @type {MemoryStatus|null} */ (null));
+  const [, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(/** @type {string|null} */ (null));
   const [autoLaunch, setAutoLaunch] = useState(() => {
     return localStorage.getItem('aibs_autolaunch_learning_loop') === 'true';
   });
-  const pollTimerRef = useRef(null);
+  const pollTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
 
   const fetchStatus = async () => {
     try {
@@ -28,17 +30,12 @@ export default function MemoryBankSupervisor({ backendUrl }) {
         });
         if (memRes.ok) {
           const memData = await memRes.json();
-          setStatus(prev => ({
-            ...(prev || {}),
-            is_running: false,
-            memory_bank: memData,
-            telemetry: prev?.telemetry || { vram_used_mb: 2600, vram_total_mb: 24576, system_ram_used_mb: 32000, system_ram_total_mb: 65536, cpu_percent: 15 }
-          }));
-          setError(null);
+          setStatus({ is_running: null, memory_bank: memData, telemetry: null });
+          setError('Learning-loop status and hardware telemetry are unavailable. Memory records are reported separately.');
           return;
         }
       } catch (e2) {}
-      setError(err.message);
+      setError(errorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -46,31 +43,16 @@ export default function MemoryBankSupervisor({ backendUrl }) {
 
   // Initial fetch and auto-launch handler
   useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      const initialData = await fetchStatus();
-      if (isMounted && autoLaunch && initialData && !initialData.is_running) {
-        handleStart();
-      }
-    })();
-
+    fetchStatus();
+    // Stored auto-launch preference is retained; activation is held during the audit.
     pollTimerRef.current = setInterval(fetchStatus, 3500);
     return () => {
-      isMounted = false;
       if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     };
   }, [backendUrl, autoLaunch]);
 
   const handleStart = async () => {
-    setActionLoading(true);
-    try {
-      await fetch(`${backendUrl}/api/learning-loop/start`, { method: 'POST' });
-      await fetchStatus();
-    } catch (err) {
-      console.error("Start loop error:", err);
-    } finally {
-      setActionLoading(false);
-    }
+    setError('Learning-loop activation and deduction actions are held during the audit.');
   };
 
   const handleStop = async () => {
@@ -86,15 +68,7 @@ export default function MemoryBankSupervisor({ backendUrl }) {
   };
 
   const handleTick = async () => {
-    setActionLoading(true);
-    try {
-      await fetch(`${backendUrl}/api/learning-loop/tick`, { method: 'POST' });
-      await fetchStatus();
-    } catch (err) {
-      console.error("Tick error:", err);
-    } finally {
-      setActionLoading(false);
-    }
+    setError('Learning-loop activation and deduction actions are held during the audit.');
   };
 
   const toggleAutoLaunch = () => {
@@ -103,11 +77,11 @@ export default function MemoryBankSupervisor({ backendUrl }) {
     localStorage.setItem('aibs_autolaunch_learning_loop', nextVal.toString());
   };
 
-  const isRunning = status?.is_running ?? false;
+  const isRunning = status?.is_running ?? null;
   const memoryBank = status?.memory_bank ?? {};
   const telemetry = status?.telemetry ?? {};
-  const vramPercent = telemetry.vram_total_mb ? Math.round((telemetry.vram_used_mb / telemetry.vram_total_mb) * 100) : 10;
-  const ramPercent = telemetry.system_ram_total_mb ? Math.round((telemetry.system_ram_used_mb / telemetry.system_ram_total_mb) * 100) : 40;
+  const vramPercent = telemetry.vram_total_mb && typeof telemetry.vram_used_mb === 'number' ? Math.round((telemetry.vram_used_mb / telemetry.vram_total_mb) * 100) : null;
+  const ramPercent = telemetry.system_ram_total_mb && typeof telemetry.system_ram_used_mb === 'number' ? Math.round((telemetry.system_ram_used_mb / telemetry.system_ram_total_mb) * 100) : null;
 
   return (
     <div style={{
@@ -156,11 +130,11 @@ export default function MemoryBankSupervisor({ backendUrl }) {
                   background: isRunning ? '#4ade80' : '#ef4444',
                   boxShadow: isRunning ? '0 0 8px #4ade80' : 'none'
                 }} />
-                {isRunning ? 'DAEMON ACTIVE' : 'LOOP IDLE'}
+                {isRunning === null ? 'STATUS UNAVAILABLE' : isRunning ? 'DAEMON ACTIVE' : 'LOOP IDLE'}
               </span>
             </div>
             <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#cbd5e1' }}>
-              Autonomous heuristic synthesis, live transcript digestion, and multi-tier memory striping.
+              Learning-loop startup and deduction actions are held during the audit. Status reads remain available.
             </p>
           </div>
         </div>
@@ -184,7 +158,7 @@ export default function MemoryBankSupervisor({ backendUrl }) {
             }}
             title="Auto-launch Infinite Learning Loop whenever AI-BS starts up"
           >
-            <span>{autoLaunch ? '✅ Auto-Launch ON' : '⚙️ Auto-Launch OFF'}</span>
+            <span>{autoLaunch ? '✅ Auto-Launch preference ON (held)' : '⚙️ Auto-Launch preference OFF'}</span>
           </button>
 
           {isRunning ? (
@@ -254,7 +228,7 @@ export default function MemoryBankSupervisor({ backendUrl }) {
           fontSize: '0.78rem',
           marginBottom: '12px'
         }}>
-          ⚠️ Backend sync notice: {error} (Falling back to local cached telemetry)
+          ⚠️ Backend sync notice: {error}
         </div>
       )}
 
@@ -269,11 +243,11 @@ export default function MemoryBankSupervisor({ backendUrl }) {
         <div style={{ background: 'rgba(30, 41, 59, 0.6)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deduction Ticks</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#a855f7', marginTop: '4px' }}>
-            {status?.iteration ?? 0}
+            {status?.iteration ?? 'Unavailable'}
             <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '6px', fontWeight: 400 }}>cycles</span>
           </div>
           <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '4px' }}>
-            Uptime: {status?.uptime_seconds ? `${Math.round(status.uptime_seconds)}s` : '0s'}
+            Uptime: {typeof status?.uptime_seconds === 'number' ? `${Math.round(status.uptime_seconds)}s` : 'Unavailable'}
           </div>
         </div>
 
@@ -281,11 +255,11 @@ export default function MemoryBankSupervisor({ backendUrl }) {
         <div style={{ background: 'rgba(30, 41, 59, 0.6)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Memory Dump Storage</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
-            {memoryBank.master_memory_blocks ?? 0}
+            {memoryBank.master_memory_blocks ?? 'Unavailable'}
             <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '6px', fontWeight: 400 }}>blocks</span>
           </div>
           <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={memoryBank.master_memory_path}>
-            📁 {memoryBank.master_memory_path ? memoryBank.master_memory_path.split('\\').pop() : 'master_memory_dump.json'}
+            📁 {memoryBank.master_memory_path ? memoryBank.master_memory_path.split('\\').pop() : 'Unavailable'}
           </div>
         </div>
 
@@ -293,11 +267,11 @@ export default function MemoryBankSupervisor({ backendUrl }) {
         <div style={{ background: 'rgba(30, 41, 59, 0.6)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ChromaDB Vectors</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
-            {memoryBank.chroma_heuristics_count ?? 0}
+            {memoryBank.chroma_heuristics_count ?? 'Unavailable'}
             <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '6px', fontWeight: 400 }}>embeddings</span>
           </div>
           <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '4px' }}>
-            Status: {memoryBank.chroma_online ? '🟢 ChromaDB Online' : '🟡 SQLite Vault'}
+            Status: {memoryBank.chroma_online === undefined ? 'Unavailable' : memoryBank.chroma_online ? '🟢 ChromaDB Online' : 'ChromaDB offline'}
           </div>
         </div>
 
@@ -306,18 +280,18 @@ export default function MemoryBankSupervisor({ backendUrl }) {
           <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hardware Footprint</div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem', marginTop: '4px' }}>
             <span style={{ color: '#cbd5e1' }}>VRAM (RTX 4090):</span>
-            <span style={{ fontWeight: 700, color: '#fef08a' }}>{telemetry.vram_used_mb ? (telemetry.vram_used_mb / 1024).toFixed(1) : '2.6'} GB</span>
+            <span style={{ fontWeight: 700, color: '#fef08a' }}>{typeof telemetry.vram_used_mb === 'number' ? `${(telemetry.vram_used_mb / 1024).toFixed(1)} GB` : 'Unavailable'}</span>
           </div>
           <div style={{ width: '100%', height: '5px', background: 'rgba(0,0,0,0.4)', borderRadius: '3px', overflow: 'hidden', margin: '4px 0 8px' }}>
-            <div style={{ width: `${vramPercent}%`, height: '100%', background: '#facc15' }} />
+            <div style={{ width: `${vramPercent ?? 0}%`, height: '100%', background: '#facc15' }} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.8rem' }}>
             <span style={{ color: '#cbd5e1' }}>System RAM:</span>
-            <span style={{ fontWeight: 700, color: '#60a5fa' }}>{telemetry.system_ram_used_mb ? (telemetry.system_ram_used_mb / 1024).toFixed(1) : '32.0'} GB</span>
+            <span style={{ fontWeight: 700, color: '#60a5fa' }}>{typeof telemetry.system_ram_used_mb === 'number' ? `${(telemetry.system_ram_used_mb / 1024).toFixed(1)} GB` : 'Unavailable'}</span>
           </div>
           <div style={{ width: '100%', height: '5px', background: 'rgba(0,0,0,0.4)', borderRadius: '3px', overflow: 'hidden', marginTop: '4px' }}>
-            <div style={{ width: `${ramPercent}%`, height: '100%', background: '#60a5fa' }} />
+            <div style={{ width: `${ramPercent ?? 0}%`, height: '100%', background: '#60a5fa' }} />
           </div>
         </div>
       </div>
@@ -335,7 +309,7 @@ export default function MemoryBankSupervisor({ backendUrl }) {
             <span style={{ color: '#64748b', fontWeight: 400 }}>({status.recent_heuristics.length} latest)</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '120px', overflowY: 'auto' }}>
-            {status.recent_heuristics.map((h, idx) => (
+            {status.recent_heuristics.map(/** @param {{"text": string, "timestamp": number}} h @param {number} idx */ (h, idx) => (
               <div key={idx} style={{
                 fontSize: '0.74rem',
                 fontFamily: 'monospace',
@@ -361,4 +335,10 @@ export default function MemoryBankSupervisor({ backendUrl }) {
       )}
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

@@ -1,29 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-export default function ProjectAudioPlayer({
-  projectName,
-  backendUrl = '',
-  isOpen = true,
-  onClose,
-  onInsertScript
-}) {
-  const [audioInfo, setAudioInfo] = useState(null);
+/** @param {{"projectName": string, "backendUrl"?: string, "isOpen"?: boolean, "onClose"?: () => void, "onInsertScript"?: (text: string) => void}} props */
+export default function ProjectAudioPlayer({ projectName, backendUrl = '', isOpen = true, onClose }) {
+  const [audioInfo, setAudioInfo] = useState(/** @type {{"stream_url": string, "duration_formatted": number, "size_mb": number, "file_name": string, "sample_rate": number} | null} */ (null));
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);
-  const [volume, setVolume] = useState(1.0);
+  const [] = useState(1.0);
   
   // Transcription States
   const [transcribeStatus, setTranscribeStatus] = useState('idle'); // idle, processing, completed, error
   const [transcribeProgress, setTranscribeProgress] = useState(0);
-  const [transcribeStep, setTranscribeStep] = useState('');
+  const [, setTranscribeStep] = useState('');
   const [transcriptContent, setTranscriptContent] = useState('');
   const [showTranscriptModal, setShowTranscriptModal] = useState(false);
-  const [isSyncingChroma, setIsSyncingChroma] = useState(false);
+  const [] = useState(false);
 
-  const audioRef = useRef(null);
-  const pollIntervalRef = useRef(null);
+  const audioRef = useRef(/** @type {HTMLAudioElement | null} */ (null));
+  const pollIntervalRef = useRef(/** @type {ReturnType<typeof setInterval> | null} */ (null));
 
   const fetchAudioInfo = async () => {
     try {
@@ -75,7 +70,7 @@ export default function ProjectAudioPlayer({
   };
 
   const startPollingStatus = () => {
-    if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    if (pollIntervalRef.current) if (pollIntervalRef.current !== null) clearInterval(pollIntervalRef.current);
     pollIntervalRef.current = setInterval(async () => {
       try {
         const res = await fetch(`${backendUrl}/api/screenwriting/projects/${encodeURIComponent(projectName)}/audio/transcribe/status`);
@@ -84,11 +79,11 @@ export default function ProjectAudioPlayer({
           setTranscribeProgress(data.progress || 50);
           setTranscribeStep(data.step || 'Transcribing speech...');
         } else if (data.status === 'completed') {
-          clearInterval(pollIntervalRef.current);
+          if (pollIntervalRef.current !== null) clearInterval(pollIntervalRef.current);
           setTranscribeStatus('completed');
           checkTranscriptExists();
         } else if (data.status === 'error') {
-          clearInterval(pollIntervalRef.current);
+          if (pollIntervalRef.current !== null) clearInterval(pollIntervalRef.current);
           setTranscribeStatus('error');
         }
       } catch (e) {
@@ -104,7 +99,7 @@ export default function ProjectAudioPlayer({
       setCurrentTime(0);
     }
     return () => {
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+      if (pollIntervalRef.current) if (pollIntervalRef.current !== null) clearInterval(pollIntervalRef.current);
     };
   }, [projectName]);
 
@@ -128,7 +123,8 @@ export default function ProjectAudioPlayer({
     }
   };
 
-  const handleSeek = (e) => {
+  /** @param {import('react').ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e */
+const handleSeek = ( e) => {
     const time = parseFloat(e.target.value);
     if (audioRef.current) {
       audioRef.current.currentTime = time;
@@ -136,14 +132,16 @@ export default function ProjectAudioPlayer({
     }
   };
 
-  const handleRateChange = (rate) => {
+  /** @param {typeof playbackRate} rate */
+const handleRateChange = ( rate) => {
     setPlaybackRate(rate);
     if (audioRef.current) {
       audioRef.current.playbackRate = rate;
     }
   };
 
-  const formatTime = (secs) => {
+  /** @param {number} secs */
+const formatTime = ( secs) => {
     if (isNaN(secs) || secs === 0) return "00:00";
     const h = Math.floor(secs / 3600);
     const m = Math.floor((secs % 3600) / 60);
@@ -311,7 +309,8 @@ export default function ProjectAudioPlayer({
 
           {/* Playback speed selector */}
           <div style={{ display: 'flex', gap: '2px', background: '#0a0f1d', padding: '2px', borderRadius: '4px', border: '1px solid #1e293b' }}>
-            {[1.0, 1.25, 1.5, 2.0].map((rate) => (
+            {[1.0, 1.25, 1.5, 2.0].map(
+( rate) => (
               <button
                 key={rate}
                 onClick={() => handleRateChange(rate)}

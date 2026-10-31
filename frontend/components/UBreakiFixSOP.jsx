@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 export default function UBreakiFixSOP() {
   const [activeTab, setActiveTab] = useState('lead_ops'); // 'lead_ops', 'training', 'pricing', 'intake', 'ber', 'operations', 'chemical'

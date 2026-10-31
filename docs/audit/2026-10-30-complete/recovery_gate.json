@@ -40,5 +40,25 @@
   "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
   "keys_uploaded": false,
   "physical_offline_key_export": "UNVERIFIED_NOT_CLAIMED",
-  "automatic_overwrite_restore": false
+  "automatic_overwrite_restore": false,
+  "record198_cloud_verified": {
+    "typescript198_before": {
+      "status": "VERIFIED",
+      "cipher_sha256": "636dc412ccd14d32d0fff311855866ee421debd77196944c67b113225f0a5396",
+      "authenticated_isolated_restore_verified": true
+    },
+    "chroma198_local_complete_before": {
+      "status": "VERIFIED",
+      "cipher_sha256": "0748d3237d4e9a5692c688ab7d4bf4e9f86e3fa808d2f05a0d86bcf9d25a9fed",
+      "authenticated_isolated_restore_verified": true
+    },
+    "chroma198_repaired_databases_delta": {
+      "status": "VERIFIED",
+      "cipher_sha256": "2bae7adcb4c3584c86e1c3b86da0ec921a28991b2f9742db0fa73c4581857ede",
+      "authenticated_isolated_restore_verified": true
+    }
+  },
+  "source_backup_note": "typescript198_before includes3758existing files and2absent targets. Earlier runtime local Chroma snapshot omitted4vector files; fresh complete5file local package now verified. Root vector preimage remains in runtime package.",
+  "repaired_delta_note": "Repaired143870863byte encrypted delta contains only2SQLite files; overlay requires matching original complete stores/vectors.167vector files verified unchanged.",
+  "record198_after_packages": "Manifest and separate remote restore receipts in restricted campaign; source handoff names exact commit."
 }

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import * as Tone from 'tone';
-import { Activity, Zap, ShieldCheck, AlertTriangle, Cpu, Radio } from 'lucide-react';
+import { Activity, Zap, Cpu } from "lucide-react";
 import { useDawStore } from './dawStore';
 
 export const LatencyMonitorHUD = ({ compact = false }) => {
   const isPlaying = useDawStore(state => state.isPlaying);
-  const bpm = useDawStore(state => state.bpm);
+  void (useDawStore(state => state.bpm));
 
   const [metrics, setMetrics] = useState({
     totalLatencyMs: 45.0,
@@ -27,9 +27,10 @@ export const LatencyMonitorHUD = ({ compact = false }) => {
   const lastFpsCalcRef = useRef(performance.now());
 
   useEffect(() => {
-    let animId;
-    let pollInterval = 0;
+    let animId = 0;
+    void (0);
 
+    /** @param {number} now */
     const measure = (now) => {
       // Calculate FPS
       frameCountRef.current++;
@@ -42,8 +43,8 @@ export const LatencyMonitorHUD = ({ compact = false }) => {
         try {
           const rawCtx = Tone.getContext().rawContext;
           const sampleRate = rawCtx?.sampleRate || 44100;
-          const baseLat = (rawCtx?.baseLatency || 0.005) * 1000;
-          const outLat = (rawCtx?.outputLatency || 0.010) * 1000;
+          const baseLat = ((rawCtx && 'baseLatency' in rawCtx ? rawCtx.baseLatency : undefined) || 0.005) * 1000;
+          const outLat = ((rawCtx && 'outputLatency' in rawCtx ? rawCtx.outputLatency : undefined) || 0.010) * 1000;
           const lookAhead = (Tone.context.lookAhead || 0.045) * 1000;
           const totalLat = Math.round((baseLat + outLat + lookAhead) * 10) / 10;
 

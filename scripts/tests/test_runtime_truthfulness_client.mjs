@@ -14,7 +14,10 @@ function nodes(text) {
 function callback(relative,name,context) {
  const text=source(relative);const declaration=nodes(text).find(n=>n.type==='VariableDeclarator'&&n.id.name===name);
  assert.ok(declaration,`callback ${name} exists`);
- return Function(...Object.keys(context),`return (${text.slice(declaration.init.start,declaration.init.end)})`)(...Object.values(context));
+ // Extract the production formatting helper with the handler; execute no module imports or bootstrap.
+ const helper=nodes(text).find(n=>n.type==='FunctionDeclaration'&&n.id?.name==='errorMessage');
+ const helperSource=helper?text.slice(helper.start,helper.end):'';
+ return Function(...Object.keys(context),`${helperSource}\nreturn (${text.slice(declaration.init.start,declaration.init.end)})`)(...Object.values(context));
 }
 const cluster='frontend/src/components/ClusterEngineDashboard.jsx';
 for(const name of ['runTemporalWorkflow','runNatsBenchmark','testDragonflyCache','testGrpcHandshake','sweepZombieNodes']) {
@@ -141,9 +144,13 @@ function interceptorFixture(transport=null){
  let notify=()=>{};const calls=[];const admin={uid:'owner-a',email:'fixture-admin@example.test',emailVerified:true,getIdToken:async()=> 'fixture-token'};
  const auth={currentUser:admin};const location=new URL('https://dashboard.example.test/');
  const window={location,fetch:async(resource,config)=>{calls.push({resource,config});return transport ? transport(resource,config) : {ok:true};}};
- const text=source('frontend/main.jsx');const a=text.indexOf('const originalFetch = window.fetch;');const b=text.indexOf('ReactDOM.createRoot',a);
+ const text=source('frontend/main.jsx');
+ const statements=parse(text,{sourceType:'module',plugins:['jsx']}).program.body;
+ const start=statements.find(n=>n.type==='VariableDeclaration'&&n.declarations.some(d=>d.id.type==='Identifier'&&d.id.name==='originalFetch'));
+ const end=statements.find(n=>n.type==='ExpressionStatement'&&n.expression.type==='AssignmentExpression'&&n.expression.left.type==='MemberExpression'&&n.expression.left.object.type==='Identifier'&&n.expression.left.object.name==='window'&&n.expression.left.property.name==='fetch');
+ assert.ok(start&&end&&end.start>start.start,'actual interceptor registration is bounded before application mount');
  const context={window,auth,ADMIN_EMAILS:[admin.email],ADMIN_UIDS:[],URL,Request,Headers,DOMException,navigator:{userAgent:'fixture'},onAuthStateChanged:(a,callback)=>{notify=callback;return ()=>{};}};
- vm.createContext(context);vm.runInContext(text.slice(a,b),context);
+ vm.createContext(context);vm.runInContext(text.slice(start.start,end.end),context);
  return {window,auth,admin,calls,change:user=>{auth.currentUser=user;notify(user);}};
 }
 for(const url of ['https://api.brettstehouwer.live.attacker.test/api/read','https://evilbrettstehouwer.live/api/read','https://external.example/api/read?redirect=https://api.brettstehouwer.live','http://localhost.attacker.test:8080/api/read'])test(`interceptor never injects credentials into untrusted ${new URL(url).hostname}`,async()=>{

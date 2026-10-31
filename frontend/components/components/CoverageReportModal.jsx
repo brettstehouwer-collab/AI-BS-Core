@@ -1,6 +1,7 @@
-import React from 'react';
+import 'react';
 import './ScreenwritingTab.css';
 
+/** @param {{coverageData?:{logline?:string,genre?:string,budget_tier?:string,budget_estimate_usd?:number,characters?:string[],locations?:string[],props?:string[]}|null,onClose:()=>void}} props */
 export default function CoverageReportModal({ coverageData, onClose }) {
   if (!coverageData) return null;
 
@@ -54,7 +55,7 @@ export default function CoverageReportModal({ coverageData, onClose }) {
                 <span style={{ background: '#4c1d95', padding: '2px 8px', borderRadius: '12px' }}>{coverageData.characters?.length || 0}</span>
               </h4>
               <ul style={{ color: '#e5e7eb', margin: 0, paddingLeft: '20px', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {coverageData.characters?.map((c, i) => <li key={i}>{c}</li>)}
+                {coverageData.characters?.map(/** @param {string} c @param {number} i */ (c, i) => <li key={i}>{c}</li>)}
               </ul>
               {(!coverageData.characters || coverageData.characters.length === 0) && <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>None detected</div>}
             </div>
@@ -66,7 +67,7 @@ export default function CoverageReportModal({ coverageData, onClose }) {
                 <span style={{ background: '#064e3b', padding: '2px 8px', borderRadius: '12px' }}>{coverageData.locations?.length || 0}</span>
               </h4>
               <ul style={{ color: '#e5e7eb', margin: 0, paddingLeft: '20px', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {coverageData.locations?.map((l, i) => <li key={i}>{l}</li>)}
+                {coverageData.locations?.map(/** @param {string} l @param {number} i */ (l, i) => <li key={i}>{l}</li>)}
               </ul>
               {(!coverageData.locations || coverageData.locations.length === 0) && <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>None detected</div>}
             </div>
@@ -78,7 +79,7 @@ export default function CoverageReportModal({ coverageData, onClose }) {
                 <span style={{ background: '#7c2d12', padding: '2px 8px', borderRadius: '12px' }}>{coverageData.props?.length || 0}</span>
               </h4>
               <ul style={{ color: '#e5e7eb', margin: 0, paddingLeft: '20px', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {coverageData.props?.map((p, i) => <li key={i}>{p}</li>)}
+                {coverageData.props?.map(/** @param {string} p @param {number} i */ (p, i) => <li key={i}>{p}</li>)}
               </ul>
               {(!coverageData.props || coverageData.props.length === 0) && <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>None detected</div>}
             </div>

@@ -3,6 +3,7 @@
  * Parses Final Draft XML (.fdx) into a unified JSON AST for the AI-BS Screenplay Editor.
  */
 
+/** @param {string} xmlString */
 export function parseFDX(xmlString) {
   const ast = [];
   const parser = new DOMParser();

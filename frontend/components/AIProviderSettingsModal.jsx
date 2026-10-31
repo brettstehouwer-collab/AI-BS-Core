@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{id: string, name: string, icon: string, description?: string, models: string[], requires_key: boolean, key_hint?: string, masked_key?: string, saved_model?: string}} Provider */
+import { useState, useEffect } from 'react';
 
+/** @param {{isOpen: boolean, onClose: () => void, backendUrl?: string, onProviderChange?: (provider: string, model: string) => void}} props */
 export default function AIProviderSettingsModal({
   isOpen,
   onClose,
   backendUrl = 'http://127.0.0.1:8000',
   onProviderChange
 }) {
-  const [providers, setProviders] = useState([]);
+  const [providers, setProviders] = useState(/** @type {Provider[]} */ ([]));
   const [activeProvider, setActiveProvider] = useState('local');
   const [selectedProviderTab, setSelectedProviderTab] = useState('local');
-  const [keysState, setKeysState] = useState({});
-  const [modelsState, setModelsState] = useState({});
-  const [showKeyMap, setShowKeyMap] = useState({});
-  const [testingStatus, setTestingStatus] = useState({}); // { [id]: { status: 'idle'|'testing'|'valid'|'error', msg: '' } }
+  const [keysState, setKeysState] = useState(/** @type {Record<string, string>} */ ({}));
+  const [modelsState, setModelsState] = useState(/** @type {Record<string, string>} */ ({}));
+  const [showKeyMap, setShowKeyMap] = useState(/** @type {Record<string, boolean>} */ ({}));
+  const [testingStatus, setTestingStatus] = useState(/** @type {Record<string, {status: string, msg: string}>} */ ({})); // { [id]: { status: 'idle'|'testing'|'valid'|'error', msg: '' } }
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
@@ -30,11 +32,13 @@ export default function AIProviderSettingsModal({
           setSelectedProviderTab(data.active_provider || 'local');
 
           // Initialize keys and models from local storage or server
-          const initialKeys = {};
-          const initialModels = {};
+          /** @type {Record<string, string>} */
+const initialKeys = {};
+          /** @type {Record<string, string>} */
+const initialModels = {};
           const localKeys = JSON.parse(localStorage.getItem('aibs_custom_ai_keys') || '{}');
 
-          (data.providers || []).forEach(p => {
+          (/** @type {Provider[]} */ (data.providers || [])).forEach(p => {
             initialKeys[p.id] = localKeys[p.id] || p.masked_key || '';
             initialModels[p.id] = p.saved_model || (p.models && p.models[0]) || '';
           });
@@ -61,22 +65,26 @@ export default function AIProviderSettingsModal({
     requires_key: false
   };
 
-  const handleKeyChange = (providerId, val) => {
+  /** @param {string} providerId @param {string} val */
+const handleKeyChange = (providerId, val) => {
     setKeysState(prev => ({ ...prev, [providerId]: val }));
     // Reset test status if key changes
     setTestingStatus(prev => ({ ...prev, [providerId]: { status: 'idle', msg: '' } }));
   };
 
-  const handleModelChange = (providerId, val) => {
+  /** @param {string} providerId @param {string} val */
+const handleModelChange = (providerId, val) => {
     setModelsState(prev => ({ ...prev, [providerId]: val }));
   };
 
-  const toggleShowKey = (providerId) => {
+  /** @param {string} providerId */
+const toggleShowKey = (providerId) => {
     setShowKeyMap(prev => ({ ...prev, [providerId]: !prev[providerId] }));
   };
 
   // Test live connection with provider
-  const handleTestConnection = async (providerId) => {
+  /** @param {string} providerId */
+const handleTestConnection = async (providerId) => {
     setTestingStatus(prev => ({ ...prev, [providerId]: { status: 'testing', msg: 'Testing connection...' } }));
     try {
       const apiKey = keysState[providerId] || '';
@@ -116,7 +124,8 @@ export default function AIProviderSettingsModal({
     setSaveMessage('');
     try {
       // Save unmasked keys to browser localStorage
-      const cleanKeys = {};
+      /** @type {Record<string, string>} */
+const cleanKeys = {};
       Object.keys(keysState).forEach(k => {
         if (keysState[k] && !keysState[k].includes('...')) {
           cleanKeys[k] = keysState[k];
@@ -126,7 +135,8 @@ export default function AIProviderSettingsModal({
       localStorage.setItem('aibs_active_ai_provider', activeProvider);
 
       // Save to backend configuration
-      const providerPayload = {};
+      /** @type {Record<string, {api_key: string, model: string}>} */
+const providerPayload = {};
       providers.forEach(p => {
         providerPayload[p.id] = {
           api_key: keysState[p.id] || '',

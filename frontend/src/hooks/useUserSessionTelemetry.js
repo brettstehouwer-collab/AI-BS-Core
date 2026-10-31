@@ -2,10 +2,11 @@ import { useEffect, useRef } from 'react';
 import { getApiBase } from '../config/api';
 import { getFriendlyUserName, getFriendlyUserRole, getFriendlyUserAvatar } from '../components/collaborationService';
 
-export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard' }) {
+/** @param {{currentUser?: {email?:string|null, displayName?:string|null}|null, activeTab?:string, enabled?:boolean}} options */
+export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard', enabled = true }) {
   const apiHost = getApiBase() || '';
-  const sessionStartTimeRef = useRef(null);
-  const sessionIdRef = useRef(null);
+  const sessionStartTimeRef = useRef(/** @type {number | null} */ (null));
+  const sessionIdRef = useRef(/** @type {string | null} */ (null));
 
   // Initialize Session ID and Open Timestamp
   useEffect(() => {
@@ -18,19 +19,20 @@ export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard' }
       sessionStorage.setItem('aibs_session_start', start);
     }
     sessionIdRef.current = sid;
-    sessionStartTimeRef.current = parseInt(start, 10) || Date.now();
+    sessionStartTimeRef.current = parseInt(start || '', 10) || Date.now();
   }, []);
 
   // Send Heartbeat & Close Handler
   useEffect(() => {
+    const email = typeof currentUser?.email === 'string' ? currentUser.email.toLowerCase().trim() : '';
+    if (!enabled || !email) return;
     const sendHeartbeat = async () => {
       const sid = sessionIdRef.current || sessionStorage.getItem('aibs_session_id');
       if (!sid) return;
 
-      const startTime = sessionStartTimeRef.current || parseInt(sessionStorage.getItem('aibs_session_start'), 10) || Date.now();
+      const startTime = sessionStartTimeRef.current || parseInt(sessionStorage.getItem('aibs_session_start') || '', 10) || Date.now();
       const dwellSec = Math.max(0, (Date.now() - startTime) / 1000.0);
 
-      const email = (currentUser?.email || localStorage.getItem('aibs_user_email') || 'brettstehouwer@gmail.com').toLowerCase().trim();
       const name = currentUser?.displayName || getFriendlyUserName(email);
       const role = getFriendlyUserRole(email);
       const avatar = getFriendlyUserAvatar(email);
@@ -69,11 +71,14 @@ export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard' }
     const interval = setInterval(sendHeartbeat, 15000);
 
     // Unload / Close Handler
+    let closed = false;
     const handleUnload = () => {
+      if (closed) return;
       const sid = sessionIdRef.current || sessionStorage.getItem('aibs_session_id');
       if (!sid) return;
 
-      const startTime = sessionStartTimeRef.current || parseInt(sessionStorage.getItem('aibs_session_start'), 10) || Date.now();
+      closed = true;
+      const startTime = sessionStartTimeRef.current || parseInt(sessionStorage.getItem('aibs_session_start') || '', 10) || Date.now();
       const dwellSec = Math.max(0, (Date.now() - startTime) / 1000.0);
 
       const payload = JSON.stringify({
@@ -83,16 +88,14 @@ export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard' }
       });
 
       const closeUrl = `${apiHost}/api/telemetry/user-sessions/close`;
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(closeUrl, new Blob([payload], { type: 'application/json' }));
-      } else {
-        fetch(closeUrl, {
+      // Use the application's authenticated fetch boundary; sendBeacon cannot
+      // carry its authorization headers and bypasses the token interceptor.
+      fetch(closeUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: payload,
           keepalive: true
         }).catch(() => {});
-      }
     };
 
     window.addEventListener('beforeunload', handleUnload);
@@ -103,5 +106,5 @@ export function useUserSessionTelemetry({ currentUser, activeTab = 'dashboard' }
       window.removeEventListener('beforeunload', handleUnload);
       window.removeEventListener('pagehide', handleUnload);
     };
-  }, [apiHost, currentUser, activeTab]);
+  }, [apiHost, currentUser, activeTab, enabled]);
 }

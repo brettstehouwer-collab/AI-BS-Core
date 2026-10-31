@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 import { theme } from '../styles/theme';
 
 export const AIBSAutogradEngine = ({ activeLayers = 24, loss = 0.0014 }) => {

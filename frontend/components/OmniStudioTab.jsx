@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
-import { Radio, Music, Mic, Video, Columns, Grid, Maximize2, Activity } from 'lucide-react';
+import { Radio, Music, Mic, Video, Columns, Grid } from "lucide-react";
 
 // Importing the individual studio components
 import VideoStreamingTab from './VideoStreamingTab.jsx';
@@ -184,14 +184,14 @@ export default function OmniStudioTab() {
 
         {/* PRESET 1: Split Broadcast (Left) + DAW (Right) */}
         {activeLayout === 'split_broadcast_daw' && (
-          <PanelGroup direction="horizontal">
-            <Panel defaultSize={50} minSize={25} order={1}>
+          <PanelGroup orientation="horizontal">
+            <Panel defaultSize="50%" minSize="25%">
               <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                 <BroadcastStudio />
               </div>
             </Panel>
             <PanelResizeHandle style={{ width: '6px', backgroundColor: '#1e293b', cursor: 'col-resize' }} />
-            <Panel defaultSize={50} minSize={25} order={2}>
+            <Panel defaultSize="50%" minSize="25%">
               <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                 <MusicDAWStudioTab />
               </div>
@@ -201,14 +201,14 @@ export default function OmniStudioTab() {
 
         {/* PRESET 2: Split Broadcast (Left) + Video Meeting (Right) */}
         {activeLayout === 'split_broadcast_video' && (
-          <PanelGroup direction="horizontal">
-            <Panel defaultSize={55} minSize={25} order={1}>
+          <PanelGroup orientation="horizontal">
+            <Panel defaultSize="55%" minSize="25%">
               <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                 <BroadcastStudio />
               </div>
             </Panel>
             <PanelResizeHandle style={{ width: '6px', backgroundColor: '#1e293b', cursor: 'col-resize' }} />
-            <Panel defaultSize={45} minSize={25} order={2}>
+            <Panel defaultSize="45%" minSize="25%">
               <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                 <VideoStreamingTab />
               </div>
@@ -218,16 +218,16 @@ export default function OmniStudioTab() {
 
         {/* PRESET 3: 4-Grid Master Matrix (Top: Video + Broadcast, Bottom: DAW + Neural) */}
         {activeLayout === 'matrix_quad' && (
-          <PanelGroup direction="vertical">
-            <Panel defaultSize={50} minSize={15} order={1}>
-              <PanelGroup direction="horizontal">
-                <Panel defaultSize={45} minSize={15} order={1}>
+          <PanelGroup orientation="vertical">
+            <Panel defaultSize="50%" minSize="15%">
+              <PanelGroup orientation="horizontal">
+                <Panel defaultSize="45%" minSize="15%">
                   <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                     <VideoStreamingTab />
                   </div>
                 </Panel>
                 <PanelResizeHandle style={{ width: '6px', backgroundColor: '#1e293b', cursor: 'col-resize' }} />
-                <Panel defaultSize={55} minSize={15} order={2}>
+                <Panel defaultSize="55%" minSize="15%">
                   <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                     <BroadcastStudio />
                   </div>
@@ -237,15 +237,15 @@ export default function OmniStudioTab() {
 
             <PanelResizeHandle style={{ height: '6px', backgroundColor: '#1e293b', cursor: 'row-resize' }} />
 
-            <Panel defaultSize={50} minSize={15} order={2}>
-              <PanelGroup direction="horizontal">
-                <Panel defaultSize={65} minSize={15} order={1}>
+            <Panel defaultSize="50%" minSize="15%">
+              <PanelGroup orientation="horizontal">
+                <Panel defaultSize="65%" minSize="15%">
                   <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                     <MusicDAWStudioTab />
                   </div>
                 </Panel>
                 <PanelResizeHandle style={{ width: '6px', backgroundColor: '#1e293b', cursor: 'col-resize' }} />
-                <Panel defaultSize={35} minSize={15} order={2}>
+                <Panel defaultSize="35%" minSize="15%">
                   <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                     <NeuralAudioStudioTab />
                   </div>

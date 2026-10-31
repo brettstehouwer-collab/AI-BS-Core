@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { useDawStore } from './dawStore';
 import StepSequencer from './StepSequencer';
 import SoundDesigner from './SoundDesigner';
 import { theme } from '../../styles/theme';
-import { Sliders, Volume2, Sparkles, Trash2, Music, Activity } from 'lucide-react';
+import { Sliders, Sparkles, Trash2, Music, Activity } from "lucide-react";
 
 const ChannelRack = () => {
   const channels = useDawStore((state) => state.channels);
@@ -25,7 +25,7 @@ const ChannelRack = () => {
     <div style={{
       position: 'relative',
       background: 'rgba(15, 18, 24, 0.95)',
-      border: `1px solid ${theme.colors.border}`,
+      border: `1px solid ${'#30363d'}`,
       borderRadius: '8px',
       padding: '12px',
       display: 'flex',

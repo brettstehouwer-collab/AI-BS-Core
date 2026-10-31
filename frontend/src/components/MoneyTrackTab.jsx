@@ -1,4 +1,4 @@
-import React from 'react';
+import 'react';
 
 // No current owned evidence contract exists for these provider and host metrics.
 // Missing records remain unavailable; this view performs no financial or daemon actions.
@@ -7,6 +7,7 @@ const MoneyTrackTab = () => {
   const chiaMetrics = { totalPlots: 'Unavailable', farmSize: 'Unavailable', xchBalance: 'Unavailable', estTimeToWin: 'Unavailable', status: 'Unavailable' };
   const saladMetrics = { dayEarnings: 'Unavailable', totalBalance: 'Unavailable', workload: 'Unavailable', gpuTemp: 'Unavailable' };
   const minerMetrics = { hashrate: 'Unavailable', algo: 'Unavailable', targetWallet: 'Unavailable', gpuTemp: 'Unavailable', status: 'Unavailable' };
+  /** @type {{id:string,date:string,bot:string,pair:string,action:string,amount:string,status:string}[]} */
   const recentBots = [];
 
   return (
@@ -140,6 +141,7 @@ const MoneyTrackTab = () => {
   );
 };
 
+/** @param {{title:string,value:import("react").ReactNode,color:string}} props */
 const MetricCard = ({ title, value, color }) => (
   <div style={{
     flex: 1,
@@ -160,6 +162,7 @@ const MetricCard = ({ title, value, color }) => (
   </div>
 );
 
+/** @param {{title:string,value:import("react").ReactNode,color?:string}} props */
 const MiniCard = ({ title, value, color = '#e6edf3' }) => (
   <div style={{
     background: '#111',

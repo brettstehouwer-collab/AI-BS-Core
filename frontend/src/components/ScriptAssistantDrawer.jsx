@@ -1,26 +1,34 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-export default function ScriptAssistantDrawer({
+/** @param {import('react').ComponentProps<typeof ScriptAssistantSession>} props */
+export default function ScriptAssistantDrawer( props) {
+  // Each project owns a separate mounted session. Pending results remain with
+  // their original session when a project switch unmounts it.
+  return <ScriptAssistantSession key={props.projectName || 'Default Project'} {...props} />;
+}
+
+/** @param {{"projectName"?: string, "isOpen"?: boolean, "onClose"?: () => void, "onInsertScript"?: (arg0: string) => void, "backendUrl"?: string}} props */
+function ScriptAssistantSession({
   projectName = 'Default Project',
   isOpen = false,
   onClose,
   onInsertScript,
   backendUrl = ''
 }) {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState(/** @type {Array<{id: string, role: string, content: string, sources?: Array<{type?: string, label?: string, excerpt?: string}>}>} */ ([
     {
       id: 'welcome',
       role: 'assistant',
-      content: `👋 **Hello! I am your Dedicated Script & Memoir Assistant for *${projectName}*.**\n\nI am directly connected to this project's isolated Vector Database containing **only** your original book manuscript and current screenplay draft.\n\nAsk me anything about real-life events, character voice, scene locations, or request grounded scene revisions!`,
+      content: `👋 **Script & Memoir Assistant for *${projectName}*.**\n\nI can query this project's indexed manuscript and screenplay excerpts. Corpus isolation is not verified; responses may include model knowledge.\n\nCheck the index status and review cited sources before inserting revisions.`,
       sources: []
     }
-  ]);
+  ]));
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [stats, setStats] = useState({ total_docs: 0, book_chunks: 0, script_scenes: 0 });
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   const fetchStats = async () => {
     try {
@@ -61,13 +69,14 @@ export default function ScriptAssistantDrawer({
         setSyncMessage(`❌ Sync error: ${data.message}`);
       }
     } catch (err) {
-      setSyncMessage(`❌ Sync failed: ${err.message}`);
+      setSyncMessage(`❌ Sync failed: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsSyncing(false);
       setTimeout(() => setSyncMessage(''), 4000);
     }
   };
 
+  /** @param {string | null} [textToSend] */
   const handleSendMessage = async (textToSend = null) => {
     const query = (textToSend || inputValue).trim();
     if (!query || isLoading) return;
@@ -118,7 +127,7 @@ export default function ScriptAssistantDrawer({
         {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `⚠️ Connection error: ${err.message}`,
+          content: `⚠️ Connection error: ${(err instanceof Error ? err.message : String(err))}`,
           sources: []
         }
       ]);

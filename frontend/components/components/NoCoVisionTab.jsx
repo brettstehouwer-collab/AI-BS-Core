@@ -1,7 +1,7 @@
-import React from 'react';
+import "react";
 import TheatricalStageSwitch from './TheatricalStageSwitch.jsx';
 import TheatricalMicClient from './TheatricalMicClient.jsx';
-import { useAppStore } from './useAppStore.js';
+import "./useAppStore.js";
 
 const NoCoVisionTab = () => {
   return (

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function ClusterEngineDashboard() {
   const [logs, setLogs] = useState(['Cluster telemetry unavailable: no verified telemetry source is connected.']);
   const kpiStats = { granianRps: 'Unavailable', natsLatency: 'Unavailable', temporalWorkflows: 'Unavailable', dragonflyHitRate: 'Unavailable', grpcLatency: 'Unavailable', mediasoupTracks: 'Unavailable' };
 
-  const appendLog = (msg) => {
+  const appendLog = (/** @type {string} */ msg) => {
     const time = new Date().toLocaleTimeString();
     setLogs((prev) => [`[${time}] ${msg}`, ...prev.slice(0, 40)]);
   };

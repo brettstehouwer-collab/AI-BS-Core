@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Public advisory telemetry. This component has no order, strategy or flag APIs.
 export default function CryptoNewsCatalysts({ apiBase = '' }) {
-  const [view, setView] = useState({ status: 'loading', items: [] });
+  const [view, setView] = useState(/** @type {{status:string,counts?:Record<string,number>,feeds?:{status:string}[],items:{article_hash:string,title:string,source:string,detected_tokens?:string[],catalyst_category:string,sentiment_score:number,confidence:number}[]}} */ ({ status: 'loading', items: [] }));
   useEffect(() => {
     let active = true;
+    /** @type {ReturnType<typeof setTimeout>|undefined} */
     let pollTimer;
+    /** @type {AbortController|undefined} */
     let controller;
     const poll = async () => {
       controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 6000);
+      const timeout = setTimeout(() => controller?.abort(), 6000);
       try {
         const response = await fetch(`${apiBase.replace(/\/$/, '')}/api/telemetry/news-catalysts`, {
           signal: controller.signal, cache: 'no-store',
@@ -29,13 +31,15 @@ export default function CryptoNewsCatalysts({ apiBase = '' }) {
     return () => { active = false; clearTimeout(pollTimer); controller?.abort(); };
   }, [apiBase]);
 
-  const statusText = {
+  /** @type {Record<string,string>} */
+  const statusLabels = {
     loading: 'Checking news telemetry…',
     not_configured: 'News monitoring is not configured.',
     unavailable: 'News telemetry is unavailable.',
     no_recent_poll: 'No recent feed poll observed. Stored signals may be stale.',
     recent_poll_observed: 'Recent public feed poll observed.',
-  }[view.status] || 'News telemetry status unknown.';
+  };
+  const statusText = statusLabels[view.status] || 'News telemetry status unknown.';
   return (
     <section aria-label="Crypto news catalysts" style={{ padding: 18, border: '1px solid #30363d', borderRadius: 10, background: '#161b22' }}>
       <h3 style={{ margin: '0 0 8px', color: '#c9d1d9' }}>Crypto news catalysts</h3>
@@ -43,7 +47,7 @@ export default function CryptoNewsCatalysts({ apiBase = '' }) {
       <p style={{ color: '#8b949e', fontSize: 12 }}>Advisory only · Local model estimates · Trading remains disabled</p>
       {!!view.counts?.RETRY && <p style={{ color: '#e3b341' }}>Analysis retries pending: {view.counts.RETRY}</p>}
       {!!view.counts?.FAILED && <p style={{ color: '#e3b341' }}>Analysis unavailable for {view.counts.FAILED} articles.</p>}
-      {view.feeds?.some(feed => feed.status !== 'OK') && <p style={{ color: '#e3b341' }}>Some feeds could not be read.</p>}
+      {view.feeds?.some(/** @param {{"status": string}} feed */ feed => feed.status !== 'OK') && <p style={{ color: '#e3b341' }}>Some feeds could not be read.</p>}
       {view.items.length === 0 ? <p style={{ color: '#8b949e' }}>No recent signals meet the display threshold.</p> : (
         <ul style={{ margin: 0, paddingLeft: 20 }}>
           {view.items.slice(0, 10).map(item => (

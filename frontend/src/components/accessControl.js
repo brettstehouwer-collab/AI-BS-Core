@@ -3,6 +3,7 @@
  * Controls role-based access to the 30+ tools and enables multi-tenant SaaS packaging.
  */
 
+/** @type {Record<string, {id: string, name: string, badge: string, color: string, description: string}>} */
 export const USER_TIERS = {
   ADMIN: {
     id: 'admin',
@@ -56,6 +57,7 @@ export const USER_TIERS = {
 };
 
 // Map each tab key to the tiers allowed to access it
+/** @type {Record<string, string[]>} */
 export const TAB_PERMISSIONS = {
   // --- Admin / Host Root Tools ---
   executive_cockpit: ['admin', 'enterprise_all_access'],
@@ -168,6 +170,7 @@ export const ADMIN_UIDS = [
 /**
  * Determine a user's active tier based on auth profile, simulated tier, or local environment.
  */
+/** @param {{email?: string | null, uid?: string, emailVerified?: boolean, plan?: string, subscriptionTier?: string} | null | undefined} currentUser @param {string | null} [simulatedTier] */
 export const getUserTier = (currentUser, simulatedTier = null) => {
   // These tiers control presentation only. Protected APIs independently authorize every request.
   if (!currentUser) return USER_TIERS.FREE_DEMO;
@@ -188,6 +191,7 @@ export const getUserTier = (currentUser, simulatedTier = null) => {
 /**
  * Check if a tier has permission to view a specific tab.
  */
+/** @param {string} tierId @param {string} tabKey */
 export const canAccessTab = (tierId, tabKey) => {
   if (tierId === 'admin') return true;
   const allowedTiers = TAB_PERMISSIONS[tabKey] || [];
@@ -197,6 +201,7 @@ export const canAccessTab = (tierId, tabKey) => {
 /**
  * Filter the master navigation hubs and subTabs to only show items accessible to the active tier.
  */
+/** @param {typeof import("./navigationConfig").masterHubs} masterHubs @param {string} tierId */
 export const filterNavigationByTier = (masterHubs, tierId) => {
   if (tierId === 'admin') return masterHubs;
 

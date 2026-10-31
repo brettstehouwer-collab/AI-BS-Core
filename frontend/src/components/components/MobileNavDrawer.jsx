@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 /**
  * MobileNavDrawer: Fullscreen Slide-over Navigation Hub for smartphone users.
  * Houses all 35+ tools in clean, thumb-friendly categorized sections with live search.
  */
+/** @param {{isOpen:boolean,onClose:()=>void,activeTab:string,onTabChange:(key:string)=>void,momMode:boolean,onToggleMomMode:()=>void,hwTelemetry?:{core_temp_c?:number,memory_used_mb?:number},currentUser?:{displayName?:string|null,email?:string|null}|null}} props */
 export default function MobileNavDrawer({
   isOpen,
   onClose,
@@ -106,7 +107,7 @@ export default function MobileNavDrawer({
 
   if (!isOpen) return null;
 
-  const handleSelectTool = (key) => {
+  const handleSelectTool = (/** @type {string} */ key) => {
     onTabChange(key);
     onClose();
   };

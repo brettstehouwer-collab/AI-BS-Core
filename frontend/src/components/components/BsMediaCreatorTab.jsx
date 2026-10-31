@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
 
+/** @param {{BACKEND_URL?: string, backendUrl?: string}} props */
 export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
   const activeBackend = backendUrl || BACKEND_URL || useAppStore((state) => state.BACKEND_URL) || 'http://localhost:8080';
 
@@ -30,35 +31,35 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     }
   ]);
   const [isStreaming, setIsStreaming] = useState(false);
-  const chatEndRef = useRef(null);
+  const chatEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // ── MEDIA ASSET & VAULT STATE ───────────────────────────────────────────
   const [vaultStats, setVaultStats] = useState({ count: null, status: 'unavailable', error: 'Vault records are Unavailable until account access and stored records can be verified.' });
   const [vaultStatus, setVaultStatus] = useState('Vault retrieval is held: verified access to stored media is Unavailable.');
   const [vaultQuery, setVaultQuery] = useState('');
-  const [vaultResults] = useState([]);
+  const [vaultResults] = useState(/** @type {({"metadata": {"media_type": string, "title": string}, "id": string, "document": string})[]} */ ([]));
 
   // ── GENERATION & WORKSPACE TOOLS STATE ──────────────────────────────────
   const [videoPrompt, setVideoPrompt] = useState('Cinematic aerial flythrough of a futuristic neon cyber corridor, 8k, photorealistic');
-  const [videoDuration, setVideoDuration] = useState(4);
-  const [videoModel, setVideoModel] = useState('wan2.1');
+  const [videoDuration] = useState(4);
+  const [videoModel] = useState('wan2.1');
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [lastRenderedVideo, setLastRenderedVideo] = useState('/saved_data/mtd_demo_showcase/mtd_vertical_short_9x16.mp4');
 
-  const [photoPrompt, setPhotoPrompt] = useState('Cyberpunk neon street at night, reflective rain puddles, high detail');
-  const [isGeneratingPhoto, setIsGeneratingPhoto] = useState(false);
-  const [lastRenderedPhoto, setLastRenderedPhoto] = useState(null);
+  useState('Cyberpunk neon street at night, reflective rain puddles, high detail');
+  useState(false);
+  useState(null);
 
-  const [audioPrompt, setAudioPrompt] = useState('Deep ambient cinematic synth drone with pulsing bass');
+  useState('Deep ambient cinematic synth drone with pulsing bass');
   const [isProcessingAudio] = useState(false);
   const [audioStatus, setAudioStatus] = useState('Output verification is Unavailable. Separation is held until service access and completed outputs can be verified.');
   const [audioInputPath, setAudioInputPath] = useState('C:\\AI-BS\\MP4 medial screen recordings\\mtd.mp4');
   const [demucsModel, setDemucsModel] = useState('htdemucs');
   const [demucsSplitMode, setDemucsSplitMode] = useState('4stems');
-  const [stemMutes, setStemMutes] = useState({ vocals: false, drums: false, bass: false, other: false });
-  const [stemSolos, setStemSolos] = useState({ vocals: false, drums: false, bass: false, other: false });
-  const [stemVolumes, setStemVolumes] = useState({ vocals: 80, drums: 85, bass: 75, other: 80 });
-  const [stemSessions] = useState([]);
+  const [stemMutes, setStemMutes] = useState(/** @type {Record<string,boolean>} */ ({ vocals: false, drums: false, bass: false, other: false }));
+  const [stemSolos, setStemSolos] = useState(/** @type {Record<string,boolean>} */ ({ vocals: false, drums: false, bass: false, other: false }));
+  const [stemVolumes, setStemVolumes] = useState(/** @type {Record<string,number>} */ ({ vocals: 80, drums: 85, bass: 75, other: 80 }));
+  const [stemSessions] = useState(/** @type {({"id": string, "name": string, "stems": string[], "time": string, "status": string})[]} */ ([]));
 
   // ── UNREAL ENGINE 5.8 MCP STATE ─────────────────────────────────────────
   const [unrealStatus, setUnrealStatus] = useState({
@@ -69,7 +70,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     recommended_action: 'launch_required'
   });
   const [isLaunchingUnreal, setIsLaunchingUnreal] = useState(false);
-  const [unrealAssets, setUnrealAssets] = useState([]);
+  const [unrealAssets, setUnrealAssets] = useState(/** @type {({"category": string, "full_path": string, "asset_name": string})[]} */ ([]));
   const [unrealAssetQuery, setUnrealAssetQuery] = useState('');
   const [unrealCategory, setUnrealCategory] = useState('');
   const [unrealCategories, setUnrealCategories] = useState([]);
@@ -154,7 +155,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
       setUnrealLog(`[Launch Trigger]: ${data.message || 'Launched'}`);
       setTimeout(fetchUnrealStatus, 3000);
     } catch (e) {
-      setUnrealLog(`[Launch Error]: ${e.message}`);
+      setUnrealLog(`[Launch Error]: ${errorMessage(e)}`);
     } finally {
       setIsLaunchingUnreal(false);
     }
@@ -169,13 +170,13 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
           camera_name: `CineCam_${Date.now().toString().slice(-4)}`,
           location: [0.0, 0.0, 150.0],
           rotation: [0.0, 0.0, 0.0],
-          focal_length: parseFloat(cameraFocalLength)
+          focal_length: Number(cameraFocalLength)
         })
       });
       const data = await res.json();
       setUnrealLog(`[CineCamera]: ${data.success ? 'Camera spawned in Unreal World' : (data.error || 'Fallback logged')}`);
     } catch (e) {
-      setUnrealLog(`[Camera Error]: ${e.message}`);
+      setUnrealLog(`[Camera Error]: ${errorMessage(e)}`);
     }
   };
 
@@ -191,7 +192,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
       const data = await res.json();
       setUnrealLog(`[Sequencer]: Action '${sequencerAction}' ${data.success ? 'dispatched to Sequencer' : (data.error || 'logged')}`);
     } catch (e) {
-      setUnrealLog(`[Sequencer Error]: ${e.message}`);
+      setUnrealLog(`[Sequencer Error]: ${errorMessage(e)}`);
     }
   };
 
@@ -225,6 +226,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
       let assistantMessage = '';
       setChatMessages(prev => [...prev, { role: 'assistant', content: '' }]);
 
+      if (!res.body) throw new Error('Streaming response is unavailable.');
       const reader = res.body.getReader();
       const decoder = new TextDecoder('utf-8');
 
@@ -261,7 +263,7 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
     } catch (err) {
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: `❌ **Media Director Error:** ${err.message}` }
+        { role: 'assistant', content: `❌ **Media Director Error:** ${errorMessage(err)}` }
       ]);
     } finally {
       setIsStreaming(false);
@@ -1356,4 +1358,10 @@ export default function BsMediaCreatorTab({ BACKEND_URL, backendUrl }) {
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

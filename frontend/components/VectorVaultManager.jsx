@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 export default function VectorVaultManager() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
@@ -6,28 +6,38 @@ export default function VectorVaultManager() {
   const [collection, setCollection] = useState('stehouwer_vector_memory');
   const [queryText, setQueryText] = useState('SHM ring buffer latency');
   const [isSearching, setIsSearching] = useState(false);
-  const [results, setResults] = useState([
-    { id: 'doc_101', distance: 0.12, content: 'Sub-microsecond SHM ring buffer architecture mapped at Local\\AI_BS_IPC_SHM_RING.', source: 'ringbuffer_multitopic.h' },
-    { id: 'doc_102', distance: 0.18, content: 'FastAPI WebSocket Gateway streaming telemetry at 20 Hz (50ms interval).', source: 'shm_websocket_gateway.py' },
-    { id: 'doc_103', distance: 0.24, content: 'ComfyUI SDXL & Wan2.1 workflow triggers pushing GPU stats over Topic 0x0006.', source: 'comfyui_workflow_trigger.py' }
-  ]);
+  const [results, setResults] = useState(/** @type {Array<{id: string, distance: number, content: string, source?: string, metadata?: {source?: string}}>} */ ([
+  ]));
 
-  const handleSearch = async (e) => {
+  const [queryStatus, setQueryStatus] = useState('Unavailable: run a read-only query to load owned vector records.');
+
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSearch = async ( e) => {
     e.preventDefault();
     if (!queryText.trim()) return;
     setIsSearching(true);
+    setResults([]);
+    setQueryStatus('Unavailable: query pending.');
     try {
       const res = await fetch(`${backendUrl}/api/proxy/8001/api/v1/vault/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collection_name: collection, query_text: queryText, top_k: 5 })
       });
-      if (res.ok) {
-        const data = await res.json();
-        setResults(data.results);
+      if (!res.ok) throw new Error('Vector query unavailable.');
+      const data = await res.json();
+      if (!Array.isArray(data.results) || !data.results.every((/** @type {unknown} */ row) =>
+        row !== null && typeof row === 'object' && 'id' in row && typeof row.id === 'string'
+        && 'content' in row && typeof row.content === 'string'
+        && 'distance' in row && typeof row.distance === 'number' && Number.isFinite(row.distance))) {
+        throw new Error('Vector query returned malformed records.');
       }
+      setResults(data.results);
+      setQueryStatus(data.results.length ? '' : 'The query returned no records; this does not establish complete vault coverage.');
     } catch (err) {
-      console.warn('Backend vector vault query using offline baseline fallback.', err);
+      console.warn('Backend vector vault query unavailable.');
+      setResults([]);
+      setQueryStatus('Unavailable: the query failed or returned unverified records.');
     } finally {
       setIsSearching(false);
     }
@@ -48,7 +58,8 @@ export default function VectorVaultManager() {
         </h4>
         <select
           value={collection}
-          onChange={(e) => setCollection(e.target.value)}
+          onChange={
+( e) => setCollection(e.target.value)}
           style={{
             backgroundColor: '#161b22',
             border: '1px solid #30363d',
@@ -68,7 +79,8 @@ export default function VectorVaultManager() {
         <input
           type="text"
           value={queryText}
-          onChange={(e) => setQueryText(e.target.value)}
+          onChange={
+( e) => setQueryText(e.target.value)}
           placeholder="Search vector embeddings..."
           style={{
             flex: 1,
@@ -98,6 +110,7 @@ export default function VectorVaultManager() {
         </button>
       </form>
 
+      {queryStatus && <p role="status">{queryStatus}</p>}
       {/* Results List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {results.map((item, idx) => (

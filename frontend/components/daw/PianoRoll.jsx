@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { theme } from '../../styles/theme';
 import { useDawStore } from './dawStore';
-import { AlignLeft, Music2, Trash2, Volume2, Mic, Radio, Zap, Sparkles } from 'lucide-react';
+import { AlignLeft, Radio } from "lucide-react";
 import AIPromptGenerator from './AIPromptGenerator';
 
 const OCTAVES = ['5', '4', '3'];
@@ -29,13 +29,14 @@ const PianoRoll = () => {
   const isMidiRecording = useDawStore(state => state.isMidiRecording);
   const toggleMidiRecording = useDawStore(state => state.toggleMidiRecording);
 
-  const [selectedChord, setSelectedChord] = useState(null);
-  const [selectedScale, setSelectedScale] = useState('All');
+  const [selectedChord, setSelectedChord] = useState(/** @type {typeof CHORD_PRESETS[number] | null} */ (null));
+  const [] = useState('All');
 
   const activeChannel = channels.find(c => c.id === activeChannelId) || channels[0];
   const midiNotes = activeChannel?.midiNotes || [];
 
   // Stamp a Chord at a given root note & step
+  /** @param {string} rootKey @param {number} stepIdx */
   const stampChord = (rootKey, stepIdx) => {
     if (!selectedChord) {
       addOrToggleMidiNote(activeChannel.id, rootKey, stepIdx);
@@ -60,14 +61,14 @@ const PianoRoll = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      borderLeft: `1px solid ${theme.colors.border}`,
+      borderLeft: `1px solid ${'#30363d'}`,
       borderRadius: '8px',
       overflow: 'hidden'
     }}>
       {/* Header Bar */}
       <div style={{
         padding: '8px 12px',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${'#30363d'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

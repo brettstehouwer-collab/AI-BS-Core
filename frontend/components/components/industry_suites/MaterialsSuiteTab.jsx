@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Activity as StatusIcon, Server as ServerIcon, Clock as ClockIcon, Database as DatabaseIcon } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+/** @param {{backendUrl: string}} props */
 export default function MaterialsSuiteTab({ backendUrl }) {
-  const [data, setData] = useState({ status: 'loading', metrics: [] });
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [data, setData] = useState(/** @type {{module?: string, status: string, metrics: {timestamp: string, name: string, value: number, status: string}[]}} */ ({ status: 'loading', metrics: [] }));
+  const [lastUpdated, setLastUpdated] = useState(/** @type {string | null} */ (null));
 
   useEffect(() => {
     const wsUrl = backendUrl.replace('http', 'ws') + '/ws/telemetry/materials';

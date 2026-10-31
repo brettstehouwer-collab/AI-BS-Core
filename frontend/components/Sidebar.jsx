@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { SYSTEM_VERSION } from './version';
 import { useAppStore } from './useAppStore';
 import {
@@ -18,6 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+/** @param {{"hub": {"key": string, "defaultTab": string, "label": string, "icon": string}, "isHubActive": boolean, "isCollapsed": boolean, "onTabChange"?: (tab: string) => void, "activeTab": string, "isEditingLayout": boolean}} props */
 const SortableHubItem = ({ hub, isHubActive, isCollapsed, onTabChange, activeTab, isEditingLayout }) => {
   const {
     attributes,
@@ -28,7 +29,8 @@ const SortableHubItem = ({ hub, isHubActive, isCollapsed, onTabChange, activeTab
     isDragging,
   } = useSortable({ id: hub.key, disabled: !isEditingLayout });
 
-  const style = {
+  /** @type {import('react').CSSProperties} */
+const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 10 : 1,
@@ -83,6 +85,7 @@ const SortableHubItem = ({ hub, isHubActive, isCollapsed, onTabChange, activeTab
   );
 };
 
+/** @param {{"activeTab": string, "onTabChange"?: (tab: string) => void}} props */
 const Sidebar = ({ activeTab, onTabChange }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigationLayout = useAppStore(state => state.navigationLayout);
@@ -100,7 +103,8 @@ const Sidebar = ({ activeTab, onTabChange }) => {
     })
   );
 
-  const handleDragEnd = (event) => {
+  /** @param {import('@dnd-kit/core').DragEndEvent} event */
+const handleDragEnd = ( event) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       const oldIndex = navigationLayout.findIndex((hub) => hub.key === active.id);

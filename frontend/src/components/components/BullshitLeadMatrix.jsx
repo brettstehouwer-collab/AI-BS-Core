@@ -1,11 +1,14 @@
+/** @typedef {{id: string, business_name: string, contact: string, url: string, email: string, status: string, value: string, heuristic_match: string, date_acquired: string}} AdvertisingLead */
+/** @typedef {{id: string, date: string, client: string, description: string, amount: string, type: string, status: string}} Invoice */
 import React, { useState, useEffect, useCallback } from 'react';
 
-const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }) {
-  const [leads, setLeads] = useState([]);
+const BullshitLeadMatrix = React.memo(/** @param {{backendUrl?: string}} props */
+function BullshitLeadMatrix({ backendUrl }) {
+  const [leads, setLeads] = useState(/** @type {AdvertisingLead[]} */ ([]));
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(/** @type {string | null} */ (null));
 
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState(/** @type {Invoice[]} */ ([]));
 
   const fetchLeads = useCallback(async () => {
     try {
@@ -28,7 +31,7 @@ const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }
       if (accountingRes.ok) {
         const accData = await accountingRes.json();
         if (accData.entries) {
-          const mappedInvoices = accData.entries.map(entry => ({
+          const mappedInvoices = (/** @type {{id: string | number, date: string, category: string, description: string, amount: string, entry_type: string}[]} */ (accData.entries)).map(entry => ({
             id: `TRX-${entry.id}`,
             date: entry.date,
             client: entry.category,
@@ -56,7 +59,7 @@ const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }
       if (!res.ok) throw new Error(`Sweep HTTP ${res.status}`);
       await fetchLeads();
     } catch (err) {
-      setError(`Sweep failed: ${err.message}`);
+      setError(`Sweep failed: ${errorMessage(err)}`);
       setLoading(false);
     }
   };
@@ -125,7 +128,7 @@ const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }
             ))}
             {leads.length === 0 && (
               <tr>
-                <td colSpan="8" style={Object.assign({}, styles.td, { textAlign: 'center', color: '#555' })}>
+                <td colSpan={8} style={Object.assign({}, styles.td, { textAlign: 'center', color: '#555' })}>
                   Matrix Empty. Click "Force Sweep Override" to seed leads, or add them in the Advertising CRM tab.
                 </td>
               </tr>
@@ -149,7 +152,7 @@ const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }
               </tr>
             </thead>
             <tbody>
-              {invoices.map((inv, idx) => (
+              {invoices.map((inv) => (
                 <tr key={inv.id} style={styles.tr}>
                   <td style={{...styles.td, color: '#00ffff'}}>{inv.id}</td>
                   <td style={styles.td}>{inv.date}</td>
@@ -175,6 +178,7 @@ const BullshitLeadMatrix = React.memo(function BullshitLeadMatrix({ backendUrl }
   );
 });
 
+/** @param {string} status */
 function statusColor(status) {
   switch (status) {
     case 'Closed (Won)':   return { color: '#10b981', borderColor: '#10b981' };
@@ -185,6 +189,7 @@ function statusColor(status) {
   }
 }
 
+/** @type {Record<string, import("react").CSSProperties>} */
 const styles = {
   container: {
     padding: '20px',
@@ -253,3 +258,9 @@ const styles = {
 };
 
 export default BullshitLeadMatrix;
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

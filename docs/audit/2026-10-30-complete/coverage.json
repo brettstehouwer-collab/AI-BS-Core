@@ -1,7 +1,7 @@
 {
   "status": "IN_PROGRESS",
   "client_date": "2026-10-30",
-  "source_version": "v5.329.76",
+  "source_version": "v5.329.77",
   "repository": {
     "checkpoint_parent_sha": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
     "branch": "main"
@@ -56,28 +56,33 @@
     "cloud_placeholders_hydrated": false
   },
   "verified_tests": {
-    "python_tests": 151,
-    "client_tests": 66,
-    "recovery_tests": 14,
-    "recovery_subtests": 4
+    "reviewed_python_tests": 154,
+    "reviewed_client_tests": 75,
+    "batch_exit": 0,
+    "batch_evidence": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\batch_20261031T053810Z_c63088d4",
+    "additional_agent_fixtures": "Exact commands/counts in restricted owner completion reports; overlapping suites not added into a fabricated total."
   },
   "build": {
-    "exit": 0,
-    "modules": 7344,
-    "duration": "1m4s",
-    "output": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\final_v76_20261031T0300Z\\build",
-    "log": "build.txt",
-    "warnings": "existing minified chunk >500kB"
+    "status": "VERIFIED",
+    "version": "v5.329.77",
+    "modules_transformed": 5678,
+    "files": 143,
+    "output": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\final_v77\\build",
+    "published": false,
+    "warnings": [
+      "large chunks",
+      "mixed static/dynamic Firebase imports"
+    ]
   },
   "typecheck": {
-    "exit": 1,
-    "baseline_diagnostics": 9588,
-    "current_diagnostics": 9584,
-    "normalized_additions": 0,
-    "normalized_removals": 4,
-    "scoped_unresolved": 0,
-    "scoped_diagnostics": 187,
-    "comparison": "typecheck_comparison.json"
+    "status": "VERIFIED",
+    "baseline_diagnostics": 9584,
+    "final_diagnostics": 0,
+    "baseline_files": 326,
+    "compiler": "project-owned TypeScript7.0.2",
+    "strict_and_checkJs_retained": true,
+    "blanket_suppressions_added": false,
+    "react": "React18 matching root runtime types; Vite deduplicates react/react-dom"
   },
   "runtime_registration": {
     "status": "PARTIAL_VERIFIED",
@@ -88,171 +93,53 @@
     "all_expected": true,
     "dispatch_invocations": 0
   },
-  "live_trading": "HELD; port8007 not started",
-  "external_dispatch": "HELD; no dispatch invoked",
+  "live_trading": "DISABLED: immutable execution holds retained; daemon8007 absent",
+  "external_dispatch": "HELD: seven false backend background/outreach flags, payment disabled, DRY_RUN/HOLD_DISPATCH",
   "monetary_ledger_changes": false,
   "next_passes": [
-    "non-destructive isolated recovery of2FTS indexes",
-    "bounded complete runtime route inventory and duplicate first-match audit",
-    "remaining FE-010/FE-012/FE-013 deep links/IPC/navigation",
-    "crypto daemon signing/heartbeat/source paths and service startup persistence",
-    "per-control dataflow/cancellation/provider/device acceptance",
-    "compare-first ranked external-project roadmap"
+    "Diagnose root native Chroma failure on disposable complete clones without retries of the same failed operation.",
+    "Continue bounded route/duplicate-owner and deep-link/IPC audit; server session owner binding.",
+    "Provider credential rotation/readiness and browser acceptance remain separate, with dispatch held."
   ],
   "coverage_limit": "Static sites and metadata are inventories, not proof every action or provider works.",
-  "updated_utc": "2026-10-31T03:54:25Z",
+  "updated_utc": "2026-10-31T05:41:25Z",
   "online_policy": "ALLOWED_BY_USER; unit tests remain isolated",
   "sqlite_integrity": {
-    "candidates": 160,
-    "verified_clone_and_backup": 158,
-    "failed_fts_index": 2,
-    "snapshot_hashes_compared": 226,
-    "snapshot_hashes_unchanged": true,
-    "production_connections": 0
-  },
-  "hosting": {
-    "utc": "2026-10-31T03:53:11Z",
-    "project": "ai-bs-dashboard",
-    "site": "ai-bs-dashboard",
-    "source_version": "v5.329.76",
-    "status": "VERIFIED",
-    "files": [
+    "repaired_fts_stores": [
       {
-        "path": "index.html",
-        "status": 200,
-        "bytes": 2881,
-        "sha256": "963898654211a95d2323d696ab767d4f710d160483b68ee421c49daa66deede4",
-        "matches": true
+        "path": "C:\\AI-BS\\database\\ChromaDB_local",
+        "documents_preserved": 126,
+        "nonfts_tables_unchanged": 15,
+        "vector_files_unchanged": 4,
+        "integrity": "ok",
+        "fts_integrity": "ok",
+        "indexed_like_checks": 12,
+        "original_backup": "C:\\AI-BS\\backups\\chroma_fts_transaction_20261031T043703Z\\database_ChromaDB_local\\chroma.sqlite3.original"
       },
       {
-        "path": "writer.html",
-        "status": 200,
-        "bytes": 1426,
-        "sha256": "c5f5a7fa83359c8a135e0875a47a052d7320f6b2781dcbc5e24bf0dedb324a12",
-        "matches": true
-      },
-      {
-        "path": "version.json",
-        "status": 200,
-        "bytes": 194,
-        "sha256": "f247cfffce5f06d8f03a770e373ede2d8e4451560f6edad73623395681a8b9d9",
-        "matches": true
-      },
-      {
-        "path": "js/main.rglhuTRh.js",
-        "status": 200,
-        "bytes": 328755,
-        "sha256": "9522268b00ab75424691a6df232419c9af125a181528fa74f98664606e689d99",
-        "matches": true
-      },
-      {
-        "path": "js/vendor.i7wRWY8M.js",
-        "status": 200,
-        "bytes": 2316676,
-        "sha256": "fbfa103915e39ad35af9f5f94ba5a5b4f5ef5b9d3bdb9466ba8c5f996d43ec3d",
-        "matches": true
-      },
-      {
-        "path": "js/re2js.BlzLKqpx.js",
-        "status": 200,
-        "bytes": 157360,
-        "sha256": "55ba089dfbb4f0669cf4fc56ecb7a21b2931410aad1a50740b70b40753d98cea",
-        "matches": true
-      },
-      {
-        "path": "js/firebase.Bdot2zPX.js",
-        "status": 200,
-        "bytes": 461595,
-        "sha256": "28a88ca529dba355577bf99972157f16766b3050cbba24b8d147c7a9564ca5fc",
-        "matches": true
-      },
-      {
-        "path": "js/index.ZoTCdI8f.js",
-        "status": 200,
-        "bytes": 30052,
-        "sha256": "662d7639573dd54ab68b50eec8506552c52b01d224bf1c2acb5d24d78e29ebab",
-        "matches": true
-      },
-      {
-        "path": "js/icons.CTKOM88h.js",
-        "status": 200,
-        "bytes": 48310,
-        "sha256": "9f0538e9c82451527e62db973550f89251f00c6aa4c502a7cd6cedf8b4871e8d",
-        "matches": true
-      },
-      {
-        "path": "js/markdown.BwmLNZzu.js",
-        "status": 200,
-        "bytes": 48288,
-        "sha256": "4ac1f3ef10fbc313b7582b987989542be0b17ed82ea68ba12b73962a6bafc9c0",
-        "matches": true
-      },
-      {
-        "path": "css/vendor.DULRuONn.css",
-        "status": 200,
-        "bytes": 3750,
-        "sha256": "4ff88c6f6299d6ac70598650eb8fb0c3c5d097b957d4fafc2c649b2d7119b4af",
-        "matches": true
-      },
-      {
-        "path": "css/index.C1mZEUbl.css",
-        "status": 200,
-        "bytes": 80135,
-        "sha256": "e26aecac8da61d1f4b99b6671741b4804a30385c2cbe2324a0c7861ba9864f2e",
-        "matches": true
-      },
-      {
-        "path": "css/main.za8UzT5A.css",
-        "status": 200,
-        "bytes": 77132,
-        "sha256": "3989290ca5b0e611580b757ae822dfd30c5f4c9258441f18837fc5c0e284fe0b",
-        "matches": true
-      },
-      {
-        "path": "js/MoneyTrackTab.CT-cqG4k.js",
-        "status": 200,
-        "bytes": 5844,
-        "sha256": "c0215cde9442d72044b0ecd97b943a525f6b9e4b442d86a56c52401c1306ce60",
-        "matches": true
-      },
-      {
-        "path": "js/BsMediaCreatorTab.D82mVaaU.js",
-        "status": 200,
-        "bytes": 40657,
-        "sha256": "df7007d33dbf02cb657d645d193b95a60a97a78521161765c85eab300e9635b0",
-        "matches": true
-      },
-      {
-        "path": "js/ClusterEngineDashboard.BcjyEFZO.js",
-        "status": 200,
-        "bytes": 7386,
-        "sha256": "3ad5e9c61b181c67f75d888556149622f0b8aa2eb8ae30558df3a384a226c3bb",
-        "matches": true
-      },
-      {
-        "path": "js/MediaStudioTab.FRiJPAmM.js",
-        "status": 200,
-        "bytes": 47413,
-        "sha256": "ac2e0a7c2fcc76fd8812f6b692ec3e16c8a070e8ab170a8403a787e1d5b7df7b",
-        "matches": true
+        "path": "C:\\AI-BS\\chroma_db",
+        "documents_preserved": 72549,
+        "nonfts_tables_unchanged": 15,
+        "vector_files_unchanged": 163,
+        "integrity": "ok",
+        "fts_integrity": "ok",
+        "indexed_like_checks": 12,
+        "original_backup": "C:\\AI-BS\\backups\\chroma_fts_transaction_20261031T043703Z\\chroma_db\\chroma.sqlite3.original"
       }
     ],
-    "rollback": {
-      "status": 200,
-      "version": "v5.329.74"
-    },
-    "services_deployed": [
-      "hosting"
-    ],
-    "no_other_firebase_services_changed": true,
-    "stage_files": 1140,
-    "whole_stage_remote_byte_equivalence_claimed": false
+    "native_vector_traversal": "OPEN: offline root clone exits1 after32/34collections; two-strike stop"
+  },
+  "hosting": {
+    "published_version": "v5.329.76",
+    "source_candidate": "v5.329.77",
+    "published_this_record": false,
+    "reason": "Prior CLI credential exposure was retired. Fresh Firebase sign-in required for any future CLI deployment; OpenAI API key does not authenticate Firebase."
   },
   "protected_hashes": {
-    "backend/core/crypto_execution_safety.py": true,
-    "backend/core/crypto_execution_controls.py": true,
-    "Crypto-Swarm/drip_ledger.json": true,
-    "backend/crypto_ledger.json": true
+    "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+    "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+    "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+    "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
   },
   "cloud_folder": {
     "id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
@@ -272,5 +159,11 @@
     "unrelated_configuration_preserved": true,
     "propagation": "Provider may take time to apply revocation; no instant global invalidation claim.",
     "utc": "2026-10-31T03:54:24Z"
+  },
+  "loaded_runtime": {
+    "probes": 14,
+    "all_expected": true,
+    "dispatch_invocations": 0,
+    "receipt": "controlled_runtime_acceptance.json"
   }
 }

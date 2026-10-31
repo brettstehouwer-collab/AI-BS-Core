@@ -1,21 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  REC_DEBUT_BRAND, 
-  REC_DEBUT_LEADERSHIP, 
-  REC_DEBUT_YOUTUBE_CHANNELS, 
-  REC_DEBUT_FEATURED_VIDEOS, 
-  REC_DEBUT_VERIFICATION_MATRIX 
-} from './recDebutAssets.js';
+import { useState, useEffect, useRef } from "react";
+import { REC_DEBUT_YOUTUBE_CHANNELS, REC_DEBUT_VERIFICATION_MATRIX } from "./recDebutAssets.js";
 
-export default function DennisBellMobileRemote({ 
-  backendUrl: propBackendUrl, 
-  athletes: propAthletes,
-  excludedCoaches: propCoaches,
-  campaigns: propCampaigns,
-  quotaStatus: propQuota,
-  telemetryStats: propStats,
-  onSwitchToDesktop 
-}) {
+/** @param {{backendUrl?: string, athletes?: import('./RecreationalDebut.jsx').Athlete[], excludedCoaches?: import('./RecreationalDebut.jsx').Athlete[], campaigns?: unknown[], quotaStatus?: {swarm_daily_ceiling?: number, sent_last_24h?: number}, telemetryStats?: Partial<Record<'total' | 'contacted' | 'pending' | 'emails' | 'coaches' | 'campaigns', number>>, onSwitchToDesktop?: () => void}} props */
+export default function DennisBellMobileRemote({ backendUrl: propBackendUrl, athletes: propAthletes, onSwitchToDesktop }) {
   // Edge endpoint default - works seamlessly on Galaxy S25 Ultra via Cloudflare tunnel
   const defaultApiUrl = typeof window !== 'undefined' && (
     window.location.hostname !== 'localhost' || 
@@ -33,46 +20,46 @@ export default function DennisBellMobileRemote({
   // ══════════════════════════════════════════════════════════════════════════
   // TAB 1: REMOTE CONTROLLER STATE
   // ══════════════════════════════════════════════════════════════════════════
-  const [broadcastStatus, setBroadcastStatus] = useState(null);
+  const [broadcastStatus, setBroadcastStatus] = useState(/** @type {{"sent_count": number, "total_count": number, "progress_pct": number} | null} */ (null));
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [lastActionResponse, setLastActionResponse] = useState(null);
+  const [lastActionResponse, setLastActionResponse] = useState(/** @type {{"success": boolean, "message": string} | null} */ (null));
   const [safetyArmed, setSafetyArmed] = useState(false);
 
   // Inbound replies & Live Engagement Feed
-  const [replies, setReplies] = useState([]);
+  const [replies, setReplies] = useState(/** @type {Array<{"athlete_name": string, "sender_phone": string, "received_at": number, "reply_body": string}>} */ ([]));
   const [loadingReplies, setLoadingReplies] = useState(false);
-  const [engagementEvents, setEngagementEvents] = useState([]);
-  const [engagementFunnel, setEngagementFunnel] = useState(null);
+  const [engagementEvents, setEngagementEvents] = useState(/** @type {Array<{event_type: string, id: number, created_at: number, athlete_phone?: string, phone?: string, athlete_email?: string, athlete_name?: string, name?: string, athlete_id?: number, target_url?: string}>} */ ([]));
+  const [engagementFunnel, setEngagementFunnel] = useState(/** @type {{"contacted_count": number} | null} */ (null));
   const [leadFilter, setLeadFilter] = useState('all');
 
   // ── 6 NEW UPGRADE CAPABILITIES ──
   // 1. Lead Alerts Sentinel
-  const [leadAlerts, setLeadAlerts] = useState([]);
-  const [activeLeadBanner, setActiveLeadBanner] = useState(null);
+  const [, setLeadAlerts] = useState([]);
+  const [activeLeadBanner, setActiveLeadBanner] = useState(/** @type {{"athlete_name": string, "target_url": string, "athlete_id": number} | null} */ (null));
 
   // 2. Automated 48-Hour Drip
-  const [dripCohorts, setDripCohorts] = useState(null);
+  const [dripCohorts, setDripCohorts] = useState(/** @type {{"hot_clickers": {"count": number}, "engaged_openers": {"count": number}, "unopened_nudge": {"count": number}} | null} */ (null));
   const [dripLoading, setDripLoading] = useState(false);
-  const [dripResult, setDripResult] = useState(null);
+  const [dripResult, setDripResult] = useState(/** @type {{success: boolean, dispatched?: number, error?: string} | null} */ (null));
   const [selectedCohort, setSelectedCohort] = useState('hot_clickers');
 
   // 4. Two-Way Parent & Athlete Chat Hub
-  const [chatThreads, setChatThreads] = useState([]);
-  const [activeChatAthlete, setActiveChatAthlete] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatThreads, setChatThreads] = useState(/** @type {Array<{id?: number, phone?: string, name: string, city_state: string, sport: string, last_chat_msg: string, last_inbound_reply: string}>} */ ([]));
+  const [activeChatAthlete, setActiveChatAthlete] = useState(/** @type {{id: number, phone: string, name?: string} | null} */ (null));
+  const [chatMessages, setChatMessages] = useState(/** @type {Array<{"sender_type": string, "message_body": string}>} */ ([]));
   const [chatInputText, setChatInputText] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
 
   // 5. Viral Digital Player Scouting Card
-  const [activeScoutCard, setActiveScoutCard] = useState(null);
+  const [activeScoutCard, setActiveScoutCard] = useState(/** @type {{"athlete_name": string, "grad_year": string, "sport": string, "city_state": string, "scout_evaluation": {"scout_notes": string}, "share_caption": string} | null} */ (null));
   const [cardCopied, setCardCopied] = useState(false);
 
   // 6. Hands-Free Voice Coach Assistant
   const [voiceOpen, setVoiceOpen] = useState(false);
   const [voiceListening, setVoiceListening] = useState(false);
-  const [voiceQuery, setVoiceQuery] = useState('');
-  const [voiceAnswer, setVoiceAnswer] = useState(null);
+  const [, setVoiceQuery] = useState('');
+  const [voiceAnswer, setVoiceAnswer] = useState(/** @type {{spoken_response?: string, text_response?: string} | null} */ (null));
   const [voiceThinking, setVoiceThinking] = useState(false);
 
   // 7. Phone Native Cellular Batch Handoff (Direct SIM Dispatch)
@@ -80,12 +67,12 @@ export default function DennisBellMobileRemote({
   const [nativeBatchSize, setNativeBatchSize] = useState(10);
   const [nativeBatchIndex, setNativeBatchIndex] = useState(0);
   const [nativeSoloIndex, setNativeSoloIndex] = useState(0);
-  const [nativeFeedback, setNativeFeedback] = useState(null);
+  const [nativeFeedback, setNativeFeedback] = useState(/** @type {{"text": string, "type": string} | null} */ (null));
 
   // AI Studio Assistant state
-  const [aiPrompt, setAiPrompt] = useState('High-energy SMS invitation for 2028-2029 guards to get evaluated by 850+ college coaches');
+  const [] = useState('High-energy SMS invitation for 2028-2029 guards to get evaluated by 850+ college coaches');
   const [aiGenerating, setAiGenerating] = useState(false);
-  const [aiGeneratedSuccess, setAiGeneratedSuccess] = useState(false);
+  const [, setAiGeneratedSuccess] = useState(false);
 
   // Default Dennis Bell message script
   const [messageText, setMessageText] = useState(
@@ -245,8 +232,13 @@ export default function DennisBellMobileRemote({
     }
   };
 
-  const openAthleteChat = async (ath) => {
-    setActiveChatAthlete(ath);
+  /** @param {{id?: number, phone?: string, name?: string} | null} ath */
+const openAthleteChat = async ( ath) => {
+    if (!ath || typeof ath.id !== 'number' || !ath.phone) {
+      setNativeFeedback({type: 'warning', text: 'Select a real roster contact before opening a thread.'});
+      return;
+    }
+    setActiveChatAthlete({...ath, id: ath.id, phone: ath.phone});
     setChatLoading(true);
     try {
       const res = await fetch(`${backendUrl}/api/v1/recdebut/chat/messages/${ath.id}`);
@@ -261,6 +253,7 @@ export default function DennisBellMobileRemote({
     }
   };
 
+  /** @param {string | null} [presetText] */
   const sendChatMessage = async (presetText = null) => {
     const textToSend = presetText || chatInputText;
     if (!textToSend || !activeChatAthlete) return;
@@ -291,7 +284,9 @@ export default function DennisBellMobileRemote({
     }
   };
 
-  const openScoutCard = async (athleteId) => {
+  /** @param {number | undefined} athleteId */
+const openScoutCard = async ( athleteId) => {
+    if (typeof athleteId !== 'number') { setNativeFeedback({type: 'warning', text: 'A roster contact is required for a scout card.'}); return; }
     try {
       const res = await fetch(`${backendUrl}/api/v1/recdebut/scouting-card/${athleteId}`);
       if (res.ok) {
@@ -304,7 +299,8 @@ export default function DennisBellMobileRemote({
     }
   };
 
-  const handleDispatchDrip = async (cohortKey, dryRun = false) => {
+  /** @param {string} cohortKey */
+const handleDispatchDrip = async ( cohortKey, dryRun = false) => {
     setDripLoading(true);
     setDripResult(null);
     try {
@@ -322,13 +318,14 @@ export default function DennisBellMobileRemote({
       fetchDripCohorts();
       setTimeout(() => setDripResult(null), 5000);
     } catch (e) {
-      setDripResult({ success: false, error: e.message });
+      setDripResult({ success: false, error: (e instanceof Error ? e.message : String(e)) });
     } finally {
       setDripLoading(false);
     }
   };
 
-  const handleVoiceAssistantQuery = async (queryText) => {
+  /** @param {string} queryText */
+const handleVoiceAssistantQuery = async ( queryText) => {
     if (!queryText) return;
     setVoiceThinking(true);
     setVoiceAnswer(null);
@@ -368,7 +365,8 @@ export default function DennisBellMobileRemote({
     recognition.continuous = false;
     recognition.interimResults = false;
     setVoiceListening(true);
-    recognition.onresult = (e) => {
+    recognition.onresult = /** @param {import('/types/aibs').SpeechRecognitionResultEvent} e */
+( e) => {
       const transcript = e.results[0][0].transcript;
       setVoiceQuery(transcript);
       handleVoiceAssistantQuery(transcript);
@@ -395,11 +393,13 @@ export default function DennisBellMobileRemote({
   // ── TOOL 1C: NATIVE CELLULAR BATCH HANDOFF HELPERS ──
   const getNativeCohortAthletes = () => {
     if (nativeBatchCohort === 'clicks') {
-      const clickEvents = (engagementEvents || []).filter(e => e.event_type === 'CLICK');
+      const clickEvents = (engagementEvents || []).filter( 
+e => e.event_type === 'CLICK');
       if (clickEvents.length > 0) return clickEvents;
     }
     if (nativeBatchCohort === 'opens') {
-      const openEvents = (engagementEvents || []).filter(e => e.event_type === 'OPEN');
+      const openEvents = (engagementEvents || []).filter( 
+e => e.event_type === 'OPEN');
       if (openEvents.length > 0) return openEvents;
     }
     return Array.isArray(athletes) ? athletes : [];
@@ -420,7 +420,8 @@ export default function DennisBellMobileRemote({
     }
 
     const cleanNumbers = batch
-      .map(a => (a.athlete_phone || a.phone || '').replace(/[^0-9+]/g, ''))
+      .map( 
+a => (a.athlete_phone || a.phone || '').replace(/[^0-9+]/g, ''))
       .filter(p => p.length >= 10);
 
     if (cleanNumbers.length === 0) {
@@ -489,6 +490,7 @@ export default function DennisBellMobileRemote({
   };
 
   // Trigger AI Studio Generation
+  /** @param {string | null} [templateOverride] */
   const handleGenerateAI = (templateOverride = null) => {
     setAiGenerating(true);
     setAiGeneratedSuccess(false);
@@ -515,7 +517,8 @@ export default function DennisBellMobileRemote({
   };
 
   // Dispatch API Call
-  const handleDispatch = async (target, isDryRun = false) => {
+  /** @param {string} target */
+const handleDispatch = async ( target, isDryRun = false) => {
     setActionLoading(true);
     setLastActionResponse(null);
     try {
@@ -541,7 +544,7 @@ export default function DennisBellMobileRemote({
         message: data.detail || data.message || (res.ok ? "Test dispatched successfully!" : "Failed to dispatch.")
       });
     } catch (err) {
-      setLastActionResponse({ success: false, message: `Network error: ${err.message}` });
+      setLastActionResponse({ success: false, message: `Network error: ${(err instanceof Error ? err.message : String(err))}` });
     } finally {
       setActionLoading(false);
     }
@@ -571,7 +574,7 @@ export default function DennisBellMobileRemote({
       setIsBroadcasting(true);
       setSafetyArmed(false);
     } catch (err) {
-      setLastActionResponse({ success: false, message: `Launch error: ${err.message}` });
+      setLastActionResponse({ success: false, message: `Launch error: ${(err instanceof Error ? err.message : String(err))}` });
     } finally {
       setActionLoading(false);
     }
@@ -604,15 +607,15 @@ export default function DennisBellMobileRemote({
     setAthletes(Array.isArray(propAthletes) ? propAthletes : []);
   }, [propAthletes]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSport, setSelectedSport] = useState('All');
+  const [selectedSport] = useState('All');
   const [selectedClass, setSelectedClass] = useState('All');
   const [uploadStatus, setUploadStatus] = useState('');
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
   // ══════════════════════════════════════════════════════════════════════════
   // TAB 3: COACHES DIRECTORY STATE
   // ══════════════════════════════════════════════════════════════════════════
-  const [coaches, setCoaches] = useState([]);
+  const [coaches, setCoaches] = useState(/** @type {Array<{id?: number, college_name: string, coach_name: string, coach_title: string, conference: string, division: string, coach_phone: string, coach_email: string}>} */ ([]));
   const [coachSearch, setCoachSearch] = useState('');
   const [selectedDivision, setSelectedDivision] = useState('All');
 
@@ -631,8 +634,9 @@ export default function DennisBellMobileRemote({
     return () => { active = false; };
   }, [backendUrl]);
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleFileUpload = async ( e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     setUploadStatus(`Uploading ${file.name}...`);
     const formData = new FormData();
@@ -659,8 +663,8 @@ export default function DennisBellMobileRemote({
   // ══════════════════════════════════════════════════════════════════════════
   // TAB 4: FILM & YOUTUBE THEATER STATE
   // ══════════════════════════════════════════════════════════════════════════
-  const [activeVideoUrl, setActiveVideoUrl] = useState('https://www.youtube.com/embed/dQw4w9WgXcQ');
-  const [videoTitle, setVideoTitle] = useState('Recreational Debut Showcase Highlight Reel');
+  const [activeVideoUrl] = useState('https://www.youtube.com/embed/dQw4w9WgXcQ');
+  const [videoTitle] = useState('Recreational Debut Showcase Highlight Reel');
 
   // ══════════════════════════════════════════════════════════════════════════
   // TAB 5: LETTERS GENERATOR STATE
@@ -669,9 +673,10 @@ export default function DennisBellMobileRemote({
   const [regParent, setRegParent] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regGradYear, setRegGradYear] = useState('2028');
-  const [generatedLetter, setGeneratedLetter] = useState(null);
+  const [generatedLetter, setGeneratedLetter] = useState(/** @type {string | null} */ (null));
 
-  const handleGenerateLetter = (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleGenerateLetter = ( e) => {
     e.preventDefault();
     if (!regAthlete) return;
     const letter = `OFFICIAL RECREATIONAL DEBUT EVALUATION LETTER\n` +
@@ -691,7 +696,8 @@ export default function DennisBellMobileRemote({
   };
 
   // Filters
-  const filteredAthletes = (athletes || []).filter(a => {
+  const filteredAthletes = (athletes || []).filter(  
+a => {
     const q = searchTerm.toLowerCase();
     const matchesSearch = (a.name && a.name.toLowerCase().includes(q)) ||
       (a.school && a.school.toLowerCase().includes(q)) ||
@@ -984,7 +990,8 @@ export default function DennisBellMobileRemote({
                       type="checkbox"
                       id="safetyToggle"
                       checked={safetyArmed}
-                      onChange={(e) => setSafetyArmed(e.target.checked)}
+                      onChange={
+( e) => setSafetyArmed(e.target.checked)}
                       style={{ width: '18px', height: '18px', accentColor: '#F58426', cursor: 'pointer' }}
                     />
                     <label htmlFor="safetyToggle" style={{ fontSize: '12px', color: '#cbd5e1', cursor: 'pointer', fontWeight: 600 }}>
@@ -1177,8 +1184,10 @@ export default function DennisBellMobileRemote({
               {/* Cohort Selector */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '12px' }}>
                 {[
-                  { key: 'clicks', label: '🔥 Hot Clicks', count: (engagementEvents || []).filter(e => e.event_type === 'CLICK').length || 2, color: '#F58426' },
-                  { key: 'opens', label: '👁️ Openers', count: (engagementEvents || []).filter(e => e.event_type === 'OPEN').length || 18, color: '#38bdf8' },
+                  { key: 'clicks', label: '🔥 Hot Clicks', count: (engagementEvents || []).filter( 
+e => e.event_type === 'CLICK').length || 2, color: '#F58426' },
+                  { key: 'opens', label: '👁️ Openers', count: (engagementEvents || []).filter( 
+e => e.event_type === 'OPEN').length || 18, color: '#38bdf8' },
                   { key: 'roster', label: '🏀 Full Roster', count: athletes?.length || 2171, color: '#22c55e' }
                 ].map(c => (
                   <button
@@ -1266,7 +1275,8 @@ export default function DennisBellMobileRemote({
                         overflowY: 'auto',
                         marginBottom: '8px'
                       }}>
-                        {currentBatch.map((a, i) => (
+                        {currentBatch.map(
+( a, i) => (
                           <span
                             key={i}
                             style={{
@@ -1386,7 +1396,8 @@ export default function DennisBellMobileRemote({
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', marginBottom: '14px' }}>
-                {AI_PROMPTS.map((item, idx) => (
+                {AI_PROMPTS.map(
+(item,  idx) => (
                   <button
                     key={idx}
                     onClick={() => handleGenerateAI(item.template)}
@@ -1412,7 +1423,8 @@ export default function DennisBellMobileRemote({
               </label>
               <textarea
                 value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
+                onChange={
+(  e) => setMessageText(e.target.value)}
                 rows={6}
                 style={{
                   width: '100%',
@@ -1449,7 +1461,8 @@ export default function DennisBellMobileRemote({
                 <input
                   type="text"
                   value={customRecipient}
-                  onChange={(e) => setCustomRecipient(e.target.value)}
+                  onChange={
+(  e) => setCustomRecipient(e.target.value)}
                   placeholder="+1-616-291-5227"
                   style={{
                     flex: 1,
@@ -1520,13 +1533,15 @@ export default function DennisBellMobileRemote({
                 <div style={{ background: 'rgba(245, 132, 38, 0.15)', border: '1px solid #F58426', borderRadius: '10px', padding: '8px', textAlign: 'center' }}>
                   <div style={{ fontSize: '9px', fontWeight: 800, color: '#F58426' }}>🔥 CLICKS</div>
                   <div style={{ fontSize: '16px', fontWeight: 900, color: '#ffffff' }}>
-                    {engagementEvents.filter(e => e.event_type === 'CLICK').length || 4}
+                    {engagementEvents.filter( 
+e => e.event_type === 'CLICK').length || 4}
                   </div>
                 </div>
                 <div style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid #38bdf8', borderRadius: '10px', padding: '8px', textAlign: 'center' }}>
                   <div style={{ fontSize: '9px', fontWeight: 800, color: '#38bdf8' }}>👁️ OPENS</div>
                   <div style={{ fontSize: '16px', fontWeight: 900, color: '#ffffff' }}>
-                    {engagementEvents.filter(e => e.event_type === 'OPEN').length || 21}
+                    {engagementEvents.filter( 
+e => e.event_type === 'OPEN').length || 21}
                   </div>
                 </div>
                 <div style={{ background: 'rgba(34, 197, 94, 0.15)', border: '1px solid #22c55e', borderRadius: '10px', padding: '8px', textAlign: 'center' }}>
@@ -1541,8 +1556,10 @@ export default function DennisBellMobileRemote({
               <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', overflowX: 'auto', paddingBottom: '4px' }}>
                 {[
                   { id: 'all', label: `All Activity (${engagementEvents.length})` },
-                  { id: 'clicks', label: `🔥 Clicks (${engagementEvents.filter(e => e.event_type === 'CLICK').length})` },
-                  { id: 'opens', label: `👁️ Opens (${engagementEvents.filter(e => e.event_type === 'OPEN').length})` },
+                  { id: 'clicks', label: `🔥 Clicks (${engagementEvents.filter( 
+e => e.event_type === 'CLICK').length})` },
+                  { id: 'opens', label: `👁️ Opens (${engagementEvents.filter( 
+e => e.event_type === 'OPEN').length})` },
                   { id: 'replies', label: `💬 Replies (${replies.length})` }
                 ].map(tab => (
                   <button
@@ -1590,7 +1607,8 @@ export default function DennisBellMobileRemote({
                       if (leadFilter === 'opens') return ev.event_type === 'OPEN';
                       return true;
                     })
-                    .map((ev, idx) => {
+                    .map(
+(ev,  idx) => {
                       const isClick = ev.event_type === 'CLICK';
                       const formattedTime = ev.created_at ? new Date(ev.created_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                       return (
@@ -1755,7 +1773,8 @@ export default function DennisBellMobileRemote({
                 type="text"
                 placeholder="Search athlete, high school, city..."
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={  
+e => setSearchTerm(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '12px',
@@ -1771,7 +1790,8 @@ export default function DennisBellMobileRemote({
               <div style={{ display: 'flex', gap: '8px' }}>
                 <select
                   value={selectedClass}
-                  onChange={e => setSelectedClass(e.target.value)}
+                  onChange={  
+e => setSelectedClass(e.target.value)}
                   style={{
                     flex: 1,
                     padding: '8px',
@@ -1822,7 +1842,8 @@ export default function DennisBellMobileRemote({
 
             {/* Roster Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {filteredAthletes.map((a, idx) => (
+              {filteredAthletes.map(
+(  a,  idx) => (
                 <div key={idx} style={{
                   backgroundColor: '#0A0A0A',
                   border: '1px solid #1E293B',
@@ -1933,7 +1954,8 @@ export default function DennisBellMobileRemote({
                 type="text"
                 placeholder="Search college, coach, conference..."
                 value={coachSearch}
-                onChange={e => setCoachSearch(e.target.value)}
+                onChange={  
+e => setCoachSearch(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '12px',
@@ -1970,7 +1992,8 @@ export default function DennisBellMobileRemote({
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {filteredCoaches.map((c, idx) => (
+              {filteredCoaches.map(
+(c,  idx) => (
                 <div key={idx} style={{
                   backgroundColor: '#0A0A0A',
                   border: '1px solid #1E293B',
@@ -2189,7 +2212,8 @@ export default function DennisBellMobileRemote({
                   type="text"
                   placeholder="Student-Athlete Full Name *"
                   value={regAthlete}
-                  onChange={e => setRegAthlete(e.target.value)}
+                  onChange={  
+e => setRegAthlete(e.target.value)}
                   required
                   style={{
                     padding: '12px',
@@ -2204,7 +2228,8 @@ export default function DennisBellMobileRemote({
                   type="text"
                   placeholder="Parent / Guardian Name"
                   value={regParent}
-                  onChange={e => setRegParent(e.target.value)}
+                  onChange={  
+e => setRegParent(e.target.value)}
                   style={{
                     padding: '12px',
                     backgroundColor: '#111827',
@@ -2219,7 +2244,8 @@ export default function DennisBellMobileRemote({
                     type="tel"
                     placeholder="Phone Number"
                     value={regPhone}
-                    onChange={e => setRegPhone(e.target.value)}
+                    onChange={  
+e => setRegPhone(e.target.value)}
                     style={{
                       flex: 1,
                       padding: '12px',
@@ -2232,7 +2258,8 @@ export default function DennisBellMobileRemote({
                   />
                   <select
                     value={regGradYear}
-                    onChange={e => setRegGradYear(e.target.value)}
+                    onChange={  
+e => setRegGradYear(e.target.value)}
                     style={{
                       width: '110px',
                       padding: '12px',
@@ -2350,7 +2377,8 @@ export default function DennisBellMobileRemote({
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
-                  {chatThreads.map((t, idx) => (
+                  {chatThreads.map(
+(t,  idx) => (
                     <div
                       key={idx}
                       onClick={() => openAthleteChat(t)}
@@ -2776,7 +2804,8 @@ export default function DennisBellMobileRemote({
                     Start the conversation or tap a quick-reply chip below.
                   </div>
                 ) : (
-                  chatMessages.map((m, idx) => {
+                  chatMessages.map(
+(m,  idx) => {
                     const isDennis = m.sender_type === 'dennis';
                     return (
                       <div
@@ -2809,7 +2838,8 @@ export default function DennisBellMobileRemote({
                   { label: "🏆 Registration Link", text: "Here is your direct registration link to secure your showcase evaluation spot: https://recdebut.com/all-registration/" },
                   { label: "📋 GPA & Height?", text: "Coach Dennis here. What is your current unweighted GPA, height, and AAU team?" },
                   { label: "🤝 Sending to Coaches", text: "Forwarding your athletic profile directly to our network of 850+ college coaches now!" }
-                ].map((chip, idx) => (
+                ].map(
+(chip,  idx) => (
                   <button
                     key={idx}
                     onClick={() => sendChatMessage(chip.text)}
@@ -2837,8 +2867,10 @@ export default function DennisBellMobileRemote({
                   type="text"
                   placeholder="Type direct SMS reply to athlete..."
                   value={chatInputText}
-                  onChange={e => setChatInputText(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') sendChatMessage(); }}
+                  onChange={ 
+e => setChatInputText(e.target.value)}
+                  onKeyDown={ 
+e => { if (e.key === 'Enter') sendChatMessage(); }}
                   style={{
                     flex: 1,
                     backgroundColor: '#111827',

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import './ProductionBreakdownModal.css';
 import './StagePlayBreakdownModal.css';
 
+/** @param {{"scriptText": string, "onClose"?: () => void}} props */
 const StagePlayBreakdownModal = ({ scriptText, onClose }) => {
   const [activeTab, setActiveTab] = useState('capitalization');
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(/** @type {{"csv_data": string, "detected_cast_size": number, "detected_scene_count": number, "capitalization": {"creative_fees": number, "rehearsal_labor": number, "physical_production": number, "load_in_labor": number, "contingency": number, "total": number}, "weekly_operating": {"cast_and_crew": number, "venue_rent": number, "marketing": number, "royalties": number, "total": number}, "run_metrics": {"run_weeks": string, "weekly_net_profit": number, "weeks_to_recoup": string}} | null} */ (null));
 
   const [params, setParams] = useState({
     running_time_minutes: 120,

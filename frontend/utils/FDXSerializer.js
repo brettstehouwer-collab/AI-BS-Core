@@ -5,6 +5,7 @@
  * and exact Paragraph types & alignments matching Final Draft 12/13, Fade In, and Movie Magic.
  */
 
+/** @param {string} unsafe */
 function escapeXml(unsafe) {
   if (!unsafe) return "";
   return unsafe
@@ -15,6 +16,7 @@ function escapeXml(unsafe) {
     .replace(/'/g, "&apos;");
 }
 
+/** @param {{id?: string; type: string; text: string; dual?: boolean}[]} [ast] @param {{title?: string; author?: string; description?: string}} [metadata] */
 export function serializeFDX(ast = [], metadata = {}) {
   const title = escapeXml(metadata.title || "UNTITLED SCREENPLAY");
   const author = escapeXml(metadata.author || "AI-BS Suite");
@@ -76,6 +78,12 @@ export function serializeFDX(ast = [], metadata = {}) {
   <PageLayout BackgroundColor="#FFFFFFFFFFFF" BottomMargin="720" BreakDialogueAndActionAtSentences="Yes" DocumentType="Script" HeaderMargin="360" FooterMargin="360" LeftMargin="1080" RightMargin="720" TopMargin="720">
     <PageSize Height="11.00" Width="8.50"/>
   </PageLayout>
+  <TitlePage>
+    <Content>
+      <Paragraph Type="Title"><Text>${title}</Text></Paragraph>
+      <Paragraph Type="Author"><Text>${author}</Text></Paragraph>
+    </Content>
+  </TitlePage>
   <Content>
 `;
 

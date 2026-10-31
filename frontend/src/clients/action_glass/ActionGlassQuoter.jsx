@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
-export default function ActionGlassQuoter({ backendUrl }) {
+/** @param {{"backendUrl": string}} props */
+export default function ActionGlassQuoter({  }) {
   const [vehicle, setVehicle] = useState({ year: '2022', make: 'Ford', model: 'F-150' });
   const [hasADAS, setHasADAS] = useState(true);
   const [wipers, setWipers] = useState(false);

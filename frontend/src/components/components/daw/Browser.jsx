@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { theme } from '../../styles/theme';
-import { 
-  Folder, FileAudio, FileVideo, Image as ImageIcon, Database, Sparkles, 
-  Volume2, Music, Disc, ArrowLeft, Loader, Search, X, Grid, List, 
-  Maximize2, Minimize2, Plus, ChevronRight, HardDrive, RefreshCw
-} from 'lucide-react';
+import { Folder, FileAudio, FileVideo, Image as ImageIcon, Database, Sparkles, Volume2, Music, Disc, ArrowLeft, Loader, Search, X, Grid, List, Maximize2, Minimize2, Plus, ChevronRight, HardDrive } from "lucide-react";
 import { useDawStore } from './dawStore';
 
+/** @param {{browserWidth?: number; setBrowserWidth: import("react").Dispatch<import("react").SetStateAction<number>>; isExpanded?: boolean; onToggleExpand: () => void}} props */
 const Browser = ({ 
   browserWidth = 320, 
   setBrowserWidth, 
@@ -14,19 +11,19 @@ const Browser = ({
   onToggleExpand 
 }) => {
   const [currentPath, setCurrentPath] = useState('/4 media');
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(/** @type {import("/types/wave").BrowserItem[]} */ ([]));
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(/** @type {string | null} */ (null));
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'grid'
-  const [activeAuditionPath, setActiveAuditionPath] = useState(null);
+  const [activeAuditionPath, setActiveAuditionPath] = useState(/** @type {string | null} */ (null));
   const [backendBase, setBackendBase] = useState('http://127.0.0.1:8080');
 
-  const previewNote = useDawStore(state => state.previewNote);
+  void (useDawStore(state => state.previewNote));
   const generateAIBeat = useDawStore(state => state.generateAIBeat);
   const addAudioChannel = useDawStore(state => state.addAudioChannel);
-  const fileInputRef = useRef(null);
-  const activeAudioRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const activeAudioRef = useRef(/** @type {HTMLAudioElement | null} */ (null));
 
   // Fetch Drive Files with Multi-Endpoint Fallback
   useEffect(() => {
@@ -73,15 +70,17 @@ const Browser = ({
     fetchDrive();
   }, [currentPath]);
 
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       addAudioChannel(url, file.name);
     }
-    if (fileInputRef.current) fileInputRef.current.value = null;
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  /** @param {import("react").DragEvent} e */
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
@@ -91,8 +90,10 @@ const Browser = ({
     }
   };
 
+  /** @param {import("react").DragEvent} e */
   const handleDragOver = (e) => e.preventDefault();
 
+  /** @param {import("/types/wave").BrowserItem} item */
   const handleItemClick = (item) => {
     if (item.is_dir) {
       setCurrentPath(item.path);
@@ -102,6 +103,7 @@ const Browser = ({
     }
   };
 
+  /** @param {import("/types/wave").BrowserItem} item @param {boolean} [autoAdd] */
   const auditionSound = (item, autoAdd = false) => {
     const previewUrl = item.path.startsWith('http') 
       ? item.path 
@@ -128,6 +130,7 @@ const Browser = ({
     }
   };
 
+  /** @param {import("react").DragEvent} e @param {import("/types/wave").BrowserItem} item */
   const handleDragStart = (e, item) => {
     if (item.is_dir) return;
     e.dataTransfer.setData('application/json', JSON.stringify(item));
@@ -208,10 +211,11 @@ const Browser = ({
     return item.name.toLowerCase().includes(q) || (item.category && item.category.toLowerCase().includes(q));
   });
 
+  /** @param {import("react").WheelEvent} e */
   const handleBrowserWheel = (e) => {
     const target = e.target;
     const soundList = document.querySelector('.daw-browser-scroll');
-    if (soundList && soundList.scrollHeight > soundList.clientHeight && target && soundList.contains(target)) {
+    if (soundList && soundList.scrollHeight > soundList.clientHeight && target instanceof Node && soundList.contains(target)) {
       return;
     }
     const canvas = document.querySelector('.daw-center-canvas');
@@ -225,7 +229,7 @@ const Browser = ({
       onWheel={handleBrowserWheel}
       style={{
         background: 'rgba(13, 17, 23, 0.98)',
-        borderRight: `1px solid ${theme.colors.border}`,
+        borderRight: `1px solid ${'#30363d'}`,
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -635,7 +639,7 @@ const Browser = ({
                   });
                   if (res.ok) {
                     const data = await res.json();
-                    data.stems.forEach(stem => {
+                    data.stems.forEach(/** @param {{url: string; name: string}} stem */ stem => {
                       addAudioChannel(stem.url, `[STEM] ${stem.name}`);
                     });
                     alert(`[SUCCESS] 4 Stems decomposed and loaded into DAW Playlist!`);

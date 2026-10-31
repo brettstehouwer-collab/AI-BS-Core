@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { SYSTEM_VERSION } from './version';
-import ChatToolControlBar from './ChatToolControlBar';
+import "./ChatToolControlBar";
 import ChatTab from './ChatTab';
 import VisualScriptingTab from './VisualScriptingTab';
 import BullshitTelemetrySuite from '../src/BullshitTelemetrySuite';
-import BullshitKnowledgeSuite from '../src/BullshitKnowledgeSuite';
+import OmniDriveExplorer from './OmniDriveExplorer';
 import { useAppStore } from './useAppStore';
 
-function resolveHostCPath(rawPath) {
+/** This standalone IDE has no owned automation callback to dispatch. */
+function unavailableNoCoAction() {
+  window.alert('NoCo automation is unavailable in this standalone IDE until its owned handler is connected.');
+}
+
+/** @param {string} rawPath */
+function resolveHostCPath( rawPath) {
   if (!rawPath) return 'C:\\AI-BS\\scratch\\test_chat.txt';
   let p = String(rawPath).trim().replace(/^file:\/\/\/?/i, '');
   if (/^[a-zA-Z]:/.test(p)) {
@@ -20,8 +26,10 @@ function resolveHostCPath(rawPath) {
   return 'C:\\AI-BS\\' + p;
 }
 
-export default function SplitPaneIDEWorkspace() {
-  const BACKEND_URL = useAppStore(state => state.BACKEND_URL) || 'http://127.0.0.1:8080';
+/** @param {{"wirelessCastOpenRequest"?: number}} props */
+export default function SplitPaneIDEWorkspace({ wirelessCastOpenRequest = 0 }) {
+  const appStore = useAppStore();
+  const BACKEND_URL = appStore.BACKEND_URL || 'http://127.0.0.1:8080';
   const [activeRightTab, setActiveRightTab] = useState('ide_editor');
   const [showRightPane, setShowRightPane] = useState(false);
   const [ideFile, setIdeFile] = useState({
@@ -42,7 +50,8 @@ export default function SplitPaneIDEWorkspace() {
     'X-Client-ID': 'stehouwer_publishing'
   };
 
-  const loadFileIntoIde = async (targetPath, preloadedContent = null) => {
+  /** @param {string} targetPath @param {string | null} [preloadedContent] */
+const loadFileIntoIde = async ( targetPath, preloadedContent = null) => {
     const cleanTarget = String(targetPath || '').trim().replace(/^file:\/\/\/?/i, '');
     const fullCPath = resolveHostCPath(cleanTarget);
     setShowRightPane(true);
@@ -98,14 +107,15 @@ export default function SplitPaneIDEWorkspace() {
         setEditorStatus(data2.status === 'success' ? `✅ Opened ${fullCPath}` : `⚠️ File ready for editing: ${fullCPath}`);
       }
     } catch (err) {
-      setEditorStatus(`❌ Error loading file: ${err.message}`);
+      setEditorStatus(`❌ Error loading file: ${(err instanceof Error ? err.message : String(err))}`);
     }
     setTimeout(() => setEditorStatus(''), 4500);
   };
 
   useEffect(() => {
-    const handleOpenIdeEvent = (e) => {
-      if (e.detail && e.detail.path) {
+    /** @param {Event} e */
+const handleOpenIdeEvent = ( e) => {
+      if (e instanceof CustomEvent && e.detail && typeof e.detail.path === 'string') {
         loadFileIntoIde(e.detail.path, e.detail.content ?? null);
       }
     };
@@ -135,14 +145,15 @@ export default function SplitPaneIDEWorkspace() {
         setEditorStatus(`⚠️ Save error: ${data.message || 'Failed'}`);
       }
     } catch (err) {
-      setEditorStatus(`❌ Error saving: ${err.message}`);
+      setEditorStatus(`❌ Error saving: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsSaving(false);
       setTimeout(() => setEditorStatus(''), 4500);
     }
   };
 
-  const handleShowInExplorer = async (pathToReveal) => {
+  /** @param {string} pathToReveal */
+const handleShowInExplorer = async ( pathToReveal) => {
     const fullCPath = resolveHostCPath(pathToReveal || ideFile.fullPath || ideFile.path);
     setEditorStatus(`📂 Opening Windows File Explorer: ${fullCPath}`);
     try {
@@ -155,7 +166,7 @@ export default function SplitPaneIDEWorkspace() {
         })
       });
     } catch (err) {
-      setEditorStatus(`❌ Explorer error: ${err.message}`);
+      setEditorStatus(`❌ Explorer error: ${(err instanceof Error ? err.message : String(err))}`);
     }
     setTimeout(() => setEditorStatus(''), 4000);
   };
@@ -185,7 +196,7 @@ export default function SplitPaneIDEWorkspace() {
         setEditorStatus(`⚠️ Rename failed: ${data.message || 'Error'}`);
       }
     } catch (err) {
-      setEditorStatus(`❌ Rename error: ${err.message}`);
+      setEditorStatus(`❌ Rename error: ${(err instanceof Error ? err.message : String(err))}`);
     }
     setTimeout(() => setEditorStatus(''), 4500);
   };
@@ -304,7 +315,7 @@ export default function SplitPaneIDEWorkspace() {
 
         <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', backgroundColor: '#0d1117', borderRadius: '6px', border: '1px solid #30363d' }}>
           {/* Primary Chat Interface Injected into Left Pane */}
-          <ChatTab isNested={true} />
+          <ChatTab isNested={true} wirelessCastOpenRequest={wirelessCastOpenRequest} />
         </div>
       </div>
 
@@ -421,7 +432,8 @@ export default function SplitPaneIDEWorkspace() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '12px', fontWeight: 700, color: '#38bdf8' }}>📄 HOST FILE (C: DRIVE):</span>
                     <code
-                      onContextMenu={(e) => {
+                      onContextMenu={
+( e) => {
                         e.preventDefault();
                         handleShowInExplorer(ideFile.fullPath);
                       }}
@@ -533,8 +545,10 @@ export default function SplitPaneIDEWorkspace() {
                     <input
                       type="text"
                       value={renameValue}
-                      onChange={e => setRenameValue(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') handleRenameIdeFile(); }}
+                      onChange={ 
+e => setRenameValue(e.target.value)}
+                      onKeyDown={ 
+e => { if (e.key === 'Enter') handleRenameIdeFile(); }}
                       placeholder="e.g. bretttest.txt"
                       style={{
                         flex: 1,
@@ -608,8 +622,10 @@ export default function SplitPaneIDEWorkspace() {
                   </div>
                   <textarea
                     value={ideFile.content}
-                    onChange={e => setIdeFile(prev => ({ ...prev, content: e.target.value }))}
-                    onKeyDown={e => {
+                    onChange={ 
+e => setIdeFile(prev => ({ ...prev, content: e.target.value }))}
+                    onKeyDown={ 
+e => {
                       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                         e.preventDefault();
                         handleSaveIdeFile();
@@ -637,12 +653,12 @@ export default function SplitPaneIDEWorkspace() {
             )}
             {activeRightTab === 'shm_telemetry' && (
               <div style={{ height: '100%', overflow: 'auto' }}>
-                <BullshitTelemetrySuite activeTab="noco_telemetry" />
+                <BullshitTelemetrySuite {...appStore} handleTriggerNocoAlert={unavailableNoCoAction} handleGenerateNocoCode={unavailableNoCoAction} activeTab="noco_telemetry" />
               </div>
             )}
             {activeRightTab === 'omnidrive' && (
               <div style={{ height: '100%', overflow: 'auto' }}>
-                <BullshitKnowledgeSuite activeTab="omnidrive" />
+                <OmniDriveExplorer BACKEND_URL={BACKEND_URL} />
               </div>
             )}
             {activeRightTab === 'visual_scripting' && (

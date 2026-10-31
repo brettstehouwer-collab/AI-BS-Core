@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
+/** @param {{ast?:{type:string,text:string}[],onClose:()=>void}} props */
 const AnalyticsOverlay = ({ ast, onClose }) => {
   // Compute analytics from AST
   const analytics = useMemo(() => {
+    /** @type {Record<string,number>} */
     let dialogueCount = {};
     let sceneCount = 0;
     let actionBlocks = 0;
 
-    (ast || []).forEach(block => {
+    (ast || []).forEach(/** @param {{"type": string, "text": string}} block */ block => {
       if (block.type === 'Character') {
         const name = block.text.trim();
         dialogueCount[name] = (dialogueCount[name] || 0) + 1;

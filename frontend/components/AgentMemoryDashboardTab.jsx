@@ -1,130 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import MemoryBankSupervisor from './MemoryBankSupervisor.jsx';
 
 // ─── colour palette for file-type bars ───────────────────────────────────────
-const TYPE_COLORS = {
+({
   py:   '#4ade80',
   md:   '#60a5fa',
   pdf:  '#f97316',
   txt:  '#facc15',
   json: '#c084fc',
   other:'#94a3b8',
-};
-
-function IngestionMonitor({ backendUrl }) {
-  const [stats, setStats]           = useState(null);
-  const [error, setError]           = useState(null);
-  const intervalRef                 = useRef(null);
-
-  const fetchStats = async () => {
-    try {
-      const res = await fetch(`${backendUrl}/api/ingestion/stats`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setStats(await res.json());
-      setError(null);
-    } catch (e) {
-      setError(e.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchStats();
-    intervalRef.current = setInterval(fetchStats, 3000);   // poll every 3 s
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
-  const total = stats?.files_processed?.total ?? 0;
-  const fp    = stats?.files_processed ?? {};
-
-  // Build bar segments
-  const types = ['py','md','pdf','txt','json','other'];
-  const segments = types.map(t => ({ key: t, count: fp[t] ?? 0 })).filter(s => s.count > 0);
-
-  return (
-    <div style={{
-      background: 'linear-gradient(135deg, rgba(74,222,128,0.06) 0%, rgba(96,165,250,0.06) 100%)',
-      border: '1px solid rgba(74,222,128,0.25)',
-      borderRadius: '12px',
-      padding: '20px',
-      marginBottom: '20px',
-    }}>
-      {/* Header row */}
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'16px' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
-          <span style={{ fontSize:'1.3rem' }}>💾</span>
-          <h3 style={{ margin:0, color:'#4ade80', fontSize:'1rem', fontWeight:700 }}>
-            SSD Knowledge Ingestion
-          </h3>
-          {/* live pulse dot */}
-          <span style={{
-            width:8, height:8, borderRadius:'50%',
-            background: stats?.status === 'running' ? '#4ade80' : '#6b7280',
-            display:'inline-block',
-            boxShadow: stats?.status === 'running' ? '0 0 6px #4ade80' : 'none',
-            animation: stats?.status === 'running' ? 'pulse 1.5s infinite' : 'none',
-          }}/>
-          <span style={{ fontSize:'0.75rem', color: stats?.status === 'running' ? '#4ade80' : '#6b7280' }}>
-            {stats?.status === 'running' ? 'LIVE' : 'IDLE'}
-          </span>
-        </div>
-        <div style={{ fontSize:'1.6rem', fontWeight:800, color:'#fff' }}>
-          {total.toLocaleString()}
-          <span style={{ fontSize:'0.8rem', color:'#aaa', fontWeight:400, marginLeft:4 }}>files</span>
-        </div>
-      </div>
-
-      {error && <p style={{ color:'#f87171', fontSize:'0.8rem', margin:'0 0 8px' }}>⚠ {error}</p>}
-
-      {/* Stacked progress bar */}
-      {total > 0 && (
-        <div style={{ height:12, borderRadius:6, overflow:'hidden', display:'flex', marginBottom:12, background:'rgba(0,0,0,0.3)' }}>
-          {segments.map(({ key, count }) => (
-            <div key={key} style={{
-              width: `${(count / total) * 100}%`,
-              background: TYPE_COLORS[key],
-              transition: 'width 0.6s ease',
-            }}/>
-          ))}
-        </div>
-      )}
-
-      {/* Legend */}
-      <div style={{ display:'flex', flexWrap:'wrap', gap:'10px', marginBottom:14 }}>
-        {types.map(t => (fp[t] ?? 0) > 0 && (
-          <div key={t} style={{ display:'flex', alignItems:'center', gap:5, fontSize:'0.78rem', color:'#ccc' }}>
-            <span style={{ width:10, height:10, borderRadius:2, background:TYPE_COLORS[t], display:'inline-block' }}/>
-            <span style={{ color: TYPE_COLORS[t], fontWeight:600 }}>.{t}</span>
-            <span>{(fp[t] ?? 0).toLocaleString()}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Current file ticker */}
-      {stats?.current_file && (
-        <div style={{
-          background:'rgba(0,0,0,0.4)', borderRadius:6, padding:'6px 10px',
-          fontFamily:'monospace', fontSize:'0.72rem', color:'#60a5fa',
-          whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
-        }}>
-          🔄 {stats.current_file}
-        </div>
-      )}
-
-      <style>{`
-        @keyframes pulse {
-          0%,100% { opacity:1; }
-          50%      { opacity:0.3; }
-        }
-      `}</style>
-    </div>
-  );
-}
+});
 
 
+
+
+/** @param {{backendUrl?:string,currentUser?:import("firebase/auth").User|null}} props */
 export default function AgentMemoryDashboardTab(props) {
-  const { backendUrl, currentUser } = props;
+  const { backendUrl } = props;
   
-  const [memoryItems, setMemoryItems] = useState([]);
+  const [memoryItems, setMemoryItems] = useState(/** @type {{id:string,content:string,metadata:unknown}[]} */ ([]));
   const [sandboxState, setSandboxState] = useState("{}");
   const [newMemoryInput, setNewMemoryInput] = useState("");
   const [newMemoryMeta, setNewMemoryMeta] = useState("");
@@ -139,7 +33,7 @@ export default function AgentMemoryDashboardTab(props) {
       const memRes = await fetch(`${backendUrl}/api/memory`);
       if (memRes.ok) {
         const data = await memRes.json();
-        const formatted = (data.ids || []).map((id, i) => ({
+        const formatted = (data.ids || []).map(/** @param {string} id @param {number} i */ (id, i) => ({
           id,
           content: data.documents[i],
           metadata: data.metadatas[i] || {}
@@ -195,7 +89,7 @@ export default function AgentMemoryDashboardTab(props) {
     }
   };
   
-  const handleDeleteMemory = async (id) => {
+  const handleDeleteMemory = async (/** @type {string} */ id) => {
     try {
       const res = await fetch(`${backendUrl}/api/memory/${id}`, {
         method: 'DELETE'
@@ -343,3 +237,5 @@ export default function AgentMemoryDashboardTab(props) {
     </div>
   );
 }
+
+

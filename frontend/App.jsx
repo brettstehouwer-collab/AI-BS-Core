@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import Sidebar from './components/Sidebar.jsx';
 import TopNavbar from './components/TopNavbar.jsx';
@@ -10,7 +10,7 @@ import { auth, db } from './firebase.js';
 import { SYSTEM_VERSION } from './version.js';
 import { useBackendHealth } from './components/useBackendHealth.js';
 import { useAppStore } from './components/useAppStore.js';
-import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS, USER_TIERS } from './components/accessControl.js';
+import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS } from './components/accessControl.js';
 import FeatureGateLockedCard from './components/FeatureGateLockedCard.jsx';
 import MomAccessibilityHUD from './components/MomAccessibilityHUD.jsx';
 import './components/MomMode.css';
@@ -19,8 +19,8 @@ import { applyLayoutConfigToDom, DEFAULT_LAYOUT_CONFIG } from './components/Glob
 import MobileStehouwerChat from './components/MobileStehouwerChat.jsx';
 import MobileBottomNav from './components/MobileBottomNav.jsx';
 import MobileNavDrawer from './components/MobileNavDrawer.jsx';
-import { isNativeMobile } from './config/api.js';
 import { useUserSessionTelemetry } from './src/hooks/useUserSessionTelemetry.js';
+import { resolveInitialWorkspaceTab, rememberedWorkspaceTab } from './components/portalRouting.js';
 
 // Loading placeholder
 const TabLoader = () => (
@@ -33,9 +33,13 @@ const TabLoader = () => (
 );
 
 // Safe lazy import wrapper with auto-reload recovery for new production deployments
+/**
+ * @template P
+ * @param {() => Promise<{default: import('react').ComponentType<P>}>} importFn
+ */
 function safeLazy(importFn) {
   return lazy(() => 
-    importFn().catch((err) => {
+    importFn().catch(/** @param {unknown} err */ (err) => {
       console.warn("Failed to load component chunk, auto-reloading page for new deployment...", err);
       const lastReload = sessionStorage.getItem('chunk_reload_timestamp');
       const now = Date.now();
@@ -57,7 +61,6 @@ const ClientServicePortalModal = safeLazy(() => import('./components/ClientServi
 
 // Lazy load components
 const BullshitLeadMatrix = safeLazy(() => import('./components/BullshitLeadMatrix.jsx'));
-const VisualScriptingTab = safeLazy(() => import('./components/VisualScriptingTab.jsx'));
 const VisualWorkflowDAGTab = safeLazy(() => import('./src/components/VisualWorkflowDAGTab.jsx'));
 const TerminalPanelWrapper = safeLazy(() => import('./components/TerminalPanelWrapper.jsx'));
 const AutomationConsole = safeLazy(() => import('./components/AutomationConsole.jsx'));
@@ -65,16 +68,13 @@ const PhoneRepairGuideTab = safeLazy(() => import('./src/components/PhoneRepairG
 const BibleStudyTab = safeLazy(() => import('./src/components/BibleStudyTab.jsx'));
 const DashboardView = safeLazy(() => import('./components/CommandCenterTab'));
 const IdeView = safeLazy(() => import('./components/SplitPaneIDEWorkspace.jsx'));
-const ChatTab = safeLazy(() => import('./components/ChatTab'));
 const CentralGamingHubTab = safeLazy(() => import('./components/CentralGamingHubTab.jsx'));
 
 const AdvertisingTab = safeLazy(() => import('./components/AdvertisingTab'));
 const SyndicationTab = safeLazy(() => import('./components/SyndicationTab.jsx'));
-const StudioWorkspaceTab = safeLazy(() => import('./components/StudioWorkspaceTab.jsx'));
 const VirtualMachineTab = safeLazy(() => import('./src/components/VirtualMachineTab.jsx'));
 const ClientsModuleTab = safeLazy(() => import('./src/clients/ClientsModule.jsx'));
 const MoneyTrackTab = safeLazy(() => import('./components/MoneyTrackTab.jsx'));
-const BullshitEvolutionHistory = safeLazy(() => import('./components/BullshitEvolutionHistory.jsx'));
 const BetaAnalyticsTab = safeLazy(() => import('./components/BetaAnalyticsTab'));
 const AgentMemoryDashboardTab = safeLazy(() => import('./components/AgentMemoryDashboardTab.jsx'));
 const UniversalCreationSuite = safeLazy(() => import('./components/UniversalCreationSuite.jsx'));
@@ -90,15 +90,11 @@ const PersonalBrandStudioTab = safeLazy(() => import('./components/PersonalBrand
 const AutomatedClientSchedulerTab = safeLazy(() => import('./components/AutomatedClientSchedulerTab.jsx'));
 const DeepLearningStudioTab = safeLazy(() => import('./components/DeepLearningStudioTab.jsx'));
 const ReasoningAttentionTab = safeLazy(() => import('./components/ReasoningAttentionTab.jsx'));
-const VideoStreamingTab = safeLazy(() => import('./components/VideoStreamingTab.jsx'));
 const VideoStudioTab = safeLazy(() => import('./components/VideoStudioTab.jsx'));
 const DigitalStorefrontTab = safeLazy(() => import('./components/DigitalStorefrontTab.jsx'));
-const GpuNetworkTab = safeLazy(() => import('./components/GpuNetworkTab.jsx'));
 const DefinitionsModuleTab = safeLazy(() => import('./components/DefinitionsModuleTab.jsx'));
-const CryptoSwarmMobileController = safeLazy(() => import('./components/CryptoSwarmMobileController.jsx'));
 const LearningMaterialHub = safeLazy(() => import('./components/LearningMaterialHub.jsx'));
 const RapidApiReconTab = safeLazy(() => import('./components/RapidApiReconTab.jsx'));
-const NoCoVisionTab = safeLazy(() => import('./components/NoCoVisionTab.jsx'));
 const TheatricalTeleprompter = safeLazy(() => import('./components/TheatricalTeleprompter.jsx'));
 const TheatricalProjector = safeLazy(() => import('./components/TheatricalProjector.jsx'));
 const LostPropertyTab = safeLazy(() => import('./components/LostPropertyTab.jsx'));
@@ -106,23 +102,19 @@ const EmailClientTab = safeLazy(() => import('./components/EmailClientTab.jsx'))
 const UnifiedMediaVaultTab = safeLazy(() => import('./components/UnifiedMediaVaultTab.jsx'));
 const AdminSharedDriveTab = safeLazy(() => import('./components/AdminSharedDriveTab.jsx'));
 const PowerWashingTab = safeLazy(() => import('./components/PowerWashingTab.jsx'));
-const ProcessMemoryLabTab = safeLazy(() => import('./components/ProcessMemoryLabTab.jsx'));
 
 // Unified Hub Wrappers
 const UnifiedOsintHub = safeLazy(() => import('./components/UnifiedOsintHub.jsx'));
 const UnifiedCalendarHub = safeLazy(() => import('./components/UnifiedCalendarHub.jsx'));
 const UnifiedFinancialHub = safeLazy(() => import('./components/UnifiedFinancialHub.jsx'));
-const UnifiedCreationHub = safeLazy(() => import('./components/UnifiedCreationHub.jsx'));
 const UnifiedCryptoHub = safeLazy(() => import('./components/UnifiedCryptoHub.jsx'));
 const UnifiedSystemEconomics = safeLazy(() => import('./components/UnifiedSystemEconomics.jsx'));
 const NotosEnterpriseOSTab = safeLazy(() => import('./components/NotosEnterpriseOSTab.jsx'));
 const NotoBarInventoryHub = safeLazy(() => import('./components/NotoBarInventoryHub.jsx'));
-const NeuralAudioStudioTab = safeLazy(() => import('./components/NeuralAudioStudioTab.jsx'));
 const CampaignAutomationTab = safeLazy(() => import('./components/CampaignAutomationTab.jsx'));
 const BanquetArchitectTab = safeLazy(() => import('./components/BanquetArchitectTab.jsx'));
 const SystemHealthTab = safeLazy(() => import('./components/SystemHealthTab.jsx'));
 const EnterpriseIndustryHubTab = safeLazy(() => import('./components/EnterpriseIndustryHubTab.jsx'));
-const UnrealViewport = safeLazy(() => import('./src/components/UnrealViewport.jsx'));
 const OnboardingTab = safeLazy(() => import('./components/OnboardingTab.jsx'));
 const ClientsTab = safeLazy(() => import('./components/ClientsTab.jsx'));
 const FuturisticNeonLoungeStudio = safeLazy(() => import('./src/components/FuturisticNeonLoungeStudio.jsx'));
@@ -141,18 +133,22 @@ const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardw
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
 const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
 const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
-const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressDispatcher.jsx'));
+const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressPinPortal.jsx'));
 const ClusterEngineDashboard = safeLazy(() => import('./src/components/ClusterEngineDashboard.jsx'));
 
+/** @extends {React.Component<{children?: import('react').ReactNode}, {hasError: boolean; error: unknown}>} */
 class TabErrorBoundary extends React.Component {
 
+  /** @param {{children?: import('react').ReactNode}} props */
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = /** @type {{hasError: boolean; error: unknown}} */ ({ hasError: false, error: null });
   }
+  /** @param {unknown} error */
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
+  /** @param {unknown} error @param {import('react').ErrorInfo} errorInfo */
   componentDidCatch(error, errorInfo) {
     console.error("Tab ErrorBoundary caught error:", error, errorInfo);
     const errStr = error?.toString() || '';
@@ -231,7 +227,7 @@ const tabs = [
   { key: 'syndication', label: '🌐 Automated Syndication', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite', Component: SyndicationTab },
   { key: 'clients', label: 'Clients Hub', description: 'Master Workspace for all clients', Component: ClientsModuleTab },
   { key: 'fe_express', label: '🚚 FE Express Box Truck Automation Hub (Devin)', description: 'Real-Time Trulos Public Load Board, Smart Backhaul Radar, Broker Credit Sentinel, Spot Rate Benchmarks & 1-Tap Mobile Dispatch Suite for Devin', Component: FEExpressDispatcherTab },
-  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite', Component: RecreationalDebutTab },
+  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut — Families, Recruiting Workflow, Services & Review', Component: RecreationalDebutTab },
   { key: 'nda_module', label: '📜 Sovereign NDA & Anti-Tamper', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal', Component: NdaModuleTab },
   { key: 'moneytrack', label: 'Money Track', description: 'Financial dashboard for revenue, expenses, and invoices', Component: MoneyTrackTab },
   { key: 'definitions', label: 'Definitions & Lore', description: 'Interactive AI-BS dictionary and architectural timeline', Component: DefinitionsModuleTab },
@@ -286,42 +282,20 @@ export default function App() {
   const toggleEditMode = useAppStore(state => state.toggleEditMode);
   const [zenMode, setZenMode] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const urlTab = params.get('tab') || (params.get('portal') === 'nda' ? 'nda_module' : null);
-      if (urlTab) {
-        if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') return 'central_gaming_hub';
-        if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) return 'unified_crypto';
-        return urlTab;
-      }
-    }
-    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY) || 'dashboard';
-    if (stored === 'steam_gaming' || stored === 'gaming_lab') return 'central_gaming_hub';
-    if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(stored)) return 'unified_crypto';
-    return stored;
+    if (typeof window === 'undefined') return 'dashboard';
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'clients' && params.get('client') === 'fe_express') return 'fe_express';
+    return resolveInitialWorkspaceTab(window.location.search, localStorage.getItem(ACTIVE_TAB_STORAGE_KEY));
   });
+  const [wirelessCastOpenRequest, setWirelessCastOpenRequest] = useState(0);
+  const navigateWorkspaceTab = useCallback(/** @param {string} tab */ (tab) => {
+    if (tab === 'screen_mirror') setWirelessCastOpenRequest(request => request + 1);
+    setActiveTab(tab);
+  }, []);
   const { backendUrl, backendStatus } = useBackendHealth();
-  const [localTrustState, setLocalTrustState] = useState({ enabled: false, allowedUsers: [] });
+  const [localTrustState, setLocalTrustState] = useState(/** @type {import('/types/aibs').LocalTrustState} */ ({ enabled: false, allowedUsers: [] }));
   const [authLoading, setAuthLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
-  // Mobile View Mode: 'chat' (default on mobile devices/APK) vs 'desktop'
-  const isMobileDevice = typeof window !== 'undefined' && (isNativeMobile() || window.innerWidth <= 768);
-  const [mobileViewMode, setMobileViewMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aibs_mobile_view_mode');
-      if (saved) return saved === 'gemini' ? 'chat' : saved;
-      return (isNativeMobile() || window.innerWidth <= 768) ? 'chat' : 'desktop';
-    }
-    return 'desktop';
-  });
-
-  const handleSetMobileViewMode = (mode) => {
-    setMobileViewMode(mode);
-    try {
-      localStorage.setItem('aibs_mobile_view_mode', mode);
-    } catch {}
-  };
-
+  const [currentUser, setCurrentUser] = useState(/** @type {import("firebase/auth").User | null} */ (null));
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [viewMode, setViewMode] = useState('2D');
   const [workspaceMode, setWorkspaceMode] = useState(() => {
@@ -426,11 +400,13 @@ export default function App() {
     }
   }, [momMode, momZoomLevel]);
 
+  /** @param {number} newZoom */
   const handleZoomChange = (newZoom) => {
     setMomZoomLevel(newZoom);
     localStorage.setItem('aibs_mom_zoom', newZoom.toString());
   };
 
+  /** @param {string} tierKey */
   const handleSimulateTier = (tierKey) => {
     setSimulatedTier(tierKey);
     localStorage.setItem('aibs_preview_tier', tierKey);
@@ -470,7 +446,7 @@ export default function App() {
           } catch (e) {
             console.warn('Failed to cache user session:', e);
           }
-          setAntiTamperUser(user.email);
+          setAntiTamperUser(user);
 
           // Update Firestore Presence (Online)
           if (user && user.uid && db) {
@@ -564,7 +540,7 @@ export default function App() {
   }, [currentUser, activeTab]);
 
   // Live User Presence, Session Dwell-Time & Activity Telemetry
-  useUserSessionTelemetry({ currentUser, activeTab });
+  useUserSessionTelemetry({ currentUser, activeTab, enabled: isAuthenticated });
 
   // Universal Deep Linking & URL Search Parameter Synchronization
   useEffect(() => {
@@ -578,14 +554,17 @@ export default function App() {
         window.sendDashboardAnalyticsBeacon('tab_switch', activeTab);
       }
     }
-    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTab);
+    const rememberedTab = rememberedWorkspaceTab(activeTab);
+    if (rememberedTab) localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, rememberedTab);
   }, [activeTab]);
 
   // Handle Browser Back / Forward Button Navigation
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
-      let urlTab = params.get('tab');
+      let urlTab = params.get('tab') || 'dashboard';
+      if (urlTab === 'clients' && params.get('client') === 'fe_express') urlTab = 'fe_express';
+      if (urlTab === 'website_home') urlTab = 'dashboard';
       if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') urlTab = 'central_gaming_hub';
       if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) urlTab = 'unified_crypto';
       if (urlTab && urlTab !== activeTab) {
@@ -608,9 +587,9 @@ export default function App() {
         if (Array.isArray(data.models)) {
           modelList = data.models;
         } else if (Array.isArray(data.data)) {
-          modelList = data.data.map(m => typeof m === 'string' ? m : (m.id || m.name));
+          modelList = data.data.map(/** @param {string | {id?: string; name?: string}} m */ m => typeof m === 'string' ? m : (m.id || m.name));
         } else if (Array.isArray(data)) {
-          modelList = data.map(m => typeof m === 'string' ? m : (m.id || m.name));
+          modelList = data.map(/** @param {string | {id?: string; name?: string}} m */ m => typeof m === 'string' ? m : (m.id || m.name));
         }
 
         // Append Gemini backup fallback models
@@ -637,10 +616,14 @@ export default function App() {
     localStorage.setItem('sp-ai-nav-layout', nextLayout);
   };
 
+  /** @type {Record<string, string>} */
   const TAB_ALIASES = {
     chat: 'chat',
     team_chat: 'chat',
     mobile_chat: 'chat',
+    steam_gaming: 'central_gaming_hub',
+    gaming_lab: 'central_gaming_hub',
+    screen_mirror: 'ide',
     vlc: 'video_streaming',
     vlc_player: 'video_streaming',
     video_streaming: 'video_streaming',
@@ -712,7 +695,7 @@ export default function App() {
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#090d16' }}>
         <TabErrorBoundary key={isCheckout ? 'checkout' : 'playground'}>
           <Suspense fallback={<TabLoader />}>
-            {isCheckout ? <PublicCheckoutTab backendUrl={backendUrl} /> : <PublicPlaygroundTab backendUrl={backendUrl} />}
+            {isCheckout ? <PublicCheckoutTab /> : <PublicPlaygroundTab backendUrl={backendUrl} />}
           </Suspense>
         </TabErrorBoundary>
       </div>
@@ -758,6 +741,7 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
+      <TabErrorBoundary key="main-login"><Suspense fallback={<TabLoader />}>
       <LoginModal 
         onLoginSuccess={(user) => {
           setIsAuthenticated(true);
@@ -770,10 +754,11 @@ export default function App() {
               photoURL: user.photoURL
             }));
           } catch {}
-          setAntiTamperUser(user.email);
+          setAntiTamperUser(user);
         }} 
         backendUrl={backendUrl} 
       />
+      </Suspense></TabErrorBoundary>
     );
   }
 
@@ -797,8 +782,9 @@ export default function App() {
       <div className={`app-shell ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`} style={{ flexDirection: navLayout === 'top' ? 'column' : 'row', height: '100vh', width: '100vw' }}>
         {!zenMode && navLayout === 'top' && (
           <TopNavbar 
+            backendUrl={backendUrl}
             activeTab={activeTab}
-            onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
+            onTabChange={/** @param {string} t */ (t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
             onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
             navLayout={navLayout}
             onToggleNavLayout={handleToggleNavLayout}
@@ -825,12 +811,12 @@ export default function App() {
         )}
 
         {navLayout === 'sidebar' ? (
-          <PanelGroup direction="horizontal" style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
+          <PanelGroup orientation="horizontal" style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
             {!zenMode && (
               <>
-                <Panel key="sidebar-panel" id="sidebar-panel" order={1} defaultSize={15} minSize={10} maxSize={30}>
+                <Panel key="sidebar-panel" id="sidebar-panel" defaultSize="15%" minSize="10%" maxSize="30%">
                   <aside className="sidebar-panel" style={{ height: '100%', overflow: 'hidden' }}>
-                    <Sidebar activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); }} />
+                    <Sidebar activeTab={activeTab} onTabChange={/** @param {string} t */ (t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); }} />
                   </aside>
                 </Panel>
 
@@ -838,7 +824,7 @@ export default function App() {
               </>
             )}
 
-            <Panel key="main-panel" id="main-panel" order={2} minSize={50}>
+            <Panel key="main-panel" id="main-panel" minSize="50%">
               <main className="main-panel" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 {!zenMode && (
                   <div className="topbar">
@@ -916,13 +902,13 @@ export default function App() {
                       ● Backend {backendStatus.toUpperCase()}
                     </span>
                     <span className="identity-pill">
-                      {currentUser ? `${currentUser.displayName || currentUser.email.split('@')[0]} (Admin / Partner)` : 'Brett Adam Stehouwer (CTO)'}
+                      {currentUser ? `${currentUser.displayName || (currentUser.email || '').split('@')[0]} (Admin / Partner)` : 'Brett Adam Stehouwer (CTO)'}
                     </span>
                   </div>
                 </div>
                 )}
 
-                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
+                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
 
                 <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
                   <div
@@ -939,7 +925,8 @@ export default function App() {
                               backendUrl={backendUrl} 
                               currentUser={currentUser} 
                               selectedModel={selectedModel} 
-                              onNavigateTab={setActiveTab}
+                              onNavigateTab={navigateWorkspaceTab}
+                              wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
                               workspaceMode={workspaceMode}
                               onToggleWorkspaceMode={handleToggleWorkspaceMode}
                             />
@@ -948,7 +935,7 @@ export default function App() {
                               tabKey={activeTabConfig.key}
                               tabLabel={activeTabConfig.label}
                               activeTier={userTier}
-                              onNavigateToPricing={() => setActiveTab('public_checkout')}
+                              onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
                             />
                           )}
                         </Suspense>
@@ -961,7 +948,7 @@ export default function App() {
           </PanelGroup>
         ) : (
           <main className="main-panel" style={{ flex: 1, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
+            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
 
             <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
               <div
@@ -978,7 +965,8 @@ export default function App() {
                           backendUrl={backendUrl} 
                           currentUser={currentUser} 
                           selectedModel={selectedModel} 
-                          onNavigateTab={setActiveTab}
+                          onNavigateTab={navigateWorkspaceTab}
+                          wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
                           workspaceMode={workspaceMode}
                           onToggleWorkspaceMode={handleToggleWorkspaceMode}
                         />
@@ -987,7 +975,7 @@ export default function App() {
                           tabKey={activeTabConfig.key}
                           tabLabel={activeTabConfig.label}
                           activeTier={userTier}
-                          onNavigateToPricing={() => setActiveTab('public_checkout')}
+                          onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
                         />
                       )}
                     </Suspense>
@@ -1059,8 +1047,8 @@ export default function App() {
         {/* Native Mobile Bottom Navigation Bar (Active on Mobile Viewports) */}
         <MobileBottomNav
           activeTab={activeTab}
-          onTabChange={(t) => {
-            setActiveTab(t);
+          onTabChange={/** @param {string} t */ (t) => {
+            navigateWorkspaceTab(t);
             setIsMobileDrawerOpen(false);
           }}
           onOpenDrawer={() => setIsMobileDrawerOpen(true)}
@@ -1071,8 +1059,8 @@ export default function App() {
           isOpen={isMobileDrawerOpen}
           onClose={() => setIsMobileDrawerOpen(false)}
           activeTab={activeTab}
-          onTabChange={(t) => {
-            setActiveTab(t);
+          onTabChange={/** @param {string} t */ (t) => {
+            navigateWorkspaceTab(t);
             setIsMobileDrawerOpen(false);
           }}
           momMode={momMode}
@@ -1083,6 +1071,7 @@ export default function App() {
     </>
   );
 }
+
 
 
 

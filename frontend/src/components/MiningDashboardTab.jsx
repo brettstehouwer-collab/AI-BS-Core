@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './DeveloperWorkspaceTab.css'; // Reuse existing styles for consistency
 
 const getEffectiveApiBase = () => {
@@ -14,22 +14,9 @@ const getEffectiveApiBase = () => {
 };
 
 export default function MiningDashboardTab() {
-  const [telemetry, setTelemetry] = useState(null);
-  const [ledger, setLedger] = useState(null);
+  const [telemetry, setTelemetry] = useState(/** @type {{"alerts": string[], "asic_status": {"status": string, "temp": number, "hashrate_th": string}, "gpu_status": {"status": string, "temp": number, "hashrate_mh": string, "power_w": string}, "storage_status": {"status": string, "plot_progress_pct": number, "capacity_tb": string}, "system_stats": {"vram_allocated_mb": number, "system_ram_mb": number, "cpu_thread_utilization": Record<string,number>}, "system_stats_error": string, "timestamp": number, "wallet_status": {"status": string, "balance_doge": string, "unconfirmed_balance_doge": string, "tx_count": number}}|null} */ (null));
+  const [ledger, setLedger] = useState(/** @type {({"timestamp": number, "type": string, "coin_amount": number, "usd_value": number})[]|null} */ (null));
   const [status, setStatus] = useState("loading");
-
-  useEffect(() => {
-    const daemons = ['minerwatch_daemon', 'drip_trader_daemon', 'chia_plotter_daemon'];
-    const apiBase = getEffectiveApiBase();
-    
-    daemons.forEach(d => {
-      fetch(`${apiBase}/api/daemons/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ daemon: d })
-      }).catch(err => console.error(`Failed to start ${d}:`, err));
-    });
-  }, []);
 
   useEffect(() => {
     const fetchTelemetry = async () => {
@@ -61,19 +48,8 @@ export default function MiningDashboardTab() {
           }
           setStatus("active");
           
-          // Trigger Thoughtful Friction if alerts are present
-          if (data.alerts && data.alerts.length > 0) {
-            // Local simulation of Thoughtful Friction modal
-            const proceed = window.confirm(`⛏️ THOUGHTFUL FRICTION: SYSTEM PAUSED\n\nMining Alert: ${data.alerts.join(", ")}\n\nWould you like to execute the Aegis mitigation script to lower power limits?`);
-            if (proceed) {
-                // Execute mitigation
-                await fetch(`${apiBase}/api/mining/mitigate`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ action: "lower_power", target: "all" })
-                });
-            }
-          }
+          // Alerts remain visible. Hardware mitigation is held during the audit.
+
         }
       } catch (e) {
         setStatus("error");
@@ -89,6 +65,7 @@ export default function MiningDashboardTab() {
     <div className="developer-workspace-tab">
       <div className="header-bar">
         <h2>⛏️ Aegis MinerWatch Dashboard</h2>
+        <p role="status">Mining startup and hardware mitigation are held during the audit. Telemetry is read-only.</p>
         <div className={`status-badge ${status === 'active' && (!telemetry?.alerts?.length) ? 'healthy' : (telemetry?.alerts?.length ? 'critical' : status)}`}>
           {status === 'active' ? (telemetry?.alerts?.length ? 'ALERTS ACTIVE' : 'SYSTEM HEALTHY') : (status || 'UNKNOWN').toUpperCase()}
         </div>
@@ -106,7 +83,7 @@ export default function MiningDashboardTab() {
              </div>
              <div className="metric-box">
                 <span className="metric-label">Temperature</span>
-                <span className={`metric-value ${telemetry?.asic_status?.temp > 80 ? 'text-critical' : ''}`}>
+                <span className={`metric-value ${(telemetry?.asic_status?.temp ?? 0) > 80 ? 'text-critical' : ''}`}>
                   {telemetry?.asic_status?.temp ? `${telemetry.asic_status.temp} °C` : "--"}
                 </span>
              </div>
@@ -127,7 +104,7 @@ export default function MiningDashboardTab() {
              </div>
              <div className="metric-box">
                 <span className="metric-label">Temperature</span>
-                <span className={`metric-value ${telemetry?.gpu_status?.temp > 80 ? 'text-critical' : ''}`}>
+                <span className={`metric-value ${(telemetry?.gpu_status?.temp ?? 0) > 80 ? 'text-critical' : ''}`}>
                   {telemetry?.gpu_status?.temp ? `${telemetry.gpu_status.temp} °C` : "--"}
                 </span>
              </div>
@@ -199,7 +176,7 @@ export default function MiningDashboardTab() {
           <div className="panel-header">Aegis Alerts Log</div>
           <div className="panel-content" style={{fontFamily: "monospace", color: "#e06c75"}}>
             {telemetry?.alerts && telemetry.alerts.length > 0 ? (
-               telemetry.alerts.map((a, i) => <div key={i}>[{telemetry.timestamp}] {a}</div>)
+               telemetry.alerts.map(/** @param {string} a @param {number} i */ (a, i) => <div key={i}>[{telemetry.timestamp}] {a}</div>)
             ) : (
                <div style={{color: "#98c379"}}>[{telemetry?.timestamp || new Date().toISOString()}] No active alerts.</div>
             )}
@@ -250,7 +227,7 @@ export default function MiningDashboardTab() {
                    </tr>
                  </thead>
                  <tbody>
-                   {ledger.map((trade, i) => (
+                   {ledger.map(/** @param {{"timestamp": number, "type": string, "coin_amount": number, "usd_value": number}} trade @param {number} i */ (trade, i) => (
                      <tr key={i} style={{borderBottom: "1px solid rgba(255,255,255,0.05)"}}>
                        <td style={{padding: "4px 0"}}>{new Date(trade.timestamp).toLocaleString()}</td>
                        <td style={{padding: "4px 0", color: trade.type === "sell_bootstrap" ? "#e06c75" : "#98c379"}}>{(trade.type || 'UNKNOWN').toUpperCase()}</td>

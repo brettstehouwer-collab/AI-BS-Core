@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiBase } from '/src/config/api.js';
 import { Layout, Model } from 'flexlayout-react';
 import 'flexlayout-react/style/dark.css';
-import { 
-  Monitor, Layers, Sliders, MessageSquare, Activity, Settings, 
-  Video, VideoOff, ScreenShare, Mic, MicOff, Play, Square, 
-  Volume2, VolumeX, Eye, EyeOff, Plus, Trash2, Globe, ExternalLink,
-  RefreshCw, CheckCircle, AlertCircle, Gamepad2, Cpu, Music,
-  Maximize2, X, SlidersHorizontal, Check, ShieldCheck, Radio,
-  Smartphone, Camera, Bot, Sparkles, Key, Send, Hash, ShieldAlert,
-  BookOpen, HelpCircle, Info, ChevronRight, Zap, ChevronUp, ChevronDown
-} from 'lucide-react';
+import { Monitor, Layers, Settings, Video, VideoOff, ScreenShare, Mic, Eye, EyeOff, Plus, Trash2, Globe, RefreshCw, Gamepad2, Cpu, X, SlidersHorizontal, Radio, Smartphone, Camera, Bot, Sparkles, Key, Send, BookOpen, ChevronRight, Zap, ChevronUp, ChevronDown } from 'lucide-react';
 
+/** @param {unknown} value @param {'message' | 'name'} field */
+
+/** @param {unknown} value @param {'message' | 'name'} field */
+function describeBroadcastError(value, field) {
+  if (value instanceof Error) return value[field];
+  if (value && typeof value === 'object') {
+    if (field === 'message' && 'message' in value && typeof value.message === 'string') return value.message;
+    if (field === 'name' && 'name' in value && typeof value.name === 'string') return value.name;
+  }
+  return field === 'name' ? 'Error' : String(value);
+}
+
+/** @type {import('flexlayout-react').IJsonModel} */
 const layoutConfig = {
   global: {
     tabEnableClose: false,
     tabEnableRename: false,
     tabSetEnableMaximize: true,
-    splitterSize: 6,
-    tabSetTabStripHeight: 35,
   },
   borders: [],
   layout: {
@@ -86,22 +90,14 @@ const layoutConfig = {
   }
 };
 
-const DEFAULT_GAMES = [
-  'Auto-Detect Foreground Window',
-  'Cyberpunk 2077 (cyberpunk2077.exe)',
-  'Call of Duty: Warzone (cod.exe)',
-  'Valorant (VALORANT-Win64-Shipping.exe)',
-  'Counter-Strike 2 (cs2.exe)',
-  'Apex Legends (r5apex.exe)',
-  'Sovereign Music Studio (DAW)',
-  'Ableton Live 12 (Ableton Live 12 Suite.exe)',
-  'Unreal Engine 5 Editor (UnrealEditor.exe)',
-  'OBS Studio (obs64.exe)',
-  'Discord (Discord.exe)',
-  'Google Chrome (chrome.exe)',
-  'Custom Manual Hook...'
-];
 
+
+/**
+ * @template T
+ * @param {T} defaultValue
+ * @param {string} key
+ * @returns {[T, React.Dispatch<React.SetStateAction<T>>]}
+ */
 function useStickyState(defaultValue, key) {
   const [value, setValue] = useState(() => {
     try {
@@ -123,6 +119,7 @@ function useStickyState(defaultValue, key) {
 }
 
 const BroadcastStudio = () => {
+  const backendUrl = getApiBase();
   const [model] = useState(Model.fromJson(layoutConfig));
   const [isStreaming, setIsStreaming] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -135,7 +132,9 @@ const BroadcastStudio = () => {
     game_name: "Desktop Screen 1" 
   });
   const [statusMessage, setStatusMessage] = useState('Standby');
-  const [daemonConnected, setDaemonConnected] = useState(false);
+  const [, setDaemonConnected] = useState(false);
+
+// Canvas Orientation (Horizontal 16:9 vs Vertical 9:16 Shorts/TikTok)
 
   // Canvas Orientation (Horizontal 16:9 vs Vertical 9:16 Shorts/TikTok)
   const [canvasOrientation, setCanvasOrientation] = useState('horizontal'); // 'horizontal' | 'vertical'
@@ -143,20 +142,20 @@ const BroadcastStudio = () => {
   // Active Scene & Sources State
   const [activeScene, setActiveScene] = useState('[MAIN] Game Capture');
 
-  const [windowList, setWindowList] = useState([]);
-  const [detectedActiveGame, setDetectedActiveGame] = useState(null);
+  const [windowList, setWindowList] = useState(/** @type {import('/types/broadcast').CaptureWindow[]} */ ([]));
+  const [detectedActiveGame, setDetectedActiveGame] = useState(/** @type {import('/types/broadcast').ActiveGame | null} */ (null));
 
   // Game / Process Capture Configuration
   const [selectedGameSource, setSelectedGameSource] = useStickyState('Auto-Detect Foreground Window', 'aibs_game_source');
-  const [customProcessName, setCustomProcessName] = useStickyState('', 'aibs_custom_process');
-  const [autoDetectGame, setAutoDetectGame] = useStickyState(true, 'aibs_auto_detect_game');
+  const [customProcessName,,] = useStickyState('', 'aibs_custom_process');
+  const [autoDetectGame,,] = useStickyState(true, 'aibs_auto_detect_game');
 
-  const [sources, setSources] = useStickyState([
+  const [sources, setSources] = useStickyState(/** @type {import('/types/broadcast').BroadcastSource[]} */ ([
     { id: 's1', name: '🎮 Game Capture (DirectX/DXGI)', type: 'game', enabled: true, active: false, opacity: 100, volume: 85 },
     { id: 's2', name: 'Sony A7III / Cam Link', type: 'cam', enabled: true, active: false, opacity: 100, volume: 100 },
     { id: 's3', name: 'DAW Master Stems', type: 'daw', enabled: true, active: true, opacity: 100, volume: 80 },
     { id: 's4', name: 'WebRTC / Guest Feed', type: 'guest', enabled: true, active: false, opacity: 100, volume: 75 }
-  ], 'aibs_broadcast_sources');
+   ]), 'aibs_broadcast_sources');
 
   // Audio Mixer Channels (Multi-Track 1..6)
   const [audioChannels, setAudioChannels] = useStickyState([
@@ -169,18 +168,18 @@ const BroadcastStudio = () => {
 
   // Stream Endpoints Configuration
   const [endpoints, setEndpoints] = useStickyState([
-    { name: 'Twitch', url: 'rtmp://live.twitch.tv/app', key: 'live_475849061_slFqN8Vl9Rr5SdAXRAnzry99LIfMVb', enabled: true },
-    { name: 'YouTube Live', url: 'rtmp://a.rtmp.youtube.com/live2', key: 'je5p-8zxu-d7rj-d73s-cvu6', enabled: true },
-    { name: 'Facebook Live', url: 'rtmps://live-api-s.facebook.com:443/rtmp/', key: 'FB-1455139260007499-0-Ab7LXQ_vG92-BfC6C_aD2Zqj', enabled: true },
+    { name: 'Twitch', url: 'rtmp://live.twitch.tv/app', key: "", enabled: false },
+    { name: 'YouTube Live', url: 'rtmp://a.rtmp.youtube.com/live2', key: "", enabled: false },
+    { name: 'Facebook Live', url: 'rtmps://live-api-s.facebook.com:443/rtmp/', key: "", enabled: false },
     { name: 'Kick', url: 'rtmp://fa723fc1b171.global-contribute.live-video.net/app', key: '', enabled: false },
-    { name: 'Custom RTMP', url: 'rtmp://127.0.0.1:1935/live', key: 'stehouwer', enabled: false }
+    { name: 'Custom RTMP', url: 'rtmp://127.0.0.1:1935/live', key: "", enabled: false }
   ], 'aibs_broadcast_endpoints');
 
   // Twitch OAuth & Chat Bot Config
   const [twitchChannel, setTwitchChannel] = useStickyState('brettstehouwer', 'aibs_twitch_channel');
   const [twitchClientId, setTwitchClientId] = useStickyState('', 'aibs_twitch_client_id');
-  const [twitchClientSecret, setTwitchClientSecret] = useStickyState('', 'aibs_twitch_client_secret');
-  const [twitchBotConnected, setTwitchBotConnected] = useState(false);
+  useStickyState('', 'aibs_twitch_client_secret');
+  useState(false);
   
   const fetchWindows = async () => {
     try {
@@ -210,7 +209,7 @@ const BroadcastStudio = () => {
       if (res && res.ok) {
         const data = await res.json();
         const raw = data.open_windows || data.windows || [];
-        const normalized = raw.map(w => typeof w === 'string' ? { title: w, process_name: w, pid: 0, is_game: false } : w);
+        const normalized = raw.map(/** @param {string | import('/types/broadcast').CaptureWindow} w */ w => typeof w === 'string' ? { title: w, process_name: w, pid: 0, is_game: false } : w);
         setWindowList(normalized);
 
         if (data.active_game) {
@@ -235,9 +234,9 @@ const BroadcastStudio = () => {
   }, [autoDetectGame, selectedGameSource]);
 
   // Hardware Devices Enumeration State
-  const [videoDevices, setVideoDevices] = useState([]);
-  const [audioInputDevices, setAudioInputDevices] = useState([]);
-  const [audioOutputDevices, setAudioOutputDevices] = useState([]);
+  const [videoDevices, setVideoDevices] = useState(/** @type {import('/types/broadcast').DeviceChoice[]} */ ([]));
+  const [audioInputDevices, setAudioInputDevices] = useState(/** @type {import('/types/broadcast').DeviceChoice[]} */ ([]));
+  const [, setAudioOutputDevices] = useState(/** @type {import('/types/broadcast').DeviceChoice[]} */ ([]));
   const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useStickyState('', 'aibs_video_device');
   const [selectedAudioInputId, setSelectedAudioInputId] = useStickyState('', 'aibs_audio_input');
   const [selectedAudioOutputId, setSelectedAudioOutputId] = useStickyState('', 'aibs_audio_output');
@@ -250,11 +249,11 @@ const BroadcastStudio = () => {
   const [hardwareEncoder, setHardwareEncoder] = useStickyState('h264_nvenc', 'aibs_encoder');
   const [encoderPreset, setEncoderPreset] = useStickyState('p1', 'aibs_preset');
   const [recordingFormat, setRecordingFormat] = useStickyState('hybrid_mp4', 'aibs_format');
-  const [audioSampleRate, setAudioSampleRate] = useStickyState('48000', 'aibs_sample_rate');
-  const [audioBufferSize, setAudioBufferSize] = useStickyState('512', 'aibs_buffer_size');
-  const [enableNoiseSuppression, setEnableNoiseSuppression] = useStickyState(true, 'aibs_noise_sup');
-  const [enableEchoCancellation, setEnableEchoCancellation] = useStickyState(true, 'aibs_echo_cancel');
-  const [enableDawLoopback, setEnableDawLoopback] = useStickyState(true, 'aibs_daw_loopback');
+  useStickyState('48000', 'aibs_sample_rate');
+  useStickyState('512', 'aibs_buffer_size');
+  useStickyState(true, 'aibs_noise_sup');
+  useStickyState(true, 'aibs_echo_cancel');
+  useStickyState(true, 'aibs_daw_loopback');
 
   // Modals & Drawers State
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -263,13 +262,13 @@ const BroadcastStudio = () => {
   const [showOverlayDesigner, setShowOverlayDesigner] = useState(false);
   const [guideActiveSection, setGuideActiveSection] = useState('quickstart');
   const [activeSettingsTab, setActiveSettingsTab] = useState('video');
-  const [editingSource, setEditingSource] = useState(null);
-  const [editingOverlay, setEditingOverlay] = useState(null);
+  const [editingSource, setEditingSource] = useState(/** @type {import('/types/broadcast').BroadcastSource | null} */ (null));
+  const [editingOverlay, setEditingOverlay] = useState(/** @type {import('/types/broadcast').BroadcastOverlay | null} */ (null));
 
   // Ingest Probing & Health Telemetry State
-  const [probeResults, setProbeResults] = useState({});
+  const [probeResults, setProbeResults] = useState(/** @type {Record<string, import('/types/broadcast').ProbeResult>} */ ({}));
   const [isProbing, setIsProbing] = useState(false);
-  const [twitchLiveInfo, setTwitchLiveInfo] = useState(null);
+  const [twitchLiveInfo, setTwitchLiveInfo] = useState(/** @type {import('/types/broadcast').TwitchLiveInfo | null} */ (null));
 
   const handleTestConnections = async () => {
     setIsProbing(true);
@@ -286,8 +285,9 @@ const BroadcastStudio = () => {
       if (res.ok) {
         const data = await res.json();
         if (data.results) {
+          /** @type {Record<string, import('/types/broadcast').ProbeResult>} */
           const map = {};
-          data.results.forEach(r => { map[r.name] = r; });
+          data.results.forEach(/** @param {import('/types/broadcast').ProbeResult} r */ r => { map[r.name] = r; });
           setProbeResults(map);
           setStatusMessage('Ingest connection probe complete (Daemon 8005)');
           success = true;
@@ -309,8 +309,9 @@ const BroadcastStudio = () => {
         if (res.ok) {
           const data = await res.json();
           if (data.results) {
-            const map = {};
-            data.results.forEach(r => { map[r.name] = r; });
+            /** @type {Record<string, import('/types/broadcast').ProbeResult>} */
+          const map = {};
+            data.results.forEach(/** @param {import('/types/broadcast').ProbeResult} r */ r => { map[r.name] = r; });
             setProbeResults(map);
             setStatusMessage('Ingest connection probe complete (Core Backend 8080)');
             success = true;
@@ -336,12 +337,12 @@ const BroadcastStudio = () => {
   };
 
   // Media Streams & Canvas Refs
-  const [screenStream, setScreenStream] = useState(null);
-  const [webcamStream, setWebcamStream] = useState(null);
-  const previewVideoRef = useRef(null);
-  const webcamVideoRef = useRef(null);
-  const programCanvasRef = useRef(null);
-  const animFrameIdRef = useRef(null);
+  const [screenStream, setScreenStream] = useState(/** @type {MediaStream | null} */ (null));
+  const [webcamStream, setWebcamStream] = useState(/** @type {MediaStream | null} */ (null));
+  const previewVideoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
+  const webcamVideoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
+  const programCanvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const animFrameIdRef = useRef(/** @type {number | null} */ (null));
 
   // Synchronize Active Media Streams to Canvas Decoders
   useEffect(() => {
@@ -371,12 +372,12 @@ const BroadcastStudio = () => {
   const [inputUrl, setInputUrl] = useState('https://streamlabs.com/dashboard');
 
   // Unified Chat & Live Sidekick
-  const [chatMessages, setChatMessages] = useState([
+  const [chatMessages, setChatMessages] = useState(/** @type {import('/types/broadcast').BroadcastChatMessage[]} */ ([
     { id: 1, user: 'AI-BS Bot', badge: 'SYSTEM', text: 'Social Hub & AI Sidekick connected (Port 8006).', time: '12:00', platform: 'system' },
     { id: 2, user: 'Sidekick', badge: 'AI CO-HOST', text: 'Ready! Chat with me or type !joke, !hype, !sentiment.', time: '12:01', platform: 'ai' }
-  ]);
+  ]));
   const [chatInput, setChatInput] = useState('');
-  const chatSocketRef = useRef(null);
+  const chatSocketRef = useRef(/** @type {WebSocket | null} */ (null));
 
   // Enumerate Hardware Audio/Video Devices on Mount
   const refreshMediaDevices = async () => {
@@ -427,7 +428,9 @@ const BroadcastStudio = () => {
 
   // Connect to Broadcast Telemetry Daemon (Port 8005)
   useEffect(() => {
+    /** @type {WebSocket | null} */
     let ws = null;
+    /** @type {ReturnType<typeof setTimeout> | null} */
     let reconnectTimeout = null;
     let isMounted = true;
 
@@ -437,7 +440,7 @@ const BroadcastStudio = () => {
         ws = new WebSocket('ws://127.0.0.1:8005/ws/telemetry');
         ws.onopen = () => {
           if (!isMounted) {
-            ws.close();
+            ws?.close();
             return;
           }
           setDaemonConnected(true);
@@ -472,12 +475,12 @@ const BroadcastStudio = () => {
     connectWs();
     return () => {
       isMounted = false;
-      clearTimeout(reconnectTimeout);
+      if (reconnectTimeout !== null) clearTimeout(reconnectTimeout);
       if (ws) {
         if (ws.readyState === WebSocket.OPEN) {
           ws.close();
         } else if (ws.readyState === WebSocket.CONNECTING) {
-          ws.onopen = () => ws.close();
+          ws.onopen = () => ws?.close();
         }
       }
     };
@@ -485,7 +488,9 @@ const BroadcastStudio = () => {
 
   // Connect to Social Hub & Sidekick WebSocket (Port 8006)
   useEffect(() => {
+    /** @type {WebSocket | null} */
     let chatWs = null;
+    /** @type {ReturnType<typeof setTimeout> | null} */
     let chatReconnect = null;
     let isMounted = true;
 
@@ -496,7 +501,7 @@ const BroadcastStudio = () => {
         chatSocketRef.current = chatWs;
         chatWs.onopen = () => {
           if (!isMounted) {
-            chatWs.close();
+            chatWs?.close();
           }
         };
         chatWs.onmessage = (event) => {
@@ -532,12 +537,12 @@ const BroadcastStudio = () => {
     connectChatWs();
     return () => {
       isMounted = false;
-      clearTimeout(chatReconnect);
+      if (chatReconnect !== null) clearTimeout(chatReconnect);
       if (chatWs) {
         if (chatWs.readyState === WebSocket.OPEN) {
           chatWs.close();
         } else if (chatWs.readyState === WebSocket.CONNECTING) {
-          chatWs.onopen = () => chatWs.close();
+          chatWs.onopen = () => chatWs?.close();
         }
       }
     };
@@ -546,6 +551,7 @@ const BroadcastStudio = () => {
 
   // Global Hotkeys Listener
   useEffect(() => {
+    /** @param {KeyboardEvent} e */
     const handleKeyDown = (e) => {
       if (e.ctrlKey && e.shiftKey) {
         switch(e.key.toLowerCase()) {
@@ -607,6 +613,7 @@ const BroadcastStudio = () => {
   }, []);
 
   // Aspect-Ratio Preserving Containment & Letterbox Helper
+  /** @param {CanvasRenderingContext2D} ctx @param {HTMLVideoElement} video @param {number} destX @param {number} destY @param {number} destW @param {number} destH */
   const drawContainedVideo = (ctx, video, destX, destY, destW, destH, fit = 'contain') => {
     if (!video || video.readyState < 2) return;
     const srcW = video.videoWidth || 1920;
@@ -659,7 +666,7 @@ const BroadcastStudio = () => {
       let stream = null;
       try {
         // Tier 1: Advanced window/app constraints
-        stream = await navigator.mediaDevices.getDisplayMedia({
+        stream = await navigator.mediaDevices.getDisplayMedia(/** @type {import('/types/broadcast').AdvancedDisplayOptions} */ ({
           video: {
             displaySurface: 'window',
             frameRate: { ideal: 60, max: 60 },
@@ -669,9 +676,9 @@ const BroadcastStudio = () => {
           audio: false,
           surfaceSwitching: 'include',
           selfBrowserSurface: 'exclude'
-        });
+        }));
       } catch (advErr) {
-        if (advErr.name === 'NotAllowedError') {
+        if (describeBroadcastError(advErr, 'name') === 'NotAllowedError') {
           setStatusMessage('Screen capture selection cancelled.');
           return;
         }
@@ -687,7 +694,7 @@ const BroadcastStudio = () => {
             audio: false
           });
         } catch (stdErr) {
-          if (stdErr.name === 'NotAllowedError') {
+          if (describeBroadcastError(stdErr, 'name') === 'NotAllowedError') {
             setStatusMessage('Screen capture selection cancelled.');
             return;
           }
@@ -697,7 +704,7 @@ const BroadcastStudio = () => {
             stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
           } catch (finalErr) {
             console.error('Final getDisplayMedia failed:', finalErr);
-            setStatusMessage(`Screen capture failed: ${finalErr.message || 'Window or device unavailable'}`);
+            setStatusMessage(`Screen capture failed: ${describeBroadcastError(finalErr, 'message') || 'Window or device unavailable'}`);
             return;
           }
         }
@@ -732,7 +739,8 @@ const BroadcastStudio = () => {
   };
 
   // Webcam Capture Media
-  const handleToggleWebcam = async (deviceIdToUse) => {
+  /** @param {string | undefined} deviceIdToUse */
+  const handleToggleWebcam = async (deviceIdToUse = undefined) => {
     if (webcamStream) {
       webcamStream.getTracks().forEach(track => track.stop());
       setWebcamStream(null);
@@ -764,6 +772,7 @@ const BroadcastStudio = () => {
     const canvas = programCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
     const render = () => {
       ctx.fillStyle = '#05070c';
@@ -906,6 +915,7 @@ const BroadcastStudio = () => {
     };
   }, [activeScene, screenStream, webcamStream, canvasOrientation, selectedGameSource, videoFramerate, hardwareEncoder, sources]);
 
+  /** @template {keyof typeof endpoints[number]} K @param {number} index @param {K} field @param {typeof endpoints[number][K]} value */
   const handleEndpointChange = (index, field, value) => {
     const newEndpoints = [...endpoints];
     newEndpoints[index][field] = value;
@@ -972,6 +982,7 @@ const BroadcastStudio = () => {
     setIsStreaming(false);
   };
 
+  /** @param {React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>} e */
   const handleSendChat = (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
@@ -1001,6 +1012,7 @@ const BroadcastStudio = () => {
     window.open('http://localhost:8006/auth/twitch/login', '_blank', 'width=600,height=700');
   };
 
+  /** @param {import('flexlayout-react').TabNode} node */
   const factory = (node) => {
     const component = node.getComponent();
 
@@ -1339,6 +1351,7 @@ const BroadcastStudio = () => {
 
     // 4. Sources Management & Streamlabs Overlay Layer Ordering
     if (component === "sources") {
+      /** @param {number} idx */
       const moveSourceUp = (idx) => {
         if (idx <= 0) return;
         setSources(prev => {
@@ -1350,6 +1363,7 @@ const BroadcastStudio = () => {
         });
       };
 
+      /** @param {number} idx */
       const moveSourceDown = (idx) => {
         setSources(prev => {
           if (idx >= prev.length - 1) return prev;
@@ -2621,7 +2635,7 @@ const BroadcastStudio = () => {
                   type="text" value={editingSource.name}
                   onChange={(e) => {
                     const val = e.target.value;
-                    setEditingSource(prev => ({ ...prev, name: val }));
+                    setEditingSource(prev => prev ? { ...prev, name: val } : prev);
                     setSources(prev => prev.map(s => s.id === editingSource.id ? { ...s, name: val } : s));
                   }}
                   style={{ width: '100%', background: '#020617', border: '1px solid #334155', color: '#fff', padding: '6px 8px', borderRadius: '4px', fontSize: '12px' }}
@@ -2638,7 +2652,7 @@ const BroadcastStudio = () => {
                     value={editingSource.deviceId || ''}
                     onChange={(e) => {
                       const val = e.target.value;
-                      setEditingSource(prev => ({ ...prev, deviceId: val }));
+                      setEditingSource(prev => prev ? { ...prev, deviceId: val } : prev);
                       setSources(prev => prev.map(s => s.id === editingSource.id ? { ...s, deviceId: val } : s));
                     }}
                     style={{ width: '100%', background: '#020617', border: '1px solid #334155', color: '#fff', padding: '6px 8px', borderRadius: '4px', fontSize: '12px' }}

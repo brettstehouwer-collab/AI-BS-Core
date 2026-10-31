@@ -1,3 +1,5 @@
+/** @typedef {{id?: string | number, name: string, path: string, is_dir: boolean, extension?: string, category?: string, icon?: string, size_formatted?: string, modified_formatted?: string}} DriveItem */
+/** @typedef {{categories_breakdown: {category: string, icon: string, count: number, size_formatted: string}[], disk_free_formatted: string, disk_total_formatted: string, disk_used_pct: number, drive_total_files: number, drive_total_folders: number, drive_total_formatted: string}} StorageStats */
 import { isDriveIntakeOriginal } from '/src/utils/driveIntakeDocuments.js';
 import { AuthenticatedDriveMedia, AuthenticatedDriveDownload, requestDriveMediaUrl, useDriveMediaSession } from '/src/components/AuthenticatedDriveMedia.jsx';
 import React, { useState, useEffect, useRef } from 'react';
@@ -132,19 +134,19 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   const [currentPath, setCurrentPath] = useState('/');
   const [breadcrumbs, setBreadcrumbs] = useState([{ name: 'Shared Cloud Drive', path: '/' }]);
   const [showOctober7Section, setShowOctober7Section] = useState(true);
-  const [items, setItems] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [items, setItems] = useState(/** @type {DriveItem[]} */ ([]));
+  const [selectedItems, setSelectedItems] = useState(/** @type {string[]} */ ([]));
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
   const [sortBy, setSortBy] = useState('name'); // 'name' | 'modified' | 'size' | 'type'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' | 'desc'
-  const [storageStats, setStorageStats] = useState(null);
+  const [storageStats, setStorageStats] = useState(/** @type {StorageStats | null} */ (null));
 
   // Drag & Drop State
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(/** @type {string | null} */ (null));
 
   // Modals & In-App Viewers
   const [showNewMenu, setShowNewMenu] = useState(false);
@@ -152,7 +154,7 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   const [newFolderName, setNewFolderName] = useState('');
   
   const [showRenameModal, setShowRenameModal] = useState(false);
-  const [renameTarget, setRenameTarget] = useState(null);
+  const [renameTarget, setRenameTarget] = useState(/** @type {DriveItem | null} */ (null));
   const [renameValue, setRenameValue] = useState('');
 
   const [showMoveModal, setShowMoveModal] = useState(false);
@@ -166,26 +168,28 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
     filename: '',
     content: '',
     category: 'document',
-    isNew: false
+    isNew: false,
+    docType: ''
   });
-  const [isSavingDoc, setIsSavingDoc] = useState(false);
+  const [, setIsSavingDoc] = useState(false);
   const [isAiAssisting, setIsAiAssisting] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState('saved'); // 'saved' | 'saving' | 'error'
-  const [lastSavedTime, setLastSavedTime] = useState(null);
-  const autoSaveTimerRef = useRef(null);
+  const [lastSavedTime, setLastSavedTime] = useState(/** @type {string | null} */ (null));
+  const autoSaveTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
 
   // In-Drive Media / PDF / Audio Preview Lightbox
-  const [previewMedia, setPreviewMedia] = useState(null);
+  const [previewMedia, setPreviewMedia] = useState(/** @type {DriveItem & {url: string, intakeOriginal?: boolean} | null} */ (null));
 
   // File Inputs
-  const fileInputRef = useRef(null);
-  const folderInputRef = useRef(null);
-  const newMenuRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const folderInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const newMenuRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Close "+ New" dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (newMenuRef.current && !newMenuRef.current.contains(e.target)) {
+    /** @param {MouseEvent} e */
+const handleClickOutside = (e) => {
+      if (newMenuRef.current && !newMenuRef.current.contains(e.target instanceof Node ? e.target : null)) {
         setShowNewMenu(false);
       }
     };
@@ -243,7 +247,8 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Navigation Handlers
-  const handleItemClick = (item, e) => {
+  /** @param {DriveItem} item @param {import("react").MouseEvent} _event */
+const handleItemClick = (item, _event) => {
     if (item.is_dir) {
       setCurrentPath(item.path);
       setSearchQuery('');
@@ -252,13 +257,14 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
     }
   };
 
-  const handleSelect = (item, e) => {
+  /** @param {DriveItem} item @param {import("react").MouseEvent | import("react").ChangeEvent<HTMLInputElement>} e */
+const handleSelect = (item, e) => {
     e.stopPropagation();
-    if (e.ctrlKey || e.metaKey) {
+    if ('ctrlKey' in e && (e.ctrlKey || e.metaKey)) {
       setSelectedItems((prev) =>
         prev.includes(item.path) ? prev.filter((p) => p !== item.path) : [...prev, item.path]
       );
-    } else if (e.shiftKey && selectedItems.length > 0) {
+    } else if ('shiftKey' in e && e.shiftKey && selectedItems.length > 0) {
       const lastSelected = selectedItems[selectedItems.length - 1];
       const lastIdx = items.findIndex((i) => i.path === lastSelected);
       const currIdx = items.findIndex((i) => i.path === item.path);
@@ -282,19 +288,21 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Open Preview or In-Drive Document Editor
-  const handleOpenPreviewOrEdit = async (item) => {
+  /** @param {DriveItem} item */
+const handleOpenPreviewOrEdit = async (item) => {
     if (!current()) return;
     if (isDriveIntakeOriginal(item.path)) {
       try {
         const url = item.extension?.toLowerCase() === '.pdf' ? await requestDriveMediaUrl(backendUrl, item.path) : null;
         if (!current()) return;
+        if (!url) return;
         setPreviewMedia({ ...item, url, intakeOriginal: true });
-      } catch (error) { if (current()) alert(`Unable to preview original: ${error.message}`); }
+      } catch (error) { if (current()) alert(`Unable to preview original: ${errorMessage(error)}`); }
       return;
     }
     const nonTextExtensions = ['.pdf', '.doc', '.docx', '.rtf', '.odt'];
     const ext = item.extension ? item.extension.toLowerCase() : '';
-    const isTextDoc = (['screenplay', 'document', 'code'].includes(item.category) && !nonTextExtensions.includes(ext)) || 
+    const isTextDoc = (['screenplay', 'document', 'code'].includes(item.category || '') && !nonTextExtensions.includes(ext)) || 
       ['.txt', '.md', '.fountain', '.fdx', '.json', '.py', '.js', '.jsx', '.html', '.css', '.yaml', '.yml', '.bat', '.sh'].includes(ext);
     
     if (isTextDoc) {
@@ -306,8 +314,9 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
             path: item.path,
             filename: item.name,
             content: docData.content || '',
-            category: item.category,
-            isNew: false
+            category: item.category || '',
+            isNew: false,
+    docType: ''
           });
           setShowDocEditor(true);
           return;
@@ -322,12 +331,13 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
     try {
       const url = await requestDriveMediaUrl(backendUrl, item.path);
       if (!current()) return;
+      if (!url) return;
       setPreviewMedia({ ...item, url });
-    } catch (error) { if (current()) alert(`Unable to preview file: ${error.message}`); }
+    } catch (error) { if (current()) alert(`Unable to preview file: ${errorMessage(error)}`); }
   };
 
   // File Upload Handlers (Any File Type)
-  const handleFilesUpload = async (fileList) => {
+  const handleFilesUpload = async (/** @type {FileList|File[]|null} */ fileList) => {
     if (!fileList || fileList.length === 0) return;
     setUploadProgress(`Uploading ${fileList.length} file(s)...`);
 
@@ -359,15 +369,16 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Drag and drop event handlers
-  const handleDragOver = (e) => {
+  const handleDragOver = (/** @type {import("react").DragEvent<HTMLElement>} */ e) => {
     e.preventDefault();
     setIsDragging(true);
   };
-  const handleDragLeave = (e) => {
+  const handleDragLeave = (/** @type {import("react").DragEvent<HTMLElement>} */ e) => {
     e.preventDefault();
     setIsDragging(false);
   };
-  const handleDrop = (e) => {
+  /** @param {import("react").DragEvent<HTMLElement>} e */
+const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -399,16 +410,19 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Create New Document
-  const handleStartNewDocument = (docType = 'markdown') => {
+  /** @param {string} [docType] */
+const handleStartNewDocument = (docType = 'markdown') => {
     setShowNewMenu(false);
-    const defaultExtensions = {
+    /** @type {Record<string, string>} */
+const defaultExtensions = {
       fountain: 'Untitled_Screenplay.fountain',
       markdown: 'New_Document.md',
       text: 'Notes.txt',
       json: 'data.json',
       python: 'script.py'
     };
-    const defaultTemplates = {
+    /** @type {Record<string, string>} */
+const defaultTemplates = {
       fountain: 'Title: UNTITLED SCREENPLAY\nAuthor: Brett Stehouwer\n\nEXT. CITY STREET - DAY\n\nThe morning sun breaks through the skyline.\n\nBRETT\nHere is where our story begins.',
       markdown: '# Project Document\n\n**Author:** Stehouwer Publishing  \n**Date:** ' + new Date().toLocaleDateString() + '\n\n## Overview\nEnter project notes, strategy, or specifications here...',
       text: 'AI-BS Quick Notes\n------------------\n- ',
@@ -512,7 +526,7 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
           setAutoSaveStatus('error');
         }
       } catch (err) {
-        console.warn('[Drive AutoSave] Background save error:', err.message);
+        console.warn('[Drive AutoSave] Background save error:', errorMessage(err));
         setAutoSaveStatus('error');
       }
     }, 1500);
@@ -523,7 +537,7 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   }, [editingDoc.content, editingDoc.path, editingDoc.filename, editingDoc.isNew, showDocEditor, backendUrl]);
 
   // AI Document Assistant Prompt Injection
-  const handleAiPolishDoc = async (promptType) => {
+  const handleAiPolishDoc = async (/** @type {string} */ promptType) => {
     if (isDriveIntakeOriginal(editingDoc.path)) return;
     setIsAiAssisting(true);
     try {
@@ -628,13 +642,14 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Download Single File or ZIP Bundle
-  const handleDownload = async (item) => {
+  /** @param {DriveItem} item */
+const handleDownload = async (item) => {
     if (!current()) return;
     try {
       const url = await requestDriveMediaUrl(backendUrl, item.path, 'download');
       if (!current()) return;
       window.location.assign(url);
-    } catch (error) { if (current()) alert(`Download unavailable: ${error.message}`); }
+    } catch (error) { if (current()) alert(`Download unavailable: ${errorMessage(error)}`); }
   };
 
   const handleZipDownload = async () => {
@@ -664,19 +679,19 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
   };
 
   // Cross-Studio Navigation Bridges
-  const handleOpenInScreenplayStudio = (fountainPath) => {
+  const handleOpenInScreenplayStudio = (/** @type {string|undefined} */ _fountainPath) => {
     if (onNavigateTab) {
       onNavigateTab('unified_creation');
     }
   };
 
-  const handleOpenInIDE = (filePath) => {
+  const handleOpenInIDE = (/** @type {string|undefined} */ _filePath) => {
     if (onNavigateTab) {
       onNavigateTab('ide');
     }
   };
 
-  const handleOpenInVideoStudio = (mediaPath) => {
+  const handleOpenInVideoStudio = (/** @type {string|undefined} */ _mediaPath) => {
     if (onNavigateTab) {
       onNavigateTab('video_agent');
     }
@@ -1109,7 +1124,7 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
                     </div>
 
                     {/* Inline Audio Preview Player */}
-                    <AuthenticatedDriveMedia as="audio" backendUrl={backendUrl} path={st.mp3 || st.wav}
+                    <AuthenticatedDriveMedia as="audio" backendUrl={backendUrl} path={st.mp3 || st.wav || ''}
                       controls
                       className="october7-audio-player"
                       preload="none"
@@ -1319,12 +1334,12 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
           <div className="drive-doc-editor-modal" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <WordDocsPaperCanvas
               value={editingDoc.content}
-              onChange={(newContent) => setEditingDoc({ ...editingDoc, content: newContent })}
+              onChange={/** @param {string} newContent */ (newContent) => setEditingDoc({ ...editingDoc, content: newContent })}
               filename={editingDoc.filename}
-              onFilenameChange={(newFilename) => setEditingDoc({ ...editingDoc, filename: newFilename })}
+              onFilenameChange={/** @param {string} newFilename */ (newFilename) => setEditingDoc({ ...editingDoc, filename: newFilename })}
               onSave={handleSaveDocument}
               autoSaveStatus={autoSaveStatus}
-              lastSavedTime={lastSavedTime}
+              lastSavedTime={lastSavedTime || undefined}
               onClose={() => setShowDocEditor(false)}
               extraHeaderActions={
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1498,4 +1513,10 @@ function ScopedAdminSharedDriveTab({ backendUrl = 'http://localhost:8080', onNav
       )}
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

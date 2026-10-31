@@ -17,12 +17,14 @@ export const AUTHORIZED_ADMIN_EMAILS = [
 ];
 
 let isGuardActive = false;
+/** @type {{email?: string | null} | null} */
 let currentAdminUser = null;
 let devToolsWarningLogged = false;
 
 /**
  * Checks if the current session belongs to a verified admin.
  */
+/** @param {{email?: string | null} | null} user */
 export function isUserAdmin(user) {
   if (!user) {
     // Check if running on localhost / dev machine
@@ -48,6 +50,7 @@ export function isUserAdmin(user) {
 /**
  * Update the active user context in the anti-tamper engine.
  */
+/** @param {{email?: string | null} | null} user */
 export function setAntiTamperUser(user) {
   currentAdminUser = user;
   const isAdmin = isUserAdmin(user);
@@ -136,7 +139,7 @@ export function initAntiTamperGuard() {
     if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
       // Don't prevent standard script saving in textareas, but block global page saving
       const target = e.target;
-      if (!target || !['INPUT', 'TEXTAREA'].includes(target.tagName)) {
+      if (!(target instanceof HTMLElement) || !['INPUT', 'TEXTAREA'].includes(target.tagName)) {
         e.preventDefault();
       }
     }

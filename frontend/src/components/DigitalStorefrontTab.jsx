@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Lightweight Inline Icons with explicit SVG dimensions
 const ZapIcon = ({ color = "#58a6ff", size = 20 }) => (
@@ -42,6 +42,7 @@ const CopyIcon = ({ color = "#8b949e", size = 16 }) => (
   </svg>
 );
 
+/** @param {{backendUrl?:string,currentUser?:{email?:string|null}|null,selectedModel?:string,subView?:string}} props */
 const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView = 'storefront_hub' }) => {
   const [activeApp, setActiveApp] = useState(subView);
   const [credits, setCredits] = useState(500);
@@ -122,7 +123,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleAddLead = (e) => {
+  const handleAddLead = (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault();
     if (!newLeadName || !newLeadContact) return;
     setLeads([...leads, {
@@ -189,7 +190,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
           onMouseLeave={(e) => e.currentTarget.style.borderColor = '#30363d'}
         >
           <div>
-            <div style={{ background: 'rgba(88, 166, 255, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyCenter: 'center', marginBottom: '16px' }}>
+            <div style={{ background: 'rgba(88, 166, 255, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <ZapIcon color="#58a6ff" size={26} />
             </div>
             <h3 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.3rem' }}>AI Content Engine</h3>
@@ -220,7 +221,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
           onMouseLeave={(e) => e.currentTarget.style.borderColor = '#30363d'}
         >
           <div>
-            <div style={{ background: 'rgba(63, 185, 80, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyCenter: 'center', marginBottom: '16px' }}>
+            <div style={{ background: 'rgba(63, 185, 80, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <BriefcaseIcon color="#3fb950" size={26} />
             </div>
             <h3 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.3rem' }}>Auto Lead Tracker</h3>
@@ -251,7 +252,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
           onMouseLeave={(e) => e.currentTarget.style.borderColor = '#30363d'}
         >
           <div>
-            <div style={{ background: 'rgba(163, 113, 247, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyCenter: 'center', marginBottom: '16px' }}>
+            <div style={{ background: 'rgba(163, 113, 247, 0.15)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
               <ChartIcon color="#a371f7" size={26} />
             </div>
             <h3 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.3rem' }}>AI ROI Diagnostic</h3>
@@ -379,14 +380,14 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
         </div>
         <div style={{ flex: 1, padding: '24px', overflowY: 'auto', color: '#c9d1d9', lineHeight: '1.7', whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.95rem' }}>
           {isGenerating ? (
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyCenter: 'center', color: '#58a6ff' }}>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#58a6ff' }}>
               <div style={{ fontSize: '2rem', marginBottom: '12px' }}>⚙️</div>
               <div>Processing request via local Ollama engine...</div>
             </div>
           ) : generatedContent ? (
             generatedContent
           ) : (
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyCenter: 'center', color: '#484f58' }}>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#484f58' }}>
               <ZapIcon color="#30363d" size={48} />
               <p style={{ marginTop: '16px' }}>Enter a prompt on the left to generate content.</p>
             </div>
@@ -597,7 +598,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
       {/* Credit Purchase Packs */}
       <h3 style={{ margin: '0', color: '#f0f6fc' }}>Refill Credit Packages</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '16px', padding: '24px', textCenter: 'center', textAlign: 'center' }}>
+        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
           <h4 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.2rem' }}>Starter Pack</h4>
           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#58a6ff', margin: '12px 0' }}>100 Credits</div>
           <p style={{ color: '#8b949e', fontSize: '0.85rem', marginBottom: '20px' }}>$5.00 One-time ($0.05 / generation)</p>
@@ -606,7 +607,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
           </button>
         </div>
 
-        <div style={{ background: '#161b22', border: '2px solid #58a6ff', borderRadius: '16px', padding: '24px', textCenter: 'center', textAlign: 'center', position: 'relative' }}>
+        <div style={{ background: '#161b22', border: '2px solid #58a6ff', borderRadius: '16px', padding: '24px', textAlign: 'center', position: 'relative' }}>
           <span style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: '#58a6ff', color: '#0d1117', padding: '2px 12px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 'bold' }}>MOST POPULAR</span>
           <h4 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.2rem' }}>Pro Pack</h4>
           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#58a6ff', margin: '12px 0' }}>500 Credits</div>
@@ -616,7 +617,7 @@ const DigitalStorefrontTab = ({ backendUrl, currentUser, selectedModel, subView 
           </button>
         </div>
 
-        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '16px', padding: '24px', textCenter: 'center', textAlign: 'center' }}>
+        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
           <h4 style={{ margin: '0 0 8px 0', color: '#f0f6fc', fontSize: '1.2rem' }}>Agency Pack</h4>
           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#a371f7', margin: '12px 0' }}>2,000 Credits</div>
           <p style={{ color: '#8b949e', fontSize: '0.85rem', marginBottom: '20px' }}>$49.00 One-time ($0.024 / generation)</p>

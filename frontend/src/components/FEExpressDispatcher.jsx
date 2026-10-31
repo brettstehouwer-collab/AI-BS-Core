@@ -1,608 +1,12 @@
-import React, { useState, useEffect } from 'react';
+/** @jsxRuntime classic */
+import FEExpressDriverReports from '/src/components/FEExpressDriverReports.jsx';
+import { boardForSource } from '/src/utils/feExpressBoardSources.mjs';
+import { PortalWorkspace, PortalSaveButton, usePortalState } from '/src/utils/feExpressWorkspace.jsx';
+import { rankLoads } from '/src/utils/feExpressLoadSearch.mjs';
+import dispatchProfile from '/src/config/feExpressProfile.json';
+import React, { useState, useEffect } from '/src/utils/applicationReact.js';
 
-const INITIAL_FALLBACK_LOADS = [
-  {
-    "load_id": "TR-23750836",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Milwaukee, WI",
-    "equipment_type": "Flatbed (Hotshot) (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 91.5,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 6.56,
-    "true_rpm": 2.22,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FH\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23739199",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Bridgeport, OH",
-    "dest_city_state": "Charleston, WV",
-    "equipment_type": "Flatbed (Full) [10-21-2026]",
-    "weight_lbs": 5000.0,
-    "total_miles": 177.8,
-    "deadhead_miles": 437.9,
-    "flat_rate_pay": 1100.0,
-    "rpm": 6.19,
-    "true_rpm": 1.79,
-    "broker_name": "Atlantic Logistics (Extension in Comments)",
-    "broker_phone": "",
-    "broker_email": "X139 KASEY@SHIPATLANTIC.COM NO TARP,EDGE PROTECTORS",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750841",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Waukesha, WI",
-    "equipment_type": "Flatbed/Step Deck (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 105.2,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 5.7,
-    "true_rpm": 2.11,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FOSD\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750837",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Waukesha, WI",
-    "equipment_type": "Flatbed/Step Deck (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 105.2,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 5.7,
-    "true_rpm": 2.11,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FOSD\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750835",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Waukesha, WI",
-    "equipment_type": "Flatbed (Hotshot) (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 105.2,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 5.7,
-    "true_rpm": 2.11,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FH\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750834",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Waukesha, WI",
-    "equipment_type": "Flatbed/Step Deck (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 105.2,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 5.7,
-    "true_rpm": 2.11,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FOSD\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750833",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Chicago, IL",
-    "dest_city_state": "Waukesha, WI",
-    "equipment_type": "Flatbed/Step Deck (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 105.2,
-    "deadhead_miles": 179.3,
-    "flat_rate_pay": 600.0,
-    "rpm": 5.7,
-    "true_rpm": 2.11,
-    "broker_name": "DSV Road (Dispatch) \u2022 (541) 630-5024",
-    "broker_phone": "(541) 630-5024",
-    "broker_email": "FOSD\nCONTAINERS\n982 - Central Point, OR",
-    "score": "Greenlight",
-    "priority_tier": 1,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23711965",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Howell, MI",
-    "dest_city_state": "Hudson, CO",
-    "equipment_type": "Flatbed (Hotshot) (Full) [10-22-2026]",
-    "weight_lbs": 10000.0,
-    "total_miles": 705.1,
-    "deadhead_miles": 104.8,
-    "flat_rate_pay": 1175.0,
-    "rpm": 1.67,
-    "true_rpm": 1.45,
-    "broker_name": "Sureway Transportation Co / Anderson Trucking Serv (Mary Anderson) \u2022 (320) 304-6150",
-    "broker_phone": "(320) 304-6150",
-    "broker_email": "HOTSHOT, NO TARPS, ASK FOR MARY PARTIAL",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23746716",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Fowler, IN",
-    "dest_city_state": "Wisconsin Rapi, WI",
-    "equipment_type": "Van (Full) [10-22-2026]",
-    "weight_lbs": 440.0,
-    "total_miles": 755.2,
-    "deadhead_miles": 218.8,
-    "flat_rate_pay": 1200.0,
-    "rpm": 1.59,
-    "true_rpm": 1.23,
-    "broker_name": "Sureway Transportation Co / Anderson Trucking Serv (Lisa Anderson) \u2022 (320) 534-2221",
-    "broker_phone": "(320) 534-2221",
-    "broker_email": "ask for lisa",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23747240",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Michigan City, IN",
-    "dest_city_state": "Fort Worth, TX",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-22-2026]",
-    "weight_lbs": 8000.0,
-    "total_miles": 980.1,
-    "deadhead_miles": 122.8,
-    "flat_rate_pay": 1400.0,
-    "rpm": 1.43,
-    "true_rpm": 1.27,
-    "broker_name": "Sureway Transportation Co / Anderson Trucking Serv (Brian Bjorklund) \u2022 (320) 258-8028",
-    "broker_phone": "(320) 258-8028",
-    "broker_email": "13FT PARTIAL / TARP / FLAT OR STEP / BRIANBJO@ATS-INC.COM",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23737857",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Michigan City, IN",
-    "dest_city_state": "Baton Rouge, LA",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-22-2026]",
-    "weight_lbs": 8000.0,
-    "total_miles": 937.7,
-    "deadhead_miles": 122.8,
-    "flat_rate_pay": 1200.0,
-    "rpm": 1.28,
-    "true_rpm": 1.13,
-    "broker_name": "Sureway Transportation Co / Anderson Trucking Serv (Brian Bjorklund) \u2022 (320) 258-8028",
-    "broker_phone": "(320) 258-8028",
-    "broker_email": "10FT PARTIAL / TARP / BRIANBJO@ATS-INC.COM",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23745578",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Michigan City, IN",
-    "dest_city_state": "Kenner, LA",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-22-2026]",
-    "weight_lbs": 7000.0,
-    "total_miles": 938.7,
-    "deadhead_miles": 122.8,
-    "flat_rate_pay": 1200.0,
-    "rpm": 1.28,
-    "true_rpm": 1.13,
-    "broker_name": "Sureway Transportation Co / Anderson Trucking Serv (Brian Bjorklund) \u2022 (320) 258-8028",
-    "broker_phone": "(320) 258-8028",
-    "broker_email": "12FT PARTIAL / NO TARP / BRIANBJO@ATS-INC.COM",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750721",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Apple Creek, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 750.3,
-    "deadhead_miles": 334.7,
-    "flat_rate_pay": 900.0,
-    "rpm": 1.2,
-    "true_rpm": 0.83,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 5 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750722",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Apple Creek, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 750.3,
-    "deadhead_miles": 334.7,
-    "flat_rate_pay": 900.0,
-    "rpm": 1.2,
-    "true_rpm": 0.83,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 5 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750731",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Apple Creek, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 750.3,
-    "deadhead_miles": 334.7,
-    "flat_rate_pay": 900.0,
-    "rpm": 1.2,
-    "true_rpm": 0.83,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 5 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750733",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Apple Creek, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Double Drop (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 750.3,
-    "deadhead_miles": 334.7,
-    "flat_rate_pay": 900.0,
-    "rpm": 1.2,
-    "true_rpm": 0.83,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 5 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750734",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "Apple Creek, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Double Drop (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 750.3,
-    "deadhead_miles": 334.7,
-    "flat_rate_pay": 900.0,
-    "rpm": 1.2,
-    "true_rpm": 0.83,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 5 loose attachments, no tarps, 6,000 lbs -Landoll Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750521",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750525",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750528",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -Conestoga Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750532",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Double Drop (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750533",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Double Drop (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -Landoll Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750535",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750536",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed/Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750548",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Flatbed (Hotshot) (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750549",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Lowboy (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750572",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Lowboy (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -OR RGN Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750573",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Step Deck (Removable Gooseneck) (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750615",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  },
-  {
-    "load_id": "TR-23750705",
-    "source": "Trulos Public Board (Live)",
-    "origin_city_state": "South Vienna, OH",
-    "dest_city_state": "Jefferson, NH",
-    "equipment_type": "Step Deck (Partial) [10-21-2026]",
-    "weight_lbs": 6000.0,
-    "total_miles": 867.6,
-    "deadhead_miles": 327.8,
-    "flat_rate_pay": 700.0,
-    "rpm": 0.81,
-    "true_rpm": 0.59,
-    "broker_name": "Ampersand Transport ((856) 807-5810 Milton)",
-    "broker_phone": "",
-    "broker_email": "(856) 807-5810 Milton, 6 loose attachments, no tarps, 6,000 lbs -OR RGN Requested-",
-    "score": "Reject",
-    "priority_tier": 3,
-    "status": "LIVE",
-    "created_at": "2026-10-21 19:25:08"
-  }
-];
-
+/** @param {string | null | undefined} equipmentStr @param {number} [weight] */
 function classifyEquipmentLocally(equipmentStr, weight = 0) {
   const eqLower = (equipmentStr || '').toLowerCase();
   const semiKeywords = ["53'", "semi", "tractor", "double drop", "heavy haul", "lowboy"];
@@ -628,18 +32,22 @@ function classifyEquipmentLocally(equipmentStr, weight = 0) {
   if (isBox) vehicleType = 'BOX_TRUCK';
   else if (isVan) vehicleType = 'CARGO_VAN';
 
-  const requiresLiftgate = ['liftgate', 'lift gate', 'lift-gate', 'lg req', 'needs lg'].some(k => eqLower.includes(k));
+  const requiresLiftgate = ['liftgate', 'lift gate', 'lift-gate', 'lg req', 'needs lg'].some(k => eqLower.includes(k)) && !['no liftgate', 'no lift gate', 'no lift-gate'].some(k => eqLower.includes(k));
 
   return { isBox, isVan, vehicleType, isSemi, requiresLiftgate };
 }
 
+/** @param {import("/types/fe-express").LoadInput} payload */
 function evaluateLocally(payload) {
-  const weight = parseFloat(payload.weight_lbs || 0);
+  const weight = Number(payload.weight_lbs ?? 0);
   const { isBox, isVan, vehicleType, isSemi, requiresLiftgate } = classifyEquipmentLocally(payload.equipment_type, weight);
-  const underWeight = (isBox && weight <= 10000.0) || (isVan && weight <= 4500.0) || (weight <= 10000.0);
-  const miles = Math.max(parseFloat(payload.total_miles || 1), 1.0);
-  const deadhead = Math.max(parseFloat(payload.deadhead_miles || 0), 0.0);
-  const pay = parseFloat(payload.flat_rate_pay || 0);
+  const underWeight = (isBox && weight <= 10000.0) || (isVan && weight <= 4500.0);
+  const miles = Number(payload.total_miles);
+  const deadhead = Number(payload.deadhead_miles ?? 0);
+  const pay = Number(payload.flat_rate_pay ?? 0);
+  if (![weight, Number(payload.total_miles), Number(payload.deadhead_miles ?? 0), pay].every(Number.isFinite) || weight <= 0 || Number(payload.total_miles) <= 0 || Number(payload.deadhead_miles ?? 0) < 0 || pay < 0) {
+    throw new Error('Enter positive weight and loaded miles, with nonnegative deadhead and pay.');
+  }
   const rpm = Number((pay / miles).toFixed(2));
   const true_rpm = Number((pay / (miles + deadhead)).toFixed(2));
 
@@ -650,7 +58,7 @@ function evaluateLocally(payload) {
   if (matchedFleet && underWeight && !isSemi) {
     if (requiresLiftgate) {
       score = 'Reject';
-      priority_tier = 4;
+      priority_tier = 3;
     } else if (true_rpm >= 2.50) {
       score = 'Greenlight';
       priority_tier = 1;
@@ -673,6 +81,7 @@ function evaluateLocally(payload) {
   };
 }
 
+/** @param {string | null | undefined} brokerName */
 function getLocalBrokerCredit(brokerName) {
   const name = (brokerName || '').toLowerCase();
   if (name.includes('sureway') || name.includes('anderson trucking')) {
@@ -699,89 +108,92 @@ function getLocalBrokerCredit(brokerName) {
   return { score: 82, rating: 'B', days_to_pay: 35, factoring: 'VERIFY', color: '#94A3B8' };
 }
 
-function getLocalSpotBenchmark(origin, dest, currentRpm, miles) {
+/** @param {string} _origin @param {string} _dest @param {string | number | null | undefined} currentRpm @param {number} _miles */
+function getLocalSpotBenchmark(_origin, _dest, currentRpm, _miles) {
   const avg = 2.45;
   const high = 3.20;
-  const current = parseFloat(currentRpm || 0);
+  const current = parseFloat(String(currentRpm || 0));
   const diff = (current - avg).toFixed(2);
-  let assessment = 'MARKET';
+  let assessment = 'TARGET';
   let badgeColor = '#38BDF8';
   if (current >= high) {
     assessment = 'PREMIUM';
     badgeColor = '#10B981';
   } else if (current >= avg) {
-    assessment = 'ABOVE AVG';
+    assessment = 'ABOVE TARGET';
     badgeColor = '#34D399';
   } else if (current < 2.00) {
     assessment = 'LOWBALL';
     badgeColor = '#EF4444';
   }
-  return { avg_rpm: avg, high_rpm: high, diff, assessment, badgeColor };
+  return { avg_rpm: avg, high_rpm: high, diff, assessment, badgeColor, source: 'Fixed illustrative targets; not measured market rates' };
 }
 
-export const DEVIN_DISPATCH_PROFILE = {
-  name: 'Devin',
-  company: 'FE Express LLC',
-  email: 'Devin.feexpress@gmail.com',
-  phone: '(616) 315-7483',
-  phoneDigits: '6163157483',
-  officePhone: '(616) 827-9366',
-  mc: 'MC-744829',
-  usdot: 'USDOT-2137128',
-  address: '2700 Remico St SW, Wyoming, MI 49519',
-  powerUnits: 43,
-  drivers: 43,
-  annualMiles: '3,624,940',
-  safetyRating: 'FMCSA Satisfactory / Active & In Good Standing',
-  driverOosPct: '4.2% (Better than US 6.67% Avg)',
-  insurance: '$1,000,000 Auto Liability / $100,000 Cargo'
-};
+// Official free board destinations. These links do not import or post loads.
+const FREE_LOAD_BOARDS = [
+  { id: 'trulos', name: 'Trulos', url: 'https://www.trulos.com/load-board/', access: 'Free search · No account required', note: 'Open the provider board. Existing Trulos refresh is available above.' },
+  { id: 'freightfinder', name: 'FreightFinder', url: 'https://www.freightfinder.com/', access: 'Free search · No account required', note: 'Search by origin, destination and equipment. Most listings are full truckloads; confirm box-truck suitability.' },
+  { id: 'directfreight', name: 'Direct Freight', url: 'https://www.directfreight.com/home/', access: 'Free account available', note: 'Search on the provider website. Some tools or contact details may require an account or paid plan.' },
+];
 
+export const DEVIN_DISPATCH_PROFILE = dispatchProfile;
+
+/** @param {string | null | undefined} brokerEmail @param {import("/types/fe-express").FreightLoad} load @param {string} [bidSubject] @param {string} [bidBody] */
 function buildDevinMailto(brokerEmail, load, bidSubject, bidBody) {
   const to = (brokerEmail && brokerEmail.includes('@')) ? brokerEmail.trim() : '';
   const subject = encodeURIComponent(bidSubject || `FE Express LLC - Load ${load.load_id} (${load.origin_city_state} -> ${load.dest_city_state})`);
-  const body = encodeURIComponent(bidBody || `Hello ${load.broker_name},\n\nWe have a 26' Box Truck (Dock High - No Liftgate) ready near ${load.origin_city_state}.\nCan lock down load ${load.load_id}.\n\nDirect Dispatch: Devin\nPhone: (616) 315-7483\nEmail: Devin.feexpress@gmail.com\nFE Express LLC | MC-744829 | USDOT-2137128\nAddress: 2700 Remico St SW, Wyoming, MI 49519\nFleet: 43 Power Units | Safety: Satisfactory (Active & In Good Standing)`);
+  const body = encodeURIComponent(bidBody || `Hello ${load.broker_name},\n\nWe have a 26' Box Truck (Dock High - No Liftgate) ready near ${load.origin_city_state}.\nCan lock down load ${load.load_id}.\n\nDirect Dispatch: ${DEVIN_DISPATCH_PROFILE.name}\nPhone: ${DEVIN_DISPATCH_PROFILE.phone}\nEmail: ${DEVIN_DISPATCH_PROFILE.email}\n${DEVIN_DISPATCH_PROFILE.company} | ${DEVIN_DISPATCH_PROFILE.mc} | ${DEVIN_DISPATCH_PROFILE.usdot}\nVerify carrier details and broker terms before sending.`);
   return `mailto:${to}?subject=${subject}&body=${body}`;
 }
 
-export default function FEExpressDispatcher({ BACKEND_URL }) {
+/** @param {{BACKEND_URL?: string; request?: typeof fetch}} props */
+function DispatcherContent({ BACKEND_URL = 'http://127.0.0.1:8080', request = fetch }) {
   const baseUrl = BACKEND_URL || 'http://127.0.0.1:8080';
-  const [loads, setLoads] = useState(INITIAL_FALLBACK_LOADS);
-  const [status, setStatus] = useState({
-    status: 'ONLINE',
-    total_loads: INITIAL_FALLBACK_LOADS.length,
-    greenlight_loads: INITIAL_FALLBACK_LOADS.filter(l => l.score === 'Greenlight').length
+  const [loads, setLoads] = useState(/** @type {import("/types/fe-express").FreightLoad[]} */ ([]));
+  const [, setStatus] = useState({
+    status: 'CONNECTING',
+    total_loads: 0,
+    greenlight_loads: 0
   });
   const [loading, setLoading] = useState(false);
-  const [filterScore, setFilterScore] = useState('ALL');
+  const [filterScore, setFilterScore] = usePortalState('filterScore', 'ALL');
+  const [selectedBoard, setSelectedBoard] = usePortalState('selectedBoard', 'all');
+  const [reportDriver, setReportDriver] = usePortalState('reportDriver', 'OWNER-DEVIN');
+  const [reportsOpened, setReportsOpened] = usePortalState('reportsOpened', false);
+  const [logRequest, setLogRequest] = useState(0);
+  const [tripForReport, setTripForReport] = usePortalState('tripForReport', '');
 
   // Ad-hoc Quick Calculator
-  const [calcOrigin, setCalcOrigin] = useState('Grand Rapids, MI');
-  const [calcDest, setCalcDest] = useState('Chicago, IL');
-  const [calcEquip, setCalcEquip] = useState("26' Box Truck (Dock High - No Liftgate)");
-  const [calcMiles, setCalcMiles] = useState(180);
-  const [calcDeadhead, setCalcDeadhead] = useState(15);
-  const [calcPay, setCalcPay] = useState(550);
-  const [calcWeight, setCalcWeight] = useState(6500);
-  const [calcBroker, setCalcBroker] = useState('Echo Global Logistics');
-  const [evalResult, setEvalResult] = useState(null);
-  const [homeBase, setHomeBase] = useState('Grand Rapids, MI');
+  const [calcOrigin, setCalcOrigin] = usePortalState('calcOrigin', '');
+  const [calcDest, setCalcDest] = usePortalState('calcDest', '');
+  const [calcEquip, setCalcEquip] = usePortalState('calcEquip', '');
+  const [calcMiles, setCalcMiles] = usePortalState('calcMiles', '');
+  const [calcDeadhead, setCalcDeadhead] = usePortalState('calcDeadhead', '');
+  const [calcPay, setCalcPay] = usePortalState('calcPay', '');
+  const [calcWeight, setCalcWeight] = usePortalState('calcWeight', '');
+  const [calcBroker, setCalcBroker] = usePortalState('calcBroker', '');
+  const [evalResult, setEvalResult] = useState(/** @type {ReturnType<typeof evaluateLocally> | null} */ (null));
+  const [homeBase, setHomeBase] = usePortalState('homeBase', 'Grand Rapids, MI');
   const [syncingLive, setSyncingLive] = useState(false);
-  const [selectedBidLoad, setSelectedBidLoad] = useState(null);
-  const [bidData, setBidData] = useState(null);
+  const [feedError, setFeedError] = useState('');
+  const [lastBoardRead, setLastBoardRead] = useState('');
+  const [lastPublicSync, setLastPublicSync] = useState('');
+  const [selectedBidLoad, setSelectedBidLoad] = useState(/** @type {import("/types/fe-express").FreightLoad | null} */ (null));
+  const [bidData, setBidData] = useState(/** @type {import("/types/fe-express").BidData | null} */ (null));
 
   // Phase 1: Smart Backhaul Radar & Alert Sentinel States
-  const [selectedBackhaulLoad, setSelectedBackhaulLoad] = useState(null);
-  const [backhaulsList, setBackhaulsList] = useState([]);
+  const [selectedBackhaulLoad, setSelectedBackhaulLoad] = useState(/** @type {import("/types/fe-express").FreightLoad | null} */ (null));
+  const [backhaulsList, setBackhaulsList] = useState(/** @type {import("/types/fe-express").FreightLoad[]} */ ([]));
   const [loadingBackhauls, setLoadingBackhauls] = useState(false);
-  const [activeAlertBanner, setActiveAlertBanner] = useState(null);
+  const [] = useState(null);
 
+  /** @param {import("/types/fe-express").FreightLoad} load */
   const handleOpenBackhaulModal = async (load) => {
     setSelectedBackhaulLoad(load);
     setLoadingBackhauls(true);
     setBackhaulsList([]);
     try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/loads/${load.load_id}/backhauls?home_base=${encodeURIComponent(homeBase)}`);
+      const res = await request(`${baseUrl}/api/v1/fe-express/loads/${load.load_id}/backhauls?home_base=${encodeURIComponent(homeBase)}`);
       if (res.ok) {
         const data = await res.json();
         setBackhaulsList(data.backhauls || []);
@@ -801,163 +213,146 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
   };
 
   // Search & Filter Bar Variables (Live Querying)
-  const [searchOrigin, setSearchOrigin] = useState('');
-  const [searchDest, setSearchDest] = useState('');
-  const [minRpm, setMinRpm] = useState('');
-  const [minFlatPay, setMinFlatPay] = useState('');
-  const [maxWeight, setMaxWeight] = useState('');
-  const [maxDeadhead, setMaxDeadhead] = useState('');
-  const [vehicleFilter, setVehicleFilter] = useState('ALL'); // 'ALL' | 'BOX_TRUCK' | 'CARGO_VAN'
-  const [viewMode, setViewMode] = useState(() => (typeof window !== 'undefined' && window.innerWidth < 768 ? 'cards' : 'table')); // 'table' | 'cards'
-  const [showEvaluator, setShowEvaluator] = useState(() => (typeof window !== 'undefined' && window.innerWidth < 768 ? false : true));
+  const [searchOrigin, setSearchOrigin] = usePortalState('searchOrigin', '');
+  const [searchEquipment, setSearchEquipment] = usePortalState('searchEquipment', '');
+  const [searchMiles, setSearchMiles] = usePortalState('searchMiles', '');
+  const [searchBroker, setSearchBroker] = usePortalState('searchBroker', '');
+  const [searchDest, setSearchDest] = usePortalState('searchDest', '');
+  const [minRpm, setMinRpm] = usePortalState('minRpm', '');
+  const [minFlatPay, setMinFlatPay] = usePortalState('minFlatPay', '');
+  const [maxWeight, setMaxWeight] = usePortalState('maxWeight', '');
+  const [maxDeadhead, setMaxDeadhead] = usePortalState('maxDeadhead', '');
+  const [vehicleFilter, setVehicleFilter] = usePortalState('vehicleFilter', 'ALL'); // 'ALL' | 'BOX_TRUCK' | 'CARGO_VAN'
+  const [viewMode, setViewMode] = usePortalState('viewMode', () => (typeof window !== 'undefined' && window.innerWidth < 768 ? 'cards' : 'table')); // 'table' | 'cards'
+  const [showEvaluator, setShowEvaluator] = usePortalState('showEvaluator', () => (typeof window !== 'undefined' && window.innerWidth < 768 ? false : true));
 
   // Phase 3 & 4: Active Loads, BOL Photos, Profit & Driver Settlements States
-  const [activeSubTab, setActiveSubTab] = useState('board'); // 'board' | 'active_dispatches' | 'profit_ledger' | 'drivers_ledger'
-  const [activeDispatches, setActiveDispatches] = useState([]);
-  const [selectedDispatchForBol, setSelectedDispatchForBol] = useState(null);
-  const [bolUploadNote, setBolUploadNote] = useState('');
-  const [bolFuelCost, setBolFuelCost] = useState(40.0);
-  const [bolTollsCost, setBolTollsCost] = useState(20.0);
-  const [bolStatusUpdate, setBolStatusUpdate] = useState('DELIVERED');
+  const [activeSubTab, setActiveSubTab] = usePortalState('activeSubTab', 'board'); // 'board' | 'active_dispatches' | 'profit_ledger' | 'drivers_ledger'
+  const [activeDispatches, setActiveDispatches] = useState(/** @type {import("/types/fe-express").ActiveDispatch[]} */ ([]));
 
   // Subcontractor 1099 Drivers & Payroll State
-  const [driversList, setDriversList] = useState([]);
-  const [settlementsList, setSettlementsList] = useState([]);
+  const [driversList, setDriversList] = useState(/** @type {import("/types/fe-express").Driver[]} */ ([]));
+  const [settlementsList, setSettlementsList] = useState(/** @type {import("/types/fe-express").Settlement[]} */ ([]));
   const [showAddDriverModal, setShowAddDriverModal] = useState(false);
   const [showAddSettlementModal, setShowAddSettlementModal] = useState(false);
-  const [selectedDriverForSettlement, setSelectedDriverForSettlement] = useState(null);
+  const [selectedDriverForSettlement, setSelectedDriverForSettlement] = useState(/** @type {import("/types/fe-express").Driver | null} */ (null));
 
   // New Driver Form State
-  const [newDriverName, setNewDriverName] = useState('');
-  const [newDriverPhone, setNewDriverPhone] = useState('');
-  const [newDriverEmail, setNewDriverEmail] = useState('');
-  const [newDriverSSN4, setNewDriverSSN4] = useState('');
-  const [newDriverDL, setNewDriverDL] = useState('');
-  const [newDriverDLState, setNewDriverDLState] = useState('MI');
-  const [newDriverPayModel, setNewDriverPayModel] = useState('PERCENT_GROSS'); // 'PERCENT_GROSS' | 'PER_MILE' | 'FLAT_DAY'
-  const [newDriverPayRate, setNewDriverPayRate] = useState('25'); // 25% or 0.55/mi or 200/day
-  const [newDriverMedCardExp, setNewDriverMedCardExp] = useState('2027-01-01');
-  const [newDriverMVRStatus, setNewDriverMVRStatus] = useState('CLEARED');
-  const [newDriverW9Status, setNewDriverW9Status] = useState(1);
-  const [newDriverNotes, setNewDriverNotes] = useState('');
+  const [newDriverName, setNewDriverName] = usePortalState('newDriverName', '');
+  const [newDriverPhone, setNewDriverPhone] = usePortalState('newDriverPhone', '');
+  const [newDriverEmail, setNewDriverEmail] = usePortalState('newDriverEmail', '');
+  const [newDriverSSN4, setNewDriverSSN4] = usePortalState('newDriverSSN4', '');
+  const [newDriverDL, setNewDriverDL] = usePortalState('newDriverDL', '');
+  const [newDriverDLState, setNewDriverDLState] = usePortalState('newDriverDLState', 'MI');
+  const [newDriverPayModel, setNewDriverPayModel] = usePortalState('newDriverPayModel', 'PERCENT_GROSS'); // 'PERCENT_GROSS' | 'PER_MILE' | 'FLAT_DAY'
+  const [newDriverPayRate, setNewDriverPayRate] = usePortalState('newDriverPayRate', '25'); // 25% or 0.55/mi or 200/day
+  const [newDriverMedCardExp, setNewDriverMedCardExp] = usePortalState('newDriverMedCardExp', '2027-01-01');
+  const [newDriverMVRStatus] = usePortalState('newDriverMVRStatus', 'CLEARED');
+  const [newDriverW9Status, setNewDriverW9Status] = usePortalState('newDriverW9Status', 1);
+  const [newDriverNotes, setNewDriverNotes] = usePortalState('newDriverNotes', '');
 
   // New Settlement Form State
-  const [settleDate, setSettleDate] = useState(new Date().toISOString().slice(0, 10));
-  const [settleLane, setSettleLane] = useState('');
-  const [settleMiles, setSettleMiles] = useState('');
-  const [settleGrossPay, setSettleGrossPay] = useState('');
-  const [settleFuelDeduct, setSettleFuelDeduct] = useState('0');
-  const [settleAdvance, setSettleAdvance] = useState('0');
-  const [settlePayMethod, setSettlePayMethod] = useState('ZELLE');
-  const [settleNotes, setSettleNotes] = useState('');
+  const [settleDate, setSettleDate] = usePortalState('settleDate', new Date().toISOString().slice(0, 10));
+  const [settleLane, setSettleLane] = usePortalState('settleLane', '');
+  const [settleMiles, setSettleMiles] = usePortalState('settleMiles', '');
+  const [settleGrossPay, setSettleGrossPay] = usePortalState('settleGrossPay', '');
+  const [settleFuelDeduct, setSettleFuelDeduct] = usePortalState('settleFuelDeduct', '0');
+  const [settleAdvance, setSettleAdvance] = usePortalState('settleAdvance', '0');
+  const [settlePayMethod, setSettlePayMethod] = usePortalState('settlePayMethod', 'ZELLE');
+  const [settleNotes, setSettleNotes] = usePortalState('settleNotes', '');
 
   // Owner-Operator High-ROI State
-  const [triangulationChains, setTriangulationChains] = useState([]);
+  const [triangulationChains, setTriangulationChains] = useState(/** @type {import("/types/fe-express").TriangulationChain[]} */ ([]));
   const [loadingChains, setLoadingChains] = useState(false);
-  const [iftaSummary, setIftaSummary] = useState(null);
-  const [factoringSubmissions, setFactoringSubmissions] = useState([]);
-  const [navHazards, setNavHazards] = useState(null);
-  const [dvirDashboard, setDvirDashboard] = useState(null);
+  const [iftaSummary, setIftaSummary] = useState(/** @type {import("/types/fe-express").IftaSummary | null} */ (null));
+  const [] = useState(/** @type {unknown[]} */ ([]));
+  const [] = useState(null);
+  const [dvirDashboard, setDvirDashboard] = useState(/** @type {import("/types/fe-express").DvirDashboard | null} */ (null));
 
   // Apex Dispatcher Cockpit 5-Pillar States
-  const [selectedLoadForBlast, setSelectedLoadForBlast] = useState(null);
-  const [blastBidAmount, setBlastBidAmount] = useState('');
-  const [blastStatus, setBlastStatus] = useState(null);
-  const [horizonMapModal, setHorizonMapModal] = useState(null);
-  const [detentionEscrowModal, setDetentionEscrowModal] = useState(null);
+  const [selectedLoadForBlast, setSelectedLoadForBlast] = useState(/** @type {import("/types/fe-express").FreightLoad | null} */ (null));
+  const [blastBidAmount, setBlastBidAmount] = usePortalState('blastBidAmount', '');
+  const [blastStatus, setBlastStatus] = useState(/** @type {{pitch_snippet: string} | null} */ (null));
+  const [horizonMapModal, setHorizonMapModal] = useState(/** @type {import("/types/fe-express").HorizonMap | null} */ (null));
+  const [] = useState(null);
 
   // Apex Logistics Missing Suite States (Dock Intelligence, Live CPM, Accessorial Claims)
-  const [dockIntelModal, setDockIntelModal] = useState(null);
-  const [cpmCalibrationModal, setCpmCalibrationModal] = useState(null);
-  const [accessorialClaimModal, setAccessorialClaimModal] = useState(null);
-  const [cpmParams, setCpmParams] = useState({ diesel_price: 3.85, truck_mpg: 9.5, driver_cpm: 0.60, target_margin: 25.0 });
-  const [claimParams, setClaimParams] = useState({ claim_type: 'DETENTION', units: 2.5, rate: 75.0 });
-  const [claimResult, setClaimResult] = useState(null);
+  const [dockIntelModal, setDockIntelModal] = useState(/** @type {import("/types/fe-express").DockIntel | null} */ (null));
+  const [cpmCalibrationModal, setCpmCalibrationModal] = useState(/** @type {import("/types/fe-express").CpmCalibration | null} */ (null));
+  const [accessorialClaimModal, setAccessorialClaimModal] = useState(/** @type {import("/types/fe-express").FreightLoad | null} */ (null));
+  const [cpmParams] = usePortalState('cpmParams', { diesel_price: 3.85, truck_mpg: 9.5, driver_cpm: 0.60, target_margin: 25.0 });
+  const [claimParams, setClaimParams] = usePortalState('claimParams', { claim_type: 'DETENTION', units: 2.5, rate: 75.0 });
+  const [claimResult, setClaimResult] = useState(/** @type {import("/types/fe-express").ClaimResult | null} */ (null));
 
   // Elite Tier Scaling Suite (Fuel Arbitrage, Capacity Broadcast, Lumper Escrow)
-  const [fuelOptimizerModal, setFuelOptimizerModal] = useState(null);
-  const [capacityBroadcastModal, setCapacityBroadcastModal] = useState(null);
-  const [broadcastStatus, setBroadcastStatus] = useState(null);
+  const [fuelOptimizerModal, setFuelOptimizerModal] = useState(/** @type {import("/types/fe-express").FuelOptimization | null} */ (null));
+  const [capacityBroadcastModal, setCapacityBroadcastModal] = useState(/** @type {{destination: string; location: string; available_time: string} | null} */ (null));
+  const [broadcastStatus, setBroadcastStatus] = useState(/** @type {{broadcast_id: string} | null} */ (null));
 
   // Next-Gen 5 Enterprise Modules States
-  const [meshModal, setMeshModal] = useState(null);
-  const [meshMatchResult, setMeshMatchResult] = useState(null);
-  const [fatigueModal, setFatigueModal] = useState(null);
-  const [fatigueResult, setFatigueResult] = useState(null);
-  const [scope3Modal, setScope3Modal] = useState(null);
-  const [scope3Result, setScope3Result] = useState(null);
-  const [blackSwanModal, setBlackSwanModal] = useState(null);
-  const [blackSwanResult, setBlackSwanResult] = useState(null);
-  const [arHudModal, setArHudModal] = useState(null);
-  const [arHudData, setArHudData] = useState(null);
+  const [meshModal, setMeshModal] = useState(/** @type {{carrier_b: string; lane: string[]} | null} */ (null));
+  const [meshMatchResult, setMeshMatchResult] = useState(/** @type {import("/types/fe-express").MeshMatch | null} */ (null));
+  const [fatigueModal, setFatigueModal] = useState(/** @type {{driver: string; unit: string} | null} */ (null));
+  const [fatigueResult, setFatigueResult] = useState(/** @type {import("/types/fe-express").FatigueAnalysis | null} */ (null));
+  const [scope3Modal, setScope3Modal] = useState(/** @type {{dispatch: string; lane: string} | null} */ (null));
+  const [scope3Result, setScope3Result] = useState(/** @type {import("/types/fe-express").Scope3Ledger | null} */ (null));
+  const [blackSwanModal, setBlackSwanModal] = useState(/** @type {{corridor: string} | null} */ (null));
+  const [blackSwanResult, setBlackSwanResult] = useState(/** @type {import("/types/fe-express").BlackSwanResult | null} */ (null));
+  const [arHudModal, setArHudModal] = useState(/** @type {{unit: string; driver: string} | null} */ (null));
+  const [arHudData, setArHudData] = useState(/** @type {import("/types/fe-express").ArHudData | null} */ (null));
 
 
 
 
-  const handleBookLoad = async (load) => {
-    const confirmBook = window.confirm(`Lock down load ${load.load_id} (${load.origin_city_state} -> ${load.dest_city_state}) for $${load.flat_rate_pay} and assign to Devin's active haul queue?`);
-    if (!confirmBook) return;
-
-    try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/book-load`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(load)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        alert(`Load ${load.load_id} booked successfully! Assigned to Devin's active dispatches.`);
-      }
-    } catch {
-      // Local state fallback
-      const totalMiles = Number(load.total_miles || 0) + Number(load.deadhead_miles || 0);
-      const estFuel = Math.round(totalMiles * 0.385);
-      const newDispatch = {
-        dispatch_id: `DISPATCH-${Date.now().toString().slice(-6)}`,
-        load_id: load.load_id,
-        origin: load.origin_city_state,
-        destination: load.dest_city_state,
-        loaded_miles: load.total_miles,
-        deadhead_miles: load.deadhead_miles || 0,
-        gross_pay: load.flat_rate_pay,
-        driver_name: 'Devin',
-        driver_phone: '(616) 315-7483',
-        driver_email: 'Devin.feexpress@gmail.com',
-        broker_name: load.broker_name,
-        broker_phone: load.broker_phone,
-        status: 'EN_ROUTE_PICKUP',
-        fuel_cost: estFuel,
-        tolls_cost: 25.0,
-        net_profit: load.flat_rate_pay - estFuel - 25.0,
-        bol_notes: 'Booked directly via FE Express Mobile Portal.',
-        bol_photo_url: null,
-        dispatched_at: new Date().toLocaleTimeString()
-      };
-      setActiveDispatches(prev => [newDispatch, ...prev]);
-      setActiveSubTab('active_dispatches');
-      alert(`Load ${load.load_id} booked locally and moved to Devin's Active Dispatches!`);
-    }
+  /** @param {import("/types/fe-express").ActiveDispatch} dispatch */
+  const openShipmentPaperwork = (dispatch) => {
+    setTripForReport(dispatch.dispatch_id);
+    setReportsOpened(true);
+    setActiveSubTab('driver_reports');
   };
 
+  /** @param {import("/types/fe-express").FreightLoad} load */
+  const handleBookLoad = async (load) => {
+    if (!window.confirm(`Save load ${load.load_id} to the active dispatch queue? Broker confirmation remains separate.`)) return;
+    try {
+      const res = await request(`${baseUrl}/api/v1/fe-express/book-load`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(load)
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.success !== true || !data.dispatch_id) throw new Error('Missing saved dispatch confirmation');
+      await refreshDispatchesAfterUpdate();
+      setActiveSubTab('active_dispatches');
+      alert(`Load ${load.load_id} saved to the dispatch queue. Confirm the booking with the broker separately.`);
+    } catch (error) {
+      alert('Booking was not confirmed. Refresh the dispatch list before retrying; no local booking has been created.');
+    }
+  };
   const triggerLivePublicSync = async () => {
     try {
       setSyncingLive(true);
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/loads/sync-live?home_base=${encodeURIComponent(homeBase)}`, { method: 'POST' });
-      if (res.ok) {
-        await fetchLoads();
+      const res = await request(`${baseUrl}/api/v1/fe-express/loads/sync-public?home_base=${encodeURIComponent(homeBase)}`, { method: 'POST' });
+      if (!res.ok) throw new Error(`Public board refresh returned HTTP ${res.status}`);
+      const result = await res.json();
+      if (result.success !== true || !Array.isArray(result.loads) || result.loads.length === 0) {
+        throw new Error('No fresh public listings were confirmed. The provider may be unavailable.');
       }
+      setLastPublicSync(new Date().toLocaleString());
+      setFeedError('');
+      await fetchLoads();
     } catch (e) {
-      console.warn('Live sync fallback:', e);
+      setFeedError(e instanceof Error ? e.message : 'Public board refresh failed.');
     } finally {
       setSyncingLive(false);
     }
   };
 
+  /** @param {import("/types/fe-express").FreightLoad} load */
   const handleOpenBidModal = async (load) => {
     setSelectedBidLoad(load);
     setBidData(null);
     try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/loads/${load.load_id}/bid`);
+      const res = await request(`${baseUrl}/api/v1/fe-express/loads/${load.load_id}/bid`);
       if (res.ok) {
         const data = await res.json();
         setBidData(data.bid);
@@ -968,13 +363,13 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     const targetBid = Math.round((load.flat_rate_pay || 600) * 1.10);
     setBidData({
       subject: `RATE CONFIRMATION / TRUCK IN HAND: ${load.origin_city_state} -> ${load.dest_city_state} [${load.load_id}] - FE Express LLC`,
-      email_body: `Hello ${load.broker_name} Team,\n\nWe have an empty 26' Box Truck (Dock High - No Liftgate) & Pallet Jack ready near ${load.origin_city_state} (Home: ${homeBase}) and can lock down load ${load.load_id} immediately.\n\n• Origin: ${load.origin_city_state}\n• Destination: ${load.dest_city_state}\n• Trip: ${load.total_miles} loaded miles\n• Posted Pay: $${load.flat_rate_pay}\n• Our All-In Rate Bid: $${targetBid} (Clean rate)\n\nAuthority: MC-1482910 | USDOT-3918241\nInsurance: $1,000,000 Auto Liability / $100,000 Cargo\n\nPlease send rate confirmation to Devin.feexpress@gmail.com or call Devin directly at (616) 315-7483.\n\nThank you,\nDevin | FE Express Dispatch\nDirect: (616) 315-7483\nEmail: Devin.feexpress@gmail.com`,
-      sms_text: `FE Express (MC-1482910) has a 26' box truck empty at ${load.origin_city_state} for load ${load.load_id} (${load.origin_city_state}->${load.dest_city_state}). Can take for $${targetBid} all-in. Call or text Devin at (616) 315-7483.`
+      email_body: `Hello ${load.broker_name} Team,\n\nWe have an empty 26' Box Truck (Dock High - No Liftgate) & Pallet Jack ready near ${load.origin_city_state} (Home: ${homeBase}) and can lock down load ${load.load_id} immediately.\n\n• Origin: ${load.origin_city_state}\n• Destination: ${load.dest_city_state}\n• Trip: ${load.total_miles} loaded miles\n• Posted Pay: $${load.flat_rate_pay}\n• Our All-In Rate Bid: $${targetBid} (Clean rate)\n\nAuthority: ${DEVIN_DISPATCH_PROFILE.mc} | ${DEVIN_DISPATCH_PROFILE.usdot}\nInsurance: $1,000,000 Auto Liability / $100,000 Cargo\n\nPlease send rate confirmation to Devin.feexpress@gmail.com or call Devin directly at (616) 315-7483.\n\nThank you,\nDevin | FE Express Dispatch\nDirect: (616) 315-7483\nEmail: Devin.feexpress@gmail.com`,
+      sms_text: `FE Express (${DEVIN_DISPATCH_PROFILE.mc}) has a 26' box truck empty at ${load.origin_city_state} for load ${load.load_id} (${load.origin_city_state}->${load.dest_city_state}). Can take for $${targetBid} all-in. Call or text Devin at (616) 315-7483.`
     });
   };
 
   const fetchActiveDispatches = async () => {
-    const response = await fetch(`${baseUrl}/api/v1/fe-express/active-dispatches`);
+    const response = await request(`${baseUrl}/api/v1/fe-express/active-dispatches`);
     if (!response.ok) throw new Error(`Dispatch refresh returned HTTP ${response.status}`);
     const data = await response.json();
     if (!Array.isArray(data.dispatches)) throw new Error('Dispatch response is missing its list.');
@@ -994,14 +389,13 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
   const fetchLoads = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/loads?limit=50`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.loads && data.loads.length > 0) {
-          setLoads(data.loads);
-        }
-      }
-      const stRes = await fetch(`${baseUrl}/api/v1/fe-express/status`);
+      const res = await request(`${baseUrl}/api/v1/fe-express/loads?limit=50`);
+      if (!res.ok) throw new Error(`Board read returned HTTP ${res.status}`);
+      const data = await res.json();
+      if (!Array.isArray(data.loads)) throw new Error('Board response is missing its list.');
+      setLoads(data.loads.map(/** @param {import("/types/fe-express").FreightLoad} load */ load => ({ ...load, source: String(load.source || 'Saved listing').replace(/\(Live\)/gi, '(cached)'), status: 'CACHED' })));
+      setLastBoardRead(new Date().toLocaleTimeString());
+      const stRes = await request(`${baseUrl}/api/v1/fe-express/status`);
       if (stRes.ok) {
         const stData = await stRes.json();
         setStatus(stData);
@@ -1011,7 +405,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       await fetchActiveDispatches();
 
       // Fetch 1099 Drivers
-      const drvRes = await fetch(`${baseUrl}/api/v1/fe-express/drivers`);
+      const drvRes = await request(`${baseUrl}/api/v1/fe-express/drivers`);
       if (drvRes.ok) {
         const drvData = await drvRes.json();
         if (drvData.drivers) {
@@ -1020,20 +414,21 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       }
 
       // Fetch Driver Settlements
-      const stlRes = await fetch(`${baseUrl}/api/v1/fe-express/settlements`);
+      const stlRes = await request(`${baseUrl}/api/v1/fe-express/settlements`);
       if (stlRes.ok) {
         const stlData = await stlRes.json();
         if (stlData.settlements) {
           setSettlementsList(stlData.settlements);
         }
       }
-    } catch {
-      // Fallback to local state when viewing on static Firebase or before backend reload
+    } catch (error) {
+      setFeedError(error instanceof Error ? error.message : 'Board connection unavailable.');
     } finally {
       setLoading(false);
     }
   };
 
+  /** @param {import("react").FormEvent} e */
   const handleSaveDriver = async (e) => {
     e.preventDefault();
     if (!newDriverName.trim()) {
@@ -1052,20 +447,26 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       pay_rate: parseFloat(newDriverPayRate) || 25,
       medical_card_exp: newDriverMedCardExp,
       mvr_check_status: newDriverMVRStatus,
-      w9_on_file: parseInt(newDriverW9Status, 10),
+      w9_on_file: parseInt(String(newDriverW9Status), 10),
       notes: newDriverNotes.trim()
     };
 
     try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/drivers`, {
+      const res = await request(`${baseUrl}/api/v1/fe-express/drivers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newDriverObj)
       });
-      if (res.ok) {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const saved = await res.json();
+      if (saved.success !== true) throw new Error('Save not confirmed');
+      {
         alert(`Subcontract driver ${newDriverName} saved successfully to database!`);
       }
-    } catch {}
+    } catch (error) {
+      alert('Driver save was not confirmed. Your entries have been kept; refresh before retrying.');
+      return;
+    }
 
     setDriversList(prev => [newDriverObj, ...prev.filter(d => d.driver_id !== newDriverObj.driver_id)]);
     setShowAddDriverModal(false);
@@ -1078,6 +479,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     setNewDriverNotes('');
   };
 
+  /** @param {import("react").FormEvent} e */
   const handleRecordSettlement = async (e) => {
     e.preventDefault();
     if (!selectedDriverForSettlement) {
@@ -1120,15 +522,21 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     };
 
     try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/settlements`, {
+      const res = await request(`${baseUrl}/api/v1/fe-express/settlements`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settlementObj)
       });
-      if (res.ok) {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const saved = await res.json();
+      if (saved.success !== true) throw new Error('Save not confirmed');
+      {
         alert(`1099 settlement of $${net1099} recorded for ${selectedDriverForSettlement.full_name}!`);
       }
-    } catch {}
+    } catch (error) {
+      alert('Settlement save was not confirmed. Your entries have been kept; refresh before retrying.');
+      return;
+    }
 
     setSettlementsList(prev => [settlementObj, ...prev]);
     setShowAddSettlementModal(false);
@@ -1147,8 +555,19 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     return () => clearInterval(interval);
   }, []);
 
+  /** @param {import("react").FormEvent} e */
   const handleCalculate = async (e) => {
     e.preventDefault();
+    const unknown = [calcOrigin, calcDest, calcEquip, calcWeight, calcMiles, calcDeadhead, calcPay].some(value => String(value).trim() === '');
+    if (unknown) {
+      setSearchOrigin(calcOrigin.trim()); setSearchDest(calcDest.trim());
+      setSearchMiles(calcMiles); setSearchEquipment(calcEquip.trim()); setSearchBroker(calcBroker.trim());
+      setMaxWeight(String(calcWeight)); setMaxDeadhead(String(calcDeadhead));
+      setMinFlatPay(String(calcPay)); setMinRpm(''); setFilterScore('ALL');
+      setVehicleFilter('ALL'); setSelectedBoard('all'); setEvalResult(null);
+      setActiveSubTab('board');
+      return;
+    }
     const payload = {
       load_id: `FE-${Math.floor(100 + Math.random() * 900)}`,
       origin_city_state: calcOrigin,
@@ -1160,8 +579,9 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       flat_rate_pay: parseFloat(calcPay),
       broker_name: calcBroker
     };
+    try { evaluateLocally(payload); } catch (error) { alert(error instanceof Error ? error.message : "Invalid load values"); return; }
     try {
-      const res = await fetch(`${baseUrl}/api/v1/fe-express/loads/evaluate`, {
+      const res = await request(`${baseUrl}/api/v1/fe-express/loads/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -1182,63 +602,12 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
     }
   };
 
-  const filteredLoads = loads.filter(l => {
-    if (filterScore !== 'ALL' && l.score !== filterScore) return false;
-    
-    // Origin / State Filter
-    if (searchOrigin.trim()) {
-      const q = searchOrigin.toLowerCase().trim();
-      const originMatch = (l.origin_city_state || '').toLowerCase().includes(q);
-      if (!originMatch) return false;
-    }
+  const filteredLoads = rankLoads(loads, { selectedBoard, filterScore, searchOrigin, searchDest, searchEquipment, searchBroker, searchMiles, minRpm, minFlatPay, maxWeight, maxDeadhead, vehicleFilter });
 
-    // Destination / State Filter
-    if (searchDest.trim()) {
-      const q = searchDest.toLowerCase().trim();
-      const destMatch = (l.dest_city_state || '').toLowerCase().includes(q);
-      if (!destMatch) return false;
-    }
-
-    // Min Rate ($/mi - using true_rpm or loaded rpm)
-    if (minRpm !== '' && !isNaN(parseFloat(minRpm))) {
-      const threshold = parseFloat(minRpm);
-      const loadRpm = parseFloat(l.true_rpm || l.rpm || 0);
-      if (loadRpm < threshold) return false;
-    }
-
-    // Min Flat Pay ($)
-    if (minFlatPay !== '' && !isNaN(parseFloat(minFlatPay))) {
-      const threshold = parseFloat(minFlatPay);
-      const pay = parseFloat(l.flat_rate_pay || 0);
-      if (pay < threshold) return false;
-    }
-
-    // Max Weight (lbs)
-    if (maxWeight !== '' && !isNaN(parseFloat(maxWeight))) {
-      const threshold = parseFloat(maxWeight);
-      const wt = parseFloat(l.weight_lbs || 0);
-      if (wt > threshold) return false;
-    }
-
-    // Max Deadhead Radius (mi)
-    if (maxDeadhead !== '' && !isNaN(parseFloat(maxDeadhead))) {
-      const threshold = parseFloat(maxDeadhead);
-      const dh = parseFloat(l.deadhead_miles || 0);
-      if (dh > threshold) return false;
-    }
-
-    // Vehicle Type Match Automation (Box Truck vs Cargo/Sprinter Van)
-    if (vehicleFilter !== 'ALL') {
-      const match = l.vehicle_match || (classifyEquipmentLocally(l.equipment_type, l.weight_lbs).vehicleType);
-      if (vehicleFilter === 'BOX_TRUCK' && match !== 'BOX_TRUCK') return false;
-      if (vehicleFilter === 'CARGO_VAN' && match !== 'CARGO_VAN') return false;
-    }
-
-    return true;
-  });
 
   return (
     <div className="fe-express-container" style={{ padding: '24px', backgroundColor: '#0B0F19', color: '#F8FAFC', minHeight: '100%', overflowY: 'auto', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <PortalSaveButton />
       <div className="fe-express-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #1E293B', paddingBottom: '16px' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1275,22 +644,64 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               gap: '6px'
             }}
           >
-            {syncingLive ? '⏳ Fetching Live Boards...' : '🌐 Pull Real Live Public Loads (No Login)'}
+            {syncingLive ? '⏳ Refreshing Trulos...' : '🌐 Pull connected boards'}
           </button>
           <button
             onClick={fetchLoads}
             style={{ padding: '8px 14px', backgroundColor: '#1E293B', color: '#38BDF8', border: '1px solid #38BDF8', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}
           >
-            🔄 Refresh Board
+            🔄 Refresh saved results
           </button>
         </div>
       </div>
+
+      <p role="status" style={{ color: feedError ? '#FCA5A5' : '#CBD5E1' }}>
+        Free public listings · Saved board checked: {lastBoardRead || 'not yet'} · Public refresh confirmed: {lastPublicSync || 'not this session'}.
+        {' '}Saved listings refresh every 5 seconds while this page is open; availability and route mileage require confirmation.
+        {feedError && ` ${feedError} Previously saved listings may be stale.`}
+      </p>
+
+      <section aria-label="Free load boards" style={{ marginBottom: '24px', padding: '16px', border: '1px solid #334155', borderRadius: '8px', backgroundColor: '#111827' }}>
+        <h2 style={{ margin: '0 0 8px', fontSize: '18px', color: '#F8FAFC' }}>Load boards — organized by source</h2>
+        <p style={{ margin: '0 0 14px', color: '#CBD5E1', fontSize: '13px' }}>
+          Pull connected boards requests fresh Trulos listings. Refresh saved results reloads stored records; it does not contact every provider. Select a board below to show only its saved loads. FreightFinder and Direct Freight currently open on their own websites.
+          {' '}Use the Quick Calculator below to check a load before contacting its broker. Confirm availability, equipment, weight and rate with the provider.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
+          {FREE_LOAD_BOARDS.map(board => (
+            <article key={board.name} style={{ padding: '14px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px' }}>
+              <h3 style={{ margin: '0 0 6px', fontSize: '16px', color: '#F8FAFC' }}>{board.name}</h3>
+              <p style={{ margin: '0 0 8px', color: '#6EE7B7', fontSize: '12px' }}>{board.access}</p>
+              <p style={{ color: '#CBD5E1', fontSize: 13 }}>
+                {board.id === 'trulos' ? (syncingLive ? 'Pulling listings…' : feedError ? 'Refresh failed — saved results retained' : 'Importer available') : 'Website search only — import not connected'}
+                <br />{loads.filter(l => boardForSource(l.source) === board.id).length} saved records loaded
+                {board.id === 'trulos' && <><br />Last successful pull: {lastPublicSync || 'not this session'}</>}
+              </p>
+              <button type="button" aria-pressed={selectedBoard === board.id} onClick={() => { setSelectedBoard(board.id); setActiveSubTab('board'); }} style={{ padding: 9, background: selectedBoard === board.id ? '#0369a1' : '#1e293b', color: 'white', border: '1px solid #64748b', borderRadius: 5 }}>Show {board.name} loads</button>
+              {board.id === 'trulos' && <button type="button" disabled={syncingLive} onClick={triggerLivePublicSync} style={{ padding: 9, marginLeft: 6 }}>Pull Trulos</button>}
+              <p style={{ margin: '0 0 12px', color: '#CBD5E1', fontSize: '12px' }}>{board.note}</p>
+              <a href={board.url} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer"
+                aria-label={`Search ${board.name} (opens in a new tab)`}
+                style={{ display: 'inline-block', color: '#7DD3FC', fontWeight: 700, padding: '8px 0' }}>
+                Search {board.name} ↗
+              </a>
+            </article>
+          ))}
+        </div>
+        <div role="group" aria-label="Load board filter" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 12 }}>
+          {[['all', 'All boards'], ['other', 'Other / manually saved'], ['sylectus', 'Sylectus (pending)']].map(([id, title]) => <button key={id} type="button" aria-pressed={selectedBoard === id} onClick={() => { setSelectedBoard(id); setActiveSubTab('board'); }} style={{ padding: 10, background: selectedBoard === id ? '#0369a1' : '#1e293b', color: 'white', border: '1px solid #64748b', borderRadius: 5 }}>{title} ({id === 'all' ? loads.length : loads.filter(l => boardForSource(l.source) === id).length})</button>)}
+        </div>
+        <p role="status">Showing: {selectedBoard === 'all' ? 'All boards' : selectedBoard}. {filteredLoads.length} results from this board. Closest matches first when searching; otherwise newest received first. Unknown details require confirmation. Counts cover the records loaded on this page.</p>
+        <p style={{ margin: '12px 0 0', color: '#94A3B8', fontSize: '12px' }}>
+          Automatic access to additional boards requires a provider-approved feed. Sylectus remains pending; no paid plan or trial has been started.
+        </p>
+      </section>
 
       {/* KPI Cards */}
       <div className="fe-express-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <div style={{ backgroundColor: '#111827', border: '1px solid #1F2937', padding: '16px', borderRadius: '8px' }}>
           <div style={{ color: '#9CA3AF', fontSize: '12px', textTransform: 'uppercase' }}>Active Hub Status</div>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px' }}>🟢 OPERATIONAL</div>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px' }}>{lastBoardRead ? 'Connected to saved board' : 'Connecting to board'}</div>
         </div>
         <div style={{ backgroundColor: '#111827', border: '1px solid #1F2937', padding: '16px', borderRadius: '8px' }}>
           <div style={{ color: '#9CA3AF', fontSize: '12px', textTransform: 'uppercase' }}>Greenlight Loads</div>
@@ -1321,7 +732,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         fontSize: '13px',
         marginBottom: '12px'
       }}>
-        🟢 REAL PUBLIC BOARD FEED (Trulos Live) | Active Box Truck / Light Freight: {loads.length} loads | 🌟 {loads.filter(l => l.score === 'Greenlight').length} Greenlight (≥ $2.50/mi) | ⚠️ {loads.filter(l => l.score === 'Caution').length} Caution | Terminal Home Base: {homeBase}
+        SAVED LISTINGS (all loaded sources) | Box Truck / Light Freight: {loads.length} loads | 🌟 {loads.filter(l => l.score === 'Greenlight').length} Greenlight (≥ $2.50/mi) | ⚠️ {loads.filter(l => l.score === 'Caution').length} Caution | Terminal Home Base: {homeBase}
       </div>
 
       {/* Devin Dispatch Profile & Quick Contact Header */}
@@ -1489,6 +900,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         >
           💰 Trip Profit &amp; BOL Ledger (${activeDispatches.reduce((acc, d) => acc + (d.net_profit || 0), 0).toLocaleString()})
         </button>
+        <button onClick={() => { setReportsOpened(true); setActiveSubTab('driver_reports'); }} style={{padding:'8px 16px', background:activeSubTab === 'driver_reports' ? '#2563EB' : '#1E293B', color:'#FFF', border:0, borderRadius:6, cursor:'pointer'}}>Daily logs &amp; weekly reports</button>
         <button
           onClick={() => setActiveSubTab('drivers_ledger')}
           style={{
@@ -1512,19 +924,19 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             setActiveSubTab('owner_operator');
             if (triangulationChains.length === 0) {
               setLoadingChains(true);
-              fetch(`${baseUrl}/api/v1/fe-express/triangulation-chains`)
+              request(`${baseUrl}/api/v1/fe-express/triangulation-chains`)
                 .then(r => r.json())
                 .then(d => { if (d.success) setTriangulationChains(d.chains); setLoadingChains(false); })
                 .catch(() => setLoadingChains(false));
             }
             if (!iftaSummary) {
-              fetch(`${baseUrl}/api/v1/fe-express/ifta/summary`)
+              request(`${baseUrl}/api/v1/fe-express/ifta/summary`)
                 .then(r => r.json())
                 .then(d => { if (d.success) setIftaSummary(d.ifta_summary); })
                 .catch(() => {});
             }
             if (!dvirDashboard) {
-              fetch(`${baseUrl}/api/v1/fe-express/maintenance/dvir`)
+              request(`${baseUrl}/api/v1/fe-express/maintenance/dvir`)
                 .then(r => r.json())
                 .then(d => { if (d.success) setDvirDashboard(d.maintenance_dashboard); })
                 .catch(() => {});
@@ -1568,16 +980,16 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             alignItems: 'center',
             gap: '6px'
           }}
-          title="Multi-Platform Capacity Publishing: Broadcast empty truck to DAT, Truckstop, Sylectus & broker portals"
+          title="Prepare a local capacity draft; load board posting is not connected"
         >
-          📡 Post My Truck (5-Board Broadcast)
+          Prepare capacity posting draft
         </button>
         <button
           onClick={async () => {
             setMeshModal({ carrier_b: 'Midwest Peer Freight', lane: ['Grand Rapids, MI', 'Chicago, IL'] });
             setMeshMatchResult(null);
             try {
-              const r = await fetch(`${baseUrl}/api/v1/fe-express/mesh-haul/match`, {
+              const r = await request(`${baseUrl}/api/v1/fe-express/mesh-haul/match`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1616,7 +1028,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             setFatigueModal({ driver: 'Devin', unit: 'UNIT-26FT-01' });
             setFatigueResult(null);
             try {
-              const r = await fetch(`${baseUrl}/api/v1/fe-express/fatigue-catalyst`, {
+              const r = await request(`${baseUrl}/api/v1/fe-express/fatigue-catalyst`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1655,7 +1067,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             setScope3Modal({ dispatch: 'DISP-2026-001', lane: 'Grand Rapids ➔ Chicago' });
             setScope3Result(null);
             try {
-              const r = await fetch(`${baseUrl}/api/v1/fe-express/scope3-carbon`, {
+              const r = await request(`${baseUrl}/api/v1/fe-express/scope3-carbon`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1693,7 +1105,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             setBlackSwanModal({ corridor: 'Midwest / I-80 & I-94' });
             setBlackSwanResult(null);
             try {
-              const r = await fetch(`${baseUrl}/api/v1/fe-express/black-swan-radar`);
+              const r = await request(`${baseUrl}/api/v1/fe-express/black-swan-radar`);
               const d = await r.json();
               if (d.success) setBlackSwanResult(d.macro_radar);
             } catch (e) { console.error(e); }
@@ -1720,7 +1132,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             setArHudModal({ unit: 'UNIT-26FT-01', driver: 'Devin' });
             setArHudData(null);
             try {
-              const r = await fetch(`${baseUrl}/api/v1/fe-express/ar-hud?unit_id=UNIT-26FT-01&driver_id=DRV-DEVIN`);
+              const r = await request(`${baseUrl}/api/v1/fe-express/ar-hud?unit_id=UNIT-26FT-01&driver_id=DRV-DEVIN`);
               const d = await r.json();
               if (d.success) setArHudData(d.hud_telemetry);
             } catch (e) { console.error(e); }
@@ -1745,6 +1157,17 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       </div>
 
       {/* TAB 1: LIVE LOAD BOARD & FILTER CONTROLS */}
+      {['profit_ledger', 'driver_reports'].includes(activeSubTab) && <section aria-label="Employee work file" style={{ padding: 16, marginBottom: 14, background: '#142033', border: '1px solid #475569', borderRadius: 8 }}>
+        <h2 style={{ marginTop: 0 }}>Employee logs &amp; trip files</h2>
+        <label>Employee / driver<select aria-label="Employee / driver" value={reportDriver} onChange={e => setReportDriver(e.target.value)} style={{ padding: 10, margin: 10, color: 'white', background: '#0f172a', maxWidth: '100%' }}><option value="OWNER-DEVIN">Devin (owner)</option>{driversList.map(d => <option key={d.driver_id} value={d.driver_id}>{d.full_name}</option>)}</select></label>
+        <button type="button" onClick={() => setActiveSubTab('profit_ledger')} style={{ padding: 10, margin: 5 }}>Trip ledger</button>
+        <button type="button" onClick={() => { setReportsOpened(true); setActiveSubTab('driver_reports'); }} style={{ padding: 10, margin: 5 }}>Employee weekly file</button>
+        <button type="button" onClick={() => { setReportsOpened(true); setActiveSubTab('driver_reports'); setLogRequest(n => n + 1); }} style={{ padding: 10, margin: 5 }}>Add employee log</button>
+        <button type="button" onClick={() => setActiveSubTab('drivers_ledger')} style={{ padding: 10, margin: 5 }}>Manage drivers</button>
+        <p style={{ marginBottom: 0 }}>Logs and shipment files belong to the selected driver. The trip ledger shows all recorded trips. Link a trip explicitly using its Employee file button.</p>
+      </section>}
+      {(reportsOpened || activeSubTab === 'driver_reports') && <div hidden={activeSubTab !== 'driver_reports'}><FEExpressDriverReports baseUrl={baseUrl} request={request} activeDispatches={activeDispatches} driverId={reportDriver} onDriverChange={setReportDriver} logRequest={logRequest} selectedDispatch={tripForReport} /></div>}
+
       {activeSubTab === 'board' && (
         <>
           {/* Search & Filter Bar - Devin Lead Criteria Controls */}
@@ -1865,7 +1288,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             {(searchOrigin || searchDest || minRpm || minFlatPay || maxWeight || maxDeadhead || filterScore !== 'ALL' || vehicleFilter !== 'ALL') && (
               <button
                 onClick={() => {
-                  setSearchOrigin('');
+                  setSearchOrigin(''); setSearchMiles(''); setSearchEquipment(''); setSearchBroker('');
                   setSearchDest('');
                   setMinRpm('');
                   setMinFlatPay('');
@@ -2026,45 +1449,46 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
         {showEvaluator && (
           <div className="fe-express-evaluator-card" style={{ backgroundColor: '#111827', border: '1px solid #1F2937', borderRadius: '8px', padding: '18px', height: 'fit-content' }}>
             <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#38BDF8', margin: '0 0 16px' }}>⚡ Instant Lane Evaluator</h2>
+            <p style={{ color: '#94a3b8', fontSize: 12 }}>Every search field is optional. Blank means unknown. Partial entries find closest saved loads without adding a load or calculating an unsupported rate.</p>
             <form onSubmit={handleCalculate} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>
                 <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Origin</label>
-                <input type="text" value={calcOrigin} onChange={e => setCalcOrigin(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                <input type="text" aria-label="Origin (optional)" placeholder="Unknown" value={calcOrigin} onChange={e => setCalcOrigin(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
               </div>
               <div>
                 <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Destination</label>
-                <input type="text" value={calcDest} onChange={e => setCalcDest(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                <input type="text" aria-label="Destination (optional)" placeholder="Unknown" value={calcDest} onChange={e => setCalcDest(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <div>
                   <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Loaded Miles</label>
-                  <input type="number" value={calcMiles} onChange={e => setCalcMiles(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                  <input type="number" aria-label="Loaded miles (optional)" placeholder="Unknown" value={calcMiles} onChange={e => setCalcMiles(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Deadhead Miles</label>
-                  <input type="number" value={calcDeadhead} onChange={e => setCalcDeadhead(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                  <input type="number" aria-label="Deadhead miles (optional)" placeholder="Unknown" value={calcDeadhead} onChange={e => setCalcDeadhead(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <div>
                   <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Flat Rate Pay ($)</label>
-                  <input type="number" value={calcPay} onChange={e => setCalcPay(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                  <input type="number" aria-label="Flat rate pay (optional)" placeholder="Unknown" value={calcPay} onChange={e => setCalcPay(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Weight (lbs)</label>
-                  <input type="number" value={calcWeight} onChange={e => setCalcWeight(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                  <input type="number" aria-label="Weight (optional)" placeholder="Unknown" value={calcWeight} onChange={e => setCalcWeight(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
                 </div>
               </div>
               <div>
                 <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Equipment String</label>
-                <input type="text" value={calcEquip} onChange={e => setCalcEquip(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                <input type="text" aria-label="Equipment (optional)" placeholder="Unknown" value={calcEquip} onChange={e => setCalcEquip(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
               </div>
               <div>
                 <label style={{ fontSize: '12px', color: '#9CA3AF' }}>Broker Name</label>
-                <input type="text" value={calcBroker} onChange={e => setCalcBroker(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
+                <input type="text" aria-label="Broker (optional)" placeholder="Unknown" value={calcBroker} onChange={e => setCalcBroker(e.target.value)} style={{ width: '100%', padding: '8px', backgroundColor: '#1F2937', border: '1px solid #374151', color: '#FFF', borderRadius: '4px' }} />
               </div>
               <button type="submit" style={{ marginTop: '8px', padding: '10px', backgroundColor: '#2563EB', color: '#FFF', border: 'none', borderRadius: '4px', fontWeight: 700, cursor: 'pointer' }}>
-                ⚡ Evaluate &amp; Add to Board
+                ⚡ Evaluate / find closest loads
               </button>
             </form>
 
@@ -2150,7 +1574,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         {load.score.toUpperCase()}
                       </span>
                       <span style={{ fontSize: '11px', color: '#38BDF8', fontWeight: 600 }}>
-                        {load.posted_at || 'Live Feed'}
+                        {load.created_at ? `Received: ${load.created_at}` : 'Received time unknown'}
                       </span>
                     </div>
 
@@ -2217,7 +1641,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                               {bench.assessment}
                             </span>
                             <span style={{ color: '#94A3B8' }}>
-                              7-Day Spot Avg: <strong style={{ color: '#E2E8F0' }}>${bench.avg_rpm.toFixed(2)}/mi</strong>
+                              Illustrative Target: <strong style={{ color: '#E2E8F0' }}>${bench.avg_rpm.toFixed(2)}/mi</strong>
                             </span>
                           </div>
                           <div style={{
@@ -2279,7 +1703,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                               color: credit.color,
                               border: `1px solid ${credit.color}`
                             }}>
-                              {credit.factoring === 'APPROVED' ? '🟢 Factor Approved' : credit.factoring === 'CONDITIONAL' ? '🟡 Factor Cond.' : '⚪ Verify Factor'}
+                              {credit.factoring === 'APPROVED' ? 'Example factor rating' : credit.factoring === 'CONDITIONAL' ? '🟡 Factor Cond.' : '⚪ Verify Factor'}
                             </span>
                           </div>
                           <div style={{ display: 'flex', gap: '10px', marginTop: '4px', fontSize: '10px', color: '#94A3B8' }}>
@@ -2449,7 +1873,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 <tbody>
                   {filteredLoads.length === 0 ? (
                     <tr>
-                      <td colSpan="11" style={{ textAlign: 'center', padding: '24px', color: '#6B7280' }}>
+                      <td colSpan={11} style={{ textAlign: 'center', padding: '24px', color: '#6B7280' }}>
                         {loading ? 'Refreshing loads...' : 'No loads matching current filter.'}
                       </td>
                     </tr>
@@ -2469,7 +1893,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                           </span>
                         </td>
                         <td style={{ padding: '8px', color: '#38BDF8', fontWeight: 600, fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
-                          {load.posted_at || 'Live Feed'}
+                          {load.created_at ? `Received: ${load.created_at}` : 'Received time unknown'}
                         </td>
                         <td style={{ padding: '8px', fontWeight: 600, verticalAlign: 'top', whiteSpace: 'nowrap' }}>{load.load_id}</td>
                         <td style={{ padding: '8px', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '200px' }}>
@@ -2557,7 +1981,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                                   color: credit.color,
                                   border: `1px solid ${credit.color}`
                                 }}>
-                                  {credit.factoring === 'APPROVED' ? '🟢 Factor OK' : credit.factoring === 'CONDITIONAL' ? '🟡 Factor Cond.' : '⚪ Verify'}
+                                  {credit.factoring === 'APPROVED' ? 'Example factor rating' : credit.factoring === 'CONDITIONAL' ? '🟡 Factor Cond.' : '⚪ Verify'}
                                 </span>
                                 <span style={{ fontSize: '10px', color: '#94A3B8' }}>
                                   Score: <strong style={{ color: credit.color }}>{credit.score}</strong> ({credit.days_to_pay}d pay)
@@ -2644,7 +2068,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             <button
                               onClick={() => {
                                 setSelectedLoadForBlast(load);
-                                setBlastBidAmount(load.flat_rate_pay || '');
+                                setBlastBidAmount(load.flat_rate_pay ? String(load.flat_rate_pay) : '');
                                 setBlastStatus(null);
                               }}
                               style={{
@@ -2658,18 +2082,18 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                                 cursor: 'pointer',
                                 whiteSpace: 'nowrap'
                               }}
-                              title="Multi-Channel Blast: Dispatch SMS + Email + TMS Webhook in <300ms"
+                              title="Prepare a bid draft for manual sending; providers not connected"
                             >
-                              ⚡ Blast Bid
+                              Prepare bid draft
                             </button>
                             <button
                               onClick={() => {
-                                fetch(`${baseUrl}/api/v1/fe-express/horizon-map?destination=${encodeURIComponent(load.dest_city_state)}&hours_ahead=14`)
+                                request(`${baseUrl}/api/v1/fe-express/horizon-map?destination=${encodeURIComponent(load.dest_city_state)}&hours_ahead=14`)
                                   .then(r => r.json())
                                   .then(d => {
                                     if (d.success) setHorizonMapModal(d.horizon_map);
                                   })
-                                  .catch(err => alert(`Error: ${err.message}`));
+                                  .catch(err => alert(`Error: ${(err instanceof Error ? err.message : String(err))}`));
                               }}
                               style={{
                                 padding: '4px 8px',
@@ -2688,12 +2112,12 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             </button>
                             <button
                               onClick={() => {
-                                fetch(`${baseUrl}/api/v1/fe-express/dock-intelligence?query=${encodeURIComponent(load.dest_city_state || load.dest_address || 'Joliet')}`)
+                                request(`${baseUrl}/api/v1/fe-express/dock-intelligence?query=${encodeURIComponent(load.dest_city_state || load.dest_address || 'Joliet')}`)
                                   .then(r => r.json())
                                   .then(d => {
                                     if (d.success) setDockIntelModal(d.dock_facility);
                                   })
-                                  .catch(err => alert(`Error: ${err.message}`));
+                                  .catch(err => alert(`Error: ${(err instanceof Error ? err.message : String(err))}`));
                               }}
                               style={{
                                 padding: '4px 8px',
@@ -2712,12 +2136,12 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             </button>
                             <button
                               onClick={() => {
-                                fetch(`${baseUrl}/api/v1/fe-express/cpm-calibration?diesel_price=${cpmParams.diesel_price}&truck_mpg=${cpmParams.truck_mpg}&driver_cpm=${cpmParams.driver_cpm}&target_margin=${cpmParams.target_margin}`)
+                                request(`${baseUrl}/api/v1/fe-express/cpm-calibration?diesel_price=${cpmParams.diesel_price}&truck_mpg=${cpmParams.truck_mpg}&driver_cpm=${cpmParams.driver_cpm}&target_margin=${cpmParams.target_margin}`)
                                   .then(r => r.json())
                                   .then(d => {
                                     if (d.success) setCpmCalibrationModal({ ...d.cpm_calibration, targetLoad: load });
                                   })
-                                  .catch(err => alert(`Error: ${err.message}`));
+                                  .catch(err => alert(`Error: ${(err instanceof Error ? err.message : String(err))}`));
                               }}
                               style={{
                                 padding: '4px 8px',
@@ -2736,12 +2160,12 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             </button>
                             <button
                               onClick={() => {
-                                fetch(`${baseUrl}/api/v1/fe-express/fuel-optimizer?origin=${encodeURIComponent(load.origin_city_state || 'Grand Rapids, MI')}&destination=${encodeURIComponent(load.dest_city_state || 'Chicago, IL')}&miles=${load.loaded_miles || 180}`)
+                                request(`${baseUrl}/api/v1/fe-express/fuel-optimizer?origin=${encodeURIComponent(load.origin_city_state || 'Grand Rapids, MI')}&destination=${encodeURIComponent(load.dest_city_state || 'Chicago, IL')}&miles=${load.loaded_miles || 180}`)
                                   .then(r => r.json())
                                   .then(d => {
                                     if (d.success) setFuelOptimizerModal(d.fuel_optimization);
                                   })
-                                  .catch(err => alert(`Error: ${err.message}`));
+                                  .catch(err => alert(`Error: ${(err instanceof Error ? err.message : String(err))}`));
                               }}
                               style={{
                                 padding: '4px 8px',
@@ -2860,38 +2284,9 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             gap: '10px'
           }}>
             <div>
-              <strong style={{ color: '#A5B4FC' }}>ℹ️ Dispatcher Notice for Devin:</strong> The card below is a <strong>Sample Interactive Demonstration</strong> illustrating how booked loads, BOL photo uploads, driver tracking, and trip profit settlements appear once confirmed from the live board.
+              <strong style={{ color: '#A5B4FC' }}>ℹ️ Dispatcher Notice for Devin:</strong> This list contains saved dispatch records. Saving a dispatch does not confirm a booking with the broker.
             </div>
-            <button
-              onClick={async () => {
-                if (window.confirm("Clear this demo example trip from Devin's queue?")) {
-                  try {
-                    const response = await fetch(`${baseUrl}/api/v1/fe-express/update-dispatch-status`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ dispatch_id: 'DISP-2026-001', status: 'DELIVERED' })
-                    });
-                    if (!response.ok) throw new Error(`Dispatch update returned HTTP ${response.status}`);
-                    await refreshDispatchesAfterUpdate();
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }
-              }}
-              style={{
-                padding: '4px 10px',
-                backgroundColor: '#312E81',
-                color: '#E0E7FF',
-                border: '1px solid #4F46E5',
-                borderRadius: '4px',
-                fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              Clear Demo Card
-            </button>
+
           </div>
 
           <div className="fe-express-dispatches-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '14px' }}>
@@ -2984,7 +2379,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   )}
                   {dispatch.bol_photo_url && (
                     <div style={{ marginTop: '6px' }}>
-                      <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 700 }}>✅ Signed BOL Photo Attached</span>
+                      <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 700 }}>Legacy BOL reference — verify the stored file in shipment paperwork</span>
                     </div>
                   )}
                 </div>
@@ -3001,24 +2396,20 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   )}
                   <button
                     onClick={() => {
-                      setSelectedDispatchForBol(dispatch);
-                      setBolFuelCost(dispatch.fuel_cost || 40);
-                      setBolTollsCost(dispatch.tolls_cost || 20);
-                      setBolUploadNote(dispatch.bol_notes || '');
+                      openShipmentPaperwork(dispatch);
                     }}
                     style={{ padding: '6px', backgroundColor: '#7C3AED', color: '#FFF', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}
                   >
-                    📸 Upload BOL
+                    📄 Shipment paperwork
                   </button>
                   {dispatch.status !== 'DELIVERED' && (
                     <button
                       onClick={() => {
-                        setActiveDispatches(prev => prev.map(d => d.dispatch_id === dispatch.dispatch_id ? { ...d, status: 'DELIVERED' } : d));
-                        alert(`Load ${dispatch.load_id} marked as DELIVERED! Net profit of $${dispatch.net_profit} logged in Profit Ledger.`);
+                        openShipmentPaperwork(dispatch);
                       }}
                       style={{ padding: '6px', backgroundColor: '#10B981', color: '#000', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 800, cursor: 'pointer' }}
                     >
-                      🏁 Mark Delivered
+                      Review delivery status
                     </button>
                   )}
                   <button
@@ -3028,31 +2419,31 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                       const gross = Number(dispatch.gross_pay || 0);
                       const netP = (gross * (advance / 100) - (gross * (fee / 100))).toFixed(2);
                       const conf = window.confirm(
-                        `⚡ INSTANT FACTORING GATEWAY CASH-OUT\n\n` +
+                        `Prepare a local factoring draft\n\n` +
                         `• Invoice: INV-${dispatch.dispatch_id}\n` +
                         `• Gross Freight: $${gross.toLocaleString()}\n` +
                         `• Factoring Partner: Triumph Business Capital\n` +
                         `• Advance Rate: 97.5% (Fee: 2.5%)\n` +
-                        `• Expected Same-Day Deposit: $${netP}\n\n` +
-                        `Transmit deskewed BOL & Rate Con to factoring house gateway now?`
+                        `• Estimated payout: $${netP} (illustrative terms)\n\n` +
+                        `Save this estimate locally? Provider not connected. No documents will be sent or funding requested.`
                       );
                       if (!conf) return;
 
                       try {
-                        const r = await fetch(`${baseUrl}/api/v1/fe-express/factoring/submit`, {
+                        const r = await request(`${baseUrl}/api/v1/fe-express/factoring/submit`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ dispatch_id: dispatch.dispatch_id, fee_pct: fee, advance_pct: advance })
                         });
                         const data = await r.json();
-                        if (data.success) {
-                          alert(`✅ FACTORING SUBMISSION SUCCESS!\n\nBatch ID: ${data.factoring_package.submission_id}\nStatus: APPROVED FOR SAME-DAY ACH\nDirect Deposit: $${netP} to FE Express Operating Account.`);
+                        if (r.ok && data.success) {
+                          alert(`Factoring draft prepared locally.\n\nDraft ID: ${data.factoring_package.submission_id}\nEstimated payout: $${netP}\nProvider not connected. Documents not verified or sent; approval and deposit are not confirmed.`);
                           await refreshDispatchesAfterUpdate();
                         } else {
                           alert(`Factoring Error: ${data.error || 'Gateway timed out'}`);
                         }
                       } catch (err) {
-                        alert(`Network Error: ${err.message}`);
+                        alert(`Network Error: ${(err instanceof Error ? err.message : String(err))}`);
                       }
                     }}
                     style={{
@@ -3066,16 +2457,16 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                       cursor: 'pointer',
                       whiteSpace: 'nowrap'
                     }}
-                    title="Asynchronous Gateway: Submit Deskewed BOL & Invoice to Triumph/Apex for Same-Day Cash Deposit"
+                    title="Prepare a local factoring estimate for review; provider not connected"
                   >
-                    ⚡ Factor Now
+                    Prepare factoring draft
                   </button>
                   <button
                     onClick={async () => {
                       const lumperAmt = prompt("Enter Warehouse Lumper Unloading Fee ($):", "175.00");
                       if (!lumperAmt) return;
                       try {
-                        const r = await fetch(`${baseUrl}/api/v1/fe-express/lumper-escrow`, {
+                        const r = await request(`${baseUrl}/api/v1/fe-express/lumper-escrow`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({
@@ -3089,10 +2480,10 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         });
                         const d = await r.json();
                         if (d.success) {
-                          alert(`🚨 URGENT LUMPER ESCROW ALERT TRANSMITTED!\n\nEscrow ID: ${d.lumper_escrow.escrow_id}\nAmount: $${d.lumper_escrow.lumper_amount.toFixed(2)}\n\nDispatched via SMS to Broker Night-Dispatch. Awaiting EFS/Comcheck authorization code.`);
+                          alert(`Lumper request prepared locally.\n\nDraft ID: ${d.lumper_escrow.escrow_id}\nAmount: $${d.lumper_escrow.lumper_amount.toFixed(2)}\n\nSMS provider not connected. Contact the broker separately; no message sent or payment code confirmed.`);
                         }
                       } catch (err) {
-                        alert(`Error: ${err.message}`);
+                        alert(`Error: ${(err instanceof Error ? err.message : String(err))}`);
                       }
                     }}
                     style={{
@@ -3106,9 +2497,9 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                       cursor: 'pointer',
                       whiteSpace: 'nowrap'
                     }}
-                    title="Smart Lumper Pre-Approval Ledger: Fire urgent night-dispatch SMS to get instant EFS/Comcheck authorization"
+                    title="Prepare a local lumper request; contact the broker separately"
                   >
-                    📦 Lumper Code
+                    Prepare lumper request
                   </button>
                 </div>
               </div>
@@ -3159,7 +2550,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   <th style={{ padding: '10px 8px' }}>Tolls / Scales</th>
                   <th style={{ padding: '10px 8px' }}>Net Take-Home</th>
                   <th style={{ padding: '10px 8px' }}>Status</th>
-                  <th style={{ padding: '10px 8px' }}>BOL Proof</th>
+                  <th style={{ padding: '10px 8px' }}>Employee file</th><th style={{ padding: '10px 8px' }}>BOL Proof</th>
                 </tr>
               </thead>
               <tbody>
@@ -3186,20 +2577,17 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         {dispatch.status}
                       </span>
                     </td>
+                    <td style={{ padding: '10px 8px' }}><button type="button" aria-label={`Employee file ${dispatch.dispatch_id}`} onClick={() => { setTripForReport(dispatch.dispatch_id); setReportsOpened(true); setActiveSubTab('driver_reports'); }} style={{ padding: 9 }}>Employee file</button></td>
                     <td style={{ padding: '10px 8px' }}>
-                      {dispatch.bol_photo_url ? (
-                        <span style={{ color: '#10B981', fontWeight: 700, fontSize: '11px' }}>📄 Verified</span>
-                      ) : (
+                      {dispatch.bol_photo_url && <div style={{ fontSize: 11 }}>Legacy reference; file not verified</div>}
+                      {(
                         <button
                           onClick={() => {
-                            setSelectedDispatchForBol(dispatch);
-                            setBolFuelCost(dispatch.fuel_cost || 40);
-                            setBolTollsCost(dispatch.tolls_cost || 20);
-                            setBolUploadNote(dispatch.bol_notes || '');
+                            openShipmentPaperwork(dispatch);
                           }}
                           style={{ padding: '3px 8px', backgroundColor: '#7C3AED', color: '#FFF', border: 'none', borderRadius: '4px', fontSize: '10px', cursor: 'pointer', fontWeight: 700 }}
                         >
-                          Upload BOL
+                          Shipment paperwork
                         </button>
                       )}
                     </td>
@@ -3417,6 +2805,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             >
                               💵 Pay Trip
                             </button>
+                            <button type="button" onClick={() => { setReportDriver(driver.driver_id); setReportsOpened(true); setActiveSubTab('driver_reports'); }} style={{ padding: 8, margin: 5 }}>Employee logs</button>
                           </td>
                         </tr>
                       );
@@ -3546,7 +2935,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               <button
                 onClick={() => {
                   setLoadingChains(true);
-                  fetch(`${baseUrl}/api/v1/fe-express/triangulation-chains`)
+                  request(`${baseUrl}/api/v1/fe-express/triangulation-chains`)
                     .then(r => r.json())
                     .then(d => { if (d.success) setTriangulationChains(d.chains); setLoadingChains(false); })
                     .catch(() => setLoadingChains(false));
@@ -3636,10 +3025,10 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             {/* Factoring Card */}
             <div style={{ backgroundColor: '#0F172A', border: '1px solid #1E293B', borderRadius: '8px', padding: '16px' }}>
               <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ⚡ Same-Day Factoring &amp; Instant Cash Flow Gateway
+                Factoring draft preparation
               </h4>
               <p style={{ margin: '0 0 12px', fontSize: '12px', color: '#94A3B8' }}>
-                Auto-compiles Invoice + RateCon + Signed BOL into a funding package the moment a haul is marked Delivered.
+                Save an estimated factoring draft for manual review. Provider not connected; shipment documents, approval and funding require separate verification.
               </p>
 
               {activeDispatches.length === 0 ? (
@@ -3668,7 +3057,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                       </div>
                       <button
                         onClick={() => {
-                          fetch(`${baseUrl}/api/v1/fe-express/factoring/submit`, {
+                          request(`${baseUrl}/api/v1/fe-express/factoring/submit`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ dispatch_id: d.dispatch_id, fee_pct: 2.5, advance_pct: 97.5 })
@@ -3676,12 +3065,12 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                             .then(r => r.json())
                             .then(res => {
                               if (res.success) {
-                                alert(`Factoring package ${res.factoring_package.submission_id} submitted!\nExpected Payout: $${res.factoring_package.expected_payout} (97.5% Advance - 2.5% Fee)`);
+                                alert(`Factoring draft ${res.factoring_package.submission_id} prepared locally.\nEstimated payout: $${res.factoring_package.expected_payout}. Provider not connected; documents not sent, approval and deposit not confirmed.`);
                               } else {
                                 alert(`Submission error: ${res.error}`);
                               }
                             })
-                            .catch(err => alert(`API Error: ${err.message}`));
+                            .catch(err => alert(`API Error: ${(err instanceof Error ? err.message : String(err))}`));
                         }}
                         style={{
                           padding: '6px 12px',
@@ -3694,7 +3083,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                           cursor: 'pointer'
                         }}
                       >
-                        ⚡ Submit for Same-Day Funding
+                        Prepare factoring draft
                       </button>
                     </div>
                   ))}
@@ -3987,7 +3376,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   <label style={{ fontSize: '11px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>W-9 Form Status:</label>
                   <select
                     value={newDriverW9Status}
-                    onChange={e => setNewDriverW9Status(e.target.value)}
+                    onChange={e => setNewDriverW9Status(Number(e.target.value))}
                     style={{ width: '100%', padding: '8px', backgroundColor: '#020617', border: '1px solid #334155', borderRadius: '4px', color: '#FFF', fontSize: '12px' }}
                   >
                     <option value={1}>✅ Signed W-9 Form on File</option>
@@ -4215,143 +3604,6 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
       )}
 
 
-      {/* BOL Photo Uploader & Accounting Adjustment Modal */}
-      {selectedDispatchForBol && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.85)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 9999
-        }}>
-          <div style={{
-            backgroundColor: '#0F172A',
-            border: '1px solid #334155',
-            borderRadius: '10px',
-            padding: '24px',
-            maxWidth: '520px',
-            width: '90%',
-            color: '#F8FAFC',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ margin: 0, color: '#38BDF8', fontSize: '17px' }}>
-                📸 Bill of Lading (BOL) &amp; Trip Expense Capture
-              </h3>
-              <button
-                onClick={() => setSelectedDispatchForBol(null)}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', fontSize: '18px', cursor: 'pointer' }}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div style={{ backgroundColor: '#1E293B', padding: '12px', borderRadius: '6px', marginBottom: '16px', fontSize: '12px' }}>
-              <div><strong>Dispatch:</strong> {selectedDispatchForBol.dispatch_id} ({selectedDispatchForBol.origin} ➡️ {selectedDispatchForBol.destination})</div>
-              <div><strong>Gross Pay:</strong> ${selectedDispatchForBol.gross_pay} | <strong>Broker:</strong> {selectedDispatchForBol.broker_name}</div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
-              <div>
-                <label style={{ fontSize: '12px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>
-                  Take BOL Photo / Upload Delivery Proof:
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  style={{
-                    width: '100%',
-                    padding: '8px',
-                    backgroundColor: '#020617',
-                    border: '1px solid #334155',
-                    borderRadius: '6px',
-                    color: '#CBD5E1',
-                    fontSize: '12px'
-                  }}
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      alert(`BOL image "${file.name}" captured successfully! Ready for factoring & broker submission.`);
-                    }
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div>
-                  <label style={{ fontSize: '11px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>Actual Fuel Spent ($):</label>
-                  <input
-                    type="number"
-                    value={bolFuelCost}
-                    onChange={(e) => setBolFuelCost(parseFloat(e.target.value) || 0)}
-                    style={{ width: '100%', padding: '6px 8px', backgroundColor: '#020617', border: '1px solid #334155', borderRadius: '4px', color: '#FFF', fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '11px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>Tolls &amp; Scales ($):</label>
-                  <input
-                    type="number"
-                    value={bolTollsCost}
-                    onChange={(e) => setBolTollsCost(parseFloat(e.target.value) || 0)}
-                    style={{ width: '100%', padding: '6px 8px', backgroundColor: '#020617', border: '1px solid #334155', borderRadius: '4px', color: '#FFF', fontSize: '12px' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '11px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>Delivery Notes / Consignee Signature:</label>
-                <textarea
-                  value={bolUploadNote}
-                  onChange={(e) => setBolUploadNote(e.target.value)}
-                  placeholder="e.g. Received at dock door 3 in good condition. Signed by warehouse manager Bob."
-                  rows={3}
-                  style={{ width: '100%', padding: '8px', backgroundColor: '#020617', border: '1px solid #334155', borderRadius: '4px', color: '#FFF', fontSize: '12px' }}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                onClick={() => {
-                  const net = selectedDispatchForBol.gross_pay - bolFuelCost - bolTollsCost;
-                  setActiveDispatches(prev => prev.map(d => {
-                    if (d.dispatch_id === selectedDispatchForBol.dispatch_id) {
-                      return {
-                        ...d,
-                        status: 'DELIVERED',
-                        fuel_cost: bolFuelCost,
-                        tolls_cost: bolTollsCost,
-                        net_profit: net,
-                        bol_notes: bolUploadNote || 'BOL Captured.',
-                        bol_photo_url: 'local_bol_photo.jpg'
-                      };
-                    }
-                    return d;
-                  }));
-                  setSelectedDispatchForBol(null);
-                  alert(`BOL saved & trip reconciled! Net profit of $${net.toFixed(2)} recorded.`);
-                }}
-                style={{ padding: '8px 16px', backgroundColor: '#059669', color: '#FFF', border: 'none', borderRadius: '6px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}
-              >
-                💾 Save BOL &amp; Reconcile Profit
-              </button>
-              <button
-                onClick={() => setSelectedDispatchForBol(null)}
-                style={{ padding: '8px 14px', backgroundColor: '#334155', color: '#FFF', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Auto-Bid & Rate Confirmation Modal */}
       {selectedBidLoad && (
         <div style={{
@@ -4420,31 +3672,31 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                       }}>
                         {bench.assessment}
                       </span>
-                      <strong style={{ color: '#E2E8F0' }}>7-Day Lane Spot Benchmark: ${bench.avg_rpm.toFixed(2)}/mi</strong>
+                      <strong style={{ color: '#E2E8F0' }}>Illustrative Lane Target: ${bench.avg_rpm.toFixed(2)}/mi</strong>
                     </div>
                     <span style={{
                       fontWeight: 700,
                       color: Number(bench.diff) >= 0 ? '#10B981' : '#EF4444'
                     }}>
-                      {Number(bench.diff) >= 0 ? `+${bench.diff}` : bench.diff} $/mi vs average
+                      {Number(bench.diff) >= 0 ? `+${bench.diff}` : bench.diff} $/mi vs fixed target
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', backgroundColor: '#0B132B', padding: '8px', borderRadius: '4px', marginBottom: '8px' }}>
                     <div>
-                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Broker Credit</div>
+                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Illustrative Broker Credit</div>
                       <div style={{ fontWeight: 700, color: credit.color }}>{credit.score} ({credit.rating})</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Factoring Status</div>
+                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Example Factoring Status</div>
                       <div style={{ fontWeight: 700, color: credit.color }}>{credit.factoring}</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Avg Days to Pay</div>
+                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Example Days to Pay</div>
                       <div style={{ fontWeight: 700, color: '#F1F5F9' }}>{credit.days_to_pay} Days</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Recommended Counter</div>
+                      <div style={{ fontSize: '10px', color: '#94A3B8' }}>Illustrative Counter</div>
                       <div style={{ fontWeight: 700, color: '#38BDF8' }}>
                         ${Math.round(bench.avg_rpm * selectedBidLoad.total_miles).toLocaleString()}
                       </div>
@@ -4453,10 +3705,10 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
 
                   <div style={{ fontSize: '11px', color: '#93C5FD' }}>
                     💡 <strong>Counter-Bid Advice:</strong> {bench.assessment === 'PREMIUM'
-                      ? 'Rate is at top-market tier. Confirm broker quickly before another carrier snatches it.'
-                      : bench.assessment === 'ABOVE AVG'
-                      ? `Solid rate. If counter-bidding, request $${Math.round((selectedBidLoad.true_rpm + 0.20) * selectedBidLoad.total_miles)} to test broker flexibility.`
-                      : `Rate is below the 7-day average ($${bench.avg_rpm}/mi). Counter at $${Math.round(bench.avg_rpm * selectedBidLoad.total_miles)} based on regional fuel and lane capacity.`
+                      ? 'Rate exceeds the illustrative target. Verify current lane rates and broker terms before bidding.'
+                      : bench.assessment === 'ABOVE TARGET'
+                      ? `Above the illustrative target. If counter-bidding, request $${Math.round((selectedBidLoad.true_rpm + 0.20) * selectedBidLoad.total_miles)} to test broker flexibility.`
+                      : `Rate is below the illustrative target ($${bench.avg_rpm}/mi). Counter at $${Math.round(bench.avg_rpm * selectedBidLoad.total_miles)} using a fixed illustrative target, not live market data.`
                     }
                   </div>
                 </div>
@@ -4464,7 +3716,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
             })()}
 
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 700 }}>Pre-Filled Email Rate Confirmation Bid:</label>
+              <label style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 700 }}>Draft Bid — verify carrier profile and broker details before sending:</label>
               <textarea
                 readOnly
                 value={bidData?.email_body || 'Generating bid...'}
@@ -4805,7 +4057,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
               <h3 style={{ margin: 0, color: '#F472B6', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                ⚡ Multi-Channel Parallel Bidding Matrix
+                Bid draft preparation
               </h3>
               <button
                 onClick={() => setSelectedLoadForBlast(null)}
@@ -4830,7 +4082,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               marginBottom: '14px',
               fontSize: '12px'
             }}>
-              <div style={{ fontWeight: 800, color: '#6EE7B7' }}>🛡️ GHOST-BOOKING FRAUD SHIELD OVERLAY:</div>
+              <div style={{ fontWeight: 800, color: '#6EE7B7' }}>Illustrative broker example — verify independently:</div>
               <div style={{ color: '#D1FAE5', marginTop: '3px' }}>
                 Credit Score: <strong>98/100</strong> | Avg Days to Pay: <strong>21 days</strong> | Bond: <strong>$75,000 Active</strong> | RTS/Triumph: <strong>Tier 1 Approved</strong>
               </div>
@@ -4860,8 +4112,9 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
 
             {blastStatus && (
               <div style={{ backgroundColor: '#1E1B4B', border: '1px solid #6366F1', padding: '10px', borderRadius: '6px', marginBottom: '14px', fontSize: '12px', color: '#C7D2FE' }}>
-                ✅ <strong>{blastStatus.status}</strong> in {blastStatus.execution_latency_ms}ms!<br />
-                Channels: {blastStatus.channels.join(' • ')}
+                <strong>Bid draft prepared locally.</strong><br />
+                SMS, email and TMS providers are not connected. Nothing sent; no broker acceptance confirmed.
+                <p style={{ whiteSpace: 'pre-wrap' }}>{blastStatus.pitch_snippet}</p>
               </div>
             )}
 
@@ -4874,7 +4127,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               </button>
               <button
                 onClick={() => {
-                  fetch(`${baseUrl}/api/v1/fe-express/blast-bid`, {
+                  request(`${baseUrl}/api/v1/fe-express/blast-bid`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -4891,7 +4144,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         alert(`Error: ${d.error}`);
                       }
                     })
-                    .catch(err => alert(`Network error: ${err.message}`));
+                    .catch(err => alert(`Network error: ${(err instanceof Error ? err.message : String(err))}`));
                 }}
                 style={{
                   padding: '8px 18px',
@@ -4907,7 +4160,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   gap: '6px'
                 }}
               >
-                ⚡ Fire 3-Channel Blast Pitch (&lt;300ms)
+                Save local bid draft
               </button>
             </div>
           </div>
@@ -5099,7 +4352,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                 <span style={{ color: '#94A3B8' }}>Broker's Posted RPM:</span>
-                <span style={{ fontWeight: 800, color: (cpmCalibrationModal.targetLoad?.rpm >= cpmCalibrationModal.recommended_minimum_rpm) ? '#10B981' : '#EF4444' }}>
+                <span style={{ fontWeight: 800, color: (cpmCalibrationModal.targetLoad && cpmCalibrationModal.targetLoad.rpm >= cpmCalibrationModal.recommended_minimum_rpm) ? '#10B981' : '#EF4444' }}>
                   ${cpmCalibrationModal.targetLoad?.rpm}/mi
                 </span>
               </div>
@@ -5225,14 +4478,14 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   <button
                     onClick={() => {
                       const rate = claimParams.claim_type === 'TONU' ? 250 : (claimParams.claim_type === 'LAYOVER' ? 350 : 75);
-                      fetch(`${baseUrl}/api/v1/fe-express/accessorial-claim`, {
+                      request(`${baseUrl}/api/v1/fe-express/accessorial-claim`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                           claim_type: claimParams.claim_type,
                           load_id: accessorialClaimModal.load_id,
                           broker_name: accessorialClaimModal.broker_name,
-                          broker_mc: accessorialClaimModal.broker_mc || 'MC-1482910',
+                          broker_mc: accessorialClaimModal.broker_mc || '${DEVIN_DISPATCH_PROFILE.mc}',
                           broker_email: accessorialClaimModal.broker_email || 'claims@freightbroker.com',
                           units_claimed: claimParams.units,
                           unit_rate: rate,
@@ -5243,7 +4496,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         .then(d => {
                           if (d.success) setClaimResult(d.accessorial_claim);
                         })
-                        .catch(err => alert(`Error: ${err.message}`));
+                        .catch(err => alert(`Error: ${(err instanceof Error ? err.message : String(err))}`));
                     }}
                     style={{ padding: '8px 16px', backgroundColor: '#DC2626', color: '#FFF', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 800 }}
                   >
@@ -5363,7 +4616,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#38BDF8', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                📡 5-Board Multi-Platform Capacity Broadcast
+                Capacity posting draft
               </h3>
               <button
                 onClick={() => setCapacityBroadcastModal(null)}
@@ -5383,13 +4636,13 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                 </div>
 
                 <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '12px', borderRadius: '6px', marginBottom: '16px', fontSize: '12px' }}>
-                  <div style={{ fontWeight: 800, color: '#F1F5F9', marginBottom: '6px' }}>Simultaneous Destination Boards:</div>
+                  <div style={{ fontWeight: 800, color: '#F1F5F9', marginBottom: '6px' }}>Intended boards — connections not configured:</div>
                   <div style={{ color: '#94A3B8', lineHeight: '1.6' }}>
-                    ✅ DAT One (Direct Carrier Posting)<br />
-                    ✅ Truckstop.com Pro (Expedite Filter)<br />
-                    ✅ Sylectus Alliance Network<br />
-                    ✅ C.H. Robinson Navisphere Carrier Portal<br />
-                    ✅ TQL Direct Carrier Bidding Matrix
+                    DAT One (Direct Carrier Posting)<br />
+                    Truckstop.com Pro (Expedite Filter)<br />
+                    Sylectus Alliance Network<br />
+                    C.H. Robinson Navisphere Carrier Portal<br />
+                    TQL Direct Carrier Bidding Matrix
                   </div>
                 </div>
 
@@ -5403,7 +4656,7 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                   <button
                     onClick={async () => {
                       try {
-                        const r = await fetch(`${baseUrl}/api/v1/fe-express/capacity-broadcast`, {
+                        const r = await request(`${baseUrl}/api/v1/fe-express/capacity-broadcast`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({
@@ -5417,20 +4670,20 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
                         const d = await r.json();
                         if (d.success) setBroadcastStatus(d.broadcast_result);
                       } catch (err) {
-                        alert(`Error: ${err.message}`);
+                        alert(`Error: ${(err instanceof Error ? err.message : String(err))}`);
                       }
                     }}
                     style={{ padding: '8px 16px', backgroundColor: '#0284C7', color: '#FFF', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 800 }}
                   >
-                    📡 Broadcast Empty Capacity
+                    Save local capacity draft
                   </button>
                 </div>
               </div>
             ) : (
               <div>
                 <div style={{ backgroundColor: '#064E3B', border: '1px solid #059669', padding: '14px', borderRadius: '6px', marginBottom: '14px', color: '#A7F3D0', fontSize: '13px' }}>
-                  ✅ Capacity Broadcast <strong style={{ color: '#FFF' }}>{broadcastStatus.broadcast_id}</strong> is LIVE across 5 load boards!<br />
-                  <span style={{ fontSize: '11px', color: '#D1FAE5' }}>Automated deletion armed: Boards will auto-delist the instant a load is confirmed.</span>
+                  Capacity draft <strong style={{ color: '#FFF' }}>{broadcastStatus.broadcast_id}</strong> prepared locally.<br />
+                  <span style={{ fontSize: '11px', color: '#D1FAE5' }}>Providers not connected. No load boards received this draft; posting and removal must be handled separately.</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <button
@@ -5671,3 +4924,8 @@ export default function FEExpressDispatcher({ BACKEND_URL }) {
 
 }
 
+
+/** @param {{BACKEND_URL?:string,request?:typeof fetch}} props */
+export default function FEExpressDispatcher(props) {
+  return <PortalWorkspace baseUrl={props.BACKEND_URL || 'http://127.0.0.1:8080'} request={props.request || fetch}><DispatcherContent {...props} /></PortalWorkspace>;
+}

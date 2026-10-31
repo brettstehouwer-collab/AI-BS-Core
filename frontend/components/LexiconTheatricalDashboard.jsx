@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function LexiconTheatricalDashboard() {
   const [inputText, setInputText] = useState("We need to synergize our paradigms for optimal ROI.");
-  const [enrichmentData, setEnrichmentData] = useState(null);
+  const [enrichmentData, setEnrichmentData] = useState(/** @type {{original_text:string,expansion_map:Record<string,{synonyms?:string[]}>}|null} */ (null));
   const [loading, setLoading] = useState(false);
   const [synonymLookupWord, setSynonymLookupWord] = useState("");
-  const [synonymResults, setSynonymResults] = useState(null);
+  const [synonymResults, setSynonymResults] = useState(/** @type {{word:string,synonyms:string[]}|null} */ (null));
 
   const handleEnrich = async () => {
     setLoading(true);

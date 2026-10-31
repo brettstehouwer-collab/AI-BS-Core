@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { theme } from '../styles/theme';
 
-export const NeonBlueAndPurpleLEDStrips = ({ intensity = 85, colorMode = 'cyber' }) => {
+/** @param {{intensity?:number,colorMode?:string}} props */
+export const NeonBlueAndPurpleLEDStrips = ({ intensity = 85 }) => {
   return (
     <div style={{
       background: 'rgba(13, 17, 23, 0.75)',
@@ -118,7 +119,7 @@ export const ColorChangingAccentLights = ({ activeMood = 'Cyberpunk Violet' }) =
 
 const Lighting = () => {
   const [intensity, setIntensity] = useState(85);
-  const [activeMood, setActiveMood] = useState('Cyberpunk Violet');
+  const [activeMood] = useState('Cyberpunk Violet');
 
   return (
     <div style={{ color: theme.colors.textPrimary }}>

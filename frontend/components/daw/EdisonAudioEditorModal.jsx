@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { theme } from '../../styles/theme';
-import { 
-  Scissors, Volume2, ZoomIn, ZoomOut, Play, Square, Repeat, 
-  Download, ArrowDownRight, RefreshCw, Wand2, ShieldAlert, X, Sparkles, Sliders
-} from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import "../../styles/theme";
+import { Scissors, ZoomIn, ZoomOut, Play, Square, Repeat, ArrowDownRight, X, Sparkles } from "lucide-react";
 
-export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist, onSendToChannelRack }) {
-  const canvasRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const audioBufferRef = useRef(null);
-  const activeSourceRef = useRef(null);
+/** @param {{clip?: import('/types/wave').EditableClip | null; onClose: () => void; onSendToPlaylist?: (clip: import('/types/wave').EditableClip) => void; onSendToChannelRack?: (clip: import('/types/wave').EditableClip) => void}} props */
+export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist }) {
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const audioContextRef = useRef(/** @type {AudioContext | null} */ (null));
+  const audioBufferRef = useRef(/** @type {AudioBuffer | null} */ (null));
+  const activeSourceRef = useRef(/** @type {AudioBufferSourceNode | null} */ (null));
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
@@ -79,10 +77,12 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
   }, [selectionStart, selectionEnd, zoomLevel]);
 
   // Waveform Drawing
+  /** @param {AudioBuffer} buffer @param {number} selStart @param {number} selEnd */
   const drawWaveform = (buffer, selStart, selEnd) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const width = canvas.width;
     const height = canvas.height;
 
@@ -157,6 +157,7 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
     stopPlayback();
 
     const ctx = audioContextRef.current;
+    if (!ctx) throw new Error('The audio editor is not initialized.');
     if (ctx.state === 'suspended') ctx.resume();
 
     const source = ctx.createBufferSource();
@@ -194,17 +195,19 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
   };
 
   // Selection Drag Handlers
+  /** @param {import("react").MouseEvent<HTMLCanvasElement>} e */
   const handleMouseDown = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
     const pos = (e.clientX - rect.left) / rect.width;
     setSelectionStart(pos);
     setSelectionEnd(pos);
     setIsSelecting(true);
   };
 
+  /** @param {import("react").MouseEvent<HTMLCanvasElement>} e */
   const handleMouseMove = (e) => {
     if (!isSelecting) return;
-    const rect = canvasRef.current.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
     const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     setSelectionEnd(pos);
   };
@@ -214,8 +217,10 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
   };
 
   // Audio Processing Operations
+  /** @param {AudioBuffer} buffer */
   const cloneBuffer = (buffer) => {
     const ctx = audioContextRef.current;
+    if (!ctx) throw new Error('The audio editor is not initialized.');
     const clone = ctx.createBuffer(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
     for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
       clone.getChannelData(ch).set(buffer.getChannelData(ch));
@@ -234,6 +239,7 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
     const newLen = Math.max(1, sEnd - sStart);
 
     const ctx = audioContextRef.current;
+    if (!ctx) throw new Error('The audio editor is not initialized.');
     const trimmed = ctx.createBuffer(buf.numberOfChannels, newLen, buf.sampleRate);
     for (let ch = 0; ch < buf.numberOfChannels; ch++) {
       const src = buf.getChannelData(ch);
@@ -263,6 +269,7 @@ export default function EdisonAudioEditorModal({ clip, onClose, onSendToPlaylist
     if (newLen <= 0) return;
 
     const ctx = audioContextRef.current;
+    if (!ctx) throw new Error('The audio editor is not initialized.');
     const cutBuffer = ctx.createBuffer(buf.numberOfChannels, newLen, buf.sampleRate);
     for (let ch = 0; ch < buf.numberOfChannels; ch++) {
       const src = buf.getChannelData(ch);

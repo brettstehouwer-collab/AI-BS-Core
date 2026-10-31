@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import './ProductionBreakdownModal.css';
 
-const formatEighths = (eighths) => {
+/** @param {number} eighths */
+const formatEighths = ( eighths) => {
   if (eighths < 8) {
     return `${eighths}/8`;
   }
@@ -11,7 +12,8 @@ const formatEighths = (eighths) => {
   return `${pages} ${remainder}/8 pgs`;
 };
 
-const getStripColor = (isExt, isNight) => {
+/** @param {boolean} isExt @param {boolean} isNight */
+const getStripColor = ( isExt,  isNight) => {
   if (isExt) {
     return isNight ? '#22c55e' : '#ffffff'; // Green : White
   } else {
@@ -19,7 +21,8 @@ const getStripColor = (isExt, isNight) => {
   }
 };
 
-const getStripTextColor = (isExt, isNight) => {
+/** @param {boolean} isExt @param {boolean} isNight */
+const getStripTextColor = ( isExt,  isNight) => {
   if (isExt && !isNight) return '#000000';
   if (!isExt && !isNight) return '#000000';
   return '#ffffff';
@@ -50,10 +53,11 @@ const FALLBACK_STATE_INCENTIVES = [
   { state_code: "NONE", name: "No State Incentive (Standard Federal/Non-Incentive)", base_rate: 0.00, max_rate: 0.00, structure: "None", annual_cap: "N/A", min_spend: "N/A", details: "Standard baseline without state tax rebates or incentives.", status: "Baseline", last_updated: "2026-01-01" }
 ];
 
+/** @param {{"scriptText": string, "onClose"?: () => void}} props */
 const ProductionBreakdownModal = ({ scriptText, onClose }) => {
   const [activeTab, setActiveTab] = useState('schedule');
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(/** @type {{"csv_data": string, "shoot_days": Array<Array<{"id": string, "is_ext": boolean, "is_night": boolean, "heading": string, "special_requirements": string, "eighths": number}>>, "scenes": Array<{"id": string, "is_ext": boolean, "is_night": boolean, "location": string, "eighths": number, "characters": Array<string>}>, "total_shoot_days": number, "dood": Record<string, string[]>, "cast_tiering": Record<string, string>, "top_sheet": {"effective_tax_incentive_rate": number, "tax_rebate_amount": number, "gross_budget": number, "net_budget": number, "above_the_line": number, "production": number, "post_production": number, "contingency": number}} | null} */ (null));
   const [stateList, setStateList] = useState(FALLBACK_STATE_INCENTIVES);
   const [selectedStateCode, setSelectedStateCode] = useState('GA');
   const [includeUplifts, setIncludeUplifts] = useState(false);
@@ -91,7 +95,8 @@ const ProductionBreakdownModal = ({ scriptText, onClose }) => {
   }, []);
 
   // Update tax incentive percentage whenever state or uplift checkbox changes
-  const handleStateChange = (newCode) => {
+  /** @param {typeof selectedStateCode} newCode */
+const handleStateChange = ( newCode) => {
     setSelectedStateCode(newCode);
     const targetState = stateList.find(s => s.state_code === newCode) || stateList[0];
     const newRate = includeUplifts ? targetState.max_rate : targetState.base_rate;
@@ -102,7 +107,8 @@ const ProductionBreakdownModal = ({ scriptText, onClose }) => {
     }));
   };
 
-  const handleUpliftToggle = (checked) => {
+  /** @param {typeof includeUplifts} checked */
+const handleUpliftToggle = ( checked) => {
     setIncludeUplifts(checked);
     const targetState = stateList.find(s => s.state_code === selectedStateCode) || stateList[0];
     const newRate = checked ? targetState.max_rate : targetState.base_rate;
@@ -339,7 +345,8 @@ const ProductionBreakdownModal = ({ scriptText, onClose }) => {
                           <tr>
                             <th>Character</th>
                             <th>Tier</th>
-                            {Array.from({length: data.total_shoot_days}).map((_, i) => (
+                            {Array.from({length: data.total_shoot_days}).map(
+(_,  i) => (
                               <th key={i}>D{i+1}</th>
                             ))}
                           </tr>
@@ -349,7 +356,8 @@ const ProductionBreakdownModal = ({ scriptText, onClose }) => {
                             <tr key={char}>
                               <td>{char}</td>
                               <td><span className={`tier-badge ${data.cast_tiering[char].replace(' ', '').toLowerCase()}`}>{data.cast_tiering[char]}</span></td>
-                              {days.map((status, i) => (
+                              {days.map(
+( status,  i) => (
                                 <td key={i} className={`dood-status ${status}`}>{status}</td>
                               ))}
                             </tr>

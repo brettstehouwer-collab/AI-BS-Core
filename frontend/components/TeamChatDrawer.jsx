@@ -1,11 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { useAppStore } from './useAppStore';
 import { ADMIN_EMAILS } from './accessControl';
 import './TeamChatDrawer.css';
 
-export default function TeamChatDrawer({ momMode }) {
+/** Normalize recorded timestamps without calling a database or inventing a current time.
+ * @param {unknown} value
+ * @returns {Date | null}
+ */
+function recordedDate(value) {
+  let date = null;
+  if (value instanceof Date) date = value;
+  else if (value && typeof value === 'object') {
+    if ('toDate' in value && typeof value.toDate === 'function') {
+      const result = value.toDate();
+      if (result instanceof Date) date = result;
+    } else if ('seconds' in value && typeof value.seconds === 'number') date = new Date(value.seconds * 1000);
+  } else if (typeof value === 'number' || typeof value === 'string') date = new Date(value);
+  return date && Number.isFinite(date.getTime()) ? date : null;
+}
+
+
+/** @param {{"momMode"?: boolean}} props */
+export default function TeamChatDrawer({  }) {
   const currentUser = useAppStore((state) => state.currentUser);
   const teamUsers = useAppStore((state) => state.teamUsers);
   const setTeamUsers = useAppStore((state) => state.setTeamUsers);
@@ -14,9 +32,9 @@ export default function TeamChatDrawer({ momMode }) {
   const activeChatChannel = useAppStore((state) => state.activeChatChannel);
   const setActiveChatChannel = useAppStore((state) => state.setActiveChatChannel);
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(/** @type {Array<{"senderId"?: string, "text"?: string, "id": string, "senderName"?: string, "timestamp"?: unknown}>} */ ([]));
   const [inputText, setInputText] = useState('');
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Presence Listener
   useEffect(() => {
@@ -35,15 +53,17 @@ export default function TeamChatDrawer({ momMode }) {
     const usersRef = collection(db, 'users');
     const unsubscribe = onSnapshot(usersRef, (snapshot) => {
       // Map Firestore users by email
+      /** @type {Record<string, import('/types/domain').TeamUser>} */
       const firestoreUsers = {};
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.email) {
-          firestoreUsers[data.email.toLowerCase()] = { id: doc.id, ...data };
+        if (typeof data.email === 'string' && data.email) {
+          firestoreUsers[data.email.toLowerCase()] = { ...data, id: doc.id, email: data.email.toLowerCase(), displayName: typeof data.displayName === 'string' ? data.displayName : data.email.split('@')[0], isOnline: data.isOnline === true };
         }
       });
 
       // Merge all Firestore users and known admins without dropping newly added Firebase users
+      /** @type {Map<string, import('/types/domain').TeamUser>} */
       const usersMap = new Map();
 
       // Seed all known admin emails
@@ -83,7 +103,7 @@ export default function TeamChatDrawer({ momMode }) {
 
   // Messages Listener
   useEffect(() => {
-    if (!isChatDrawerOpen || !currentUser || !db || (auth && !auth.currentUser)) {
+    if (!isChatDrawerOpen || !currentUser?.email || !db || (auth && !auth.currentUser)) {
       setMessages([]);
       return;
     }
@@ -98,6 +118,7 @@ export default function TeamChatDrawer({ momMode }) {
 
     const q = query(messagesRef, orderBy('timestamp', 'asc'), limit(100));
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      /** @type {typeof messages} */
       const msgs = [];
       snapshot.forEach((doc) => {
         msgs.push({ id: doc.id, ...doc.data() });
@@ -113,9 +134,10 @@ export default function TeamChatDrawer({ momMode }) {
     return () => unsubscribe();
   }, [isChatDrawerOpen, activeChatChannel, currentUser]);
 
-  const handleSendMessage = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSendMessage = async ( e) => {
     e.preventDefault();
-    if (!inputText.trim() || !currentUser) return;
+    if (!inputText.trim() || !currentUser?.email) return;
 
     const msg = inputText.trim();
     setInputText('');
@@ -148,13 +170,16 @@ export default function TeamChatDrawer({ momMode }) {
     setInputText(msg);
   };
 
-  const formatTime = (timestamp) => {
+  /** @param {unknown} timestamp */
+const formatTime = ( timestamp) => {
     if (!timestamp) return '';
-    const date = timestamp.toDate();
+    const date = recordedDate(timestamp);
+    if (!date) return '';
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const getInitials = (name) => {
+  /** @param {string | undefined} name */
+const getInitials = ( name) => {
     if (!name) return '?';
     if (name.toLowerCase().includes('julie') || name.toLowerCase().includes('mom')) return '🌸';
     if (name.toLowerCase().includes('brett')) return '👑';
@@ -162,13 +187,15 @@ export default function TeamChatDrawer({ momMode }) {
     return name.substring(0, 1).toUpperCase();
   };
 
-  const formatLastSeen = (timestamp) => {
+  /** @param {unknown} timestamp */
+const formatLastSeen = ( timestamp) => {
     if (!timestamp) return '⚪ Offline';
     try {
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      const date = recordedDate(timestamp);
+      if (!date) return '⚪ Offline';
       
       const now = new Date();
-      const diffMs = now - date;
+      const diffMs = now.getTime() - date.getTime();
       const diffMins = Math.floor(diffMs / 60000);
       const diffHours = Math.floor(diffMins / 60);
       const diffDays = Math.floor(diffHours / 24);
@@ -259,12 +286,12 @@ export default function TeamChatDrawer({ momMode }) {
             <div className="team-chat-messages">
               {messages.map((msg) => {
                 const isSentByMe = msg.senderId === currentUser.uid;
-                const isShareLink = msg.text.includes('🚀 Open Active Tool');
+                const isShareLink = (msg.text || '').includes('🚀 Open Active Tool');
                 let shareUrl = '';
                 let displayMsg = msg.text;
 
                 if (isShareLink) {
-                  const parts = msg.text.split('\n');
+                  const parts = (msg.text || '').split('\n');
                   shareUrl = parts[1] || '?tab=dashboard';
                   displayMsg = parts[0];
                 }
@@ -286,7 +313,8 @@ export default function TeamChatDrawer({ momMode }) {
                           <a 
                             href={shareUrl} 
                             className="chat-share-card" 
-                            onClick={(e) => {
+                            onClick={
+( e) => {
                               e.preventDefault();
                               setIsChatDrawerOpen(false);
                               const searchParams = new URLSearchParams(shareUrl);
@@ -316,7 +344,8 @@ export default function TeamChatDrawer({ momMode }) {
                 className="team-chat-input" 
                 placeholder="Type a message to the team..." 
                 value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
+                onChange={
+( e) => setInputText(e.target.value)}
               />
               <button type="submit" className="team-chat-send-btn" disabled={!inputText.trim()}>
                 ↑

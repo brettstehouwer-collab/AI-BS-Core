@@ -1,35 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  Terminal,
-  Code,
-  Globe,
-  Play,
-  Cpu,
-  Monitor,
-  Smartphone,
-  Heart,
-  Layers,
-  HelpCircle,
-  Sparkles,
-  Compass,
-  Box,
-  Square,
-  Send,
-  Bot,
-  RefreshCw,
-  CheckCircle2,
-  ChevronRight,
-  Zap,
-  ArrowRight,
-  Sliders,
-  MessageSquare,
-  Trash2,
-  FileCode,
-  Check,
-  Flame,
-  Search
-} from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Terminal, Code, Globe, Play, Cpu, Monitor, Smartphone, Heart, Layers, HelpCircle, Sparkles, Compass, Box, Square, Send, Bot, RefreshCw, CheckCircle2, Zap, Sliders, Flame, Search } from "lucide-react";
 
+/** @type {Record<string, import('lucide-react').LucideIcon>} */
 const ICON_MAP = {
   Terminal: Terminal,
   Code: Code,
@@ -236,39 +208,39 @@ export default function SovereignAgentAppsTab() {
   const [apps, setApps] = useState(DEFAULT_APPS);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeSession, setActiveSession] = useState(null);
-  const [sessionMessages, setSessionMessages] = useState([]);
+  const [activeSession, setActiveSession] = useState(/** @type {{"session_id": string, "model": string, "app_id": string, "app_name": string} | null} */ (null));
+  const [sessionMessages, setSessionMessages] = useState(/** @type {Array<{"role": string, "model"?: string, "timestamp": string, "content": string, "elapsed_ms"?: number}>} */ ([]));
   const [promptInput, setPromptInput] = useState("");
   const [executing, setExecuting] = useState(false);
-  const [fleetStatus, setFleetStatus] = useState({ online: true, port: 11434, model_count: 29 });
+  const [, setFleetStatus] = useState({ online: true, port: 11434, model_count: 29 });
   
   // View Mode: 'matrix' (14 Apps) vs 'swarm' (Collaborative Multi-Agent Chain)
   const [viewMode, setViewMode] = useState("matrix");
 
   // Streaming State (Triple-Tier: WebSocket + SSE + SQLite)
-  const wsRef = useRef(null);
+  const wsRef = useRef(/** @type {WebSocket | null} */ (null));
   const [streamingText, setStreamingText] = useState("");
-  const [streamingLogs, setStreamingLogs] = useState([]);
+  const [streamingLogs, setStreamingLogs] = useState(/** @type {Array<{"stream": string, "line": string}>} */ ([]));
 
   // Swarm State
   const [selectedPreset, setSelectedPreset] = useState("full_feature_sprint");
   const [swarmPrompt, setSwarmPrompt] = useState("Synthesize an automated regression test suite for all sovereign agent harnesses with 100% assertions passing.");
-  const [swarmJob, setSwarmJob] = useState(null);
+  const [, setSwarmJob] = useState(null);
   const [swarmExecuting, setSwarmExecuting] = useState(false);
-  const [swarmSteps, setSwarmSteps] = useState([
+  const [swarmSteps, setSwarmSteps] = useState(/** @type {Array<{step_index: number, role: string, app_id: string, status: string, output: string, model_used?: string, elapsed_ms?: number}>} */ ([
     { step_index: 1, role: "Architect & Spec Author", app_id: "hermes_agent", status: "queued", output: "" },
     { step_index: 2, role: "Lead Code Synthesizer", app_id: "claude_code", status: "queued", output: "" },
     { step_index: 3, role: "Test & Execution Verifier", app_id: "opencode", status: "queued", output: "" },
     { step_index: 4, role: "Release Sentinel & Auditor", app_id: "hermes_desktop", status: "queued", output: "" }
-  ]);
+  ]));
   
   // MoE Tester State
   const [testPrompt, setTestPrompt] = useState("Refactor this python function to use list comprehensions and type hints");
-  const [moeDecision, setMoeDecision] = useState(null);
+  const [moeDecision, setMoeDecision] = useState(/** @type {{"domain": string, "selected_model": string, "confidence": number, "reason": string} | null} */ (null));
   const [classifying, setClassifying] = useState(false);
-  const [moeExecutionResult, setMoeExecutionResult] = useState(null);
+  const [moeExecutionResult, setMoeExecutionResult] = useState(/** @type {{"response": string} | null} */ (null));
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Fetch apps & fleet status from backend
   const fetchBackendData = useCallback(async () => {
@@ -310,6 +282,7 @@ export default function SovereignAgentAppsTab() {
   useEffect(() => {
     if (!activeSession) return;
     
+    /** @type {WebSocket} */
     let ws;
     try {
       ws = new WebSocket(`ws://127.0.0.1:8080/api/v1/agent-harness/ws/${activeSession.session_id}`);
@@ -366,7 +339,8 @@ export default function SovereignAgentAppsTab() {
 
   const categories = ["All", "Code & Terminal", "Web & Reconnaissance", "Execution Sandbox", "Agentic Orchestration", "System Control", "Mobile & Hardware", "Cognitive Dialogue", "Creative Ideation", "Symbolic Reasoning"];
 
-  const filteredApps = apps.filter(app => {
+  const filteredApps = apps.filter( 
+app => {
     const matchesCat = selectedCategory === "All" || app.category === selectedCategory;
     const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           app.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -374,7 +348,8 @@ export default function SovereignAgentAppsTab() {
     return matchesCat && matchesSearch;
   });
 
-  const launchAppSession = async (app) => {
+  /** @param {{"id": string, "name": string, "default_model": string, "specialist_domain": string}} app */
+const launchAppSession = async ( app) => {
     try {
       const res = await fetch('http://127.0.0.1:8080/api/v1/agent-harness/session/create', {
         method: 'POST',
@@ -520,7 +495,7 @@ export default function SovereignAgentAppsTab() {
         ...prev,
         {
           role: "assistant",
-          content: `[Host Runtime]: Request processed. (${err.message})`,
+          content: `[Host Runtime]: Request processed. (${(err instanceof Error ? err.message : String(err))})`,
           timestamp: new Date().toLocaleTimeString()
         }
       ]);
@@ -626,7 +601,7 @@ export default function SovereignAgentAppsTab() {
         setMoeExecutionResult(data.response);
       }
     } catch (err) {
-      setMoeExecutionResult({ response: `Execution error: ${err.message}` });
+      setMoeExecutionResult({ response: `Execution error: ${(err instanceof Error ? err.message : String(err))}` });
     } finally {
       setClassifying(false);
     }
@@ -1053,7 +1028,8 @@ export default function SovereignAgentAppsTab() {
             gap: '18px',
             marginBottom: '36px'
           }}>
-            {filteredApps.map(app => {
+            {filteredApps.map( 
+app => {
               const IconComp = ICON_MAP[app.icon] || Terminal;
               const isSelected = activeSession?.app_id === app.id;
 

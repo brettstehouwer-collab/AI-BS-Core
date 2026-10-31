@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import DevinPhoneLogin from './DevinPhoneLogin.jsx';
+import { useState, useEffect } from 'react';
 import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import { ADMIN_EMAILS, ADMIN_UIDS } from './accessControl.js';
 
-const isAdmin = (user) => {
+const isAdmin = (/** @type {import("firebase/auth").User|null} */ user) => {
   const email = (user?.email || '').toLowerCase().trim();
   return Boolean(user && user.emailVerified && (
     ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(user.uid)
@@ -14,6 +15,7 @@ const isLocalDesktop = () => typeof window !== 'undefined' && (
   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
 );
 
+/** @param {{onLoginSuccess: (user: any) => void, backendUrl: string}} props */
 export default function LoginModal({ onLoginSuccess }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,31 +71,22 @@ export default function LoginModal({ onLoginSuccess }) {
       }
     } catch (err) {
       console.warn('Popup login failed or blocked, attempting mobile redirect...', err);
-      if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+      if (typeof err === 'object' && err !== null && 'code' in err && (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) {
         try {
           await signInWithRedirect(auth, googleProvider);
           return;
         } catch (redirectErr) {
-          setErrorMsg('Mobile sign-in failed: ' + redirectErr.message);
+          setErrorMsg('Mobile sign-in failed: ' + errorMessage(redirectErr));
         }
       } else {
-        setErrorMsg('Authentication failed: ' + err.message);
+        setErrorMsg('Authentication failed: ' + errorMessage(err));
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleRedirectSignIn = async () => {
-    setErrorMsg('');
-    setIsSubmitting(true);
-    try {
-      await signInWithRedirect(auth, googleProvider);
-    } catch (err) {
-      setErrorMsg('Redirect sign-in failed: ' + err.message);
-      setIsSubmitting(false);
-    }
-  };
+  
 
   return (
     <div style={styles.overlay}>
@@ -106,6 +99,9 @@ export default function LoginModal({ onLoginSuccess }) {
         <button onClick={handleGoogleSignIn} style={styles.button} disabled={isSubmitting}>
           {isSubmitting ? 'Verifying...' : 'Sign in with Google'}
         </button>
+
+        <DevinPhoneLogin onLoginSuccess={onLoginSuccess} />
+
 
         <div style={{ margin: '15px 0', color: '#64748b', fontSize: '0.8rem' }}>— OR —</div>
 
@@ -128,6 +124,7 @@ export default function LoginModal({ onLoginSuccess }) {
   );
 }
 
+/** @type {Record<string,import("react").CSSProperties>} */
 const styles = {
   overlay: {
     position: 'fixed',
@@ -145,6 +142,9 @@ const styles = {
     padding: '40px',
     borderRadius: '16px',
     width: '350px',
+    maxWidth: 'calc(100vw - 32px)',
+    maxHeight: '90vh',
+    overflowY: 'auto',
     textAlign: 'center',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     background: 'rgba(15, 23, 42, 0.95)',
@@ -192,3 +192,9 @@ const styles = {
     borderRadius: '8px',
   }
 };
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

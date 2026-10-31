@@ -74,6 +74,7 @@ function useDriveMediaUrl(backendUrl, path, action) {
   return state.key === key ? state : {};
 }
 
+/** @param {{backendUrl:string,path:string,as?:"iframe"|"img"|"video"|"audio",controls?:boolean,autoPlay?:boolean,loop?:boolean,muted?:boolean,preload?:string,width?:number|string,height?:number|string,allowFullScreen?:boolean,allow?:string}&import("react").HTMLAttributes<HTMLElement>} props */
 export function AuthenticatedDriveMedia({ backendUrl, path, as = 'iframe', ...props }) {
   const { url, error } = useDriveMediaUrl(backendUrl, path, 'preview');
   if (error) return <span role="alert">Unable to open file: {error}</span>;
@@ -81,6 +82,7 @@ export function AuthenticatedDriveMedia({ backendUrl, path, as = 'iframe', ...pr
   return React.createElement(as, { ...props, src: url, referrerPolicy: 'no-referrer' });
 }
 
+/** @param {{backendUrl:string,path:string}&import("react").AnchorHTMLAttributes<HTMLAnchorElement>} props */
 export function AuthenticatedDriveDownload({ backendUrl, path, children, ...props }) {
   const { url, error } = useDriveMediaUrl(backendUrl, path, 'download');
   if (error) return <span role="alert">Download unavailable: {error}</span>;

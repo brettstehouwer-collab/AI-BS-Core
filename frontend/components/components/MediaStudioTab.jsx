@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{name: string, type: string, size: number, url: string, duration?: number, path?: string, width?: number, height?: number}} StudioMedia */
+/** @typedef {{id: string, name: string, type: string, visible: boolean, locked: boolean, opacity: number, blendMode: string, imgElement?: HTMLImageElement, text?: string, font?: string, size?: number, color?: string, kerning?: number, preset?: string}} StudioLayer */
+/** @typedef {{id: string, track: string, title: string, start: number, duration: number, color: string, url?: string, path?: string, width?: number, height?: number}} StudioClip */
+import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
 
+/** @param {{BACKEND_URL?: string, backendUrl?: string}} props */
 export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const activeBackend = backendUrl || BACKEND_URL || useAppStore((state) => state.BACKEND_URL) || 'http://localhost:8080';
 
@@ -11,17 +15,18 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const [studioMode, setStudioMode] = useState('canvas');
 
   // ── HARDWARE GOVERNANCE & TELEMETRY STATE ─────────────────────────────────
-  const [telemetry, setTelemetry] = useState({ device_name: null, total_mb: null, free_mb: null, used_mb: null, used_percent: null, allocated_shared_buffers: [] });
+  const [telemetry, setTelemetry] = useState({ device_name: /** @type {string | null} */ (null), total_mb: /** @type {number | null} */ (null), free_mb: /** @type {number | null} */ (null), used_mb: /** @type {number | null} */ (null), used_percent: /** @type {number | null} */ (null), allocated_shared_buffers: [] });
   const [isFlushingVram, setIsFlushingVram] = useState(false);
   const [isAllocatingBuffer, setIsAllocatingBuffer] = useState(false);
 
   // ── MEDIA UPLOAD & IMPORT STATE ──────────────────────────────────────────
-  const fileInputRef = useRef(null);
-  const videoPlayerRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const videoPlayerRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  const [activeMediaFile, setActiveMediaFile] = useState(null);
+  const [activeMediaFile, setActiveMediaFile] = useState(/** @type {StudioMedia | null} */ (null));
 
-  const handleMediaUpload = async (file) => {
+  /** @param {File | undefined} file */
+const handleMediaUpload = async (file) => {
     if (!file) return;
     const isVideo = file.type.startsWith('video/') || /\.(mp4|mov|webm|mkv|avi)$/i.test(file.name);
     const isImage = file.type.startsWith('image/') || /\.(png|jpg|jpeg|webp|svg|gif)$/i.test(file.name);
@@ -93,7 +98,8 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
     }
   };
 
-  const handleLoadPath = async (customPath) => {
+  /** @param {string | null} [customPath] */
+const handleLoadPath = async (customPath) => {
     let path = customPath;
     if (!path) {
       path = window.prompt("Enter absolute path to local video or photo:", "C:\\AI-BS\\MP4 medial screen recordings\\studiopro.mp4");
@@ -170,7 +176,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
         img.src = streamUrl;
       }
     } catch (e) {
-      addLog('ERROR', `Failed to load local media: ${e.message}`);
+      addLog('ERROR', `Failed to load local media: ${errorMessage(e)}`);
     }
   };
 
@@ -185,6 +191,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
       offCanvas.width = vid.videoWidth || 1920;
       offCanvas.height = vid.videoHeight || 1080;
       const offCtx = offCanvas.getContext('2d');
+      if (!offCtx) throw new Error('Video frame canvas unavailable.');
       offCtx.drawImage(vid, 0, 0, offCanvas.width, offCanvas.height);
       const img = new Image();
       img.onload = () => {
@@ -208,18 +215,19 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
       };
       img.src = offCanvas.toDataURL('image/png');
     } catch (e) {
-      addLog('ERROR', 'Failed to capture frame: ' + e.message);
+      addLog('ERROR', 'Failed to capture frame: ' + errorMessage(e));
     }
   };
 
   // ── SHARED EXECUTION LOGS ────────────────────────────────────────────────
-  const [executionLogs, setExecutionLogs] = useState([
+  const [executionLogs, setExecutionLogs] = useState(/** @type {{timestamp: string, tag: string, message: string, payload?: unknown}[]} */ ([
     { timestamp: new Date().toLocaleTimeString(), tag: 'STUDIO', message: 'Draft media editing workspace initialized. Hardware and output verification unavailable until confirmed by a connected source.' }
-  ]);
+  ]));
   const [isLogDrawerOpen, setIsLogDrawerOpen] = useState(false);
-  const logsEndRef = useRef(null);
+  const logsEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
-  const addLog = (tag, message, payload = null) => {
+  /** @param {string} tag @param {string} message @param {unknown} [payload] */
+const addLog = (tag, message, payload = null) => {
     const timestamp = new Date().toLocaleTimeString();
     setExecutionLogs(prev => [...prev.slice(-60), { timestamp, tag, message, payload }]);
   };
@@ -240,7 +248,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
       setTelemetry(data);
       return data;
     } catch {
-      setTelemetry({ device_name: null, total_mb: null, free_mb: null, used_mb: null, used_percent: null, allocated_shared_buffers: [] });
+      setTelemetry({ device_name: /** @type {string | null} */ (null), total_mb: /** @type {number | null} */ (null), free_mb: /** @type {number | null} */ (null), used_mb: /** @type {number | null} */ (null), used_percent: /** @type {number | null} */ (null), allocated_shared_buffers: [] });
       return null;
     }
   };
@@ -261,7 +269,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
       addLog('VRAM', 'Flush request acknowledged; hardware completion remains unverified.', data);
       await fetchTelemetry();
     } catch (e) {
-      addLog('ERROR', 'Failed to flush VRAM: ' + e.message);
+      addLog('ERROR', 'Failed to flush VRAM: ' + errorMessage(e));
     } finally {
       setIsFlushingVram(false);
     }
@@ -282,7 +290,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
       addLog('IPC', 'Allocation request acknowledged; buffer mapping remains unverified.', data);
       await fetchTelemetry();
     } catch (e) {
-      addLog('ERROR', 'IPC Allocation failed: ' + e.message);
+      addLog('ERROR', 'IPC Allocation failed: ' + errorMessage(e));
     } finally {
       setIsAllocatingBuffer(false);
     }
@@ -291,29 +299,29 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   // ══════════════════════════════════════════════════════════════════════════
   // 1. VISUAL CANVAS STUDIO (PHOTOSHOP / KRITA ANALOG)
   // ══════════════════════════════════════════════════════════════════════════
-  const canvasRef = useRef(null);
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
   const [activeTool, setActiveTool] = useState('select'); // 'select', 'crop', 'brush', 'outpaint', 'wand', 'type', 'vector'
   const [zoomLevel, setZoomLevel] = useState(100);
   const [brushSize, setBrushSize] = useState(28);
   const [isDrawingMask, setIsDrawingMask] = useState(false);
-  const [inpaintMaskPoints, setInpaintMaskPoints] = useState([]);
+  const [inpaintMaskPoints, setInpaintMaskPoints] = useState(/** @type {{x: number, y: number}[]} */ ([]));
 
   // Crop & Reframe Bounding Box
   const [cropBox, setCropBox] = useState({ x: 40, y: 30, width: 320, height: 480, aspect: '9:16' });
 
   // Outpaint Expansion Handles
-  const [outpaintBounds, setOutpaintBounds] = useState({ left: 80, right: 80, top: 40, bottom: 40 });
+  const [outpaintBounds] = useState({ left: 80, right: 80, top: 40, bottom: 40 });
   const [outpaintPrompt, setOutpaintPrompt] = useState('hyper-detailed cinematic environment extension, volumetric lighting');
-  const [isOutpainting, setIsOutpainting] = useState(false);
+  const [isOutpainting] = useState(false);
 
   // Layer Stack (Photoshop Layer Panel)
-  const [layers, setLayers] = useState([
+  const [layers, setLayers] = useState(/** @type {StudioLayer[]} */ ([
     { id: 'layer_bg', name: 'Background Matte', type: 'image', visible: true, locked: false, opacity: 100, blendMode: 'normal' },
     { id: 'layer_cutout', name: 'Isolated Subject (BiRefNet)', type: 'subject', visible: true, locked: false, opacity: 100, blendMode: 'normal' },
     { id: 'layer_mask', name: 'Inpaint Healing Mask', type: 'mask', visible: true, locked: false, opacity: 65, blendMode: 'overlay' },
     { id: 'layer_text', name: 'Master Title Typography', type: 'text', visible: true, locked: false, opacity: 100, blendMode: 'normal', text: 'SOVEREIGN ARCHITECT', font: 'Cinzel Decorative', size: 36, color: '#f8fafc', kerning: 4 },
     { id: 'layer_grade', name: 'Teal & Orange 3D LUT', type: 'adjustment', visible: true, locked: false, opacity: 80, blendMode: 'overlay', preset: 'Teal & Orange' }
-  ]);
+  ]));
   const [selectedLayerId, setSelectedLayerId] = useState('layer_bg');
 
   // Image Adjustment Sliders
@@ -332,6 +340,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const width = canvas.width;
     const height = canvas.height;
 
@@ -507,19 +516,21 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   }, [layers, activeTool, cropBox, outpaintBounds, inpaintMaskPoints, brushSize, adjustments]);
 
   // Canvas Mouse Events for Inpainting & Mask Painting
-  const handleCanvasMouseDown = (e) => {
+  /** @param {import("react").MouseEvent<HTMLCanvasElement>} e */
+const handleCanvasMouseDown = (e) => {
     if (activeTool === 'brush') {
       setIsDrawingMask(true);
-      const rect = canvasRef.current.getBoundingClientRect();
+      const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setInpaintMaskPoints(prev => [...prev, { x, y }]);
     }
   };
 
-  const handleCanvasMouseMove = (e) => {
+  /** @param {import("react").MouseEvent<HTMLCanvasElement>} e */
+const handleCanvasMouseMove = (e) => {
     if (activeTool === 'brush' && isDrawingMask) {
-      const rect = canvasRef.current.getBoundingClientRect();
+      const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setInpaintMaskPoints(prev => [...prev, { x, y }]);
@@ -559,11 +570,11 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
 
   // Multi-Track Timeline Clips
-  const [videoClips, setVideoClips] = useState([
+  const [videoClips, setVideoClips] = useState(/** @type {StudioClip[]} */ ([
     { id: 'v_clip_1', track: 'V1', title: 'A-Roll Opening Anchor Take', start: 0, duration: 18.0, color: '#38bdf8' },
     { id: 'v_clip_2', track: 'V1', title: 'Dr. Aris Vance Laboratory', start: 18.0, duration: 22.0, color: '#0284c7' },
     { id: 'v_clip_3', track: 'V1', title: 'Closing Horizon Sweep', start: 40.0, duration: 20.0, color: '#2563eb' }
-  ]);
+  ]));
 
   const [brollClips] = useState([
     { id: 'b_clip_1', track: 'V2', title: 'Wan 2.2 Neural Library Flythrough', start: 12.0, duration: 10.0, color: '#a855f7' },
@@ -571,7 +582,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   ]);
 
   // Audio Waveform & Ducking
-  const [silenceGaps, setSilenceGaps] = useState([
+  const [silenceGaps] = useState([
     { start: 8.2, duration: 1.4 },
     { start: 24.1, duration: 1.8 },
     { start: 38.5, duration: 1.2 }
@@ -591,7 +602,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
 
   // Playhead Animation
   useEffect(() => {
-    let animId;
+    let animId = 0;
     if (isPlaying) {
       const startTime = Date.now();
       const initialPlayhead = playheadTime;
@@ -671,7 +682,8 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   const [copilotCommand, setCopilotCommand] = useState('');
   const [isExecutingCopilot, setIsExecutingCopilot] = useState(false);
 
-  const handleExecuteCopilot = async (cmdText = null) => {
+  /** @param {string | null} [cmdText] */
+const handleExecuteCopilot = async (cmdText = null) => {
     const text = (cmdText || copilotCommand).trim();
     if (!text) return;
     addLog('DIRECTOR', `Directive held as draft: "${text}". Execution and output verification are unavailable; external dispatch is disabled.`);
@@ -679,7 +691,8 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
   };
 
   // Format Timecode Helper
-  const formatTimecode = (sec) => {
+  /** @param {number} sec */
+const formatTimecode = (sec) => {
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60);
     const f = Math.floor((sec % 1) * 30);
@@ -931,7 +944,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
               }} />
             </div>
             <span style={{ color: '#9ca3af', fontFamily: 'monospace' }}>
-              {telemetry.used_mb === null ? 'Telemetry unavailable' : `${(telemetry.used_mb / 1024).toFixed(1)} / ${(telemetry.total_mb / 1024).toFixed(1)} GB`}
+              {telemetry.used_mb === null ? 'Telemetry unavailable' : `${(telemetry.used_mb / 1024).toFixed(1)} / ${((telemetry.total_mb || 0) / 1024).toFixed(1)} GB`}
             </span>
           </div>
 
@@ -1541,8 +1554,8 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
                     src={activeMediaFile.url}
                     playsInline
                     onTimeUpdate={(e) => {
-                      if (isPlaying && Math.abs(e.target.currentTime - playheadTime) > 0.15) {
-                        setPlayheadTime(e.target.currentTime);
+                      if (isPlaying && Math.abs(e.currentTarget.currentTime - playheadTime) > 0.15) {
+                        setPlayheadTime(e.currentTarget.currentTime);
                       }
                     }}
                     onEnded={() => setIsPlaying(false)}
@@ -1582,7 +1595,7 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
                   <span style={{ color: '#10b981', fontWeight: '700' }}>● CFR 30.00 FPS NVENC</span>
                   <span>
                     {activeMediaFile?.width ? `${activeMediaFile.width}x${activeMediaFile.height}` : '1920x1080'}
-                    {activeMediaFile?.width > 2000 ? ' (4K Ultra-Wide)' : ' (16:9)'}
+                    {(activeMediaFile?.width ?? 0) > 2000 ? ' (4K Ultra-Wide)' : ' (16:9)'}
                   </span>
                 </div>
 
@@ -2258,4 +2271,10 @@ export default function MediaStudioTab({ BACKEND_URL, backendUrl }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

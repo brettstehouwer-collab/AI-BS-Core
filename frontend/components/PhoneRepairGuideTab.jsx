@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import UBreakiFixSOP from './UBreakiFixSOP';
 import UBreakiFixPracticePortal from './UBreakiFixPracticePortal';
 import UsbFlashRecoveryStation from './UsbFlashRecoveryStation';
@@ -14,6 +14,7 @@ import {
   DEFAULT_CHEMICALS_SAFETY
 } from '../data/defaultPhoneRepairData';
 
+/** @param {{"backendUrl": string}} props */
 export default function PhoneRepairGuideTab({ backendUrl }) {
   // Navigation & Station State
   const [activeStation, setActiveStation] = useState('guides'); // 'guides', 'diagnostics', 'ic_lab', 'tools_mat', 'calculator', 'tickets', 'sop_academy', 'practice_sim', 'sku_matrix', 'dc_lab', 'qa_cert', 'chem_safety'
@@ -28,23 +29,24 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
   const [toolsRef, setToolsRef] = useState(DEFAULT_TOOLS_REF);
   const [repairTickets, setRepairTickets] = useState(DEFAULT_TICKETS);
   const [loading, setLoading] = useState(false);
-  const [qaChecked, setQaChecked] = useState({});
+  const [qaChecked, setQaChecked] = useState(/** @type {Record<string, boolean>} */ ({}));
 
   // Station 9: Part SKUs & Cross-Compatibility State
-  const [partSkus, setPartSkus] = useState(DEFAULT_PART_SKUS);
+  const [partSkus] = useState(DEFAULT_PART_SKUS);
   const [skuSearch, setSkuSearch] = useState('');
   const [selectedSkuCat, setSelectedSkuCat] = useState('all');
 
   // Station 10: DC Power Supply & Waveform Lab State
-  const [dcPresets, setDcPresets] = useState(DEFAULT_DC_PRESETS);
+  const [dcPresets] = useState(DEFAULT_DC_PRESETS);
   const [selectedDcPreset, setSelectedDcPreset] = useState(DEFAULT_DC_PRESETS[0]);
-  const [customVoltage, setCustomVoltage] = useState(4.2);
-  const [customCurrent, setCustomCurrent] = useState(0.000);
+  const [] = useState(4.2);
+  const [] = useState(0.000);
   const [isSupplyOn, setIsSupplyOn] = useState(true);
 
   // Station 11: 24-Point Asurion Audit & QA Certificate Generator State
-  const [qaCheckpoints, setQaCheckpoints] = useState(DEFAULT_QA_CHECKPOINTS);
+  const [qaCheckpoints] = useState(DEFAULT_QA_CHECKPOINTS);
   const [qaAuditStatus, setQaAuditStatus] = useState(() => {
+    /** @type {Record<string, string>} */
     const s = {};
     DEFAULT_QA_CHECKPOINTS.forEach(q => { s[q.id] = 'pass'; });
     return s;
@@ -56,7 +58,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
   const [qaWarrantyMonths, setQaWarrantyMonths] = useState(12);
 
   // Station 12: Chemical Safety & Thermal MSDS State
-  const [chemicalsSafety, setChemicalsSafety] = useState(DEFAULT_CHEMICALS_SAFETY);
+  const [chemicalsSafety] = useState(DEFAULT_CHEMICALS_SAFETY);
   const [activeChemTab, setActiveChemTab] = useState('guide'); // 'guide', 'emergency'
 
   // Filter & Search State
@@ -67,6 +69,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
 
   // Interactive Screw Mat State
   const [screwMatGrid, setScrewMatGrid] = useState(() => {
+    /** @type {Record<string, string | null>} */
     const grid = {};
     for (let r = 0; r < 6; r++) {
       for (let c = 0; c < 8; c++) {
@@ -231,14 +234,17 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     });
   }, [partSkus, skuSearch, selectedSkuCat]);
 
-  const toggleQaAuditPoint = (id, newStatus) => {
+  /** @param {string} id @param {string} newStatus */
+const toggleQaAuditPoint = ( id,  newStatus) => {
     setQaAuditStatus(prev => ({
       ...prev,
       [id]: newStatus
     }));
   };
 
-  const markAllQa = (status) => {
+  /** @param {string} status */
+const markAllQa = ( status) => {
+    /** @type {Record<string, string>} */
     const s = {};
     qaCheckpoints.forEach(q => { s[q.id] = status; });
     setQaAuditStatus(s);
@@ -253,7 +259,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     }
   }, [filteredGuides, selectedGuide]);
 
-  const handleCreateTicket = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleCreateTicket = async ( e) => {
     e.preventDefault();
     if (!calcCustomerName.trim() || !calcModel.trim()) return;
 
@@ -291,7 +298,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     }
   };
 
-  const handleUpdateTicketStatus = async (ticketId, newStatus) => {
+  /** @param {number} ticketId @param {string} newStatus */
+const handleUpdateTicketStatus = async ( ticketId,  newStatus) => {
     try {
       const res = await fetch(`${API_BASE}/api/repair/tickets/${ticketId}/status`, {
         method: 'PUT',
@@ -310,7 +318,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     }
   };
 
-  const toggleScrewSlot = (key) => {
+  /** @param {string} key */
+const toggleScrewSlot = ( key) => {
     setScrewMatGrid(prev => ({
       ...prev,
       [key]: prev[key] ? null : selectedScrewColor
@@ -318,6 +327,7 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
   };
 
   const clearScrewMat = () => {
+    /** @type {Record<string, string | null>} */
     const grid = {};
     for (let r = 0; r < 6; r++) {
       for (let c = 0; c < 8; c++) {
@@ -327,7 +337,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
     setScrewMatGrid(grid);
   };
 
-  const toggleQaCheck = (idx) => {
+  /** @param {number} idx */
+const toggleQaCheck = ( idx) => {
     setQaChecked(prev => ({
       ...prev,
       [idx]: !prev[idx]
@@ -586,7 +597,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
               className="aibs-touch-input"
               placeholder="Search model, error code, TrueTone, or port..."
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={ 
+e => setSearchQuery(e.target.value)}
               style={{
                 width: '100%',
                 background: '#090e17',
@@ -607,7 +619,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
             <select
               className="aibs-touch-input"
               value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
+              onChange={ 
+e => setSelectedCategory(e.target.value)}
               style={{
                 width: '100%',
                 background: '#090e17',
@@ -635,7 +648,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
             <select
               className="aibs-touch-input"
               value={selectedRepairType}
-              onChange={e => setSelectedRepairType(e.target.value)}
+              onChange={ 
+e => setSelectedRepairType(e.target.value)}
               style={{
                 width: '100%',
                 background: '#090e17',
@@ -664,7 +678,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
             <select
               className="aibs-touch-input"
               value={selectedDifficulty}
-              onChange={e => setSelectedDifficulty(e.target.value)}
+              onChange={ 
+e => setSelectedDifficulty(e.target.value)}
               style={{
                 width: '100%',
                 background: '#090e17',
@@ -887,7 +902,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   📋 18-Point Post-Repair Quality Assurance (QA) Checklist
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  {selectedGuide.post_qa_checklist.map((item, idx) => (
+                  {selectedGuide.post_qa_checklist.map(
+(item,  idx) => (
                     <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: qaChecked[idx] ? '#34d399' : '#94a3b8', cursor: 'pointer' }}>
                       <input
                         type="checkbox"
@@ -1210,7 +1226,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   { label: '$99 Tier 1 Replacement', model: 'Standard / Budget Phone', part: 0, labor: 99, grade: 'OEM Refurb / Pull', issue: 'Asurion Tier 1 BER / Whole Unit Replacement ($99)' },
                   { label: '$249 Tier 2/3 Flagship WUR', model: 'iPhone Pro Max / Ultra / Fold', part: 0, labor: 249, grade: 'OEM Refurb / Pull', issue: 'Asurion Tier 2/3 Flagship WUR Replacement ($249)' },
                   { label: '$99 Home+ Claim', model: 'Laptop / Tablet / Console', part: 0, labor: 99, grade: 'OEM Refurb / Pull', issue: 'Asurion Home+ $99 Flat Service Fee' }
-                ].map((p, idx) => (
+                ].map(
+(p,  idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -1241,7 +1258,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   { label: 'Samsung Z Fold/Flip ($499)', model: 'Samsung Galaxy Z Fold 5', part: 320, labor: 179, grade: 'OEM Refurb / Pull', issue: 'Foldable Inner Screen Replacement' },
                   { label: 'Google Pixel 6-7 Screen ($189)', model: 'Google Pixel 7', part: 90, labor: 99, grade: 'Soft OLED', issue: 'Pixel OLED Replacement & Optical Fingerprint Calibration' },
                   { label: 'Google Pixel 8-9 Pro ($299)', model: 'Google Pixel 9 Pro', part: 160, labor: 139, grade: 'OEM Refurb / Pull', issue: 'Pixel Pro OLED Screen Replacement' }
-                ].map((p, idx) => (
+                ].map(
+(p,  idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -1272,7 +1290,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   { label: 'Laptop Screen ($220)', model: 'Dell / HP / Lenovo Laptop', part: 80, labor: 140, grade: 'Incell LCD', issue: 'Laptop 1080p LED/IPS Display Replacement' },
                   { label: 'OS Reinstall / Virus ($119)', model: 'Windows PC / MacBook', part: 0, labor: 119, grade: 'OEM Refurb / Pull', issue: 'Clean OS Reinstall, Driver Updates & Virus Removal' },
                   { label: 'Data Recovery Temp Boot ($275)', model: 'Dead Motherboard (Data Retrieval)', part: 25, labor: 250, grade: 'OEM Refurb / Pull', issue: 'Board-level Micro-soldering & Bypass Jumpers for Temporary Boot' }
-                ].map((p, idx) => (
+                ].map(
+(p,  idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -1302,7 +1321,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   type="text"
                   placeholder="e.g. John Doe"
                   value={calcCustomerName}
-                  onChange={e => setCalcCustomerName(e.target.value)}
+                  onChange={ 
+e => setCalcCustomerName(e.target.value)}
                   style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   required
                 />
@@ -1315,7 +1335,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                     type="text"
                     placeholder="(616) 555-0199"
                     value={calcPhone}
-                    onChange={e => setCalcPhone(e.target.value)}
+                    onChange={ 
+e => setCalcPhone(e.target.value)}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   />
                 </div>
@@ -1325,7 +1346,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                     type="text"
                     placeholder="e.g. iPhone 15 Pro Max"
                     value={calcModel}
-                    onChange={e => setCalcModel(e.target.value)}
+                    onChange={ 
+e => setCalcModel(e.target.value)}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                     required
                   />
@@ -1337,7 +1359,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <label style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>Part Quality Grade</label>
                   <select
                     value={calcPartGrade}
-                    onChange={e => setCalcPartGrade(e.target.value)}
+                    onChange={ 
+e => setCalcPartGrade(e.target.value)}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   >
                     <option value="Incell LCD">Incell LCD (Budget / $35)</option>
@@ -1351,7 +1374,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="text"
                     value={calcIssue}
-                    onChange={e => setCalcIssue(e.target.value)}
+                    onChange={ 
+e => setCalcIssue(e.target.value)}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   />
                 </div>
@@ -1363,7 +1387,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="number"
                     value={calcPartCost}
-                    onChange={e => setCalcPartCost(e.target.value)}
+                    onChange={ 
+e => setCalcPartCost(Number(e.target.value))}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   />
                 </div>
@@ -1372,7 +1397,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="number"
                     value={calcLaborRate}
-                    onChange={e => setCalcLaborRate(e.target.value)}
+                    onChange={ 
+e => setCalcLaborRate(Number(e.target.value))}
                     style={{ width: '100%', background: '#090e17', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem' }}
                   />
                 </div>
@@ -1488,7 +1514,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                     {/* Status Lifecycle Dropdown */}
                     <select
                       value={t.status}
-                      onChange={e => handleUpdateTicketStatus(t.ticket_id, e.target.value)}
+                      onChange={ 
+e => handleUpdateTicketStatus(t.ticket_id, e.target.value)}
                       style={{
                         background: t.status === 'Completed' || t.status === 'Picked Up' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(56, 189, 248, 0.15)',
                         color: t.status === 'Completed' || t.status === 'Picked Up' ? '#34d399' : '#38bdf8',
@@ -1550,7 +1577,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                 type="text"
                 placeholder="Search model, SKU, or rule..."
                 value={skuSearch}
-                onChange={e => setSkuSearch(e.target.value)}
+                onChange={ 
+e => setSkuSearch(e.target.value)}
                 style={{
                   background: '#090e17',
                   border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -1563,7 +1591,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
               />
               <select
                 value={selectedSkuCat}
-                onChange={e => setSelectedSkuCat(e.target.value)}
+                onChange={ 
+e => setSelectedSkuCat(e.target.value)}
                 style={{
                   background: '#090e17',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -1623,7 +1652,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
 
                 {/* Quality Grades Matrix */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '12px' }}>
-                  {sku.grades.map((g, idx) => (
+                  {sku.grades.map(
+(g,  idx) => (
                     <div key={idx} style={{
                       background: 'rgba(255, 255, 255, 0.03)',
                       border: '1px solid rgba(255, 255, 255, 0.06)',
@@ -1769,7 +1799,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
               <div>
                 <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700, marginBottom: '6px' }}>🔍 Probable Root Causes:</div>
                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.82rem', color: '#cbd5e1', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  {selectedDcPreset.root_causes.map((rc, idx) => (
+                  {selectedDcPreset.root_causes.map(
+(rc,  idx) => (
                     <li key={idx}>{rc}</li>
                   ))}
                 </ul>
@@ -1779,7 +1810,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
               <div>
                 <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700, marginBottom: '6px' }}>🔬 Multimeter Diode Mode Test Points (Red Probe on Ground):</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {selectedDcPreset.probe_points.map((pt, idx) => (
+                  {selectedDcPreset.probe_points.map(
+(pt,  idx) => (
                     <div key={idx} style={{ background: '#020617', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '6px', padding: '8px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 700, fontFamily: 'monospace' }}>{pt.rail}</span>
                       <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{pt.test_step}</span>
@@ -1919,7 +1951,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="text"
                     value={qaCustomerName}
-                    onChange={e => setQaCustomerName(e.target.value)}
+                    onChange={ 
+e => setQaCustomerName(e.target.value)}
                     style={{ width: '100%', background: '#020617', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem' }}
                   />
                 </div>
@@ -1928,7 +1961,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="text"
                     value={qaDeviceModel}
-                    onChange={e => setQaDeviceModel(e.target.value)}
+                    onChange={ 
+e => setQaDeviceModel(e.target.value)}
                     style={{ width: '100%', background: '#020617', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem' }}
                   />
                 </div>
@@ -1937,7 +1971,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                   <input
                     type="text"
                     value={qaSerialImei}
-                    onChange={e => setQaSerialImei(e.target.value)}
+                    onChange={ 
+e => setQaSerialImei(e.target.value)}
                     style={{ width: '100%', background: '#020617', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem', fontFamily: 'monospace' }}
                   />
                 </div>
@@ -1947,7 +1982,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                     <input
                       type="text"
                       value={qaTechInitials}
-                      onChange={e => setQaTechInitials(e.target.value)}
+                      onChange={ 
+e => setQaTechInitials(e.target.value)}
                       style={{ width: '100%', background: '#020617', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem' }}
                     />
                   </div>
@@ -1955,7 +1991,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
                     <label style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Warranty Period:</label>
                     <select
                       value={qaWarrantyMonths}
-                      onChange={e => setQaWarrantyMonths(Number(e.target.value))}
+                      onChange={ 
+e => setQaWarrantyMonths(Number(e.target.value))}
                       style={{ width: '100%', background: '#020617', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#fff', padding: '6px 10px', borderRadius: '6px', fontSize: '0.8rem' }}
                     >
                       <option value={1}>30-Day Limited</option>
@@ -2053,7 +2090,8 @@ export default function PhoneRepairGuideTab({ backendUrl }) {
 
           {activeChemTab === 'guide' ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
-              {chemicalsSafety.map((chem, idx) => (
+              {chemicalsSafety.map(
+(chem,  idx) => (
                 <div key={idx} style={{ background: '#090e17', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#38bdf8' }}>{chem.chemical}</span>

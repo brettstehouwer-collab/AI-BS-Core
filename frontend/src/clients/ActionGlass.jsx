@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import ActionGlassQuoter from './action_glass/ActionGlassQuoter';
 import CompetitorRadar from './action_glass/CompetitorRadar';
 import DriverOutreach from './action_glass/DriverOutreach';
 import FleetTracker from './action_glass/FleetTracker';
 import SeoOptimizer from './action_glass/SeoOptimizer';
 
+/** @param {{"BACKEND_URL": string}} props */
 export default function ActionGlass({ BACKEND_URL }) {
   const [activeTab, setActiveTab] = useState('quoter');
-  const [consoleLogs, setConsoleLogs] = useState([]);
-  const consoleEndRef = useRef(null);
+  const [consoleLogs, setConsoleLogs] = useState(/** @type {Array<string>} */ ([]));
+  const consoleEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
-  const addLog = (msg) => {
+  /** @param {string} msg */
+const addLog = ( msg) => {
     setConsoleLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
   };
 
@@ -30,7 +32,7 @@ export default function ActionGlass({ BACKEND_URL }) {
       case 'quoter': return <ActionGlassQuoter backendUrl={BACKEND_URL} />;
       case 'competitor_radar': return <CompetitorRadar backendUrl={BACKEND_URL} />;
       case 'driver_outreach': return <DriverOutreach backendUrl={BACKEND_URL} />;
-      case 'fleet_tracker': return <FleetTracker backendUrl={BACKEND_URL} />;
+      case 'fleet_tracker': return <FleetTracker />;
       case 'seo_optimizer': return <SeoOptimizer backendUrl={BACKEND_URL} />;
       default: return null;
     }

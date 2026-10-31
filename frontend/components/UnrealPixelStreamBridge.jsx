@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MonitorPlay, WifiOff, Box, Image as ImageIcon, Sparkles, Camera, Play, Square, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { MonitorPlay, WifiOff, Box, Image as ImageIcon, Sparkles, Camera, Play } from "lucide-react";
 
+/** @param {{"signalingUrl": string, "onStatusChange"?: (arg0: string) => void}} props */
 function WebRTCSession({ signalingUrl, onStatusChange }) {
-    const videoRef = useRef(null);
+    const videoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
 
     useEffect(() => {
+        /** @type {WebSocket} */
         let ws;
+        /** @type {RTCPeerConnection} */
         let pc;
         let isMounted = true;
 
@@ -27,6 +30,7 @@ function WebRTCSession({ signalingUrl, onStatusChange }) {
                 }
             };
 
+            /** @type {string | number | null} */
             let remotePlayerId = null;
 
             ws.onmessage = async (event) => {
@@ -112,16 +116,18 @@ function WebRTCSession({ signalingUrl, onStatusChange }) {
     );
 }
 
+/** @param {{"signalingUrl"?: string, "port"?: string, "height"?: string, "title"?: string, "backendUrl"?: string, "onAction"?: (arg0: string) => void}} props */
 export default function UnrealPixelStreamBridge({ 
   signalingUrl = "ws://127.0.0.1", 
   port = "8888", 
   height = "560px", 
   title = "Unreal Engine 5.8 | Live 3D Viewport",
   backendUrl = '',
-  onAction = async (actionType) => {}
+  onAction = /** @param {string} _actionType */
+async ( _actionType) => {}
 }) {
   const [streamActive, setStreamActive] = useState(true);
-  const [streamStatus, setStreamStatus] = useState('Initializing...');
+  const [, setStreamStatus] = useState('Initializing...');
   const [trackerActive, setTrackerActive] = useState(false);
   const [isLaunchingStreamer, setIsLaunchingStreamer] = useState(false);
   const [actionFeedback, setActionFeedback] = useState('');
@@ -141,7 +147,7 @@ export default function UnrealPixelStreamBridge({
         setActionFeedback(`⚠️ Launch failed: ${data.message}`);
       }
     } catch (e) {
-      setActionFeedback(`❌ Failed to reach backend: ${e.message}`);
+      setActionFeedback(`❌ Failed to reach backend: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsLaunchingStreamer(false);
     }
@@ -164,7 +170,8 @@ export default function UnrealPixelStreamBridge({
     }
   };
 
-  const triggerAction = async (actionType) => {
+  /** @param {string} actionType */
+const triggerAction = async ( actionType) => {
     setActionFeedback(`⚡ Executing ${actionType} in Unreal Engine...`);
     try {
       const res = await fetch(`${backendUrl}/api/unreal/execute`, {
@@ -177,7 +184,7 @@ export default function UnrealPixelStreamBridge({
       if (onAction) onAction(actionType);
     } catch (e) {
       console.error(e);
-      setActionFeedback(`❌ Action failed: ${e.message}`);
+      setActionFeedback(`❌ Action failed: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 

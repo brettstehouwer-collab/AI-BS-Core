@@ -5,7 +5,7 @@
 
 export interface ASTBlock {
   id: string;
-  type: 'Scene Heading' | 'Action' | 'Character' | 'Dialogue' | 'Parenthetical' | 'Transition' | 'Shot' | 'General';
+  type: string;
   text: string;
   dual?: boolean;
 }
@@ -72,6 +72,11 @@ export function serializeFDX(ast: ASTBlock[] = [], metadata: FDXMetadata = {}): 
     <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="12" Spacing="1" StartsNewPage="No"/>
     <Behavior Paginated="No"/>
   </ElementSettings>
+  <ElementSettings Type="Cast List">
+    <FontSpec AdornmentStyle="0" Background="#FFFFFFFFFFFF" Color="#000000000000" Font="Courier Final Draft" RevisionID="0" Size="12" Style="AllCaps"/>
+    <ParagraphSpec Alignment="Left" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="0" Spacing="1" StartsNewPage="No"/>
+    <Behavior Paginated="No"/>
+  </ElementSettings>
   <HeaderAndFooter>
     <Header>
       <Paragraph Alignment="Right" FirstIndent="0.00" Leading="Regular" LeftIndent="0.00" RightIndent="0.00" SpaceBefore="0" Spacing="1" StartsNewPage="No">
@@ -82,6 +87,12 @@ export function serializeFDX(ast: ASTBlock[] = [], metadata: FDXMetadata = {}): 
   <PageLayout BackgroundColor="#FFFFFFFFFFFF" BottomMargin="720" BreakDialogueAndActionAtSentences="Yes" DocumentType="Script" HeaderMargin="360" FooterMargin="360" LeftMargin="1080" RightMargin="720" TopMargin="720">
     <PageSize Height="11.00" Width="8.50"/>
   </PageLayout>
+  <TitlePage>
+    <Content>
+      <Paragraph Type="Title"><Text>${title}</Text></Paragraph>
+      <Paragraph Type="Author"><Text>${author}</Text></Paragraph>
+    </Content>
+  </TitlePage>
   <Content>
 `;
 

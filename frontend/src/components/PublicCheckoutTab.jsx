@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const PASS_TIERS = [
   { id: 'pass_1day', name: '1-Day Pass', duration: '24 Hours', price: '$4.99', amount: 4.99, badge: 'Popular', reqs: '250 req/day', rpm: '20 RPM', desc: 'Ideal for quick 1-day AI generation projects and quick API testing.' },
@@ -10,6 +10,7 @@ const PASS_TIERS = [
   { id: 'pass_30day', name: '30-Day Pass', duration: '720 Hours (Full Month)', price: '$69.99', amount: 69.99, badge: 'Pro Month', reqs: '500 req/day', rpm: '60 RPM', desc: 'Full 30-day non-recurring pass for ongoing batch production.' },
 ];
 
+/** @param {{"onLaunchPlayground"?: () => void}} props */
 export default function PublicCheckoutTab({ onLaunchPlayground }) {
   const [selectedPass, setSelectedPass] = useState(PASS_TIERS[0]);
   const [checkoutError, setCheckoutError] = useState('');

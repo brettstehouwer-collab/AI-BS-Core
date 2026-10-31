@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getApiBase } from '../config/api.js';
-import { db, auth } from '../firebase.js';
-import { collection, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebase.js';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const BACKEND_URL = getApiBase();
 
 // ─── Initial State Defaults ────────────────────────────────────────────────
-const defaultTelemetry = {
+export const defaultTelemetry = {
   deviceTelemetry: { primary: '15.5%', secondary: '39%', label: 'ANTOKRES', detail: 'Local matrix deconvolution stable' },
   processManager: { primary: '13.29%', secondary: '1.79%', subtitle: 'Mvmoeor 7.55% · Nxeerr 97°C', detail: 'Ceonunace GOHH · Atnosuce 1.43°C' },
   deviceTelemetry2: { value: '0.5% / 0.96% / 8.7%', subtitle: 'Dsrvmoee · Dhnooe · Arceut surion', detail: 'Ffaoo 1.77% · Totel grace 0.09%' },
@@ -37,17 +37,20 @@ const defaultTelemetry = {
 };
 
 // ─── Utility Functions ───────────────────────────────────────────────────
+/** @param {string | null | undefined} ctx */
 const parseSources = (ctx) => {
   if (!ctx) return [];
   return ctx.split(',').map(s => s.trim()).filter(Boolean);
 };
 
+/** @param {number} seconds */
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60).toString().padStart(2, '0');
   const s = (seconds % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
 };
 
+/** @param {import("/types/domain").Model[]} models */
 const categorizeModels = (models) => {
   return {
     chat: models.filter(m => m.type === 'chat'),
@@ -79,8 +82,11 @@ if (typeof window !== 'undefined') {
 
 import { masterHubs } from './navigationConfig';
 
+/** @type {import("zustand").UseBoundStore<import("zustand").StoreApi<import("/types/domain").AppStore>>} */
 export const useAppStore = create(
   persist(
+    /** @param {import("zustand").StoreApi<import("/types/domain").AppStore>["setState"]} set
+     * @returns {import("/types/domain").AppStore} */
     (set) => ({
       BACKEND_URL,
       setBackendUrl: (url) => set({ BACKEND_URL: url }),
@@ -222,15 +228,15 @@ export const useAppStore = create(
   devCodeType: 'python',
   setDevCodeType: (devCodeType) => set({ devCodeType }),
   gitStatus: 'Clean working tree.',
-  setGitStatus: (gitStatus) => set({ gitStatus }),
+  setGitStatus: (updater) => set(state => ({ gitStatus: typeof updater === 'function' ? updater(state.gitStatus) : updater })),
   systemGitStatus: 'Clean working tree.',
-  setSystemGitStatus: (systemGitStatus) => set({ systemGitStatus }),
+  setSystemGitStatus: (updater) => set(state => ({ systemGitStatus: typeof updater === 'function' ? updater(state.systemGitStatus) : updater })),
 
   // ── Terminal / PowerShell State ─────────────────────────────────────────
   psCommand: '',
   setPsCommand: (psCommand) => set({ psCommand }),
   psOutput: '',
-  setPsOutput: (psOutput) => set({ psOutput }),
+  setPsOutput: (updater) => set(state => ({ psOutput: typeof updater === 'function' ? updater(state.psOutput) : updater })),
   isExecutingPs: false,
   setIsExecutingPs: (isExecutingPs) => set({ isExecutingPs }),
 
@@ -380,12 +386,12 @@ export const useAppStore = create(
   // ── Pull Model State ────────────────────────────────────────────────────
   pullModelInput: '',
   setPullModelInput: (pullModelInput) => set({ pullModelInput }),
-  pullingStatus: '',
-  setPullingStatus: (pullingStatus) => set({ pullingStatus }),
+  pullingStatus: {},
+  setPullingStatus: (updater) => set(state => ({ pullingStatus: typeof updater === 'function' ? updater(state.pullingStatus) : updater })),
 
   // ── Agent Launcher State ────────────────────────────────────────────────
   activeAgents: [],
-  setActiveAgents: (activeAgents) => set({ activeAgents }),
+  setActiveAgents: (updater) => set(state => ({ activeAgents: typeof updater === 'function' ? updater(state.activeAgents) : updater })),
   telegramToken: '',
   setTelegramToken: (telegramToken) => set({ telegramToken }),
   safetySkipPermissions: false,
@@ -415,7 +421,7 @@ export const useAppStore = create(
       if (data.status === 'success' && data.results) {
         // Merge without duplicates by ID
         const existingIds = new Set(osintVaultItems.map(item => item.id));
-        const newItems = data.results.filter(item => !existingIds.has(item.id));
+        const newItems = data.results.filter(/** @param {import("/types/domain").VaultItem} item */ item => !existingIds.has(item.id));
         
         if (newItems.length > 0) {
           set({ osintVaultItems: [...newItems, ...osintVaultItems] });
@@ -457,7 +463,7 @@ export const useAppStore = create(
       else if (data.result && Array.isArray(data.result)) parsed = data.result;
       
       if (parsed) {
-        const newVaultItems = parsed.map(item => ({
+        const newVaultItems = parsed.map(/** @param {unknown} item */ item => ({
           id: crypto.randomUUID(),
           timestamp: Date.now(),
           source: `RapidAPI - ${taskType}`,
@@ -477,7 +483,7 @@ export const useAppStore = create(
         set({ osintVaultItems: [singleItem, ...osintVaultItems] });
       }
     } catch (err) {
-      set({ rapidApiError: err.message });
+      set({ rapidApiError: err instanceof Error ? err.message : String(err) });
     } finally {
       set({ rapidApiIsFetching: false });
     }
@@ -495,7 +501,7 @@ export const useAppStore = create(
 
   runLostPropertyScan: async () => {
     set({ lostPropertyLoading: true, lostPropertyScanStatus: 'Connecting to Gmail API via OAuth and categorizing...', lostPropertyError: null });
-    const { BACKEND_URL, osintVaultItems } = useAppStore.getState();
+    const { BACKEND_URL } = useAppStore.getState();
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/lost-property/scan`, { method: 'POST' });
       const json = await res.json();
@@ -504,7 +510,7 @@ export const useAppStore = create(
           lostPropertyAccounts: json.data || [],
           lostPropertyScanStatus: `Scan complete! Found ${json.count} potential accounts.`
         });
-        const newVaultItems = (json.data || []).map(acc => ({
+        const newVaultItems = (json.data || []).map(/** @param {import("/types/domain").LostPropertyAccount} acc */ acc => ({
           id: crypto.randomUUID(),
           timestamp: Date.now(),
           source: 'Lost Property Scanner',
@@ -516,7 +522,7 @@ export const useAppStore = create(
         set({ lostPropertyError: json.error || 'Scan failed.', lostPropertyScanStatus: '' });
       }
     } catch (e) {
-      set({ lostPropertyError: e.message, lostPropertyScanStatus: '' });
+      set({ lostPropertyError: e instanceof Error ? e.message : String(e), lostPropertyScanStatus: '' });
     } finally {
       set({ lostPropertyLoading: false });
     }
@@ -532,7 +538,7 @@ export const useAppStore = create(
 
   runLostPropertyWebScan: async (targetEmail, scanType) => {
     set({ lostPropertyWebLoading: true, lostPropertyWebError: null });
-    const { BACKEND_URL, osintVaultItems } = useAppStore.getState();
+    const { BACKEND_URL } = useAppStore.getState();
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/lost-property/web-scan`, { 
         method: 'POST',
@@ -542,7 +548,7 @@ export const useAppStore = create(
       const json = await res.json();
       if (res.ok) {
         set({ lostPropertyWebResults: json.data || [] });
-        const newVaultItems = (json.data || []).map(hit => ({
+        const newVaultItems = (json.data || []).map(/** @param {unknown} hit */ hit => ({
           id: crypto.randomUUID(),
           timestamp: Date.now(),
           source: 'Breach/Web Leak Scanner',
@@ -554,7 +560,7 @@ export const useAppStore = create(
         set({ lostPropertyWebError: json.error || json.message || 'Web scan failed.' });
       }
     } catch (e) {
-      set({ lostPropertyWebError: e.message });
+      set({ lostPropertyWebError: e instanceof Error ? e.message : String(e) });
     } finally {
       set({ lostPropertyWebLoading: false });
     }
