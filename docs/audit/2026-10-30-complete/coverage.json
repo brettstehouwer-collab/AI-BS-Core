@@ -3,8 +3,10 @@
   "client_date": "2026-10-30",
   "source_version": "v5.329.77",
   "repository": {
-    "checkpoint_parent_sha": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
-    "branch": "main"
+    "branch": "codex/audit-v532976-20261031",
+    "source_commit": "518dc77032dd3dcb63306ac28353c5c88b38ce90",
+    "handoff_commit": "a3d58ed5132a364f3ed856ad2c1b2254f956996e",
+    "note": "Prior inherited branch/main metadata retained explicitly as historical; current source/handoff verified."
   },
   "source_inventory": {
     "backend_python_sources_parsed": 791,
@@ -165,5 +167,9 @@
     "all_expected": true,
     "dispatch_invocations": 0,
     "receipt": "controlled_runtime_acceptance.json"
+  },
+  "inherited_record197_repository_metadata": {
+    "checkpoint_parent_sha": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "branch": "main"
   }
 }
