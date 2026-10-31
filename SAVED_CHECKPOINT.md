@@ -1,3 +1,14 @@
+# Current deployment checkpoint — Record199 / v5.329.77
+
+2026-10-31T06:19:50Z; Firebasev77VERIFIED_DEPLOYED https://ai-bs-dashboard.web.app .
+Live trading disabled;8007absent;4protectedhashes unchanged.143newcompiled+version+12publicsample hashes verified on preview/live.
+154Python/75clienttests,strictTS0/versionchecks pass. All Drive uploads remain in established folder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k.
+Rollbackv76 retained in audit-pre-v77 (7dayexpiry). Currentdeploymentreport docs/audit/2026-10-30-complete/DEPLOYMENT_v5.329.77.md.
+Fullaudit IN_PROGRESS: native rootChroma32/34failure, provider rotation, remaining route/IPC/navigation/serveridentity acceptance.
+Previous checkpoint text below is historical, including prior Firebase sign-in/deployment holds.
+
+---
+
 # Current checkpoint — v5.329.77 / Record198 / ADR-123
 
 Campaign IN_PROGRESS; 2026-10-31T05:41:25Z. Resume RESUME_FULL_AUDIT_V532977.

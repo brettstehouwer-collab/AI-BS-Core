@@ -104,7 +104,7 @@
     "Provider credential rotation/readiness and browser acceptance remain separate, with dispatch held."
   ],
   "coverage_limit": "Static sites and metadata are inventories, not proof every action or provider works.",
-  "updated_utc": "2026-10-31T05:41:25Z",
+  "updated_utc": "2026-10-31T06:19:50Z",
   "online_policy": "ALLOWED_BY_USER; unit tests remain isolated",
   "sqlite_integrity": {
     "repaired_fts_stores": [
@@ -132,10 +132,67 @@
     "native_vector_traversal": "OPEN: offline root clone exits1 after32/34collections; two-strike stop"
   },
   "hosting": {
-    "published_version": "v5.329.76",
-    "source_candidate": "v5.329.77",
-    "published_this_record": false,
-    "reason": "Prior CLI credential exposure was retired. Fresh Firebase sign-in required for any future CLI deployment; OpenAI API key does not authenticate Firebase."
+    "record": 199,
+    "source_version": "v5.329.77",
+    "status": "VERIFIED_DEPLOYED",
+    "updated_utc": "2026-10-31T06:19:50Z",
+    "project": "ai-bs-dashboard",
+    "site": "ai-bs-dashboard",
+    "production_url": "https://ai-bs-dashboard.web.app",
+    "preview_url": "https://ai-bs-dashboard--audit-v77-ne4cs5ue.web.app",
+    "rollback_url": "https://ai-bs-dashboard--audit-pre-v77-yab6nfsi.web.app",
+    "rollback_version": "v5.329.76",
+    "preview_hosting_version": "b2f5e1cf834b5030",
+    "promotion": "hosting:clone ai-bs-dashboard:audit-v77 ai-bs-dashboard:live",
+    "source_commit": "518dc77032dd3dcb63306ac28353c5c88b38ce90",
+    "source_metadata_parent": "5fc1a510e5143b93d2aad45378a0ce6596c705d0",
+    "branch": "codex/audit-v532976-20261031",
+    "stage_files": 1127,
+    "stage_bytes": 921343788,
+    "preserved_public_artifacts": 983,
+    "new_compiled_files": 143,
+    "version_metadata_files": 1,
+    "preview_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true
+    },
+    "production_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true,
+      "static_requests": 157
+    },
+    "offline_preflight": {
+      "python_tests": 154,
+      "client_tests": 75,
+      "typescript_diagnostics": 0,
+      "version_paths": 16,
+      "all_passed": true
+    },
+    "safety": {
+      "live_trading": "DISABLED",
+      "port8007": "ABSENT",
+      "protected_crypto_ledger_hashes": 4,
+      "all_unchanged": true,
+      "application_source_paths_unchanged": 1230,
+      "backend_daemons_activated": false,
+      "payments_or_outreach_activated": false,
+      "database_changes": false
+    },
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "credentials_in_records": false,
+    "keys_uploaded": false,
+    "cli_note": "npx launcher hung before startup; verified cached official Firebase CLI15.34.2 used. Project-list access confirmed despite one Windows shutdown assertion. Hosting rollback, preview upload and promotion exited0. No login:list --json or auth token store dump used.",
+    "limits": [
+      "Hosting only; no Cloud Functions/Firestore/backend deployment. Existing backend dispatch holds remain.",
+      "Static-byte/header checks did not execute appJavaScript, provider/device workflows, or every UI action.",
+      "Root native Chroma32/34collection failure, provider credential rotation and remaining route/IPC/server identity audit stay open.",
+      "983preserved public artifacts hash-checked locally;12sampled remotely, not all983downloaded.",
+      "Prior version retained in audit-pre-v77 preview channel with7day expiry; not permanent backup."
+    ]
   },
   "protected_hashes": {
     "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
@@ -171,5 +228,12 @@
   "inherited_record197_repository_metadata": {
     "checkpoint_parent_sha": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
     "branch": "main"
-  }
+  },
+  "previous_record198_hosting": {
+    "published_version": "v5.329.76",
+    "source_candidate": "v5.329.77",
+    "published_this_record": false,
+    "reason": "Prior CLI credential exposure was retired. Fresh Firebase sign-in required for any future CLI deployment; OpenAI API key does not authenticate Firebase."
+  },
+  "last_operational_record": 199
 }

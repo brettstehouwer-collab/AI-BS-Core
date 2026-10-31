@@ -1,3 +1,15 @@
+# Current Hosting checkpoint — v5.329.77 / Record199
+
+Firebase deployment is VERIFIED at https://ai-bs-dashboard.web.app (2026-10-31T06:19:50Z).
+All143new compiled files,version.json and12preserved public samples match staged SHA256 bytes on preview/live.154Python/75client tests,strictTypeScript0/version checks pass.
+Live trading disabled;8007absent; four protected crypto/monetary hashes unchanged. No backend/provider activation.
+Rollbackv76: https://ai-bs-dashboard--audit-pre-v77-yab6nfsi.web.app (7day preview retention). All Drive uploads remain in the established single campaign folder.
+See DEPLOYMENT_v5.329.77.md and coverage.json. Full audit remains IN_PROGRESS; native Chroma/provider rotation/remaining control acceptance is open.
+
+---
+
+## Historical Record198 findings snapshot (publication status superseded above)
+
 # AI-BS audit findings — Record198 / ADR-123
 
 Source **v5.329.77**, 2026-10-31T05:41:25Z. Campaign **IN PROGRESS**. Both requested FTS repairs and the strict frontend typecheck are verified. Live trading stays disabled.
