@@ -1,3 +1,9 @@
+# Current checkpoint — Record201 / Windows v5.329.78
+
+2026-10-31T13:46:27.048380+00:00. Rebuilt and installed Windows executable5.329.78; desktopshortcut repaired. 2256packagefiles hashed; frozenlocalconnectioncheck and48native/8wrapper tests pass. FullGUIacceptance unverified; executable unsigned. Source remainsv78; Firebasev77unchanged. Priorpartial/olderbundles preserved. Tradingdisabled/8007absent; payment/outreach/background holds retained. Wholeaudit remainsPARTIAL; Chroma vector recovery open. See docs/audit/2026-10-30-complete/WINDOWS_BUILD_v5.329.78.md . AllDriveuploads establishedsinglefolder.
+
+---
+
 # Current checkpoint — Record200 / v5.329.78
 
 2026-10-31T07:47:42Z. NativeChroma corruptiondiagnosed; originals preserved; authoritativevectorrecoveryOPEN.
