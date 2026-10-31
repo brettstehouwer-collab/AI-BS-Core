@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-31T19:38:41Z",
+  "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "all_parent_size_and_download_sha_match": true,
+  "files": [
+    {
+      "id": "1UZsAjq_hkkPkl6KyLg054H6LXErniXcp",
+      "path": "C:/AI-BS/docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+      "bytes": 19211,
+      "sha256": "415bb7db9ec1ba88948524beedd97ccf6f035e4e5531f9e173069afeb6d3286f",
+      "parent": [
+        "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+      ],
+      "raw_download_matches": true
+    },
+    {
+      "id": "1N8MOViGq4CnnpEIMiagS-EMs87XssmEc",
+      "path": "C:/AI-BS/backups/windows_integration_v83_20261031_record207/record207_v532983_sanitized_release_evidence.zip",
+      "bytes": 35531,
+      "sha256": "21d5ca38df001c37bd872cf5f3a635b063620b90d682fd6c1c25aaac4a693b37",
+      "parent": [
+        "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+      ],
+      "raw_download_matches": true
+    },
+    {
+      "id": "1py0gr4-Gkos5mvafw8V2xhSwhhDze6dO",
+      "path": "C:/AI-BS/docs/agent_sync/manifest_record207_v532983.json",
+      "bytes": 21597,
+      "sha256": "351b07757997b9604103e4a8dc53d7789aa6858afae796c4478b8a8d3e636eeb",
+      "parent": [
+        "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+      ],
+      "raw_download_matches": true
+    },
+    {
+      "id": "1X9sAttJoM6KtOBXcAh7IS3XZLPZVPOS8",
+      "path": "C:/AI-BS/backups/record207_close_work/drive_index_updated207.md",
+      "bytes": 22025,
+      "sha256": "7dd1c2e1e474085cf8f7e8bc8443bb3fccea5445fe705832c387ffbd85c105eb",
+      "parent": [
+        "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+      ],
+      "raw_download_matches": true
+    }
+  ],
+  "source_binary_archive_uploaded": false,
+  "keys_uploaded": false,
+  "record": 207,
+  "version": "v5.329.83",
+  "source_commit": "765a95d1837f29ad94d5b07e02d510d3c23c44ce",
+  "handoff_commit": "9e9479a32de3fd727486788f4165ade73bb8ac14",
+  "status": "VERIFIED_SANITIZED_RECORDS_SAME_FOLDER_DOWNLOAD_HASH_MATCH",
+  "encrypted_full_source_binary_recovery": "BLOCKED_E_KEY_CUSTODY_UNREADABLE_C_SNAPSHOTS_RETAINED"
+}
