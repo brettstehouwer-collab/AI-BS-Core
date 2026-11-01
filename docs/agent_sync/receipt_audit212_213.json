@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-01T01:49:04.633644+00:00",
+  "implementation_commit": "44b17923f06d4589cbb43405952afdfafcdbfe17",
+  "workspace_status_file": "C:\\AI-BS\\backups\\october7_audit212\\workspace_state_after_commit212.local.txt",
+  "workspace_status_sha256": "dadc402aa1f8f34d3967ec3ab933aee875f5ec4c33d5e4f41c159dca50e5d593",
+  "workspace_status_entries": 71993,
+  "preexisting_workspace_changes_preserved": true,
+  "broadcast": {
+    "status": "running_unverified",
+    "active": true,
+    "capture_state": "capturing",
+    "game_frame_verified": false,
+    "frames_encoded": 11454,
+    "out_time_us": 381800000,
+    "source_mode": "window",
+    "holding_reason": "MANUAL_WINDOW"
+  },
+  "records": "LOCAL_ONLY_PER_USER",
+  "trading_dispatch_enabled": false,
+  "initial_capture_evidence": {
+    "source_mode": "auto_game",
+    "game_frame_verified": true,
+    "holding_reason": "VERIFIED_GAME",
+    "frames_encoded": 534,
+    "out_time_us": 17800000,
+    "decoded_fortnite_frame": "docs/audit/2026-10-30-complete/record213/preview_frame213.jpg"
+  },
+  "manual_window_note": "Explicit window selection does not set the automatic game-verification flag; retain operator source changes."
+}
