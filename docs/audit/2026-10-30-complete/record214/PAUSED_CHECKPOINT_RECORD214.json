@@ -1,0 +1,72 @@
+{
+  "record": 214,
+  "utc": "2026-11-01T02:53:43.060237+00:00",
+  "local_date": "2026-10-31",
+  "status": "PAUSED_BY_USER",
+  "base_commit": "f2dce3cfc70c57abbb83547a93dff0b9d208dab8",
+  "branch": "codex/audit-v532976-20261031",
+  "preview": {
+    "actual_v532986_studio_visually_confirmed_showing_fortnite": true,
+    "computer_use_note": "First capture showed the occluding browser; activating the selected Studio window produced the correct screenshot."
+  },
+  "live_runtime": {
+    "audio": "generated_silence",
+    "audio_changes_applied_to_live_stream": false,
+    "per_destination_quality_applied": false,
+    "production_engine_restored_to_prechange": true,
+    "engine_sha256": "81156f597682beb7a0e96594a160c73ea4fd18bf672e6e5132e8c1505eec331d",
+    "broadcast_not_stopped": true
+  },
+  "verified_work": [
+    "PyAudioWPatch 0.2.12.9 installed in pyppeteer_env",
+    "A50 USB microphone opens successfully; microphone signal not yet verified",
+    "WASAPI desktop PCM successfully consumed by local FFmpeg; measured -48.15 dBFS, zero queue drops",
+    "Six PCM unit contracts pass before the pending integration test",
+    "Four preferences and four destination encoder contracts pass"
+  ],
+  "known_failure": "Owned-PCM/secondary-engine integration fixture still returns False before Popen; not fixed, skipped or deployed.",
+  "user_upload_capacity": "100 Mbps or higher",
+  "planned_profiles_kbps": {
+    "youtube": 24000,
+    "twitch": 6000,
+    "kick": 8000,
+    "facebook": 8000
+  },
+  "privacy": "No speech recording or stream credentials included in this checkpoint",
+  "unfinished": [
+    "Finish PCM hook integration and diagnose the failing fixture",
+    "Wire runtime preferences, audio ownership/cleanup and independent destination encoders into the coordinator",
+    "Add real audio/output UI controls and rebuild v5.329.86 with truthful labels",
+    "Verify microphone signal, live per-service delivery and actual Studio preview after upgrade"
+  ],
+  "resume_step": "Read this record and source hashes; diagnose the owned-PCM fixture before restoring pending_engine214.py. Do not assume audio or per-service bitrates are live.",
+  "trading_dispatch_enabled": false,
+  "google_drive_folder": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "files": [
+    {
+      "path": "backend/core/broadcast_audio.py",
+      "sha256": "2964c028be471df39e9f37aaee09ed2f793999b38e0caf166d96ed1283889c94"
+    },
+    {
+      "path": "backend/core/broadcast_outputs.py",
+      "sha256": "46b0c4413ebe854434b0fbdbb3ca1ce4d9dabda96cde2568d37291245192d498"
+    },
+    {
+      "path": "native_studio/broadcast_preferences.py",
+      "sha256": "4f47db739ef88fd90d0d2b5c99613dbec03ca643ae1369bf5b19fcfb8fa160d9"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_audio214.py",
+      "sha256": "9294051b290b20c99a2a81d19ccaa9f1fd6c19f9b6babe8a59241b3a6b1810a6"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_outputs214.py",
+      "sha256": "05d5e8584700a91beec3eaad7ca6f9a12bcb7caca2894655b249ae613251a22e"
+    },
+    {
+      "path": "scripts/tests/test_broadcast_preferences214.py",
+      "sha256": "561c7617e9cdad25a564ef38587508dff28c12afd5ed463906d5a98e875db17a"
+    }
+  ],
+  "draft_engine_sha256": "58dc520b4d37c01e93f0664de5230078b2366a4258fdb8c9cebb2814076082a9"
+}

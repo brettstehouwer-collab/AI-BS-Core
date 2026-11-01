@@ -1,0 +1,39 @@
+{
+  "utc": "2026-11-01T02:59:03.984053+00:00",
+  "status": "PAUSED_BY_USER",
+  "drive_folder": "https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "checkpoint_file_id": "1wcZg2IjxWfBXThCuoAvUZUSCcVMG4Zzw",
+  "native_file_id": "1PrWxuUTmD9uDNCxlJeoVyjsLUjsz6kbb",
+  "roundtrip": [
+    {
+      "name": "checkpoint_roundtrip214.zip",
+      "bytes": 918909,
+      "sha256": "75e63f5a29926fd98f72a7eb5501f7c419070d62394910b06f0cd902d011213b",
+      "verified": true
+    },
+    {
+      "name": "october7_roundtrip214.zip",
+      "bytes": 103453544,
+      "sha256": "c5cce65cc8a154e75d1d9cc077df00dd92f1b29fde2c034bf140c2e0af83e5e0",
+      "verified": true
+    }
+  ],
+  "trading": {
+    "dispatch_enabled": false,
+    "reconciliation_required": true,
+    "halt_marker_present": false,
+    "reason": "Reconciliation required: fills, fees, slippage and shared risk limits are unverified."
+  },
+  "broadcast": {
+    "status": "stopped",
+    "active": false,
+    "source_mode": null,
+    "capture_state": "unavailable",
+    "frames_encoded": null,
+    "out_time_us": null
+  },
+  "audio_quality_work": "UNFINISHED_NOT_DEPLOYED",
+  "production_engine_restored_to_prechange": true,
+  "recordings_deleted": false,
+  "credentials_uploaded": false
+}
