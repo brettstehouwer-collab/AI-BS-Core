@@ -1,0 +1,149 @@
+{
+  "record": 212,
+  "utc": "2026-11-01T01:47:08.296203+00:00",
+  "local_date": "2026-10-31",
+  "status": "REPAIRED_SOURCE_AND_REBUILT_NATIVE_STATIC_VERIFIED",
+  "repository_base_commit": "d321b96219427d998dd8c97c214967a5f3f2a8e3",
+  "branch": "codex/audit-v532976-20261031",
+  "project_folder": "C:\\AI-BS\\October7_VocalStudio_DAW",
+  "recovery_copy": "C:\\AI-BS-Recovery\\October7_Audit212\\pre_repair",
+  "full_pre_repair_hash_verification": true,
+  "original_recordings_and_installation_preserved": true,
+  "candidate": {
+    "recorded_utc": "2026-11-01T01:40:46.685232+00:00",
+    "status": "VERIFIED_STATIC_CANDIDATE",
+    "application_executed": false,
+    "application_imported": false,
+    "candidate": "C:\\AI-BS\\releases\\october7\\native-1.0.212.0\\October7_VocalStudio_Native\\October7_VocalStudio_Native.exe",
+    "exe_sha256": "fa212891edcc3046eec30e7c4ded1fa9058cf21ede6b92f9ee1a3a0e57c7d288",
+    "exe_bytes": 10718072,
+    "file_version": [
+      1,
+      0,
+      212,
+      0
+    ],
+    "version_strings": {
+      "CompanyName": "October 7 Vocal Studio",
+      "FileDescription": "October 7 Vocal Studio Native — Audit 212",
+      "FileVersion": "1.0.212.0",
+      "InternalName": "October7_VocalStudio_Native",
+      "OriginalFilename": "October7_VocalStudio_Native.exe",
+      "ProductName": "October 7 Vocal Studio Native",
+      "ProductVersion": "1.0.212.0",
+      "Comments": "Repaired native candidate; no automatic installation or launch."
+    },
+    "machine": "AMD64",
+    "requested_execution_level": "asInvoker",
+    "source_sha256": "a7af7f4a81a593a12438ace9bb6a94e2f6af869ce7427df3f979ef0eebd75386",
+    "source_bytecode_equivalent": true,
+    "source_compile_optimization": 0,
+    "frozen_source_filename": "app_native.py",
+    "pyz_module_count": 1110,
+    "forbidden_module_matches": [],
+    "required_resources": {
+      "Python runtime": [
+        "_internal/python312.dll"
+      ],
+      "Qt widgets extension": [
+        "_internal/PyQt6/QtWidgets.pyd"
+      ],
+      "Qt Core DLL": [
+        "_internal/PyQt6/Qt6/bin/Qt6Core.dll"
+      ],
+      "Qt Gui DLL": [
+        "_internal/PyQt6/Qt6/bin/Qt6Gui.dll"
+      ],
+      "Qt Widgets DLL": [
+        "_internal/PyQt6/Qt6/bin/Qt6Widgets.dll"
+      ],
+      "PortAudio x64 DLL": [
+        "_internal/_sounddevice_data/portaudio-binaries/libportaudio64bit.dll"
+      ],
+      "libsndfile x64 DLL": [
+        "_internal/_soundfile_data/libsndfile_x64.dll"
+      ],
+      "pedalboard native extension": [
+        "_internal/pedalboard_native.cp312-win_amd64.pyd"
+      ]
+    },
+    "bundle_file_count": 447,
+    "bundle_bytes": 253289681,
+    "recordings_bundled": false,
+    "legacy_server_or_html_bundled": false,
+    "runtime_limits": "No GUI/audio/device/VST/runtime test was attempted. Signing is a separate release step."
+  },
+  "build_elapsed_seconds": 64.093,
+  "signature_status": "NotSigned",
+  "verification": {
+    "pytest": {
+      "tests": 149,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 9.793,
+      "junit_entries_include_subtests": true,
+      "pytest_cases": 131,
+      "pytest_subtests": 18
+    },
+    "pytest_summary": "131 passed, 18 subtests passed in 9.82 seconds",
+    "browser_node_tests": 7,
+    "browser_node_failures": 0
+  },
+  "source_manifest_sha256": "452f1839f237e27f99d6fa6572b49c2fd95523e7d6218f2926f2accb2460b121",
+  "changed_paths": [
+    "October7_VocalStudio_DAW/source/app_native.py",
+    "October7_VocalStudio_DAW/source/build_windows_app.py",
+    "October7_VocalStudio_DAW/source/Install_October7_DAW.bat",
+    "October7_VocalStudio_DAW/source/Install_Wizard.ps1",
+    "October7_VocalStudio_DAW/source/native_version_info.txt",
+    "October7_VocalStudio_DAW/source/october7_core.py",
+    "October7_VocalStudio_DAW/source/October7_VocalStudio_Native.spec",
+    "October7_VocalStudio_DAW/source/requirements-native.hashes.txt",
+    "October7_VocalStudio_DAW/source/requirements-native.lock.txt",
+    "October7_VocalStudio_DAW/source/server.js",
+    "October7_VocalStudio_DAW/source/setup_installer.py",
+    "October7_VocalStudio_DAW/source/VOICECOACH PROGRAM.html",
+    "October7_VocalStudio_DAW/.gitignore",
+    "October7_VocalStudio_DAW/PROJECT_GUIDE.md",
+    "October7_VocalStudio_DAW/setup_installer.py",
+    "October7_VocalStudio_DAW/Install_Wizard.ps1",
+    "October7_VocalStudio_DAW/Install_October7_DAW.bat",
+    "October7_VocalStudio_DAW/Uninstall_October7_DAW.bat",
+    "AI-BS.code-workspace",
+    "AI-BS_Sovereign.code-workspace",
+    "native_studio/broadcast_secondary_control.py",
+    "scripts/core_boot.py",
+    "scripts/tests/october7_browser212.test.cjs",
+    "scripts/tests/test_october7_build212.py",
+    "scripts/tests/test_october7_installer212.py",
+    "scripts/tests/test_october7_legacy_security212.py",
+    "scripts/tests/test_october7_native212.py",
+    "scripts/tests/test_broadcast_reboot_recovery213.py"
+  ],
+  "trading": {
+    "dispatch_enabled": false,
+    "reconciliation_required": true,
+    "halt_marker_present": false,
+    "reason": "Reconciliation required: fills, fees, slippage and shared risk limits are unverified."
+  },
+  "protected_crypto_hashes": {
+    "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+    "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+    "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+    "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
+  },
+  "cloud": {
+    "status": "LOCAL_ONLY_PER_USER",
+    "uploads_attempted_after_user_deferral": false,
+    "future_only_folder": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+  },
+  "limitations": [
+    "Native candidate was not launched or hardware/audio/VST tested",
+    "Candidate is unsigned; original installed binaries remain unchanged",
+    "Recovery UI, full power-loss durability, real coaching analyzer and complete effects/cue controls remain open",
+    "Legacy browser take persistence/count-in/timeline and AI artifact verification remain open",
+    "Broadcast game frame decoded locally; remote platform acceptance and current app physical display not observed"
+  ],
+  "next_step": "User can open the rebuilt candidate without enabling audio; explicit device acceptance is separate. Check restored live Studio preview; retain all originals."
+}

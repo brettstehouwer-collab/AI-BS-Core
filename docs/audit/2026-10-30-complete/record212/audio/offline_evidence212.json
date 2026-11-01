@@ -1,0 +1,75 @@
+{
+  "source": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF\\app_native.py",
+  "source_sha256": "050ea0cdd76f8942799df21c4559ffa021647e25f2e126db7b2079971bc1e72f",
+  "scope": "AST extracted definitions; no application imports, audio hardware, GUI, network or real media",
+  "results": [
+    {
+      "id": "N01",
+      "status": "REPRODUCED",
+      "input_seconds": 12,
+      "retained_seconds": 9.999979166666666,
+      "lost_frames": 96001
+    },
+    {
+      "id": "N02",
+      "status": "REPRODUCED",
+      "frequencies_hz": [
+        110,
+        220,
+        440,
+        880
+      ],
+      "configured_block_frames": 128,
+      "required_search_lag_frames": 800,
+      "detected_f0_hz": 0.0
+    },
+    {
+      "id": "N03",
+      "status": "REPRODUCED",
+      "track_frames": 48000,
+      "queued_frames_when_transport_stops": 49152,
+      "consumed_frames": 0
+    },
+    {
+      "id": "N04",
+      "status": "REPRODUCED",
+      "exports": [
+        {
+          "method": "_export_stems_wav",
+          "error": "name 'HAS_SOUNDFILE' is not defined"
+        },
+        {
+          "method": "_export_master_mix_wav",
+          "error": "name 'HAS_SOUNDFILE' is not defined"
+        }
+      ],
+      "files_written": 0
+    },
+    {
+      "id": "N05",
+      "status": "REPRODUCED_AFTER_ISOLATING_N04",
+      "track_pan": -1,
+      "actual_export_first_stereo_frame": [
+        0.25,
+        0.25
+      ],
+      "expected_live_pan_first_frame": [
+        0.25,
+        0.0
+      ]
+    },
+    {
+      "id": "N06",
+      "status": "REPRODUCED",
+      "soloed_track_is_silent": true,
+      "non_soloed_track_audible_peak": 0.1414213627576828
+    },
+    {
+      "id": "N07",
+      "status": "REPRODUCED",
+      "armed_track": "Harmonies",
+      "actual_loaded_track": "Lead Vocal",
+      "lead_was_armed": false
+    }
+  ]
+}

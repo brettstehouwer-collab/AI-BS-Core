@@ -1,0 +1,57 @@
+{
+  "folders": [
+    {
+      "path": "C:\\AI-BS"
+    },
+    {
+      "path": "C:\\AI-BS-Models"
+    },
+    {
+      "path": "C:\\BS-Studio"
+    },
+    {
+      "path": "C:\\M-AI_BS_Android_Build"
+    },
+    {
+      "path": "C:\\StehouwerPublishing.com"
+    },
+    {
+      "path": "C:\\Recreational-Debut"
+    },
+    {
+      "path": "D:\\AI-BS-ComfyUI-Models"
+    },
+    {
+      "path": "D:\\AI-BS_Master_Memory"
+    },
+    {
+      "path": "D:\\Stehouwer_Server\\AI-BS"
+    },
+    {
+      "path": "D:\\Stehouwer_Server\\AI-BS_LLM_Core"
+    },
+    {
+      "path": "D:\\AndroidStudioProjects\\AI-BS tunnel"
+    },
+    {
+      "path": "E:\\AI_BS_Resources"
+    },
+    {
+      "path": "E:\\AI-BS Broadcast Studio"
+    },
+    {
+      "path": "E:\\Recordings\\AI-BS Matrix"
+    },
+    {
+      "name": "October7 Vocal Studio DAW",
+      "path": "October7_VocalStudio_DAW"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/__pycache__": true,
+      "**/.aibs_backups": true
+    }
+  }
+}

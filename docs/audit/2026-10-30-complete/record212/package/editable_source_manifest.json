@@ -1,0 +1,161 @@
+{
+  "utc": "2026-11-01T00:27:19.562110+00:00",
+  "root": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF",
+  "purpose": "first-party editable source selection; root copies separately",
+  "files": [
+    {
+      "path": "ace_step_pipeline.json",
+      "bytes": 3864,
+      "sha256": "625020306f1ba1890dec2b321c4fc0c1504dc346a9e592cbf7acd4be6b2679f2"
+    },
+    {
+      "path": "app_native.py",
+      "bytes": 77816,
+      "sha256": "050ea0cdd76f8942799df21c4559ffa021647e25f2e126db7b2079971bc1e72f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "build_windows_app.py",
+      "bytes": 3722,
+      "sha256": "26ff670dbed8c916cb4d38c2b47d80213eb882a088b3e0897f584294c531d406",
+      "syntax": "PASS"
+    },
+    {
+      "path": "deploy_native_release.ps1",
+      "bytes": 1865,
+      "sha256": "d72ee5373aefd63b5c0baf9344bd3a3a8b9e195fc6f6929ead9e449c89969e90"
+    },
+    {
+      "path": "GEMINI.md",
+      "bytes": 1691,
+      "sha256": "13717b5b72d6a8136d83737075d474391ca483a4dc24eedd6df103e02c5aef89"
+    },
+    {
+      "path": "Install_October7_DAW.bat",
+      "bytes": 5218,
+      "sha256": "1fe5000125aa6381f7e7b1a3a82021e2331cae3e1e31ff6e3b31e14cd9ae5990"
+    },
+    {
+      "path": "Install_Wizard.ps1",
+      "bytes": 21047,
+      "sha256": "ba7fc2374dc3ed04970dfdca28cbcc8701c1da656e560f12822b5cb9781f4803"
+    },
+    {
+      "path": "latency_calibrator.py",
+      "bytes": 4497,
+      "sha256": "bad32faf68bf58f94d6aed3f5aa12e7f08f430418bdc983b5f418608db7e047b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "Launch Studio.bat",
+      "bytes": 632,
+      "sha256": "40196ef0f2eb6379beef7dff173cc719479a688c7d6d3afaa579e8a8c37d8387"
+    },
+    {
+      "path": "october7_core.py",
+      "bytes": 50068,
+      "sha256": "a82f62677dc46ecd9088a29c69e664eadf4486fc24dfa5fcb695ab45094bd2f1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "October7_DAW_Setup.spec",
+      "bytes": 741,
+      "sha256": "b7ae8925ec35e2f8b34d6e11dc7ac61024ba76141cb2dc07f82dd626c1283c0b"
+    },
+    {
+      "path": "October7_VocalStudio_DAW.spec",
+      "bytes": 980,
+      "sha256": "e3f09323d7547b95bf22ff7fdad40039756666dc60d2b259181758e73a14a84c"
+    },
+    {
+      "path": "October7_VocalStudio_Native.spec",
+      "bytes": 1136,
+      "sha256": "08b7d5b3efe0a85f10815073b28d8836df6bee5f2c46440eb297d114786b50b1"
+    },
+    {
+      "path": "preprocess_dataset.py",
+      "bytes": 5434,
+      "sha256": "64bc8d27fd9df0e412f78473baef135aa7516490d3ff40ccd2de7a114a74b93c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "run_lora_train.bat",
+      "bytes": 1600,
+      "sha256": "3f10e5b4ae7a887a0f968460dbce817dae29438271156a3c343ac1cf7191bc9c"
+    },
+    {
+      "path": "server.js",
+      "bytes": 2606,
+      "sha256": "a0f6803b74bd3fd23469552e0fd4e16234cfa43a1327d8394fd7032e6337d919"
+    },
+    {
+      "path": "setup_installer.py",
+      "bytes": 23390,
+      "sha256": "e32e845a5b4410e2ba4362a0705248d5d376bffb349742e0b2f0f64a3822c20a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sign_release_binary.ps1",
+      "bytes": 5242,
+      "sha256": "69508b4e37fbbdf9a9c6f5a0a8551dc3a2e7aa00fcf77542c874cd54bea2a04a"
+    },
+    {
+      "path": "test_stress_validation.py",
+      "bytes": 16320,
+      "sha256": "4f3a5a06a9e9bd2523d881557f5163b1a46f12515724d727bf1c93594fc1af0f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "verify_native_engine.ps1",
+      "bytes": 2591,
+      "sha256": "9d57338653984d8e59b235affb9ac7e848711a52eea5b74b615b4e9491c253b4"
+    },
+    {
+      "path": "vocal_to_midi.py",
+      "bytes": 6637,
+      "sha256": "604c7ce538cc2aca935632fa82996777933a3d91f0a0d419c65f5580b6217a42",
+      "syntax": "PASS"
+    },
+    {
+      "path": "VOICECOACH PROGRAM.backup.html",
+      "bytes": 27122,
+      "sha256": "5e968abe9b3a826e78835947795f71045583a2cf0dc43507f637734b58915509"
+    },
+    {
+      "path": "VOICECOACH PROGRAM.html",
+      "bytes": 231718,
+      "sha256": "48bf3db02931ba4cc4d5efdf85818f6fa51074c7ac9dc39cea42a9b1764d2a52"
+    }
+  ],
+  "files_count": 23,
+  "selected_bytes": 495937,
+  "excluded_top_source_assets": [
+    {
+      "path": "October 7v2 (Add Vocal) (Remastered).mp3",
+      "bytes": 7526785
+    },
+    {
+      "path": "October7_ACE_Generated.wav",
+      "bytes": 1152044
+    },
+    {
+      "path": "October7_DAW_Setup.exe",
+      "bytes": 11342488
+    }
+  ],
+  "excluded_directory_names": [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "_internal",
+    "build",
+    "dist",
+    "models",
+    "node_modules",
+    "stems",
+    "takes",
+    "venv"
+  ],
+  "original_modified": false,
+  "source_executed_or_imported": false
+}

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "altgraph",
+    "version": "0.17.5",
+    "wheel": "altgraph-0.17.5-py2.py3-none-any.whl",
+    "bytes": 21228,
+    "sha256": "f3a22400bce1b0c701683820ac4f3b159cd301acab067c51c653e06961600597"
+  },
+  {
+    "name": "cffi",
+    "version": "2.0.0",
+    "wheel": "cffi-2.0.0-cp312-cp312-win_amd64.whl",
+    "bytes": 183557,
+    "sha256": "da68248800ad6320861f129cd9c1bf96ca849a2771a59e0344e88681905916f5"
+  },
+  {
+    "name": "numpy",
+    "version": "2.5.1",
+    "wheel": "numpy-2.5.1-cp312-cp312-win_amd64.whl",
+    "bytes": 12430966,
+    "sha256": "f7d60026c0bdb1380e83bfa7a0419c4577ee4b9a08880afcb6dadeb74c649fa2"
+  },
+  {
+    "name": "packaging",
+    "version": "26.2",
+    "wheel": "packaging-26.2-py3-none-any.whl",
+    "bytes": 100195,
+    "sha256": "5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"
+  },
+  {
+    "name": "pedalboard",
+    "version": "0.9.24",
+    "wheel": "pedalboard-0.9.24-cp312-cp312-win_amd64.whl",
+    "bytes": 3681319,
+    "sha256": "27ba467a7e0b5b6b8b060c34532ab629732343860d6a2f40af41543ce981b8f0"
+  },
+  {
+    "name": "pefile",
+    "version": "2024.8.26",
+    "wheel": "pefile-2024.8.26-py3-none-any.whl",
+    "bytes": 74766,
+    "sha256": "76f8b485dcd3b1bb8166f1128d395fa3d87af26360c2358fb75b80019b957c6f"
+  },
+  {
+    "name": "pip",
+    "version": "25.0.1",
+    "wheel": "pip-25.0.1-py3-none-any.whl",
+    "bytes": 1841526,
+    "sha256": "c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f"
+  },
+  {
+    "name": "pycparser",
+    "version": "3.0",
+    "wheel": "pycparser-3.0-py3-none-any.whl",
+    "bytes": 48172,
+    "sha256": "b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992"
+  },
+  {
+    "name": "pyinstaller",
+    "version": "6.21.0",
+    "wheel": "pyinstaller-6.21.0-py3-none-win_amd64.whl",
+    "bytes": 1397487,
+    "sha256": "7fae06c494ce0ebfe6bd3055c0e409def884f63af2e3705d06bd431ad9237fc7"
+  },
+  {
+    "name": "pyinstaller-hooks-contrib",
+    "version": "2026.6",
+    "wheel": "pyinstaller_hooks_contrib-2026.6-py3-none-any.whl",
+    "bytes": 457159,
+    "sha256": "fd13b8ac126b35361175edacd41a0d97080b75dd5f4b594ecefefff969509dd3"
+  },
+  {
+    "name": "pyqt6",
+    "version": "6.11.0",
+    "wheel": "pyqt6-6.11.0-cp310-abi3-win_amd64.whl",
+    "bytes": 6844358,
+    "sha256": "bd11b459c54dca068e988a42cf838303334f0d441b9d16d92ae6719fcb5ac6ba"
+  },
+  {
+    "name": "pyqt6-qt6",
+    "version": "6.11.2",
+    "wheel": "pyqt6_qt6-6.11.2-py3-none-win_amd64.whl",
+    "bytes": 78000994,
+    "sha256": "4b424ed1babbef07133eb2a4174c56c848d518767bca8e759aca2c8c9c313636"
+  },
+  {
+    "name": "pyqt6-sip",
+    "version": "13.13.0",
+    "wheel": "pyqt6_sip-13.13.0-cp312-cp312-win_amd64.whl",
+    "bytes": 53464,
+    "sha256": "c6b67d301ef64e13d313c728020616315c952473abb27029b2e5857b44a7b3e6"
+  },
+  {
+    "name": "pywin32-ctypes",
+    "version": "0.2.3",
+    "wheel": "pywin32_ctypes-0.2.3-py3-none-any.whl",
+    "bytes": 30756,
+    "sha256": "8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8"
+  },
+  {
+    "name": "scipy",
+    "version": "1.18.0",
+    "wheel": "scipy-1.18.0-cp312-cp312-win_amd64.whl",
+    "bytes": 36597428,
+    "sha256": "71ccc8faa2dd16ac310233203474a8b5cb67f10dedd54a3116d34943f4b19132"
+  },
+  {
+    "name": "setuptools",
+    "version": "78.1.0",
+    "wheel": "setuptools-78.1.0-py3-none-any.whl",
+    "bytes": 1256108,
+    "sha256": "3e386e96793c8702ae83d17b853fb93d3e09ef82ec62722e61da5cd22376dcd8"
+  },
+  {
+    "name": "sounddevice",
+    "version": "0.5.6",
+    "wheel": "sounddevice-0.5.6-py3-none-win_amd64.whl",
+    "bytes": 1009630,
+    "sha256": "7f4162f514f007b0bf25a3ccfed3f1705bc2ec311888a90232729eec4f57a4f4"
+  },
+  {
+    "name": "soundfile",
+    "version": "0.14.0",
+    "wheel": "soundfile-0.14.0-py2.py3-none-win_amd64.whl",
+    "bytes": 1021480,
+    "sha256": "299491d3499460fb1b74bb4bd78b57ffc2d243a5fafa7b6ec1b264875c78453e"
+  },
+  {
+    "name": "typing-extensions",
+    "version": "4.16.0",
+    "wheel": "typing_extensions-4.16.0-py3-none-any.whl",
+    "bytes": 45571,
+    "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+  }
+]

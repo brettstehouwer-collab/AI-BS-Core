@@ -178,6 +178,20 @@ def _empty(status='stopped'):
             'ingest_verified':False,'archive_verified':False,'quality':QUALITY}
 
 
+def _previous_boot_status(raw):
+    """A dead previous-boot session cannot own a running process this boot.
+
+    This only permits a fresh start through the existing controller lock and
+    process check. It never signals a PID or treats an unverified frame as live.
+    """
+    if type(raw.get('protocol_version')) is not int or raw['protocol_version'] != 2:
+        return False
+    boot = psutil.boot_time()
+    epochs = [raw.get('controller_create_time'), raw.get('encoder_create_time')]
+    return all(type(value) in (int, float) and math.isfinite(value) and 0 < value < boot
+               for value in epochs)
+
+
 def read_broadcast_status():
     try:
         raw,fresh = _read_status()
@@ -191,6 +205,7 @@ def read_broadcast_status():
             except (OSError,ValueError,TypeError): pass
         if owner is None:
             if raw.get('status') in {'stopped','failed'} and raw.get('process_running') is False: return _empty(raw['status'])
+            if _previous_boot_status(raw): return _empty()
             return _empty('owner_unverified')
         modern = type(raw.get('protocol_version')) is int and raw['protocol_version'] == 2 and re.fullmatch('[0-9a-f]{32}',str(raw.get('session_id','')))
         result = {**_empty(), **owner, 'active':True,'can_start':False,'can_stop':True,
@@ -286,6 +301,25 @@ def _spawn(command):
     with LOG.open('ab') as log:
         return subprocess.Popen(command,cwd=str(ROOT),env=service_environment(),stdin=subprocess.DEVNULL,
                                 stdout=log,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0),close_fds=True)
+
+
+def recover_previous_boot_session():
+    """Preserve stale IPC, then unblock older installed clients after a reboot."""
+    try:
+        with _start_lock():
+            raw, _fresh = _read_status()
+            if not raw or not _previous_boot_status(raw):
+                return {'status': 'no_previous_boot_session'}
+            if _existing_controller():
+                return {'status': 'controller_present'}
+            path = ipc_paths()['status']
+            backup = path.with_name('broadcast_previous_boot_' + uuid.uuid4().hex + '.json')
+            write_private_json(backup, raw)
+            write_private_json(path, {'protocol_version': 2, 'status': 'stopped',
+                                      'process_running': False, 'recovered_previous_boot': True})
+            return {'status': 'previous_boot_recovered', 'backup': str(backup)}
+    except (OSError, ValueError, psutil.Error):
+        return {'status': 'recovery_unavailable'}
 
 
 def start_broadcast(payload):

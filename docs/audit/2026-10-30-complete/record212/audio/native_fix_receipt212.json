@@ -1,0 +1,26 @@
+{
+  "utc": "2026-11-01T00:39:22.842256+00:00",
+  "original_sha256_unchanged": "050ea0cdd76f8942799df21c4559ffa021647e25f2e126db7b2079971bc1e72f",
+  "new_source_sha256": "7f788f39bb8643db78bcfb8b3362e7d4f4d28449fc8f6168f98246d33c712bd5",
+  "tests_sha256": "bd728794e0b57c1be1b4f9a7d69f084734a7ccb9b358bed3fc96677f627d0ddd",
+  "red": "6 failures in 2.03 seconds on unmodified project source; capture truncated at 479999 frames, EOF stopped queued playback, both exports NameError, wrong pan/solo",
+  "green": "14 passed in 1.90 seconds; XML: native_regression212.xml",
+  "fixed": [
+    "continuous recording drain into unique lossless FLOAT WAV",
+    "bounded overflow explicitly stops incomplete capture",
+    "writer/finalize failures retain recovery file and unsaved buffers without replacing previous track",
+    "15-second and 60-second sample counts exact",
+    "producer EOF waits for output consumption",
+    "both native WAV export crashes",
+    "shared pan/solo/mute law for live/offline mix",
+    "export I/O failure never claims success"
+  ],
+  "limitations": [
+    "Source changes only; native binary not rebuilt or run",
+    "No physical audio, mic, GUI, network or VST execution",
+    "Existing native record routing/timeline/processed-left-only behavior remains separate audit work",
+    "Failed writer pending samples remain in memory; only successfully flushed frames are recovered from incomplete WAV after a crash",
+    "An incomplete capture deliberately blocks recording until recovered; no automatic recovery UI yet",
+    "No claims of power-loss-safe filesystem sync or measured hardware latency"
+  ]
+}
