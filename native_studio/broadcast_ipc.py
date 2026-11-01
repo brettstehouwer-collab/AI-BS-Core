@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import os
+import re
 from pathlib import Path
 import uuid
 import time
@@ -173,12 +174,20 @@ def read_private_json(path,max_bytes=16384):
     return _decode_json(raw,max_bytes)
 
 
+def allowed_write_path(path,paths):
+    path=Path(path)
+    if path in paths.values():return True
+    return (path.parent==paths['status'].parent and re.fullmatch(
+        r'(?:live_overlay_(?:config|status)|overlay_event_[a-f0-9]{32}|broadcast_previous_boot_[a-f0-9]{32})\.json',
+        path.name) is not None)
+
+
 def write_private_json(path,data,max_bytes=16384):
     if type(data) is not dict or type(max_bytes) is not int or not 1<=max_bytes<=16384: raise ValueError('IPC_JSON_INVALID')
     raw=json.dumps(data,allow_nan=False,separators=(',',':')).encode('utf-8')
     if len(raw)>max_bytes: raise ValueError('IPC_TOO_LARGE')
     path=Path(path);paths=ensure_private_ipc()
-    if path not in paths.values(): raise ValueError('IPC_PATH_UNEXPECTED')
+    if not allowed_write_path(path,paths): raise ValueError('IPC_PATH_UNEXPECTED')
     validate_private_path(path,allow_missing=True)
     import win32file,win32con
     temporary=path.parent/('.broadcast-'+uuid.uuid4().hex+'.tmp')

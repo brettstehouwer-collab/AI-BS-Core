@@ -331,8 +331,10 @@ def safe_status(engine,state,error):
 
 
 class SecondaryBroadcast:
-    def __init__(self,*,publish_status=False):
+    def __init__(self,*,publish_status=False,live_overlay=False):
         if type(publish_status) is not bool:raise SecondaryError('INVALID_STATUS_MODE')
+        if type(live_overlay) is not bool:raise SecondaryError('INVALID_OVERLAY_MODE')
+        self._live_overlay=live_overlay
         self._lock=threading.RLock();self._stop=threading.Event();self._ready=threading.Event()
         self._thread=None;self._engine=None;self._state='stopped';self._error=None;self._generation=0
         self._publish_status=publish_status;self._lease_acquired=False
@@ -402,6 +404,9 @@ class SecondaryBroadcast:
             if self._stop.is_set():return
             source={'hwnd':hwnd,'pid':pid,'title':title} if source_mode=='window' else {'screen_id':screen_id} if source_mode=='screen' else None
             follow=_new_follow(source_mode,source)
+            if self._live_overlay:
+                from backend.core.live_overlay_runtime import OverlayCapture
+                follow.capture=OverlayCapture(follow.capture)
             engine=_new_engine()
             engine._capture_provider_override=follow.capture
             with self._lock:
@@ -507,7 +512,7 @@ def main():
     parser.add_argument('--title');parser.add_argument('--targets',nargs='+',choices=TARGETS,required=True)
     parser.add_argument('--source-mode',choices=('auto_game','window','screen'),default='window')
     parser.add_argument('--screen-id')
-    args=parser.parse_args();controller=SecondaryBroadcast(publish_status=True)
+    args=parser.parse_args();controller=SecondaryBroadcast(publish_status=True,live_overlay=True)
     try:
         status=controller.start(args.hwnd,args.pid,args.title,targets=args.targets,
                                 source_mode=args.source_mode,screen_id=args.screen_id)
