@@ -1,5 +1,113 @@
 # BS game project index
 
+## November 21 — installed SDK and testing launcher
+
+**Current testing build — Studio 5.329.173, Workshop.7.1.** The recorded tour checks that it can walk back from the diagnostic panel and gives the player time to land after releasing forward input. Pick up the relay assembly at the sampled path contact and install it at the service socket to take the bypass. [Workshop.7.1 launcher](../../Launch-AI-BS-173-Workshop-Corridor-Qualified.cmd) · [Walkthrough checks](../../backups/workshop_corridor_20261121_v01/handoff.md)
+
+**Earlier testing build — Studio 5.329.173, Workshop.6.** Sample the path contact, then use a separate **E** interaction to collect the one relay assembly. Socket installation consumes it; dismantling recovers it once. Existing relays and readings survive reopening; the main repair route needs no part. [Workshop.6 launcher](../../Launch-AI-BS-173-Workshop-Assembly.cmd) · [Assembly rules and checked saves](../../backups/workshop_assembly_20261121_v01/handoff.md) Human pacing and five-minute foreground performance remain open.
+
+**Earlier testing build — Studio 5.329.173, Workshop.5.** Near the service socket, the HUD distinguishes the actual aim position, a built but unconnected relay, and a live or lost feed. No materials are required. Use **B** when the aim cue identifies the socket, then follow the centre **E** prompt to connect a healthy relay after isolating the main feed. The **AI-BS Latest Candidate (Testing)** desktop shortcut opens this build. [Watch the bypass walkthrough](https://drive.google.com/file/d/18AhDGK4sW34Vtr_UN9I0Z9mTVoCio7sY/view?usp=drivesdk) Later recoverable assembly and first-time human pacing remain open. [Relay candidate launcher](../../Launch-AI-BS-173-Workshop-Relay.cmd) · [Relay rules and checks](../../backups/workshop_relay_20261121_v01/handoff.md)
+
+**Workshop.4 compact HUD.** The compact HUD keeps the crosshair clear as you follow the diagnostic probe and sample the two contacts. Press **F1** for full controls, Adam’s guidance and acknowledged outcomes. Press it again to return to the compact view. [Workshop.4 launcher](../../Launch-AI-BS-173-Workshop-HUD.cmd) · [HUD and save checks](../../backups/workshop_hud_20261121_v01/handoff.md) · [Watch the 47-second repair walkthrough](https://drive.google.com/file/d/1JYYPDlDd2AG4-qAsVDUTFxC603fDdRO6/view?usp=drivesdk)
+
+**Workshop.3 saved contact readings.** Face either sampled contact to read its recorded capacity, isolation and feed. Earlier repair and bypass saves reopened with their original 17 events. [Workshop.3 results](../../backups/workshop_readings_20261121_v01/handoff.md)
+
+**Workshop.2 navigation.** The opening now guides the player to the diagnostic probe and two contacts. An automated run used the on-screen cues to collect the probe and recovered the supply-contact objective after reopening. Both packaged repair and bypass routes restored revision 13 with 17 events. The five-minute foreground performance check is still open. [Testing launcher](../../Launch-AI-BS-Latest-Candidate.cmd) · [Navigation and save results](../../backups/workshop_navigation_20261121_v01/handoff.md)
+
+The current testing shortcut selects Studio173. Its launcher opened the Game Development screen and exposed the Build Progress heading and eight game-tool buttons in the packaged application. The standard game-development shortcut selects Studio144. [Launcher guide](UPDATED_GAME_TOOLS_2026-11-11.md) · [Observed controls and exit receipt](../../backups/native173_game_entry_20261121_v01/run-203bf3f0/receipt.json)
+
+The durable-world button opened a fresh world and later restored a controlled repair from the same disposable save. The HUD showed revision 1 and the repair, and all saved records matched after reopening. [Player and save verification](../../backups/native173_firstboot_action_20261121_v01/run-c7cc7705/receipt.json)
+
+The separate authored Warm Beginning Workshop opened in two packaged player processes through **Play saved chapter**. Both recovered the same revision-0 slot. [Workshop checkpoint](../../backups/native173_firstboot_action_20261121_v01/warm-handoff.md)
+
+The earlier Workshop.1 testing package was also verified. **Create First Boot opening** created and opened a new Workshop with all 24 asset files intact. Asking Adam to wait and collecting the diagnostic probe each survived restarting the player. Separate controlled repair and bypass tours both earned the shelter and workbench. Each restored its own 17 events at revision 13. [Workshop gameplay and save evidence](../../backups/workshop_progress_20261121_v01/handoff.md) · [Packaging](../../backups/frozen_workshop_20261121_v01/handoff.md) · [Factory and Windows lock tests](../../backups/workshop_asset_publish_20261121_v01/handoff.md)
+
+Twelve follow-up cases checked that doors, companion choices, departures and falls survive reopening the chapter. The bypass cases also covered losing power and building a replacement relay. All 231 checks passed across 36 player processes. [Continuity results](../../backups/workshop_progress_20261121_v01/continuity-b032f05bc46b/summary.json)
+
+The Workshop.1 performance launcher opens a separate five-minute review save, measures frame times and samples the player's GPU usage and budget. A background check exercised the packaged player and its saved close. It recorded zero foreground observations, leaving the five-minute frame target open. [Performance launcher](../../Launch-AI-BS-Workshop-Performance.cmd) · [Measurement evidence](../../backups/workshop_performance_20261121_v01/handoff.md)
+
+Built three external sample programs against the installed **0.17.4 Debug SDK** with MSVC. All three passed: the SDK consumer, GPU guide and gameplay measurement sample. The guide rendered 47 controlled frames with zero debug errors or warnings. The measurement sample uses synthetic timing. The relocated Release SDK also passed all three external consumer tests. Its 449 package files matched the recorded preview installation byte-for-byte before configuration. Ordinary gameplay pacing and full release qualification remain open. [Release CTest log](../../backups/sdk174_release_relocation_20261121_v01/ctest.log) [CTest log](../../backups/sdk174_consumer_20261121_v01/ctest.log) · [GPU receipt](../../backups/sdk174_consumer_20261121_v01/build/guide-gpu-Debug/verification.json)
+
+
+Current November15: separate170candidate static/writer/rejection/Creator12 pass,
+five normal exits0;55/433member engineering/runtime Drive roundtrips verified.
+Launch-AI-BS-Latest-Candidate.cmd and Desktop testing shortcut select170, notrun.
+Defaults preserved. Next exact relocation; ordinary play/owner/clean machine/
+signing/full release remain open. See ../agent_sync/NATIVE170_ACCEPTANCE_2026-11-15.md.
+
+November15 source/native169candidate static pass and actual frozen writer
+preserve/recovery/CAS-save/real PDF delivery in three fresh exit0processes.
+Creator169/normal entry/error/real owner/ordinary play/signing/full release remain
+open. New separate Launch-AI-BS-169-Candidate.cmd prepared/notrun; defaults/163
+retained.53member engineering/432member clean-runtime Drive verified; web165/
+backend164 unchanged. See ../agent_sync/NATIVE169_WRITER_2026-11-15.md.
+
+November15 source/hosted/static165published; backend164/native163candidate and
+retained default144145 separate. All1155hosted files byte-verified. No engine
+asset/save/package/default change. Next native frozen rich-writer acceptance,
+source parity first; see ../agent_sync/FRONTEND165_RELEASE_2026-11-15.md.
+
+November15 backend8080now source164/14checks passed; original records preserved.
+No engine/package/save/default or hosted promotion; native163candidate remains
+separate, default144145retained. See ../agent_sync/BACKEND164_LOCALHOST_2026-11-15.md.
+
+November15 backend164candidate15checks/normal exit0 passes; source53pins and
+original records preserved. No game asset/save/package/default change. Native163
+remains candidate, retained144/145defaults unchanged. Next guarded backend-only
+promotion; see ../agent_sync/BACKEND164_CANDIDATE_2026-11-15.md.
+
+Latest release164 preflight: Coding156tests pass; candidate source/rollback copies
+retained, no engine asset/save change or promotion. Native163 frozen185inputs
+remain intact. Read ../agent_sync/RELEASE164_PREFLIGHT_2026-11-14.md; next backend
+candidate qualification retains game ordinary-play/performance/full-release gates.
+
+Latest cross-system source164 checkpoint: mounted Coding browser13/native13
+controlled assertions pass; original synthetic backup retained, processes close0.
+No game asset/save changes or new engine qualification. Hosted/native/backend163
+remain separate. See ../agent_sync/CODING_NATIVE164_2026-11-14.md; next release
+preflight preserves all ordinary-play/performance/real-owner gates.
+
+## Current active candidate — November14,2026
+
+The original ten-goal program and six additions are ACTIVE/incomplete. Source152
+now has a separate native152 candidate with static and controlled Creator/Play
+acceptance passed, and separate source/runtime Drive roundtrips verified. Use
+`../agent_sync/NATIVE152_CANDIDATE_2026-11-14.md` and
+`Launch-AI-BS-152-Candidate.cmd`; the152launcher opened normal Game Build,
+Creator/Chapter creator/Assets and a bundled DX12 sample preview; preview stopped
+and MainWindow closed with retained exit0. Defaults are not promoted. External
+monitor candidate152 is recorded, while engine-source freshness remains stale.
+Build Progress horizontal clipping and real-owner/ordinary-play/full-release
+gates remain. See `../agent_sync/NATIVE152_NORMAL_ENTRY_2026-11-14.md`.
+
+Prior148record: native148 passes static/controlled creator, viewport, isolated Play
+save/drain and saved-authoring reopen checks. See
+`../agent_sync/NATIVE148_CANDIDATE_2026-11-14.md`. The Windows short-TEMP alias fix
+preserves the native canonical-path guard. Separate root candidate launcher:
+`Launch-AI-BS-148-Candidate.cmd`, now opened148normally. Separate Administrator
+desktop shortcut: `AI-BS Game Tools 148 Candidate`; target readback verified,
+shortcut itself not executed. Original defaults remain144/145;
+hosted146 and Android1.0 are separate. Normal native148 MainWindow and Creator
+navigation were observed; further action stopped after detected user input.
+First normal session closed with exit0; second session, remaining tabs, all-hub
+operation, ordinary gameplay and full release remain unqualified. See
+`../agent_sync/NATIVE148_CLOSE_AND_LAUNCHER_2026-11-14.md`. No manual
+test request. Earlier pause rows
+below are dated history, not the current program state.
+
+Later148follow-up confirmed PID33028still running. Supported UI input stopped
+after geometry and refreshed foreground-process identification failures. Packaged
+private-connection diagnostic, frozen-client live read-only status stream and a
+fresh headless Qt delivery/drain case pass; these do not qualify ordinary GUI
+gameplay or explain retained chat failures. See
+`../agent_sync/NATIVE148_CONNECTION_FOLLOWUP_2026-11-14.md`. Originals/defaults
+remain unchanged; no user prompt was replayed and no model generation requested.
+
+Before that follow-up checkpoint closed, PID33028was absent and root observer87903
+ended with its delayed process-discovery assertion/exit1. This is terminal process
+evidence, not a known application exit code or normal-close qualification. No
+duplicate launch/restart or user-data change was performed.
+
 ## Current paused recovery save — November 11, 2026
 
 The long-term program remains **PAUSED**. [Updated game tools and launchers](UPDATED_GAME_TOOLS_2026-11-11.md) points to Studio5.329.144, the two new Administrator desktop entries and their actual verification scope. [Recovery folder and Drive history](../architecture/AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md) retains the supplied local/profile/Drive references, including sensitive paths, without implying their contents have all been reviewed or copied. Source/log and complete frozen runtime backups are separately manifested; final Drive receipts are linked by `docs/agent_sync/current_long_term_goal.json`. Existing projects, saves, older releases and original profile shortcuts remain preserved.
@@ -748,3 +856,242 @@ Held Studio 5.329.143 fixes narrow-window navigation and chapter controls. Start
 The unregistered-font source baseline is retained as an unqualified diagnostic; actual 142 screenshots establish the original defect. Existing runtime-discovery expectations now verify scroll containment without changing path precedence. No functionality, providers, original data or failed evidence was removed. All ten goals and six additions remain active and incomplete. Backup receipt follows separately.
 
 Next: Resume original creative/browser acceptance: read the current real-owner creative, recovery and mounted-RAG receipts; reconcile retained handshake/PATH failures before a new bounded run. Verify authenticated BS-Chat source retrieval, writer edit/save, fresh reopen and export on an owned synthetic fixture without inference, then qualify authorized derived manuscript outputs while preserving originals. Installed parity, human pacing, signing/clean-machine/hosted/full release and Nsight injection remain separate open gates.
+
+
+## Native152 fresh separate candidate — November14,2026
+
+Fresh152185-input frozen build (183unchanged from148; version metadata only) passes static PE/PYZ/source/assets/privacy-boundary checks and actual packaged Creator/Play acceptance12core assertions/exit0.429files/217999231bytes; exeSHA256 22d9c36349ed2d273c5afa867d04b05d75e62ee2c9098496c4f054f6fce660dc. Separate candidate launcher Launch-AI-BS-152-Candidate.cmd prepared, not run; defaults and prior releases/private data unchanged. See docs/agent_sync/NATIVE152_CANDIDATE_2026-11-14.md. source-backup Drive 1tB7lul7VS5VkVfVd-4HXHg4-P5JKN6lK verified 854983bytes/145members/SHA256 7b607d3aae7c8e78c75c7992c16a1f685be4fbc36239f31f4e76eec5cf846bce. runtime-backup Drive 1_-c4LewK0C8zxXRuyQKTaXZAHINAjLpy verified 87527505bytes/432members/SHA256 5715d146a0d0454125fcd91803e7d94ce9d1bae29a399c2b15608c2894a1a5ad. Closing pointers postdate frozen archives. Next normal152entry, retaining real-owner, ordinary gameplay, hosted parity and full-release gates. Goal ACTIVE/incomplete.
+
+
+## Native152 normal game-tool entry and close0 — November14,2026
+
+Root152candidate launcher returned0 and opened one exact152MainWindow with activation management off. Actual desktop Creator/Chapter creator/Assets navigation, bundled4788triangle/eight-material sample and visible native DX12 preview passed; Escape stopped preview and MainWindow Close completed with retained exit0. Defaults/private projects unchanged.13normal-entry/monitor checks pass. Focused external monitor candidate metadata now152; prior148record and engine-build source-staleness warning retained. Build Progress horizontal clipping remains a reproduced UI defect; next focused repair, with real-owner/all-hub/ordinary gameplay/fullrelease gates open. See docs/agent_sync/NATIVE152_NORMAL_ENTRY_2026-11-14.md. Progress Drive 1nD61RDyouwWXGgN172wATR5qElqXPLdg roundtrip verified 11708bytes/11members/SHA256 cb66af38f0e74bcebfeeb18086d0f4c3b60a492faecb2af70167f069c5099a7a. Private screenshots/full historical monitor/recovery data excluded; source/runtime backup remains separately verified at packaging checkpoint. Closing annotations postdate immutable archive. Goal ACTIVE/incomplete.
+
+
+## Build Progress width differential, no application patch — November14,2026
+
+Source152 unchanged; prospective153directory is not a version bump. Earlier exact152desktop capture clipped Build Progress; source/offscreen/native Windows/actual-monitor contexts and separate frozen152-source diagnostic fit. Frozen diagnostic samples1586/1586px, horizontal0, normal exit0; not proof exact152entry repaired. Exploratory geometry11/12pass with one incomplete button-only minimum expectation; source-shell metrics exit1teardown unknown; other source/native probes retained. First diagnostic build rejected48foreign PATH DLLs via unchanged guard; fresh process-local sanitized build passed. No application patch or default/private-data change. See docs/agent_sync/BUILD_PROGRESS_WIDTH_DIAGNOSTIC_2026-11-14.md. Drive 1TImfCmzkTxHvlP-__k2FJrjIKwbJlPNB roundtrip verified 18673bytes/23members/SHA256 0b8be897879f583620753b6558177c84b451d0b066e85619e89643306a297e13. Raw private monitor/renders and diagnostic binaries excluded. Closing annotations postdate archive. Next exact152startup capture/resize/refresh differential; clipping and all remaining original gates stay open. Goal ACTIVE/incomplete.
+
+
+## Exact152 refresh and resize recheck — November14,2026
+
+Exact retained152 fresh startup, post-refresh, maximize and restore visibly fitted Build Progress. PID29552 closed normally/exit0 with unchanged default launcher hashes. No application patch/version bump; earlier clipped capture and diagnostic failures retained. Cause unproven; no permanent/all-DPI repair claim. See docs/agent_sync/NATIVE152_WIDTH_RECHECK_2026-11-14.md and backups/native152_width_recheck_20261114_v01/checkpoint.json. Drive 1dDzEeO7KXbF0y7dlABY-hP3DJ9MRysZ_ verified 5132bytes/7members/SHA256 92d8577cdb4df938f6ff351cb724e5c5dc63b7d5871b54d08cd56af00c4dc036. Raw screenshots, private monitor history/stores and binaries excluded. Closing annotations postdate archive. Next T07 isolated installed-layout acceptance of exact152 from unrelated working directory, preserving original releases/data and default launchers. Real-owner, ordinary gameplay, signing/clean-machine/hosted/full release gates remain separate. Goal ACTIVE/incomplete.
+
+
+## Native152 identical relocated acceptance — November14,2026
+
+Identical429files/217999231bytes relocated outside checkout. Fresh owned profiles, minimal PATH and unrelated cwd: existing Creator fixture passed12core assertions (private numeric/typed/AI previews, native DX12, graceful Play/save/reopen/drain), process39624exit0. Separate normal MainWindow25380 fitted Build Progress and loaded Motherboard cooling reference4788triangles/8materials from relocated bundle path; normal close0. All original/copied package hashes unchanged afterward. Canonical checkout remains present; clean-machine/real-account/ordinary-gameplay/signing/hosted/fullrelease remain unqualified. Source152/default launchers/private data unchanged. See docs/agent_sync/NATIVE152_RELOCATED_ACCEPTANCE_2026-11-14.md and backups/native152_relocated_20261114_v01/checkpoint.json. Drive 1KLF-u4xmJc4b9mzhqBMjiI1ywSYCXodZ verified 32131bytes/12members/SHA256 13feac29d9f2be93d8fbac2d2ae84e9435e7907d19e8c51ba89bed19b83f8279. Profiles, raw captures/history/logs and runtime binaries excluded. Closing annotations postdate archive. Next remaining real-owner native creative/BS-Chat and release gates, no inference replay/default promotion. Earlier clipping and failed evidence retained. Goal ACTIVE/incomplete.
+
+
+## A3 legacy execution admission source153 — November14,2026
+
+Arbitrary legacy build_project/run_existing_program and build_program execution requests now return unavailable/legacy_execution_not_admitted before legacy scans, writes or process execution. build_project preserves existing fixed maintenance dispatch; explicit execute_build=false/run_immediately=false scaffolding remains. Twelve inert admission checks pass after retained11/12red failures; actual source-only scaffold/ZIP check passes with0subprocess execution. Version consistency153 has no drift. Fixed maintenance was tested with a spy, not a live build/restart. Existing execution bodies are retained unreachable; accepted Coding mode and explicit Trusted local contracts remain separate. No live service restart, deployment, inference/private-store change or default promotion. Native152/web151/hosted146 remain distinct. Prior Computer Use URL-policy stop retained, no retry. See docs/agent_sync/LEGACY_BUILD_ADMISSION153_2026-11-14.md and backups/legacy_build_admission153_20261114_v01/checkpoint.json. Engineering Drive 1KkX5LthyVHp9ysiV0YbYIvMrhlgojRrg verified 8041bytes/7members/SHA256 a2ee1d75960e28aa3e1e3105e9c12a8be4d8cdeeb4ee24c6f75f8ad5b9d7fd2f. Scope: implementation diff, new inert checks and aggregate evidence; excludes private data, full metadata/source/runtime snapshots and raw logs. Local exact preimage and release-versioning checkpoint retained. Closing annotations postdate archive. Next mounted denial/native unavailable-result presentation before runtime rollout; real-owner creative/BS-Chat, actual worker isolation and original release/game gates remain. Goal ACTIVE/incomplete.
+
+
+## Legacy caller receipts source154 — November14,2026
+
+Source154 corrects caller behavior after153admission: actual artifacts router in isolated TestClient returns503/unavailable; explicit source-only API flags supported. Native AST-extracted slash handlers report Not executed and omit nonexistent exit codes instead of claiming completed/executed. Fixed-template function requests source-only scaffold and accurately reports unavailable as BLOCKED. Twelve scoped checks passed after12red failures; final label cleanup rerun passed. Source153 admission tests/primitives unchanged. No full Qt queued delivery or production middleware/runtime qualification. Source154 metadata consistent; native152/web151/hosted146/services/private data remain unchanged. See docs/agent_sync/LEGACY_BUILD_CLIENTS154_2026-11-14.md and backups/legacy_build_clients154_20261114_v01/checkpoint.json. Drive 1uNP-4KDvpH49Gu5_UYD2ewCVrbxOcW50 roundtrip verified 9646bytes/7members/SHA256 93c00d2be151773913808832764b1e2bddad5f7e4c12b44d3424cdd728995f7a. Scope is implementation diffs/new fixture/aggregate evidence, not full source/metadata/runtime/private backup. Closing annotations postdate archive. Next actual queued native delivery and production API composition before rollout, retaining browser URL-policy stop and remaining real-owner/worker/game/release gates. Goal ACTIVE/incomplete.
+
+
+## Source154 real native queue denial — November14,2026
+
+Full source BS-Chat widget plus actual EngineBus passed13offscreen assertions. Seven build/run aliases called real admission methods on pool workers; rendered Not executed receipts, GUI-thread delivery, unsent draft retention and native pool join verified. Python sockets/subprocess.run forbidden; owned in-memory recovery. Application source unchanged; no installed152/production API/full-release claim. See docs/agent_sync/LEGACY_BUILD_QUEUED154_2026-11-14.md and backups/legacy_build_queued154_20261114_v01/checkpoint.json. Drive 1mJfyyMANLLGc-e4KsGymcSUIXOsRPlqI verified 6040bytes/5members/SHA256 12663ce7b09f7a1e11c8e7d0a1ffa2bc13acebf75f2523effdd6af5dfd5a9369. Scoped fixture/aggregate evidence only; raw logs/private data/runtime excluded. Closing annotations postdate archive. Next production tools-execute/API middleware composition before rollout. No browser URL-policy-stop retry, service/provider/private-store/default changes. Original creative/game/worker/release gates retained. Goal ACTIVE/incomplete.
+
+
+## Source155 selected tools-execute API composition — November14,2026
+
+Tools-execute success-wrapped unavailable results; source155 now returns503/unavailable with original result. Actual selected admin middleware/payload/handler AST source plus real registry/admission passed12checks after5red failures. Synthetic resolver, no real credentials; anonymous denial/private headers/owner reset/queued fixed maintenance preserved. No full backend startup/lifespan/all middleware/live identity or actual maintenance execution claim. Source155 consistency passed; native152/web151/hosted146/services/defaults/private data unchanged. See docs/agent_sync/LEGACY_BUILD_API155_2026-11-14.md and backups/legacy_build_api155_20261114_v01/checkpoint.json. Drive 10uDgSIenUuNUebo1IzvqE0qi0ZlguHWc verified 6786bytes/7members/SHA256 8bf15ffb7a28fdb77fe4765eac2896956bd1987024031fefd7e7b033a707fa6f. Patch/fixture/aggregate scope only; whole backend preimage/raw logs/private data/runtime excluded. Closing annotations postdate archive. Next coherent source155 candidate qualification before promotion; real-owner creative/game/worker/release gates and browser stop retained. Goal ACTIVE/incomplete.
+
+
+## Source156 visible native worker failure and static candidate — November14,2026
+
+Missing builder import silently lost seven native build/run worker failures. Source156 connects the three task submissions to safe GUI failure receipts; 13full-widget/real-EngineBus offscreen assertions pass after7red failures. Drafts retained; no raw dependency detail, retries or EngineBus changes. Separate156candidate185inputs built successfully/static verified, application not executed/promoted. Backend153/155fixes are not bundled/live. See docs/agent_sync/NATIVE_BUILD_ERROR156_2026-11-14.md and backups/native_build_error156_20261114_v01/checkpoint.json; candidate work backups/studio156_candidate_20261114_v01. Drive 1loqPkG-OACenkPoKY0xMoOWKBOho2Gqe verified 7578bytes/8members/SHA256 ba4fd14ddf07363d7956b0411506e2aba7da199149e655c1f5c2c26e4224ecf6. Engineering-only scope; clean156runtime backup pending. Closing annotations postdate archive. Native152/web151/hosted146/defaults/services/private data unchanged. Next actual frozen156BS-Chat error delivery and runtime qualification; real-owner/game/worker/release gates remain. Browser URL-policy stop retained. Goal ACTIVE/incomplete.
+
+
+## Exact156 normal BS-Chat, Creator and clean runtime backup — November14,2026
+
+Exact156MainWindow/BS-Chat opened with owned profile/minimal PATH/unrelated cwd, recovery-ready observed and normal process58356exit0. Draft typing had stale-state/user-input diagnostics; later returned without effect, Message0characters. Probe stopped; no draft-recovery/frozen build-error-delivery qualification. Separate packaged Creator12assertions/exit0 pass. Candidate launcher Launch-AI-BS-156-Candidate.cmd prepared, not executed; defaults/exe unchanged. See docs/agent_sync/NATIVE156_NORMAL_AND_CREATOR_2026-11-14.md and backups/native156_normal_20261114_v01/checkpoint.json. Engineering Drive 1QB-x0U5MM-W3NulzsXfk7-66UJmZMEP5 verified 10467bytes/13members/SHA256 3deaf2923be0a3531b935e211aaaee9c73a619d94643c8d62765ac1e9cb9704b. Clean runtime Drive 1qYadXZAm1c_gFn0V0PfSsQL-J60SDULf verified 87524763bytes/432members/SHA256 c17835be90542a8aeaee89b7ef3419fc390780dec4afb234256f84eaf8b2ce1d. Initial22-byte runtime ZIP failed on missing static-inventory hash field; retained, not uploaded. Corrected freshv02 hashes source bytes; full downloaded members verified. Archives exclude private profiles/data/raw logs; clean runtime contains429packagefiles plus launcher/qualification/RESTORE. Byte verification is not clean-machine/whole-project/private-data restore. Closing annotations postdate archives. Backend153/155not bundled/live; web151/hosted146/services/private stores/defaults unchanged. Remaining frozen draft/error, real-owner, ordinary game, worker, signing/clean-machine/full-release gates retained. Do not repeat ineffective typing without changed supported mechanism. Goal ACTIVE/incomplete.
+
+
+## Combined web156 build and Hosting acceptance — November14,2026
+
+Fresh canonical release build from3190frozen inputs passed; all canonical bytes equal at freeze. Artifact1155files/922299388bytes. Actual unmodified installed CLI demo Hosting12checks passed routes/assets/workers/offline phone shells. Emulator joined and all configured ports closed. Three concurrent source/public additions preserved without integration activation. Existing151artifact/canonical dist/mirrors/live flags/hosted146 unchanged. Signed156browser gate not run,151results not transferred. See docs/agent_sync/WEB156_COMBINED_CANDIDATE_2026-11-14.md and backups/web156_combined_20261114_v01/checkpoint.json. Drive 1bxR1lcktcdV4yn4NmzIGuqtoXPcUKs9p verified 247937bytes/14members/SHA256 0a42b1f1a8e845387bdfba9f3d938dd89fdd063272254d3d649eb6bd912e3e99. Engineering-only archive excludes full compiled site/public media/hidden environment/profiles/raw logs/private data. Closing annotations postdate archive. Next exact156signed-browser composition before rollout; native frozen input/error, real-owner, ordinary game, worker, signing/clean-machine/fullrelease gates retained. Source156unchanged, no deployment/restart/provider or private-data change. Goal ACTIVE/incomplete.
+
+
+## Exact web156 signed-browser acceptance — November14,2026
+
+Actual combined156artifact passed13signed-browser checks: actual SDK cached identity, gateway/selected API/RSA with ephemeral synthetic trust root, true offline capture, fresh Chrome cold restart without reseeding, reconnect sync and signout. Owned API/gateway exits0/0; browser/server closed. All3190source pins/1155output hashes unchanged. Raw copied fixture receipt still labels151; its exact hash and explicit156stage/path/output reconciliation retained, without editing passing fixture/replaying checks. See docs/agent_sync/WEB156_SIGNED_BROWSER_2026-11-14.md and backups/web156_combined_20261114_v01/signed156-checkpoint/checkpoint.json. Drive 1TsGirjaDT0pkI87d4yY9UXyN8bV39RkA verified 15631bytes/12members/SHA256 0499328d8bb52df06207d42728949776192c8f4b7a5d08882ed83c662452959a. Excludes profiles/tokens/email/private stores/raw logs/hidden environment/full site/media. Closing annotations postdate archive. Real Google/Android/full backend and native frozen input/error gaps remain. No deployment/services/provider/private-data changes. Next independent A4: read VAULT_KEY_MIGRATION_PLAN_2026-11-11.md and inspect actual encrypted-store preservation/recovery prerequisites read-only, without exporting keys/private data or migrating stores. Do not repeat synthetic canaries or stopped browser/typing probes. Original goal ACTIVE/incomplete.
+
+
+## A4 actual declared-store preservation preflight — November14,2026
+
+Declared key-location metadata and two bounded/stable environment reads classified actual formats/duplicate/override behavior. Mixed formats cannot be treated as the earlier raw-token canary. No key bytes read, decryption, source/config/store mutation, key generation, migration or consumer startup. No directly named consumer observed; imports/all writers still unknown. Detailed inventory/script remain local, excluded from cloud. See docs/agent_sync/VAULT_ACTUAL_PREFLIGHT_2026-11-14.md and backups/vault_actual_preflight_20261114_v01/checkpoint.json. Non-executable report-only Drive 1U6DxhUkpZgMASYSmiMOrMaYN07kHurRU verified 1890bytes/2members/SHA256 403103cc0d9438e44c7cdb865e9fb5d4f15bf2084d8d13f0c8e3355e12c8cc73. No restricted canary repackage/appeal/bypass. Closing annotations postdate archive. Next existing owner-private helper/destination review and verified local original key/config preservation before private recoverability checks. Never upload that pair. Migration/consumer switch/history remediation remain separate open gates. Source156/services/private data unchanged; all original goal scope retained. Goal ACTIVE/incomplete.
+
+
+## A4 local private original-pair preservation — November14,2026
+
+Original declared key/two environment files copied exactly into fresh protected local storage using unchanged private-directory helper. Fresh process verified copied hashes/key structure and authenticated recognized Fernet subset. Original configs retain existing formats; decrypted outputs not persisted/logged. All source hashes matched at final preservation read, without claiming all writers quiesced/transactional snapshot/whole-vault or unknown-format recovery. No active key/config/consumer/source change, rotation, migration, writer stop or history rewrite. See docs/agent_sync/VAULT_PRIVATE_PRESERVATION_2026-11-14.md and backups/vault_private_preservation_20261114_v01/checkpoint.json. Private copies/manifests/fingerprints/receipts/scripts remain local. Status-only Drive 1nuk7jqzJsEUHWSQNa4IGQz4zpZ3osL_9 verified 1916bytes/2members/SHA256 8a043003b4ce58d2d37b9d8cdd790da3965582870c0f8f90883f4b5abd916dfa. No private-data cloud backup claim or restricted-canary repackage. Closing annotations postdate archive. Next concrete proposed consumer switch/rollback map from preserved formats/precedence, without new key/active switch before plan-required operator review. Source156 and all other original goal gates retained. Goal ACTIVE/incomplete.
+
+
+## A4 concrete proposed consumer switch and rollback — November14,2026
+
+Concrete Markdown/JSON proposal records actual reader/writer contracts, private immutable generations/single selector, no invalid-selection fallback, raw/quoted/unknown/plain/duplicate/encoding disposition, first-adoption stop window and adapter/legacy rollback. Existing paths/JSON checked; no adapter, runtime test, key generation, private-file access or active change. See docs/architecture/VAULT_CONSUMER_SWITCH_PROPOSAL_2026-11-14.md and backups/vault_switch_proposal_20261114_v01/checkpoint.json. Non-executable proposal/report Drive 1Vc6bkNE3lQvggdyTXLiOzooUI9Yq8JVC verified 6435bytes/4members/SHA256 9710a3f461f3c5a23d993dedf3fc26839d0da3225c8392c793e8527add724366. Private snapshots/manifests/keys and restricted canary excluded; closing annotations postdate archive. Next source-only opt-in private-generation reader/admission with synthetic bounded checks, without consumer hookup, real key generation or live selection. Operator review remains before actual credential/switch changes. Source156/all original goal scope retained. Goal ACTIVE/incomplete.
+
+
+## Source157 opt-in private generation reader — November14,2026
+
+New backend/security/vault_bundle.py admits one exact private generation through bounded pinned read handles, schema/hash/generation and private file ACL checks. Immutable raw snapshot excludes secrets from repr; no environment lookup/fallback/decrypt/key creation/publication/consumer hookup.14synthetic Windows checks pass including reparse/hardlink/broad-file-ACL/stale rejection. Existing frozen primitives/suites unchanged; no real keys/stores accessed. See docs/agent_sync/VAULT_READER157_2026-11-14.md and backups/vault_reader157_20261114_v01/checkpoint.json. Source/evidence Drive 1eTL0tIN4NNbYDyQoyH0lgx342IGVBA2b verified 6684bytes/5members/SHA256 ed5384da0ac448e5f8e080ef8b58dfb191300751f9de2667887bdcb257ef8cc2. Synthetic/private key files and old restricted canary excluded. Source157 metadata consistent; native156/web156/hosted146 unchanged. Architecture matrix refreshed with these actual scopes; map/closing annotations postdate archive. Next read-handle/selector overlap and source-only candidate publication qualification, without live selector, new real key or consumer hookup. Parent live operator-review boundary and all original goal requirements retained. Goal ACTIVE/incomplete.
+
+
+## Source157 separate-writer read overlap — November14,2026
+
+Unchanged actual reader held all selected handles while separate owned Windows writer attempted selector/manifest replacement, key overwrite and generation/root renames.14assertions pass: all blocked/original bytes exact, reader returns old snapshot, later test selection/new snapshot succeeds, stale expectation rejects, snapshots unmixed. Initial13/14failure was incorrect Python error mapping expectation; errno13/winerrorNone denial reproduced separately, corrected fresh fixture passes14/14; failed result/preimages/logs retained. Application/original passing suite/primitives unchanged. See docs/agent_sync/VAULT_READ_OVERLAP157_2026-11-14.md and backups/vault_reader_overlap157_20261114_v01/checkpoint.json. Drive 1VJm3y4W26Lg-RqiY3FFdY6IhYK-g973o verified 9533bytes/10members/SHA256 377152d1c2f18ac067da4697b71c3032446c87bef16f46f45156c8abaf22df4a. Generated keys/fixture trees/private data/raw logs/old restricted payload excluded. Closing annotations postdate archive. Raw test replacement is not production publisher/CAS/crash durability. Next source-only expected-generation candidate publisher with existing cooperative admission, synthetic qualification only; no live selector, real key generation or consumer hookup. Source157/all original scope retained. Goal ACTIVE/incomplete.
+
+
+## Source158 cooperative private selector publication — November14,2026
+
+New vault_publication.py requires an existing valid selection/expected generation/exact candidate manifest under existing cooperative lock, pins candidate bytes across one atomic journal write/readback, reports unknown after failed write attempts without replay. Shared reader validation extracted; frozen primitives/suites unchanged.14synthetic Windows publisher checks pass; no real keys/stores, bootstrap, consumer hookup or live selector changes. Byte admission does not authenticate config token compatibility; format/decryptability admission remains required before live use. See docs/agent_sync/VAULT_PUBLICATION158_2026-11-14.md and backups/vault_publisher158_20261114_v01/checkpoint.json. Drive 15nolokuDtS3Z4_QLdcg44QT-UQO67AbO verified 9618bytes/7members/SHA256 f4e039070c95c5f699d4f574e0f671e82830ca0a2a4af7adfccbac0305c5a513. Synthetic/private key files/fixture trees/raw logs excluded; closing annotations postdate archive. Source158 metadata consistent; native/web156/hosted146/services/private data unchanged. Next disposable competing publisher/interruption checks, then format-aware staging before integration. No hostile-same-account/crash/power-loss/live qualification claim. Parent operator review and original goal scope retained. Goal ACTIVE/incomplete.
+
+
+## Source158 cooperative publisher process/interruption acceptance — November14,2026
+
+Unchanged publisher14separate-process checks pass. Held-lock contender refused without mutation; winner resumes/exits0. Actual-journal pre-replace exit23preserves old selection/staging; fresh inspected operation succeeds after OS releases lock. Post-replace exit24leaves valid new selection without success receipt; old expected request refuses replay. Original generation/source/fixture bytes unchanged. Exits23/24are controlled expected evidence, not power-loss/filesystem/all-hostile-writer qualification. See docs/agent_sync/VAULT_PUBLICATION_PROCESS158_2026-11-14.md and backups/vault_publish_interrupt158_20261114_v01/checkpoint.json. Drive 1SXXCQLPOgyo2TXhI0oDOJG3ohV43Dm-T verified 5208bytes/5members/SHA256 ba402c15617ff05b6ff6c2468730e5785e37cf1c8f30531115812ffc19c9ed69. Generated keys/fixture trees/private snapshots/raw logs/restricted payload excluded. Map/closing annotations postdate archive. Next source-only synthetic format/decryptability candidate admission before integration; byte publication does not prove effective credential compatibility. No real key/store/live selector/consumer/service changes; parent operator-review boundary and original goal retained. Source158/native-web156/hosted146 remain distinct. Goal ACTIVE/incomplete.
+
+
+## Source159 pure vault candidate compatibility — November14,2026
+
+New pure validator passed14synthetic in-memory checks: explicit UTF8/CP1252, every raw/double-quoted Fernet occurrence authenticates under its snapshot key, value/timestamp identity, duplicate/order/root-backend preservation and exact surrounding text. Changed plain values, conversion, malformed/single-quoted forms, wrong keys and format drift reject. Version helper consistency gate passed; existing suites/primitives untouched. Publisher does not yet call validator. No private original access, live key/selector/consumer/service changes. Native/web156 candidates and hosted146 remain distinct. See docs/agent_sync/VAULT_COMPATIBILITY159_2026-11-14.md and backups/vault_compatibility159_20261114_v01/checkpoint.json. Drive 1MFMAMInzYKaLbBr9w4q7Q6kx5vIi8w22 verified 6213bytes/6members/SHA256 4d80be8cbe82ed8815e6ba109d5bd0761577f7fbfe765f2b6c1429bef9e1bc50. Keys/configs/private fingerprints/generated fixtures/raw logs/restricted payload excluded; closing annotations postdate archive. Next bind compatibility to pinned previous/candidate snapshots inside cooperative publication before selector write, synthetic qualification only. Live inventory/encoding/operator review and all original broader gates remain open. Goal ACTIVE/incomplete.
+
+
+## Source160 compatibility-bound publication — November14,2026
+
+Publisher now requires explicit UTF8/CP1252 decoding, pins previous and candidate snapshots, authenticates every transformed occurrence before journal write, and compares final old selection before replacement/readback.14combined synthetic Windows checks pass, including byte-valid wrong key, changed values/timestamp/order/quotes, missing decoding, pinned-write denial, stale expected, unknown post-commit/no replay and original generation retention. Existing primitives/passing suites untouched; historical profiles are not fresh regression for changed API. Source160 consistency gate passed. See docs/agent_sync/VAULT_ADMISSION160_2026-11-14.md and backups/vault_admission160_20261114_v01/checkpoint.json. Drive 16hhSqVLUw6QHmpEabHuWJXqoc9uOo1_e verified 10213bytes/8members/SHA256 add783c4486d9e90e20f96723a8e581bf29b61c5eb8c63fb0784453d5f29a6ef. Generated keys/private fixture roots/originals/raw logs/restricted payload excluded; closing annotations postdate archive. No live keys/selectors/consumers/services/deployment changes. Native/web156 candidates and hosted146 remain separate. Live consumer inventory/actual decoding/interruption/operator review remain open. Next return to retained creative Fountain role-loss evidence and current export contracts; no stopped UI probe repetition or inference replay. All ten goals/six additions retained; ACTIVE/incomplete.
+
+
+## Source161 Fountain dialogue boundary repair — November14,2026
+
+Focused matrix_docs.py repair respects speech boundaries/continued lines, uppercase speech, contextual parentheticals, intentional two-space empty dialogue and block-delimited cues with digits/long names/lowercase extensions.14synthetic parser/FDX checks pass; initial11redfailures and first green XML-whitespace assertion failure retained, corrected new Text-node comparison passes. Existing suites/primitives untouched. Read-only retained edited manuscript-copy comparison preserves authored tokens/private input hashes and reduces role mismatches602to53. Full legacy role fidelity remains unqualified; immutable packets/rich preservation unchanged. Source161 version consistency gate passes. See docs/agent_sync/FOUNTAIN_DIALOGUE161_2026-11-14.md and backups/fountain_dialogue161_20261114_v01/checkpoint.json. Drive 1pde6wy5_Cg174LT3YQCo0yCQ2Ra254_v verified 14933bytes/10members/SHA256 1ef03e736335c8c9f08d10b4551cdfeff432094a3d092efaf79540fd9f597ebf. Original/derived manuscripts/private stores/raw logs/restricted payload excluded; closing annotations postdate archive. No inference/stopped UI probe/live restart/deployment/native-web rebuild. Source161/native-web156/hosted146 distinct. Next private comparison of53remaining role mismatches against immutable paragraph boundaries, distinguishing parser defects from ambiguous plain projection before further repair. All original ten goals/six additions and remaining live/full-release gates retained; ACTIVE/incomplete.
+
+
+## Remaining legacy role disposition — November14,2026
+
+Read-only classification accounts for53remaining token-role mismatches across16source-paragraph/parser-element pairs: isolated cues lack following speech, unmarked source Action matches heading syntax, source Dialogue lacks adjacent cue context, and nonstandard source headings lack forced markers. Source161/private inputs unchanged; no text/fingerprints/occurrence IDs serialized. No further heuristic guessing or old packet rewrite justified. Keep legacy reflow explicitly lossy and rich typed FDX preservation separate; existing edited plain copy not automatically transferred. See docs/agent_sync/FOUNTAIN_ROLE_DISPOSITION161_2026-11-14.md and backups/fountain_roles161_20261114_v01/checkpoint.json. Drive 1KR1uQzMEc-cYXrfeCNql1NcbeoWu48ZW verified 2981bytes/3members/SHA256 be912c278681ce70b357483bf59ac423f2d83562cba7a713ed8377e6e3e8d015. Only aggregate/report/checkpoint included; private manuscripts/stores/raw logs/restricted payload excluded. Closing annotations postdate archive. Next review actual rich FDX model and professional PDF renderer for an explicit typed supported rendering subset, rejecting unsupported features without heuristic conversion or original-layout fidelity claims. No service/deployment/inference/UI retry/private data change. Original ten-goal/six-addition program ACTIVE/incomplete; real-owner/creative/full-release gates remain.
+
+
+## Source162 typed FDX professional PDF — November14,2026
+
+New fdx_professional_pdf.py reuses inert typed FDX and existing professional paginator, retaining six roles and Courier12 Bold/Italic/Underline including intra-word runs. Readback verifies planned page/word/glyph sequence. Explicit export_pdf layout=typed-professional uses actual owner/revision-fenced saved FDX; unsupported features/watermarks/plain projects reject; default original-layout422 remains. Separate14layout/12in-memory renderer/12selected real AST-handler checks pass, three synthetic diagnostic images visually reviewed. First new plain-project fixture error retained/corrected. Existing suites/primitives unchanged; full HTTP/auth/compiled client/package/live qualification remains open. Source162 version consistency gate passed. See docs/agent_sync/TYPED_FDX_PDF162_2026-11-14.md and backups/typed_fdx_pdf162_20261114_v01/checkpoint.json. Drive 17xhPtjlPgS4O9rU4aqBUOhEag3Mfs_dr verified 15106bytes/12members/SHA256 fbed927d7e7d192713fc74e87e41e69d02163c72fb7b08361eafcee34c3e79d0. Private manuscripts/stores/fixture roots/logs/media/restricted payload excluded; closing annotations postdate archive. Standalone PDF artifact not authored/delivered: required PDF skill operation-marker helper absent from bundled skill/runtime; in-memory application tests and diagnostic PNGs are separate. Next explicit client choice/professional-layout disclosure, source-pin reconciliation and mounted/candidate workflow. No source-layout/vendor certification, live rollout, inference or saved-data changes. Source162/native-web156/hosted146 distinct; all original goal scope retained, ACTIVE/incomplete.
+
+
+## Source163 typed professional PDF client controls — November14,2026
+
+Browser/native controls offer explicit typed-professional PDF/new-layout disclosure and reject incompatible formats. Browser export waits for saved revision and verifies profile/renderer/hash/page receipt; native preserves before/after revision checks and validates receipt before existing new-file writer. Server typed receipt includes actual page count. Four browser mirrors match; JSX syntax passes. Seven browser-helper checks and seven native-client/selected actual offscreen Qt-action checks pass; initial wrong-class-name fixture error retained/corrected. Existing suites/primitives unchanged, source163 version consistency gate passed. See docs/agent_sync/TYPED_PDF_CLIENTS163_2026-11-14.md and backups/typed_pdf_clients163_20261114_v01/checkpoint.json. Drive 1e1h5oDDv01BUoCDRScGLSERpBk7BSWN8 verified 108250bytes/13members/SHA256 359ec084aa9c7d9bfed7b5e615750f638a47a122280dc4d5529a57a37d9f49ac. Selected code/aggregate evidence only; private originals/stores/credentials/media/logs/restricted payload excluded. Closing annotations postdate archive. No mounted React/full protected HTTP/writer/installed acceptance; source pins not reconciled and must qualify before fixed-writer reuse. No live restart/deployment/inference/manuscript/saved-data change. Source163/native-web156/hosted146 remain distinct. Next mounted protected route/actual clients/compiled controls, stale/error/draft retention, then pins/packaging. Standalone artifact helper gap remains separate. Original full program ACTIVE/incomplete.
+
+
+## Functional release163 published to localhost and Firebase — November14,2026
+
+User-authorized release163now serves Hosting version8e1594d8406d440f and localhost3000; all1155eligible files/922306409bytes remotely match, five local/five hosted entry routes match. Backend8080promoted after spare-port full-app qualification; existing auth/admission flags preserved, Vite5173/gateway8000/public API/publishing healthy. Ten fresh private SQLite online snapshots pass quick_check and all10logical contents unchanged across restart. Current compiled writer14mounted checks and native source writer12checks/three normal child exits0pass. Two stale creative dependency pins+selfhash reconciled with exact original/metadata/ACL/ADS preserved. Source163/native156candidate/default144145/gateway52 remain distinct; no whole-release or installed acceptance. See docs/agent_sync/FUNCTIONAL_RELEASE163_2026-11-14.md and backups/functional_release163_20261114_v01/release-checkpoint.json. Drive 1i5LuYI4_uVGsPrXBzFLbSXrzkArwUaae verified 67710bytes/9members/SHA256 20e4117b4c98dee62279f497e47ab61df019c2b7075ecdce80169470f8beffb1. Archive is sanitized reports/aggregate receipts/public asset hashes, excludes private DBs/paths/fingerprints/credentials/manuscripts/profiles/raw logs/restricted payload; closing annotations postdate sealing. Earlier failures retained. User campaign screenshot400explained by Julie Reply-To outside current Brett/Gmail policy; no settings/provider/send changes. Active Audit Stehouwer Publishing website chat owns post-freeze clearer-validation edit; not claimed published163. Next native163candidate packaging/runtime qualification and coordinate pending campaign source before another web release. Full original ten-goal/six-addition program ACTIVE/incomplete.
+
+
+## Native163 candidate and current Creation Suite link — November14,2026
+
+Real separate163package185inputs/429files/218000107bytes built/staticverified;181inputs match156, changed client/view/version/generatedmetadata only. Actual frozen Creator12assertions exit0; ordinary BSchat shows controls/recoveryready/emptyinput and normal Close exit0, exe/default hashes unchanged, later window listing confirms gone. Separate attempted draft probe never reached setter/typing: missing geometry, minimized window, restore user-input detection; held and owned cancellation15after local profile preservation0files, not a recovery/error-delivery pass. No further stopped UI input. Separate Launch-AI-BS-163-Candidate.cmd prepared/notexecuted, old144145defaults/156candidate retained; no signing/default promotion. See docs/agent_sync/NATIVE163_CANDIDATE_2026-11-14.md and backups/native163_acceptance_20261114_v01/checkpoint.json. Clean runtime Drive 15TKTecXKhoM0HdgjDrjJqJjyPY5t1ht8 verified 87526074bytes/432members/SHA256 620734e86ab6474c24ef8e6cadff7c2abc76ec6c479c3ba1194bf44be8120e3e; engineering Drive 1EU4GdY0plNV_GwUlV8J1wnBaFbmBJwom verified 7048bytes/10members/SHA256 1962cc000590954cded689e87d51ae766979945a24643abe8ff99b5722362dd3. Private stores/profiles/copies/logs/screenshots/manuscripts/credentials/models/restricted payload excluded. No source-independent/clean-machine/real-owner/ordinary-human-play/fullgate claim. Current localhost5173/?tab=unified_creation returns200, defaults via full suite to ScreenwritingTab; published163equivalent link available. Browser panel open queued, no signed-in visual inspection/repair claim. Next owned full Creation Suite deep-link acceptance separately from standalone writer; retain native interactive/relocation/final gates and concurrent website-audit campaign ownership. Live163Hosting/backend and gateway52unchanged. Closing annotations postdate archives. Full original goal ACTIVE/incomplete.
+
+
+## Creation Suite163 controlled route checkpoint — 2026-11-14
+
+Full frozen App → Creation Suite → Writing Studio passed14 synthetic browser/protected-handler checks. Attempt01 fixture port mismatch retained; corrected isolated8080/8000relay passed attempt02. Browser/API/gateway drained0; unrelated services explicitly404/no live forwarding. No source fix/version bump/redeployment or real-account qualification. Seven-member4098byte scoped engineering archive Drive ID19eH6PAA9Q5VYH-LY81zTO3l-Tu64_OKl downloaded/members/parent/sharing verified, SHA2566b1889fcd557965a4ee2f88fa1f2dd518ae7a7ec3aa6f304f65e08940f400ceb. Local profiles/stores/logs/credentials excluded. Closing pointer edits postdate seal. Read docs/agent_sync/CREATION_SUITE163_ACCEPTANCE_2026-11-14.md and backups/creation_suite163_20261114_v01/checkpoint.json. Next owned native163relocation acceptance; retained interactive/error/real-account/full-release gates. Full ten-goal/six-addition program ACTIVE/incomplete.
+
+
+## Native163 relocated runtime checkpoint — November14,2026
+
+Verified clean archive restored429package files outside the checkout. Actual frozen Creator12assertions passed/exit0; all reported native executables resolved inside that restored package; owned processes drained. All429files still match and default launchers remain unchanged. Canonical checkout/system dependencies remained accessible: no clean-machine, default promotion, signing, real-account or whole-release claim. Six-member3273byte engineering archive Drive ID14fzkghwIkO0Q6KDYTGiYmcAWD8wcrjC2 roundtrip/member/parent/sharing verified, SHA25677d4aa0998cdd5eef8381607fc67256250f9c93c76cb1cf5d29bcb92d43600d8. Read docs/agent_sync/NATIVE163_RELOCATED_2026-11-14.md and backups/native163_relocated_20261114_v01/checkpoint.json. Profiles/stores/captures/raw logs excluded. Closing pointer edits postdate archive seal. Corrected stale current hosted version/pointers from146to163 while preserving prior146records. Next T03actual authorized rich-FDX professional-profile preflight; no original writes or standalone PDF authoring. Full ten-goal/six-addition goal ACTIVE/incomplete.
+
+
+## Creation Suite dev-server import recovery — November14,2026
+
+User-reported PlaywrightTab dynamic import reproduced against actual5173. Browser dependency fountain-js returned504Outdated Optimize Dep despite parent200. Identified Vite23184 stopped under exact process/listener guards, incomplete optimizer cache preserved, same server command force-optimized as36336. Exact browser import now passes/no failed events; full current-dev App/Creation Suite14checks pass with synthetic identity/disposable stores and unrelated requests404contained. Owned API/gateway drained0; replacement Vite remains running. No source/version/deployment/backend/private-data/default-launcher changes. Seven-member4584byte engineering Drive roundtrip verified ID1N_6fWGK4Mh9bF8ZXIZegbTlEpjsDLak-, SHA2568c23127eeebe1e4ecd199638c3de7f104b37f73af3d202db2dcc3f6e21e3a2db, sharing unchanged. Closing pointers postdate seal. See docs/agent_sync/CREATION_IMPORT_RECOVERY_2026-11-14.md and backups/creation_import_recovery_20261114_v01/checkpoint.json. Hooks attachment received as reference only; no hooks or trust bypass enabled. Deferred manuscript professional-profile preflight remains next; full goal ACTIVE/incomplete.
+
+
+## Actual typed manuscript professional renderer — November14,2026
+
+Authorized retained FDX1772body/3title paragraphs admits explicit typed-professional profile. Actual application renderer265224bytes/82pages passed all-page token/bounds/Courier12 and exact typed-role checks. Physical pages1/41/82 privately inspected; not all-page visual, original-layout or external Final Draft qualification. Original PDF/FDX unchanged; no standalone PDF delivered. Separate actual protected import quarantined after two wrapper exits1; secondHTTP503 confirmed/firststatusnotrecorded, both API/gateway pairs drained0. Staged originals retained;250/263character version-path hypothesis remains unproven. Diagnose retained failure before a changed-condition retry, no blind third import. Six-member4207byte aggregate engineering Drive ID1QVGSCBJZukP9-TgbrMiTlzE9L0_oa6OL downloaded/member/parent/sharing verified; SHA256b5ebca0af8415da2cadba22bfa10d10ae826449e3fe1ba442343bcd8092819ef. Private source identities/manuscripts/stores/plans/rasters/raw logs excluded. Read docs/agent_sync/ACTUAL_TYPED_FDX163_2026-11-14.md and backups/actual_typed_fdx_preflight163_20261114_v01/checkpoint.json. Source163unchanged, no activation/promotion/deployment. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.
+
+
+## Actual typed protected/browser workflow163 — November14,2026
+
+Synthetic250character directory reproduces Windows206; retained failed staging unchanged. Changed short owner-private root qualifies actual manuscript protected route13 and full frozen App/Creation Suite browser14.1772typed paragraphs/82page professional PDF; original FDX exact, one expected Action edit saved/reopened, owner/revision rejection and owned drain0 pass. No source change/general long-path/real-owner/native frozen writer/standalone PDF delivery claim. New wrong-format fixture label stopped before API startup; corrected supported label used. Long-root failures retained. Seven-member5391byte aggregate engineering Drive ID1cwZpe9ft9PwszZSTOmACDptrfTW8F-h4 verified downloaded/members/parent/sharing; SHA25670683cd3a52c1fd1c9ef28246c064c57ee52d8f5aeabb8c7c4df36129f03d342. Private records/rasters/profiles/logs excluded. Read docs/agent_sync/ACTUAL_TYPED_WORKFLOW163_2026-11-14.md and backups/actual_typed_fdx_preflight163_20261114_v01/route-checkpoint.json. Next owned native actual-manuscript typed PDF menu/client integration with short private root; retain real-owner/frozen input/error/full release gates. Full ten-goal/six-addition program ACTIVE/incomplete. Closing pointer updates postdate seal.
+
+
+## Owned native actual typed-PDF menu163 — November14,2026
+
+One current-source/offscreen Qt actual-manuscript case passes13core assertions: bootstrap beforeQt/onlywriter/1772paragraphs, selected disclosed typed menu, one actual pipe export/client receipt,82page readback/drawn Courier12/bounds, no save/revision change, RAM output sink/noPDFfile, original preservation and normal child/controller close0/drain. Filesystem export/frozen desktop/real identity not qualified. Initial new fixture failed on unused font resources; corrected drawn-span assertion passed, app/renderer/passing tests unchanged. Three-member2619byte aggregate Drive ID12ARyzkRMBnYe-hBsSirRAe1SNNEk0DiC roundtrip/members/parent/sharing verified SHA2566917eac124dc76debfab80e1aa04e3a1a3b062339e5029f2b8f6189d5df5ce77. Private originals/stores/raw logs excluded. See docs/agent_sync/NATIVE_ACTUAL_TYPED_PDF163_2026-11-14.md and backups/native_actual_typed_pdf163_20261114_v01/result.json. Next owned typed unsupported-feature error/draft-retention gate. Full ten-goal/six-addition goal ACTIVE/incomplete, source163unchanged. Closing pointers postdate seal.
+
+
+## Native typed rejection/draft retention163 — November14,2026
+
+One new owned/offscreen Qt unsupported-title-style copy passes13core checks: one explicit flush save then one typed export, one warning/zero output, visible edited text and acknowledged revision retained, no fallback, original bytes exact and normal child/controller close0/drain. Exact native error HTTPstatus not captured; no numeric assertion claimed. No app/live/source/provider/default changes, no PDF delivery/frozen UI/real-owner acceptance. Two-member2000byte aggregate Drive ID12fd22BPy9tVcAnvYkvYd2NQ0b010tVxK downloaded/member/parent/sharing verified SHA2562382497b59d16c4ed2a1c734c0d87776fbdb8fa422efa84d8d0dc79c48ed4e3d. Private data excluded. Read docs/agent_sync/NATIVE_TYPED_REJECTION163_2026-11-14.md and backups/native_typed_rejection163_20261114_v01/result.json. Next T04/T05mounted Coding mode controlled acceptance from V02/V03, preserving flags, isolated fail-closed/default and per-task trusted-local/review boundaries; no model replay/real-project apply. One closing AGENTS patch anchor mismatch was read/reconciled before focused correction; no code/test failed. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.
+
+
+## Mounted Coding mode163 partial — November14,2026
+
+Current full IDE source in separate5192Vite/actual SDK/router/Go fixture completed9checks through trusted-local VERIFIED on disposable Git repo, originalvalue1unchanged. Review response/Apply unresolved at15s. APIprofile held after incorrect403/401 and non200/200BLOCKEDexpectations; browserprofile held after cold-optimizer setup then review timeout. Go5sshutdown panic and relayECONNRESET prevented normal finaljoin/result; exact owned API/stack/listener later absent. No real model, live Coding flags, real-project apply, app source patch or deployment. Read docs/agent_sync/CODING_MOUNTED163_PARTIAL_2026-11-14.md and backups/coding_mounted163_20261114_v01/checkpoint.json. Five-member3874byte aggregate Drive ID1NYP9xvl6IZMVz7KALg8hSz8YdqVoiHjj downloaded/member/parent/sharing verified SHA256695f4c3a9d7b4c1300e75545fe2bd57c2241491f086c6af4877c2bf872c41caa. Private profiles/journals/logs/check outputs excluded. Next private review timing/thread diagnosis, not blind full-profile retry. Full ten-goal/six-addition goal ACTIVE/incomplete/source163. Closing pointers postdate seal.
+
+
+## Source164 Coding review fix/full browser gate — November14,2026
+
+Fixed fixed-command Git HEAD stdin=DEVNULL after private trace showed review waiting in subprocess capture. Diagnostic intervention104ms; actual source/nooverride108ms; owned pairs0. Bumped16metadatafiles163to164with preimages/consistency pass. New full IDE mounted browser13pass: auth/retained inputs/default isolated denial/per-task trusted ack/real candidate checks/explicit review/apply onlysyntheticrepo/originalvalue1backup/fresh-browser inspect no replay. API/gateway0, ownedViteSIGTERM/port released. Source164not deployed; native/hosted/localbackend163unchanged, no live flags/providers or user-project writes. Forty-two-member459466byte scoped source/preimage/metadata/evidence Drive ID1ZcbECSUtlZ65lGOihv5XUG3ImYriKoFU roundtrip/members/parent/sharing verified SHA256deefb3c235fa327dc795bd72ea861b0708bd0b1b160ed2d8db773867e8119f02. Private traces/journals/profiles/logs excluded. Read docs/agent_sync/CODING_REVIEW_FIX164_2026-11-14.md and backups/coding_browser164_20261114_v01/checkpoint.json. Next owned mounted native Coding gate; retain real-owner/isolated-worker/installed/hosted/final-release requirements. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.
+
+
+November15 current continuation: exact170 Drive runtime restored outside checkout; Creator12 pass/exit0, all429package files unchanged, owned work drained. Ten-member relocation Drive archive downloaded/member-hash verified. See docs/agent_sync/NATIVE170_RELOCATED_2026-11-15.md. Next native unsaved failure contract; no clean-machine/ordinary input/real-owner/full-release claim. Defaults/live services preserved; entire goal ACTIVE/incomplete.
+
+
+November15 current: source/native172 static and actual frozen unsaved pre-write
+save refusal pass: one save/one warning, complete rich draft dirty/uncertain,
+revision/prior recovery/originals/package unchanged; exit0/drain. Twelve admission
+checks pass. Failed171 wrong-interpreter build retained; corrected fresh172 built.
+66member engineering/431member runtime Drive roundtrips verified. Latest-Candidate
+launcher remains170. Next exact172positive/rejection/Creator qualification.
+See docs/agent_sync/NATIVE172_FAILED_SAVE_2026-11-15.md. No live/default promotion;
+all remaining original goal/real owner/ordinary input/full-release gates retained.
+
+
+November15 current native172: positive frozen preserve/recovery/CAS save/real PDF,
+saved-clean unsupported export and Creator12 pass; five fresh exits0/drain and
+429package files unchanged. Prior172unsaved refusal remains separate pass.
+Latest-Candidate launcher now172,170preimage retained; prepared/notrun.16member
+engineering/433member runtime Drive downloads verified. Defaults/live unchanged.
+Read docs/agent_sync/NATIVE172_POSITIVE_2026-11-15.md. Next exact172relocation,
+then remaining independently actionable original-goal gate. Goal ACTIVE/incomplete.
+
+
+November15 continuation: exact172relocated Creator12pass/exit0;429files unchanged,
+owned work drained. Ten-member Drive evidence verified. New T06 read-only AST
+baseline: unchanged eight-thread EngineBus/64tasks, idle max5.899ms versus loaded
+max607.496ms timer interval, all results on GUI thread and actual pool join.
+Not mounted-widget/production latency qualification. Four-member baseline Drive
+roundtrip verified. Next same workload via existing owned process batching,
+then select actual caller/budget; no primitive changes or speculative thread-cap
+increase. Read docs/agent_sync/STUDIO_CONCURRENCY_BASELINE_2026-11-15.md and
+NATIVE172_RELOCATED_2026-11-15.md. Defaults/live/user data retained; goal ACTIVE.
+
+
+November15 source173 full BS-Chat widget Syntax button/real bus/shared controller
+passes13 controlled assertions, including128KB heartbeat p95 6.238ms/max11.694ms,
+private refusal, actual timeout, retained editor and existing selected close/drain
+methods with synthetic hub. Exact173package188inputs/429files static pass;
+two frozen compile-only children exit0/drain with package unchanged. Nine-member
+evidence/431member runtime Drive roundtrips verified. Testing launcher stays172.
+Read docs/agent_sync/SYNTAX173_MOUNTED_FROZEN_2026-11-15.md. Next exact173candidate
+integration; full ordinary/frozen MainWindow/real owner/full release remain open.
+Defaults/live services/private originals retained; entire goal ACTIVE/incomplete.
+
+
+November15 native173Creator12pass/exit0;429package files unchanged. Testing-only
+Latest-Candidate launcher now173;172preimage retained, not executed. Default
+promotion/full frozen BSChat/ordinary entry remain separate open gates. Twelve-
+member integration/launcher archive Drive roundtrip verified; identical complete
+runtime reuses prior431member verified archive, not reuploaded. Read
+docs/agent_sync/NATIVE173_INTEGRATION_2026-11-15.md. Next T06opt-in context/progress
+adapter over unchanged EngineBus, synthetic harmless caller only; general
+workspace fairness and real model/vector work remain separate. Goal ACTIVE.

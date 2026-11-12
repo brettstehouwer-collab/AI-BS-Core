@@ -6,6 +6,7 @@
 
 export const AUTHORIZED_ADMIN_EMAILS = [
   'brettstehouwer@gmail.com',
+  'brett@stehouwerproductions.com',
   'footballstar0325@gmail.com',
   'theseandaley@gmail.com',
   'julie.a.stehouwer@gmail.com',

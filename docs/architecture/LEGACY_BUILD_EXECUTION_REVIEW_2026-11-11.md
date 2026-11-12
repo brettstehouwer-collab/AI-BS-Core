@@ -1,5 +1,15 @@
 # Legacy project-build execution review
 
+## Source153 correction — November14,2026
+
+Legacy build_project now preserves fixed maintenance dispatch and denies other
+execution; run_existing_program is unavailable and generated programs require
+explicit source-only flags before writes. No caller confirmation bypass exists.
+Thirteen scoped checks pass; actual source-only scaffold/ZIP retained. Mounted
+denial, UI presentation, live rollout and isolated-worker qualification remain
+open. See docs/agent_sync/LEGACY_BUILD_ADMISSION153_2026-11-14.md. The following
+review records the pre-correction behavior and remaining broader worker gates.
+
 Status: SOURCE REVIEWED / GAP CONFIRMED / REMEDIATION PENDING. No untrusted repository, build command, model request or service activation was run for this review.
 
 ## Findings

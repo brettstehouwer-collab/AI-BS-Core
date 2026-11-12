@@ -46,7 +46,7 @@ const getEffectiveApiBase = () => {
       return 'https://api.brettstehouwer.live';
     }
     if (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return 'http://127.0.0.1:8080';
+      return 'http://127.0.0.1:8000';
     }
   }
   return 'https://api.brettstehouwer.live';
@@ -71,7 +71,7 @@ const CryptoSwarmMobileController = ({ backendUrl }) => {
   };
 
   const getApiHost = () => {
-    return getEffectiveApiBase();
+    return (backendUrl && !backendUrl.includes(':8080')) ? backendUrl : getEffectiveApiBase();
   };
 
   const daemonHost = getDaemonHost();
@@ -108,7 +108,7 @@ const CryptoSwarmMobileController = ({ backendUrl }) => {
         if (r.ok) res = r;
       } catch (e) {}
 
-      // 2. Try FastAPI Core Backend (port 8080) crypto status
+      // 2. Try FastAPI Core Backend (port 8000) crypto status
       if (!res) {
         try {
           const r = await fetch(`${apiHost}/api/crypto/swarm-status`);

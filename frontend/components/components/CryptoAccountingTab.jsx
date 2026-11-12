@@ -9,7 +9,7 @@ const getEffectiveApiBase = () => {
       return 'https://api.brettstehouwer.live';
     }
     if (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return 'http://localhost:8080';
+      return 'http://127.0.0.1:8000';
     }
   }
   return 'https://api.brettstehouwer.live';

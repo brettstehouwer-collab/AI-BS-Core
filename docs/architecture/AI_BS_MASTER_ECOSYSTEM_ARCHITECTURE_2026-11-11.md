@@ -1,10 +1,154 @@
 # AI-BS, BS-Chat and BS Game — Master Ecosystem Architecture
 
-**Updated:** November 11, 2026. **Program:** paused and incomplete; all ten original goals remain.  
-**Canonical project:** `C:\AI-BS`. **Source release:** `5.329.144`; packaged tools and static Firebase deployment have scoped verification. Private subsystem workflow gates remain separate. **Engine SDK source:** `0.17.4`.  
+## Artifact matrix — November 21, 2026
+
+Version numbers describe different artifacts. The game entries below were checked November 21. The November 15 deployment receipts establish the published backend and web builds on that date.
+
+| Surface | Current recorded identity | Evidence and limits |
+|---|---|---|
+| Native BS-Chat testing | Studio 5.329.173, Workshop.7.1 Chat Access 1 | The dedicated launcher opened the packaged chat. Windows identified the empty, populated and cleared message field. The other 428 package members match Workshop.7.1. [Dedicated BS-Chat testing launcher](../../Launch-AI-BS-BS-Chat-Testing.cmd) · [Windows accessibility check](../../backups/bschat_accessible_name_20261121_v01/acceptance/acceptance.json). |
+| Current native testing (November21) | Studio 5.329.173 Workshop.7.1 | The diagnostic return and low-surface landing were tested in the native walkthrough. New and earlier chapter saves use the Workshop.6 assembly contract. [Workshop.7.1 launcher](../../Launch-AI-BS-173-Workshop-Corridor-Qualified.cmd) · [Walkthrough checks](../../backups/workshop_corridor_20261121_v01/handoff.md). |
+| Earlier native testing (November21) | Studio 5.329.173 Workshop.6 | One recoverable assembly at the existing path-contact tray; atomic socket install/reclaim, preserved readings and legacy relay identities. Prior-registry saves are backed up before explicit action-driven extension. [Workshop.6 launcher](../../Launch-AI-BS-173-Workshop-Assembly.cmd) · [Assembly rules and checked saves](../../backups/workshop_assembly_20261121_v01/handoff.md). Controlled recovery is separate from human pacing and foreground performance. |
+| Current native testing (November 21) | Studio 5.329.173 Workshop.5, selected by the desktop testing shortcut | Pure nearby socket guidance uses the actual board-aim projection and existing relay records. The checked recipe requires no materials; construction and connection remain distinct, with isolation and a healthy actual relay required for connection. Existing centre-pick/reach rules remain authoritative. Live/lost feed text follows actual power state. [Dedicated launcher](../../Launch-AI-BS-173-Workshop-Relay.cmd) · [Relay handoff](../../backups/workshop_relay_20261121_v01/handoff.md). Later recoverable assembly and first-time human pacing remain open. |
+| Application source | 5.329.192 | The local version marker and release metadata identify the application source. The Workshop.7.1 overlay has its own player hash. [Version authority](../../version.txt) · [Release scope](../../release.json) |
+| Backend 8080 | 5.329.188 at the November 15 release | The published authenticated protective-review endpoint passed its release checks. [Backend receipt](../../backups/crypto188_release_20261115_v01/public-acceptance.json) |
+| Local production 3000 | 5.329.180 at the November 15 release | The static bundle was checked against its manifest. Vite and native Studio use separate launch paths. [Web release checks](../../backups/crypto180_release_20261115_v01/verification.json) |
+| Firebase Hosting | 5.329.180, Hosting version 9bf57b6d3cd2aad0, November 15 | 23 changed assets were downloaded and compared at both origins, with 1,132 matching entries carried forward from 179. [Hosting receipt](../../backups/crypto180_release_20261115_v01/verification.json) |
+| Game navigation source / scoped Release build (November21) | Additive Workshop probe/contact HUD cue; SDK0.17.4 headers and retained original link inputs | Original-code-section control relink exact;137aim-prompt checks pass. [Build](../../backups/workshop_navigation_20261121_v01/candidate01/build.json), [checks](../../backups/workshop_navigation_20261121_v01/candidate01/contracts.log). This is a selected player rebuild, not a full current-source Studio/SDK rebuild. |
+| Previous native testing (November 21) | Studio 5.329.173 Workshop.4 | The player provides a compact HUD and F1 details. The other 428 files match Workshop.3. Both controlled routes saved and reopened at revision 13. [Qualification](../../backups/workshop_hud_20261121_v01/handoff.md) / [Testing launcher receipt](../../backups/workshop_hud_20261121_v01/integration.json) |
+| Prior native testing (November21) | Studio 5.329.173 Workshop.3, saved contact readings; 428 package files match Workshop.2 | The packaged Studio opened the player twice. Both contacts displayed their saved values at revisions 2 and 3. Copies of earlier repair and bypass saves reopened at revision 13 with all 17 events intact. [Build and 153 prompt checks](../../backups/workshop_readings_20261121_v01/candidate01/build.json) · [Runtime and recovery](../../backups/workshop_readings_20261121_v01/handoff.md) |
+| Previous native testing (November21) | Studio5.329.173-workshop.2; player SHA256 `c8a61a4672bf895e644cd9865bbc10e6369ff593e9c722d091bacdb57ece9ee1` |429files/218027443bytes; only player differs from Workshop.1. [Staging](../../backups/workshop_navigation_20261121_v01/stage.json) preserves base173/Workshop.1; later [integration](../../backups/workshop_navigation_20261121_v01/integration.json) verifies Latest-Candidate testing selection of Workshop.2. Earlier173Creator12/429file evidence remains retained; no177whole-native rebuild is claimed. |
+| Actual game runtime qualification (November21) | Workshop.2 dedicated launcher → frozen Studio → real saved Play, twice, on an owned non-input desktop | [Frozen receipt](../../backups/workshop_navigation_20261121_v01/frozen-qualification.json): cue observed, normal exit0/drain, exact idle reopen; full cue string was not retained. [Ordinary diagnostic](../../backups/workshop_navigation_20261121_v01/ordinary-0773e14047d2/receipt.json): live cue-guided probe collection/revision1 and exact fresh reopen, no physical input/human pacing. [Controlled branches](../../backups/workshop_navigation_20261121_v01/routes-c8a9ea190d13/summary.json): repair/bypass each revision13/sequence17 with exact fresh recovery; synthetic/offscreen, not foreground performance. Failed fixtures remain retained. |
+| SDK relocation (November21) | SDK0.17.4 Release recovery prefix, relocated to a separate backup-owned SDK directory | [Receipt](../../backups/sdk174_release_relocation_20261121_v01/receipt.json):449files/213730576bytes matched before/after; independent external Release consumer3/3pass against relocated AIBS/Jolt paths. No fresh Debug, ordinary-Play, clean-machine or full current-source SDK qualification follows. |
+| Workshop.2 ordinary contact progression (November21) | Actual packaged player; live probe/supply/path navigation and centre prompts | [Receipt](../../backups/workshop_contacts_20261121_v01/ordinary-1377ee9d7bf2/receipt.json): three separately observed E actions, acknowledged heads1/2/3, two exit0/joined children, exact logical save after reopen. Owned non-input desktop; no physical-input, foreground or human-pacing claim. Raw HUD077/099 transiently showed `Capacity 0% / isolation OFF / feed none` while saving; acknowledged HUD078/100 replaced it with “sample recorded”. Workshop.3 subsequently showed the saved reading after acknowledgment, including a controlled revisit to the supply contact from an older save. [Upgrade check](../../backups/workshop_readings_20261121_v01/revisit-result.json) |
+| Installed defaults | Retained144/145, not requalified here | No shortcut/default promotion. Real owner, ordinary gameplay, signing and clean-machine gates remain open. |
+| Game public release and play acceptance | Open | Workshop.7.1 is available through the local testing shortcut. The five-minute foreground run, GPU coverage during play, first-time player pacing, and final 20–30 minute chapter remain open. [Game handoff](../../backups/workshop_relay_20261121_v01/handoff.md) |
+| Gateway | Retained52 | Public health200/anonymous provider403 at177publication; no gateway rebuild/config change. |
+
+Publication evidence: `../../backups/patch177_release_20261115_v01/handoff.md`,
+`backend-promotion.json`, `localhost-static.json` and `verification.json` in that
+directory. Native evidence: `../agent_sync/NATIVE173_INTEGRATION_2026-11-15.md`.
+Launch the native testing game tools from the root Latest-Candidate launcher;
+use `https://ai-bs-dashboard.web.app/chat` for phone BS-Chat and `/driver/` for
+the work portal. Launcher paths here are documentation, not an execution claim.
+Live sending/trading holds remain; full45secondWan and physicalAndroid acceptance
+remain open. Goal ACTIVE/incomplete with minimum-resource preference.
+
+Current November15 source175; testing native173/defaults144145 separate. Port
+monitor now uses opt-in task context adapter, mounted13pass; no process/storage/
+bus primitive changes. Crucially direct TCP checks at2026-11-15T07:48:36Z show
+8000/8080/3000/5173/11434unreachable. Backend164/web165/gateway52 remain last
+qualified historical identities, not current liveness claims. Core recovery
+preflight is next; preserve originals/auth/flags and unrelated operations.
+See ../agent_sync/PORT_CONTEXT175_2026-11-15.md.
+
+November15 current source/testing candidate173: source BSChat syntax action now
+uses shared owned-process controller with private hash/revision-bound compile-only
+snapshot; mounted source13 and frozen worker2 pass. Creator17312exit0pass. Testing
+launcher173 distinct from installed defaults144145, hosted/static165/backend164/
+gateway52. Full frozen chat/ordinary entry/real owner/full release remain open.
+T06generic task context/progress/fairness remain proposed; no new pool. See
+../agent_sync/NATIVE173_INTEGRATION_2026-11-15.md and SYNTAX173_MOUNTED_FROZEN_2026-11-15.md.
+
+November15 current matrix: source/separate testing candidate172; qualified scoped
+writer/Creator and relocated Creator12exit0. Installed defaults144145 and last
+qualified hosted/static165/backend164/gateway52 remain distinct. T06 read-only
+EngineBus AST burst baseline found607ms max observed timer interval; no new
+scheduler/progress/fairness implementation. See ../agent_sync/NATIVE172_POSITIVE_2026-11-15.md,
+NATIVE172_RELOCATED_2026-11-15.md and STUDIO_CONCURRENCY_BASELINE_2026-11-15.md.
+
+Current matrix November15: source/native candidate170; last qualified hosted/
+static165, backend164/gateway52; defaults144145 retained.170 controlled writer
+and Creator acceptance plus verified55/433member Drive archives supersede169
+candidate status only. No default/live promotion or whole-release qualification.
+See ../agent_sync/NATIVE170_ACCEPTANCE_2026-11-15.md.
+
+November15 matrix: source169/separate native169candidate, hosted/static165,
+backend164/gateway52, retained native163/default144145. Native169static and
+three-process synthetic frozen rich-writer recovery/save/real PDF pass; not
+ordinary MainWindow/user-input/full release. Optional fixed callback is reached
+only after existing strict authenticated pipe bootstrap; no arbitrary scripts or
+new provider authority. Clean/runtime and engineering Drive roundtrips verified.
+See ../agent_sync/NATIVE169_WRITER_2026-11-15.md and game_engine/
+NSIGHT_COMPATIBILITY_REVIEW_2026-11-15.md for separately retained profiling limits.
+
+November15 live matrix: source/Firebase/static3000=165, backend8080=164,
+gateway/publichealth=retained52, Vite current source, native163candidate/default
+144145retained.165all1155hosted files downloaded/hash-matched. Campaign local5191
+contract is explicit: unsupported origins get a notice, no campaign token/fetch;
+remote campaign integration unconfigured, other owner edits preserved. No new
+public/business activation. See ../agent_sync/FRONTEND165_RELEASE_2026-11-15.md.
+
+November15 live matrix: source/localbackend8080=164; existing Vite source service;
+Firebase/static3000=163; gateway/publichealth=retained52; native163candidate
+unpromoted/default144145retained. Scoped14localchecks/publichealth200 and10DB
+original-record preservation verified. No DNS/tunnel/provider/activation change.
+See ../agent_sync/BACKEND164_LOCALHOST_2026-11-15.md. Next separately owned
+campaign/frontend integration preflight before new hosted publication.
+
+November15: owned full backend164candidate15checks passes/normal exit0; live8080
+still163, disabled flags/auth retained. Original records preserved across10DBs;
+master append-only telemetry differs, nine exact. No production source change or
+deployment this scope. Native163candidate unpromoted/default144145unchanged.
+See ../agent_sync/BACKEND164_CANDIDATE_2026-11-15.md; next guarded backend-only
+localhost promotion, campaign/frontend integration separate.
+
+Source164 release preflight now records Coding156regressions passed/53pins
+unchanged,17scoped rollback preimages and current backend/gateway health200 with
+anonymous403. No service/data/deployment change. Campaign delta remains separately
+owned; its loopback5191origin also exists in163baseline, a retained gap. Historical
+whole-backend rollback coverage is unproven. Next backend candidate qualification;
+see ../agent_sync/RELEASE164_PREFLIGHT_2026-11-14.md.
+
+Latest scoped checkpoint supersedes older version summaries below: source164
+mounted Coding browser13/native13 pass on owned disposable repositories, actual
+SDK/router/gateway and EngineBus. Explicit trusted acknowledgement/review/apply
+and reopen qualified; original backup retained. No real inference, live flags or
+private data changed. Hosted/native/local backend163 remain separate. Read
+../agent_sync/CODING_NATIVE164_2026-11-14.md. Release preflight/actual owner and
+isolated-worker qualification remain open; entire program ACTIVE/incomplete.
+
+**Updated:** November 14, 2026. **Program:** ACTIVE and incomplete; all ten original goals and six additions remain.  
+**Canonical project:** `C:\AI-BS`. **Source baseline:** `5.329.157`. Opt-in private-generation reader14synthetic checks pass, without live consumer integration. Native156 static/normal BS-Chat close0/controlled Creator12 and web156 Hosting12/signed-browser13 have separate receipts; no default or hosted promotion. Native156 scoped engineering/clean-runtime Drive backups are verified. Native144/145 defaults and earlier/held releases remain retained; hosted146 and live service generations remain separate. Real-owner/device, frozen native draft/error input, ordinary gameplay and full release remain open. FE/finance remains unactivated. **Engine SDK version recorded November11:** `0.17.4`; this update does not requalify its current source.
 **Purpose:** preserve the whole ecosystem, explain how its parts connect, and give future builds one navigable architecture map.
 
+Latest network evidence: `SITES_HEALTH_AND_ALIAS_REPAIR_2026-11-14.md` and the
+sites/server register. Selected Sites ownership and brettstehouwer.live zone
+administration reverified; stale existing ai-bs alias CNAME restored to the
+active tunnel and backend health200. Other record fields/Access/services unchanged.
+Other configured-name ownership/DNS/TLS gaps remain. Live gateway reports52,
+hosted146; source149 and native/web148 candidates are separate.
+
 This is a current source/configuration inventory with separately identified test and historical evidence. It is not a claim that every component is enabled, every website is reachable, or every past idea is implemented. Connected Sites ownership was checked; other domains below are configured properties whose current DNS/account control remains to be verified. Credentials, contact numbers, private manuscripts, database contents and personal historical conversations are excluded.
+
+## Latest scoped integration matrix — November14
+
+Earlier pause/version/status paragraphs below are retained history. Current
+authority is `docs/agent_sync/current_long_term_goal.json` and its checkpoint.
+
+| Surface | Source | Controlled/runtime evidence | Installed/hosted boundary |
+|---|---|---|---|
+| BS-Chat web | Source149 metadata; dedicated entry introduced in146 | Combined web148 candidate Hosting12/12; prior public API checks retain dated scope | Hosting146:1141file hashes; no blanket current model/workflow acceptance |
+| Gateway | Source149 configured loopback backend and shared production route table | Three regression groups plus12signed fixture portal groups; stamped149candidate | Live gateway unchanged; real-owner/device and all-route acceptance remain open |
+| BS-Chat Android | Accepted1.0/build1 wrapper | Package-manager installation verified; login USER_REPORTED_PASS | Accepted APK retained; optional1.0.1 candidate not promoted |
+| FE driver work | Standalone `/driver/`, UID-scoped cache and reviewed sync | Real UI/ASGI/temp-SQLite composition with synthetic verified identities; offline shell checks | Backend flag disabled; no public deployment, installed FE app or real-owner workflow claim |
+| Personal finance | Source148 `/personal/`, owner-bound records/originals/yearly parts and offline local drafts | Separate API/phone/worker scoped fixtures; no real private record access | Flags disabled; normal owner/device/hosted rollout open; work PIN never grants financial access |
+| Truck navigation | Retained active planning/integration requirement | No routing provider connected | Actual vehicle dimensions/weights/provider remain open; no qualified truck route |
+| Local service layer | Existing individual launch paths | Scoped startup receipts plus real Comfy8188 proxy; Chroma FTS repair preserves documents/vectors | Node/RecDebut/WSL holds and persistence/workflow gates remain |
+| Native Studio / BS Game | Source148; fresh185input/429file native candidate | Static + actual packaged creator/viewport/isolated Play/save/reopen pass; canonical TEMP fix | Retained144/145;146/147held; separate148candidate launcher prepared, defaults/normal MainWindow/hosted parity not promoted |
+
+FE work flow: current verified Firebase owner → owner-bound API → separate driver
+SQLite; phone IndexedDB retains unsynced originals, evidence and reviewed conflict
+journals. A scoped worker caches public shell files only, never API/account data.
+Actual FE backend routes remain opt-in; no shared FE PIN or personal-finance
+ownership is inherited. See FE_DRIVER_SOURCE_INTEGRATION_2026-11-14.md and the
+latest sync checkpoint for exact qualification and remaining owner/device gates.
+
+Review metadata has a separate owner-scoped database so older capture clients
+retain their original row contract. Review intentions precede the capture
+transaction; confirmation/reconciliation is separate, not a cross-database atomic
+commit. Source CORS now permits evidence operation IDs narrowly; standing services
+have not adopted that candidate. Current proof: FE_DRIVER_SYNC_2026-11-14.md.
 
 ## 1. What AI-BS is building
 
@@ -311,7 +455,7 @@ During this architecture pass, sandbox TCP-table access failed; an authorized na
 | Canonical maintenance | Existing fixed `project_maintenance` lane differs from legacy arbitrary/custom/native build paths. Preserve known authorized maintenance. |
 | Legacy builder gap | Current `program_builder_engine.py` admits existing absolute project directories and repository-discovered/custom commands for host execution. Administrator admission is not an untrusted-code sandbox. Review and route untrusted projects into separately accepted bounded execution. |
 | Disposable VM lane | Historical Host/VM Page records staged diagnostics, not admitted guest program execution. Clean separate image/account, trusted broker/root policy, bounded host-issued jobs, cancellation, collection and protected apply/release remain open. |
-| Vault key | Existing vault key is tracked and appears in reachable Git history. Its value was not read/changed in this work. Plan migration with decryptability verification and rollback before removing/replacing keys; history remediation is separate. |
+| Vault key | Existing vault key is tracked and appears in reachable Git history. Real value not read/changed. Twelve synthetic format/interruption/restart/rollback canaries pass; see `VAULT_SYNTHETIC_CANARY_2026-11-14.md`. Actual private preservation, coherent consumer switch and history remediation remain open. Source archive Drive download blocked; separate report-only backup verified. |
 | Git staging safety | Root `backups/`, `t/`, `outputs/`, `work/` now ignored; canonical architectural ledger explicitly excepted from broad ledger ignore. Nothing was staged at the latest check. Ignore rules do not untrack existing files. |
 | Service recovery | Attribute exact owned process and service readiness before intervention; do not kill a process merely because it owns a port. |
 | Outbound operations | Publication, messaging, recruiting sends, trading, mining, payouts, broadcast and deployments retain their specific controls and authorizations. |
@@ -341,18 +485,36 @@ Latest verified scoped Drive save remains the 080426Z overlay. Subsequent channe
 
 | Layer | What must identify the result | Current scope / next gate |
 |---|---|---|
-| Source/dependencies | Branch/commit plus dirty-file pins, manifests and lockfiles | Source version consistency passed at139; `.aibs-project.json`'s `main` field does not override actual Git branch. |
+| Source/dependencies | Branch/commit plus dirty-file pins, manifests and lockfiles | Source157 managed metadata consistent. Native156 freezes185inputs; web156 freezes3190inputs. Source153–155 backend admission/receipt fixes and157reader remain source-qualified, not live-promoted. Actual Git branch remains authoritative. |
 | Unit/component | Exact command, dependencies, synthetic fixture and source |48 channel-focused tests and10dispatcher tests are separate passing scopes; The corrected 64-case RAG/OpenCode source suite passes; the old 8/9 run remains historical evidence. |
 | Local API | Owned process/generation, auth policy, routes, synthetic and owner checks | November11 bounded observation: loopback8080/8000 health200, anonymous memory query403/401 respectively; eight business/background flags false. Authenticated live RAG is a separate gate. |
-| Mounted browser/mobile | Actual mounted view, principal, transport and interaction evidence | Source/type/build checks cannot replace this layer. |
-| Native source/candidate | Complete candidate source/resource pins and dependency scope | Reviewed fixed local candidate is enabled and launched: synthetic editing/recovery evidence plus real-owner existing-PDF load/normal-close exit0. Original edit/export, installed parity and full Python/Qt dependency attestation remain open. |
-| Installed Studio | Exact installed artifact and its own acceptance | Retained107 is separate from139source/SDK 0.17.4. |
+| Mounted browser/mobile | Actual mounted view, principal, transport and interaction evidence | Exact combined156 driver passes13controlled SDK/RSA/synthetic-root checks including cold offline restart; Hosting12separate. Raw fixture151label explicitly reconciled to156artifact hashes. Private manuscript scopes remain separate. Real Google/Android acceptance is open. |
+| Native source/candidate | Complete candidate source/resource pins and dependency scope | Native156 static, ordinary BS-Chat/recovery-ready/normal close0 and controlled Creator12pass. Frozen draft typing remained ineffective; draft/error-delivery gate open. Rich source manuscript recovery/save/export is separate offscreen synthetic-context evidence. Real-owner/all-hub/external-renderer/full-release gates remain open. |
+| Installed Studio | Exact installed artifact and its own acceptance | Defaults144/145 retained; candidate156 has a separate prepared launcher, not executed/default-promoted. Earlier artifact-specific normal-entry/relocation receipts remain separate. |
 | Native game | Exact player/world/save, durable outcomes and fresh-process reopen | Controlled HUD/motion/routes are distinct from ordinary play and human pacing. |
 | GPU/performance | Exact artifact/settings, frame/memory evidence and capture | Nsight installation is not a game capture; old performance results remain tied to their players. |
-| Hosted release | Exact saved/pushed source, deployment/destination and protected/public workflow checks | Historical Firebase 109 receipt does not establish current139deployment. |
-| Restore | Archive members, source hashes, privacy/parent receipt and restored bytes | Scoped local/cloud receipts are separate from complete base and saved-data coverage. |
+| Hosted release | Exact saved/pushed source, deployment/destination and protected/public workflow checks | Verified static Hosting146 remains separate from web/native156 candidates and source157. No deployment follows from source/candidate qualification. |
+| Restore | Archive members, source hashes, privacy/parent receipt and restored bytes | Native156engineering13member/clean-runtime432member archives downloaded/member-verified. Actual declared key/config preserved and recognized recovery verified locally only. Neither is whole-project/private-data cloud restore or clean-machine acceptance. |
 
 Root `package.json` exposes version check/sync/bump, not a universal build/test command. Frontend scripts contain actual Vite/type/lint/build commands; its `npm test` is a placeholder that exits with failure. Some build scripts synchronize mirrors or package artifacts, so this document is not permission to execute every script. Use direct standard tools and reviewed scoped workflows; do not proxy application behavior through `agy`.
+
+
+### Dated matrix supplement — November 21, 2026
+
+The preceding rows retain their historical artifact scopes. This supplement records the November 21 observations separately; a healthy listener does not identify its loaded source version or qualify its workflows.
+
+| Layer | Dated evidence and exact scope | Remaining gate / limitation |
+|---|---|---|
+| Local static browser bundle180 | `backups/core_listeners_20261121_v01/handoff.md` and `verification.json` (16:35:24 UTC): restored loopback3000 using existing static180; all1155local manifest members matched; `/`, `/chat`, `/writer.html`, `/driver`, `/personal` each200 with pinned served bytes. Manifest SHA256 `ff639c2650d092fb55b9dc7b5ac32e818a2264d2542e4567aa4a6ab74196180d`. | Local bundle/served-byte verification; no new frontend build, remote deploy, mounted interaction or current Firebase re-verification. |
+| Local runtime/listeners | Same November21 receipt: gateway8000/backend8080 health200 and Vite5173 root200. Ollama11434 version0.40.16,30catalog entries,0loaded models; existing model store reused and no inference requested. | Responses establish dated availability only; no backend generation/version, current authentication matrix, model inference or full subsystem acceptance inferred. |
+| Hosted browser180 | Retained `backups/crypto180_release_20261115_v01/handoff.md`: Firebase version `9bf57b6d3cd2aad0`;23changed/new assets hash-matched at static/Firebase origins,1132unchanged manifest members reuse179verification;21retired names listed without remote-absence claim. | Dated November15 incremental publication evidence, separate from November21local full-manifest check. Backend188publication (`backups/crypto188_release_20261115_v01/handoff.md`) did not rebuild clients180/native173/default144145. Later source changes do not establish hosted parity. |
+| Current public Firebase observation | `backups/sites_health_20261121_v01/direct-get.json` (16:37:18 UTC): anonymous direct GET with TLS validation and no redirects returned root200, `/bs-chat.html`200 and `/chat`404. Root and BS-Chat HTML each differed from retained local180 entry bytes. | Current hosted180 parity is unverified and the observed entries differ; November15publication is historical evidence only. Three entry responses do not establish the full deployed version, asset inventory, authenticated behavior or cause of drift. |
+| Native173 source feasibility / executable identity | `backups/native173_bschat_preflight_20261121_v01/receipt.json` (16:34:27 UTC):8static checks pass;11947223-byte candidate executable SHA256 `10c07a4aca9a52acb80442d0c41108d7ba84b81feb63f768259b15e11009e0da` matches retained package manifest. | Current source feasibility plus exact executable identity; source-to-bundled-module equivalence unproven. No application launch, runtime qualification, physical input, account request or production change. |
+| Native ordinary BS-Chat / installed defaults | November21preflight shows ordinary MainWindow starts real telemetry before BS-Chat selection; default writer can attach fixed `AIBS_NATIVE_TELEMETRY_V1`. Core-listener handoff records session-local read-only OpenFileMappingW probe ERROR_FILE_NOT_FOUND(2) at check time. Defaults144/145 remain distinct from testing173. | Mapping absence at one instant does not isolate concurrent startup or other constructor effects. LOCALAPPDATA isolates recovery only. Full frozen ordinary BSChat/scratchpad/close/recovery remains open; inspect other constructor effects and qualify an owned isolated-profile run with a fresh mapping-scope check. The observed absent mapping does not itself require a separate OS/session; concurrent startup still needs consideration. Prior frozen worker bypassed Qt/MainWindow; synthetic-hub source checks and Creator acceptance are separate scopes. |
+
+Later on November 21, the exact frozen173 executable started with --bs-chat under an isolated profile. Its hidden ordinary MainWindow was observed and closed normally (exit 0); the owned process exited and the telemetry mapping was absent afterward. The probe did not exercise a scratchpad compile, draft recovery or physical input. See backups/native173_bschat_entry_20261121_v01/receipt.json.
+
+These are local evidence references only; this matrix edit creates no upload or cloud-checkpoint verification claim. The original goal remains ACTIVE/incomplete.
 
 ## 12. Six additions to the active goal
 
@@ -1018,3 +1180,98 @@ Controlled creator/save/freshreopen/viewports/saved-player qualification is v01 
 All supplied recovery folder/Drive references, including sensitive path references, are being saved to docs/architecture/AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md and.json. Registration is distinct from content review or copy. The ongoing BS game folder1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m retains its existing shared permissions. Current source/log/history/handoff and clean runtime archives have separate manifests; final upload/readback/hash receipts are linked from docs/agent_sync/current_long_term_goal.json after verification. No whole-profile/saved-data synchronization claim. Private authored material unexpectedly present in DIRECTORY_INDEX.md is not copied into the shared source-history package.
 
 Next on explicit goal resume: reconcile current shared-engine/creative-launcher pins, then authenticated creative edit/save/reopen/export. Preserve ordinary human pacing/captions/likeness, signing/clean-machine/fullparity/Nsight gates and all failed evidence. No manual gameplay requests. Final observations: docs/agent_sync/RELEASE144_FINAL_SAVE_2026-11-11.json. Backup verification follows as a separate receipt; the snapshot does not claim to contain its own later receipt.
+
+
+## Paused expansion reference — November 14, 2026
+
+The additive FE Express company-driver Android portal, separate personal-finance records/pay comparison and truck-GPS requirements are saved in [docs/fe_express/DRIVER_PORTAL_PERSONAL_FINANCE_PLAN.md](../fe_express/DRIVER_PORTAL_PERSONAL_FINANCE_PLAN.md). Development and integration setup are paused; no implementation or employer connection is claimed. Read the linked source inventory for shared-workspace/offline/auth/demo-navigation limits. The original November11 inventory/status above remains dated history; current program status is in docs/agent_sync/current_long_term_goal.json.
+
+
+## Source158 cooperative publisher process/interruption acceptance — November14,2026
+
+Unchanged publisher14separate-process checks pass. Held-lock contender refused without mutation; winner resumes/exits0. Actual-journal pre-replace exit23preserves old selection/staging; fresh inspected operation succeeds after OS releases lock. Post-replace exit24leaves valid new selection without success receipt; old expected request refuses replay. Original generation/source/fixture bytes unchanged. Exits23/24are controlled expected evidence, not power-loss/filesystem/all-hostile-writer qualification. See docs/agent_sync/VAULT_PUBLICATION_PROCESS158_2026-11-14.md and backups/vault_publish_interrupt158_20261114_v01/checkpoint.json. Drive 1SXXCQLPOgyo2TXhI0oDOJG3ohV43Dm-T verified 5208bytes/5members/SHA256 ba402c15617ff05b6ff6c2468730e5785e37cf1c8f30531115812ffc19c9ed69. Generated keys/fixture trees/private snapshots/raw logs/restricted payload excluded. Map/closing annotations postdate archive. Next source-only synthetic format/decryptability candidate admission before integration; byte publication does not prove effective credential compatibility. No real key/store/live selector/consumer/service changes; parent operator-review boundary and original goal retained. Source158/native-web156/hosted146 remain distinct. Goal ACTIVE/incomplete.
+
+
+## Source159 pure vault candidate compatibility — November14,2026
+
+New pure validator passed14synthetic in-memory checks: explicit UTF8/CP1252, every raw/double-quoted Fernet occurrence authenticates under its snapshot key, value/timestamp identity, duplicate/order/root-backend preservation and exact surrounding text. Changed plain values, conversion, malformed/single-quoted forms, wrong keys and format drift reject. Version helper consistency gate passed; existing suites/primitives untouched. Publisher does not yet call validator. No private original access, live key/selector/consumer/service changes. Native/web156 candidates and hosted146 remain distinct. See docs/agent_sync/VAULT_COMPATIBILITY159_2026-11-14.md and backups/vault_compatibility159_20261114_v01/checkpoint.json. Drive 1MFMAMInzYKaLbBr9w4q7Q6kx5vIi8w22 verified 6213bytes/6members/SHA256 4d80be8cbe82ed8815e6ba109d5bd0761577f7fbfe765f2b6c1429bef9e1bc50. Keys/configs/private fingerprints/generated fixtures/raw logs/restricted payload excluded; closing annotations postdate archive. Next bind compatibility to pinned previous/candidate snapshots inside cooperative publication before selector write, synthetic qualification only. Live inventory/encoding/operator review and all original broader gates remain open. Goal ACTIVE/incomplete.
+
+
+## Source160 compatibility-bound publication — November14,2026
+
+Publisher now requires explicit UTF8/CP1252 decoding, pins previous and candidate snapshots, authenticates every transformed occurrence before journal write, and compares final old selection before replacement/readback.14combined synthetic Windows checks pass, including byte-valid wrong key, changed values/timestamp/order/quotes, missing decoding, pinned-write denial, stale expected, unknown post-commit/no replay and original generation retention. Existing primitives/passing suites untouched; historical profiles are not fresh regression for changed API. Source160 consistency gate passed. See docs/agent_sync/VAULT_ADMISSION160_2026-11-14.md and backups/vault_admission160_20261114_v01/checkpoint.json. Drive 16hhSqVLUw6QHmpEabHuWJXqoc9uOo1_e verified 10213bytes/8members/SHA256 add783c4486d9e90e20f96723a8e581bf29b61c5eb8c63fb0784453d5f29a6ef. Generated keys/private fixture roots/originals/raw logs/restricted payload excluded; closing annotations postdate archive. No live keys/selectors/consumers/services/deployment changes. Native/web156 candidates and hosted146 remain separate. Live consumer inventory/actual decoding/interruption/operator review remain open. Next return to retained creative Fountain role-loss evidence and current export contracts; no stopped UI probe repetition or inference replay. All ten goals/six additions retained; ACTIVE/incomplete.
+
+
+## Source161 Fountain dialogue boundary repair — November14,2026
+
+Focused matrix_docs.py repair respects speech boundaries/continued lines, uppercase speech, contextual parentheticals, intentional two-space empty dialogue and block-delimited cues with digits/long names/lowercase extensions.14synthetic parser/FDX checks pass; initial11redfailures and first green XML-whitespace assertion failure retained, corrected new Text-node comparison passes. Existing suites/primitives untouched. Read-only retained edited manuscript-copy comparison preserves authored tokens/private input hashes and reduces role mismatches602to53. Full legacy role fidelity remains unqualified; immutable packets/rich preservation unchanged. Source161 version consistency gate passes. See docs/agent_sync/FOUNTAIN_DIALOGUE161_2026-11-14.md and backups/fountain_dialogue161_20261114_v01/checkpoint.json. Drive 1pde6wy5_Cg174LT3YQCo0yCQ2Ra254_v verified 14933bytes/10members/SHA256 1ef03e736335c8c9f08d10b4551cdfeff432094a3d092efaf79540fd9f597ebf. Original/derived manuscripts/private stores/raw logs/restricted payload excluded; closing annotations postdate archive. No inference/stopped UI probe/live restart/deployment/native-web rebuild. Source161/native-web156/hosted146 distinct. Next private comparison of53remaining role mismatches against immutable paragraph boundaries, distinguishing parser defects from ambiguous plain projection before further repair. All original ten goals/six additions and remaining live/full-release gates retained; ACTIVE/incomplete.
+
+
+## Remaining legacy role disposition — November14,2026
+
+Read-only classification accounts for53remaining token-role mismatches across16source-paragraph/parser-element pairs: isolated cues lack following speech, unmarked source Action matches heading syntax, source Dialogue lacks adjacent cue context, and nonstandard source headings lack forced markers. Source161/private inputs unchanged; no text/fingerprints/occurrence IDs serialized. No further heuristic guessing or old packet rewrite justified. Keep legacy reflow explicitly lossy and rich typed FDX preservation separate; existing edited plain copy not automatically transferred. See docs/agent_sync/FOUNTAIN_ROLE_DISPOSITION161_2026-11-14.md and backups/fountain_roles161_20261114_v01/checkpoint.json. Drive 1KR1uQzMEc-cYXrfeCNql1NcbeoWu48ZW verified 2981bytes/3members/SHA256 be912c278681ce70b357483bf59ac423f2d83562cba7a713ed8377e6e3e8d015. Only aggregate/report/checkpoint included; private manuscripts/stores/raw logs/restricted payload excluded. Closing annotations postdate archive. Next review actual rich FDX model and professional PDF renderer for an explicit typed supported rendering subset, rejecting unsupported features without heuristic conversion or original-layout fidelity claims. No service/deployment/inference/UI retry/private data change. Original ten-goal/six-addition program ACTIVE/incomplete; real-owner/creative/full-release gates remain.
+
+
+## Source162 typed FDX professional PDF — November14,2026
+
+New fdx_professional_pdf.py reuses inert typed FDX and existing professional paginator, retaining six roles and Courier12 Bold/Italic/Underline including intra-word runs. Readback verifies planned page/word/glyph sequence. Explicit export_pdf layout=typed-professional uses actual owner/revision-fenced saved FDX; unsupported features/watermarks/plain projects reject; default original-layout422 remains. Separate14layout/12in-memory renderer/12selected real AST-handler checks pass, three synthetic diagnostic images visually reviewed. First new plain-project fixture error retained/corrected. Existing suites/primitives unchanged; full HTTP/auth/compiled client/package/live qualification remains open. Source162 version consistency gate passed. See docs/agent_sync/TYPED_FDX_PDF162_2026-11-14.md and backups/typed_fdx_pdf162_20261114_v01/checkpoint.json. Drive 17xhPtjlPgS4O9rU4aqBUOhEag3Mfs_dr verified 15106bytes/12members/SHA256 fbed927d7e7d192713fc74e87e41e69d02163c72fb7b08361eafcee34c3e79d0. Private manuscripts/stores/fixture roots/logs/media/restricted payload excluded; closing annotations postdate archive. Standalone PDF artifact not authored/delivered: required PDF skill operation-marker helper absent from bundled skill/runtime; in-memory application tests and diagnostic PNGs are separate. Next explicit client choice/professional-layout disclosure, source-pin reconciliation and mounted/candidate workflow. No source-layout/vendor certification, live rollout, inference or saved-data changes. Source162/native-web156/hosted146 distinct; all original goal scope retained, ACTIVE/incomplete.
+
+
+## Source163 typed professional PDF client controls — November14,2026
+
+Browser/native controls offer explicit typed-professional PDF/new-layout disclosure and reject incompatible formats. Browser export waits for saved revision and verifies profile/renderer/hash/page receipt; native preserves before/after revision checks and validates receipt before existing new-file writer. Server typed receipt includes actual page count. Four browser mirrors match; JSX syntax passes. Seven browser-helper checks and seven native-client/selected actual offscreen Qt-action checks pass; initial wrong-class-name fixture error retained/corrected. Existing suites/primitives unchanged, source163 version consistency gate passed. See docs/agent_sync/TYPED_PDF_CLIENTS163_2026-11-14.md and backups/typed_pdf_clients163_20261114_v01/checkpoint.json. Drive 1e1h5oDDv01BUoCDRScGLSERpBk7BSWN8 verified 108250bytes/13members/SHA256 359ec084aa9c7d9bfed7b5e615750f638a47a122280dc4d5529a57a37d9f49ac. Selected code/aggregate evidence only; private originals/stores/credentials/media/logs/restricted payload excluded. Closing annotations postdate archive. No mounted React/full protected HTTP/writer/installed acceptance; source pins not reconciled and must qualify before fixed-writer reuse. No live restart/deployment/inference/manuscript/saved-data change. Source163/native-web156/hosted146 remain distinct. Next mounted protected route/actual clients/compiled controls, stale/error/draft retention, then pins/packaging. Standalone artifact helper gap remains separate. Original full program ACTIVE/incomplete.
+
+
+## Functional release163 published to localhost and Firebase — November14,2026
+
+User-authorized release163now serves Hosting version8e1594d8406d440f and localhost3000; all1155eligible files/922306409bytes remotely match, five local/five hosted entry routes match. Backend8080promoted after spare-port full-app qualification; existing auth/admission flags preserved, Vite5173/gateway8000/public API/publishing healthy. Ten fresh private SQLite online snapshots pass quick_check and all10logical contents unchanged across restart. Current compiled writer14mounted checks and native source writer12checks/three normal child exits0pass. Two stale creative dependency pins+selfhash reconciled with exact original/metadata/ACL/ADS preserved. Source163/native156candidate/default144145/gateway52 remain distinct; no whole-release or installed acceptance. See docs/agent_sync/FUNCTIONAL_RELEASE163_2026-11-14.md and backups/functional_release163_20261114_v01/release-checkpoint.json. Drive 1i5LuYI4_uVGsPrXBzFLbSXrzkArwUaae verified 67710bytes/9members/SHA256 20e4117b4c98dee62279f497e47ab61df019c2b7075ecdce80169470f8beffb1. Archive is sanitized reports/aggregate receipts/public asset hashes, excludes private DBs/paths/fingerprints/credentials/manuscripts/profiles/raw logs/restricted payload; closing annotations postdate sealing. Earlier failures retained. User campaign screenshot400explained by Julie Reply-To outside current Brett/Gmail policy; no settings/provider/send changes. Active Audit Stehouwer Publishing website chat owns post-freeze clearer-validation edit; not claimed published163. Next native163candidate packaging/runtime qualification and coordinate pending campaign source before another web release. Full original ten-goal/six-addition program ACTIVE/incomplete.
+
+
+## Native163 candidate and current Creation Suite link — November14,2026
+
+Real separate163package185inputs/429files/218000107bytes built/staticverified;181inputs match156, changed client/view/version/generatedmetadata only. Actual frozen Creator12assertions exit0; ordinary BSchat shows controls/recoveryready/emptyinput and normal Close exit0, exe/default hashes unchanged, later window listing confirms gone. Separate attempted draft probe never reached setter/typing: missing geometry, minimized window, restore user-input detection; held and owned cancellation15after local profile preservation0files, not a recovery/error-delivery pass. No further stopped UI input. Separate Launch-AI-BS-163-Candidate.cmd prepared/notexecuted, old144145defaults/156candidate retained; no signing/default promotion. See docs/agent_sync/NATIVE163_CANDIDATE_2026-11-14.md and backups/native163_acceptance_20261114_v01/checkpoint.json. Clean runtime Drive 15TKTecXKhoM0HdgjDrjJqJjyPY5t1ht8 verified 87526074bytes/432members/SHA256 620734e86ab6474c24ef8e6cadff7c2abc76ec6c479c3ba1194bf44be8120e3e; engineering Drive 1EU4GdY0plNV_GwUlV8J1wnBaFbmBJwom verified 7048bytes/10members/SHA256 1962cc000590954cded689e87d51ae766979945a24643abe8ff99b5722362dd3. Private stores/profiles/copies/logs/screenshots/manuscripts/credentials/models/restricted payload excluded. No source-independent/clean-machine/real-owner/ordinary-human-play/fullgate claim. Current localhost5173/?tab=unified_creation returns200, defaults via full suite to ScreenwritingTab; published163equivalent link available. Browser panel open queued, no signed-in visual inspection/repair claim. Next owned full Creation Suite deep-link acceptance separately from standalone writer; retain native interactive/relocation/final gates and concurrent website-audit campaign ownership. Live163Hosting/backend and gateway52unchanged. Closing annotations postdate archives. Full original goal ACTIVE/incomplete.
+
+
+## Creation Suite163 controlled route checkpoint — 2026-11-14
+
+Full frozen App → Creation Suite → Writing Studio passed14 synthetic browser/protected-handler checks. Attempt01 fixture port mismatch retained; corrected isolated8080/8000relay passed attempt02. Browser/API/gateway drained0; unrelated services explicitly404/no live forwarding. No source fix/version bump/redeployment or real-account qualification. Seven-member4098byte scoped engineering archive Drive ID19eH6PAA9Q5VYH-LY81zTO3l-Tu64_OKl downloaded/members/parent/sharing verified, SHA2566b1889fcd557965a4ee2f88fa1f2dd518ae7a7ec3aa6f304f65e08940f400ceb. Local profiles/stores/logs/credentials excluded. Closing pointer edits postdate seal. Read docs/agent_sync/CREATION_SUITE163_ACCEPTANCE_2026-11-14.md and backups/creation_suite163_20261114_v01/checkpoint.json. Next owned native163relocation acceptance; retained interactive/error/real-account/full-release gates. Full ten-goal/six-addition program ACTIVE/incomplete.
+
+
+## Native163 relocated runtime checkpoint — November14,2026
+
+Verified clean archive restored429package files outside the checkout. Actual frozen Creator12assertions passed/exit0; all reported native executables resolved inside that restored package; owned processes drained. All429files still match and default launchers remain unchanged. Canonical checkout/system dependencies remained accessible: no clean-machine, default promotion, signing, real-account or whole-release claim. Six-member3273byte engineering archive Drive ID14fzkghwIkO0Q6KDYTGiYmcAWD8wcrjC2 roundtrip/member/parent/sharing verified, SHA25677d4aa0998cdd5eef8381607fc67256250f9c93c76cb1cf5d29bcb92d43600d8. Read docs/agent_sync/NATIVE163_RELOCATED_2026-11-14.md and backups/native163_relocated_20261114_v01/checkpoint.json. Profiles/stores/captures/raw logs excluded. Closing pointer edits postdate archive seal. Corrected stale current hosted version/pointers from146to163 while preserving prior146records. Next T03actual authorized rich-FDX professional-profile preflight; no original writes or standalone PDF authoring. Full ten-goal/six-addition goal ACTIVE/incomplete.
+
+
+## Creation Suite dev-server import recovery — November14,2026
+
+User-reported PlaywrightTab dynamic import reproduced against actual5173. Browser dependency fountain-js returned504Outdated Optimize Dep despite parent200. Identified Vite23184 stopped under exact process/listener guards, incomplete optimizer cache preserved, same server command force-optimized as36336. Exact browser import now passes/no failed events; full current-dev App/Creation Suite14checks pass with synthetic identity/disposable stores and unrelated requests404contained. Owned API/gateway drained0; replacement Vite remains running. No source/version/deployment/backend/private-data/default-launcher changes. Seven-member4584byte engineering Drive roundtrip verified ID1N_6fWGK4Mh9bF8ZXIZegbTlEpjsDLak-, SHA2568c23127eeebe1e4ecd199638c3de7f104b37f73af3d202db2dcc3f6e21e3a2db, sharing unchanged. Closing pointers postdate seal. See docs/agent_sync/CREATION_IMPORT_RECOVERY_2026-11-14.md and backups/creation_import_recovery_20261114_v01/checkpoint.json. Hooks attachment received as reference only; no hooks or trust bypass enabled. Deferred manuscript professional-profile preflight remains next; full goal ACTIVE/incomplete.
+
+
+## Actual typed manuscript professional renderer — November14,2026
+
+Authorized retained FDX1772body/3title paragraphs admits explicit typed-professional profile. Actual application renderer265224bytes/82pages passed all-page token/bounds/Courier12 and exact typed-role checks. Physical pages1/41/82 privately inspected; not all-page visual, original-layout or external Final Draft qualification. Original PDF/FDX unchanged; no standalone PDF delivered. Separate actual protected import quarantined after two wrapper exits1; secondHTTP503 confirmed/firststatusnotrecorded, both API/gateway pairs drained0. Staged originals retained;250/263character version-path hypothesis remains unproven. Diagnose retained failure before a changed-condition retry, no blind third import. Six-member4207byte aggregate engineering Drive ID1QVGSCBJZukP9-TgbrMiTlzE9L0_oa6OL downloaded/member/parent/sharing verified; SHA256b5ebca0af8415da2cadba22bfa10d10ae826449e3fe1ba442343bcd8092819ef. Private source identities/manuscripts/stores/plans/rasters/raw logs excluded. Read docs/agent_sync/ACTUAL_TYPED_FDX163_2026-11-14.md and backups/actual_typed_fdx_preflight163_20261114_v01/checkpoint.json. Source163unchanged, no activation/promotion/deployment. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.
+
+
+## Actual typed protected/browser workflow163 — November14,2026
+
+Synthetic250character directory reproduces Windows206; retained failed staging unchanged. Changed short owner-private root qualifies actual manuscript protected route13 and full frozen App/Creation Suite browser14.1772typed paragraphs/82page professional PDF; original FDX exact, one expected Action edit saved/reopened, owner/revision rejection and owned drain0 pass. No source change/general long-path/real-owner/native frozen writer/standalone PDF delivery claim. New wrong-format fixture label stopped before API startup; corrected supported label used. Long-root failures retained. Seven-member5391byte aggregate engineering Drive ID1cwZpe9ft9PwszZSTOmACDptrfTW8F-h4 verified downloaded/members/parent/sharing; SHA25670683cd3a52c1fd1c9ef28246c064c57ee52d8f5aeabb8c7c4df36129f03d342. Private records/rasters/profiles/logs excluded. Read docs/agent_sync/ACTUAL_TYPED_WORKFLOW163_2026-11-14.md and backups/actual_typed_fdx_preflight163_20261114_v01/route-checkpoint.json. Next owned native actual-manuscript typed PDF menu/client integration with short private root; retain real-owner/frozen input/error/full release gates. Full ten-goal/six-addition program ACTIVE/incomplete. Closing pointer updates postdate seal.
+
+
+## Owned native actual typed-PDF menu163 — November14,2026
+
+One current-source/offscreen Qt actual-manuscript case passes13core assertions: bootstrap beforeQt/onlywriter/1772paragraphs, selected disclosed typed menu, one actual pipe export/client receipt,82page readback/drawn Courier12/bounds, no save/revision change, RAM output sink/noPDFfile, original preservation and normal child/controller close0/drain. Filesystem export/frozen desktop/real identity not qualified. Initial new fixture failed on unused font resources; corrected drawn-span assertion passed, app/renderer/passing tests unchanged. Three-member2619byte aggregate Drive ID12ARyzkRMBnYe-hBsSirRAe1SNNEk0DiC roundtrip/members/parent/sharing verified SHA2566917eac124dc76debfab80e1aa04e3a1a3b062339e5029f2b8f6189d5df5ce77. Private originals/stores/raw logs excluded. See docs/agent_sync/NATIVE_ACTUAL_TYPED_PDF163_2026-11-14.md and backups/native_actual_typed_pdf163_20261114_v01/result.json. Next owned typed unsupported-feature error/draft-retention gate. Full ten-goal/six-addition goal ACTIVE/incomplete, source163unchanged. Closing pointers postdate seal.
+
+
+## Native typed rejection/draft retention163 — November14,2026
+
+One new owned/offscreen Qt unsupported-title-style copy passes13core checks: one explicit flush save then one typed export, one warning/zero output, visible edited text and acknowledged revision retained, no fallback, original bytes exact and normal child/controller close0/drain. Exact native error HTTPstatus not captured; no numeric assertion claimed. No app/live/source/provider/default changes, no PDF delivery/frozen UI/real-owner acceptance. Two-member2000byte aggregate Drive ID12fd22BPy9tVcAnvYkvYd2NQ0b010tVxK downloaded/member/parent/sharing verified SHA2562382497b59d16c4ed2a1c734c0d87776fbdb8fa422efa84d8d0dc79c48ed4e3d. Private data excluded. Read docs/agent_sync/NATIVE_TYPED_REJECTION163_2026-11-14.md and backups/native_typed_rejection163_20261114_v01/result.json. Next T04/T05mounted Coding mode controlled acceptance from V02/V03, preserving flags, isolated fail-closed/default and per-task trusted-local/review boundaries; no model replay/real-project apply. One closing AGENTS patch anchor mismatch was read/reconciled before focused correction; no code/test failed. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.
+
+
+## Mounted Coding mode163 partial — November14,2026
+
+Current full IDE source in separate5192Vite/actual SDK/router/Go fixture completed9checks through trusted-local VERIFIED on disposable Git repo, originalvalue1unchanged. Review response/Apply unresolved at15s. APIprofile held after incorrect403/401 and non200/200BLOCKEDexpectations; browserprofile held after cold-optimizer setup then review timeout. Go5sshutdown panic and relayECONNRESET prevented normal finaljoin/result; exact owned API/stack/listener later absent. No real model, live Coding flags, real-project apply, app source patch or deployment. Read docs/agent_sync/CODING_MOUNTED163_PARTIAL_2026-11-14.md and backups/coding_mounted163_20261114_v01/checkpoint.json. Five-member3874byte aggregate Drive ID1NYP9xvl6IZMVz7KALg8hSz8YdqVoiHjj downloaded/member/parent/sharing verified SHA256695f4c3a9d7b4c1300e75545fe2bd57c2241491f086c6af4877c2bf872c41caa. Private profiles/journals/logs/check outputs excluded. Next private review timing/thread diagnosis, not blind full-profile retry. Full ten-goal/six-addition goal ACTIVE/incomplete/source163. Closing pointers postdate seal.
+
+
+## Source164 Coding review fix/full browser gate — November14,2026
+
+Fixed fixed-command Git HEAD stdin=DEVNULL after private trace showed review waiting in subprocess capture. Diagnostic intervention104ms; actual source/nooverride108ms; owned pairs0. Bumped16metadatafiles163to164with preimages/consistency pass. New full IDE mounted browser13pass: auth/retained inputs/default isolated denial/per-task trusted ack/real candidate checks/explicit review/apply onlysyntheticrepo/originalvalue1backup/fresh-browser inspect no replay. API/gateway0, ownedViteSIGTERM/port released. Source164not deployed; native/hosted/localbackend163unchanged, no live flags/providers or user-project writes. Forty-two-member459466byte scoped source/preimage/metadata/evidence Drive ID1ZcbECSUtlZ65lGOihv5XUG3ImYriKoFU roundtrip/members/parent/sharing verified SHA256deefb3c235fa327dc795bd72ea861b0708bd0b1b160ed2d8db773867e8119f02. Private traces/journals/profiles/logs excluded. Read docs/agent_sync/CODING_REVIEW_FIX164_2026-11-14.md and backups/coding_browser164_20261114_v01/checkpoint.json. Next owned mounted native Coding gate; retain real-owner/isolated-worker/installed/hosted/final-release requirements. Full ten-goal/six-addition goal ACTIVE/incomplete. Closing pointers postdate seal.

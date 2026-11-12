@@ -3,6 +3,7 @@
 /** @typedef {{id: string | number, timestamp: number, method?: string, protocol?: string, record_type?: string, origin_domain?: string, endpoint?: string, path?: string, src_endpoint?: string, status_code?: number, flow_id?: string, payload_sha256?: string, payload_sha256_in?: string, payload_sha256_out?: string, frame_payload_sha256?: string, asgi_duration_ms?: number, duration_ms?: number, bytes_in?: number, bytes_out?: number, body_bytes_in?: number, body_bytes_out?: number, captured_frame_bytes?: number, captured_overhead_bytes?: number, frame_bytes?: number, header_bytes?: number, payload_bytes?: number, transport_payload_bytes?: number, is_stehouwer_publishing?: boolean}} WireRecord */
 /** @typedef {{block_index: number, domain: string, event: string, detail: string, full_hash: string, hash: string, prev_hash: string, id?: string, timestamp: number, timestamp_iso?: string}} AuditBlock */
 import { useState, useEffect, useRef } from 'react';
+import BrandCampaignManager from './BrandCampaignManager.jsx';
 import { loadAnalyticsSnapshot, emptyTrafficData, emptyApiData } from '/src/utils/analyticsData.js';
 import { getApiBase } from '../config/api';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
@@ -93,8 +94,8 @@ const handlePasswordUnlock = (e) => {
 
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
   const [activeSubView, setActiveSubView] = useState('user_sessions'); // 'user_sessions' | 'ecosystem_ports' | 'site_traffic' | 'wire_packets' | 'air_sensors' | 'api_compute' | 'cdz_audit'
-  const [selectedSite, setSelectedSite] = useState('stehouwer_publishing'); // 'stehouwer_publishing' | 'thesimplechef'
-  const [siteCounts, setSiteCounts] = useState({ stehouwer_publishing: 0, thesimplechef: 0 });
+  const [selectedSite, setSelectedSite] = useState('stehouwer_publishing'); // 'stehouwer_publishing' | 'thesimplechef' | 'stehouwer_productions'
+  const [siteCounts, setSiteCounts] = useState({ stehouwer_publishing: 0, thesimplechef: 0, stehouwer_productions: 0 });
 
   // 1. Site Traffic Telemetry State (16-Layer Suite)
   const [trafficData, setTrafficData] = useState(emptyTrafficData);
@@ -160,10 +161,15 @@ const handlePasswordUnlock = (e) => {
   const [analyticsError, setAnalyticsError] = useState(/** @type {string | null} */ (null));
   const privateRequest = useRef(/** @type {AbortController | null} */ (null));
   const privateGeneration = useRef(0);
+  const privateOwner = useRef('');
+  const analyticsOwnerKey = JSON.stringify([currentUser?.uid, currentUser?.email, currentUser?.emailVerified, apiHost, isAuthorizedOperator, isUnlocked]);
+  const trafficScopeKey = JSON.stringify([analyticsOwnerKey, selectedSite]);
+  const [loadedTrafficScope, setLoadedTrafficScope] = useState('');
 
   const clearPrivateAnalytics = () => {
     setTrafficData(emptyTrafficData());
-    setSiteCounts({ stehouwer_publishing: 0, thesimplechef: 0 });
+    setLoadedTrafficScope('');
+    setSiteCounts({ stehouwer_publishing: 0, thesimplechef: 0, stehouwer_productions: 0 });
     setApiData(emptyApiData());
     setPubSecurityEvents([]);
     setLastRefreshed(null);
@@ -178,14 +184,20 @@ const handlePasswordUnlock = (e) => {
       const snapshot = await loadAnalyticsSnapshot(apiHost, selectedSite, { signal: controller.signal });
       if (controller.signal.aborted || generation !== privateGeneration.current) return;
       setTrafficData(snapshot.trafficData);
-      setSiteCounts(snapshot.siteCounts);
-      setApiData(snapshot.apiData);
-      setPubSecurityEvents(snapshot.pubSecurityEvents);
+      setLoadedTrafficScope(trafficScopeKey);
+      setSiteCounts(previous => ({ ...previous, ...snapshot.siteCounts }));
+      if (snapshot.apiData) setApiData(snapshot.apiData);
+      if (snapshot.pubSecurityEvents) setPubSecurityEvents(snapshot.pubSecurityEvents);
       setAnalyticsError(null);
       setLastRefreshed(new Date().toLocaleTimeString());
     } catch (error) {
       if (controller.signal.aborted || generation !== privateGeneration.current) return;
-      clearPrivateAnalytics();
+      if ([401, 403].includes(error?.status)) clearPrivateAnalytics();
+      else {
+        setTrafficData(emptyTrafficData());
+        setLoadedTrafficScope('');
+        setLastRefreshed(null);
+      }
       setAnalyticsError(errorMessage(error) || 'Web analytics could not refresh.');
     } finally {
       if (privateRequest.current === controller) privateRequest.current = null;
@@ -409,12 +421,20 @@ const handleFetchCorrelation = async (flowId, txId) => {
     // transports that finish after AbortController cancellation.
     privateRequest.current?.abort();
     privateGeneration.current += 1;
-    clearPrivateAnalytics();
+    if (privateOwner.current !== analyticsOwnerKey) {
+      privateOwner.current = analyticsOwnerKey;
+      clearPrivateAnalytics();
+    } else {
+      setTrafficData(emptyTrafficData());
+      setLoadedTrafficScope('');
+      setLastRefreshed(null);
+    }
     setAnalyticsError(null);
     if (!isAuthorizedOperator || !isUnlocked || !currentUser?.uid || !currentUser?.emailVerified) {
       setAnalyticsError('Sign in with an authorized administrator account to load private analytics.');
       return;
     }
+    if (activeSubView === 'brand_campaigns') return;
     refreshAll();
     if (activeSubView === 'wire_packets') {
       fetchInterfaces();
@@ -431,6 +451,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
   }, [currentUser?.uid, currentUser?.email, currentUser?.emailVerified, apiHost, isAuthorizedOperator, isUnlocked, activeSubView, selectedSite, wireFilterStehouwer, wireFilterHasHash, wireSearchDomain, wireLimit, wireFilterEngine, airFilterType, airFilterBand, airSearchHash, airLimit]);
 
   const isChef = selectedSite === 'thesimplechef';
+  const isProductions = selectedSite === 'stehouwer_productions';
 
   // Security Barrier 1: Email / LocalDev Identity Enforcement
   if (!isAuthorizedOperator) {
@@ -575,17 +596,21 @@ const handleFetchCorrelation = async (flowId, txId) => {
               border: isChef ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(56, 189, 248, 0.4)',
               fontWeight: '700'
             }}>
-              {isChef ? '👨‍🍳 The Simple Chef Module' : '📚 Stehouwer Publishing Module'}
+              {isProductions ? 'Stehouwer Productions Module' : isChef ? '👨‍🍳 The Simple Chef Module' : '📚 Stehouwer Publishing Module'}
             </span>
           </div>
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#8b949e' }}>
-            Real-time dwell times, scroll depths, Geo-IP, hardware specs, Web Vitals, wire packet hashes & over-the-air RF wave sensors
+            {isProductions ? 'Website events, referral sources and campaign labels' : 'Real-time dwell times, scroll depths, Geo-IP, hardware specs, Web Vitals, wire packet hashes & over-the-air RF wave sensors'}
           </p>
         </div>
 
         {/* Site Switcher Toggle & Refresh Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#161b22', padding: '3px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <button
+              onClick={() => { setSelectedSite('stehouwer_productions'); setActiveSubView('site_traffic'); }}
+              style={{ padding: '5px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: isProductions ? '#1f6feb' : 'transparent', color: '#fff' }}
+            >Stehouwer Productions ({siteCounts.stehouwer_productions})</button>
             <button
               onClick={() => { setSelectedSite('stehouwer_publishing'); setActiveSubView('site_traffic'); }}
               style={{
@@ -674,12 +699,14 @@ const handleFetchCorrelation = async (flowId, txId) => {
 
       {analyticsError && (
         <div role="alert" style={{ padding: '12px', marginBottom: '18px', color: '#fca5a5', background: '#29161a', border: '1px solid #85404a', borderRadius: '8px' }}>
-          {analyticsError} Previous web traffic and security results have been cleared.
+          {analyticsError} Current results are unavailable; retained counts are not a fresh result.
         </div>
       )}
 
+      {activeSubView === 'brand_campaigns' && <BrandCampaignManager currentUser={currentUser} />}
       {/* Navigation Sub-Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        <button onClick={() => setActiveSubView('brand_campaigns')} style={{ padding: '8px 16px', borderRadius: '6px', color: '#fff', background: activeSubView === 'brand_campaigns' ? '#1f6feb' : '#161b22', border: '1px solid #30363d', cursor: 'pointer' }}>Email &amp; SMS Campaigns</button>
         <button
           onClick={() => setActiveSubView('user_sessions')}
           style={{
@@ -730,6 +757,11 @@ const handleFetchCorrelation = async (flowId, txId) => {
         >
           🌐 Stehouwer-Publishing.com Web Traffic ({siteCounts.stehouwer_publishing} Hits)
         </button>
+
+        <button
+          onClick={() => { setActiveSubView('site_traffic'); setSelectedSite('stehouwer_productions'); }}
+          style={{ padding: '8px 16px', borderRadius: '6px', background: activeSubView === 'site_traffic' && isProductions ? '#1f6feb' : '#161b22', color: '#fff', border: '1px solid #30363d', cursor: 'pointer' }}
+        >StehouwerProductions.com Web Traffic ({siteCounts.stehouwer_productions} Events)</button>
 
         <button
           onClick={() => { setActiveSubView('site_traffic'); setSelectedSite('thesimplechef'); }}
@@ -823,7 +855,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
       )}
 
       {/* VIEW 1: WEBSITE TRAFFIC ANALYTICS (16-LAYER DEEP TELEMETRY SUITE) */}
-      {activeSubView === 'site_traffic' && !analyticsError && (
+      {activeSubView === 'site_traffic' && !analyticsError && loadedTrafficScope === trafficScopeKey && (
         <div>
           {/* Active Site Scope Banner */}
           <div style={{
@@ -842,10 +874,10 @@ const handleFetchCorrelation = async (flowId, txId) => {
               <span style={{ fontSize: '20px' }}>{isChef ? '👨‍🍳' : '🌐'}</span>
               <div>
                 <div style={{ fontSize: '14px', fontWeight: '800', color: isChef ? '#f59e0b' : '#38bdf8' }}>
-                  {isChef ? 'TheSimpleChef.com (John Barr)' : 'Stehouwer-Publishing.com'} — 16-Layer Deep Web Telemetry
+                  {isProductions ? 'StehouwerProductions.com — Visitor Analytics' : `${isChef ? 'TheSimpleChef.com (John Barr)' : 'Stehouwer-Publishing.com'} — 16-Layer Deep Web Telemetry`}
                 </div>
                 <div style={{ fontSize: '11px', color: '#8b949e' }}>
-                  {isChef ? 'Smokehouse BBQ Storefront • Venmo/Credit/Cash Checkout Telemetry • ChromaDB Partition: thesimplechef_analytics_bin' : 'Publishing Platform • HLS Ingest Telemetry • CDZ Cryptographic Hash Ledger'}
+                  {isProductions ? 'Events, referral origins, campaign labels and page engagement; no form contents collected' : isChef ? 'Smokehouse BBQ Storefront • Venmo/Credit/Cash Checkout Telemetry • ChromaDB Partition: thesimplechef_analytics_bin' : 'Publishing Platform • HLS Ingest Telemetry • CDZ Cryptographic Hash Ledger'}
                 </div>
               </div>
             </div>
@@ -857,18 +889,21 @@ const handleFetchCorrelation = async (flowId, txId) => {
             </div>
           </div>
 
+          {isProductions && <p role="note" style={{ color: '#a8b3c2', fontSize: '13px', lineHeight: 1.6 }}>Source: AWS cloud analytics. Collection continues while this PC is off; opening this local dashboard still requires the PC. Counts include pageviews and engagement events. Sessions are browser sessions, not verified people. Dwell and scroll summarize event samples. Hardware, network, location, media and client diagnostics are unavailable for this site.</p>}
+          {isProductions && trafficData.metadata?.partial_metadata && <p role="note" style={{ color: '#a8b3c2', fontSize: '13px' }}>Top pages, referrals and campaign lists contain partial metadata and may not cover every recorded event.</p>}
           {/* 16-Layer KPI Summary Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>Total Pageviews</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Recorded events' : 'Total Pageviews'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: isChef ? '#f59e0b' : '#38bdf8', marginTop: '4px' }}>
                 {trafficData.total_pageviews}
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Total web visits</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Pageviews and engagement events' : 'Total web visits'}</div>
+              {isProductions && Number.isFinite(trafficData.actual_pageviews) && <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{trafficData.actual_pageviews} pageviews</div>}
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>Unique Visitors</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Browser sessions' : 'Unique Visitors'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#4ade80', marginTop: '4px' }}>
                 {trafficData.unique_visitors}
               </div>
@@ -876,11 +911,11 @@ const handleFetchCorrelation = async (flowId, txId) => {
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>⏱️ Avg Dwell Time</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Avg reported dwell' : '⏱️ Avg Dwell Time'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#f59e0b', marginTop: '4px' }}>
                 {trafficData.avg_dwell_time_sec}s
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Active reading/viewing time</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Average of positive event samples' : 'Active reading/viewing time'}</div>
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
@@ -888,40 +923,40 @@ const handleFetchCorrelation = async (flowId, txId) => {
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#a855f7', marginTop: '4px' }}>
                 {trafficData.scroll_completion_rate}%
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Hit 75%+ scroll milestone</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Events reporting 75%+ scroll' : 'Hit 75%+ scroll milestone'}</div>
             </div>
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>⚡ Web Vitals (LCP)</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
                 {trafficData.web_vitals?.lcp_ms || 320}ms
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>CLS: {trafficData.web_vitals?.cls_score || 0.005}</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>📶 Edge Latency (TTFB)</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#38bdf8', marginTop: '4px' }}>
                 {trafficData.network_metrics?.avg_ttfb_ms || 35}ms
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>RTT: {trafficData.network_metrics?.avg_rtt_ms || 18}ms | {trafficData.network_metrics?.avg_downlink_mbps || 25} Mbps</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>📡 HLS Stream Ready</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
                 {trafficData.media_readiness?.hls_supported_pct || 100}%
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{trafficData.media_readiness?.live_stream_hits || 0} media stream hits</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>🤖 Human Ratio</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#ec4899', marginTop: '4px' }}>
                 {trafficData.human_traffic_pct}%
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Verified human sessions</div>
-            </div>
+            </div>)}
           </div>
 
           {/* Breakdown Grid 1: Pages & Referrers */}
@@ -932,7 +967,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Page Path</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Total Hits</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Events' : 'Total Hits'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -956,7 +991,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Referrer</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Visitors</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Events' : 'Visitors'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -977,7 +1012,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
 
           {/* Breakdown Grid 2: Edge Network & Campaign Attribution */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
-            <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#38bdf8' }}>📶 Network Connection & Throughput</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                 <thead>
@@ -999,7 +1034,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                   )}
                 </tbody>
               </table>
-            </div>
+            </div>)}
 
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f59e0b' }}>🎯 Campaign & Marketing Attribution</h3>
@@ -1007,7 +1042,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Source / Campaign</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Attributed Hits</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Attributed events' : 'Attributed Hits'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1019,7 +1054,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan={2} style={{ padding: '16px', color: '#8b949e', textAlign: 'center' }}>Direct / organic visitors active.</td></tr>
+                    <tr><td colSpan={2} style={{ padding: '16px', color: '#8b949e', textAlign: 'center' }}>{isProductions ? 'No campaign attribution recorded.' : 'Direct / organic visitors active.'}</td></tr>
                   )}
                 </tbody>
               </table>
@@ -1027,7 +1062,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
           </div>
 
           {/* Breakdown Grid 3: Geo-IP Location Distribution & Hardware */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+{!isProductions && (          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f0f6fc' }}>🌍 Geo-IP Location Distribution</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
@@ -1077,10 +1112,10 @@ const handleFetchCorrelation = async (flowId, txId) => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>)}
 
           {/* Recent Client Errors */}
-          {trafficData.recent_errors && trafficData.recent_errors.length > 0 && (
+          {!isProductions && trafficData.recent_errors && trafficData.recent_errors.length > 0 && (
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid rgba(239, 68, 68, 0.4)', marginBottom: '24px' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#ef4444' }}>⚠️ Live Client-Side Diagnostics & Error Catcher</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
@@ -1109,7 +1144,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
           )}
 
           {/* Form Field Abandonment Leads */}
-          {trafficData.form_abandonment_leads && trafficData.form_abandonment_leads.length > 0 && (
+          {!isProductions && trafficData.form_abandonment_leads && trafficData.form_abandonment_leads.length > 0 && (
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid rgba(245, 158, 11, 0.4)', marginBottom: '24px' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f59e0b' }}>🎯 Form Field Abandonment Leads</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
@@ -1140,29 +1175,29 @@ const handleFetchCorrelation = async (flowId, txId) => {
           {/* Live 16-Layer Visitor Event Stream Table */}
           <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d', marginBottom: '24px' }}>
             <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f0f6fc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>🔴 Live 16-Layer Visitor Event Telemetry Stream ({trafficData.live_events.length} Events)</span>
+              <span>{isProductions ? 'Recent website events' : '🔴 Live 16-Layer Visitor Event Telemetry Stream'} ({trafficData.live_events.length} Events)</span>
               <span style={{ fontSize: '11px', color: '#8b949e' }}>Scope: {selectedSite}</span>
             </h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e' }}>
-                    <th style={{ padding: '8px' }}>Time</th>
+                    <th style={{ padding: '8px' }}>{isProductions ? 'Time (UTC)' : 'Time'}</th>
                     <th style={{ padding: '8px' }}>Session ID</th>
-                    <th style={{ padding: '8px' }}>Location</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>Location</th>}
                     <th style={{ padding: '8px' }}>Page Path</th>
                     <th style={{ padding: '8px' }}>Event</th>
-                    <th style={{ padding: '8px' }}>Network</th>
-                    <th style={{ padding: '8px' }}>TTFB</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>Network</th>}
+                    {!isProductions && <th style={{ padding: '8px' }}>TTFB</th>}
                     <th style={{ padding: '8px' }}>Dwell</th>
                     <th style={{ padding: '8px' }}>Scroll</th>
-                    <th style={{ padding: '8px' }}>GPU Renderer</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>GPU Renderer</th>}
                   </tr>
                 </thead>
                 <tbody>
                   {trafficData.live_events.length === 0 ? (
                     <tr>
-                      <td colSpan={10} style={{ padding: '20px', textAlign: 'center', color: '#8b949e' }}>
+                      <td colSpan={isProductions ? 6 : 10} style={{ padding: '20px', textAlign: 'center', color: '#8b949e' }}>
                         No live website traffic recorded yet for {selectedSite}.
                       </td>
                     </tr>
@@ -1171,7 +1206,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
                       <tr key={e.id} style={{ borderBottom: '1px solid #21262d' }}>
                         <td style={{ padding: '8px', color: '#8b949e', fontFamily: 'monospace' }}>{e.formatted_time}</td>
                         <td style={{ padding: '8px', fontFamily: 'monospace', color: '#38bdf8', fontSize: '11px' }}>{e.session_id}</td>
-                        <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '600' }}>🇺🇸 {e.city}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '600' }}>🇺🇸 {e.city}</td>}
                         <td style={{ padding: '8px', color: '#4ade80', fontWeight: '600' }}>{e.page_path}</td>
                         <td style={{ padding: '8px' }}>
                           <span style={{
@@ -1185,11 +1220,11 @@ const handleFetchCorrelation = async (flowId, txId) => {
                             {e.event_type.toUpperCase()}
                           </span>
                         </td>
-                        <td style={{ padding: '8px', color: '#38bdf8', fontWeight: 'bold' }}>{e.network_type ? e.network_type.toUpperCase() : '4G'}</td>
-                        <td style={{ padding: '8px', color: '#10b981', fontFamily: 'monospace' }}>{e.ttfb_ms ? `${e.ttfb_ms}ms` : '—'}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#38bdf8', fontWeight: 'bold' }}>{e.network_type ? e.network_type.toUpperCase() : '4G'}</td>}
+                        {!isProductions && <td style={{ padding: '8px', color: '#10b981', fontFamily: 'monospace' }}>{e.ttfb_ms ? `${e.ttfb_ms}ms` : '—'}</td>}
                         <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '700' }}>{e.dwell_time_sec || 0}s</td>
                         <td style={{ padding: '8px', color: '#a855f7', fontWeight: '700' }}>{e.scroll_depth_pct || 0}%</td>
-                        <td style={{ padding: '8px', color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>{e.gpu_renderer || 'WebGL'}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>{e.gpu_renderer || 'WebGL'}</td>}
                       </tr>
                     ))
                   )}
@@ -1199,7 +1234,7 @@ const handleFetchCorrelation = async (flowId, txId) => {
           </div>
 
           {/* Decoupled L7 Application Metrics */}
-          <div style={{ marginBottom: '20px' }}>
+{!isProductions && (          <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <span style={{ fontSize: '12px', fontWeight: '800', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 🌐 Layer 7 Application Telemetry (ASGI Middleware)
@@ -1243,10 +1278,10 @@ const handleFetchCorrelation = async (flowId, txId) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>)}
 
           {/* Stehouwer-Publishing.com Dedicated Packet Sub-Ledger Highlight */}
-          {wireSummary.stehouwer_publishing?.recent_packet_hashes?.length > 0 && (
+          {!isProductions && wireSummary.stehouwer_publishing?.recent_packet_hashes?.length > 0 && (
             <div style={{ background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '10px', padding: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <h3 style={{ margin: 0, fontSize: '14px', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px' }}>

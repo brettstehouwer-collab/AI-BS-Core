@@ -7,8 +7,11 @@ import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useC
 import { stageRagSource, indexSavedRagSource, searchRagSources } from '/src/utils/ragSourceStage.js';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
+import CodingModePanel from './CodingModePanel';
+import { codingModeEnabled } from '/src/utils/codingMode.js';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { ChatStreamParser, frameTextFor, stripMetadataFrames } from '/src/utils/chatStream.js';
 import { streamBSChatProvider } from '/src/utils/bsChatProvider.js';
 import { isOpenCodeWorkerCommand, requestOpenCodeWorker } from '/src/utils/opencodeWorkers.js';
 import { isLocalMaintenanceBuild, requestProjectBuild, waitForProjectMaintenance, pendingProjectMaintenance, projectMaintenanceReply } from '/src/utils/projectMaintenance.js';
@@ -1131,7 +1134,7 @@ function parseCognitiveContent(rawContent) {
 
   // Report the latest stage/final frame while retaining earlier source provenance.
   meta = readCognitiveMetadata(text);
-  text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/g, '').trimStart();
+  text = stripMetadataFrames(text).trimStart();
 
   // 2. Extract <think>...</think> block (complete or in-progress stream)
   let thought = null;
@@ -1526,14 +1529,15 @@ function DesktopCognitiveThoughtDrawer({ thought, isThinking }) {
 }
 
 /** @param {{content: string, role: string}} props */
-function FormattedMessageContent({ content, role }) {
+function FormattedMessageContent({ content, role, meta: metaOverride }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
   if (role === 'user') {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
+  const { meta: parsedMeta, thought, body, isThinking } = parseCognitiveContent(content);
+  const meta = metaOverride || parsedMeta;
   const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
   const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
 
@@ -3217,10 +3221,10 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0,
   const [isBackendDisabled, setIsBackendDisabled] = useState(false);
   const abortControllerRef = useRef(/** @type {AbortController | null} */ (null));
   const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
-  const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
-  const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
-  const setChatMessages = conversationMemory.setMessages;
-  const setFooterInput = conversationMemory.setDraft;
+  const chatMessages = conversationMemory.viewReady ? storedChatMessages : (storedChatMessages || []);
+  const footerInput = conversationMemory.viewReady ? storedFooterInput : (storedFooterInput || '');
+  const setChatMessages = conversationMemory.viewReady ? conversationMemory.setMessages : (updater => useAppStore.getState().setChatMessages(updater));
+  const setFooterInput = conversationMemory.viewReady ? conversationMemory.setDraft : (updater => useAppStore.getState().setFooterInput(updater));
 
   useEffect(() => {
     if (!conversationMemory.viewReady) return;
@@ -3278,6 +3282,7 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0,
 
   // BS-Chat Decluttering Drawer & Toolbar State
   const [showControlDrawer, setShowControlDrawer] = useState(false);
+  const [chatFocus, setChatFocus] = useState(false);
   const [showToolBar, setShowToolBar] = useState(false);
   const [showTagsBar, setShowTagsBar] = useState(false);
   const [showQuickActionsMenu, setShowQuickActionsMenu] = useState(false);
@@ -3927,7 +3932,6 @@ const removeAttachment = (index) => {
 
   /** @param {string | null} [customText] */
 const handleSendMessage = async (customText = null) => {
-    if (!conversationMemory.viewReady) return;
     const rawText = customText !== null ? customText : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
 
@@ -7108,9 +7112,9 @@ const extLangMap = {
 
         let assistantMessage = '';
         try {
-          const recentHistory = (updatedHistory || []).slice(-8).map(m => ({
+          const recentHistory = (updatedHistory || []).filter(m => m !== userMsg).slice(-32).map(m => ({
             role: m.role,
-            content: m.content || m.displayContent || ''
+            content: stripMetadataFrames(m.content || m.displayContent || '')
           }));
 
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
@@ -7138,18 +7142,30 @@ const extLangMap = {
           if (streamRes.ok && streamRes.body) {
             const reader = streamRes.body.getReader();
             const decoder = createChatStreamDecoder();
+            const streamParser = new ChatStreamParser();
+            let frameText = '';
 
             while (true) {
               const { done, value } = await reader.read();
-              if (done) { decoder.finish(); break; }
+              if (done) {
+                decoder.finish();
+                const tail = streamParser.finish();
+                if (tail.text) {
+                  assistantMessage += tail.text;
+                  setChatMessages(prev => prev.map((m, i) => i === prev.length - 1 && m.role === 'assistant' ? { ...m, content: assistantMessage } : m));
+                }
+                break;
+              }
               const chunk = decoder.decode(value);
-              assistantMessage += chunk;
+              const parsedChunk = streamParser.feed(chunk);
+              assistantMessage += parsedChunk.text;
+              if (parsedChunk.frames.length) frameText += (frameText ? '\n' : '') + frameTextFor(parsedChunk.frames);
               
               setChatMessages(prev => {
                 const newArr = [...prev];
                 if (newArr.length > 0 && newArr[newArr.length - 1].role === 'assistant') {
                   newArr[newArr.length - 1].content = assistantMessage;
-                  const parsedMeta = readCognitiveMetadata(assistantMessage);
+                  const parsedMeta = readCognitiveMetadata(frameText);
                   if (parsedMeta) {
                     if (parsedMeta.display_name) newArr[newArr.length - 1].model = parsedMeta.display_name;
                     newArr[newArr.length - 1].meta = parsedMeta;
@@ -7587,8 +7603,10 @@ const extLangMap = {
       display: 'flex',
       flexDirection: 'column',
       flex: isNested ? 1 : undefined,
-      height: isNested ? '100%' : 'calc(100vh - 170px)',
-      minHeight: isNested ? 0 : '600px',
+      height: chatFocus ? '100dvh' : isNested ? '100%' : 'calc(100dvh - 170px)',
+      minHeight: 0,
+      minWidth: 0,
+      ...(chatFocus ? { position: 'fixed', inset: 0, zIndex: 1000, width: '100%', borderRadius: 0 } : {}),
       background: 'linear-gradient(180deg, #0d0f14 0%, #07090e 100%)',
       borderRadius: isNested ? '6px' : '12px',
       border: dpiScaleProfile !== 'desktop_native' ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
@@ -7596,10 +7614,15 @@ const extLangMap = {
       overflow: 'hidden',
       color: '#e2e8f0',
       fontFamily: 'Inter, system-ui, sans-serif',
-      zoom: uiDpiZoom,
+      zoom: chatFocus ? 1 : uiDpiZoom,
     }}>
+      <details style={{ flexShrink: 0, maxHeight: '25dvh', overflow: 'auto' }}>
+      <summary style={{ padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem' }}>Conversation &amp; coding</summary>
       <ConversationMemoryStatus memory={conversationMemory} />
-      <CodingPreparationPanel memory={conversationMemory} />
+      {codingModeEnabled(import.meta.env.VITE_AI_BS_CODING_MODE)
+        ? <CodingModePanel memory={conversationMemory} />
+        : <CodingPreparationPanel memory={conversationMemory} />}
+      </details>
       {/* Hidden File Input */}
       <input
         type="file"
@@ -7619,8 +7642,12 @@ const extLangMap = {
         justifyContent: 'space-between',
         gap: '8px',
         minHeight: '42px',
-        flexWrap: 'nowrap'
+        flexWrap: 'wrap',
+        flexShrink: 0
       }}>
+        <button type="button" aria-pressed={chatFocus} onClick={() => setChatFocus(value => !value)} style={{ padding: '5px 10px', borderRadius: '8px', cursor: 'pointer', background: '#16202e', color: '#e2e8f0', border: '1px solid #475569' }}>
+          {chatFocus ? 'Exit focused chat' : 'Focus chat'}
+        </button>
         {/* Left: Indicator, Title & Model Picker */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
           <div style={{
@@ -7692,6 +7719,9 @@ const extLangMap = {
         )}
 
         {/* Right: Quick toggles + Drawer toggle */}
+        <details style={{ position: 'relative', flexShrink: 0 }}>
+        <summary style={{ cursor: 'pointer', fontSize: '0.8rem' }}>Chat options</summary>
+        <div style={{ position: 'absolute', right: 0, top: '100%', zIndex: 100, background: '#111827', padding: '10px', border: '1px solid #475569', borderRadius: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
           <button
             onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
@@ -7757,6 +7787,8 @@ const extLangMap = {
             <span>⚙️ Hub Controls {showControlDrawer ? '▴' : '▾'}</span>
           </button>
         </div>
+        </div>
+        </details>
       </div>
 
       {/* Collapsible Secondary Control Drawer */}
@@ -8152,6 +8184,7 @@ const extLangMap = {
                     <FormattedMessageContent
                       content={msg.displayContent || msg.content || ''}
                       role={msg.role}
+                      meta={msg.meta}
                     />
                     <FileEditorDrawer editorData={msg.editorData} />
                   </>
@@ -8176,6 +8209,7 @@ const extLangMap = {
                     <FormattedMessageContent
                       content={msg.displayContent || msg.content || ''}
                       role={msg.role}
+                      meta={msg.meta}
                     />
                     {msg.grillHelpExamples && (
                       <div className="mt-3 p-3.5 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-black/60 shadow-lg flex flex-col gap-2.5">
@@ -8233,10 +8267,14 @@ const extLangMap = {
 
       {/* Footer Input Controls */}
       <div style={{
-        padding: '16px 20px',
+        padding: '8px 12px',
         borderTop: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(12, 15, 22, 0.98)',
+        flexShrink: 0,
       }}>
+        <details style={{ marginBottom: '6px' }}>
+        <summary style={{ cursor: 'pointer', fontSize: '0.8rem' }}>Tools &amp; status</summary>
+        <div style={{ maxHeight: '25dvh', overflowY: 'auto' }}>
         <CodingTaskHistory />
         {/* Attached Files Preview Bar (GPT Style) */}
         {attachments.length > 0 && (
@@ -8355,12 +8393,15 @@ const extLangMap = {
           </div>
         )}
 
+        <details style={{ maxHeight: '30dvh', overflow: 'auto' }}>
+        <summary style={{ cursor: 'pointer', padding: '4px 0', fontSize: '0.8rem' }}>Workspace tools</summary>
         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext}
           onOpenArtifacts={() => setIsArtifactsModalOpen(true)}
           onOpenTerminal={() => setWorkspacePanel('terminal')}
           onOpenCodebase={() => setWorkspacePanel('codebase')} />
         <ChatWorkspaceTools panel={workspacePanel} onClose={closeWorkspacePanel} backendUrl={BACKEND_URL} hasDraft={!!footerInput.trim()}
           onInsertText={text => {setFooterInput(previous => previous ? `${previous}\n${text}` : text);requestAnimationFrame(() => chatInputRef.current?.focus());}} />
+        </details>
 
         {/* 3-Way Wireless Screen Mirror & Display Cast Hub */}
         {showWirelessCastHub && (
@@ -8883,7 +8924,12 @@ const extLangMap = {
             )}
           </div>
         )}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+        </div>
+        </details>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', minWidth: 0 }}>
+          <details style={{ position: 'relative', flexShrink: 0 }}>
+            <summary style={{ padding: '10px', cursor: 'pointer', border: '1px solid #475569', borderRadius: '10px', fontSize: '0.8rem' }}>Actions</summary>
+            <div style={{ position: 'absolute', bottom: '100%', left: 0, zIndex: 100, padding: '10px', background: '#111827', border: '1px solid #475569', borderRadius: '10px', width: 'min(320px, 80vw)', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {/* Artifacts & Tools Hub Button */}
           <button
             onClick={() => setIsArtifactsModalOpen(true)}
@@ -8967,11 +9013,12 @@ const extLangMap = {
             {/* Dropdown Menu Popup (Anchored Above the Button) */}
             {showCommandsDropdown && (
               <div style={{
-                position: 'absolute',
-                bottom: '50px',
-                left: '0',
-                width: 'min(580px, 92vw)',
-                maxHeight: '480px',
+                position: 'fixed',
+                top: '8dvh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'min(580px, calc(100vw - 24px))',
+                maxHeight: '75dvh',
                 background: 'linear-gradient(180deg, #0d131f 0%, #060911 100%)',
                 border: '1px solid rgba(56, 189, 248, 0.45)',
                 borderRadius: '14px',
@@ -9271,6 +9318,8 @@ const extLangMap = {
             )}
           </div>
 
+            </div>
+          </details>
           {/* Attachment Button 📎 */}
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -9290,7 +9339,7 @@ const extLangMap = {
 
           <textarea
             ref={chatInputRef}
-            disabled={!conversationMemory.viewReady}
+            disabled={false}
             value={footerInput}
             onChange={handleInputChange}
             onKeyDown={(e) => {
@@ -9372,6 +9421,9 @@ const extLangMap = {
         </div>
 
         {/* Clear screen & Action Toolbar (Decluttered Single Row) */}
+        {isLoading && <button type="button" onClick={handleStopOrToggleBackend} style={{ padding: '6px 12px', color: '#fecaca', background: '#7f1d1d', borderRadius: '8px' }}>Stop response</button>}
+        <details>
+        <summary style={{ cursor: 'pointer', fontSize: '0.75rem', marginTop: '4px' }}>More actions · {conversationMemory.statusLabel}</summary>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {/* Disable / Enable Backend & Stop Process Button */}
@@ -9540,6 +9592,7 @@ const extLangMap = {
             </span>
           </div>
         </div>
+        </details>
       </div>
 
       {/* Live Workspace Artifacts & Autonomous Program Builder Hub Modal */}

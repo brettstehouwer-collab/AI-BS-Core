@@ -12,9 +12,11 @@ export const isNativeMobile = () => {
 
 export const getApiBase = () => {
   if (typeof window !== 'undefined') {
-    // 1. Local desktop PC dev (plain http://localhost or http://127.0.0.1) ALWAYS routes directly to local core
+    // 1. Local desktop PC dev (plain http://localhost or http://127.0.0.1) routes directly to local core (default :8000)
     if (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return 'http://127.0.0.1:8080';
+      return (currentApiBase && /^http:\/\/(127\.0\.0\.1|localhost):(8000|8080)$/.test(currentApiBase))
+        ? currentApiBase
+        : 'http://127.0.0.1:8000';
     }
 
     // 2. Mobile devices (Capacitor APK, iPhone PWA, Mobile browsers) or HTTPS use Cloudflare Tunnel
@@ -24,10 +26,10 @@ export const getApiBase = () => {
 
     // 3. Local LAN IP directly
     if (/^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname)) {
-      return `http://${window.location.hostname}:8080`;
+      return `http://${window.location.hostname}:8000`;
     }
   }
-  return 'http://127.0.0.1:8080';
+  return 'http://127.0.0.1:8000';
 };
 
 /** @param {string} url */

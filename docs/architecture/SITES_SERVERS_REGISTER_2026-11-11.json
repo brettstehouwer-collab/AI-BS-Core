@@ -1,6 +1,73 @@
 {
+  "latest_scoped_health_2026_11_21": {
+    "local_core": "backups/core_listeners_20261121_v01/verification.json",
+    "anonymous_checks": "backups/sites_health_20261121_v01/public-health.json",
+    "direct_get_checks": "backups/sites_health_20261121_v01/direct-get.json",
+    "local_static": "5.329.180; 1155 files verified locally, five served entrypoints hash-matched",
+    "public_gateway_backend_alias_publishing": "HTTP 200 on direct GET. First request profile returned 403; different method, header or network settings may affect results.",
+    "firebase": "Root and /bs-chat.html return HTTP 200. /chat returns 404 on both checks. Root and /bs-chat.html bytes differ from local 180. Current hosted release identity and signed-in flow unverified.",
+    "ownership": "Prior ownership evidence retains its original dates. No new account ownership proof, DNS edits or hosting deployment."
+  },
   "schema_version": 1,
+  "latest_frontend165_2026_11_15": {
+    "handoff": "docs/agent_sync/FRONTEND165_RELEASE_2026-11-15.md",
+    "firebase_hosting_version": "8e1758905b2564d8",
+    "hosted_and_static3000_version": "5.329.165",
+    "hosted_files_downloaded_and_hash_matched": 1155,
+    "backend_runtime_version": "5.329.164",
+    "public_gateway_health": 200,
+    "public_providers_anonymous_status": 403,
+    "publishing_health": 200,
+    "campaign_service_scope": "Existing local5191; no new public route/CORS/account/provider change",
+    "dns_tunnel_access_changes": false
+  },
+  "latest_backend164_localhost_2026_11_15": {
+    "handoff": "docs/agent_sync/BACKEND164_LOCALHOST_2026-11-15.md",
+    "local_backend": "127.0.0.1:8080; source5.329.164; health200/auth/disabled flags verified",
+    "public_health_url": "https://api.brettstehouwer.live/health",
+    "public_health_status": 200,
+    "public_gateway_version": "5.329.52-firebase-id-token",
+    "hosted_static_version": "5.329.163",
+    "gateway_vite_static_processes_predate_backend_replacement": true,
+    "dns_tls_tunnel_access_changes": false,
+    "coverage": "Scoped backend replacement/public gateway health; other names not rechecked"
+  },
   "captured_utc": "2026-11-11T09:22:48.999646+00:00",
+  "latest_scoped_updates_2026_11_14": {
+    "fresh_health_and_alias_repair": {
+      "checkpoint": "backups/sites_health_20261114_v01/checkpoint.json",
+      "report": "docs/architecture/SITES_HEALTH_AND_ALIAS_REPAIR_2026-11-14.md",
+      "snapshot": "backups/sites_health_20261114_v01/observations.json",
+      "connected_sites_owner_role_reverified": 2,
+      "selected_cloudflare_zone_admin_access": "brettstehouwer.live; existing certificate account matched; selected record read/update verified",
+      "alias_restored": "ai-bs.brettstehouwer.live/health",
+      "alias_pre_repair_http": 530,
+      "alias_post_propagation_http": 200,
+      "repair_scope": "One existing CNAME content field; old inactive tunnel to current active tunnel. Other fields, Access and services unchanged.",
+      "unique_catalog_ports_listening": 18,
+      "catalog_ports_not_listening": [8007, 8089],
+      "live_gateway_version": "5.329.52-firebase-id-token",
+      "live_hosted_version": "5.329.146",
+      "source149_gateway_not_activated": true,
+      "remaining_domain_ownership_dns_tls_gaps": true,
+      "drive_receipt": "backups/sites_health_20261114_v01/drive-verified.json"
+    },
+    "note": "Original captured ownership/domain rows retain their November11 scope; these references add later bounded evidence without claiming new DNS or account control.",
+    "hosting_146": "docs/agent_sync/PRODUCTION_RELEASE_2026-11-14.json",
+    "native148_candidate_not_promoted": "docs/agent_sync/NATIVE148_CANDIDATE_2026-11-14.md",
+    "personal_finance_source_not_deployed": "docs/agent_sync/PERSONAL_EXPORT_PARTS_2026-11-14.md",
+    "service_startup": "docs/agent_sync/SERVICE_STARTUP_2026-11-14.md",
+    "comfy_primary_8188": "backups/comfy_acceptance_followup_20261114_v01/private-proxy/receipt.json",
+    "android_installation_login": "docs/agent_sync/ANDROID_BS_CHAT_USER_ACCEPTANCE_2026-11-14.json",
+    "fe_driver": {
+      "source_entry": "/driver/",
+      "source_status": "UNRELEASED_CANDIDATE",
+      "live_driver_flag_enabled": false,
+      "public_deployment_verified": false,
+      "reference": "docs/agent_sync/FE_DRIVER_SOURCE_INTEGRATION_2026-11-14.md"
+    },
+    "all_subsystems_qualified": false
+  },
   "owned_sites": [
     {
       "id": "appgprj_6af244fe0bb481919916930646b23aae",

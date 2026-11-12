@@ -1,6 +1,54 @@
 # Vault-key preservation and migration plan
 
-Status: PLANNED / NOT EXECUTED. Added to the active ten-goal program by the user on November 11, 2026. No key value was read, exported, changed or removed during the review.
+## Scope extension: AES payload and plaintext credential lanes — November21,2026
+
+Status: PROPOSED — NOT APPLIED; each phase needs owner approval. This plan, the
+switch proposal and VAULT_KEY_CONSUMERS_2026-11-11.json cover only the Fernet
+store (lane A4-F). The consumer JSON remains Fernet-only. backend/vault_master.key
+is tracked in the current index and present in origin/main; treat it as exposed.
+Lane A4-P: backend/core/cryptographic_vault.py AES-GCM payload layer. Default
+passphrase/salt are public and the legacy key is always accepted. Backend
+/api/security/decrypt (AI_BS_Backend.py:3571) has no admin boundary. rawFallback
+plaintext substitution (:9062-9068, :14461-14471) means retained legacy envelopes
+already carry plaintext: mainly code fix/retirement, not re-encryption.
+Lane A4-K: backend/modules/vault_router.py:86,93,100,107 hardcoded credentials,
+public in origin/main, seeded as plaintext into vault_keys (:113-118, :124).
+Owner revocation first, then seed removal and reviewed row cleanup on an isolated
+copy. Never use the Fernet key for A4-P or A4-K. Findings, phases and acceptance:
+docs/drafts/VAULT_TRACE_review_ClaudeCode.md. Issue separate receipts per lane,
+consistent with step 9. No code, data, credential or service change occurred.
+
+## Concrete switch/rollback map — November14,2026
+
+The proposed immutable-generation/single-selector consumer and rollback map is
+now written in VAULT_CONSUMER_SWITCH_PROPOSAL_2026-11-14.md and JSON companion.
+It binds actual legacy precedence, mixed formats and first-adoption constraints.
+No adapter or live transition exists. Next source-only opt-in reader/admission
+with synthetic checks; active changes remain behind the operator review below.
+
+## Local private preservation and recognized recovery — November14,2026
+
+Original declared key/environment files are now privately preserved byte-for-byte.
+A fresh process verified copies and authenticated the recognized Fernet subset;
+decrypted outputs were not persisted/logged. Actual config retains its original
+mixed formats. Active files/keys/consumers remain unchanged. No whole-vault,
+all-writer or transactional multi-file snapshot claim. See
+docs/agent_sync/VAULT_PRIVATE_PRESERVATION_2026-11-14.md. Next concrete proposed
+consumer switch/rollback map; parent operator-review boundary still applies before
+any real switch/credential change. Private files never enter the shared archive.
+
+## Actual declared-store preflight — November14,2026
+
+Read-only metadata/aggregate variant classification is now recorded in
+docs/agent_sync/VAULT_ACTUAL_PREFLIGHT_2026-11-14.md. Actual configuration has
+mixed value formats and duplicate/override behavior; the earlier raw-token
+canary cannot be applied blindly. No key bytes read, private recovery/copy or
+migration performed. Detailed local inventory is excluded from shared backup.
+Next review the existing owner-private helper/destination and preserve original
+key/config locally before checking recoverability. Existing migration/switch/
+history boundaries below remain in force.
+
+Status: LOCAL ORIGINAL PAIR PRESERVED; RECOGNIZED PRIVATE RECOVERY PASS; ACTIVE MIGRATION NOT EXECUTED. Added to the active ten-goal program November11,2026. Original planning and synthetic canary did not read real keys. Later local preservation copied original bytes and authenticated recognized values from private copies, without logging/uploading key or decrypted material. Active keys/consumers remain unchanged.
 
 ## Confirmed evidence and limits
 
@@ -30,4 +78,6 @@ Status: PLANNED / NOT EXECUTED. Added to the active ten-goal program by the user
 
 The scoped source-only consumer/format inventory is now recorded in `VAULT_KEY_CONSUMERS_2026-11-11.json`. It identifies the Fernet reader, missing-key-generating writer, import-time environment precedence and a live credential test to avoid. Private keys/ciphertext/record counts/decryptability/ACLs/running writers remain unverified.
 
-Next action: design inert format/canary and interrupted-migration/rollback checks, then prepare the separately governed private preservation step. No key rotation, untracking, history rewrite or data migration is authorized by this plan's existence.
+Inert format/canary and controlled interruption/restart/rollback checks now pass12/12. Read `VAULT_SYNTHETIC_CANARY_2026-11-14.md` for the exact source fingerprints, format/switch map, quoted-token hazard and limitations. The synthetic rehearsal can precede private preservation because it uses no real store. It does not qualify real encrypted counts, private recovery, coherent consumer switching or power-loss durability.
+
+Next action: prepare the separately governed private preservation inventory and exact affected-store review before any real migration. No key rotation, untracking, history rewrite or data migration is authorized by this plan's existence.

@@ -12,8 +12,8 @@ import { auth } from '../firebase';
 import { SYSTEM_VERSION } from './version';
 import './MomMode.css';
 
-/** @param {{"localTrustEnabled"?: boolean, "trustedUserEmails"?: string[], "activeTab": string, "onTabChange": (arg0: string) => void, "navLayout"?: string, "onToggleNavLayout"?: () => void, "backendUrl": string, "backendOnline"?: boolean, "backendStatus"?: string, "comfyOnline"?: boolean, "selectedModel"?: string, "onSelectModel": (arg0: string) => void, "availableModels"?: string[], "onOpenProfile"?: () => void, "userProfile"?: unknown, "currentUser": import('firebase/auth').User | null, "userTier": {"id": string}, "isAdmin"?: boolean, "simulatedTier"?: string, "onSimulateTier"?: (tierKey: string) => void, "workspaceMode"?: string, "onToggleWorkspaceMode": () => void, "momMode"?: boolean, "onToggleMomMode": () => void, "zoomLevel"?: number, "onZoomChange": (zoom: number) => void, "zenMode"?: boolean, "onToggleZenMode": () => void, "onOpenMobileDrawer": () => void}} props */
-export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentUser, userTier, workspaceMode = 'simple', onToggleWorkspaceMode, momMode = false, onToggleMomMode, zoomLevel = 125, onZoomChange, zenMode = false, onToggleZenMode, onOpenMobileDrawer }) {
+/** @param {{"localTrustEnabled"?: boolean, "trustedUserEmails"?: string[], "activeTab": string, "onTabChange": (arg0: string) => void, "navLayout"?: string, "onToggleNavLayout"?: () => void, "backendUrl": string, "backendOnline"?: boolean, "backendStatus"?: string, "comfyOnline"?: boolean, "selectedModel"?: string, "onSelectModel": (arg0: string) => void, "availableModels"?: string[], "onOpenProfile"?: () => void, "userProfile"?: unknown, "currentUser": import('firebase/auth').User | null, "userTier": {"id": string}, "isAdmin"?: boolean, "simulatedTier"?: string, "onSimulateTier"?: (tierKey: string) => void, "workspaceMode"?: string, "onToggleWorkspaceMode": () => void, "momMode"?: boolean, "onToggleMomMode": () => void, "zoomLevel"?: number, "onZoomChange": (zoom: number) => void, "zenMode"?: boolean, "onToggleZenMode": () => void, "onOpenMobileDrawer": () => void, "onSignOut"?: () => void | Promise<void>}} props */
+export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentUser, userTier, workspaceMode = 'simple', onToggleWorkspaceMode, momMode = false, onToggleMomMode, zoomLevel = 125, onZoomChange, zenMode = false, onToggleZenMode, onOpenMobileDrawer, onSignOut }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
 
   useEffect(() => {
@@ -56,7 +56,8 @@ export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentU
     const fetchTelemetry = async () => {
       if (failStreak > 3) return; // Prevent network churn and thread blocking if core unreachable
       try {
-        const apiBase = isLocalDev ? 'http://127.0.0.1:8080' : 'https://api.brettstehouwer.live';
+        const resolvedLocal = backendUrl && !backendUrl.includes(':8080') ? backendUrl : 'http://127.0.0.1:8000';
+        const apiBase = isLocalDev ? resolvedLocal : (backendUrl || 'https://api.brettstehouwer.live');
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 1200);
 
@@ -84,7 +85,7 @@ export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentU
       isMounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [backendUrl]);
 
   
 /** @param {string} groupName @param {import('react').MouseEvent<HTMLElement>} event */
@@ -951,8 +952,12 @@ item => {
                 <button
                   onClick={() => {
                     if (window.confirm('Sign out of AI-BS Dashboard?')) {
-                      auth.signOut();
-                      localStorage.removeItem('aibs_cached_user');
+                      if (onSignOut) {
+                        onSignOut();
+                      } else {
+                        auth.signOut();
+                        localStorage.removeItem('aibs_cached_user');
+                      }
                     }
                   }}
                   style={{ background: 'transparent', color: '#f85149', border: '1px solid rgba(248, 81, 73, 0.4)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: '600' }}

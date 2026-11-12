@@ -83,13 +83,97 @@ class LocalOllamaHTTPTests(unittest.IsolatedAsyncioTestCase):
         self.assertIs(local_ollama_host, self.module.local_ollama_host)
         self.assertIs(_LOCAL_HTTP_CONTEXT, self.module._LOCAL_HTTP_CONTEXT)
 
+    def test_prompt_prefix_stability_analyzer_tracks_30_turn_replay_and_invalidations(self):
+        analyzer = self.module.PromptPrefixStabilityAnalyzer(max_scopes=16)
+        tools_order_a = [
+            {"type": "function", "function": {"name": "zeta_tool", "parameters": {"b": 2, "a": 1}}},
+            {"type": "function", "function": {"name": "alpha_tool", "parameters": {"y": 2, "x": 1}}},
+        ]
+        tools_order_b = [
+            {"type": "function", "function": {"name": "alpha_tool", "parameters": {"x": 1, "y": 2}}},
+            {"type": "function", "function": {"name": "zeta_tool", "parameters": {"a": 1, "b": 2}}},
+        ]
 
+        messages = [{"role": "system", "content": "You are the immutable AI-BS coding engine."}]
+        for turn in range(1, 31):
+            messages.append({"role": "user", "content": f"Turn {turn} user instruction"})
+            payload = {
+                "model": "qwen2.5-coder:latest",
+                "messages": list(messages),
+                "tools": tools_order_a if turn % 2 == 0 else tools_order_b,
+                "options": {"num_ctx": 8192, "temperature": 0.1},
+            }
+            receipt = analyzer.analyze_payload(payload, scope="replay_30", canonicalize_tools=True)
+            self.assertEqual(receipt["schema"], "aibs.prompt_prefix_stability.v1")
+            self.assertEqual(receipt["volatile_prefix_markers"], ())
+            if turn == 1:
+                self.assertEqual(receipt["status"], "cold_start")
+            else:
+                self.assertEqual(receipt["status"], "cache_hit_prefix_extended")
+                self.assertTrue(receipt["is_prefix_extension"])
+                self.assertEqual(receipt["invalidation_reasons"], ())
+            messages.append({"role": "assistant", "content": f"Turn {turn} assistant reply"})
+
+        metrics = analyzer.snapshot_metrics()
+        self.assertEqual(metrics["total_requests"], 30)
+        self.assertEqual(metrics["stable_system_hits"], 29)
+        self.assertEqual(metrics["stable_tool_hits"], 29)
+        self.assertEqual(metrics["prefix_extension_hits"], 29)
+        self.assertEqual(metrics["invalidations"], 0)
+        self.assertEqual(metrics["volatile_prefix_warnings"], 0)
+
+    def test_prompt_prefix_analyzer_detects_volatile_timestamps_and_never_leaks_secrets(self):
+        analyzer = self.module.PromptPrefixStabilityAnalyzer(max_scopes=8)
+        secret_token = "SECRET_TOKEN_DO_NOT_LEAK_998877"
+        payload_t1 = {
+            "model": "stehouwer_llm:latest",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": f"System clock: 2026-11-19T13:50:42Z | request_id=12345678-1234-1234-1234-123456789abc | key={secret_token}",
+                },
+                {"role": "user", "content": "Inspect live telemetry."},
+            ],
+            "options": {"num_ctx": 8192},
+        }
+        payload_t2 = {
+            "model": "stehouwer_llm:latest",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": f"System clock: 2026-11-19T13:50:45Z | request_id=87654321-4321-4321-4321-cba987654321 | key={secret_token}",
+                },
+                {"role": "user", "content": "Inspect live telemetry."},
+                {"role": "assistant", "content": "Telemetry healthy."},
+                {"role": "user", "content": "Next step?"},
+            ],
+            "options": {"num_ctx": 16384},
+        }
+        r1 = analyzer.analyze_payload(payload_t1, scope="volatile_test")
+        r2 = analyzer.analyze_payload(payload_t2, scope="volatile_test")
+        self.assertEqual(r1["status"], "cold_start")
+        self.assertIn("iso_timestamp", r1["volatile_prefix_markers"])
+        self.assertIn("request_uuid", r1["volatile_prefix_markers"])
+        self.assertEqual(r2["status"], "invalidated")
+        self.assertIn("system_prompt_changed", r2["invalidation_reasons"])
+        self.assertIn("context_options_changed", r2["invalidation_reasons"])
+        serialized_receipt = str(r1) + str(r2)
+        self.assertNotIn(secret_token, serialized_receipt)
+
+
+try:
+    from scripts.tests import test_gpu_dispatcher_integration as _router_fixtures
+except ImportError:
+    _router_fixtures = None
+
+
+@unittest.skipIf(_router_fixtures is None, "FastAPI/Pydantic native extension unavailable in current interpreter")
 class LocalOllamaRouterTests(unittest.IsolatedAsyncioTestCase):
     # Reuse only the offline setup helpers, not their already-covered test cases.
-    from scripts.tests import test_gpu_dispatcher_integration as fixtures
-    setUp = fixtures.RouterIntegrationTests.setUp
-    patch_clients = fixtures.RouterIntegrationTests.patch_clients
-    request = fixtures.RouterIntegrationTests.request
+    fixtures = _router_fixtures
+    setUp = _router_fixtures.RouterIntegrationTests.setUp if _router_fixtures else None
+    patch_clients = _router_fixtures.RouterIntegrationTests.patch_clients if _router_fixtures else None
+    request = _router_fixtures.RouterIntegrationTests.request if _router_fixtures else None
 
     async def test_metadata_embedding_chat_and_agent_clients_use_shared_context(self):
         fixture = self.fixtures
@@ -99,7 +183,7 @@ class LocalOllamaRouterTests(unittest.IsolatedAsyncioTestCase):
                 return fixture.response({"models": [fixture.MODEL]})
             if url.endswith("/api/embed"):
                 return fixture.response({"embeddings": [[1] for _ in kwargs["json"]["input"]]})
-            return fixture.response({"message": {"content": "ok"}})
+            return fixture.response({"done": True, "message": {"content": "ok"}})
         operations = (
             (lambda: self.real_resolve_model_host("fixture"), (2, 1, 2, 2)),
             (self.chat.get_available_models, (2, 1, 2, 2)),

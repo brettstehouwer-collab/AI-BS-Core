@@ -151,8 +151,10 @@ export async function openConversationOutbox({ indexedDB = globalThis.indexedDB,
         validateHead(head);
         if (!head) head = { key: selected.headKey, scope_key: selected.scopeKey, conversation_id: options.conversationId,
           local_revision: 0, ack_local_revision: 0, server_revision: integer(options.baseServerRevision ?? 0), closed: false };
-        if (head.closed || head.local_revision !== expected || expected >= Number.MAX_SAFE_INTEGER) throw Error('Browser conversation changed; preserve pending input and reload it.');
-        const revision = expected + 1;
+        if (head.closed || expected >= Number.MAX_SAFE_INTEGER) throw Error('Browser conversation closed or at maximum revision; preserve pending input and reload it.');
+        // If head.local_revision has advanced past expected due to an earlier incremental flush in the same stream,
+        // safely reconcile to current head revision instead of halting with a false conflict.
+        const revision = Math.max(head.local_revision, expected) + 1;
         await request(entries.add({ key, head_key: selected.headKey, local_revision: revision, request_id: options.requestId,
           snapshot_json: raw, source_sha256: digest, expected_revision: null, status: 'queued' }));
         head.local_revision = revision;

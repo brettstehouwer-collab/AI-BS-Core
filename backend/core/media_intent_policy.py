@@ -171,6 +171,11 @@ async def resolve_media_status(body):
         if body.get('user_prompt') is not None:
             return 'The current user message is invalid or empty. No generation, model or tool was invoked.\n'
         return None
+    if mode in {None, '', 'execute'} and body.get('plan_only') is not True:
+        from core.chat_film import reply as film_reply
+        film = await film_reply(prompt)
+        if film is not None:
+            return film
     category = classify_media_message(prompt)
     if category == 'comfy_status':
         state = await probe_comfy_status()

@@ -20,8 +20,10 @@ from security.screenwriting_access import require_screenwriting_access
 
 logger = logging.getLogger("AgentRouting")
 router = APIRouter(prefix="/api/agent", tags=["Multi-Agent Gateway & Routing"], dependencies=[Depends(require_screenwriting_access)])
+OLLAMA_URL: Optional[str] = None
 
 def _agent_origin():
+    if OLLAMA_URL is not None:return local_ollama_host(OLLAMA_URL)
     explicit=os.environ.get('OLLAMA_URL')
     if explicit is not None:return local_ollama_host(explicit)
     from routers.ai_providers_router import load_config

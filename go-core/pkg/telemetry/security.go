@@ -64,7 +64,7 @@ func (c *corsResponseWriter) sanitizeCORS() {
 	c.Header().Set("Access-Control-Allow-Origin", c.origin)
 	c.Header().Add("Vary", "Origin")
 	c.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
-	c.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, X-API-Key, X-Admin-Key, X-Admin-Email, X-Client-ID")
+	c.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, X-API-Key, X-Admin-Key, X-Admin-Email, X-Client-ID, X-Operation-Id, Idempotency-Key, X-Document-Name, X-Document-Name-Encoding")
 	c.Header().Set("Access-Control-Allow-Credentials", "true")
 }
 

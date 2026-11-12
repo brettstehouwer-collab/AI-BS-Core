@@ -15,6 +15,36 @@ from .tool_call_contract import ToolCallValidationError, validate_tool_call
 logger = logging.getLogger("ToolRegistry")
 
 
+_BS_CHAT_DIAGNOSTIC_NAMES = frozenset((
+    'run_coding_smoke', 'verify_sqlite_wal', 'inspect_source_diff',
+    'check_service_health', 'inspect_database_schema', 'discover_databases',
+    'process_batch_status',
+))
+
+
+def _bs_chat_diagnostic_declarations():
+    # Explicit source opt-in; importing the registry never activates diagnostics.
+    if os.environ.get('AI_BS_ENABLE_CHAT_TOOL_BRIDGE') != '1':
+        return []
+    specifications = (
+        ('run_coding_smoke', 'Observe the existing twelve-check coding candidate profile.',
+         {'max_checks': {'type': 'integer', 'enum': [12, 13, 14, 15]}}, []),
+        ('verify_sqlite_wal', 'Observe registered database read-only connection settings.', {}, []),
+        ('inspect_source_diff', 'Observe metadata for an exact task-approved source file.',
+         {'path': {'type': 'string'}}, ['path']),
+        ('check_service_health', 'Observe a fixed local HTTP endpoint.',
+         {'service': {'type': 'string', 'enum': ['backend', 'coding_candidate', 'browser']}}, []),
+        ('inspect_database_schema', 'Observe bounded registered database schema without row values.',
+         {'database': {'type': 'string', 'enum': ['backend_master', 'cdz_audit']}}, ['database']),
+        ('discover_databases', 'Observe availability of the two registered database files.', {}, []),
+        ('process_batch_status', 'Observe sanitized counts from an already bound controller.', {}, []),
+    )
+    return [{'name': name, 'description': description,
+             'parameters': {'type': 'object', 'properties': properties,
+                            'required': required, 'additionalProperties': False}}
+            for name, description, properties, required in specifications]
+
+
 def _resolve_host_read_path(file_path: str, workspace_root: str = r"C:\AI-BS") -> str:
     """Keep explicit paths; resolve one known bare project-document alias only."""
     if os.path.isabs(file_path):
@@ -112,7 +142,9 @@ class ToolRegistry:
     @staticmethod
     def get_tool_declarations():
         """Returns JSON schema definitions of all registered tools for the LLM."""
-        return [
+        from core.crypto_preview_chat import crypto_preview_declarations
+        from core.crypto_trial_status_chat import crypto_trial_status_declarations, crypto_protective_review_declarations, crypto_preparation_status_declarations
+        return _bs_chat_diagnostic_declarations() + crypto_preview_declarations() + crypto_trial_status_declarations() + crypto_protective_review_declarations() + crypto_preparation_status_declarations() + [
             {
                 "name": "read_sandbox_file",
                 "description": "Reads contents of a file inside the isolated backend sandbox.",
@@ -2268,6 +2300,9 @@ class ToolRegistry:
             tool_name, arguments = validate_tool_call(
                 tool_name, arguments, ToolRegistry.get_tool_declarations()
             )
+            if tool_name in ('preview_crypto_spot', 'get_crypto_trial_status', 'get_crypto_protective_review', 'get_crypto_preparation_status') or tool_name in _BS_CHAT_DIAGNOSTIC_NAMES:
+                from tools.bs_chat_tool_bridge import bs_chat_bridge
+                return bs_chat_bridge.execute_tool(tool_name, arguments)
             import time, os, sys, json, re, subprocess, urllib.request
             if tool_name == "kraken_op":
                 from core.kraken_service import kraken_service

@@ -29,6 +29,7 @@ class ChatRequest(BaseModel):
     messages: Optional[list] = None
     temperature: float = Field(default=0.7, strict=True, ge=0.0, le=2.0)
     stream: bool = True
+    client_correlation_id: Optional[str] = None
 
 
 def clean_tool_prompt(raw: str) -> str:
@@ -676,6 +677,16 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
     # Availability/informational questions never enter model/tool dispatch.
     from core.media_intent_policy import resolve_media_status
     intent = intent_prompt if intent_prompt is not None else prompt
+    from core.crypto_preview_chat import crypto_preview_reply
+    crypto_reply = await crypto_preview_reply({'user_prompt': intent})
+    if crypto_reply is not None:
+        yield crypto_reply['response']
+        return
+    from core.crypto_trial_status_chat import crypto_trial_status_reply
+    trial_reply = await crypto_trial_status_reply({'user_prompt': intent})
+    if trial_reply is not None:
+        yield trial_reply['response']
+        return
     observed = await resolve_media_status({'prompt': intent})
     if observed is not None:
         yield observed
@@ -1346,9 +1357,15 @@ async def chat_hybrid_endpoint(req: ChatRequest):
         return hybrid_reply_response(provider_reply)
     source_context_bundle = (await request_source_bundle(req.user_prompt or req.prompt, source_references)
                              if source_references else None)
+    import uuid
+    server_trace_id = uuid.uuid4().hex
+    resp_headers = {
+        "X-Server-Trace-ID": server_trace_id,
+        "X-Client-Correlation-ID": str(req.client_correlation_id or ""),
+    }
     async def events():
         messages = list(req.messages or [])
         async for chunk in stream_stehouwer_hybrid_response(req.prompt, messages=messages, intent_prompt=req.user_prompt, primary_model=req.model,
                 **({'source_context_bundle':source_context_bundle} if source_context_bundle is not None else {})):
             yield chunk
-    return StreamingResponse(events(), media_type="text/event-stream")
+    return StreamingResponse(events(), media_type="text/event-stream", headers=resp_headers)

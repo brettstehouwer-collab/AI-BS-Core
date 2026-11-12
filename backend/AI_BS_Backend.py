@@ -1397,6 +1397,10 @@ except ImportError as e:
     print(f"Warning: Could not load fe_express_router: {e}")
 
 
+from routers.fe_driver_registration import register_driver_portal
+register_driver_portal(app)
+
+
 
 
 
@@ -1941,7 +1945,7 @@ app.add_middleware(
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "X-Admin-Key", "X-API-Key", "X-Client-ID", "X-Local-Token"],
+    allow_headers=["Authorization", "Content-Type", "X-Admin-Key", "X-API-Key", "X-Client-ID", "X-Local-Token", "X-Operation-Id", "Idempotency-Key", "X-Document-Name", "X-Document-Name-Encoding"],
 )
 
 # Application-Level ASGI Network Telemetry & Cryptographic Packet Analysis Middleware
@@ -2141,6 +2145,8 @@ from routers.matrix_router import router as matrix_domain_router
 from routers.agent_routing import router as agent_domain_router
 
 app.include_router(chat_domain_router)
+from routers.chat_films import router as chat_films_router
+app.include_router(chat_films_router)
 app.include_router(coding_review_router)
 
 app.include_router(media_domain_router)
@@ -3156,6 +3162,10 @@ async def get_v1_telemetry_alias():
     return await get_swarm_status()
 
 app.include_router(accounting_router)
+from modules.personal_ledger_export import register_personal_ledger
+from modules.personal_payments import register_personal_payments
+register_personal_payments(app)
+register_personal_ledger(app)
 
 app.include_router(vault_router)
 
@@ -6205,6 +6215,9 @@ def execute_registered_tool(payload: ToolExecutionPayload):
     """Executes a registered tool by name with arguments."""
 
     result = ToolRegistry.execute_tool(payload.tool_name, payload.arguments)
+
+    if result.get("status") == "unavailable":
+        return JSONResponse(status_code=503, content={"status": "unavailable", "result": result})
 
     if payload.tool_name in ("run_coding_task", "get_coding_task"):
 

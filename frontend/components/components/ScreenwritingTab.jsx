@@ -1098,6 +1098,10 @@ const downloadScreenplayExport = async ( format, watermark = '') => {
       return;
     }
     const project = currentProject;
+    if (exportLayout==='typed-professional' && format!=='pdf') {
+      alert('Typed professional mode exports PDF. Choose a preserved FDX mode to export XML.');
+      return;
+    }
     const draft = captureDraft();
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     setIsLoading(true);
@@ -2355,13 +2359,13 @@ event=>toggleMobilePanel('tools',event)}>Tools</button>
             <button onClick={() => setShowFindReplace(!showFindReplace)} className="sw-ribbon-btn" style={{ background: showFindReplace ? 'rgba(168, 85, 247, 0.3)' : 'transparent', border: '1px solid #a855f7', color: '#a855f7', padding: '4px 8px', fontSize: '0.8rem' }}>
               🔍 Find & Replace
             </button>
-            <button onClick={handleExportFDX} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #38bdf8', color: '#38bdf8', padding: '4px 8px', fontSize: '0.8rem' }}>
+            <button onClick={handleExportFDX} disabled={exportLayout==='typed-professional'} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #38bdf8', color: '#38bdf8', padding: '4px 8px', fontSize: '0.8rem' }}>
               📄 Export FDX
             </button>
-            <button onClick={handleExportPDF} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #e11d48', color: '#e11d48', padding: '4px 8px', fontSize: '0.8rem' }}>
+            <button onClick={handleExportPDF} disabled={Boolean(projectMetadata?.source_fdx && !['typed-professional','reflow'].includes(exportLayout))} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #e11d48', color: '#e11d48', padding: '4px 8px', fontSize: '0.8rem' }}>
               📄 Export PDF
             </button>
-            {projectMetadata?.source_fdx&&<><select aria-label="Rich FDX export mode" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}}><option value="source">Current preserved FDX</option><option value="original">Original imported FDX</option><option value="reflow">Explicit legacy text reflow</option></select><span>Rich PDF export requires explicit legacy reflow; rich XML/style fidelity applies to preserved FDX only.</span></>}
+            {projectMetadata?.source_fdx&&<><select aria-label="Rich FDX export mode" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}}><option value="source">Current preserved FDX</option><option value="original">Original imported FDX</option><option value="typed-professional">Typed professional PDF: new layout</option><option value="reflow">Explicit legacy text reflow</option></select><span role="status">{exportLayout==='typed-professional'?'Typed roles and supported bold/italic/underline use Courier 12 and new pagination. Source layout, headers and fonts are replaced; unsupported features reject.':'Preserved FDX retains rich XML. For PDF choose Typed professional or explicit lossy legacy reflow.'}</span>{exportReceipt?.layout==='typed-professional'&&<span role="status">Typed professional PDF verified: {exportReceipt.pdf_page_count} pages. SHA-256: {exportReceipt.output_sha256}.</span>}</>}
             {projectMetadata?.source_pdf && <>
               <select aria-label="Screenplay export layout" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}} style={{background:'#111827',color:'#cbd5e1',fontSize:'0.8rem'}}>
                 <option value="source">Archival: preserve source pages</option>

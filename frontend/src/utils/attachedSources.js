@@ -15,7 +15,11 @@ function references(value){
 /** IDs are copied only from verified upload receipts or this same conversation's explicit scope.
  * @param {any[]} files @param {any[]} history @param {{owner:string,conversation_id:string,backend_url:string}} scope */
 export function attachmentSourceReferences(files,history,scope){
- if(!scope?.owner||!scope?.conversation_id||!scope?.backend_url)throw Error('Chat identity is not ready. Attachments were retained.');
+ if(!files?.length && !history?.some(r => r?.source_references?.length)) return [];
+ if(!scope?.owner||!scope?.conversation_id||!scope?.backend_url){
+  if(files?.length) throw Error('Chat identity is not ready. Attachments were retained.');
+  return [];
+ }
  if(files.length){
   const pdfs=files.filter(isPdf);
   for(const file of pdfs){

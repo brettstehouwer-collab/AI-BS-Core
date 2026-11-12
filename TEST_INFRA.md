@@ -36,6 +36,7 @@
   - `C:\AI-BS\tests\e2e\tier2_boundary\` - Tier 2: 18 boundary test modules (`test_b01_sheltered_hub_boundary.py` .. `test_b18_e2e_boundary.py`)
   - `C:\AI-BS\tests\e2e\tier3_pairwise\` - Tier 3: Pairwise cross-feature integration test modules (`test_p01_viewport_graphics_config.py`, etc.)
   - `C:\AI-BS\tests\e2e\tier4_scenarios\` - Tier 4: Real-world multi-feature application workflow scenarios (`test_s01_authoring_to_viewport_e2e.py`, etc.)
+  - `C:\AI-BS\tests\e2e\tier5_adversarial\` - Tier 5: Adversarial, chaos, stress & hardening test modules (`test_a01_concurrency_stress_rag.py` .. `test_a04_zero_leak_memory_guard.py`)
 
 ## Real-World Application Scenarios (Tier 4)
 | # | Scenario | Features Exercised | Complexity |

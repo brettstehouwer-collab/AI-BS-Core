@@ -147,7 +147,7 @@ export default function LoginModal({ onLoginSuccess }) {
 
         {isLocalDesktop() && <button 
           onClick={() => {
-            const localUser = { email: 'brett@stehouwerproductions.com', displayName: 'Brett Stehouwer (Desktop Admin)', uid: 'local_admin_brett' };
+            const localUser = { email: 'brett@stehouwerproductions.com', displayName: 'Brett Stehouwer (Desktop Admin)', uid: 'local_admin_brett', emailVerified: true };
             try {
               localStorage.setItem('aibs_cached_user', JSON.stringify(localUser));
             } catch {}

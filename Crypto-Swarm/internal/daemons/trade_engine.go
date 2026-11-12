@@ -87,56 +87,47 @@ type InstrumentInfo struct {
 	PriceDecimals    int `json:"price_decimals"`
 }
 
-// CryptoComClient handles authenticated requests to the Crypto.com Exchange API v2.
+// CryptoComClient uses v1 public data; legacy private dispatch remains held.
 type CryptoComClient struct {
 	APIKey    string
 	APISecret string
 	reqID     int64
 	Markets   map[string]InstrumentInfo
 	mu        sync.RWMutex
+	publicHTTPClient *http.Client
 }
 
 // LoadMarkets fetches precision rules from the exchange.
 func (c *CryptoComClient) LoadMarkets() error {
-	resp, err := http.Get(fmt.Sprintf("%s/public/get-instruments", cryptoComBaseURL))
+	result, err := c.publicMarketData("public/get-instruments")
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	var result map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return err
-	}
-
 	res, ok := result["result"].(map[string]interface{})
 	if !ok {
 		return fmt.Errorf("missing result in get-instruments")
 	}
 
-	instruments, ok := res["instruments"].([]interface{})
+	instruments, ok := res["data"].([]interface{})
 	if !ok {
 		return fmt.Errorf("missing instruments array")
 	}
 
-	c.mu.Lock()
-	if c.Markets == nil {
-		c.Markets = make(map[string]InstrumentInfo)
-	}
+	markets := make(map[string]InstrumentInfo)
 	for _, rawInst := range instruments {
 		inst, ok := rawInst.(map[string]interface{})
 		if !ok {
-			continue
+			return fmt.Errorf("invalid instrument record")
 		}
-		name, _ := inst["instrument_name"].(string)
-		qd, _ := inst["quantity_decimals"].(float64)
-		pd, _ := inst["price_decimals"].(float64)
-
-		c.Markets[name] = InstrumentInfo{
-			QuantityDecimals: int(qd),
-			PriceDecimals:    int(pd),
-		}
+		name, _ := inst["symbol"].(string)
+		qd, qerr := marketPrecision(inst["quantity_decimals"])
+		pd, perr := marketPrecision(inst["quote_decimals"])
+		if name == "" || qerr != nil || perr != nil { return fmt.Errorf("invalid instrument precision or symbol") }
+		if _, duplicate := markets[name]; duplicate { return fmt.Errorf("duplicate instrument") }
+		markets[name] = InstrumentInfo{QuantityDecimals: qd, PriceDecimals: pd}
 	}
+	c.mu.Lock()
+	c.Markets = markets
 	c.mu.Unlock()
 	return nil
 }
@@ -150,17 +141,10 @@ func (c *CryptoComClient) Truncate(value float64, decimals int) string {
 
 // FetchTickers fetches all current market prices.
 func (c *CryptoComClient) FetchTickers() (map[string]float64, error) {
-	resp, err := http.Get(fmt.Sprintf("%s/public/get-ticker", cryptoComBaseURL))
+	result, err := c.publicMarketData("public/get-tickers")
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	var result map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-
 	res, ok := result["result"].(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("missing result in get-ticker")
@@ -174,13 +158,13 @@ func (c *CryptoComClient) FetchTickers() (map[string]float64, error) {
 	for _, rawTicker := range data {
 		t, ok := rawTicker.(map[string]interface{})
 		if !ok {
-			continue
+			return nil, fmt.Errorf("invalid ticker record")
 		}
 		name, _ := t["i"].(string)
-		last, _ := t["a"].(float64)
-		if name != "" && last > 0 {
-			tickers[name] = last
-		}
+		last, err := marketPrice(t["a"])
+		if name == "" || err != nil { return nil, fmt.Errorf("invalid ticker symbol or price") }
+		if _, duplicate := tickers[name]; duplicate { return nil, fmt.Errorf("duplicate ticker") }
+		tickers[name] = last
 	}
 	return tickers, nil
 }

@@ -27,11 +27,11 @@ function InputEvidence({ record }) {
 }
 
 /** Preparation evidence only. This view has no run/apply action. */
-/** @param {{state: import("/types/preparation").PreparationState, onField: (name: keyof import("/types/preparation").PreparationForm, value: string) => void, canCopyDraft: boolean, onPreview: () => void, onSave: () => void, onRefresh: () => void, onMore: () => void, onKeepPending: () => void, onCopyDraft: () => void, onReconnect: () => void, onGeneratePlan: () => void, onPlansRefresh: () => void, onPlansMore: () => void, onProposalReview: () => void, onProposalGenerate: () => void, onProposalsRefresh: () => void, onProposalsMore: () => void, onInspect: (id: string) => void, onRecover: (id: string) => void, onPlanInspect: (id: string) => void, onPlanRecover: (id: string) => void, onPlanCancel: (id: string) => void, onPlanId: (id: string) => void, onProposalInspect: (id: string) => void, onProposalRecover: (id: string) => void, onProposalCancel: (id: string) => void, onProposalId: (id: string) => void}} props */
+/** @param {{allowCodeProposal?: boolean, state: import("/types/preparation").PreparationState, onField: (name: keyof import("/types/preparation").PreparationForm, value: string) => void, canCopyDraft: boolean, onPreview: () => void, onSave: () => void, onRefresh: () => void, onMore: () => void, onKeepPending: () => void, onCopyDraft: () => void, onReconnect: () => void, onGeneratePlan: () => void, onPlansRefresh: () => void, onPlansMore: () => void, onProposalReview: () => void, onProposalGenerate: () => void, onProposalsRefresh: () => void, onProposalsMore: () => void, onInspect: (id: string) => void, onRecover: (id: string) => void, onPlanInspect: (id: string) => void, onPlanRecover: (id: string) => void, onPlanCancel: (id: string) => void, onPlanId: (id: string) => void, onProposalInspect: (id: string) => void, onProposalRecover: (id: string) => void, onProposalCancel: (id: string) => void, onProposalId: (id: string) => void}} props */
 export function PreparationView({ state, onField, onPreview, onSave, onRefresh, onMore, onInspect, onRecover,
   onKeepPending, onCopyDraft, onReconnect, canCopyDraft, onGeneratePlan, onPlanInspect, onPlanRecover, onPlanCancel,
   onPlansRefresh, onPlansMore, onPlanId, onProposalReview, onProposalGenerate, onProposalInspect, onProposalRecover,
-  onProposalCancel, onProposalId, onProposalsRefresh, onProposalsMore }) {
+  onProposalCancel, onProposalId, onProposalsRefresh, onProposalsMore, allowCodeProposal = true }) {
   const control = 'rounded border border-slate-600 px-2 py-1 text-xs disabled:opacity-40';
   if (!state.connected) return <section aria-label="Coding preparation" className="rounded border border-slate-700 bg-slate-900 p-3 text-sm text-slate-200">
     <p>{state.busy ? 'Checking preparation access…' : 'Connect to view preparations for the selected backend and account.'}</p>
@@ -119,7 +119,7 @@ export function PreparationView({ state, onField, onPreview, onSave, onRefresh, 
           </>}
           <button type="button" className={`${control} mt-2`} disabled={state.busy || planning}
             onClick={() => { if (state.planRecord) onPlanRecover(state.planRecord.plan_id); }}>Recover current plan</button>
-          {state.planRecord.state === 'PLAN_PROPOSED' && !state.planRecord.proposal?.questions.length && <div className="mt-3 border-t border-slate-600 pt-3">
+          {allowCodeProposal && state.planRecord.state === 'PLAN_PROPOSED' && !state.planRecord.proposal?.questions.length && <div className="mt-3 border-t border-slate-600 pt-3">
             <h5 className="font-semibold">Code proposal · Review only</h5>
             <p className="mt-1 text-slate-400">Review this saved plan before asking Stehouwer for code. Nothing is applied, and tests have not run.</p>
             <div className="mt-2 flex flex-wrap gap-2">

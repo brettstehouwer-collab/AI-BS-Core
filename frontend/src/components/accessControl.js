@@ -177,8 +177,22 @@ export const getUserTier = (currentUser, simulatedTier = null) => {
   if (!currentUser) return USER_TIERS.FREE_DEMO;
   const email = (currentUser.email || '').toLowerCase().trim();
   const uid = currentUser.uid || '';
-  const isAdmin = Boolean(currentUser.emailVerified && uid && (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid)));
-  if (isAdmin) return simulatedTier ? (USER_TIERS[simulatedTier] || USER_TIERS.FREE_DEMO) : USER_TIERS.ADMIN;
+  const isLocalHost = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  );
+  const isLocalDesktopAdmin = Boolean(
+    isLocalHost && (uid === 'local_admin_brett' || ADMIN_EMAILS.includes(email))
+  );
+  const isVerifiedFirebaseAdmin = Boolean(
+    currentUser.emailVerified && uid && (ADMIN_EMAILS.includes(email) || ADMIN_UIDS.includes(uid))
+  );
+  const isAdmin = isLocalDesktopAdmin || isVerifiedFirebaseAdmin;
+  if (isAdmin) {
+    if (!simulatedTier) return USER_TIERS.ADMIN;
+    const normalizedTier = String(simulatedTier).toUpperCase();
+    return USER_TIERS[normalizedTier] || USER_TIERS.ADMIN;
+  }
 
   // Check custom user claims / subscription plan saved in profile
   const userPlan = (currentUser.plan || currentUser.subscriptionTier || '').toUpperCase();

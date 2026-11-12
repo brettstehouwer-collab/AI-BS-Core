@@ -16,6 +16,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppStore } from './useAppStore';
+import { ChatStreamParser, frameTextFor, stripMetadataFrames } from '/src/utils/chatStream.js';
 import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 import { Menu, Plus, Mic, MicOff, Image, Paperclip, ChevronDown, Check, Copy, Download, Monitor, X, Cpu, ArrowUp, Sparkles, Share2, Smartphone, Play, Square, Terminal, WrapText } from 'lucide-react';
 
@@ -335,8 +336,9 @@ function parseCognitiveContent(rawContent) {
     } catch (e) {
       console.warn("Failed to parse AI-BS cognitive metadata", e);
     }
-    text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/, '').trimStart();
   }
+  // Strip every complete frame and any unterminated in-flight frame.
+  text = stripMetadataFrames(text).trimStart();
 
   // 2. Extract <think>...</think> block (complete or in-progress stream)
   let thought = null;
@@ -674,7 +676,7 @@ function MobileCognitiveThoughtDrawer({ thought, isThinking }) {
 
 // ─── Markdown Content Renderer with Media Proxying ───────────────────────────
 /** @param {{content: string, role: string, onImageClick?: (src: string) => void}} props */
-export function MobileFormattedContent({ content, role }) {
+export function MobileFormattedContent({ content, role, meta: metaOverride }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
 
   // ReactMarkdown uses renderer functions as component types. Keep them stable
@@ -734,7 +736,7 @@ export function MobileFormattedContent({ content, role }) {
           return <p style={{ margin: '6px 0', lineHeight: '1.55' }}>{children}</p>;
         },
         a({ href, children }) {
-          if (typeof href === 'string' && (/\/api\/(?:comfy(?:ui)?\/(?:media|view)|music\/|audio\/|video\/|media\/)/.test(href) || /\/media\//.test(href))) {
+          if (typeof href === 'string' && (/\/api\/(?:comfy(?:ui)?\/(?:media|view)|music\/|audio\/|video\/|media\/|chat\/films\/)/.test(href) || /\/media\//.test(href))) {
             return <AuthenticatedChatMedia src={href} backendUrl={BACKEND_URL} linkOnly>{children}</AuthenticatedChatMedia>;
           }
           let finalHref = href;
@@ -756,7 +758,8 @@ export function MobileFormattedContent({ content, role }) {
     return <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</div>;
   }
 
-  const { meta, thought, body, isThinking } = parseCognitiveContent(content);
+  const { meta: parsedMeta, thought, body, isThinking } = parseCognitiveContent(content);
+  const meta = metaOverride || parsedMeta;
   const hasRunToken = typeof body === 'string' && /\[Run\s+([^\]]+)\]/.test(body);
   const stagedPayloads = hasRunToken ? extractStagedPayloads(body) : null;
 
@@ -847,6 +850,7 @@ export default function MobileStehouwerChat({ onSwitchToDesktop, currentUser, ba
   const [autoSpeak, setAutoSpeak] = useState(false);
 
   const abortControllerRef = useRef(/** @type {AbortController | null} */ (null));
+  const chatRequestEpochRef = useRef(0);
   const conversationMemory = useConversationMemory(useAppStore, BACKEND_URL, () => abortControllerRef.current?.abort());
   const chatMessages = conversationMemory.viewReady ? storedChatMessages : [];
   const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
@@ -1234,7 +1238,7 @@ const readLocalFileAsDataUrl = (targetFile) => {
   // Message Send Logic
   /** @param {string|null} textToSend */
   const handleSendMessage = async (textToSend = null) => {
-    if (!conversationMemory.viewReady) return;
+    if (!conversationMemory.viewReady || !conversationMemory.isCurrent() || abortControllerRef.current) return;
     const rawText = textToSend !== null ? textToSend : footerInput.trim();
     if ((!rawText && attachments.length === 0) || isLoading) return;
 
@@ -1267,16 +1271,17 @@ let attachmentBadges = [];
       source_reference_scope:sourceReferenceScope
     };
 
-    const currentList = chatMessages;
-    const updatedHistory = [...currentList, userMsg];
-    setChatMessages(updatedHistory);
-
-    setFooterInput('');
-    setAttachments([]);
-    setIsLoading(true);
-
     const controller = new AbortController();
+    const requestEpoch = ++chatRequestEpochRef.current;
     abortControllerRef.current = controller;
+    setIsLoading(true);
+    let submitted = false;
+    const requireCurrentRequest = () => {
+      if (controller.signal.aborted || abortControllerRef.current !== controller || chatRequestEpochRef.current !== requestEpoch ||
+          !conversationMemory.viewReady || !conversationMemory.isCurrent()) {
+        throw Object.assign(new Error('Chat request stopped before further dispatch.'), { name:'AbortError' });
+      }
+    };
 
     try {
       const reqHeaders = await chatAuthHeaders({
@@ -1284,7 +1289,13 @@ let attachmentBadges = [];
         
         'X-Client-ID': 'stehouwer_mobile_sovereign'
       }, currentUser?.uid || '', { forceRefresh:true });
-      if (!conversationMemory.isCurrent()) return;
+      requireCurrentRequest();
+      const updatedHistory = [...useAppStore.getState().chatMessages, userMsg];
+      setChatMessages(updatedHistory);
+      // Authentication can take time; preserve any newer draft or attachments.
+      setFooterInput(previous => previous === footerInput ? '' : previous);
+      setAttachments(previous => previous.filter(attachment => !attachments.includes(attachment)));
+      submitted = true;
 
       if (selectedProvider === 'openai') {
         const startedAt = Date.now();
@@ -1293,10 +1304,14 @@ let attachmentBadges = [];
           provider: selectedProvider, model: selectedModel, prompt: formattedPrompt,
           userPrompt: rawText || 'Please review and analyze the attached files.',
           messages: updatedHistory, sourceReferences, headers: reqHeaders, signal: controller.signal,
-          onText: (content, displayName, sourceRetrieval) => setChatMessages(prev => prev.map((message, index) =>
-            index === prev.length - 1 && message.role === 'assistant'
-              ? { ...message, content, model: displayName, source_retrieval:sourceRetrieval, client_elapsed_ms: Date.now() - startedAt } : message)),
+          onText: (content, displayName, sourceRetrieval) => {
+            requireCurrentRequest();
+            setChatMessages(prev => prev.map((message, index) =>
+              index === prev.length - 1 && message.role === 'assistant'
+                ? { ...message, content, model: displayName, source_retrieval:sourceRetrieval, client_elapsed_ms: Date.now() - startedAt } : message));
+          },
         });
+        requireCurrentRequest();
         if (autoSpeak) speakText(reply.content);
         return;
       }
@@ -1328,18 +1343,20 @@ let attachmentBadges = [];
         ]);
 
         let accumulated = '';
-        const recentHistory = (updatedHistory || []).slice(-8).map(m => ({
+        const recentHistory = (updatedHistory || []).slice(0, -1).slice(-32).map(m => ({
           role: m.role,
-          content: m.content || m.displayContent || ''
+          content: stripMetadataFrames(m.content || m.displayContent || '')
         }));
         for (const targetBase of candidateBases) {
           try {
+            requireCurrentRequest();
             const streamRes = await fetch(`${targetBase}/api/v1/hybrid-chat/stream`, {
               method: 'POST',
               headers: reqHeaders,
               body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', source_references:sourceReferences, messages: recentHistory, provider: selectedProvider, model: selectedModel, stream: true, enable_rag: true }),
               signal: controller.signal
             });
+            requireCurrentRequest();
 
             if ([401, 403].includes(streamRes.status)) {
               const error = Object.assign(new Error(`AI-BS backend returned HTTP ${streamRes.status}. Sign in with an authorized administrator account.`), { chatAuthorizationFailure: true });
@@ -1354,24 +1371,32 @@ let attachmentBadges = [];
             }
             if (streamRes.ok && streamRes.body) {
               const reader = streamRes.body.getReader();
-              const decoder = new TextDecoder();
-
+              let completed = false;
+              let cancelled = false;
+              const cancelReader = () => {
+                if (completed || cancelled) return;
+                cancelled = true;
+                try { Promise.resolve(reader.cancel?.()).catch(error => console.warn('Chat stream cancellation failed:', error)); }
+                catch (error) { console.warn('Chat stream cancellation failed:', error); }
+              };
+              controller.signal.addEventListener('abort', cancelReader, { once:true });
               try {
-                while (true) {
-                  const { done, value } = await reader.read();
-                  if (done) break;
-                  const chunk = decoder.decode(value, { stream: true });
-                  accumulated += chunk;
-  
+                const decoder = new TextDecoder();
+                const streamParser = new ChatStreamParser();
+                let frameText = '';
+                const publishChunk = parsedChunk => {
+                  accumulated += parsedChunk.text;
+                  if (parsedChunk.frames.length) frameText += (frameText ? '\n' : '') + frameTextFor(parsedChunk.frames);
                   const displayAccumulated = accumulated.replace(/^[\u200B\s]+/, '');
                   setChatMessages(prev => {
                     const arr = [...prev];
                     if (arr.length > 0 && arr[arr.length - 1].role === 'assistant') {
                       arr[arr.length - 1].content = displayAccumulated;
-                      const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(displayAccumulated);
-                      if (metaMatch) {
-                        try {
-                          const parsedMeta = JSON.parse(metaMatch[1]);
+                      const lastFrame = frameText ? frameText.slice(frameText.lastIndexOf('<!--AI-BS-METADATA:') + 19, frameText.lastIndexOf('-->')) : '';
+                       if (lastFrame) {
+                         try {
+                           const parsedMeta = JSON.parse(lastFrame);
+                           arr[arr.length - 1].meta = parsedMeta;
                           arr[arr.length - 1].source_retrieval = parsedMeta.source_retrieval;
                           if (parsedMeta.display_name) {
                             arr[arr.length - 1].model = parsedMeta.display_name;
@@ -1381,9 +1406,21 @@ let attachmentBadges = [];
                     }
                     return arr;
                   });
+                };
+                while (true) {
+                  requireCurrentRequest();
+                  const { done, value } = await reader.read();
+                  requireCurrentRequest();
+                  publishChunk(streamParser.feed(done ? decoder.decode() : decoder.decode(value, { stream:true })));
+                  if (done) {
+                    publishChunk(streamParser.finish());
+                    completed = true;
+                    break;
+                  }
                 }
               } finally {
-                // Release the owned reader on EOF, cancellation and failed reads.
+                controller.signal.removeEventListener('abort', cancelReader);
+                if (!completed) cancelReader();
                 // Cleanup cannot replace the original failure or partial reply.
                 try { reader.releaseLock?.(); }
                 catch (releaseError) { console.warn('Chat stream reader release failed:', releaseError); }
@@ -1400,21 +1437,11 @@ let attachmentBadges = [];
             }
           } catch (streamErr) {
             if (streamErr && typeof streamErr === 'object' && 'chatAuthorizationFailure' in streamErr && streamErr.chatAuthorizationFailure) throw streamErr;
+            if (streamErr && typeof streamErr === 'object' && 'name' in streamErr && streamErr.name === 'AbortError') throw streamErr;
             if (sourceReferences.length) throw streamErr;
-            if (streamErr instanceof Error && streamErr.name === 'AbortError') {
-              console.log('Stream generation aborted by user.');
-              const partialTrimmed = accumulated.replace(/^[\u200B\s]+/, '').trim();
-              if (partialTrimmed.length > 0) {
-                streamingSucceeded = true;
-              }
-              break;
-            }
             console.warn(`Streaming attempt on ${targetBase} failed:`, streamErr);
             const partialTrimmed = accumulated.replace(/^[\u200B\s]+/, '').trim();
-            if (partialTrimmed.length > 0) {
-              streamingSucceeded = true;
-              break;
-            }
+            if (partialTrimmed.length > 0) throw streamErr;
           }
         }
 
@@ -1429,6 +1456,7 @@ let attachmentBadges = [];
       }
 
       if (!streamingSucceeded) {
+        requireCurrentRequest();
         const payloadBody = JSON.stringify({
           user_prompt: rawText || 'Please review and analyze the attached files.',
           source_references:sourceReferences,
@@ -1443,9 +1471,11 @@ let attachmentBadges = [];
         candidateLoop: for (const targetBase of candidateBases) {
           for (const endpoint of ['/api/chat', '/v1/chat/completions']) {
             try {
+              requireCurrentRequest();
               res = await fetch(`${targetBase}${endpoint}`, {
                 method: 'POST', headers: reqHeaders, body: payloadBody, signal: controller.signal
               });
+              requireCurrentRequest();
             } catch (error) {
               if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') throw error;
               throw new Error('The chat request was not acknowledged. It may have reached the host; no automatic retry was sent. Your prompt is retained.');
@@ -1462,12 +1492,15 @@ let attachmentBadges = [];
           console.warn('Dedicated model endpoints unready. Falling back to Stehouwer sovereign stream...');
           for (const targetBase of candidateBases) {
             try {
+              requireCurrentRequest();
               const fbRes = await fetch(`${targetBase}/api/v1/hybrid-chat/stream`, {
                 method: 'POST',
                 headers: reqHeaders,
                 body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', source_references:sourceReferences, provider: selectedProvider, model: selectedModel, stream: false }),
-                signal: AbortSignal.timeout ? AbortSignal.timeout(fallbackTimeout) : undefined
+                signal: AbortSignal.any && AbortSignal.timeout
+                  ? AbortSignal.any([controller.signal, AbortSignal.timeout(fallbackTimeout)]) : controller.signal
               });
+              requireCurrentRequest();
               if ([401, 403].includes(fbRes?.status)) {
                 const error = Object.assign(new Error(`AI-BS backend returned HTTP ${fbRes.status}. Sign in with an authorized administrator account.`), { chatAuthorizationFailure: true });
                 throw error;
@@ -1475,6 +1508,7 @@ let attachmentBadges = [];
               if (sourceReferences.length && !fbRes.ok && ![404,405].includes(fbRes.status)) await readChatHttpResponse(fbRes);
               if (fbRes && fbRes.ok) {
                 const fbData = await readChatHttpResponse(fbRes);
+                requireCurrentRequest();
                 const fbText = chatResponseText(fbData);
                 if (sourceReferences.length && !fbText.trim()) throw new Error('The attached-source request ended without an answer. No automatic retry was sent.');
                 if (fbText.trim()) {
@@ -1493,6 +1527,7 @@ let attachmentBadges = [];
                 }
               }
             } catch (fbErr) {
+              if (fbErr && typeof fbErr === 'object' && 'name' in fbErr && fbErr.name === 'AbortError') throw fbErr;
               if (fbErr && typeof fbErr === 'object' && 'chatAuthorizationFailure' in fbErr && fbErr.chatAuthorizationFailure) throw fbErr;
               if (sourceReferences.length) throw fbErr;
               console.warn(`Secondary fallback attempt on ${targetBase} failed:`, fbErr);
@@ -1503,6 +1538,7 @@ let attachmentBadges = [];
         }
 
         const data = await readChatHttpResponse(res);
+        requireCurrentRequest();
         const botResponse = chatResponseText(data);
 
         setChatMessages(prev => [
@@ -1519,13 +1555,16 @@ let attachmentBadges = [];
         if (autoSpeak) speakText(botResponse);
       }
     } catch (err) {
-      // Keep the submitted prompt available without replacing newer text typed during the request.
-      if (!(useAppStore.getState().footerInput || '').trim()) setFooterInput(rawText);
-      setAttachments(prev => prev.length ? prev : attachments);
-      setChatMessages(/** @param {typeof chatMessages} prev */ prev => prev.length && prev[prev.length - 1].role === 'assistant' && prev[prev.length - 1].content === '' ? prev.slice(0, -1) : prev);
-      if (err instanceof Error && err.name === 'AbortError') {
+      const replacedInCurrentScope = conversationMemory.isCurrent() && chatRequestEpochRef.current !== requestEpoch;
+      if (submitted && !replacedInCurrentScope) {
+        // These setters remain bound to the original owner/conversation.
+        setFooterInput(previous => previous.trim() ? previous : rawText);
+        setAttachments(previous => [...attachments.filter(attachment => !previous.includes(attachment)), ...previous]);
+        setChatMessages(/** @param {typeof chatMessages} prev */ prev => prev.length && prev[prev.length - 1].role === 'assistant' && prev[prev.length - 1].content === '' ? prev.slice(0, -1) : prev);
+      }
+      if (err && typeof err === 'object' && 'name' in err && err.name === 'AbortError') {
         console.log('Stream generation aborted by user.');
-      } else {
+      } else if (!replacedInCurrentScope && (submitted || conversationMemory.isCurrent())) {
         console.error('Chat error:', err);
         setChatMessages(prev => [
           ...prev,
@@ -1533,8 +1572,10 @@ let attachmentBadges = [];
         ]);
       }
     } finally {
-      setIsLoading(false);
-      abortControllerRef.current = null;
+      if (abortControllerRef.current === controller) {
+        setIsLoading(false);
+        abortControllerRef.current = null;
+      }
     }
   };
 
@@ -2033,6 +2074,7 @@ let attachmentBadges = [];
                       </div>
                       <MobileFormattedContent 
                         content={msg.content} 
+                        meta={msg.meta}
                         role="assistant" 
                         onImageClick={(src) => setPreviewImage(src)}
                       />

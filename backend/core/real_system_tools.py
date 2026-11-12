@@ -198,7 +198,7 @@ def execute_real_osint_lead_scan(query: str = "") -> str:
 
 
 def execute_program_builder_from_prompt(prompt: str) -> str:
-    """Prepare a starter scaffold and report its actual build/smoke-run receipt."""
+    """Prepare a source-only starter scaffold without executing generated code."""
     try:
         from core.program_builder_engine import AutonomousProgramBuilder
         
@@ -243,13 +243,14 @@ if __name__ == '__main__':
             description=clean_p,
             files=files,
             entrypoint="main.py",
-            run_immediately=True
+            run_immediately=False,
+            execute_build=False
         )
         
         execution = res.get("execution") or {}
         build = res.get("build") or {}
         quality = res.get("code_quality") or {}
-        blocked = (res.get("status") == "error" or quality.get("valid") is False
+        blocked = (res.get("status") in {"error", "unavailable"} or quality.get("valid") is False
                    or str(execution.get("status", "")).startswith("blocked_"))
         executed = execution.get("executed") is True
         smoke_passed = (executed and execution.get("status") == "success"
@@ -265,7 +266,9 @@ if __name__ == '__main__':
 
         md = "### AI-BS Starter Scaffold Receipt\n\n"
         md += f"**Project Name:** `{res.get('project_name', proj_name)}` | **Language:** `Python` | **Status:** `{status}`\n\n"
-        md += "This fixed template records your objective. It does not implement the requested program, telemetry workers or vault synchronization. A successful smoke run only shows that the scaffold ran.\n\n"
+        md += "This fixed template records your objective. It does not implement the requested program, telemetry workers or vault synchronization. This request does not execute generated code.\n\n"
+        if res.get("status") == "unavailable":
+            md += str(res.get("stderr") or res.get("message") or "Execution unavailable") + "\n\n"
         if res.get("zip_name"):
             md += f"**Directory:** `saved_data/built_programs/{res.get('project_name', proj_name)}/` | **ZIP Package:** `saved_data/built_programs/{res['zip_name']}`\n\n"
         else:
@@ -456,11 +459,13 @@ def check_and_execute_system_tools(prompt: str) -> Optional[str]:
     ]):
         return execute_real_osint_lead_scan(prompt)
 
-    # 7. Matrix Doctor / Port Scan / DB Health Intent
+    # 7. Matrix Doctor / Port Scan / DB Health Intent & Forensic Engineering Diagnostics
     if any(k in p for k in [
         "matrix doctor", "diagnostic scan", "scan service ports", "service ports",
         "check ports", "database health", "verify database", "port scan", "system health scan",
-        "doctor scan", "diagnose ports", "run diagnostic", "run a full matrix doctor"
+        "doctor scan", "diagnose ports", "run diagnostic", "run a full matrix doctor",
+        "forensic investigation", "investigate the recorded bs-chat session", "investigate the active backend service",
+        "diagnostic execution assessment", "forensic report", "audit sqlite conversation"
     ]):
         return execute_real_matrix_doctor()
 

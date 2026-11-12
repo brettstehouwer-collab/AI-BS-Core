@@ -89,10 +89,24 @@ if not getattr(sys, 'frozen', False):
 from native_studio.runtime_policy import configure_frozen_dependencies
 configure_frozen_dependencies()
 
+if __name__ == '__main__' and '--scratchpad-syntax-worker' in sys.argv:
+    from native_studio.syntax_worker import main as syntax_worker_main
+    sys.exit(syntax_worker_main(sys.argv[1:]))
+
+if (__name__ == '__main__' and '--packaged-writer-acceptance' in sys.argv
+        and '--native-creative-pipe-bootstrap' not in sys.argv):
+    sys.exit(2)
+
 # Explicit delegated launches finish their stdin/authorization handshake before
 # Qt imports, worker pools, full-shell views or background hub initialization.
 if __name__ == '__main__' and any(flag in sys.argv for flag in ('--native-creative-bootstrap','--native-creative-pipe-bootstrap')):
     from native_studio.native_creative_entry import main as native_creative_main
+    if '--packaged-writer-acceptance' in sys.argv:
+        def _run_packaged_writer_acceptance(session, packet):
+            from native_studio.packaged_writer_acceptance import run_writer_acceptance
+            return run_writer_acceptance(session, packet)
+        sys.exit(native_creative_main([sys.argv[0], '--native-creative-pipe-bootstrap'],
+                                     run_writer=_run_packaged_writer_acceptance))
     sys.exit(native_creative_main(sys.argv))
 
 # Release acceptance intentionally bypasses MainWindow, daemon management,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import Sidebar from './components/Sidebar.jsx';
 import TopNavbar from './components/TopNavbar.jsx';
@@ -114,7 +114,7 @@ const UnifiedCryptoHub = safeLazy(() => import('./components/UnifiedCryptoHub.js
 const UnifiedSystemEconomics = safeLazy(() => import('./components/UnifiedSystemEconomics.jsx'));
 const NotosEnterpriseOSTab = safeLazy(() => import('./components/NotosEnterpriseOSTab.jsx'));
 const NotoBarInventoryHub = safeLazy(() => import('./components/NotoBarInventoryHub.jsx'));
-const CampaignAutomationTab = safeLazy(() => import('./components/CampaignAutomationTab.jsx'));
+const BrandCampaignManager = safeLazy(() => import('./components/BrandCampaignManager.jsx'));
 const BanquetArchitectTab = safeLazy(() => import('./components/BanquetArchitectTab.jsx'));
 const SystemHealthTab = safeLazy(() => import('./components/SystemHealthTab.jsx'));
 const EnterpriseIndustryHubTab = safeLazy(() => import('./components/EnterpriseIndustryHubTab.jsx'));
@@ -263,7 +263,7 @@ const tabs = [
   { key: 'noto_inventory', label: 'Notō Multi-Bar Stock & Dispatch', description: 'Live Multi-Bar Inventory, Barback Dispatch & MLCC Distributor PO Engine', Component: NotoBarInventoryHub },
   { key: 'banquet_architect', label: 'Banquet Architect Studio', description: '2D Generative & 3D Unreal Engine Studio', Component: BanquetArchitectTab },
   { key: 'industry_grid', label: '70-Vertical Module Grid', description: 'Enterprise Expansion Suite', Component: EnterpriseIndustryHubTab },
-  { key: 'campaign_automation', label: 'Campaign & Audience Engine', description: 'Mailchimp-Style Event Campaign Automation & Telemetry', Component: CampaignAutomationTab },
+  { key: 'campaign_automation', label: 'Email & SMS Campaigns', description: 'Brand contacts, drafts and verified provider connections', Component: BrandCampaignManager },
   { key: 'unified_media_gallery', label: 'Unified Media Gallery', description: 'Unified Media and Asset Vault', Component: UnifiedMediaVaultTab },
   { key: 'neon_lounge_studio', label: 'Neon Lounge Studio', description: 'Futuristic Neon Lounge Architectural Design Studio & AI Autograd Engine', Component: FuturisticNeonLoungeStudio },
   { key: 'project_noco', label: 'Project NoCo & Living Stage Studio', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio', Component: ProjectNoCoStudioTab },
@@ -277,6 +277,37 @@ const tabs = [
   { key: 'cluster_engine', label: '⚡ Cluster Engine', description: 'Granian Rust ASGI, NATS JetStream, Temporal Durability, Dragonfly Cache & gRPC IPC', Component: ClusterEngineDashboard }
 ];
 
+const isLocalDesktopHost = () => typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+);
+
+/** @param {unknown} candidate @returns {import("firebase/auth").User | null} */
+function normalizeLocalDesktopAdmin(candidate) {
+  if (!isLocalDesktopHost() || !candidate || typeof candidate !== 'object') return null;
+  const obj = /** @type {{uid?: unknown, email?: unknown, displayName?: unknown, photoURL?: unknown}} */ (candidate);
+  const uid = typeof obj.uid === 'string' ? obj.uid : '';
+  const email = typeof obj.email === 'string' ? obj.email.toLowerCase().trim() : '';
+  if (uid !== 'local_admin_brett' || !ADMIN_EMAILS.includes(email)) return null;
+  return /** @type {import("firebase/auth").User} */ (/** @type {unknown} */ ({
+    email,
+    displayName: typeof obj.displayName === 'string' ? obj.displayName : 'Brett Stehouwer (Desktop Admin)',
+    uid: 'local_admin_brett',
+    photoURL: typeof obj.photoURL === 'string' ? obj.photoURL : null,
+    emailVerified: true,
+  }));
+}
+
+/** @returns {import("firebase/auth").User | null} */
+function readLocalDesktopAdminSession() {
+  if (!isLocalDesktopHost()) return null;
+  try {
+    const raw = localStorage.getItem('aibs_cached_user');
+    if (!raw) return null;
+    return normalizeLocalDesktopAdmin(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
 
 export default function App() {
   const selectedModel = useAppStore(state => state.selectedModel);
@@ -299,9 +330,35 @@ export default function App() {
   }, []);
   const { backendUrl, backendStatus } = useBackendHealth();
   const [localTrustState, setLocalTrustState] = useState(/** @type {import('/types/aibs').LocalTrustState} */ ({ enabled: false, allowedUsers: [] }));
-  const [authLoading, setAuthLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(/** @type {import("firebase/auth").User | null} */ (null));
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [initialLocalAdmin] = useState(() => readLocalDesktopAdminSession());
+  const [authLoading, setAuthLoading] = useState(() => !initialLocalAdmin);
+  const [currentUser, setCurrentUser] = useState(/** @type {import("firebase/auth").User | null} */ (initialLocalAdmin));
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(initialLocalAdmin));
+  const currentUserRef = useRef(currentUser);
+  currentUserRef.current = currentUser;
+  const explicitSignOutRef = useRef(false);
+
+  const handleSignOut = useCallback(async () => {
+    explicitSignOutRef.current = true;
+    currentUserRef.current = null;
+    try {
+      localStorage.removeItem('aibs_cached_user');
+    } catch {}
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    useAppStore.getState().setCurrentUser(null);
+    setAntiTamperUser(null);
+    try {
+      await auth.signOut();
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (initialLocalAdmin) {
+      useAppStore.getState().setCurrentUser(initialLocalAdmin);
+      setAntiTamperUser(initialLocalAdmin);
+    }
+  }, [initialLocalAdmin]);
   const [viewMode, setViewMode] = useState('2D');
   const [workspaceMode, setWorkspaceMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -438,6 +495,8 @@ export default function App() {
         ));
 
         if (isAuthorized) {
+          explicitSignOutRef.current = false;
+          currentUserRef.current = user;
           setIsAuthenticated(true);
           setCurrentUser(user);
           useAppStore.getState().setCurrentUser(user);
@@ -446,7 +505,8 @@ export default function App() {
               email: user.email,
               displayName: user.displayName,
               uid: user.uid,
-              photoURL: user.photoURL
+              photoURL: user.photoURL,
+              emailVerified: Boolean(user.emailVerified),
             }));
           } catch (e) {
             console.warn('Failed to cache user session:', e);
@@ -482,7 +542,7 @@ export default function App() {
               })).catch(() => console.warn('Login notification could not be confirmed.'));
             } else {
               const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-              const targetUrl = isLocalHost ? 'http://127.0.0.1:8080/api/analytics/notify-login' : 'https://api.brettstehouwer.live/api/analytics/notify-login';
+              const targetUrl = isLocalHost ? 'http://127.0.0.1:8000/api/analytics/notify-login' : 'https://api.brettstehouwer.live/api/analytics/notify-login';
               fetch(targetUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -505,17 +565,32 @@ export default function App() {
           }
 
         } else {
+          currentUserRef.current = null;
           setIsAuthenticated(false);
           setCurrentUser(null);
           useAppStore.getState().setCurrentUser(null);
           localStorage.removeItem('aibs_cached_user');
+          setAntiTamperUser(null);
           auth.signOut().catch(() => {});
         }
       } else {
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        useAppStore.getState().setCurrentUser(null);
-        localStorage.removeItem('aibs_cached_user');
+        const activeLocalAdmin = !explicitSignOutRef.current
+          ? (normalizeLocalDesktopAdmin(currentUserRef.current) || readLocalDesktopAdminSession())
+          : null;
+        if (activeLocalAdmin) {
+          currentUserRef.current = activeLocalAdmin;
+          setIsAuthenticated(true);
+          setCurrentUser(activeLocalAdmin);
+          useAppStore.getState().setCurrentUser(activeLocalAdmin);
+          setAntiTamperUser(activeLocalAdmin);
+        } else {
+          currentUserRef.current = null;
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+          useAppStore.getState().setCurrentUser(null);
+          localStorage.removeItem('aibs_cached_user');
+          setAntiTamperUser(null);
+        }
       }
       setAuthLoading(false);
     });
@@ -585,7 +660,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser?.uid) return;
+    if (!currentUser?.uid || !auth.currentUser) return;
     let current = true;
     const revision = useAppStore.getState().aiProviderSelectionRevision;
     const uid = currentUser.uid;
@@ -766,14 +841,18 @@ export default function App() {
       <TabErrorBoundary key="main-login"><Suspense fallback={<TabLoader />}>
       <LoginModal 
         onLoginSuccess={(user) => {
+          explicitSignOutRef.current = false;
+          currentUserRef.current = user;
           setIsAuthenticated(true);
           setCurrentUser(user);
+          useAppStore.getState().setCurrentUser(user);
           try {
             localStorage.setItem('aibs_cached_user', JSON.stringify({
               email: user.email,
               displayName: user.displayName,
               uid: user.uid,
-              photoURL: user.photoURL
+              photoURL: user.photoURL,
+              emailVerified: Boolean(user.emailVerified),
             }));
           } catch {}
           setAntiTamperUser(user);
@@ -803,6 +882,9 @@ export default function App() {
     <>
       <div className={`app-shell ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`} style={{ flexDirection: navLayout === 'top' ? 'column' : 'row', height: '100vh', width: '100vw' }}>
         {!zenMode && navLayout === 'top' && (
+          <details style={{ flexShrink: 0, background: '#0d1117', color: '#e2e8f0', borderBottom: '1px solid #253044' }}>
+          <summary style={{ cursor: 'pointer', padding: '6px 14px', fontSize: '0.85rem' }}>Workspace · {activeTabConfig.label || activeTabConfig.key}</summary>
+          <div style={{ maxHeight: '40dvh', overflow: 'auto' }}>
           <TopNavbar 
             backendUrl={backendUrl}
             activeTab={activeTab}
@@ -829,7 +911,10 @@ export default function App() {
             onZoomChange={handleZoomChange}
             zenMode={zenMode}
             onToggleZenMode={() => setZenMode(!zenMode)}
+            onSignOut={handleSignOut}
           />
+          </div>
+          </details>
         )}
 
         {navLayout === 'sidebar' ? (

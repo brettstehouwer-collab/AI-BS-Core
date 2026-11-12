@@ -1515,7 +1515,7 @@ def export_pdf(project_name: str, watermark: str = None, layout: Optional[str] =
     from urllib.parse import quote
     from core.chat_pdf_sources import PDFSourceError, source_export
     exposed = 'X-AI-BS-Layout, X-AI-BS-Profile, X-AI-BS-Renderer, X-AI-BS-Artifact-SHA256, X-AI-BS-PDF-Page-Count'
-    if layout not in (None, 'source', 'professional', 'reflow'):
+    if layout not in (None, 'source', 'professional', 'typed-professional', 'reflow'):
         raise HTTPException(422, 'Choose archival source, professional, or explicit legacy reflow export.')
     with _PROJECT_STORE_LOCK:
         name, content, metadata = _screenplay_export_source(project_name)
@@ -1524,8 +1524,28 @@ def export_pdf(project_name: str, watermark: str = None, layout: Optional[str] =
         try:rich=fdx_fence(directory)
         except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
         if rich and rich.get('mode')!='working_copy':
+            if layout=='typed-professional':
+                if watermark is not None:
+                    raise HTTPException(422,'Watermarks are not supported by the typed professional profile.')
+                from core.fdx_source_documents import export_project
+                from core.fdx_professional_pdf import render_typed_fdx_pdf, TypedFdxPdfError, PROFILE_ID, RENDERER_ID
+                try:
+                    source=export_project(directory,expected_revision)
+                    raw=render_typed_fdx_pdf(source)
+                except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+                except TypedFdxPdfError as error:raise HTTPException(422,detail=str(error)) from None
+                import fitz
+                with fitz.open(stream=raw,filetype='pdf') as document:page_count=len(document)
+                return Response(content=raw,media_type='application/pdf',headers={
+                    'Content-Disposition':"attachment; filename*=UTF-8''"+quote(name+'.typed-professional.pdf',safe=''),
+                    'X-AI-BS-Layout':'typed-professional','X-AI-BS-Profile':PROFILE_ID,
+                    'X-AI-BS-Renderer':RENDERER_ID,'X-AI-BS-Artifact-SHA256':hashlib.sha256(raw).hexdigest(),
+                    'X-AI-BS-PDF-Page-Count':str(page_count),
+                    'Cache-Control':'no-store','Access-Control-Expose-Headers':exposed})
             if layout!='reflow':raise HTTPException(422,'Rich FDX PDF fidelity is not qualified. Explicit legacy reflow is a separate lossy projection; the original FDX remains retained.')
             if expected_revision!=_screenplay_snapshot(directory)['revision']:raise HTTPException(409,'Reload the current rich revision before explicit reflow.')
+        elif layout=='typed-professional':
+            raise HTTPException(422,'Typed professional PDF requires a retained rich FDX project.')
         try:
             preserved = source_export(directory, _screenplay_snapshot(directory)['revision'], 'pdf', layout,
                                       watermark=watermark, expected_revision=expected_revision, return_receipt=True)

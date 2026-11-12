@@ -21,7 +21,7 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
 
   // Fetch available workflows on load
   useEffect(() => {
-    fetch(`${backendUrl}/api/comfyui/workflows`)
+    fetch(`${backendUrl}/api/audio/api/comfyui/workflows`)
       .then(res => res.json())
       .then(data => {
         if (data.workflows && data.workflows.length > 0) {

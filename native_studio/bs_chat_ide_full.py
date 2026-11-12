@@ -47,6 +47,22 @@ from PyQt6.QtWidgets import (
 
 from native_studio.engine import EngineBus
 
+def _program_result_text(result):
+    status = str(result.get("status", "error")).upper()
+    lines = [f"Status: {status}"]
+    if result.get("executed") is False:
+        lines.append("Not executed.")
+    if result.get("exit_code") is not None:
+        lines.append(f"Exit Code: {result['exit_code']}")
+    if result.get("command"):
+        lines.append(f"Command: {result['command']}")
+    if result.get("job_id"):
+        lines.append(f"Job: {result['job_id']}")
+    for name in ("message", "stdout", "stderr"):
+        if result.get(name):
+            lines.append(str(result[name]))
+    return "\n".join(lines)
+
 STARTER_CARDS: List[Tuple[str, str, str, str, str, str]] = [
     (
         "mission_launch",
@@ -396,6 +412,14 @@ class BsChatIdeFullView(QWidget):
 
         root.addWidget(sub_hdr)
 
+        # Source opt-in only; existing chat and installed releases stay unchanged.
+        if os.environ.get('AI_BS_CODING_MODE') == '1':
+            self.coding_mode_picker = QComboBox()
+            self.coding_mode_picker.addItems(['Chat', 'Coding'])
+            sh_lay.addWidget(self.coding_mode_picker)
+            self._coding_mode_panel = None
+            self.coding_mode_picker.currentIndexChanged.connect(self._select_coding_mode)
+
         # ── 1.5. MOBILE SYNERGY & BLUETOOTH TRACKPAD 1-TAP DOCK (HIDDEN BY DEFAULT) ──
         self.mobile_dock = QFrame()
         self.mobile_dock.setStyleSheet(
@@ -467,6 +491,18 @@ class BsChatIdeFullView(QWidget):
         from native_studio.chat_recovery import ChatRecoveryController
         self._chat_recovery = ChatRecoveryController(self, bus, session_store)
         self._chat_recovery.begin()
+
+    def _select_coding_mode(self, index):
+        if index != 1:
+            if self._coding_mode_panel is not None:
+                self._coding_mode_panel.hide()
+            return
+        if self._coding_mode_panel is None:
+            from native_studio.coding_mode_view import CodingModeView
+            self._coding_mode_panel = CodingModeView(self.bus, self)
+            self._coding_mode_panel.finished.connect(lambda _result: self.coding_mode_picker.setCurrentIndex(0))
+        self._coding_mode_panel.show()
+        self._coding_mode_panel.raise_()
 
     def _build_web_hero_page(self) -> QWidget:
         scroll = QScrollArea()
@@ -912,6 +948,7 @@ class BsChatIdeFullView(QWidget):
         in_row.addWidget(btn_cmds)
 
         self.input_edit = QLineEdit()
+        self.input_edit.setAccessibleName("Message Stehouwer")
         self.input_edit.setPlaceholderText(
             "Message Stehouwer, request media, or enter an explicit slash command..."
         )
@@ -1091,6 +1128,12 @@ class BsChatIdeFullView(QWidget):
         self.media_panel.add_references(self.chat_display.toPlainText())
         self.chat_display.moveCursor(QTextCursor.MoveOperation.End)
         QTimer.singleShot(0,self.chat_display.ensureCursorVisible)
+
+    def _program_request_failed(self, _message: str) -> None:
+        self._append_action_log(
+            "PROGRAM REQUEST NOT COMPLETED",
+            "No successful execution was confirmed. Check local build tools availability; your draft is retained.",
+        )
 
     def _handle_slash_command(self, cmd_line: str) -> None:
         self.left_stack.setCurrentIndex(1)
@@ -1417,20 +1460,13 @@ class BsChatIdeFullView(QWidget):
             b_dir = parts_b[0] if parts_b else r"C:\AI-BS"
             b_custom = parts_b[1] if len(parts_b) > 1 else None
 
-            self.chat_display.appendPlainText(f"[PROJECT BUILD]: Initiating build for '{b_dir}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+            self.chat_display.appendPlainText(f"[PROJECT BUILD]: Requesting build for '{b_dir}'...\n")
             def _build_project_task():
                 from core.program_builder_engine import AutonomousProgramBuilder
                 res = AutonomousProgramBuilder.build_project(b_dir, build_command=b_custom)
                 status_str = res.get("status", "error").upper()
-                exit_code = res.get("exit_code", 1)
-                cmd_run = res.get("command", "N/A")
-                out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
-                if res.get("stdout"):
-                    out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
-                if res.get("stderr"):
-                    out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
-                self.action_log_signal.emit(f"Project '{b_dir}' build completed ({status_str})", out_text)
-            self.bus.submit(_build_project_task)
+                self.action_log_signal.emit(f"Project '{b_dir}' build result ({status_str})", _program_result_text(res))
+            self.bus.submit(_build_project_task, on_error=self._program_request_failed)
             return
 
         if cmd == "/test":
@@ -1461,31 +1497,24 @@ class BsChatIdeFullView(QWidget):
                 b_parts = prog_arg.split(maxsplit=1)
                 b_proj = b_parts[0]
                 b_custom = b_parts[1] if len(b_parts) > 1 else None
-                self.chat_display.appendPlainText(f"[PROJECT BUILD]: Building '{b_proj}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+                self.chat_display.appendPlainText(f"[PROJECT BUILD]: Requesting build for '{b_proj}'...\n")
                 def _build_prog_task():
                     from core.program_builder_engine import AutonomousProgramBuilder
                     res = AutonomousProgramBuilder.build_project(b_proj, build_command=b_custom)
                     status_str = res.get("status", "error").upper()
-                    exit_code = res.get("exit_code", 1)
-                    cmd_run = res.get("command", "N/A")
-                    out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
-                    if res.get("stdout"):
-                        out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
-                    if res.get("stderr"):
-                        out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
-                    self.action_log_signal.emit(f"Project '{b_proj}' build completed ({status_str})", out_text)
-                self.bus.submit(_build_prog_task)
+                    self.action_log_signal.emit(f"Project '{b_proj}' build result ({status_str})", _program_result_text(res))
+                self.bus.submit(_build_prog_task, on_error=self._program_request_failed)
                 return
             elif sub == "run":
                 if not prog_arg:
                     self.chat_display.appendPlainText("[USAGE]: /program run <project_name>\n")
                     return
-                self.chat_display.appendPlainText(f"[PROGRAM BUILDER]: Running program '{prog_arg}' in PowerShell...\n")
+                self.chat_display.appendPlainText(f"[PROGRAM BUILDER]: Checking run request for '{prog_arg}'...\n")
                 def _run_prog_task():
                     from core.program_builder_engine import AutonomousProgramBuilder
                     res = AutonomousProgramBuilder.run_existing_program(prog_arg)
-                    self.action_log_signal.emit(f"Program '{prog_arg}' executed with status: {res.get('status')}", str(res.get("stdout") or res.get("stderr") or ""))
-                self.bus.submit(_run_prog_task)
+                    self.action_log_signal.emit(f"Program '{prog_arg}' run result: {res.get('status')}", _program_result_text(res))
+                self.bus.submit(_run_prog_task, on_error=self._program_request_failed)
                 return
             else:
                 self.chat_display.appendPlainText("[USAGE]: /program [list | build <name> [cmd] | run <name>]\n")
@@ -2213,6 +2242,8 @@ class BsChatIdeFullView(QWidget):
 
     def shutdown(self) -> None:
         self._is_streaming = False
+        if getattr(self, '_syntax_check', None) is not None:
+            self._syntax_check.shutdown()
         self._chat_recovery.shutdown()
         self.media_panel.shutdown()
 
@@ -2274,7 +2305,27 @@ class BsChatIdeFullView(QWidget):
 
     def _validate_syntax(self) -> None:
         try:
-            compile(self.code_editor.toPlainText(), "<scratchpad>", "exec")
-            QMessageBox.information(self, "Syntax Check", "Python Syntax Validated: 100% Valid AST structure.")
-        except Exception as e:
-            QMessageBox.warning(self, "Syntax Error", str(e))
+            if getattr(self, '_syntax_check', None) is None:
+                from native_studio.syntax_check import SyntaxCheck
+                self._syntax_check = SyntaxCheck(self.bus, self)
+                self._syntax_check.completed.connect(self._syntax_checked)
+            self._syntax_check.submit(self.code_editor.toPlainText())
+            self._syntax_snapshot_revision = self.code_editor.document().revision()
+        except (ValueError, RuntimeError, OSError, UnicodeError):
+            QMessageBox.warning(self, 'Syntax Check', 'Check unavailable or busy. Your editor text is retained; inspect background controls.')
+
+    def _syntax_checked(self, result) -> None:
+        try:
+            current = hashlib.sha256(self.code_editor.toPlainText().encode('utf-8')).hexdigest()
+        except UnicodeError:
+            return
+        if (current != result['sha256']
+                or self.code_editor.document().revision() != self._syntax_snapshot_revision):
+            return
+        if result['status'] == 'valid':
+            QMessageBox.information(self, 'Syntax Check', 'Python syntax is valid. Code was not executed.')
+        elif result['status'] == 'invalid':
+            location = f" at line {result['line']}" if result.get('line') is not None else ''
+            QMessageBox.warning(self, 'Syntax Error', 'Python compilation failed' + location + '. Editor text retained; code was not executed.')
+        else:
+            QMessageBox.warning(self, 'Syntax Check', 'Check was not confirmed. Editor text and local snapshot retained.')

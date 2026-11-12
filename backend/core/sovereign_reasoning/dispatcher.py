@@ -1,3 +1,4 @@
+import logging
 import httpx
 
 import asyncio
@@ -118,6 +119,61 @@ def ensure_ollama_running():
 
 from typing import Optional, List, Dict, Any
 
+
+
+_CTX_LOG = logging.getLogger('aibs.chat_context')
+_PRIMARY_NUM_CTX, _PRIMARY_OUTPUT, _FRAMING_RESERVE = 16384, 1024, 512
+
+
+def _select_history_prompt(optimized_prompt, messages, current_turn, fixed_bytes, maximum_input, disambiguate, specialist_briefing=''):
+    """Rebuild the inference prompt with the newest history that fits beside fixed overhead.
+
+    Affects only this model input. Returns (prompt, sanitized metrics, chat_messages). The current
+    prompt is never truncated; if it cannot fit, admission fails closed downstream.
+    """
+    from core.local_chat_inference import conversation_prompt, conversation_chat_messages, LocalInferenceError
+    available = maximum_input - fixed_bytes
+    authored_prompt = disambiguate(optimized_prompt)
+    briefing_omitted = bool(specialist_briefing and
+        fixed_bytes + len((specialist_briefing + authored_prompt).encode('utf-8')) > maximum_input)
+    if briefing_omitted:
+        specialist_briefing = ''
+    current_prompt = specialist_briefing + authored_prompt
+    mandatory_bytes = fixed_bytes + len(current_prompt.encode('utf-8'))
+    if mandatory_bytes > maximum_input:
+        raise LocalInferenceError('context_budget_exceeded', dict(
+            status='mandatory_over_budget', rejection_stage='mandatory_admission',
+            admitted_input_utf8_bytes=mandatory_bytes, maximum_input_utf8_bytes=maximum_input,
+            over_budget_utf8_bytes=mandatory_bytes - maximum_input,
+            authored_input_preserved=True, mandatory_source_preserved=True))
+    budget = available - len(specialist_briefing.encode('utf-8'))
+    candidate, report, chat_messages = current_prompt, {}, None
+    use_chat_transport = os.environ.get("AIBS_USE_OLLAMA_CHAT", "1") in ("1", "true", "True")
+    if use_chat_transport and messages is not None:
+        chat_messages = conversation_chat_messages(optimized_prompt, messages, current_turn=current_turn,
+            max_bytes=available - len(current_prompt.encode('utf-8')), report=report)
+        chat_messages[-1]['content'] = current_prompt
+        input_bytes = fixed_bytes + sum(len(row['content'].encode('utf-8')) for row in chat_messages)
+    else:
+        # Each failed pass reduces the admitted suffix. The current turn is never sliced.
+        while True:
+            report = {}
+            built = conversation_prompt(optimized_prompt, messages, current_turn=current_turn,
+                max_bytes=max(budget, 0), report=report)
+            projection = getattr(built, 'history_projection', None)
+            candidate = specialist_briefing + disambiguate(built)
+            if projection:
+                candidate = type(built)(candidate, projection)
+            input_bytes = fixed_bytes + len(candidate.encode('utf-8'))
+            if input_bytes <= maximum_input:
+                break
+            budget -= input_bytes - maximum_input
+    metrics = dict(report, token_accounting_basis='conservative_utf8_bytes_not_tokenizer_count',
+                   maximum_input_utf8_bytes=maximum_input, fixed_overhead_utf8_bytes=fixed_bytes,
+                   input_utf8_bytes_estimate=input_bytes,
+                   chat_transport_enabled=bool(chat_messages),
+                   specialist_briefing_omitted=briefing_omitted)
+    return candidate, metrics, chat_messages
 
 
 async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[str, Any]]] = None, *, source_context_bundle=None, primary_model=None, intent_prompt=None, current_turn=None):
@@ -451,14 +507,23 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
             role="domain_preparse"
             yield f"> Specialist requested: `{target_model}` ({top_candidate.get('title')}). This is a domain proposal, not verification.\n\n"
             profile=context_profile("Provide concise domain-grounded observations for the request. Distinguish evidence from inference; no execution or verified-fact claim without evidence.",source_context_bundle)
-            if source_context_bundle is None and owned_source_context:
-                profile['system'] += '\n\n' + owned_source_context
             try:
+                # Use the same final-representation admission as the primary.
+                # Implicit background retrieval is optional, not required source evidence.
+                from core.local_chat_inference import source_system
+                specialist_system = source_system(profile['system'], source_context_bundle)
+                specialist_prompt, _, specialist_messages = _select_history_prompt(
+                    optimized_prompt, messages, transport_turn, len(specialist_system.encode('utf-8')),
+                    8192 - 512 - 450, lambda value: value)
                 result=await complete_local(model=target_model,requested_model=primary_model or "stehouwer_llm",
-                    prompt=conversation_prompt(optimized_prompt,messages,current_turn=transport_turn),endpoints=OLLAMA_ENDPOINTS,role=role,
+                    prompt=specialist_prompt, chat_messages=specialist_messages,
+                    endpoints=OLLAMA_ENDPOINTS,role=role,timeout=180.0,
                     keep_alive=0,options={"num_ctx":8192,"num_predict":450,"temperature":.4},source_context_bundle=source_context_bundle,**profile)
                 yield metadata_chunk(result['receipt']);stage_receipts=result['receipt']['steps']
-                specialist_briefing="[SPECIALIST PROPOSAL — not independently verified]\n"+result['text']+"\n[END SPECIALIST PROPOSAL]\n"
+                if result['receipt'].get('completion_verified'):
+                    specialist_briefing="[SPECIALIST PROPOSAL — not independently verified]\n"+result['text']+"\n[END SPECIALIST PROPOSAL]\n"
+                else:
+                    yield 'Specialist output was incomplete; continuing with the selected primary model.\n'
             except LocalInferenceError as error:
                 yield metadata_chunk(error.receipt)
                 yield "Specialist did not complete ("+error.code+"). No specialist verification is claimed.\n"
@@ -502,15 +567,47 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
     if projection:
         final_prompt = type(projected_prompt)(final_prompt, projection)
 
+    # Sovereign DAG & Topological Reasoning Injection into Reasoning Flow
+    topological_injection = ""
+    if any(kw in clean_p for kw in ["rubber cucumber", "operation rubber cucumber"]):
+        from .dag_topological_reasoner import solve_operation_rubber_cucumber
+        rc_info = solve_operation_rubber_cucumber()
+        topological_injection = (
+            "\n\n"
+            "[VERIFIED TOPOLOGICAL CONSTRAINT CHECK]\n"
+            f"{rc_info['explanation']}\n"
+            "[END VERIFIED CONSTRAINT CHECK]"
+        )
+    elif any(kw in clean_p for kw in ["job shop", "job-shop", "dag scheduling", "critical path", "dependency constraint"]):
+        topological_injection = (
+            "\n\n"
+            "[TOPOLOGICAL CONSTRAINT ENFORCEMENT]\n"
+            "Strictly enforce: start(T) >= max(finish(dep) for dep in dependencies(T)). Tasks on the same resource cannot overlap.\n"
+            "[END CONSTRAINT ENFORCEMENT]"
+        )
+
+    if topological_injection:
+        final_prompt = final_prompt + topological_injection
+        optimized_prompt = optimized_prompt + topological_injection
+
+    core_stehouwer_persona = (
+        "You are Brett Stehouwer / AI-BS Core. You own the room, speak with authentic brotherly banter, "
+        "directness, and deliver razor-sharp, practical solutions without corporate refusals or robotic hesitation. "
+        "Never sound robotic, apologetic, or generic. Be blunt, clever, and technically accurate. No generic corporate apologies. "
+        "Answer directly, sovereignly, and decisively.\n"
+    )
+
+    dag_scheduling_directive = (
+        "DAG RESOURCE SCHEDULING DIRECTIVE: Enforce start(T) >= max(finish(dep) for dep in dependencies(T)). "
+        "Same-resource tasks cannot overlap. In Operation Rubber Cucumber (A: CPU 3m, B: CPU 2m dep A, C: GPU 4m dep A, "
+        "D: CPU 4m dep B, E: GPU 3m dep C,D, F: CPU 2m dep E): Task E starts at max(7,9)=9; Task F ends at 14; "
+        "optimal makespan is strictly 14 minutes.\n"
+    )
+
     stehouwer_system_prompt = (
         AIBS_SOVEREIGN_SYSTEM_PROMPT + "\n\n" +
-
-        "You are Brett Stehouwer / Stehouwer Publishing AI Core. You own the room, speak with authentic brotherly banter, "
-
-        "and deliver razor-sharp, practical solutions without corporate refusals or robotic hesitation. "
-
-        "Never sound robotic or generic. Answer directly and sovereignly.\n"
-
+        core_stehouwer_persona + "\n" +
+        dag_scheduling_directive + "\n" +
         "CODEBASE EVIDENCE: Use actual supplied or retrieved source and its provenance. Do not claim complete codebase knowledge or that uninspected files were read.\n"
 
         "DATABASE EVIDENCE: AI-BS retains multiple stores. Establish current schema, ownership and coverage from actual read-only evidence; never assume all stores were consolidated or invent fixed table/row counts. The architectural ledger is a Markdown record, not a database.\n"
@@ -575,33 +672,72 @@ async def stream_sovereign_response(prompt: str, messages: Optional[List[Dict[st
 
 
     from core.local_chat_inference import stream_local
+    admitted_chat_messages = None
     if source_context_bundle is None:
         from core.chat_context_budget import plan_chat_context, ChatContextBudgetError, CORE_EVIDENCE, TOOL_BOUNDARY
-        mandatory_system = inject_safety_directive(AIBS_SOVEREIGN_SYSTEM_PROMPT + '\n\n' + CORE_EVIDENCE)
+        mandatory_system = inject_safety_directive(
+            AIBS_SOVEREIGN_SYSTEM_PROMPT + '\n\n' +
+            core_stehouwer_persona + '\n' +
+            dag_scheduling_directive + '\n' +
+            CORE_EVIDENCE
+        )
         legacy_background = legacy_system_prompt.removeprefix(AIBS_SOVEREIGN_SYSTEM_PROMPT + '\n\n')
+        _prefix_to_strip = (core_stehouwer_persona + "\n")
+        if legacy_background.startswith(_prefix_to_strip):
+            legacy_background = legacy_background[len(_prefix_to_strip):]
+        _dag_to_strip = (dag_scheduling_directive + "\n")
+        if legacy_background.startswith(_dag_to_strip):
+            legacy_background = legacy_background[len(_dag_to_strip):]
+        _fixed = len(mandatory_system.encode('utf-8')) + len(TOOL_BOUNDARY.encode('utf-8'))
+        synthesized_prompt, _history_metrics, admitted_chat_messages = _select_history_prompt(
+            optimized_prompt, messages, transport_turn, _fixed, _PRIMARY_NUM_CTX - _PRIMARY_OUTPUT - _FRAMING_RESERVE,
+            disambiguate_prompt_text, specialist_briefing)
+        _history_metrics.update(selected_model=primary_model or 'stehouwer_llm', effective_num_ctx=_PRIMARY_NUM_CTX,
+                                output_reserve_tokens=_PRIMARY_OUTPUT, framing_reserve=_FRAMING_RESERVE, stage='primary')
+        stage_receipts = [*stage_receipts, {'name': 'history_selection', 'status': 'planned', 'history_selection': _history_metrics}]
         try:
-            planned = plan_chat_context(synthesized_prompt, mandatory_system,
-                [('requested_ledger_reference', live_ledger_context),
+            planning_prompt = (''.join(row['content'] for row in admitted_chat_messages)
+                               if admitted_chat_messages is not None else synthesized_prompt)
+            planned = plan_chat_context(planning_prompt, mandatory_system,
+                [('automatic_source_references', owned_source_context),
+                 ('requested_ledger_reference', live_ledger_context),
                  ('personal_memory_references', personal_block), ('owned_memory_references', context),
                  ('codebase_references', codebase_context), ('legacy_persona_background', legacy_background)],
-                mandatory_source=owned_source_context, mandatory_suffix=TOOL_BOUNDARY,
-                num_ctx=8192, output_tokens=1024, framing_reserve=512)
+                mandatory_suffix=TOOL_BOUNDARY,
+                num_ctx=_PRIMARY_NUM_CTX, output_tokens=_PRIMARY_OUTPUT, framing_reserve=_FRAMING_RESERVE)
+            planned['receipt']['prompt_representation'] = ('chat_content_concatenation'
+                if admitted_chat_messages is not None else 'generate_prompt')
         except ChatContextBudgetError as error:
+            _CTX_LOG.warning('context_rejected stage=%s code=%s bytes=%s', error.receipt.get('rejection_stage'), error.code, error.receipt.get('admitted_input_utf8_bytes'))
             raise LocalInferenceError(error.code, error.receipt) from None
         profile = dict(system=planned['system'], context_profile='budgeted_primary_context_v1',
             unrelated_static_persona_omitted='legacy_persona_background' in planned['receipt']['omitted_labels'])
+        _history_metrics['input_utf8_bytes_estimate'] = planned['receipt']['admitted_input_utf8_bytes']
         stage_receipts = [*stage_receipts, {'name': 'context_selection', 'status': 'planned',
                                           'context_selection': planned['receipt']}]
         if planned['receipt']['omitted_labels']:
-            yield '> Context note: ' + str(len(planned['receipt']['omitted_labels'])) + ' optional background block(s) did not fit. Your supplied request, history and source evidence were retained; stored memory was not deleted.\n\n'
+            yield '> Context note: ' + str(len(planned['receipt']['omitted_labels'])) + ' optional background block(s) did not fit. Your current request and required source evidence were retained; stored memory was not deleted.\n\n'
     else:
         # Preserve the qualified explicit-attachment profile and transport.
         profile=context_profile(stehouwer_system_prompt,source_context_bundle)
         profile['system']+="\nGenerated text is not tool execution. Report host actions only from actual returned tool receipts; approved local, cloud, API and WebView capabilities retain their own backend contracts."
+        from core.local_chat_inference import source_system
+        profile['system'] = source_system(profile['system'], source_context_bundle)
+        synthesized_prompt, _history_metrics, admitted_chat_messages = _select_history_prompt(
+            optimized_prompt, messages, transport_turn, len(profile['system'].encode('utf-8')),
+            _PRIMARY_NUM_CTX - _PRIMARY_OUTPUT - _FRAMING_RESERVE, disambiguate_prompt_text, specialist_briefing)
+        _history_metrics.update(selected_model=primary_model or 'stehouwer_llm', effective_num_ctx=_PRIMARY_NUM_CTX,
+                                output_reserve_tokens=_PRIMARY_OUTPUT, framing_reserve=_FRAMING_RESERVE, stage='primary_source_bundle')
+        stage_receipts = [*stage_receipts, {'name': 'history_selection', 'status': 'planned', 'history_selection': _history_metrics}]
+    _CTX_LOG.info('history_selection %s', _history_metrics)
+    if _history_metrics.get('specialist_briefing_omitted'):
+        yield '> Context note: the optional specialist proposal did not fit and was omitted. Your current request and required source evidence were retained.\n\n'
+    if _history_metrics['history_turns_excluded']:
+        yield '> Context note: ' + str(_history_metrics['history_turns_excluded']) + ' earlier conversation turn(s) were excluded from this request to fit the context budget. Your current request and required source evidence were retained; stored conversation history was not changed.\n\n'
     receipts=[];full_response=[]
     async for chunk in stream_local(model=primary_model or "stehouwer_llm",requested_model=primary_model or "stehouwer_llm",
-            prompt=synthesized_prompt,endpoints=OLLAMA_ENDPOINTS,role="primary",source_context_bundle=source_context_bundle,
-            keep_alive=0,options={"num_ctx":8192,"temperature":.8,"top_p":.9,"num_predict":1024},stages=stage_receipts,receipt_sink=receipts.append,recovery=ensure_ollama_running,**profile):
+            prompt=synthesized_prompt,chat_messages=admitted_chat_messages,endpoints=OLLAMA_ENDPOINTS,role="primary",source_context_bundle=source_context_bundle,
+            keep_alive=0,options={"num_ctx":_PRIMARY_NUM_CTX,"temperature":.8,"top_p":.9,"num_predict":_PRIMARY_OUTPUT},stages=stage_receipts,receipt_sink=receipts.append,recovery=ensure_ollama_running,**profile):
         if not chunk.startswith("\n<!--AI-BS-METADATA:"):full_response.append(chunk)
         yield chunk
     if receipts and receipts[-1].get('status')=='completed' and source_context_bundle is None:

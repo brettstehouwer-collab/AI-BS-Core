@@ -1,4 +1,5 @@
-// Private reads use the application's existing Firebase-token fetch interceptor.
+import { loadProductionsCloudAnalytics } from './productionsCloudAnalytics.js';
+// Local private reads use the application's Firebase-token fetch interceptor.
 export const emptyTrafficData = () => ({
   total_pageviews: 0, unique_visitors: 0, avg_dwell_time_sec: 0,
   scroll_completion_rate: 0, human_traffic_pct: 0,
@@ -21,6 +22,12 @@ export async function loadAnalyticsSnapshot(baseUrl, site, { fetchImpl = globalT
   const base = baseUrl.replace(/\/$/, '');
   const timeout = AbortSignal.timeout(15000);
   const requestSignal = signal ? AbortSignal.any([signal, timeout]) : timeout;
+  const cloud = () => loadProductionsCloudAnalytics({ fetchImpl, signal: requestSignal });
+  if (site === 'stehouwer_productions') {
+    const traffic = await cloud();
+    return { trafficData: { ...emptyTrafficData(), ...traffic },
+      siteCounts: { stehouwer_productions: traffic.total_pageviews } };
+  }
   const routes = [
     `/api/analytics/traffic-summary?site_id=${encodeURIComponent(site)}&limit=50`,
     '/api/analytics/traffic-summary?site_id=stehouwer_publishing&limit=1',
@@ -49,9 +56,13 @@ export async function loadAnalyticsSnapshot(baseUrl, site, { fetchImpl = globalT
     throw new Error('Invalid API security response.');
   }
   if (!data[4] || !Array.isArray(data[4].events)) throw new Error('Invalid publishing security response.');
+  // Optional cloud count must not prevent another site's local reports refreshing.
+  let productionsCount = {};
+  try { productionsCount = { stehouwer_productions: (await cloud()).total_pageviews }; }
+  catch (error) { if (requestSignal.aborted) throw error; }
   return {
     trafficData: { ...emptyTrafficData(), ...data[0] },
-    siteCounts: { stehouwer_publishing: data[1].total_pageviews, thesimplechef: data[2].total_pageviews },
+    siteCounts: { stehouwer_publishing: data[1].total_pageviews, thesimplechef: data[2].total_pageviews, ...productionsCount },
     apiData: data[3], pubSecurityEvents: data[4].events
   };
 }

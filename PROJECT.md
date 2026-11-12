@@ -54,12 +54,12 @@ Every Survey feature assigned a milestone (none unassigned).
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Viewport & Native Studio Integration | Fix Sheltered Hub viewport session probe target and verification assertions, verify 3 stations, 7 spatial trigger zones, and Adam blend trees in C++20 DX12 runtime | none | IN_PROGRESS |
-| M2 | Legacy DirectX Fallback Compatibility | Implement engine graphics configuration (`graphics_pipeline.json`), renderer abstraction for D3D feature level fallbacks (10_0, 9_3), D3D11on12, WARP, and translation bridge options | none | IN_PROGRESS |
-| M3 | Distributed Training & Serverless Spark | Upgrade `test_local_ml_pipeline.py` with 8-point assertions and feature correlation, add PyTorch/TorchDistributor dual-framework support, implement `--validate` in `deploy_serverless_spark.py` | none | IN_PROGRESS |
-| M4 | Drive Assets ChromaDB Vectorization | Implement ingestion pipeline for all 177 synced cloud files in `synced_drive_assets` into ChromaDB, map to microservice retrieval endpoints (`/api/rag/query`, `/api/omnidrive/search`) | none | IN_PROGRESS |
-| M5 | Full System Audit & Subsystem Verification | Execute automated health checks, native C++ tests, FastAPI `/health`, ComfyUI 8188/8189 proxies, and Vite frontend build | M1, M2, M3, M4 | PLANNED |
-| M6 | Final Acceptance: E2E Suite Pass & Hardening | Execute 100% of E2E tests published in `TEST_READY.md` (Tiers 1-4), followed by Tier 5 adversarial coverage hardening | M5, TEST_READY.md | PLANNED |
+| M1 | Viewport & Native Studio Integration | Fix Sheltered Hub viewport session probe target and verification assertions, verify 3 stations, 7 spatial trigger zones, and Adam blend trees in C++20 DX12 runtime | none | COMPLETE |
+| M2 | Legacy DirectX Fallback Compatibility | Implement engine graphics configuration (`graphics_pipeline.json`), renderer abstraction for D3D feature level fallbacks (10_0, 9_3), D3D11on12, WARP, and translation bridge options | none | COMPLETE |
+| M3 | Distributed Training & Serverless Spark | Upgrade `test_local_ml_pipeline.py` with 8-point assertions and feature correlation, add PyTorch/TorchDistributor dual-framework support, implement `--validate` in `deploy_serverless_spark.py` | none | COMPLETE |
+| M4 | Drive Assets ChromaDB Vectorization | Implement ingestion pipeline for all 177 synced cloud files in `synced_drive_assets` into ChromaDB, map to microservice retrieval endpoints (`/api/rag/query`, `/api/omnidrive/search`) | none | COMPLETE |
+| M5 | Full System Audit & Subsystem Verification | Execute automated health checks, native C++ tests, FastAPI `/health`, ComfyUI 8188/8189 proxies, and Vite frontend build | M1, M2, M3, M4 | COMPLETE |
+| M6 | Final Acceptance: E2E Suite Pass & Hardening | Execute 100% of E2E tests published in `TEST_READY.md` (Tiers 1-4, 275 tests passed), followed by Tier 5 adversarial coverage hardening | M5, TEST_READY.md | COMPLETE |
 
 ## Interface Contracts
 

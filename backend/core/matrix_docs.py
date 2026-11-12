@@ -69,20 +69,37 @@ class FountainParser:
         """Main parsing loop — consume lines and emit structured elements"""
         self.elements = []  # Re-parsing must replace the previous result, not append duplicates.
         i = self._parse_title_page()
+        dialogue_active = False
         while i < len(self.lines):
             line = self.lines[i]
             stripped = line.strip()
 
             if not stripped:
+                # Fountain uses two literal spaces for an intentional empty
+                # dialogue line; a genuinely blank line ends the speech block.
+                if dialogue_active and re.fullmatch(r' {2,}', line.rstrip('\r')):
+                    self.elements.append(FountainElement('Dialogue', '', i))
+                else:
+                    dialogue_active = False
                 i += 1
                 continue
 
+            # Classify all lines of an active speech before generic uppercase,
+            # scene-heading or transition heuristics. Page breaks end the block.
+            if dialogue_active and not re.match(self.PATTERNS['page_break'], stripped):
+                parenthetical = re.match(self.PATTERNS['parenthetical'], stripped)
+                self.elements.append(FountainElement(
+                    'Parenthetical' if parenthetical else 'Dialogue',
+                    parenthetical.group(1) if parenthetical else stripped, i))
+                i += 1
+                continue
+
+            dialogue_active = False
             # Scene heading (must be uppercase and match pattern)
             if re.match(self.PATTERNS['scene_heading'], stripped):
-                match = re.match(self.PATTERNS['scene_heading'], stripped)
-                heading = f"{match.group(1)}. {match.group(2)}"
-                if match.group(4):
-                    heading += f" - {match.group(4)}"
+                # Classification must not insert punctuation or normalize a dash
+                # in authored text when the screenplay is saved/exported.
+                heading = stripped
                 self.elements.append(
                     FountainElement(
                         'Scene Heading', heading, i))
@@ -107,9 +124,11 @@ class FountainParser:
                         'Transition', stripped, i))
                 i += 1
 
-            # Character (all caps, optionally preceded by asterisks for
-            # emphasis)
-            elif stripped.isupper() and len(stripped.split()) <= 3 and not any(c.isdigit() for c in stripped):
+            # A cue starts a block and has a following nonblank speech line.
+            # Character names may contain digits and lowercase extensions.
+            elif ((i == 0 or not self.lines[i-1].strip())
+                  and i+1 < len(self.lines) and self.lines[i+1].strip()
+                  and re.sub(r'\s*\([^)]*\)\s*$', '', stripped).isupper()):
                 char_name = stripped.replace('*', '')
                 self.elements.append(
                     FountainElement(
@@ -117,27 +136,8 @@ class FountainParser:
                         char_name,
                         i,
                         character_name=char_name))
+                dialogue_active = True
                 i += 1
-
-            # Parenthetical
-            elif re.match(self.PATTERNS['parenthetical'], stripped):
-                match = re.match(self.PATTERNS['parenthetical'], stripped)
-                self.elements.append(
-                    FountainElement(
-                        'Parenthetical',
-                        match.group(1),
-                        i))
-                i += 1
-
-            # Dialogue (follows character, not in parens, starts with alpha)
-            elif self.elements and self.elements[-1].element_type in ['Character', 'Parenthetical']:
-                if stripped and not stripped.startswith('('):
-                    self.elements.append(
-                        FountainElement(
-                            'Dialogue', stripped, i))
-                    i += 1
-                else:
-                    i += 1
 
             # Action (default fallback)
             else:

@@ -7,7 +7,7 @@ const getEffectiveApiBase = () => {
     if (base) return base;
   } catch (e) {}
   if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:8080';
+    return 'http://127.0.0.1:8000';
   }
   return 'https://api.brettstehouwer.live';
 };
