@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-11T06:29:00.631394+00:00",
+  "status": "ACTIVE_INCOMPLETE_SOURCE_CHECKPOINT",
+  "previous_checkpoint": "C:\\AI-BS\\backups\\rtx_tooling_20261111T010541Z\\checkpoint.json",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_status": "ACTIVE",
+  "all_ten_goals_complete": false,
+  "creative_tests": {
+    "passed": 39,
+    "log": "C:\\AI-BS\\backups\\creative_peer_resume_20261111T061540Z\\creative-39-tests.log",
+    "scope": "components plus real Windows fixture jobs/TCP and synthetic Uvicorn; not mounted production routes"
+  },
+  "layout_receipt": "C:\\AI-BS\\backups\\build_layout_20261111T061618061939Z\\result-real-fonts.json",
+  "layout_tests": 5,
+  "source_pins": {
+    "backend/security/native_creative_peer.py": "ecc1ff24b07f7ed70f76100335f92993a8fef1e6d3c792c84664fd2f71615eaa",
+    "scripts/tests/test_native_creative_peer.py": "6a8c7b635dd5ee5eba3abac274ba93e74ce02be01a69c5a3562249437fddbcca",
+    "native_studio/game_build_view.py": "8f80e0b5679177cac53cee54540aacacf57edf3bf956412aa78bcf84d20ad216",
+    "scripts/tests/test_game_build_layout.py": "f0f24c5b56ba7d328e427c1baa91f94b4a688ecc934289027cb16a0190b100e9",
+    "PLAN.md": "8776c2a2537efd42c4cb750ce7849068bd3530cc0c139fd40cdd999b1cefb547",
+    "docs/CODEX_HANDOFF.md": "0a84371c0472620e32b6db5081bbcb0e5ca9eb80d745d759470c26ab2783aab3",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "00947ee68c801fa751009f80c65a62ce65b93c24287c22ab78077013fd95034d",
+    "docs/AI_BS_TAKEOVER_GOAL_2026-11-09.md": "93c2a533257125282b8b9513f176cc9091af773f09a5d92bf1212fdd0c567aa1",
+    "docs/game_engine/RTX_ASSET_WORKFLOW.md": "3bf95a3d129f5d31d519d99c054bbdeb89ced815f4948f56aae9f7755c6ce73a",
+    "engine/out/warm_beginning/monitor_summary.json": "0c09dcfd7f0c72e58f128e8ef074fe3bdd5381437ac110d436bb33b2dcf0d8b0",
+    "docs/agent_sync/current_long_term_goal.json": "3a6f8a1f1df3e69315078b664bb7b7e087b1fc4a644f69f398b5e05b68f9e7c4"
+  },
+  "reviewed_peer_sha256": "ecc1ff24b07f7ed70f76100335f92993a8fef1e6d3c792c84664fd2f71615eaa",
+  "existing_creative_10_pins_unchanged": true,
+  "worker_implementation_unchanged": true,
+  "existing_ui_methods_changed": [
+    "__init__"
+  ],
+  "game_launched": false,
+  "installed_107_updated": false,
+  "original_data_written": false,
+  "runtime_restarted": false,
+  "drive_uploaded": false,
+  "memory_diagnostic_result": {
+    "at": "2026-11-11T06:26:23.4127296Z",
+    "query": "System / Microsoft-Windows-MemoryDiagnostics-Results",
+    "result": "NO_MATCHING_RETAINED_EVENTS",
+    "count": 0
+  },
+  "ordinary_saved6_exit": "UNRESOLVED; old process-ended.json is another PID",
+  "next": "Implement the reviewed-candidate controller and bounded stdin delivery with a GUI-safe process lifetime; wire peer/lease resolution before local_admin owner binding, preserve Firebase owner/source/CAS fences, then explicit pre-GUI bootstrap and scoped UI. Reuse existing DraftSession recovery and qualify backend loss without destroying unsaved edits.",
+  "patch": "C:\\AI-BS\\backups\\creative_peer_resume_20261111T061540Z\\scoped.patch"
+}

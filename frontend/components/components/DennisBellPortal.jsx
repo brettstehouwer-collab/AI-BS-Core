@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DennisBellMobileRemote from './DennisBellMobileRemote.jsx';
+import { loadRecdebutSnapshot } from '/src/utils/recdebutData.js';
 import { 
   REC_DEBUT_BRAND, 
   REC_DEBUT_LEADERSHIP, 
@@ -47,9 +48,13 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
 
   const [analyticsData, setAnalyticsData] = useState(null);
 
+  const [telemetryStats, setTelemetryStats] = useState({});
   const [athletes, setAthletes] = useState([]);
   const [excludedCoaches, setExcludedCoaches] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
+  const [hasLiveData, setHasLiveData] = useState(false);
+  const [dataError, setDataError] = useState('');
+  const loadSequence = useRef(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
@@ -225,19 +230,7 @@ President, Recreational Debut`;
   });
 
   // Daily Quota & Batch Pacing State (Safe 100% Free Gateway)
-  const [quotaStatus, setQuotaStatus] = useState({
-    sent_last_24h: 0,
-    daily_ceiling: 450,
-    remaining_today: 450,
-    pending_count: 0,
-    total_contacted: 0,
-    recommended_batch_size: 400,
-    days_to_complete: 5,
-    swarm_accounts_count: 1,
-    swarm_daily_ceiling: 400,
-    swarm_remaining_today: 400,
-    swarm_days_to_complete: 5
-  });
+  const [quotaStatus, setQuotaStatus] = useState({});
   const [batchSize, setBatchSize] = useState(400);
 
   // CSV / File Upload State
@@ -275,52 +268,40 @@ President, Recreational Debut`;
   };
 
   const fetchData = async () => {
+    const sequence = ++loadSequence.current;
     setIsLoading(true);
     try {
-      const [athRes, campRes, coachRes, quotaRes, smtpRes, emailSumRes, repliesRes, analyticsRes, apiConfigRes] = await Promise.all([
-        fetch(`${BACKEND_URL}/api/v1/recdebut/athletes`).then(r => r.json()).catch(() => ({ athletes: [] })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/campaigns`).then(r => r.json()).catch(() => ({ campaigns: [] })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/excluded-coaches`).then(r => r.json()).catch(() => ({ coaches: [] })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/quota-status`).then(r => r.json()).catch(() => null),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/smtp-accounts`).then(r => r.json()).catch(() => ({ accounts: [] })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/athlete-emails`).then(r => r.json()).catch(() => null),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/sms/replies`).then(r => r.json()).catch(() => ({ replies: [], unread_count: 0 })),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/outreach-analytics`).then(r => r.json()).catch(() => null),
-        fetch(`${BACKEND_URL}/api/v1/recdebut/email-api/config`).then(r => r.json()).catch(() => null)
-      ]);
-
-      if (athRes.athletes) setAthletes(athRes.athletes);
-      if (campRes.campaigns) setCampaigns(campRes.campaigns);
-      if (coachRes.coaches) setExcludedCoaches(coachRes.coaches);
-      if (smtpRes && smtpRes.accounts) setSmtpAccounts(smtpRes.accounts);
-      if (emailSumRes && emailSumRes.success) setAthleteEmailsSummary(emailSumRes);
-      if (repliesRes && repliesRes.success) {
-        setAthleteReplies(repliesRes.replies || []);
-        setUnreadRepliesCount(repliesRes.unread_count || 0);
-      }
-      if (analyticsRes && analyticsRes.success) {
-        setAnalyticsData(analyticsRes);
-      }
-      if (apiConfigRes && apiConfigRes.success) {
-        setEmailApiConfig(apiConfigRes);
-        if (apiConfigRes.provider) setSelectedProvider(apiConfigRes.provider);
-        if (apiConfigRes.resend_from_email) setResendFromInput(apiConfigRes.resend_from_email);
-      }
-      if (quotaRes && quotaRes.success) {
-        setQuotaStatus(quotaRes);
-        if (quotaRes.recommended_batch_size) {
-          setBatchSize(quotaRes.recommended_batch_size);
-        }
-      }
-    } catch (e) {
-      console.error('Error fetching portal data:', e);
+      const data = await loadRecdebutSnapshot(BACKEND_URL);
+      if (sequence !== loadSequence.current) return;
+      setTelemetryStats(data.stats);
+      setAthletes(data.athletes.athletes);
+      setCampaigns(data.campaigns.campaigns);
+      setExcludedCoaches(data.coaches.coaches);
+      setSmtpAccounts(data.smtp.accounts);
+      setAthleteEmailsSummary(data.emails);
+      setAthleteReplies(data.replies.replies);
+      setUnreadRepliesCount(data.replies.unread_count || 0);
+      setAnalyticsData(data.analytics);
+      setEmailApiConfig(data.emailConfig);
+      if (data.emailConfig.provider) setSelectedProvider(data.emailConfig.provider);
+      if (data.emailConfig.resend_from_email) setResendFromInput(data.emailConfig.resend_from_email);
+      setQuotaStatus(data.quota);
+      if (data.quota.recommended_batch_size) setBatchSize(data.quota.recommended_batch_size);
+      setDataError('');
+      setHasLiveData(true);
+    } catch (error) {
+      if (sequence !== loadSequence.current) return;
+      setDataError(error.message || 'RecDebut live data is unavailable.');
+      setHasLiveData(false);
     } finally {
-      setIsLoading(false);
+      if (sequence === loadSequence.current) setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    setHasLiveData(false);
     fetchData();
+    return () => { loadSequence.current += 1; };
   }, [BACKEND_URL]);
 
   // Poll broadcast engine status when active
@@ -894,6 +875,16 @@ President, Recreational Debut`;
   const messagedAthletes = athletes.filter(a => a.status === 'Contacted' || a.status === 'Messaged');
   const athletesWithEmails = athletes.filter(a => a.email && a.email.includes('@'));
 
+  // Preserve genuine zeros from the live summary; never substitute historical seed counts.
+  const effectiveTotalAthletes = telemetryStats.total ?? 0;
+  const effectiveMessagedCount = telemetryStats.contacted ?? 0;
+  const effectivePendingCount = telemetryStats.pending ?? 0;
+  const effectiveEmailsCount = telemetryStats.emails ?? 0;
+  const effectiveCoachesCount = telemetryStats.coaches ?? 0;
+  const effectiveCampaignsCount = telemetryStats.campaigns ?? 0;
+  const effectivePercentComplete = effectiveTotalAthletes > 0
+    ? ((effectiveMessagedCount / effectiveTotalAthletes) * 100).toFixed(1) : '0.0';
+
   // Filter current active table
   const getActiveList = () => {
     let source = [];
@@ -936,13 +927,28 @@ President, Recreational Debut`;
   };
 
   const totalDelivered = campaigns.reduce((acc, c) => acc + (c.successful_count || 0), 0);
-  const activeSmtpCount = smtpAccounts.filter(a => a.active).length || 1;
-  const swarmDailyCapacity = quotaStatus.swarm_daily_ceiling || (activeSmtpCount * 400);
+  const activeSmtpCount = smtpAccounts.filter(a => a.active).length;
+  const swarmDailyCapacity = quotaStatus.swarm_daily_ceiling ?? 0;
+
+  if (!hasLiveData || dataError) {
+    return (
+      <section role={dataError ? 'alert' : 'status'} style={{ padding: 32, color: '#f8fafc', background: '#07101e', minHeight: '100vh' }}>
+        <h2>Recreational Debut</h2>
+        <p>{isLoading ? 'Loading authorized live data…' : dataError}</p>
+        {!isLoading && <button onClick={fetchData}>Retry connection</button>}
+      </section>
+    );
+  }
 
   if (viewMode === 'mobile') {
     return (
       <DennisBellMobileRemote 
         backendUrl={BACKEND_URL} 
+        athletes={athletes}
+        excludedCoaches={excludedCoaches}
+        campaigns={campaigns}
+        quotaStatus={quotaStatus}
+        telemetryStats={telemetryStats}
         onSwitchToDesktop={() => setViewMode('desktop')} 
       />
     );
@@ -1134,7 +1140,7 @@ President, Recreational Debut`;
           >
             <div style={{ fontSize: '32px' }}>🟢</div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: '#10b981' }}>{messagedAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#10b981' }}>{effectiveMessagedCount.toLocaleString()}</div>
               <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Contacted & Verified</div>
             </div>
           </div>
@@ -1159,7 +1165,7 @@ President, Recreational Debut`;
           >
             <div style={{ fontSize: '32px' }}>🟡</div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: '#F58426' }}>{pendingAthletes.length.toLocaleString()}</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#F58426' }}>{effectivePendingCount.toLocaleString()}</div>
               <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Needs To Be Messaged</div>
             </div>
           </div>
@@ -1210,7 +1216,7 @@ President, Recreational Debut`;
           >
             <div style={{ fontSize: '32px' }}>📧</div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '900', color: '#38bdf8' }}>{athletesWithEmails.length.toLocaleString()}</div>
+              <div style={{ fontSize: '24px', fontWeight: '900', color: '#38bdf8' }}>{effectiveEmailsCount.toLocaleString()}</div>
               <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: '700' }}>Clean Athlete Emails</div>
             </div>
           </div>
@@ -1236,7 +1242,7 @@ President, Recreational Debut`;
               <span style={{ color: '#10b981' }}>⚡</span> Swarm Daily Cap: <strong style={{ color: '#ffffff' }}>{swarmDailyCapacity}</strong> ({activeSmtpCount} Gmail{activeSmtpCount > 1 ? 's' : ''})
             </span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: '#34d399' }}>🛡️</span> Coach Safety Quarantine: <strong style={{ color: '#ffffff' }}>{excludedCoaches.length.toLocaleString()}</strong> Shielded
+              <span style={{ color: '#34d399' }}>🛡️</span> Coach Safety Quarantine: <strong style={{ color: '#ffffff' }}>{effectiveCoachesCount.toLocaleString()}</strong> Shielded
             </span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ color: '#38bdf8' }}>🏀</span> College Coaches Network: <strong style={{ color: '#ffffff' }}>850+</strong> NCAA / NAIA
@@ -1264,7 +1270,7 @@ President, Recreational Debut`;
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '15px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.3px' }}>
-                    CAMPAIGN PROGRESS: {messagedAthletes.length.toLocaleString()} OF {athletes.length.toLocaleString()} ATHLETES CONTACTED
+                    CAMPAIGN PROGRESS: {effectiveMessagedCount.toLocaleString()} OF {effectiveTotalAthletes.toLocaleString()} ATHLETES CONTACTED
                   </span>
                   <span style={{
                     backgroundColor: messagedAthletes.length > 0 ? '#10b981' : '#F58426',
@@ -1275,7 +1281,7 @@ President, Recreational Debut`;
                     borderRadius: '4px',
                     letterSpacing: '0.5px'
                   }}>
-                    {athletes.length > 0 ? ((messagedAthletes.length / athletes.length) * 100).toFixed(1) : 0}% COMPLETE
+                    {effectivePercentComplete}% COMPLETE
                   </span>
                   <span style={{
                     backgroundColor: 'rgba(56, 189, 248, 0.15)',
@@ -1290,7 +1296,7 @@ President, Recreational Debut`;
                   </span>
                 </div>
                 <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
-                  <strong style={{ color: '#10b981' }}>{messagedAthletes.length.toLocaleString()} Contacted & Verified</strong> • <strong style={{ color: '#F58426' }}>{pendingAthletes.length.toLocaleString()} Pending</strong> • <strong style={{ color: '#38bdf8' }}>{athleteReplies.length} Inbound SMS Replies</strong> • <strong>0% Bounce Rate</strong>
+                  <strong style={{ color: '#10b981' }}>{effectiveMessagedCount.toLocaleString()} Contacted & Verified</strong> • <strong style={{ color: '#F58426' }}>{effectivePendingCount.toLocaleString()} Pending</strong> • <strong style={{ color: '#38bdf8' }}>{athleteReplies.length} Inbound SMS Replies</strong> • <strong>0% Bounce Rate</strong>
                 </div>
               </div>
             </div>
@@ -1331,7 +1337,7 @@ President, Recreational Debut`;
                   boxShadow: '0 2px 10px rgba(245, 132, 38, 0.35)'
                 }}
               >
-                Send Next Batch ({pendingAthletes.length.toLocaleString()} Ready) →
+                Send Next Batch ({effectivePendingCount.toLocaleString()} Ready) →
               </button>
             </div>
           </div>
@@ -1348,7 +1354,7 @@ President, Recreational Debut`;
           }}>
             <div style={{
               height: '100%',
-              width: `${Math.min(100, Math.max(1, athletes.length > 0 ? (messagedAthletes.length / athletes.length) * 100 : 0))}%`,
+              width: `${Math.min(100, Math.max(1, parseFloat(effectivePercentComplete)))}%`,
               background: 'linear-gradient(90deg, #F58426 0%, #10b981 100%)',
               borderRadius: '6px',
               transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -1447,21 +1453,21 @@ President, Recreational Debut`;
               {
                 id: 'analytics',
                 label: '📊 Campaigns & Analytics',
-                badge: `${messagedAthletes.length.toLocaleString()} Sent • ${campaigns.length} Blasts`,
+                badge: `${effectiveMessagedCount.toLocaleString()} Sent • ${effectiveCampaignsCount} Blasts`,
                 matches: ['telemetry', 'campaigns'],
                 defaultTab: 'telemetry'
               },
               {
                 id: 'comms',
                 label: '💬 Communications Hub',
-                badge: `${pendingAthletes.length.toLocaleString()} Ready • ${athleteReplies.length} Replies`,
+                badge: `${effectivePendingCount.toLocaleString()} Ready • ${athleteReplies.length} Replies`,
                 matches: ['syndication', 'emails', 'replies'],
                 defaultTab: 'syndication'
               },
               {
                 id: 'roster',
                 label: '👥 Athlete Master Roster',
-                badge: `${athletes.length.toLocaleString()} Athletes`,
+                badge: `${effectiveTotalAthletes.toLocaleString()} Athletes`,
                 matches: ['roster', 'submit'],
                 defaultTab: 'roster'
               },
@@ -1562,7 +1568,7 @@ President, Recreational Debut`;
                     cursor: 'pointer'
                   }}
                 >
-                  📢 Campaign Activity &amp; Dispatched Logs ({campaigns.length} Blasts)
+                  📢 Campaign Activity &amp; Dispatched Logs ({effectiveCampaignsCount} Blasts)
                 </button>
               </>
             )}
@@ -1583,7 +1589,7 @@ President, Recreational Debut`;
                     cursor: 'pointer'
                   }}
                 >
-                  📱 Mass SMS Syndication &amp; Outbox ({pendingAthletes.length.toLocaleString()} Ready)
+                  📱 Mass SMS Syndication &amp; Outbox ({effectivePendingCount.toLocaleString()} Ready)
                 </button>
                 <button
                   onClick={() => handleTabChange('emails')}
@@ -1598,7 +1604,7 @@ President, Recreational Debut`;
                     cursor: 'pointer'
                   }}
                 >
-                  📧 Athlete Email Hub &amp; SMTP Swarm ({athletesWithEmails.length.toLocaleString()} Emails)
+                  📧 Athlete Email Hub &amp; SMTP Swarm ({effectiveEmailsCount.toLocaleString()} Emails)
                 </button>
                 <button
                   onClick={() => handleTabChange('replies')}
@@ -1642,7 +1648,7 @@ President, Recreational Debut`;
                     cursor: 'pointer'
                   }}
                 >
-                  👥 Master Athlete Directory ({athletes.length.toLocaleString()})
+                  👥 Master Athlete Directory ({effectiveTotalAthletes.toLocaleString()})
                 </button>
                 <button
                   onClick={() => handleTabChange('submit')}

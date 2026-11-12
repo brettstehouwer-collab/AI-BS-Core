@@ -1,0 +1,110 @@
+{
+  "at": "2026-11-03T16:38:26.774951+00:00",
+  "classification": "progress: camera obstruction fixed with actual GPU evidence; HUD caching behavior verified; genuine1080p baseline recorded and profiling focus forcing removed",
+  "previous_goal_turn": "Progress: both full current tour routes and two1080p MP4s passed, decoded and cloud-restored; creator accepted current wording for now.",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "Shared dirty tree retained; selected full files, preimages and normalized diff only; no staging/reset/clean/private global inventory.",
+  "source_sha256": {
+    "engine/include/aibs/guide_camera.hpp": "8b6ce5ac2e82d2d05394279b343fbe76fcb1f0cb55d01ea0ccefe53540c1b02b",
+    "engine/tests/guide_camera_tests.cpp": "db200c56b21c0c9a4dee9549d50c142f8b02b55c2da54effaabe96d656a58832",
+    "engine/apps/durable_world.cpp": "8788989a4504375f230f92764ac325351836258a20952dbbc269ce8960afe846",
+    "engine/apps/performance_runtime.inl": "73161d0cfa096a5142b4e005674d8a3a7992d668b3dd40134e9aa7dcc857ae27",
+    "engine/CMakeLists.txt": "c16f6f8ce1c5560e9a0a45b73bd71b0c6917a772987cddb7abbc08798656caa3"
+  },
+  "camera_gpu": {
+    "status": "passed_actual_character_camera_clearance_gpu",
+    "checks": 20,
+    "width": 1920,
+    "height": 1080,
+    "gameplay_history_unchanged": true,
+    "native_hud_cache_verified": true,
+    "cases": [
+      {
+        "case": "near",
+        "visibility": 0,
+        "difference_from_without_guide": 0,
+        "difference_from_original": 2073600
+      },
+      {
+        "case": "middle",
+        "visibility": 0.5,
+        "difference_from_without_guide": 1538099,
+        "difference_from_original": 1538099
+      },
+      {
+        "case": "far",
+        "visibility": 1,
+        "difference_from_without_guide": 452502,
+        "difference_from_original": 0
+      }
+    ]
+  },
+  "cpu_scope": "Two registered tests;214camera checks included. Original full-engine regression suite not rerun.",
+  "valid_performance": {
+    "scope": "Stationary boot nook only,15seconds after2second warmup; no recording/inference requested; background applications not isolated",
+    "fps": 46.59890834290722,
+    "frame_ms": {
+      "mean": 21.45973018597997,
+      "p50": 16.8962,
+      "p95": 33.4155,
+      "p99": 33.5912
+    },
+    "private_bytes": {
+      "start": 239599616,
+      "end": 223899648,
+      "maximum_sampled": 239603712
+    },
+    "scene_content_gpu_bytes": {
+      "start": 31522816,
+      "end": 31522816,
+      "maximum_sampled": 31522816
+    },
+    "target_60_status": "Last valid baseline below target; optimization comparison and full-route target remain unverified"
+  },
+  "retained_failures": "InitialCPUselectedtestNotRun(missing built target), fixed by building target; bypassR07focus pause; initialpassive activation and post-HUDsetup failures retained. No failed/skipped test relabelled as passed.",
+  "user_readiness": "User answered I am ready now; initial valid sample obtained. Later comparison failed setup twice; no more profiling retries this turn.",
+  "wording": "Current authored guidance/memory text unchanged; creator interim acceptance fromP38retained.",
+  "save_compatibility": "No content/save/character payload format change or movement/quest rule change. New SDK header is additive and source-only until a new verified SDK/release.",
+  "deployed": "Studio102/SDK0.16.3 unchanged; previous38candidate binary retained exact",
+  "next_step": "Read-only security verification of the locally retained binary/provider classification before any deployment. Continue full isolated SDK/Studio regression and user-started focused profiling; initial valid baseline46.6FPSbelow target and cached comparison unverified. Preserve all original scope.",
+  "space_free_bytes": {
+    "C": 67791962112,
+    "D": 85977919488,
+    "E": 146813599744
+  },
+  "binary_backup39A": {
+    "status": "provider_refused_raw_download_verification",
+    "file_id": "1i36-IDh_aPF8krWiG045WJ5_JFhtvuzT",
+    "folder_id": "1eACHbHeNssUKvNPbbuDtzigtNeX93VRN",
+    "archive": "39A_Camera_Clearance_HUD_And_Performance_Baseline.zip",
+    "provider_error": {
+      "error": "HTTPError: 403: Google Drive file download request failed (Response: {'type': 'google_drive_http_error', 'phase': 'file download', 'upstream_status': 403, 'provider': {'error': {'code': 403, 'message': 'This file has been identified as malware or spam and cannot be downloaded.', 'errors': [{'message': 'This file has been identified as malware or spam and cannot be downloaded.', 'domain': 'global', 'reason': 'cannotDownloadAbusiveFile'}]}}})",
+      "error_code": "FORBIDDEN"
+    },
+    "binary_cloud_restore_verified": false,
+    "next": "Preserve local binaries and provider classification. Create source/evidence-only checkpoint; no executable re-encoding or detection bypass."
+  },
+  "backup39B": {
+    "status": "verified_authenticated_source_evidence_restore_all_members",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\39B_Camera_HUD_Source_And_Verification_Only.zip",
+    "bytes": 5529656,
+    "sha256": "07a47799fbe20e807535cbc4c93c847ae547197e36a343cd886434e372f8a316",
+    "members": 152,
+    "binary_restore_verified": false,
+    "goal_complete": false,
+    "at": "2026-11-03T16:43:34.130047+00:00",
+    "file_id": "13LGeM1E0emRRFv53fpfKEeywzGA1IIPZ",
+    "folder_id": "1eACHbHeNssUKvNPbbuDtzigtNeX93VRN",
+    "url": "https://drive.google.com/file/d/13LGeM1E0emRRFv53fpfKEeywzGA1IIPZ/view?usp=drivesdk",
+    "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+    "binary_backup": "39A upload retained but provider refused raw download as possible malware/spam; no current binary restore claim or bypass. Local executable retained.",
+    "release_acceptance": false
+  },
+  "space_free_bytes_closeout": {
+    "C": 66854338560,
+    "D": 85959430144,
+    "E": 146813599744
+  }
+}

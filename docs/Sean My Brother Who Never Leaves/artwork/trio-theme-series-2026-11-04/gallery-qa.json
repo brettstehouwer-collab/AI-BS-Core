@@ -1,0 +1,118 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-11-05T01:05:02.473435+00:00",
+  "gallery": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\trio-theme-series-2026-11-04\\index.html",
+  "asset_count": 8,
+  "assets": [
+    {
+      "id": "01-coop-cabin",
+      "final_filename": "01-coop-cabin-both-pets.png",
+      "bytes": 3358414,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "02-chaos-lab",
+      "final_filename": "02-chaos-lab-both-pets.png",
+      "bytes": 3263315,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape, approximately 16:9"
+    },
+    {
+      "id": "03-tavern-quest",
+      "final_filename": "03-tavern-quest-both-pets.png",
+      "bytes": 3260948,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "04-court-of-bad-ideas",
+      "final_filename": "04-court-of-bad-ideas-both-pets.png",
+      "bytes": 3054169,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape, approximately 16:9"
+    },
+    {
+      "id": "05-roadside-diner",
+      "final_filename": "05-roadside-diner-both-pets.png",
+      "bytes": 3119581,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape, approximately 16:9"
+    },
+    {
+      "id": "06-orbital-breakroom",
+      "final_filename": "06-orbital-breakroom-both-pets.png",
+      "bytes": 3158755,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "07-campsite-chaos",
+      "final_filename": "07-campsite-chaos-both-pets.png",
+      "bytes": 3276006,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "08-rooftop-afterglow",
+      "final_filename": "08-rooftop-afterglow-both-pets.png",
+      "bytes": 3367032,
+      "width": 1671,
+      "height": 941,
+      "format": "landscape, approximately 16:9"
+    }
+  ],
+  "final_asset_policy": "Exactly the current final_filename values: all eight both-pets images, with neither golden-dog drafts nor single-dog variants referenced.",
+  "browser": {
+    "browser": "Installed Chrome via Python Playwright, headless",
+    "desktop": "1440x1000",
+    "mobile": "375x812",
+    "checks": {
+      "all_eight_final_images_loaded": true,
+      "filters_format_theme_intersection_empty_reset": true,
+      "desktop_lightbox_fit_native_zoom_pan_arrows_home_end_escape_focus": true,
+      "mobile_375_no_overflow_open_fit_native_zoom_escape": true
+    },
+    "script_errors": [],
+    "external_requests": [],
+    "screenshots": [
+      "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-desktop-hero-20261104.png",
+      "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-desktop-grid-20261104.png",
+      "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-mobile-hero-20261104.png",
+      "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-mobile-grid-20261104.png"
+    ]
+  },
+  "visual_review": {
+    "all_eight_final_images_inspected": true,
+    "people_and_dogs": "Each scene has exactly three main adult faces plus two visually distinct dogs: Sean’s fluffy red-brown/white blaze-faced HR dog and short-coated brown Tonto.",
+    "main_text": "Main titles and principal joke labels remain legible; the lab NOT MY DEPARTMENT prop was restored after Tonto initially occluded it.",
+    "material_issues": [],
+    "minor_notes": [
+      "Some tiny report and receipt regions use decorative pseudo-text.",
+      "Small incidental props, snails and fine textures can vary across generative edits.",
+      "Identity preservation is a visual artistic assessment; no claim of byte identity outside edited regions."
+    ],
+    "gallery_layout": "Reviewed final desktop hero, mixed-format grid, phone hero and phone collection screenshots. Native aspect ratios preserved; no image cropping or horizontal page overflow."
+  },
+  "local_history": {
+    "prior_implementation": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/expression-series-2026-11-02/index.html",
+    "scope": "Read prior local gallery scaffold and reused its accessible dialog/navigation, extending mixed aspect ratios, zoom and combined filters. Supplied current AGENTS contract read; targeted art/history search found no relevant art checkpoint in core handoff. No core files edited."
+  },
+  "screenshots_reviewed": [
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-desktop-hero-20261104.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-desktop-grid-20261104.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-mobile-hero-20261104.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-both-pets-mobile-grid-20261104.png"
+  ],
+  "preserved_previous_qa": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\trio-theme-series-2026-11-04\\gallery-qa-seans-dog.json",
+  "no_new_videos": true,
+  "external_dependencies": [],
+  "downloads": "All eight per-poster download filenames and hrefs match existing final assets; lightbox download tracks the displayed poster."
+}

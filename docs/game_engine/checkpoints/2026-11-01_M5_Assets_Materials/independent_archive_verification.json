@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "started_at": "2026-11-02T00:05:10.857245+00:00",
+  "completed_at": "2026-11-02T00:05:13.235496+00:00",
+  "scope": "Independent local streaming CRC/per-file SHA256/length/current selected-file/aggregate/Git identity reconciliation; no extraction, source edits, tests, native execution, GPU, model or build runs",
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_assets_materials\\AI_BS_Assets_Materials_Source.zip",
+  "archive_bytes": 25551025,
+  "archive_sha256": "b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469",
+  "expected_archive_bytes": 25551025,
+  "expected_archive_sha256": "b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469",
+  "delivery": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_M5_Assets_Materials\\delivery.json",
+  "delivery_sha256": "3979407227885a9a253fac14fdfd603f008eaaee73910634b03e32867511d4c6",
+  "manifest": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_M5_Assets_Materials\\source_manifest.json",
+  "manifest_file_sha256": "cf5628e4fb1cfdf597ab8bac0b379e14fee455005252377361a60c2952eab291",
+  "manifest_aggregate_algorithm": "SHA256(UTF8(json.dumps(files, sort_keys=True))) in recorded file-list order",
+  "manifest_aggregate_sha256": "67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7",
+  "declared_manifest_aggregate_sha256": "67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7",
+  "archive_observed_aggregate_sha256": "67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7",
+  "current_selected_observed_aggregate_sha256": "67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7",
+  "selected_files": 2541,
+  "archive_members": 2542,
+  "crc_verified_members": 2542,
+  "archive_sha256_and_length_verified": 2541,
+  "current_selected_sha256_and_length_verified": 2541,
+  "raw_selected_bytes": 750846426,
+  "embedded_manifest_exact_local_bytes": true,
+  "public_sdk_include_config_records": 712,
+  "compiled_native_binary_members": [],
+  "license_paths": [
+    "engine/assets/source/motherboard-LICENSE.txt",
+    "engine/install/0.9.0/debug/share/AIBS/licenses/Jolt-LICENSE.txt",
+    "engine/install/0.9.0/debug/share/AIBS/licenses/SQLite-NOTICE.txt",
+    "engine/install/0.9.0/release/share/AIBS/licenses/Jolt-LICENSE.txt",
+    "engine/install/0.9.0/release/share/AIBS/licenses/SQLite-NOTICE.txt",
+    "engine/third_party/Jolt-LICENSE.txt",
+    "engine/third_party/SQLite-NOTICE.txt"
+  ],
+  "model_evidence_scope": {
+    "retained_actual_packaged_model_run": {
+      "version": "5.329.95",
+      "selected_model": "qwen2.5-coder:latest",
+      "actual_model_inference": true,
+      "provider_origin": "explicit_installed_local_ollama_model",
+      "evidence": "backups/native_game95_20261101_creator/frozen_live.json"
+    },
+    "v96_creator": {
+      "actual_model_inference": false,
+      "provider_origin": "deterministic_loopback_http_fixture",
+      "evidence": "backups/native_game96_20261101_assets/frozen_creator.json"
+    },
+    "v96_assets": {
+      "actual_model_inference": false,
+      "evidence": "backups/native_game96_20261101_assets/frozen_assets.json"
+    }
+  },
+  "branch": "codex/audit-v532976-20261031",
+  "expected_branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "expected_commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "failures": [],
+  "receipt_outside_seal": true,
+  "limits": [
+    "Only the2541 selected checkpoint files are reconciled; unrelated dirty-tree content is outside scope.",
+    "712 public installed AIBS/Jolt header/config records plus6 capability/license records are intentional source/SDK interface evidence; executable/library binaries are excluded.",
+    "Self-authored cooked mesh and synthetic proof data may be present as selected assets/evidence; this does not classify them as compiled program binaries.",
+    "Remote upload/download integrity is outside this local verification.",
+    "One retained actual packaged Qwen run belongs to v95; v96 creator proof is an HTTP fixture and this verification runs no model."
+  ],
+  "public_sdk_selected_records": 718,
+  "sdk_capability_license_records": 6,
+  "sdk_capability_license_paths": [
+    "engine/install/0.9.0/debug/bin/aibs_capabilities.json",
+    "engine/install/0.9.0/debug/share/AIBS/licenses/Jolt-LICENSE.txt",
+    "engine/install/0.9.0/debug/share/AIBS/licenses/SQLite-NOTICE.txt",
+    "engine/install/0.9.0/release/bin/aibs_capabilities.json",
+    "engine/install/0.9.0/release/share/AIBS/licenses/Jolt-LICENSE.txt",
+    "engine/install/0.9.0/release/share/AIBS/licenses/SQLite-NOTICE.txt"
+  ],
+  "wavefront_source_mesh_records_previously_flagged_by_suffix": [
+    {
+      "path": "backups/native_game96_20261101_assets/frozen_assets-work-xfeq1d2n/owned-user-inputs/Owned triangle.obj",
+      "classification": "ASCII Wavefront OBJ source mesh",
+      "bytes": 51,
+      "sha256": "5fd16697e96b87d9ca3300ec3c1b65e57e5b46898e98f41f8f40631831931918"
+    },
+    {
+      "path": "engine/out/asset_smoke_source_fixture_20261102_v96_1/assets-work-lf8wfhh0/owned-user-inputs/Owned triangle.obj",
+      "classification": "ASCII Wavefront OBJ source mesh",
+      "bytes": 51,
+      "sha256": "5fd16697e96b87d9ca3300ec3c1b65e57e5b46898e98f41f8f40631831931918"
+    }
+  ],
+  "receipt_correction": {
+    "corrected_at": "2026-11-02T00:06:23.134102+00:00",
+    "reason": "Two extra filename-taxonomy assertions in the initial receipt were too broad. All cryptographic integrity checks passed on the first streaming scan. The 718 selected SDK records consist of712 public headers/config files and6 capability/license records; the two .obj entries are ASCII Wavefront source fixtures, not compiled object files.",
+    "initial_receipt_sha256": "dff865525b22d7005889e956f2b0b3a77f2300efbadb54b05e6ec15178d8f124",
+    "initial_classification_attempt_json": "{\r\n  \"schema_version\": 1,\r\n  \"status\": \"failed\",\r\n  \"started_at\": \"2026-11-02T00:05:10.857245+00:00\",\r\n  \"completed_at\": \"2026-11-02T00:05:13.235496+00:00\",\r\n  \"scope\": \"Independent local streaming CRC/per-file SHA256/length/current selected-file/aggregate/Git identity reconciliation; no extraction, source edits, tests, native execution, GPU, model or build runs\",\r\n  \"archive\": \"C:\\\\AI-BS\\\\backups\\\\checkpoint_20261101_assets_materials\\\\AI_BS_Assets_Materials_Source.zip\",\r\n  \"archive_bytes\": 25551025,\r\n  \"archive_sha256\": \"b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469\",\r\n  \"expected_archive_bytes\": 25551025,\r\n  \"expected_archive_sha256\": \"b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469\",\r\n  \"delivery\": \"C:\\\\AI-BS\\\\docs\\\\game_engine\\\\checkpoints\\\\2026-11-01_M5_Assets_Materials\\\\delivery.json\",\r\n  \"delivery_sha256\": \"3979407227885a9a253fac14fdfd603f008eaaee73910634b03e32867511d4c6\",\r\n  \"manifest\": \"C:\\\\AI-BS\\\\docs\\\\game_engine\\\\checkpoints\\\\2026-11-01_M5_Assets_Materials\\\\source_manifest.json\",\r\n  \"manifest_file_sha256\": \"cf5628e4fb1cfdf597ab8bac0b379e14fee455005252377361a60c2952eab291\",\r\n  \"manifest_aggregate_algorithm\": \"SHA256(UTF8(json.dumps(files, sort_keys=True))) in recorded file-list order\",\r\n  \"manifest_aggregate_sha256\": \"67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7\",\r\n  \"declared_manifest_aggregate_sha256\": \"67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7\",\r\n  \"archive_observed_aggregate_sha256\": \"67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7\",\r\n  \"current_selected_observed_aggregate_sha256\": \"67c4184c4714b33c4e6b9efcf129013957a925ca109d1b5e210c9c656ef4a9c7\",\r\n  \"selected_files\": 2541,\r\n  \"archive_members\": 2542,\r\n  \"crc_verified_members\": 2542,\r\n  \"archive_sha256_and_length_verified\": 2541,\r\n  \"current_selected_sha256_and_length_verified\": 2541,\r\n  \"raw_selected_bytes\": 750846426,\r\n  \"embedded_manifest_exact_local_bytes\": true,\r\n  \"public_sdk_include_config_records\": 712,\r\n  \"compiled_native_binary_members\": [\r\n    \"backups/native_game96_20261101_assets/frozen_assets-work-xfeq1d2n/owned-user-inputs/Owned triangle.obj\",\r\n    \"engine/out/asset_smoke_source_fixture_20261102_v96_1/assets-work-lf8wfhh0/owned-user-inputs/Owned triangle.obj\"\r\n  ],\r\n  \"license_paths\": [\r\n    \"engine/assets/source/motherboard-LICENSE.txt\",\r\n    \"engine/install/0.9.0/debug/share/AIBS/licenses/Jolt-LICENSE.txt\",\r\n    \"engine/install/0.9.0/debug/share/AIBS/licenses/SQLite-NOTICE.txt\",\r\n    \"engine/install/0.9.0/release/share/AIBS/licenses/Jolt-LICENSE.txt\",\r\n    \"engine/install/0.9.0/release/share/AIBS/licenses/SQLite-NOTICE.txt\",\r\n    \"engine/third_party/Jolt-LICENSE.txt\",\r\n    \"engine/third_party/SQLite-NOTICE.txt\"\r\n  ],\r\n  \"model_evidence_scope\": {\r\n    \"retained_actual_packaged_model_run\": {\r\n      \"version\": \"5.329.95\",\r\n      \"selected_model\": \"qwen2.5-coder:latest\",\r\n      \"actual_model_inference\": true,\r\n      \"provider_origin\": \"explicit_installed_local_ollama_model\",\r\n      \"evidence\": \"backups/native_game95_20261101_creator/frozen_live.json\"\r\n    },\r\n    \"v96_creator\": {\r\n      \"actual_model_inference\": false,\r\n      \"provider_origin\": \"deterministic_loopback_http_fixture\",\r\n      \"evidence\": \"backups/native_game96_20261101_assets/frozen_creator.json\"\r\n    },\r\n    \"v96_assets\": {\r\n      \"actual_model_inference\": false,\r\n      \"evidence\": \"backups/native_game96_20261101_assets/frozen_assets.json\"\r\n    }\r\n  },\r\n  \"branch\": \"codex/audit-v532976-20261031\",\r\n  \"expected_branch\": \"codex/audit-v532976-20261031\",\r\n  \"commit\": \"55c99f116e2c05025dd03e4b5e8a8f53b93cced7\",\r\n  \"expected_commit\": \"55c99f116e2c05025dd03e4b5e8a8f53b93cced7\",\r\n  \"failures\": [\r\n    {\r\n      \"check\": \"718 public SDK include/config records\"\r\n    },\r\n    {\r\n      \"check\": \"compiled native binaries excluded\"\r\n    }\r\n  ],\r\n  \"receipt_outside_seal\": true,\r\n  \"limits\": [\r\n    \"Only the2541 selected checkpoint files are reconciled; unrelated dirty-tree content is outside scope.\",\r\n    \"718 public installed AIBS/Jolt header/config records are intentional source/SDK interface evidence; executable/library binaries are excluded.\",\r\n    \"Self-authored cooked mesh and synthetic proof data may be present as selected assets/evidence; this does not classify them as compiled program binaries.\",\r\n    \"Remote upload/download integrity is outside this local verification.\",\r\n    \"One retained actual packaged Qwen run belongs to v95; v96 creator proof is an HTTP fixture and this verification runs no model.\"\r\n  ]\r\n}\r\n",
+    "snapshot_time_note": "Original started_at/completed_at timestamps refer to the complete pre-annotation archive/current-file scan; receipt correction changes classification fields only."
+  }
+}

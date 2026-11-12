@@ -22,13 +22,15 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     user_prompt: Optional[StrictStr] = Field(default=None, min_length=1, max_length=128000)
+    source_references: Optional[list] = Field(default=None, max_length=4)
     prompt: Optional[str] = None
     mode: Optional[str] = None
     plan_only: bool = False
     execution_backend: Optional[str] = None
+    provider: Optional[StrictStr] = None
     model: str = Field(default="stehouwer_llm", description="Target model name")
     messages: List[ChatMessage] = Field(default_factory=list, description="Conversation messages")
-    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
+    temperature: float = Field(default=0.7, strict=True, ge=0.0, le=2.0)
     stream: bool = Field(default=True)
     system_prompt: Optional[str] = None
 
@@ -169,6 +171,8 @@ async def generate_embedding(request: EmbedRequest):
 async def generate_chat_completion(request: ChatRequest):
     """Chat completion with bounded local GPU admission and token streaming."""
     body = request.model_dump() if hasattr(request, 'model_dump') else request.dict()
+    from core.attached_source_context import validate_request_sources, request_source_bundle
+    source_references = validate_request_sources(body)
     from core.media_intent_policy import resolve_media_status
     service_reply = await resolve_media_status(body)
     if service_reply is not None:
@@ -182,6 +186,10 @@ async def generate_chat_completion(request: ChatRequest):
     reply = await asyncio.to_thread(coding_request, body)
     if reply is not None:
         return reply
+    from core.bs_chat_provider import bs_chat_reply, chat_reply_response
+    provider_reply = await bs_chat_reply(body)
+    if provider_reply is not None:
+        return chat_reply_response(provider_reply, stream=request.stream)
     target_host = await resolve_model_host(request.model)
     num_gpu = 99
     if arbitrate_workload:
@@ -195,7 +203,18 @@ async def generate_chat_completion(request: ChatRequest):
     ollama_messages = [{"role": m.role, "content": m.content} for m in request.messages]
     if request.system_prompt:
         ollama_messages.insert(0, {"role": "system", "content": request.system_prompt})
-    references = await asyncio.to_thread(historical_reference_context, request_reference_query(body))
+    from core.pipeline_context_injector import inject_aibs_pipeline_context
+    ollama_messages = inject_aibs_pipeline_context(ollama_messages)
+    source_receipt = None
+    if source_references:
+        bundle = await request_source_bundle(request.user_prompt or request_reference_query(body), source_references)
+        references, source_receipt = bundle['context'], bundle['receipt']
+        from core.attached_source_context import source_unavailable_reply
+        unavailable = source_unavailable_reply(bundle)
+        if unavailable is not None:
+            return chat_reply_response(unavailable, stream=request.stream)
+    else:
+        references = await asyncio.to_thread(historical_reference_context, request_reference_query(body))
     if references:
         ollama_messages.insert(0, {"role": "system", "content": references})
 
@@ -234,7 +253,7 @@ async def generate_chat_completion(request: ChatRequest):
                                         return
                                     content = chunk.get("message", {}).get("content", "")
                                     done = chunk.get("done", False)
-                                    yield f"data: {json.dumps({'content': content, 'done': done})}\n\n"
+                                    yield f"data: {json.dumps({'content': content, 'done': done, **({'source_retrieval':source_receipt} if source_receipt is not None else {})})}\n\n"
                                     if done:
                                         break
             except GPUAdmissionError as e:
@@ -256,7 +275,8 @@ async def generate_chat_completion(request: ChatRequest):
                     resp = await client.post(f"{target_host}/api/chat", json=payload)
                     if resp.status_code == 200:
                         data = resp.json()
-                        return {"status": "success", "response": data.get("message", {}).get("content", "")}
+                        return {"status": "success", "response": data.get("message", {}).get("content", ""),
+                                **({'source_retrieval':source_receipt} if source_receipt is not None else {})}
                     raise HTTPException(status_code=resp.status_code, detail=resp.text)
         except GPUAdmissionError as e:
             raise HTTPException(status_code=503, detail={"code": e.reason}) from e

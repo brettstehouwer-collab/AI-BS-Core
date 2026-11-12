@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-04T20:41:12.792475+00:00",
+  "status": "verified_normal_companion_controls_checkpoint_not_final_acceptance",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "evidence": "E:\\AI_BS_Resources\\FirstBoot\\P98\\NormalCompanionControls\\qualification.json",
+  "backup_receipt": "docs/game_engine/checkpoints/98A-drive.json",
+  "monitor_status": "available",
+  "monitor_sha256": "704966ac089a7e7b21b7c861ae81f4a798a8d4c8e07eadcc24b78a4989bd29c8",
+  "free_GiB": {
+    "C": 204.61,
+    "D": 24.25,
+    "E": 44.21
+  },
+  "native_source_changed": false,
+  "installed_release_changed": false,
+  "goal_complete": false,
+  "next_step": "Current normal companion controls and input gates qualified inP98; preserve initial capture mismatch evidence. Next inspect remaining normal-player reading-panel/door-aware blocked-route and physical pause-clock coverage, reusing existing helpers. Human review launcher remains ready. Likeness/collar seam, caption review, current gameplay performance and final installed acceptance remain incomplete."
+}

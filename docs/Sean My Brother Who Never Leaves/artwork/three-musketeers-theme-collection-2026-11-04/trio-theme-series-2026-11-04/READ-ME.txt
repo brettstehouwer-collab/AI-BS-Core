@@ -1,0 +1,20 @@
+THREE MUSKETEERS — SAME IDIOTS, DIFFERENT WORLDS
+
+Eight original theme variations with Brett, Anna, Sean, Sean’s fluffy dog and Tonto.
+
+Open index.html for the complete gallery, theme filters, zoom and individual PNG downloads. Keep the eight PNG files next to index.html when moving the collection.
+
+01 CO-OP CHAOS — Cozy arcade cabin
+02 QUESTIONABLE RESEARCH — Neon laboratory
+03 THE QUEST CAN WAIT — Fantasy tavern
+04 THE COURT OF BAD IDEAS — Mock courtroom
+05 ONE MORE WRONG TURN — Midnight diner
+06 THE BREAK ROOM EVENT HORIZON — Orbital lounge
+07 FORECAST: POOR DECISIONS — Rainy campsite
+08 SAME TEAM. NEW DAY. — Dawn rooftop
+
+Created with built-in image generation. These are imaginative friendship scenes, with invented staging and familiar recurring jokes. Real photo references guide recognizable appearances.
+
+Final files end in -both-pets.png. Earlier draft artwork is retained separately in the workspace, excluded from the final-only ZIP. Source photos are not packaged. The exact generation/edit prompts, receipts and checks are included.
+
+Native sizes are recorded per image in collection.json. No enlargement or print-size promise is implied.

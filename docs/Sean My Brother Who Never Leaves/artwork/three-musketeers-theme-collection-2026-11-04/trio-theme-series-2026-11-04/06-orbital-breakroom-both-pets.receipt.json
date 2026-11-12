@@ -1,0 +1,37 @@
+{
+  "id": "06-orbital-breakroom-both-pets",
+  "poster_id": "06-orbital-breakroom",
+  "variant": "final-both-pets",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-3f01f702-bf8d-4483-9a54-46768017e596.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom-both-pets.png",
+  "prompt": "Edit image1 to ADD ONE second distinct real dog, TONTO, faithfully based on the SAME dog in images2 and3. Preserve the existing fluffy red-brown/tan/white HR dog completely, including its white forehead blaze, freckled muzzle, amber eyes, black HR harness, happy face and foreground presence. Do NOT replace it or blend the dogs. Final scene: exactly THREE human adults plus TWO dogs. Tonto is short-coated, muscular chocolate/russet brown, with broad square face, brown/liver nose, amber eyes, folded/rose ears, lightly graying muzzle and white chest patch. Add Tonto in a comfortable natural pose in the lower foreground near the existing dog, with a simple TONTO collar tag. Keep both dog faces clear and distinct, and retain all THREE human faces, poses, outfits, hands and expressions without redesign. VERY IMPORTANT: keep every original text phrase legible and unobstructed, especially the central NOT MY DEPARTMENT tablet, I CAN'T WAIT TO LOOK IN DEPTH mug, THREE MUSKETEERS and THE BREAK ROOM EVENT HORIZON titles, MILK: EXTRATERRESTRIAL, ADULT SUPERVISION: OUT OF ORBIT, UNPAID BILLS: STILL IN ORBIT, WHO WANNA PWAY?, HR and HR ACCEPTS TREATS. Do not position Tonto over any of those labels; minimally rearrange unlettered lower foreground props if necessary to make natural room. Preserve the orbital-lounge setting, floating spoon and sugar, window UFO/cow, snail habitat and boarding passes, coffee-paperwork printer, lighting, original portrait2:3 framing and tactile photorealistic-surreal illustration. No additional people or dogs. The two dog reference photographs supply identity only, no copied photo backgrounds, timestamps or camera text.",
+  "references": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom-seans-dog.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "transparent_background": false,
+  "supersedes": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom-seans-dog.png",
+  "original_preserved": true,
+  "edit_chain": [
+    {
+      "stage": "Add Tonto alongside Sean's existing HR dog",
+      "prompt": "Edit image1 to ADD ONE second distinct real dog, TONTO, faithfully based on the SAME dog in images2 and3. Preserve the existing fluffy red-brown/tan/white HR dog completely, including its white forehead blaze, freckled muzzle, amber eyes, black HR harness, happy face and foreground presence. Do NOT replace it or blend the dogs. Final scene: exactly THREE human adults plus TWO dogs. Tonto is short-coated, muscular chocolate/russet brown, with broad square face, brown/liver nose, amber eyes, folded/rose ears, lightly graying muzzle and white chest patch. Add Tonto in a comfortable natural pose in the lower foreground near the existing dog, with a simple TONTO collar tag. Keep both dog faces clear and distinct, and retain all THREE human faces, poses, outfits, hands and expressions without redesign. VERY IMPORTANT: keep every original text phrase legible and unobstructed, especially the central NOT MY DEPARTMENT tablet, I CAN'T WAIT TO LOOK IN DEPTH mug, THREE MUSKETEERS and THE BREAK ROOM EVENT HORIZON titles, MILK: EXTRATERRESTRIAL, ADULT SUPERVISION: OUT OF ORBIT, UNPAID BILLS: STILL IN ORBIT, WHO WANNA PWAY?, HR and HR ACCEPTS TREATS. Do not position Tonto over any of those labels; minimally rearrange unlettered lower foreground props if necessary to make natural room. Preserve the orbital-lounge setting, floating spoon and sugar, window UFO/cow, snail habitat and boarding passes, coffee-paperwork printer, lighting, original portrait2:3 framing and tactile photorealistic-surreal illustration. No additional people or dogs. The two dog reference photographs supply identity only, no copied photo backgrounds, timestamps or camera text.",
+      "references": [
+        "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom-seans-dog.png",
+        "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+        "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+      ],
+      "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-3f01f702-bf8d-4483-9a54-46768017e596.png",
+      "qa": "Accepted: exactly three adults and two visually distinct dogs; major text and portrait layout retained."
+    }
+  ],
+  "qa": {
+    "status": "accepted",
+    "inspection": "Both Tonto reference photos and each generated edit were viewed.",
+    "notes": "Tonto sits in the lower foreground with short brown coat, square head, gray muzzle, white chest and TONTO tag. Sean's fluffy red-brown/white HR dog remains at left. Three adults, major wording and orbital scene retained.",
+    "limitations": "Generative edit; fine texture and small incidental props can differ. Preservation outside the edited region is a visual assessment, not a byte identity claim.",
+    "retry_required": false
+  }
+}

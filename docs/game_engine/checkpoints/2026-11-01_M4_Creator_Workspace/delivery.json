@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_creator_workspace\\AI_BS_M4_Creator_Workspace_Source.zip",
+  "bytes": 4602073,
+  "files": 418,
+  "sha256": "345e71504f0ff5065e0e25a36f34c867f8d1081038ff428139a40943f24eb8bb",
+  "crc": "passed",
+  "captured_byte_readback": "passed",
+  "free_bytes": {
+    "C": 125410021376,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

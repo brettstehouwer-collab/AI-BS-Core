@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-11-05T00:49:54.209744+00:00",
+  "gallery": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\trio-theme-series-2026-11-04\\index.html",
+  "asset_count": 8,
+  "assets": [
+    {
+      "id": "01-coop-cabin",
+      "final_filename": "01-coop-cabin-seans-dog.png",
+      "bytes": 3393714,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "02-chaos-lab",
+      "final_filename": "02-chaos-lab-seans-dog.png",
+      "bytes": 3396294,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape 16:9"
+    },
+    {
+      "id": "03-tavern-quest",
+      "final_filename": "03-tavern-quest-seans-dog.png",
+      "bytes": 3370582,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "04-court-of-bad-ideas",
+      "final_filename": "04-court-of-bad-ideas-seans-dog.png",
+      "bytes": 3120536,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape 16:9"
+    },
+    {
+      "id": "05-roadside-diner",
+      "final_filename": "05-roadside-diner-seans-dog.png",
+      "bytes": 3208225,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape 16:9"
+    },
+    {
+      "id": "06-orbital-breakroom",
+      "final_filename": "06-orbital-breakroom-seans-dog.png",
+      "bytes": 3217243,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "07-campsite-chaos",
+      "final_filename": "07-campsite-chaos-seans-dog.png",
+      "bytes": 3330549,
+      "width": 1024,
+      "height": 1536,
+      "format": "portrait 2:3"
+    },
+    {
+      "id": "08-rooftop-afterglow",
+      "final_filename": "08-rooftop-afterglow.png",
+      "bytes": 3609241,
+      "width": 1672,
+      "height": 941,
+      "format": "landscape 16:9"
+    }
+  ],
+  "final_asset_policy": "Exactly the final_filename values from the current job; no initial golden-dog drafts referenced.",
+  "browser": {
+    "name": "Installed Chrome via Python Playwright, headless",
+    "desktop": "1440x1000",
+    "mobile": "375x812",
+    "horizontal_page_overflow": false,
+    "all_images_loaded": true,
+    "mixed_aspect_ratios": "Native dimensions retained, full image previews, object-fit contain, no crop transform",
+    "filters": "Passed format counts, theme/format intersection, zero-results state and reset",
+    "viewer": "Passed open, fit, native 1:1, keyboard + zoom, overflow pan, fit reset, arrow navigation, Escape, focus restoration, mobile opening and zoom",
+    "script_errors": [],
+    "external_requests": []
+  },
+  "visual_review": {
+    "all_eight_final_images_inspected": true,
+    "people_and_dog": "Each artwork shows exactly three main adult faces with Anna central, plus Sean\u2019s red-brown/tan/white dog in HR role.",
+    "main_text": "Main titles and principal labels visually legible; recurring PWAY preserved where requested.",
+    "material_issues": [],
+    "minor_notes": [
+      "Some tiny incident-report/receipt areas have decorative pseudo-text.",
+      "Very small snail counts and incidental labels vary among compositions.",
+      "Generative identity and fine details remain artistic interpretations."
+    ],
+    "gallery_layout": "Desktop hero and mixed-format collection plus mobile screenshot inspected: complete uncropped artwork, clear typography, responsive layout and no visible clipping."
+  },
+  "local_history": {
+    "prior_implementation": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/expression-series-2026-11-02/index.html",
+    "scope": "Read prior local gallery scaffold and reused its accessible dialog/navigation, extending mixed aspect ratios, zoom and combined filters. Supplied current AGENTS contract read; targeted art/history search found no relevant art checkpoint in core handoff. No core files edited."
+  },
+  "screenshots_reviewed": [
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-desktop-20261104.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-collection-20261104.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\trio-theme-gallery-mobile-20261104.png"
+  ]
+}

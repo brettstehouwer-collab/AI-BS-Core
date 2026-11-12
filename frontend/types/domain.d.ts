@@ -56,6 +56,11 @@ export interface AppStore {
   isExecutingPs: boolean;
   isExecutingCode: boolean;
   selectedModel: string;
+  aiProvider: string;
+  aiProviderModels: Record<string, string[]>;
+  aiProviderSelectionRevision: number;
+  setAIProviderSelection(provider: string, model: string): void;
+  setAIProviderConfiguration(configuration: import('../src/utils/bsChatProvider.js').BSChatProviderConfig, expectedRevision?: number): void;
   availableModels: string[];
   comfyuiModels: string[];
   isGeneratingNocoCode: boolean;
@@ -263,7 +268,7 @@ export interface AppStore {
 
 
 
-export interface ScreenplayBlock {id: string; type: string; text: string; dual?: boolean; revision?: boolean; revisionColor?: string}
+export interface ScreenplayBlock {id: string; type: string; text: string; dual?: boolean; revision?: boolean; revisionColor?: string; startsNewPage?: boolean; sourcePage?: number; runs?: any[]; notes?: any[]; attributes?: any; dualGroup?: string; dualSide?: string; editable?: boolean; edit_operations?: any[]}
 export interface ScreenplayBeat {id: string; heading: string; page: number; emoji?: string; summary?: string}
 export interface ScreenplayViewerHandle {scrollToPage(page: number): void; scrollToScene(beat: ScreenplayBeat): void; handleNextSearch(): void; handlePrevSearch(): void; totalPages: number; currentPage: number; matchedCount: number; activeMatchIndex: number}
 

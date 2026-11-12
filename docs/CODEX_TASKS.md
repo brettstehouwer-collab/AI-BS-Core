@@ -2651,3 +2651,313 @@ Two pre-existing hardcoded Twitch/Facebook stream-key defaults in the standalone
 ## Record210 — Program preview controls, v5.329.86
 
 VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE. Toolbar/checkbox now share the real decoder flag; explicit OFF and correct held/buffering/stale labels persist. Core unchanged; eligible probe 73 accepted/222 raw frames and actual 85 video verified before 86 release. 356 guarded tests PASS 0 errors/denials; focused 15 overlap. Build exit 0 in 120.668 seconds; 2256 files installed, 71 native modules verified; Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON. Trading disabled, audio silent. Unattributed Bad Request message is not proof of an outage. C exact preimages retained; full encrypted cloud recovery remains E-key blocked. Report: docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md.
+
+
+## VM retirement requested; deletion held - 20261104T214202Z
+User requested removing the two AI-BS VirtualBox guests to recover storage and resuming November 11, 2026. Both guests were powered off. Automatic approval review rejected permanent VM-disk/media deletion without a completed full encrypted backup. No removal, uninstallation, task change or WSL change occurred. Small private configuration/metadata checkpoint: C:\AI-BS\backups\vm_retirement_review_20261104T214202Z. This is not a full disk backup; Windows Phase 4 remains incomplete. Next: explicit permanent-erasure authorization, then bounded removal and measured free-space report; November 11 rebuild/continuation reminder.
+
+
+## Deferred Cloudflare status pilot - 2026-11-04T22:53:00.2539895Z
+User selected Save the plan for later. CF-STATUS-PILOT-001 is recorded in docs/Cloudflare_Agents_Deferred_Integration_Plan.md. Reuse the existing cloudflare-agent scaffold and a strict projection of local job status; owner auth, read-only viewers, ordered/idempotent updates, freshness, reconnect and bounded usage are future acceptance gates. No implementation/install/deployment was authorized or started. Playable opening remains ahead of game dashboards/Adam phone features. VM erasure remains a separate pending decision. Next: resume only on a new user request, requalify current SDK/scaffold and select one real local job.
+
+
+## Writing Studio PDF repair - 20261105T015401Z
+
+Verified SOURCE/OFFLINE only: import file persistence is independent of optional Git history; complete/interrupted adaptation status recognized; native workflow CAS/ack state retained; scene placeholders removed; import recovery path/storage guards hardened. 97 focused offline tests passed. No original manuscript/PDF, live service, installed107, held108/109, engine qualification or paused game task changed. Report: docs/audit/campaign_20261030/screenplay_pdf_repair_20261105T015401Z/SCREENPLAY_PDF_REPAIR.md. Source preimages, exact patch and test log retained beside report. Runtime attribution of reported500 and native packaging/acceptance remain UNVERIFIED. Next: include this patch at the separately resumed native release checkpoint and verify one disposable PDF end-to-end under existing dispatch holds.
+
+
+## BS-CHAT-OPENAI-001 — OpenAI applied to ordinary BS-chat — 2026-11-04
+
+VERIFIED source and running shared transport: reused the existing server-side OpenAI key, selected openai/gpt-4.1-mini, and completed one real synthetic-history chat through unchanged NativeChatService transport. Ordinary text/code proposals now honor the selected provider; bounded supplied history, truthful provider/model labels, visible failures without automatic retry/local substitution, authenticated settings hydration and recoverable drafts are implemented. Existing tool/media/research/coder, plan and execution-backend routes remain. No credential values/browser key writes or automatic repository/history-store upload.
+
+Validation:63backend tests,97frontend tests and TypeScript PASS; final read-only helper reviews found no blocker. Existing verified backend alone reloaded; gateway/frontend and outbound/background holds preserved. Misleading Python listener inventory caused two address-in-use startup failures; attempts stopped and evidence retained, then native process identity/direct HTTP resolved ownership. No native package, game/SDK resume or Firebase publication. Installed107/held108/109 and paused SDK174/Studio110 remain separate.
+
+Evidence/preimages/source patch/current source/results: backups/bs_chat_openai_20261105T020848Z/BS_CHAT_OPENAI_REPORT.md. Satellite mirror/fixture originals were not independently captured; report states patch limits. History scope was targeted records and six recent actual turns of source chat01a19992-d614-7021-b4ef-47695d694047, not all chats. Broad hash/architectural JSON sync deferred per contract. Cloud ledger sync not performed.
+
+WEB_RELEASE_READY — No further frontend edits pending from this task. Exact19frontend paths/SHA256 and backend dependencies: backups/bs_chat_openai_20261105T020848Z/frontend_release_manifest.json. All four component mirrors match, zero drift after97tests/TypeScript. Required backend is loaded and shared OpenAI/history transport passed. This is a source/backend compatibility checkpoint for the separately owned web release; rebuild from these pins together with its own Writing Studio/version inputs, then perform hosted UI acceptance. Actual native GUI and hosted publication were not tested here. API balance/expiry were not re-read. Next: refresh BS-chat and verify the OpenAI model label; finish hosted-web publication/verification in its existing release task, preserving paused native/game work.
+
+
+## Dashboard webv109 deployed - 2026-11-05T02:45:07.334088+00:00
+
+DEPLOYED_WEB_VERIFIED: https://ai-bs-dashboard.web.app now serves v5.329.109, Hosting version cc4229899104e8ba. The exact verified preview was promoted. All 150 focused frontend tests, canonical strict types, 499-file component mirror parity, build and credential checks passed. Preview and live each matched 18 key files and protected seven excluded URLs. The complete 1,137-file candidate manifest matched; Hosting has two additional platform initialization files. Rollback: pre-web-v109-20261104-210648 (previous v97).
+
+Includes the coordinated BS-chat provider/history checkpoint and protected web manuscript adaptation controls. This deployment made no paid requests, service restarts, native/game publications or trading changes. The relocated dependency-junction typecheck failure is retained and remains unqualified; production used canonical source without weaker checks. Report: docs/audit/campaign_20261030/web-v109-20261104-210648/RELEASE_REPORT.md. Structured receipt: docs/agent_sync/firebase_web_deploy_20261104_v109.json. Public release receipt was uploaded and its existing Drive parent verified: https://drive.google.com/file/d/1ys6rr_tkKJvWuFClx1ljcMXmJfszcU_w/view
+
+
+## PROP01-RC-RECONSTRUCTION-001 — Prop01 capture reconstructed — 2026-11-04
+
+VERIFIED: user authorized import and reconstruction of Prop01_TUF_Solid_Capacitor. RealityCapture1.4.2 imported60/60JPEGs, aligned all60in one component (10,005tie points, mean0.400983px), built Normal-detail mesh237,451vertices/474,898triangles, unwrapped/textured4096x4096PNG, and exported FBX/OBJ/MTL/.rcInfo into a unique AI-BS Unreal demonstration Photogrammetry folder. Independent structure/finite-value/index/UV/texture checks passed; real FBX import and disposable Blender5.2unlit-texture preview passed. All60inputJPEG fingerprints unchanged. Existing open unsaved RCproject and other GPUjobs preserved; no Unreal import or game/native release.
+
+QUALIFICATION LIMITS: inputviews are synthetic renders from one Blender model with injected camera EXIF, not physical photos/calibration. Generator uses10xnominal physical geometry; RCphysicalscale remains unconstrained. Rough board-edge/skirt and uneven capacitor surfaces need cleanup; hemisphere views do not measure underside. Do not call it a production-ready/physically calibrated prop. Initial report template failed after alignment had saved; failed evidence retained, report corrected and saved alignment reused successfully. No blind alignment retry.
+
+Evidence/project: C:/AI-BS/backups/photogrammetry_prop01_20261105T024638Z/reconstruction_receipt.json and textured.rcproj with adjacent data. Delivery: C:/Users/footb/Documents/AI-BS_Unreal_Demonstration/Photogrammetry/Prop01_TUF_Solid_Capacitor/20261105T024638Z/. Existing sources/manuscripts/saves/paused SDK174-Studio110 and BS-chat freeze remain unchanged. Helpers: local_value_audit reviewed generator/installedCLI; usage_evidence audited inputs and export structure; root executed pipeline/import/render. No credentials or hidden reasoning recorded; no cloud sync. Next: inspect raw reconstructed model, clean unsupported edge/underside geometry and establish a known-length scale constraint before separately requested Unreal asset import/qualification.
+
+
+## PROP01-SCAN-CLEAN-UNREAL-001 — Actual scan cleanup and Documents Unreal import — 2026-11-05
+
+VERIFIED: user requested cleaning/scaling/importing the reconstructed capacitor. Preserved the separate source-derived 13.5k game variant and cleaned the actual RC surface. A 39-camera robust fit (21 rejected) plus PCB/barrel cross-check established nominal design scale. Trimmed unsupported skirt, closed inferred cut/underside faces in a separate material, then bounded barrel/board regularization after actual lit review exposed residual wrinkles. Barrel normal p95 improved 17.24°→0.12°, with 0.12 mm/0.05 mm movement caps. Final 440,800 triangles, closed manifold, 13.6×13.6×9.114 mm; retained topology/UVs/4K diffuse preserved. Repaired 54 ill-conditioned tangent frames without additional geometry/UV changes.
+
+Final Unreal 5.8.1 import PASS, 0 errors/0 warnings; fresh rendering-enabled verification and actual GPU capture PASS. Asset: /Game/Assets/Prop01_TUF_CleanScan_V03/Meshes/SM_Prop01_TUF_CleanScan. Review map: same root/Review/Prop01_CleanScan_Review (inspection actor 100x; asset physical scale 1; controlled studio lighting and enlarged-actor distance-field exclusion). Exact project: C:/Users/footb/Documents/AI-BS_Unreal_Demonstration/BS_Unreal_Demo.uproject. All 96 preexisting Content files, 60 JPEGs and raw OBJ/PNG verified unchanged. No existing gameplay maps/native/P23 bindings replaced; no physics/LOD/performance qualification. Underside is inferred repair and dimensions are nominal design, not hardware metrology.
+
+Evidence and retained failures: C:/AI-BS/backups/prop01_cleanup_unreal_20261105T235726Z/completion_receipt.json. Portable FBX/master/texture/reports: project/Photogrammetry/Prop01_TUF_Solid_Capacitor/Cleaned_20261105T235726Z/Refined/. Local_value_audit handled scale/surface/tangent QA; usage_evidence handled Unreal/material diagnostics; root integrated and rendered. Initial commandlet/cached-material/screenshot helper failures and earlier versions are retained; final qualification is separate. Cloud sync not performed. This bounded asset request is complete; broader First Boot/native acceptance remains governed by its own checkpoints. Next: use V03 in the Content Browser or inspect its new review map; gameplay placement/collision/LOD work is separate.
+
+
+## Crypto market-news retention - November 6, 2026
+
+Implemented C:/AI-BS/trade/market_news as a private, immutable advisory RSS archive. First successful three-source run retained 60 distinct articles; source links, publisher-time qualification, first observation and corrections are preserved. Existing news-catalyst worker can archive through the same helper; offline fixtures stay separate. Dedicated RSS-only Windows task AI-BS-Crypto-News-Archive refreshes every 15 minutes, with overlap protection and a two-minute execution limit. No model, legacy firehose, SHM, financial ledger or live order path was activated. Trading guard remains disabled. All 22 focused offline tests pass; real three-feed collection and hidden wrapper execution passed. CoinDesk308 was diagnosed and its canonical slash-free feed URL corrected. Context reader excludes stale/future/unobserved evidence and supports trusted LLM context assembly; no global chat injection or prediction improvement is claimed. A 100 MB budget stops collection without purging records. Receipt: docs/audit/CRYPTO_NEWS_ARCHIVE_20261106.json; preimage and patch: backups/crypto_news_archive_20261106. Historical scope: relevant Record188 news design/handoff and current source/tests, not all chats. No web/native deployment or service restart was needed.
+
+
+## Storage checkpoint 20261106T185644Z
+Three inactive October 23 release backups copied to F:/AI-BS_DATA/archives/backups, 7045 files / 13,864,352,842 bytes SHA256 verified; directory sets preserved. Originals retained; zero bytes reclaimed on C:. Watcher/search bulk exclusions validated. Dispatch enabled=false verified. Detailed receipt: docs/audit/storage_copy_20261106T185644Z.json. No active task folders or services changed.
+
+
+## Inactive backup copies 20261106T195150Z
+Copy-only to F:/AI-BS_DATA/archives/backups: 348 older folders, 95975 files, 50239662495 bytes, plus 2 loose files. Every newly copied file SHA256 matched; directory sets checked. Originals preserved; no C: space freed. Recent, linked and existing destinations excluded; reasons in C:\AI-BS\docs\audit\storage_copy_20261106T195150Z.json. Detailed manifests/preexisting batch remain on F:. Trading dispatch false verified. No active source/service/game paths changed.
+
+
+## v5.329.128 — 64-Specialist Registry, Pipeline (6/6) Stage 1 Identity Lock & Firebase Deployment — 2026-11-09T10:42:00Z
+- [x] Seeded all 64 specialist subagent profiles across 7 operational domains into `C:\AI-BS\backend\data\aibs_master.db` (SQLite WAL mode) via `backend/core/subagent_coordinator.py` and verified two-tier routing + Role 49 (`immutable_fire_scribe`) lexical diff guardrail (`scripts/verify_immutable_diff.py`).
+- [x] Wired `/api/v1/agents/domains`, `/api/v1/agents/specialists`, `/api/v1/agents/route-hierarchical`, and `/api/v1/agents/immutable-scribe/verify` in `backend/routers/agent_crew_router.py`.
+- [x] Implemented `backend/core/pipeline_context_injector.py` (Stage 1 of `Pipeline (6/6)`) and hooked it into `bs_chat_provider.py`, `sovereign_reasoning/dispatcher.py`, and `chat_router.py`; restored `active_provider: "local"` in `database/ai_providers_config.json`; 36/36 provider/OpenAI tests pass.
+- [x] Patched mobile Markdown code-block streaming renderer (`MobileStehouwerChat.jsx`, `ChatTab.jsx`, `MobileGeminiChat.jsx`, `ArtifactRenderer.jsx`), verified 499/499 4-mirror SHA-256 byte parity, bumped version to `v5.329.128`, compiled Vite dist, and deployed to `https://ai-bs-dashboard.web.app`.
+
+
+## v5.329.129 — All-Tracks Execution & Live Swarm Explorer — 2026-11-09T10:57:00Z
+- [x] Built and mounted `SpecialistSwarmExplorer.jsx` across 4 mirrors (500/500 files SHA-256 parity) and wired into `MobileNavDrawer.jsx` and `App.jsx`.
+- [x] Verified SSE GPU hardware streaming (`/api/v1/hardware/gpu/stream`) and Executive Matrix status (`/api/v1/executive/matrix/status`).
+- [x] Implemented `backend/core/immutable_publishing_engine.py` for *Fire and the Forge* (Role 49 verbatim guard & sealed chapters).
+- [x] Implemented `backend/modules/noco_stage/biosystem_solvers.py` for NoCo CEA Hydroponics, Microgrid 24h simulation, and CAPEX calculator.
+- [x] Confirmed all 6 Custom Engine (M5 DX12), Unreal 5.8, Blender 5.2, and database paths via `subagent_coordinator.py --status`.
+- [x] Deployed `v5.329.129` live to `https://ai-bs-dashboard.web.app`.
+
+
+## v5.329.130 — Native WPF Assembly Trifecta, Live Evidence Hub & Firebase Live Release — 2026-11-09T11:40:00Z
+- [x] Diagnosed TypeNameNotFound for [System.Windows.Markup.XamlReader] in mobile screen recording video_1.mp4 and codified the canonical assembly import: Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase.
+- [x] Verified native Direct2D/DirectWrite modal execution (.ShowDialog() | Out-Null) running with zero stderr console noise and 0% webview overhead.
+- [x] Upgraded SpecialistSwarmExplorer.jsx with live 'Run Gate' execution, SQLite Job Evidence Vault card, and embedded Role 49 Fire and the Forge Manuscript Ingestion & Real-Time Diff Workbench.
+- [x] Implemented POST /api/v1/agents/specialists/{agent_id}/run-gate and GET /api/v1/agents/specialists/{agent_id}/evidence in backend/routers/agent_crew_router.py.
+- [x] Verified M5 DX12 Custom Engine verification suite (verify.ps1) compiling and running 129 test contracts under bounded build semaphore.
+- [x] Verified 100% SHA-256 byte parity across all 4 frontend mirrors (500/500 files identical).
+- [x] Bumped release to v5.329.130 across all 16 authority manifests and deployed live to Firebase Hosting (https://ai-bs-dashboard.web.app).
+
+## Track B Dual-Engine Verification Gate Resolution & Swarm Evidence Sealing — 2026-11-09T12:16:00Z
+- [x] Patched C:\AI-BS\engine\apps\creator_viewport.cpp with atomic-replacement retry loop (FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE) and suppressed transient 'Snapshot unavailable' logs during ReplaceFileW, permanently fixing Test 78 (native_persistent_placement_gpu).
+- [x] Patched C:\AI-BS\engine\scripts\verify.ps1 to clean stale out/validation- directory prior to RUN_TESTS, permanently fixing Tests 125–129 (native_render_validation_*).
+- [x] Executed full Custom M5 DX12 Engine verification pass via subagent_coordinator.py --custom-verify --config Debug (job_1189d6b3f5): 129/129 native CTest tests + isolated SDK install + 3 SDK consumer tests passed 100% in 749.128s, recording Pass: True | RC: 0 into SQLite agent_job_evidence.
+- [x] Executed full Unreal Engine 5.8 RunUAT.bat BuildCookRun verification targeting C:\AI-BS\UnrealHub\AI_BS_Hub.uproject (job_962245c4ab): verified compilation (25.24s) and cook across 575 packages in 111.775s with Return Code 0, recording Pass: True | RC: 0 into SQLite agent_job_evidence.
+- [x] Ran deterministic 64-specialist suite audit: verified 64/64 specialists seeded in SQLite WAL (0 MB idle VRAM), two-tier hierarchical routing, Role 49 verbatim word-token guardrail (accuracy=1.0), and Role 16 SQLite WAL guardian OS subprocess check ('ok').
+- [x] Verified 100% SHA-256 byte parity across all 4 frontend mirrors (500/500 files identical).
+
+
+## TAKEOVER-20261109-01 — scoped recovery in progress — 2026-11-09T19:51:59.726233+00:00
+
+User explicitly resumed implementation, requested autonomous continuation and a new long goal aligned with the project chats. Earlier read-only holds are superseded for this repair scope. Concrete plan: docs/AI_BS_TAKEOVER_GOAL_2026-11-09.md. Original ten goals, selected local/API providers, hybrid surfaces and native First Boot priority retained. Team reviewed 50 actual user/assistant message turns across 17 identified chats; older unread pages remain explicit. No hidden reasoning was transferred.
+
+VERIFIED: current local BS-Chat mounts without providerModels crash; Hub Controls opens/closes. Existing user draft/attachment untouched, no chat/model request submitted. Scoped frontend recovery preserves declutter, provider transport/error recovery, code rendering and authenticated specialist explorer. 109 Node checks and TypeScript exit0. Core backend runner passed93 tests including scheduler/process containment, publishing preservation, context and reference-model guards, existing provider/native/media checks. Separate retained-fixture runner passed all four previously setup-blocked modules (HTTP fallback, owned vault, personal authority, repository snapshot); counts/logs in checkpoint. No claim of full backend discovery acceptance.
+
+Engine fixes: explicit0.17.4 consumer requirement; persistent viewport source-error/recovery reporting; evidence/log retention and isolated SDK consumer install. First full native run109/129 passed,20 failed on deeply nested evidence paths; failure logs retained, not waived. Short-root reviewed-audio fixture and actual placement GPU probe passed (placement80 checks). Second full native run with compact unique directories under engine/out is RUNNING; no full-suite or SDK acceptance claimed yet. Windows Python event-loop startup stalled in restricted test environment; retained faulthandler located socketpair accept before test code. Same synthetic checks passed with normal Windows permissions.
+
+Source-only backend changes are not claimed loaded in existing running services. No deployment, backend restart, live API generation, campaign send, trading/order action, VM execution, or destructive Git operation. Originals, real saves, manuscripts and installed/held releases preserved. Nov4 VM decommission receipt inspected; both recorded guest paths now absent, with registration/runtime unverified.
+
+Checkpoint/preimages: C:/AI-BS/backups/antigravity_takeover_20261109T190150Z/before_manifest.json. Test logs, failures, source patches and per-run records remain under that folder; full native evidence uses short engine/out/v paths. Next: finish second native+isolated consumer checks, integrate final synthetic request tests, prepare isolated frontend candidate, record source fingerprints and remaining release/game gates. Goal remains ACTIVE.
+
+
+## TAKEOVER-20261109-02 — current source and screenplay research checkpoint — 2026-11-09T23:18Z
+
+- [x] Reconcile source133/held Studio133 versus last loaded API52836; retain earlier build generations and exact scoped counts. Current curated CORE273/273, all144 inputs unchanged; `backups/antigravity_takeover_20261109T190150Z/research-current-core/qualification.json`.
+- [x] Observe signed-in supplied-PDF intake, owner-index readback, new-screenplay opening and archival PDF export;86 physical pages and matching text/72-dpi renders, original preserved. Keep FDXv1's confirmed double-indent failure retained.
+- [x] Research official Final Draft and professional/recipient formatting. Accept legitimate professional pagination changes; archival86-page preservation is a separate profile. No fixed word-per-page quota or guaranteed runtime. Record source-specific findings in `pdf-workflow/research/professional-formatting-20261109.json` under the checkpoint and reconcile the original ten-goal document.
+- [x] Qualify native export-client expected_revision correction with17 focused checks and fresh held Studio133 hub3/creator5 package checks; preserve native/browser owner separation and previous releases.
+- [x] Externally export source-faithful FDXv4 through actual Final Draft:86 physical pages, title and authored content/labels preserved. Strict initial raw-token failure and six evidenced line-end hyphen wraps remain recorded; qualified comparison does not erase general whitespace or punctuation.
+- [x] Implement separate professional spec reflow with coherent selected vendor template and natural pagination: internal82 physical pages, actual Final Draft85 physical pages. Preserve source ambiguities and all authored words; nominal12pt source qualified with measured vendor-export variance explicitly retained. The strict effective-font-size failure remains FAILED, with separate control comparison/adjudication; no recipient certification.
+- [ ] Refresh authenticated local API/candidate after required current-source checks; do not call the pre-fix API52836 current-source acceptance.
+- [ ] Qualify remaining generic attachment-bound retrieval and native/browser project identity handoff without bypassing owner checks.
+- [ ] Qualify final rich FDX, project-scoped RAG, novelizer and native creative handoffs together. Preserve typed metadata/original XML, current source/revision receipts, unsaved drafts and immutable versions; no fabricated prose, retrieval or GPU-dispatch success. Native/browser owners remain distinct.
+- [ ] Complete scoped source bundle, sanitized engineering ledger/readback and final handoff manifest. Interim documentation is not release/game acceptance.
+- [ ] Resume bounded First Boot ordinary-input lifecycle/fresh-process resume, measured Release1080p and human pacing/clarity/captions/likeness gates; preserve prior unexplained ordinary-input failure and all original ten goals.
+
+Full evidence and limits: `docs/CODEX_HANDOFF.md`, TAKEOVER-20261109-02. Goal remains ACTIVE; unrelated backlog and deferred deployment/activation remain explicit.
+
+
+## Takeover continuation — 2026-11-10T04:06Z
+
+## Current bounded continuation
+
+- [x] Source137 preflight595/595; retain exact source scope and failures. Keep distinct from managed build/runtime acceptance.
+- [x] Record terminal result of managed137 job `5756cb79a025482fb0507e8cea43190c`: 595 CORE/249 Node/TypeScript0/Vite0,53,878 unchanged inputs,eight private database recovery copies,exact API4364 readiness; actual checks/Node/TypeScript/build counts, source identity, activation/restart/health and unchanged flags. Keep the136 receipt as historical evidence. Do not edit canonical source/docs while that job owns its input freeze.
+- [ ] After successful refresh, qualify current authenticated BS-Chat status and selected local/PDF follow-up paths with exact owner/source/current-turn/completion/cancellation evidence. Missing/budget/provider failures must remain truthful. Program-status text is a read-only service result, not build authorization or a model-created project audit.
+- [ ] Reconcile vector-service readiness as a separate bounded task; preserve all quarantined generations, actual version/count distinctions and originals. No automatic migration, reset or hidden fallback.
+- [ ] Qualify ordinary held movement using an input method that can represent a hold; the documented plain-tap UI run sampled no movement axis. Do not change bindings, collision or substitute proof inputs to manufacture acceptance.
+- [ ] Complete first/third-person repair/bypass lifecycle, real reading/Continue, build/dismantle/rebuild, help/decline, departure/return, falls and active companion controls. Retain failures and distinguish controlled proofs from ordinary input.
+- [ ] Demonstrate a genuine committed progress change, graceful stop and fresh-process persistent-player reopen with stable timeline/content/heads. Keep temporary trace and persistent-player slots distinct; no progress-save acceptance follows from revision0.
+- [ ] Measure current Release1080p frame times/memory with optional inference off; separately obtain first-time8–12minute pacing/clarity/caption/likeness evidence. The20–30minute chapter and wider world remain retained.
+- [ ] After managed input freeze ends, integrate current docs/monitor/ledger and scoped source bundle with exact receipts; keep all ten goals ACTIVE. No broad cleanup, release installation/signing/launcher replacement or hosted deployment is implied.
+- [ ] Goal10 future only: preserve `usb-future-readonly/FUTURE_SETUP_NOTE.md` as the sanitized rig/network/bootstrap planning pointer. No USB/config/VPN/VNC/watchdog/boot/service setup is part of the present queue.
+
+
+- [ ] Preserve indented assistant code examples in history projection, with retained regression evidence.
+
+
+## USER-REQUESTED PAUSE — 2026-11-10T05:00:04.266261+00:00
+
+User asked: pause and review progress. No new implementation, checks, model requests or deployment will start until the user resumes. The already-applying139 transaction was allowed to settle safely and succeeded at04:59:02Z: job5f053a57b8794593aa08ce458179c1d0,619 CORE/254 fixed Node checks,TypeScript/Vite0,53,880 inputs unchanged,eight private database recoveries, exact API24892/create1794286707.6784232 ready on127.0.0.1:8080; activation flags preserved, no other daemon fleet restart. This is local managed qualification, not fresh functional acceptance.
+
+The new quoted-heading/exact-page retrieval and provider-completion UI fixes are applied; embedding uses read60/connect5/write15/pool5 with sanitized failures. Current139 actual PDF/page3/UI checks and a NEW synthetic project-RAG index/retrieval/generation remain pending. Preserve prior wrong56/2 answers and blocked138 embedding attempt; no replay into that BLOCKED work. Original18,158-byte context was genuinely indexed/retrieved under the signed-in user (18chunks,5readbacks,5independent passages). Native135 remains held/not installed by this work; Firebase130 last observed04:36Z, no deployment.
+
+All original ten roadmap goals and preservation/hybrid boundaries remain. Source bundle/final139 ledger/handoff closure remains pending; the separate private interim138 ledger was uploaded and read back with matchingSHA. USB work remains read-only/future-only. Exact pause record: backups/antigravity_takeover_20261109T190150Z/PAUSED_20261110T0459Z.json. Next First Boot specification: backups/antigravity_takeover_20261109T190150Z/game/NEXT_FIRST_BOOT_139.md. Resume starts with actual139 PDF and project-RAG qualification, then source bundle/ledger closure and ordinary held-input/committed-save/fresh-process milestone. Goal PAUSED by user, not complete.
+
+
+## Full ten-goal acceptance reconciliation — 2026-11-10T14:20:08.447867+00:00
+
+All ten original goals remain ACTIVE and partially evidenced. Current139 source/managed update, actual synthetic project index/readback/generation/save/stale refusal and real-PDF quoted-heading/page3 backend evidence have been reconciled into backups/antigravity_takeover_20261109T190150Z/current139-acceptance-audit/audit.md and audit.json. Eleven retained receipts were inspected; current API identity and held135 executable bytes revalidated. No new code, model request, deployment or activation occurred in this audit.
+
+Open requirements remain explicit: actual139 browser interaction/display/follow-up and owner handoff; original ordinary First Boot held movement/lifecycle/companion/committed save/fresh-process recovery; measured Release1080p/human pacing/captions/likeness; remaining historical pages/carryover and final source/document/cloud-ledger closure. Computer-use tools currently unavailable; independent evidence work continues. g003 is source preservation only, not release acceptance. Next First Boot specification remains game/NEXT_FIRST_BOOT_139.md under the checkpoint. No claim all goals are achieved.
+
+## Current139 checklist clarification and game-history continuation
+
+This supersedes the corresponding pending labels in older dated checklists;
+their original results and failures remain retained.
+
+- [x] Apply the indented-code history preservation repair and qualify the619CORE/254Node local139 candidate; see the managed139 job in the handoff.
+- [x] Qualify original saved-context indexing/readback and independent retrieval in the signed-in interface (138 scope; not a new139 interface check).
+- [x] Qualify separate139 synthetic project index/readback and actual retrieval/generation: `t/rgl_139_generation01/result.json`. Original blocked probes remain blocked in their own scope.
+- [x] Qualify synthetic rich save/version retention and stale-index refusal: `t/rgl_139_stale01/result.json`. Different-owner403 is a core check, not a second signed-in browser identity.
+- [x] Qualify actual supplied-PDF quoted-heading retrieval/answer on physical page3 through139 backend: `t/pdf_139_http01/qualified.json`. Browser acceptance is explicitly false in that receipt.
+- [x] Read and reconcile two additional five-turn game-chat pages with current room/opening/workshop sources: `docs/engineering_ledger/2026-11-10_game_history_reconciliation_139.md`. This is bounded history/source review, not new native execution.
+- [ ] Finish current browser/native interaction, owner handoff, broader creative end-to-end and First Boot acceptance with actual available tools; do not substitute backend checks for interface results.
+- [ ] Continue older selected history from the recorded cursor; preserve proposal/implementation and memoir/adaptation distinctions.
+- [ ] Close final current source/document/engineering-ledger handoff; g003 predates this documentation.
+- [x] Qualify actual trusted Windows subprocess serialization, observed running cancellation/timeout, retained SQLite evidence and five queue-reuse completions using an isolated registry: `t/sp139real01/result.json` (9rows,7passes/2expected stops). Two coordinator instances share one parent; this is not separate-parent/HTTP/inference/GPU/64-worker acceptance. Initial missing-psutil interpreter failure remains retained; one existing alternate runtime succeeded without installs.
+- [x] Qualify separate controller-process gate serialization and occupied-slot admission timeout without child launch: `t/sp139cross01/result.json` (4rows,3passes/1expected timeout). Model/GPU/HTTP/64-worker acceptance remains separate.
+- [x] Upload/readback the sanitized current139 checkpoint ledger to the existing private Drive folder; exact6272UTF8bytes/SHA256 matched. Receipt `t/sp139cross01/ledger-cloud-readback.json`; final release/source/document closure remains open.
+- [x] Reconcile these results into the derivative ten-goal audit `current139-acceptance-audit-v03` under the takeover checkpoint and update the build-monitor pointer/hash with preserved preimage.
+- [x] Prepare a private current-source Release player with fresh dependency/build roots;3/3focused CPU/hidden-HWND suites and17parser refusals pass. Protected635source/1254dependency/449SDK inputs and old Debug player unchanged. Evidence `t/r139q01/`.
+- [x] Prepare separate stationary15s/gameplay180s Release1080p measurement scopes with verified30-file private chapter copy: `t/r139perf01/launch-plan.json`. Neither launched; genuine foreground and actual measurement remain required.
+- [x] Reconcile15further game-chat turns, rendered-input provenance, static-import contract and dated native/Unreal walkthrough limits; exact scope/cursor in the game history ledger. No full historical review claimed.
+
+
+Current139 source-preservation/readback and incomplete machine handoff use
+`backups/antigravity_takeover_20261109T190150Z/final139-checkpoint/` and
+`docs/agent_sync/manifest_takeover139_checkpoint_incomplete.json` sidecars.
+Their actual results supersede historical source-freeze pending labels only
+within the captured scope. Both all-zero goal documents were recovered from
+verifiedg003 prefixes plus explicit current addenda; damaged bytes retained and
+cause unproven. Other225non-continuity source paths matchedg003. Current actual
+browser/creative-owner, ordinary gameplay/durable-save/reopen, performance/human
+and unread-history gates remain open. No full-goal completion is claimed.
+
+## November10 post-reset analytics/vision and ordinary-save qualification
+- [x] Restored missing Chef engine from retained Git source with measured-only summaries and persistent-store failure reporting. Live overview/report/semantic search pass;35original records and350metadata rows retained.
+- [x] Fixed VC++ DLL prerequisite, OpenCV cascade API and GPU ONNX/rembg loading. Actual local CUDA matte/mask and HTTP matte pass;4focused regressions pass; no model download.
+- [x] Actual human movement captured (607moving-input frames), reading pause/resume edges retained, nonbaseline revision4 saved and reopened unchanged in a fresh Release process.
+- [x] Human confirmed Adam Follow/Wait; typed companion.wait committed at6, normal user close saved6, another process recovered6 with identical logical DB contents. Scoped diagnostic evidence: t/fb136oi_v01/persistent-reset-release-v01.
+- [ ] Full ordinary capture acceptance: both human traces reached32MiB and remain INCOMPLETE. Short reopen captures complete only their own scope.
+- [ ] Complete repair route, explicit named Continue observation, measured Release1080p and separate human pacing/captions/likeness. Debug player lacks Debug runtime DLLs; failed launch retained, private Release used explicitly.
+- [ ] Actual Memory Diagnostic result/stability qualification. Mining and other activation remain off. No full-goal completion.
+
+## Capture repair / agent-controlled route — November10
+- [x] Ordinary capture fixed with10Hz actual-frame sampling plus input/state edges and terminal flush; limits and honest INCOMPLETE semantics retained.
+- [x]68native diagnostic assertions pass; simulated12minutes produces9.06MB COMPLETE. Additional repair-rule, saved-play and aim-prompt suites3/3pass.
+- [x] Actual human session COMPLETE2.50MB; saved22 and fresh-process22 recovery verified. Human repair route not completed; switch discoverability remains a usability gap.
+- [x] User-requested agent takeover: existing controlled native real-time repair walkthrough passed in isolated fresh world; repaired main, shelter and Pencil Room visited, saved13/sequence17 and fresh-process recovery verified. This is not human ordinary-input/pacing acceptance.
+- [x] Original6 and human22 preserved against consistent backups; prior failed/INCOMPLETE receipts retained.
+- [ ] Native install/signing, measured Release1080p, ordinary repair discoverability, human pacing/captions/likeness and actual memory diagnostic result. No full-goal completion.
+
+## Resumed long-term goal — isolation guide and current stationary1080p
+- [x] Registered the saved ten-goal effort ACTIVE in the recovery chat; preserved earlier work and status distinctions.
+- [x] Added native isolation-switch direction/distance guide with actual-target/E-prompt separation and no action/data mutation;72aim checks, native saved-play checks and fresh-scope68capture regressions pass.
+- [x] Actual HUD fit/readback at720p and1080p; frozen private isoguide01 candidate.
+- [x] Current fifteen-second stationary1080p measurement:368.9FPS,p99=3.98ms,0frames>16.67ms; no local inference residency observed. This closes only the stationary subcheck.
+- [ ] Ordinary repair usability with new guide, moving gameplay frame/memory measurement, human pacing/captions/likeness, wider creative/native/browser and release gates. All ten goals remain incomplete.
+
+
+## Continuation — November10: private credentials, preservation and measured failure
+- [x] Preserve15Windows.old creative files489.3MB with before/copy/after hashes; directory-only no-mount WSL inventory and protected-folder metadata completed.
+- [x] Actual signed-in mounted BS-CHAT memory ready, retained conversation recovery; explicit popup recovery19tests + authorization33tests.
+- [x] Backend-only private Firebase Admin credential helper;12tests/offline actual validation; healthy exact backend replacement,10SQLite logical copies unchanged.
+- [x] Fix login notification hold bypass;11mock tests; all runtime activationflags false. Prior accepted webhook evidence retained privately.
+- [x] Separate controlled-motion diagnostics built with161CPUchecks/4guard rejections, old candidate preserved.
+- [ ] Moving performance acceptance: attempt02 measured180s/234.6FPS but FAILED one5.6s dropped-physics stall; diagnose with phase/outlier timing and preserve clean failure lifecycle before another run.
+- [ ] Ordinary guide usability, original-owner manuscript/RAG lifecycle, human pacing/captions/likeness, memory diagnostic result and remaining ten-goal/release gates remain incomplete.
+
+
+## Shared tooling and motion diagnostics — 2026-11-10T21:44:40.543219+00:00
+- [x] Verified signed agy1.5.5 actual commands; restored isolated Node/npm/npx and tested session-only development shell.
+- [x] Seven-file bounded diagnostics independently reviewed/built/integrated;178scoped native assertions plus4observer cases. Strict thresholds retained.
+- [x] Corrected saved-mode harness expectation, preserved canceled-run evidence and separately checked isolated saved-world reopening; see lifecycle receipt.
+- [x] Fresh controlled-motion run03: CONTROLLED_MOVING_HARDWARE_SUBCHECK_PASSED. Only its explicit hardware subcheck can qualify.
+- [ ] Ordinary repair-guide usability, original-owner manuscript/RAG lifecycle, human pacing/captions/likeness, memory diagnostic result and remaining ten-goal/release gates.
+
+
+## Drive catch-up — 2026-11-10T21:59:48.792966+00:00
+- [x] Reviewed source/progress archive plus current shareable handoff and checkpoint uploaded via Google Drive; metadata and downloaded hashes verified,469archive members checked.
+- [ ] Full project/private history/saved-data cloud coverage is not established; seven held paths and original-data boundaries remain explicit in C:\Users\Administrator\Documents\Codex\2026-11-10\c-ai-bs\outputs\AI-BS-Drive-backup-receipt-20261110.json.
+- [ ] Continue ordinary repair-guide, original-owner creative and remaining ten-goal acceptance gates from the preceding checkpoint.
+
+
+## Current HUD, controlled motion and delegated worker checkpoint — 2026-11-10T23:51:06.349961+00:00
+
+Current checkpoint 2026-11-10T23:51:06.349961+00:00; all ten original goals remain ACTIVE/incomplete.
+Checkpoint scope ID: NATIVE-HUD-MILESTONE-60ee067f-20261110.
+
+HUD: five scoped files were reviewed, built/frozen and integrated with source guards. The exact private player (SHA prefix 60ee067f) has 9 artifact pins and 158 compiled source pins. Bounded actual GPU overlay tests and root onscreen HUD/crosshair observation passed. The existing ordinary revision-6 scope reopened, but later disappeared without STOPPED or a terminal trace; the cause remains unknown. Its read-only logical hash ef033...f09d and initialized claim remain preserved. No clean ordinary close, repair usability or human pacing is claimed. The user declines further manual tests; continue independent authorized work without asking for them.
+
+Seven new repair-route checks passed in separate fresh synthetic-time native proof worlds. The current HUD hardware run passed 180.0042338 real seconds, 43504 Presents, 241.6832 FPS and p99=5.6418 ms, with zero dropped physics. The performance GPU debug layer was unobserved, so its zero counters do not establish clean debug output; the separate HUD GPU fixture observed an enabled layer with zero errors/warnings. This was a controlled physical shuttle with one root native Raise; its exact action timestamp was not sampled. The fresh revision-0 saved READY/STOPPED is separate from the ordinary revision-6 scope's unexplained exit. Old 1b3179 run03 at about 247.276 FPS is dated historical evidence; the older run02 stall is unresolved. Chapter-content GPU bytes exclude HUD upload buffers, swapchain/depth/driver allocations; no full VRAM or hardware-stability claim.
+
+Tooling: Codex/Gemini/OpenCode CLI installation/version/help and shared instruction/session command resolution were verified. Portable Blender 5.2.4 LTS synthetic export and its unique Start Menu entry, Krita/Inkscape/FreeCAD installation/file metadata and CC0 provenance are recorded; original assets/preferences remain retained. The Inkscape trust limitation and blocked PowerShell file-loading policy are retained. Availability is not provider authentication/quota or a universal real-project GUI qualification. The current helper is canonical runtime/devtools/Enter-AI-BS-Dev.ps1; the stale output helper remains historical.
+
+RAG: actual mounted retrieval returned five source-bound passages; metadata-only preservation checks and two private Drive receipt roundtrips passed. No manuscript/source text, databases or credentials were uploaded. Full original-owner browser/native creative edit/save/reopen/export lifecycle remains open.
+
+Official delegated OpenCode path: Official delegated OpenCode work is in progress, not promoted or API-activated. Router/UI source preparation is in flight while the existing backend generation remains unactivated for this path. Candidate v03 passed 21 offline checks and 4 Windows job checks, but its one new synthetic official-client probe failed with native HTTP429/quota_or_rate_limit and no answer. The owned job drained and zero owned CLI processes remained; cleanup still failed with WinError5 and 8,886,664 bytes of temporary DLL residue. Root is diagnosing cleanup without further model calls. No provider-working or all-model pass claim.
+Model evidence: Original v01 outcome remains unknown and was not replayed. V03 requested opencode/deepseek-v4.1-flash-free; actual model identity is unconfirmed. V03 recorded zero application retries and zero vendor retry events, with no model rotation or paid fallback. That observation does not exclude vendor retries in other requests. A catalogue of 12 models is not 12 executions; offline/handler/config gates do not qualify model answers.
+Only explicit final promotion, source pins and verified post-activation admin API receipts qualify this path. Do not infer every model/role, all 12 executions, direct custom free-API eligibility, paid fallback or unrelated provider/business activation. All existing providers and owners remain preserved.
+
+Checkpoint: C:\AI-BS\backups\hud_swarm_checkpoint_20261110T235106349961Z\checkpoint.json. New Drive progress upload remains pending separate connector/hash verification. Prior verified source overlay and RAG metadata uploads remain dated evidence. Seven held private-history/secret-candidate files, databases/saves/claims, credentials/profiles, manuscripts and original media remain outside the shared archive. This is not a whole-project/PC, private-history or saved-data cloud backup.
+
+Next: Finish the known OpenCode DLL cleanup defect with read-only diagnosis/offline gates, then qualify scoped source promotion and the administrative API. Make no additional model calls or replay/rotation after the429/unknownv01 evidence. Close the reviewed current metadata/source Drive milestone with connector metadata and downloaded hash verification; retain all private-data exclusions. Continue independent original-owner creative open/new-copy edit/save/reopen/export checks without changing originals. Preserve and investigate the unexplained ordinary native exit only with attributable evidence. Do not ask for declined manual tests; human pacing/captions/likeness and remaining ten-goal/release gates stay open.
+
+
+## Verified native/tooling Drive milestone — 2026-11-10T23:57:16.710471+00:00
+Closure ID: NATIVE-TOOLS-DRIVE-VERIFIED-ed401a2b-20261110.
+
+The existing Google Drive connector uploaded the reviewed native HUD/current controlled repair/performance, tooling/provenance and RAG-metadata milestone to the private Engineering Ledger. Archive 1ACg260kL27NKwtlUAcAOrx-qLjv2xSyu is 2,779,090 bytes, SHA256 ed401a2b98194e03cd9f4cccf0278e7f44d9bcc611d6817afd1c958c51068010: all 261 ZIP members (260 payload files plus manifest), CRCs and individual hashes verified after download. The shareable handoff, checkpoint summary and verification receipt were also uploaded; all four files have the expected private parent and owner-only permission metadata, with exact downloaded byte hashes. Receipt: C:\Users\Administrator\Documents\Codex\2026-11-10\c-ai-bs\outputs\AI-BS-HUD-Tools-Drive-receipt-20261110.json; receipt SHA256 849104c1dcc386738cb18298a1732c3793e5e85b6f41a15cfb178eee054fd674.
+
+This is a scoped overlay requiring an existing complete preserved base. In-flight OpenCode source/activation is excluded. Seven private-history/secret-candidate holds, credentials/profiles, databases/saves/claims, manuscripts and original media remain excluded; no full-project/PC, private-history or saved-data cloud backup claim. Source, controlled-game evidence, human acceptance and installed release remain distinct. All ten goals stay ACTIVE/incomplete.
+
+Native parent checkpoint: C:\AI-BS\backups\hud_swarm_checkpoint_20261110T235106349961Z\checkpoint.json. This separate local closure at C:\AI-BS\backups\hud_tools_drive_closure_20261110T235716710471Z\checkpoint.json postdates the frozen upload and is not inside that archive. Uploaded archive/handoff/checkpoint/receipt bytes remain unchanged. Continue offline worker cleanup/source/API qualification without additional model calls; then the remaining independent creative/game/release work, without asking for declined manual tests.
+
+
+## Current HUD, controlled motion and delegated worker checkpoint — 2026-11-11T00:16:49.359687+00:00
+
+Current checkpoint 2026-11-11T00:16:49.359687+00:00; all ten original goals remain ACTIVE/incomplete.
+Checkpoint scope ID: FINAL-WORKER-57d25302d4fa8bce8d8aecb12031029bcea912f41e21408765ac6c4bb4c3b0bd.
+
+HUD: five scoped files were reviewed, built/frozen and integrated with source guards. The exact private player (SHA prefix 60ee067f) has 9 artifact pins and 158 compiled source pins. Bounded actual GPU overlay tests and root onscreen HUD/crosshair observation passed. The existing ordinary revision-6 scope reopened, but later disappeared without STOPPED or a terminal trace; the cause remains unknown. Its read-only logical hash ef033...f09d and initialized claim remain preserved. No clean ordinary close, repair usability or human pacing is claimed. The user declines further manual tests; continue independent authorized work without asking for them.
+
+Seven new repair-route checks passed in separate fresh synthetic-time native proof worlds. The current HUD hardware run passed 180.0042338 real seconds, 43504 Presents, 241.6832 FPS and p99=5.6418 ms, with zero dropped physics. The performance GPU debug layer was unobserved, so its zero counters do not establish clean debug output; the separate HUD GPU fixture observed an enabled layer with zero errors/warnings. This was a controlled physical shuttle with one root native Raise; its exact action timestamp was not sampled. The fresh revision-0 saved READY/STOPPED is separate from the ordinary revision-6 scope's unexplained exit. Old 1b3179 run03 at about 247.276 FPS is dated historical evidence; the older run02 stall is unresolved. Chapter-content GPU bytes exclude HUD upload buffers, swapchain/depth/driver allocations; no full VRAM or hardware-stability claim.
+
+Tooling: Codex/Gemini/OpenCode CLI installation/version/help and shared instruction/session command resolution were verified. Portable Blender 5.2.4 LTS synthetic export and its unique Start Menu entry, Krita/Inkscape/FreeCAD installation/file metadata and CC0 provenance are recorded; original assets/preferences remain retained. The Inkscape trust limitation and blocked PowerShell file-loading policy are retained. Availability is not provider authentication/quota or a universal real-project GUI qualification. The current helper is canonical runtime/devtools/Enter-AI-BS-Dev.ps1; the stale output helper remains historical.
+
+RAG: actual mounted retrieval returned five source-bound passages; metadata-only preservation checks and two private Drive receipt roundtrips passed. No manuscript/source text, databases or credentials were uploaded. Full original-owner browser/native creative edit/save/reopen/export lifecycle remains open.
+
+Official delegated OpenCode path: Local BS-Chat web command /opencode adds12 optional official OpenCode coding/review workers alongside existing providers; the selected primary and provider configuration are unchanged.29 worker checks,7 route checks,56 JavaScript checks and an actual no-model config/cache cleanup gate passed. Guarded backend replacement33228 passed protected catalogue/authentication on8080and8000; ten database logical snapshots and provider configuration remain unchanged. Last real provider task returned HTTP429/no answer; no further inference, paid fallback or model rotation. Private per-owner binary cache corrects the intentional persistent Bun DLL lifetime; fresh task profiles clean up. This is source/local API qualification, not all-model answers, installed Studio107 parity or full release qualification.
+Model evidence: 12 documented optional models; only DeepSeek free was probed. Last native result429/no answer; actual_model=null. Original v01 outcome unknown, not replayed.
+Only explicit final promotion, source pins and verified post-activation admin API receipts qualify this path. Do not infer every model/role, all 12 executions, direct custom free-API eligibility, paid fallback or unrelated provider/business activation. All existing providers and owners remain preserved.
+
+Local web BS-Chat commands are /opencode models and /opencode <id> <task>. These are optional explicit delegations alongside the selected primary; a catalogue of 12 choices is not 12 running agents or 12 successful model answers. Mounted-browser worker execution, installed Studio107 parity and automatic swarm scheduling remain unqualified. The latest cache fix was checked through 29 offline cases and a genuine no-model mapped-DLL/config gate that removed a fresh request profile and reused its private owner cache. This does not claim a successful provider-task cleanup. Earlier v03 residue and failed evidence remain preserved; the original v01 provider outcome is unknown.
+
+Checkpoint: C:\AI-BS\backups\hud_swarm_checkpoint_20261111T001649359687Z\checkpoint.json. The native/tooling/RAG source-progress milestone is already verified in Drive: 260 payload files plus manifest, all 261 archive members checked, with private-parent/owner-only metadata and downloaded hashes. Its immutable archive SHA is ed401a2b98194e03cd9f4cccf0278e7f44d9bcc611d6817afd1c958c51068010; prior source overlay and RAG metadata uploads remain dated evidence. Only this newer worker/source/handoff checkpoint is pending its separate Drive overlay. Seven held private-history/secret-candidate files, databases/saves/claims, credentials/profiles, manuscripts and original media remain excluded. This is not a whole-project/PC, private-history or saved-data cloud backup.
+
+Next: Retain the qualified additive worker source/protected API and finish remaining independent UI/provider/role qualification. Make no additional diagnostic model calls or replay/rotation after retained429/unknownv01 evidence; all-model answers, mounted browser execution, Studio107 parity and automatic scheduling remain unqualified. Preserve the verified native/tooling260-file Drive milestone. Back up only the newer worker/source/handoff overlay next, with separate connector metadata and downloaded hash verification and all private-data exclusions. Continue independent original-owner creative open/new-copy edit/save/reopen/export checks without changing originals. Preserve and investigate the unexplained ordinary native exit only with attributable evidence. Do not ask for declined manual tests; human pacing/captions/likeness and remaining ten-goal/release gates stay open.
+
+
+## Verified additive worker Drive milestone — 2026-11-11T00:23:58.435116+00:00
+Closure ID: WORKER-DRIVE-VERIFIED-9cdacfc3-20261111.
+
+The existing Google Drive connector uploaded the second reviewed worker source/progress overlay, its current shareable handoff/checkpoint and its verification receipt to the same private Engineering Ledger. Worker archive 1nDh0et3NKv3N7O0TdBH552LoSxcXJYgq is 487,299 bytes, SHA256 9cdacfc31f7a0bc1cc35daa17eeaf3c67246a2a594b09d36ba3aed6cc102df48; all 34 ZIP members (33 payload files plus manifest), CRCs and individual hashes were verified after download, including all 11 reviewed worker source/test files. All four remote files have the expected private parent and owner-only permission metadata and exact downloaded byte hashes. Receipt: C:\Users\Administrator\Documents\Codex\2026-11-10\c-ai-bs\outputs\AI-BS-OpenCode-Drive-receipt-20261111.json; SHA256 2bbd4af2d265cfe851fc108369ac3add574212b9d7c8c4316013e00afd57399d.
+
+Both milestones are now VERIFIED: native/tooling/RAG metadata (260 payload files plus manifest; archive SHA ed401a2b98194e03cd9f4cccf0278e7f44d9bcc611d6817afd1c958c51068010) and this additive worker overlay (33 payload files plus manifest). There is no pending upload for this worker milestone. Existing primary/provider configuration is preserved; local protected worker API/catalogue qualification does not prove model answers. Last provider result remains HTTP429/no answer, actual_model:null; original v01 outcome is unknown and was not replayed. No additional model call or rotation occurred. Mounted-browser worker execution, installed Studio107 parity and automatic scheduling remain unqualified.
+
+These are incremental source/progress overlays requiring a complete preserved base and separate private data. Seven privacy holds, credentials/profiles, raw databases/saves/claims, manuscripts and original media remain excluded; no whole-project/PC, private-history or saved-data cloud backup claim. Uploaded archive/handoff/checkpoint/receipt bytes remain immutable. This local closure at C:\AI-BS\backups\worker_drive_closure_20261111T002358435116Z\checkpoint.json postdates both frozen uploads and is outside their archives. Worker parent: C:\AI-BS\backups\hud_swarm_checkpoint_20261111T001649359687Z\checkpoint.json; native parent: C:\AI-BS\backups\hud_swarm_checkpoint_20261110T235106349961Z\checkpoint.json. All ten goals stay ACTIVE/incomplete.
+
+Next: independent original-owner creative lifecycle and attributable ordinary-exit diagnosis, then retained broader acceptance gates; do not request declined manual tests or make additional diagnostic model calls.

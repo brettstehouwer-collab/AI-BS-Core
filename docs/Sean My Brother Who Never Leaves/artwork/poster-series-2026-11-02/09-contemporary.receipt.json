@@ -1,0 +1,18 @@
+{
+  "id": "09-contemporary",
+  "mode": "built-in image_gen",
+  "source": "C:\\Users\\footb\\.codex\\generated_images\\01a19b4a-a521-7652-a521-e1e66a785cbd\\exec-9014468f-59be-46bf-b996-25c048fe3547.png",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\09-contemporary.png",
+  "width": 1024,
+  "height": 1536,
+  "prompt_source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\generation-prompts.json",
+  "prompt_selection": "common + posters[id=09-contemporary].brief + additionalReferenceNote",
+  "prompt_addition": "Use Brett longer wavy brown hairstyle from reference4 rather than older short hairstyle; references3/4/5 same Brett,1/2same Sean",
+  "reference_count": 5,
+  "quality": {
+    "text": "STILL US and EVERY VERSION. SAME BROTHERHOOD. are correct and legible",
+    "identity": "Sean left dark swept hair and stubble; Brett right longer wavy brown hair, light eyes and clean-shaven face, drawing on additional Brett refs4/5",
+    "layout": "Natural conversational poses, Sean laughing while Brett gestures, ordinary late-night creative room with microphone, notebook, monitors and pizza",
+    "limitations": "Generated likenesses and tattoo detail are artistic approximations; staged imaginative scene, not a historical photograph. Hands and poster text show no material visual error."
+  }
+}

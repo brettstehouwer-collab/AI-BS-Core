@@ -1,45 +1,18 @@
-/**
- * FDXParser.js
- * Parses Final Draft XML (.fdx) into a unified JSON AST for the AI-BS Screenplay Editor.
- */
-
-/** @param {string} xmlString */
-export function parseFDX(xmlString) {
-  const ast = [];
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-
-  // Basic error checking
-  const parseError = xmlDoc.getElementsByTagName("parsererror");
-  if (parseError.length > 0) {
-    console.error("Error parsing XML:", parseError[0].textContent);
-    throw new Error("Failed to parse FDX file. Invalid XML.");
-  }
-
-  const paragraphs = xmlDoc.getElementsByTagName("Paragraph");
-
-  for (let i = 0; i < paragraphs.length; i++) {
-    const para = paragraphs[i];
-    const type = para.getAttribute("Type") || "General";
-    
-    // Combine all Text nodes within the Paragraph
-    const textNodes = para.getElementsByTagName("Text");
-    let combinedText = "";
-    for (let j = 0; j < textNodes.length; j++) {
-      combinedText += textNodes[j].textContent;
-    }
-
-    ast.push({
-      id: crypto.randomUUID(),
-      type: type,
-      text: combinedText
-    });
-  }
-
-  // If file was empty or not FDX
-  if (ast.length === 0) {
-    ast.push({ id: crypto.randomUUID(), type: "Action", text: "" });
-  }
-
-  return ast;
+import {parseFDXDocument,updateFDXBlockText} from './fdxDocumentFormat.js';
+export {parseFDXDocument,updateFDXBlockText};
+/** Backward-compatible body AST view; rich callers retain the full document. @param {string} xml */
+export function parseFDX(xml){
+  const document=parseFDXDocument(xml);
+  return document.blocks.length?document.blocks:[{id:crypto.randomUUID(),type:'Action',text:''}];
+}
+/** Derived compatibility view, not the rich preservation master. @param {string} xml */
+export function fdxTitlePageFountain(xml){
+  const lines=parseFDXDocument(xml).title_page;
+  if(!lines.length)return '';
+  const metadata=[`Title: ${lines[0].text.replace(/\n/g,'\n    ')}`];
+  const authors=lines.slice(1).filter(line=>line.type==='Author').map(line=>line.text);
+  const notes=lines.slice(1).filter(line=>line.type!=='Author').map(line=>line.text);
+  if(authors.length)metadata.push(`Author: ${authors.join('\n').replace(/\n/g,'\n    ')}`);
+  if(notes.length)metadata.push(`Notes: ${notes.join('\n').replace(/\n/g,'\n    ')}`);
+  return metadata.join('\n')+'\n\n';
 }

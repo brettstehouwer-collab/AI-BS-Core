@@ -3,6 +3,7 @@ import asyncio
 import uuid
 import logging
 from typing import Dict, Any, Optional
+from urllib.parse import urlencode
 
 COMFYUI_HOST = "http://127.0.0.1:8189"
 
@@ -90,7 +91,7 @@ def extract_output_media(
     """
     outputs = history_entry.get("outputs", {})
     for node_id, node_out in outputs.items():
-        for media_key in ["images", "videos", "gifs"]:
+        for media_key in ["images", "videos", "gifs", "audio", "meshes", "models"]:
             if media_key in node_out and len(node_out[media_key]) > 0:
                 item = node_out[media_key][0]
                 filename = item.get("filename")
@@ -98,7 +99,7 @@ def extract_output_media(
                 folder_type = item.get("type", "output")
 
                 if filename:
-                    image_url = f"/api/comfy/media?filename={filename}&subfolder={subfolder}&type={folder_type}"
+                    image_url = '/api/comfy/media?' + urlencode({'filename': filename, 'subfolder': subfolder, 'type': folder_type})
                     return {
                         "filename": filename,
                         "subfolder": subfolder,

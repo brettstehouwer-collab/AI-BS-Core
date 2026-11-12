@@ -54,6 +54,12 @@ def actual_class():
     tree = ast.parse((ROOT / 'native_studio/telemetry_hub.py').read_text(encoding='utf-8'))
     declaration = next(node for node in tree.body
                        if isinstance(node, ast.ClassDef) and node.name == 'TelemetryHub')
+    # Extract the real immutable ABI data without importing or creating any
+    # shared-memory writer; the class-only fixture must supply its globals.
+    shm_tree = ast.parse((ROOT / 'native_studio/telemetry_shm.py').read_text(encoding='utf-8'))
+    port_order = ast.literal_eval(next(node.value for node in shm_tree.body
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)
+        and node.target.id == 'PORT_ORDER'))
     writer = FakeWriter()
     scope = {
         'QThread': FakeThread,
@@ -61,6 +67,7 @@ def actual_class():
         'threading': threading,
         'time': time,
         'TelemetryWriter': lambda: writer,
+        'PORT_ORDER': port_order,
         'PORT_MATRIX': {},
         'MIN_FREE_VRAM_GB': 3.5,
         'sample_system': lambda: {'cpu_pct': 1, 'ram_pct': 2, 'ram_used_gb': 3, 'ram_total_gb': 4},
@@ -77,6 +84,16 @@ def actual_class():
 
 
 class TelemetryShutdownTests(unittest.TestCase):
+    def test_nonblocking_stop_preserves_mapping_until_sampler_releases_it(self):
+        hub, writer, _ = actual_class()
+        hub.writer = writer
+        hub.wait_result = False
+        self.assertIs(hub.shutdown(0), False)
+        self.assertEqual(hub.wait_calls, [0])
+        self.assertTrue(hub._stop.is_set())
+        self.assertIs(hub.writer, writer)
+        self.assertEqual(writer.close_calls, 0)
+
     def test_bounded_shutdown_retains_writer_when_thread_has_not_drained(self):
         hub, writer, _ = actual_class()
         hub.writer = writer

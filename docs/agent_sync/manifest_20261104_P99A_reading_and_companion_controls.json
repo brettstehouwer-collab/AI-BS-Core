@@ -1,0 +1,17 @@
+{
+  "at": "2026-11-04T20:46:24.687138+00:00",
+  "status": "verified_packaged_reading_and_companion_controls",
+  "evidence": "E:\\AI_BS_Resources\\FirstBoot\\P99\\ReadingAndCompanionControls\\qualification.json",
+  "backup_receipt": "docs/game_engine/checkpoints/99A-drive.json",
+  "monitor_status": "available",
+  "monitor_sha256": "848a7669e60989e94bfe564f521de26872d40f4de7b0f8686bf06ea72c460515",
+  "native_source_changed": false,
+  "installed_release_changed": false,
+  "free_GiB": {
+    "C": 204.57,
+    "D": 24.25,
+    "E": 43.85
+  },
+  "goal_complete": false,
+  "next_step": "Add or reuse a narrowly scoped current native door-aware companion blocking/reopening/Recall acceptance fixture. Existing companion-controls does not assert closed-door waiting. Keep final full matrix, likeness/collar seam, deferred caption listening review, human pacing/current gameplay performance and installed delivery open."
+}

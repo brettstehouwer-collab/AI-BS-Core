@@ -1,0 +1,42 @@
+{
+  "id": "20261104_P89A_sdk0172_publication",
+  "at": "2026-11-04T18:43:43.884499+00:00",
+  "outgoing_agent": "Codex",
+  "receiving_agent": "Next Codex continuation",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "working_tree_status": "E:\\AI_BS_Resources\\FirstBoot\\P89\\SDK0172Publication\\git-status.local.txt",
+  "source_manifest": "E:\\AI_BS_Resources\\FirstBoot\\P89\\SDK0172Publication\\source-current.json",
+  "source_manifest_checksum": "bcbc460e8d7d1d1450803f43cd60460026d4320fe8613fd95ee08461a0b1112a",
+  "source_diff": "E:\\AI_BS_Resources\\FirstBoot\\P89\\SDK0172Publication\\discovery-changes.patch",
+  "checkpoint": {
+    "at": "2026-11-04T18:42:45.147050+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\89A_SDK0172_Publication_And_Discovery.zip",
+    "bytes": 1538374,
+    "sha256": "692bef2311cbc9b76eb217faec2cfb6915e19086320136b6a9dc1030cedbd23c",
+    "members": 504,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1L3tRNYYeynghYlsinRWd0LRwtGHxftOx",
+    "drive_file_id": "17wlfr_vDncaEKfpbGsoX7CoghbyHZpIc",
+    "drive_restore_verified": true
+  },
+  "verified": [
+    "CanonicalSDK0172onE:449files/config exactstaging and9fresh relocated consumers/config",
+    "18fileC:runtime mirror exact;failedrename stage preserved",
+    "35source-discovery GREENchecks after5intended REDfailures;older/frozen authority retained",
+    "P87native/CMake/shader hashes unchanged;2Python discoverytests updated separately",
+    "All0171SDKfiles and2301Studio107files retained exact",
+    "Independent read-only SDKreview passed",
+    "89ArawDrive restore504members exact"
+  ],
+  "source_changed": [
+    "native_studio/game_build_view.py",
+    "engine/tests/test_native_build_view.py",
+    "engine/tests/test_game_build_runtime_discovery.py"
+  ],
+  "decision": "NewSDKversion onE: conservesD: and relocation tested. Windows denied directoryrename; exclusive new mirror verified fully before discovery activation. NoACL edits or failedstage deletion.",
+  "next_step": "Prepare bounded separate v27mouth-width study from hash-verifiedv26 master and user-selected dark-jacket store photo. Use P71smooth region masks/P74export/native all-side routes; preserve neck,eyes,hair,clothes,rightband,22bones/4clips and originalreferences. Agentproposal is not an implemented/approved likeness. Then actual preview/userreview, remaining human/caption/1080p60 and final packaging.",
+  "user_asset_question": "Provided research-only acquisition priorities and sources; no art-pack downloads or purchases.",
+  "goal_complete": false
+}

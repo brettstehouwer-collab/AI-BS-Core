@@ -20,6 +20,17 @@ export default function MobileNavDrawer({
   // Categorized Tool Registry
   const toolCategories = [
     {
+      id: 'swarm_specialists',
+      title: '🤖 64-Specialist Sovereign Swarm',
+      desc: '7 Operational Domains & SQLite WAL Registry',
+      accent: '#38bdf8',
+      tools: [
+        { key: 'specialist_swarm', label: '64-Specialist Swarm Explorer', icon: '🤖', badge: '64 Roles' },
+        { key: 'immutable_scribe', label: 'Fire & Forge Verbatim Scribe', icon: '📜', badge: 'Role 49' },
+        { key: 'agent_apps', label: 'Sovereign Agent Apps & DAGs', icon: '⚡', badge: 'DAG' }
+      ]
+    },
+    {
       id: 'noco',
       title: '🏛️ Project NoCo Sovereign Enclave',
       desc: '23-Acre Campus, 3D Walkthrough & Land Audits',

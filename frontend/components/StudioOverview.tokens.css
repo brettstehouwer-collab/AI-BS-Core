@@ -1,0 +1,17 @@
+/* Generated from ui_modernization/tokens.json; page scope only. */
+.aibs-studio-overview {
+  --overview-canvas: #09090B;
+  --overview-surface: #121215;
+  --overview-raised: #1B1B21;
+  --overview-hover: #24242D;
+  --overview-border: #3F3F4B;
+  --overview-divider: #27272A;
+  --overview-text: #F4F4F5;
+  --overview-muted: #A8A8B3;
+  --overview-cyan: #22D3EE;
+  --overview-violet: #A78BFA;
+  --overview-ready: #34D399;
+  --overview-warning: #FBBF24;
+  --overview-error: #FB7185;
+  --overview-unavailable: #A8A8B3;
+}

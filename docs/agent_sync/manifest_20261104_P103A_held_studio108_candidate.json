@@ -1,0 +1,58 @@
+{
+  "at": "2026-11-04T21:52:03.686988+00:00",
+  "status": "candidate108_held_not_deployed_failure_evidence_backed_up",
+  "source_version": "5.329.108",
+  "installed_release": "5.329.107",
+  "SDK_version": "0.17.2",
+  "candidate_sha256": "3097cca71854fd84d643e4d5dbf04b6629d689936ed4be5f6722c90c46a35ffe",
+  "package_files": 2301,
+  "packaging_tests": 134,
+  "repair_cases_passed": 7,
+  "bypass_tour_passed": false,
+  "unaffected_frozen_and_normal_controls_passed": true,
+  "protected107_and108_inventories_unchanged": true,
+  "backup_receipt": "docs/game_engine/checkpoints/103A-drive.json",
+  "monitor_status": "available",
+  "monitor_sha256": "c2bea2446f5375db7d5927d0cf7605a8d6dfecad1998765ae22e6ee9a40ac2da",
+  "launcher_mutations_performed": false,
+  "free_GiB": {
+    "C": 288.26,
+    "D": 24.12,
+    "E": 102.51
+  },
+  "goal_complete": false,
+  "next_step": "Add a regression for the recorded shelter-return segment and conservative collision clearance before the existing actual physics dry run. Validate against saved failed collision snapshot and actual PlayerController; retain real walking/no-teleport/no-recovery assertions. Qualify a fresh native SDK/runtime and fresh Studio candidate before deployment. Preserve108 as failed/held,107 as installed, all original refs/saves.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P103\\Studio108CandidateR2\\private-git-status.txt",
+  "private_worktree_sha256": "45b02e4ceb9d0a88d73adb4969c5bc4be2057439d68119159b101b8bcd3f1256",
+  "private_git_uploaded": false,
+  "changed_version_paths": [
+    "package.json",
+    "frontend/package.json",
+    "BroadcastStudioApp/package.json",
+    "package-lock.json",
+    "frontend/package-lock.json",
+    "BroadcastStudioApp/package-lock.json",
+    "release.json",
+    "frontend/public/version.json",
+    "frontend/version.js",
+    "frontend/src/version.js",
+    "frontend/components/version.js",
+    "frontend/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/components/components/version.js",
+    "BroadcastStudioApp/src/version.js",
+    "version.txt"
+  ],
+  "new_assets_root": "C:\\AI-BS\\engine\\assets\\cooked\\warm-opening-v33-surface-r02",
+  "source_threads_read": [
+    "01a18e1b-41f6-73a1-b9f9-59b18edfcb14 recent actual VM-cleanup request",
+    "01a1a7a9-5584-7ec2-bc57-3400b3f5023e recent actual storage work messages"
+  ],
+  "helper_attribution": [
+    "preview_packaging_review: read-only packaging/static inventory and obstruction analysis",
+    "preview_packaging_tests: actual134-test suite, retained E:-TEMP guard errors, corrected D: fixture pass"
+  ],
+  "hidden_reasoning_transferred": false
+}

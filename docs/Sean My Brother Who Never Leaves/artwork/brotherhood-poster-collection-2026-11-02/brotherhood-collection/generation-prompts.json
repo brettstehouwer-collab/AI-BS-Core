@@ -1,0 +1,69 @@
+{
+  "common": "Create ONE finished vertical 2:3 poster, high-detail, with faithful likenesses of exactly two real adult friends, Sean and Brett. All supplied photos are IDENTITY REFERENCES, not layout targets. Reference 1 is Sean's primary facial reference. Reference 2 is the SAME Sean and supplies build, hairstyle, watch, tattoo; preserve only his actual referenced tattoo when visible. Reference 3 is Brett's facial/build reference. Sean has dark voluminous swept-up hair, light eyes and light facial stubble; Brett has shorter light brown/blond swept-up hair, light eyes and is largely clean-shaven. Strictly preserve their distinct facial structures and identifiable noses, eye spacing, lips, hairlines and body shapes even in stylized interpretations. Do not merge them, make them twins, genericize, or beautify. For animation/comics translate recognizable features faithfully into the medium. Both have equal narrative dignity and agency. In a simple pair arrangement Sean is on viewer's left and Brett on right, unless panels require clearly identified consistent positions. Dress both casually: Sean navy/black short sleeves when appropriate; Brett charcoal and muted olive. Use the reference photo of shirtless Brett only for identity and build; the poster may dress him naturally. No source watermarks, camera timestamps, phone UI, or copied photo backgrounds. These are imaginative illustrations of their friendship, not depictions of verified historical events. No extra people. Excellent typography with exact requested wording, natural hands, strong focal hierarchy, professional margins. Only the text requested for this specific poster. No stock logos or watermarks.\n\nRelationship grounding: genuine brotherhood, reciprocal support and creative collaboration; theater and writing, music/audio/technical experimentation, daily gaming, gift pranks with pizza, late nights and hopes for a future theater/farm. They can challenge one another, misread tone, apologize, laugh and reconnect. Humor includes wordplay, exaggerated seriousness, callbacks, intentional childish language, absurd escalation and affectionate irreverence. There is no permanently superior mentor, helpless dependent or villain. Treat emotional pain with dignity. Dark humor may be profane, absurd and gallows-like but should not include slurs, sexual violence, explicit sex, actual self-harm, or ridicule of vulnerable people. Neither man is deceased. Avoid memorial imagery. Every poster must have a genuinely different visual language and composition from the previous warm painted worktable mural.",
+  "refs": [
+    "C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014412_Photos.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014500_Photos.png",
+    "C:/Users/footb/Downloads/20250916_131125.jpg"
+  ],
+  "posters": [
+    {
+      "id": "01-realistic",
+      "category": "Realistic",
+      "title": "STILL HERE",
+      "brief": "Photorealistic cinematic editorial movie poster, tactile natural skin and highly faithful photo likenesses. A candid evening at the entrance of a small creative workshop: Sean and Brett seated shoulder to shoulder on the steps, relaxed halfway through an amused conversation, one paper coffee cup each and a casually resting game controller between them. Warm light from the open workshop door, cool blue twilight outside, a notebook and rolled script visible inside. Subtle film grain, 50mm portrait feel, shallow depth of field, believable contemporary setting, natural expressions not heroic posing. Portraits dominate. Exact title \"STILL HERE\" in restrained cinematic lettering across the top; smaller footer \"MY BROTHER WHO NEVER LEAVES\". No other readable text."
+    },
+    {
+      "id": "02-animation",
+      "category": "Animation style",
+      "title": "GO TEAM",
+      "brief": "A gorgeous original hand-drawn 2D animated adventure-film poster, expressive clean linework, luminous painted backgrounds, dimensional cel shading and genuinely recognizable stylized versions of the two reference men. Sean and Brett laughing at the same ridiculous gaming moment at a small desk; dynamic diagonal composition, controller cords curl through the image like musical lines and an open script becomes a sweeping theatrical backdrop. Pizza box nearby, warm practical light against vivid midnight teal and golden-orange. Both playful and equally active, expressive eyebrows and body language but no extreme facial distortions. Polished animation key art, not photorealism and not a grid. Exact large playful title \"GO TEAM\"; exact small footer \"READY 2 PWAY?\" No other readable words."
+    },
+    {
+      "id": "03-comical",
+      "category": "Comic",
+      "title": "DOWN TO FORTNITE",
+      "brief": "A professionally drawn four-panel comic-book poster with clear panel gutters, bold ink, energetic halftone printing, rich cobalt, rust red and warm cream, accurate recognizable cartoon likenesses and consistent Sean-left/Brett-right identities. Title above panels: \"DOWN TO FORTNITE\". Panel 1: Brett enthusiastically texting on his phone with speech balloon \"I'M DTF.\" Sean looks up, eyebrow raised. Panel 2: Brett deadpan, tiny balloon \"Down to Fortnite.\" Sean pauses dramatically. Panel 3: Sean enthusiastically brandishing his controller with balloon \"YESS!\" Brett breaks into a grin. Panel 4: both playing and laughing, a hilariously gigantic game-update progress bar on their screen reading \"UPDATING...\" ending the bravado in ordinary inconvenience. The two friends are the only people. Comic timing, mutual wit, no sexual imagery. Bottom small caption \"THE TIMING WAS IMPECCABLE.\" Exact text as specified, legible and clearly assigned."
+    },
+    {
+      "id": "04-supportive",
+      "category": "Supportive",
+      "title": "YOU GOT THIS, BROTHER",
+      "brief": "A tender, highly detailed gouache and colored-pencil illustrated poster with soft natural faces that strongly preserve the references. Sean and Brett side by side at a simple rehearsal-room table, collaborating on a marked script and a technical/music notebook. Sean points at a promising section of the draft while Brett slides a practical sketch or audio note toward him, visibly reciprocal encouragement. They look toward each other with believable warm half-smiles, quiet energy, neither comforting a helpless person. Rain at the window gives way to a shaft of warm morning sunlight falling equally over both men. Sage, parchment, dusty indigo and honey gold; paper grain and hand-painted textures. Exact top title \"YOU GOT THIS, BROTHER\"; exact bottom caption \"ONE STEP. THEN THE NEXT.\" No other readable text."
+    },
+    {
+      "id": "05-emotional",
+      "category": "Emotional",
+      "title": "YOU DON'T HAVE TO SAY MUCH",
+      "brief": "An intimate sophisticated fine-art portrait poster in oil paint and translucent watercolor washes, near-real faces with exceptionally faithful likenesses. Sean and Brett sit quietly beside each other on a modest porch at dawn, elbows on knees and shoulders lightly touching, both facing three-quarter toward the viewer with open, grounded expressions. A phone lies between them with no readable interface, a shared blanket rests over the bench behind them, coffee steam softly rises. Their company is the central story; no tears forced on faces, no grief cliches or memorial imagery. Atmospheric blue-gray shadows meeting pale gold sunrise, luminous eyes, subtle visible brushwork and ample quiet negative space. Portraits are the focus and both men are alive, equal and present. Exact understated title \"YOU DON'T HAVE TO SAY MUCH\"; exact small footer \"I'M HERE, MAN.\""
+    },
+    {
+      "id": "06-frustrating",
+      "category": "Frustration and repair",
+      "title": "WE BOTH SWUNG AND MISSED",
+      "brief": "A beautifully designed two-part graphic-novel poster about misunderstood text tone and eventual repair, expressive semi-real ink portraits retaining exact identity features. Upper two-thirds: Sean and Brett on opposite sides of a shared desk, frustrated but not threatening, each phone emits tangled angular speech-shape ribbons that cross and knot between them; furrowed brows, interrupted thought, scattered notes. Limited crimson, charcoal and cream convey the mismatch. Only upper speech balloons: Brett \"THAT'S NOT WHAT I MEANT.\" Sean \"I READ IT DIFFERENTLY.\" Lower third: a separate calm horizontal panel of both friends leaning back together with a small rueful smile and controllers resting idle, the tangled ribbons becoming one loose warm line. Amber and muted blue replace red, restrained self-awareness rather than magical resolution. Exact top title \"WE BOTH SWUNG AND MISSED\"; exact bottom caption \"LET'S TRY THAT AGAIN.\" Both get equal dignity; no villain, violence, punching, insults, or medical iconography."
+    },
+    {
+      "id": "07-dark-humor",
+      "category": "Dark humor",
+      "title": "EVERYTHING IS FINE. PROBABLY.",
+      "brief": "A sharply funny dark satirical illustrated theater poster in sophisticated noir cartoon style, original adult-animation linework, deep midnight green, burgundy, dirty gold and spotlight cream. Sean and Brett, accurately recognizable, sit in absurdly solemn committee chairs at a tiny table labeled by a paper placard \"TERRIBLE IDEAS COMMITTEE\". Around them lean enormous precarious stacks of revised scripts, a laptop displaying a gigantic spinning loading symbol, an empty pizza box, and a clock showing 3:07; a single stage spotlight gives the chaos unearned bureaucratic grandeur. Both wear casual clothes with comically over-serious expressions while clearly trying not to laugh. Brett's speech balloon \"ARE WE BEING PRODUCTIVE?\" Sean's speech balloon \"EMOTIONALLY? DEBATABLE.\" Exact big title at top \"EVERYTHING IS FINE. PROBABLY.\" Small footer \"GO FUCKIN' TEAM.\" Dark comedy comes from overcommitment, tired bravado and grandiose formality applied to mundane chaos. No actual disasters, trauma scenes, slurs, explicit sex or harm. Readable carefully spaced type, faces central, maximum witty small detail without clutter."
+    },
+    {
+      "id": "08-underdogs",
+      "category": "Defiant brotherhood",
+      "title": "UNDERDAWGS",
+      "brief": "A bold original hand-pulled screenprint and woodcut concert-poster aesthetic, richly textured black ink, deep ultramarine, burnt orange and parchment, graphic strong shadows, recognizable engraved portrait likenesses from references. Sean and Brett stand as equal creative partners in front of an unfinished small theater entrance, casually fist-bumping at waist level while exchanging amused, determined looks. Hand-built stage timbers, a rolled script, a notebook and the silhouette of cultivated land on the horizon suggest a shared future still being built. Layered imperfect registration and expressive ink strokes, ambitious and human, no superhero physiques or military imagery. Exact enormous title \"UNDERDAWGS\"; exact footer \"FOR FUCKIN' ETERNITY\"; one small handwritten \"GO TEAM\" worked into a taped plan. Clear confident composition, portraits strong and identifiable, no resemblance to the earlier painted table poster."
+    },
+    {
+      "id": "09-contemporary",
+      "category": "Contemporary portrait",
+      "title": "STILL US",
+      "brief": "A contemporary realistic photography-inspired friendship poster with incredibly faithful Sean and Brett faces, candid natural expressions and fine skin texture. Brett's current longer wavy brown hair from reference4, preserving his unique face across all Brett references. Sean's dark swept-up hair, stubble, and facial structure from references1/2. Two equal friends in an ordinary late-night creative room, seated side by side at different angles, Brett telling an animated funny story with open palms and Sean caught in a real warm laugh while listening, a small quiet contrast to all their serious planning. Casual T-shirts, soft practical lamp light mixed with monitor blue, a notebook, microphone and pizza box in soft background focus, authentic clutter held in clean photographic composition. The room feels lived in; no giant staged symbolic objects. Documentary/editorial 35mm look, inviting and personal, expressions vivid but no distortions or exaggerated teeth. Full-bleed portrait layout with negative space at top for exact title \"STILL US\"; exact footer \"EVERY VERSION. SAME BROTHERHOOD.\" No other readable words. Reference4/5 are additional photos of BRETT only, not new people; all five references depict exactly two individuals."
+    }
+  ],
+  "additionalBrettRefs": [
+    "C:/Users/footb/AppData/Local/Temp/20260823_191049.jpg",
+    "C:/Users/footb/AppData/Local/Temp/f329783e-2d40-48e1-b308-10f5176214b5.jpg"
+  ],
+  "additionalReferenceNote": "References4/5, when used, are Brett only: recent longer hair and additional close facial view. Earlier images use original three references. All depict the same two men."
+}

@@ -704,11 +704,18 @@ def cmd_enroll_vbox(args: argparse.Namespace) -> int:
         'guest_python_exe': guest_python,
         'guest_temp_root': r'C:\Windows\Temp',
         'licensing_verified': True,
+        'test_only': bool(args.test_only),
         'integration_vm_override_authorized': bool(args.allow_integration_vm_override),
         'enrolled_at_utc': datetime.now(timezone.utc).isoformat(),
     }
     VBOX_CONFIG_FILE.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
     print(f'Enrolled DPAPI credentials and VirtualBox config at {VBOX_CONFIG_FILE}')
+    if args.test_only:
+        os.environ['AI_BS_VBOX_TEST_ONLY_VERIFY'] = 'true'
+        try:
+            return cmd_verify_vbox(args)
+        finally:
+            os.environ.pop('AI_BS_VBOX_TEST_ONLY_VERIFY', None)
     return cmd_verify_vbox(args)
 
 
@@ -837,6 +844,7 @@ def build_parser() -> argparse.ArgumentParser:
     enroll.add_argument('--username', default=None)
     enroll.add_argument('--guest-python', default=None)
     enroll.add_argument('--no-sanitize', action='store_true')
+    enroll.add_argument('--test-only', action='store_true', help='Run canary without admitting ordinary windows_vm tasks.')
     enroll.add_argument('--allow-integration-vm-override', action='store_true')
     return parser
 

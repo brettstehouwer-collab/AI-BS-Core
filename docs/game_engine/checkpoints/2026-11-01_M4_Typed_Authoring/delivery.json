@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_typed_authoring\\AI_BS_M4_Typed_Authoring_Source.zip",
+  "bytes": 6797554,
+  "files": 591,
+  "sha256": "0b0d64d7141856cc4cfa099870c4dd08007823c59989a75e86471e29eace93be",
+  "crc": "passed",
+  "captured_byte_readback": "passed",
+  "free_bytes": {
+    "C": 118475567104,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

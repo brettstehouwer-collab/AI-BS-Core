@@ -1,0 +1,45 @@
+{
+  "checkpoint": "BS-CHAT-OPENAI-001",
+  "status": "WEB_RELEASE_READY",
+  "recorded_utc": "2026-11-05T02:32:46.835618+00:00",
+  "source_thread": "01a19992-d614-7021-b4ef-47695d694047",
+  "frontend_source_count": 19,
+  "frontend_sha256": {
+    "frontend/src/components/ChatTab.jsx": "cf71b7c014c1cb87f1b35595705cf1a7eea7cb990af4a41b593fdaa1575d5121",
+    "frontend/src/components/MobileStehouwerChat.jsx": "3df02738626add34b1e36a93403c37c375686b4ec07656c4b4f8f6d2638c8a8c",
+    "frontend/src/components/TopNavbar.jsx": "39b86c63c1a49a580cfd4d9e3361d6f3f777ff31257adaa83fc21836fc9aee8d",
+    "frontend/src/components/useAppStore.js": "0679d49b3d43d2bc77f5a375f2333fc16db4b58f9af25a9d1c10a84dcd648c59",
+    "frontend/components/ChatTab.jsx": "cf71b7c014c1cb87f1b35595705cf1a7eea7cb990af4a41b593fdaa1575d5121",
+    "frontend/components/MobileStehouwerChat.jsx": "3df02738626add34b1e36a93403c37c375686b4ec07656c4b4f8f6d2638c8a8c",
+    "frontend/components/TopNavbar.jsx": "39b86c63c1a49a580cfd4d9e3361d6f3f777ff31257adaa83fc21836fc9aee8d",
+    "frontend/components/useAppStore.js": "0679d49b3d43d2bc77f5a375f2333fc16db4b58f9af25a9d1c10a84dcd648c59",
+    "frontend/src/components/components/ChatTab.jsx": "cf71b7c014c1cb87f1b35595705cf1a7eea7cb990af4a41b593fdaa1575d5121",
+    "frontend/src/components/components/MobileStehouwerChat.jsx": "3df02738626add34b1e36a93403c37c375686b4ec07656c4b4f8f6d2638c8a8c",
+    "frontend/src/components/components/TopNavbar.jsx": "39b86c63c1a49a580cfd4d9e3361d6f3f777ff31257adaa83fc21836fc9aee8d",
+    "frontend/src/components/components/useAppStore.js": "0679d49b3d43d2bc77f5a375f2333fc16db4b58f9af25a9d1c10a84dcd648c59",
+    "frontend/components/components/ChatTab.jsx": "cf71b7c014c1cb87f1b35595705cf1a7eea7cb990af4a41b593fdaa1575d5121",
+    "frontend/components/components/MobileStehouwerChat.jsx": "3df02738626add34b1e36a93403c37c375686b4ec07656c4b4f8f6d2638c8a8c",
+    "frontend/components/components/TopNavbar.jsx": "39b86c63c1a49a580cfd4d9e3361d6f3f777ff31257adaa83fc21836fc9aee8d",
+    "frontend/components/components/useAppStore.js": "0679d49b3d43d2bc77f5a375f2333fc16db4b58f9af25a9d1c10a84dcd648c59",
+    "frontend/App.jsx": "0cbc40f922ad86026329f013a1e2d184d145aa8a11c22f12139cfd4123a83d99",
+    "frontend/types/domain.d.ts": "13c10ea216247e8073be23feec3a306611134e3f6e624e7b007b0179822777a8",
+    "frontend/src/utils/bsChatProvider.js": "0a78d1b731b592600e5d38adfa38ac578863ff8dde5abf391055932b9503120e"
+  },
+  "frontend_writes_pending": false,
+  "backend_required_paths": [
+    "backend/AI_BS_Backend.py",
+    "backend/core/hybrid_reasoning_engine.py",
+    "backend/routers/ai_providers_router.py",
+    "backend/routers/chat_router.py",
+    "backend/core/bs_chat_provider.py"
+  ],
+  "backend_compatibility": "Required backend source is loaded in the existing local service; actual shared-route OpenAI history roundtrip passed using unchanged NativeChatService source transport.",
+  "tests": {
+    "backend": "63/63 PASS",
+    "frontend": "97/97 PASS",
+    "typescript": "PASS"
+  },
+  "deployment": "Source ready for separately owned web release. This checkpoint did not publish Firebase or package/install native Studio.",
+  "credentials_included": false,
+  "hash_scope": "Only frontend release coordination inputs; broad handoff source hashing remains deferred to manual close."
+}

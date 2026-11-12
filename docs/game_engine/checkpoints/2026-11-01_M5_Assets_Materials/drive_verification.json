@@ -1,0 +1,186 @@
+{
+  "folder": {
+    "id": "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q",
+    "url": "https://drive.google.com/drive/folders/1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+  },
+  "files": [
+    {
+      "file_uri": "C:/AI-BS/backups/checkpoint_20261101_assets_materials/AI_BS_Assets_Materials_Source.zip",
+      "id": "1KURhc-asy8tNSgEZ9xRY-ST889NSes4n",
+      "metadata": {
+        "id": "1KURhc-asy8tNSgEZ9xRY-ST889NSes4n",
+        "title": "AI_BS_Assets_Materials_Source.zip",
+        "mime_type": null,
+        "size": "25551025",
+        "url": "https://drive.google.com/file/d/1KURhc-asy8tNSgEZ9xRY-ST889NSes4n/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1KURhc-asy8tNSgEZ9xRY-ST889NSes4n/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Assets_Materials/README.md",
+      "id": "1Iw1WIyCxVQGxoqsgXnz1w0Pi2-as9lHq",
+      "metadata": {
+        "id": "1Iw1WIyCxVQGxoqsgXnz1w0Pi2-as9lHq",
+        "title": "README.md",
+        "mime_type": null,
+        "size": "1660",
+        "url": "https://drive.google.com/file/d/1Iw1WIyCxVQGxoqsgXnz1w0Pi2-as9lHq/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1Iw1WIyCxVQGxoqsgXnz1w0Pi2-as9lHq/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "12e61327ba90eceb0b4faffbd57ea20235fb1a1119d2e976a2f2a1a8ab8e63e5"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Assets_Materials/delivery.json",
+      "id": "1PB47wBQNFuJOT3yblxUIFhx1mDtzghNW",
+      "metadata": {
+        "id": "1PB47wBQNFuJOT3yblxUIFhx1mDtzghNW",
+        "title": "delivery.json",
+        "mime_type": null,
+        "size": "520",
+        "url": "https://drive.google.com/file/d/1PB47wBQNFuJOT3yblxUIFhx1mDtzghNW/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1PB47wBQNFuJOT3yblxUIFhx1mDtzghNW/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "3979407227885a9a253fac14fdfd603f008eaaee73910634b03e32867511d4c6"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/agent_sync/manifest_m5_assets_materials_20261101.json",
+      "id": "1HIJWhIQpqNKZC2YNGGUh_MBs3LWePRXA",
+      "metadata": {
+        "id": "1HIJWhIQpqNKZC2YNGGUh_MBs3LWePRXA",
+        "title": "manifest_m5_assets_materials_20261101.json",
+        "mime_type": null,
+        "size": "779678",
+        "url": "https://drive.google.com/file/d/1HIJWhIQpqNKZC2YNGGUh_MBs3LWePRXA/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1HIJWhIQpqNKZC2YNGGUh_MBs3LWePRXA/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "06176002c8617533e9d1f06331eb8c61d08c52847f0559ce55bbf6a227e2875a"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/out/asset_pipeline_verification.json",
+      "id": "10hHv2gYo4z2h5VQDI52n2FBBjxCMTKSB",
+      "metadata": {
+        "id": "10hHv2gYo4z2h5VQDI52n2FBBjxCMTKSB",
+        "title": "asset_pipeline_verification.json",
+        "mime_type": null,
+        "size": "3994",
+        "url": "https://drive.google.com/file/d/10hHv2gYo4z2h5VQDI52n2FBBjxCMTKSB/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/10hHv2gYo4z2h5VQDI52n2FBBjxCMTKSB/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "3eb3b24c016c7cb7a6f44cf16265e4c3349427b6dac4c9648affaa1b7211827c"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/out/assets96-independent-acceptance.json",
+      "id": "1E8vAAy796URHYghaKUlLahsekrrHngVR",
+      "metadata": {
+        "id": "1E8vAAy796URHYghaKUlLahsekrrHngVR",
+        "title": "assets96-independent-acceptance.json",
+        "mime_type": null,
+        "size": "43703",
+        "url": "https://drive.google.com/file/d/1E8vAAy796URHYghaKUlLahsekrrHngVR/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1E8vAAy796URHYghaKUlLahsekrrHngVR/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "fc51ed1072f3083b527fdb5fe18cee0c88574da8bafe4e88c3fd39800a64f801"
+    },
+    {
+      "file_uri": "C:/AI-BS/backups/native_game96_20261101_assets/frozen_assets-work-xfeq1d2n/assets-reference.png",
+      "id": "1UeoljW9aVWcE9feU7moiLm9Ka6sO_VuL",
+      "metadata": {
+        "id": "1UeoljW9aVWcE9feU7moiLm9Ka6sO_VuL",
+        "title": "assets-reference.png",
+        "mime_type": null,
+        "size": "46815",
+        "url": "https://drive.google.com/file/d/1UeoljW9aVWcE9feU7moiLm9Ka6sO_VuL/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1UeoljW9aVWcE9feU7moiLm9Ka6sO_VuL/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "b57f2212e2762c889db0b12dd404739fcc6d760a2caea3fc1ab4068666000ab5"
+    }
+  ],
+  "scope": "Upload size/parent only; local SHA and independent archive verification separately; remotehash/accountquota unavailable",
+  "cloud_size_parent": "passed",
+  "verified_at": "2026-11-02T00:06:53.326613+00:00"
+}

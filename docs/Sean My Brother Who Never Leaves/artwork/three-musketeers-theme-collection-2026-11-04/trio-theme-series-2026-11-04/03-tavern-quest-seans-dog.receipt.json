@@ -1,0 +1,18 @@
+{
+  "id": "03-tavern-quest-seans-dog",
+  "mode": "built-in image_gen edit",
+  "prompt": "Make a tightly localized identity-correction edit to reference image 1, the finished fantasy tavern trio poster. Replace ONLY the golden retriever with the specific real dog in reference image 2, Sean's actual dog. Faithfully preserve this dog's fluffy red-brown/chocolate and white/tan herding-dog coat, broad white forehead blaze continuing down the nose, freckled white muzzle, white chest, tan cheek and eyebrow markings, amber eyes, pinkish brown nose and soft folded triangular ears. Keep the existing dog's happy friendly expression and seated foreground pose, appropriately adapted to the actual dog's anatomy. Keep the existing leather HR harness and exact HR badge; the colorful sunglasses may rest on its forehead so its amber eyes and distinctive markings remain visible. Keep the biscuits, paw placement, surrounding lighting and coherent shadows. No second dog.\n\nStrict invariants: preserve the entire poster composition, resolution and portrait aspect ratio, all three humans' exact recognizable faces, expressions, hands, clothes and positions, all typography word-for-word, title THREE MUSKETEERS, subtitle THE QUEST CAN WAIT, footer ROAST FIRST. SHOW UP ANYWAY., all signs and tiny jokes, snail terrarium and court, mushrooms, table, map and parchment approval trail. Do not redraw unrelated parts, do not add objects or text, do not crop or genericize faces. Only the dog's identity/coat/anatomy changes. Final image exactly three human adults plus one dog.",
+  "refs": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/03-tavern-quest.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-a521-7652-a521-e1e66a785cbd/exec-34f80377-2973-423c-89d9-b8d5ca0e3b25.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/03-tavern-quest-seans-dog.png",
+  "qa": {
+    "humanCount": 3,
+    "dogCount": 1,
+    "dog": "Sean's red-brown/white/tan fluffy herding dog, white blaze and chest, freckled muzzle, amber eyes and pinkish-brown nose. Sunglasses raised above eyes; HR harness retained.",
+    "invariants": "Visual comparison shows faces, major typography, fantasy tavern composition and props preserved. No pixel equivalence claimed.",
+    "limitations": "Original draft's minor snail/treat count departures remain; four baby snails clearly visible. Original golden-dog draft preserved."
+  }
+}

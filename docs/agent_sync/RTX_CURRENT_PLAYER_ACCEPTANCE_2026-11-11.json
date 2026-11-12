@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T12:58:52.309076+00:00",
+  "status": "PASS_CONTROLLED_CURRENT_PLAYER_SEED_RELOAD",
+  "run_root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Player_LH_20261111_v02",
+  "frozen_player_sha256": "60ee067f229e040a359e302bb90def884d49223af5a616e6065d9fced1583cda",
+  "verified_artifact_pins": 9,
+  "verified_canonical_source_pins": 158,
+  "content_fingerprint": "03d41a2bc1e400d9bf507613b11398c95ee7c84246deef2a2ee967188c2baf20",
+  "content_revision": 6,
+  "durable_projection_equal": true,
+  "original_project_unchanged": true,
+  "rows": [
+    {
+      "stage": "seed",
+      "process": {
+        "pid": 36976,
+        "created": 1794401750.6397967,
+        "retained_exact_handle": true,
+        "terminal": true,
+        "exit_code": 0
+      },
+      "metrics": {
+        "debug_layer": true,
+        "debug_errors": 0,
+        "debug_warnings": 0,
+        "nonbackground_pixels": 1016027,
+        "hud_readback": true,
+        "hud_fits": true,
+        "hud_capture": true,
+        "hud_height": 411,
+        "hud_needed_height": 407,
+        "walking_ticks": 30,
+        "active_tick": 30,
+        "reload": false,
+        "repair_route": false,
+        "bypass_route": false,
+        "door_cycle": false,
+        "help": false,
+        "decline": false,
+        "depart_return": false,
+        "feed_loss": false,
+        "fall_return": false,
+        "relay_rebuild": false,
+        "hazard_recovery": false,
+        "hazard_pause": false,
+        "critical_backpressure": false,
+        "empty_socket": false,
+        "remote_nodes": false,
+        "translated_walk": false,
+        "reload_failure": false,
+        "recovery_input_consumed": false,
+        "stale_intent_rejected": false,
+        "live_retry": false,
+        "close_drained": false
+      },
+      "runtime_components": 65,
+      "native_report": {
+        "bytes": 68027,
+        "sha256": "c0481314a64687eb59e858f788570995e4f25582c5d65ab9a53102b784b0ae3a"
+      }
+    },
+    {
+      "stage": "reload",
+      "process": {
+        "pid": 8508,
+        "created": 1794401751.690062,
+        "retained_exact_handle": true,
+        "terminal": true,
+        "exit_code": 0
+      },
+      "metrics": {
+        "debug_layer": true,
+        "debug_errors": 0,
+        "debug_warnings": 0,
+        "nonbackground_pixels": 1016027,
+        "hud_readback": true,
+        "hud_fits": true,
+        "hud_capture": true,
+        "hud_height": 411,
+        "hud_needed_height": 407,
+        "walking_ticks": 0,
+        "active_tick": 0,
+        "reload": true,
+        "repair_route": false,
+        "bypass_route": false,
+        "door_cycle": false,
+        "help": false,
+        "decline": false,
+        "depart_return": false,
+        "feed_loss": false,
+        "fall_return": false,
+        "relay_rebuild": false,
+        "hazard_recovery": false,
+        "hazard_pause": false,
+        "critical_backpressure": false,
+        "empty_socket": false,
+        "remote_nodes": false,
+        "translated_walk": false,
+        "reload_failure": false,
+        "recovery_input_consumed": false,
+        "stale_intent_rejected": false,
+        "live_retry": false,
+        "close_drained": false
+      },
+      "runtime_components": 65,
+      "native_report": {
+        "bytes": 68006,
+        "sha256": "ca786dbb4d6d831ab8fdb48c8241f9c4c8704d28fc39339204fd891251276da1"
+      }
+    }
+  ],
+  "failed_small_window": {
+    "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Player_LH_20261111_v01",
+    "resolution": [
+      960,
+      640
+    ],
+    "hud_needed": 629,
+    "hud_available": 616,
+    "native_exit_code": 0,
+    "acceptance_passed": false,
+    "repair_remains_open": true
+  },
+  "scope": "Controlled hidden native seed/reload; not persistent saved-play, ordinary play, performance, installed or release qualification",
+  "next": "Repair small-window HUD using retained actual long chapter text; qualify new candidate independently. Then Nsight/ordinary performance and retained browser, creative, installed/default-launcher and release gates. Long stop-marker paths remain unqualified.",
+  "persistent_saved_play": {
+    "status": "PASS_ACTUAL_CURRENT_SAVED_PLAYER_LIFECYCLE",
+    "run_root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Saved_Player_LH_20261111_v03",
+    "worker_exit": 0,
+    "host": {
+      "pid": 36476,
+      "birth": 1794402390.7279432,
+      "executable": "D:\\AI-BS-Game-Resources\\P110\\SDK174Recovery\\sdk-preview-release\\bin\\aibs_content_host.exe",
+      "exact_handle_retained": true,
+      "terminal": true,
+      "exit_code": 0
+    },
+    "invocations": [
+      {
+        "session": "43818cb0-a24a-44e5-854a-c77f557b15bc",
+        "timeline": "25467c97-6edf-492e-b820-05d162791f10",
+        "terminal": {
+          "pid": 35716,
+          "birth": 1794402391.8386643,
+          "executable": "C:\\AI-BS\\t\\hudvis_build01\\frozen_v02\\aibs_motherboard.exe",
+          "exact_handle_retained": true,
+          "terminal": true,
+          "exit_code": 0
+        },
+        "result": {
+          "graceful": true,
+          "saved": true,
+          "forced": false,
+          "reason": "Saved chapter closed; committed progress is retained.",
+          "content_fingerprint": "03d41a2bc1e400d9bf507613b11398c95ee7c84246deef2a2ee967188c2baf20",
+          "play_session": "43818cb0-a24a-44e5-854a-c77f557b15bc",
+          "project_id": "prop01-native-acceptance",
+          "branch_id": "independent-prop01-v1",
+          "world_id": "7c66f912-2990-4ebf-aeba-25365efe8481",
+          "timeline_id": "25467c97-6edf-492e-b820-05d162791f10",
+          "context": "player_world",
+          "ready_seen": true,
+          "durable_revision": 0,
+          "durable_sequence": 0
+        },
+        "reused_slot": false,
+        "reused_publication": false,
+        "ready_head": [
+          0,
+          0
+        ]
+      },
+      {
+        "session": "209cbb17-7db3-48d1-beb1-0d82d90edd57",
+        "timeline": "25467c97-6edf-492e-b820-05d162791f10",
+        "terminal": {
+          "pid": 34920,
+          "birth": 1794402393.432548,
+          "executable": "C:\\AI-BS\\t\\hudvis_build01\\frozen_v02\\aibs_motherboard.exe",
+          "exact_handle_retained": true,
+          "terminal": true,
+          "exit_code": 0
+        },
+        "result": {
+          "graceful": true,
+          "saved": true,
+          "forced": false,
+          "reason": "Saved chapter closed; committed progress is retained.",
+          "content_fingerprint": "03d41a2bc1e400d9bf507613b11398c95ee7c84246deef2a2ee967188c2baf20",
+          "play_session": "209cbb17-7db3-48d1-beb1-0d82d90edd57",
+          "project_id": "prop01-native-acceptance",
+          "branch_id": "independent-prop01-v1",
+          "world_id": "7c66f912-2990-4ebf-aeba-25365efe8481",
+          "timeline_id": "25467c97-6edf-492e-b820-05d162791f10",
+          "context": "player_world",
+          "ready_seen": true,
+          "durable_revision": 0,
+          "durable_sequence": 0
+        },
+        "reused_slot": true,
+        "reused_publication": true,
+        "ready_head": [
+          0,
+          0
+        ]
+      }
+    ],
+    "original_source_unchanged": true,
+    "network_provider_attempts": {
+      "network": 0,
+      "provider": 0
+    },
+    "dependency_count": 1,
+    "published_files": 4,
+    "qualification_notes": {
+      "modified_files": {
+        "native_studio/game_engine/saved_play_storage.py": {
+          "bytes": 27506,
+          "sha256": "653ac5a675792a953329cb4b5ca5766142116a820f46f90ea4c962c7f92c3d6b"
+        },
+        "native_studio/tests/test_saved_play_deep_publication.py": {
+          "bytes": 4206,
+          "sha256": "fdd245df10de02a3635c77eff388755aa8bf716c1bcbabca6041168c21b3ac0f"
+        },
+        "engine/tools/qualify_rtx_saved_player.py": {
+          "bytes": 17745,
+          "sha256": "e1d657b272978eda40dcf463dc8d2da5a5448c57e052c0e38497541fe54794c7"
+        }
+      },
+      "tests": {
+        "deep_publication": {
+          "tests": 1,
+          "status": "PASS",
+          "command": "recovery python -B -m unittest native_studio.tests.test_saved_play_deep_publication -v"
+        },
+        "existing_storage": {
+          "tests": 19,
+          "status": "PASS",
+          "command": "recovery python -B -c [child-only tempfile.tempdir extended-prefix; unittest engine.tests.test_saved_play_storage]"
+        }
+      },
+      "scope_limits": [
+        "Actual saved launch/normalstop/fresh native resume only; no ordinary user input/action durability/performance/release claim",
+        "Source ContentView with explicit current player and AI-disabled adapter; default launcher/installed Studio not qualified",
+        "Long hashed asset publication and recursive staging cleanup at observed fixture depth fixed; saved_play marker I/O remains plain and arbitrary-depth project support is not claimed"
+      ],
+      "stop_marker_characters": [
+        217,
+        217
+      ]
+    },
+    "retained_failures": [
+      "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Saved_Player_LH_20261111_v01",
+      "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Saved_Player_LH_20261111_v02"
+    ]
+  }
+}

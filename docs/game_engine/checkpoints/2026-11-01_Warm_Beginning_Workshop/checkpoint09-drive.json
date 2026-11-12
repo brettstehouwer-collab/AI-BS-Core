@@ -1,0 +1,34 @@
+{
+  "bytes": 15196792,
+  "sha256": "d105a48346651285a78b3c71715a6db1e11cfb45a5602d28c16d33f725e2ce03",
+  "files": 1771,
+  "source_manifest_sha256": "82c81d3f36a13f2f4633ea8e7bd6f75d73ef51884b74e36fcc8702afb19be186",
+  "runtime_source_sha256": "2836721e2710226680be7834c7ce4015cc83a1b5c72e3f1c5da4dced6745abb8",
+  "scope": "Incremental09 complete selected native engine/creator source, SDK examples, pinned cgltf source/license, generated character fixtures, project-owned art masters including capacitor.blend, the game-only architecture addendum, current release metadata and explicitly selected verification evidence. Original family references, credentials and environment files, the cross-project master/business ledgers and private preimages, external dependency/build trees, and retired binary releases are excluded. Checkpoint08, Studio97 and SDK0.10 remain retained. This checkpoint proves only the bounded character pipeline and creator scope recorded by the parent verification report; Adam likeness, optional memory audio and the completed8\u00e2\u20ac\u201c12minute opening are not inferred.",
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-02T06:48:35.560541+00:00",
+  "drive_file_id": "1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL",
+  "drive_url": "https://drive.google.com/file/d/1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL/view?usp=drivesdk",
+  "cached_path": "D:\\AI-BS-Game-Resources\\cache\\d105a48346651285a78b3c71715a6db1e11cfb45a5602d28c16d33f725e2ce03.zip",
+  "remote_full_byte_verification": "Authenticated retrieval full length/SHA matched; downloaded ZIP CRC and exact source-manifest SHA matched",
+  "goal_status": "active; full opening incomplete",
+  "free_bytes": {
+    "C": 77839978496,
+    "D": 180995035136,
+    "E": 146813599744
+  },
+  "monitor_observation": {
+    "status": "passed",
+    "stage": "warm-beginning-character-pipeline-source-sdk-tested",
+    "source_freshness": {
+      "status": "current",
+      "file_count": 352,
+      "method": "Modification-time inventory; deletions and backdated edits require source-manifest verification"
+    },
+    "documentation_freshness": {
+      "status": "changed",
+      "file_count": 269
+    }
+  }
+}

@@ -364,6 +364,7 @@ Workflows for comfy ui/
 !scripts/**
 *Book*
 TheSimpleChef*
+!backend/core/thesimplechef_analytics_daemon.py
 Echoes_Within*
 *Bad Side*
 *Benny*
@@ -396,3 +397,16 @@ AI-BS_Module_Video_Editing/
 *.word
 
 
+
+# Local advisory crypto news evidence; never public web assets
+/trade/market_news/
+
+# Local preservation, candidates and scratch outputs. Selected source/evidence
+# checkpoints are archived explicitly; never mass-stage these runtime roots.
+/backups/
+/t/
+/outputs/
+/work/
+
+# Keep the approved architectural baseline discoverable despite *ledger* above.
+!/AI_BS_MASTER_ARCHITECTURAL_LEDGER.md

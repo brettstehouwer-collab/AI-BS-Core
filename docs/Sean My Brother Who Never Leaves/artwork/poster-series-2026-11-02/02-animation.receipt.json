@@ -1,0 +1,16 @@
+{
+  "id": "02-animation",
+  "mode": "built-in image_gen",
+  "source": "C:\\Users\\footb\\.codex\\generated_images\\01a19b4a-a521-7652-a521-e1e66a785cbd\\exec-53eb846d-3aa9-4805-980c-7acdd2c9a27c.png",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\02-animation.png",
+  "prompt_source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\generation-prompts.json",
+  "prompt_selection": "common + posters[id=02-animation].brief",
+  "reference_count": 3,
+  "quality": {
+    "text": "GO TEAM and READY 2 PWAY? are correct and legible",
+    "identity": "Sean left and Brett right preserve distinct hair, faces and build; actual arm tattoo is stylized",
+    "layout": "Vertical poster with two equally active laughing gamers, pizza, script, audio detail and distant theater",
+    "style": "Highly dimensional cel-shaded animation illustration with textured, near-real faces",
+    "limitations": "Stylized identity and tattoo are approximate artistic interpretations. No material text/layout failure observed."
+  }
+}

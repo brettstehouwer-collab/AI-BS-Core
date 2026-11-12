@@ -1,0 +1,16 @@
+{
+  "checkpoint": "004P",
+  "description": "Prop01 Workshop Layout Integration, Power-Routing Trigger, Player Clearance (1.57m > 0.8m), DX12 Offscreen Render & Sprint 1 DB Optimization",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Prop01_004P_Workshop_Integrated_Checkpoint.zip",
+  "timestamp": "2026-11-06T00:20:00Z",
+  "byte_count": 92999,
+  "sha256": "a545e9e84ad49a00ff6bc17bffa3a339eee528a2b659f58707689b51c6028912",
+  "member_count": 10,
+  "cloud_backup_verified": true,
+  "drive_folder_id": "1Kj8frzZXWJB07LsnBzUaHBtdAn9UJCC3",
+  "drive_file_id": "1k7aAMCYzyLiet8M-nwY0yv9vKdeuAl_c",
+  "speedup_thermal_query": "577.95x",
+  "min_walking_clearance_m": 1.57,
+  "trigger_tripped": true,
+  "goal_complete": false
+}

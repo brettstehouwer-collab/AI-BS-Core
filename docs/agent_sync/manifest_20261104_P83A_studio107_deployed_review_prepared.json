@@ -1,0 +1,35 @@
+{
+  "id": "20261104_P83A_studio107_deployed_review_prepared",
+  "at": "2026-11-04T17:35:03.064501+00:00",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "checkpoint": {
+    "at": "2026-11-04T17:34:44.135957+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\83A_Studio107_Deployment_And_Review.zip",
+    "bytes": 175974,
+    "sha256": "5648c2ba793d80b6514824866dbfe26e568d7c5b0f1ba71cc619ab96ff485e78",
+    "members": 26,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1Q6uFdXnybm68BTjtMJcBee4Jxx-yqZd3",
+    "drive_file_id": "1xRZ0rESWQv4b6klUas086QxWU3G_uZIa",
+    "drive_restore_verified": true
+  },
+  "verified": [
+    "Restart observed and557source/2301package pins revalidated",
+    "Five existing107shortcuts independently read back; localpreimages retained",
+    "20versioned review contracts pass;106entry and pins byte-exact",
+    "107readiness inspection executes no game",
+    "83Arawdownload exact26members CRC/SHA verified"
+  ],
+  "incomplete": [
+    "Naturalistic likeness",
+    "Checked captions",
+    "Actual human8-12minute pacing",
+    "Current1080p60Release performance",
+    "Remaining current-content fall/rebuild acceptance",
+    "Final accepted package and backup"
+  ],
+  "next_step": "Inspect existing current-content regression recipes and prepare bounded fresh107worlds for remaining fall/rebuild/route checks. Human review entry is prepared in P83; do not launch unattended or infer acceptance. Keep source/art and package freshness separate.",
+  "goal_complete": false
+}

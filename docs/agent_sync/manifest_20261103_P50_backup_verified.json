@@ -1,0 +1,41 @@
+{
+  "id": "20261103_P50_backup_verified",
+  "at": "2026-11-03T20:59:52.628292+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_complete": false,
+  "source_geometry_version": "v17 separate study",
+  "deployed": "Studio103 SDK0.16.4 installed model v10 retained",
+  "candidate": "Studio104 SDK0.16.5 not deployed",
+  "verification": "D:\\AI-BS-Game-Resources\\P50\\Adam_v17\\independent-preservation-verification.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\50A_Adam_v17_Face_Study_And_Native_Evidence.zip",
+    "bytes": 13010830,
+    "sha256": "b7fe7f26c27c4ace2d3117771c6d8dedaa8343ac7d04c251628e9839851edfd2",
+    "members": 83,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T20:59:52.628292+00:00",
+    "exact_member_set_verified": true,
+    "all_member_hashes_verified": true,
+    "crc_verified": true,
+    "drive_file_id": "1ripWpvjTPXzLEzEZ0cgG2cfEfm3Exdqc",
+    "drive_parent_id": "1OqG06EXZeGTFo1llfPnvDJoX58Fje8Z1",
+    "preview_file_id": "1zSvpuqsDZkKsqX1Lrea9Yhp-tjJ-oKxd",
+    "scope": "Private unapproved face study; family originals and user saves excluded; installed model unchanged"
+  },
+  "owned_processes": "All P50 Blender/cooker/hidden native jobs joined",
+  "remaining": [
+    "packaged104 bypass and restart recheck after prior focus failure",
+    "combined gameplay performance and human8-12minute pacing",
+    "naturalistic Adam likeness and personal approval",
+    "caption listening review",
+    "final packaged acceptance and verified final backup"
+  ],
+  "next_step": "Continue likeness improvements or packaged bypass when the user-owned game is no longer active; never force focus or change current user save.",
+  "storage_free_gib": {
+    "C": 59.96,
+    "D": 59.06,
+    "E": 136.73
+  }
+}

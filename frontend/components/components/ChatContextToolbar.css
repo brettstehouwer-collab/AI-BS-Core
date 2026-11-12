@@ -34,3 +34,31 @@
   width: 16px;
   height: 16px;
 }
+
+/* Labeled composer actions remain reachable on phones and desktop. */
+.chat-context-toolbar { flex-wrap:wrap; gap:6px; }
+.chat-context-toolbar .context-btn { gap:6px; min-height:36px; padding:6px 10px; font-size:12px; }
+.chat-context-toolbar .context-btn:focus-visible { outline:2px solid #7dd3fc; outline-offset:2px; }
+.chat-workspace-backdrop { position:fixed;inset:0;z-index:1500;background:#0008;display:flex;justify-content:flex-end; }
+.chat-workspace-drawer { width:min(520px,100%);max-width:100%;height:100%;height:100dvh;box-sizing:border-box;overflow:auto;background:#111827;color:#e5e7eb;padding:20px;padding-bottom:max(20px,env(safe-area-inset-bottom));box-shadow:-6px 0 24px #0008; }
+.chat-workspace-drawer header {display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.chat-workspace-drawer h2 {font-size:20px;margin:0 0 12px;}
+.chat-workspace-drawer label {display:flex;flex-direction:column;gap:6px;margin:12px 0;}
+.chat-workspace-drawer input,.chat-workspace-drawer select,.chat-workspace-drawer textarea {width:100%;box-sizing:border-box;background:#030712;color:#f3f4f6;border:1px solid #4b5563;border-radius:6px;padding:10px;font:inherit;font-size:16px;}
+.chat-workspace-drawer button {min-height:40px;background:#1e3a5f;color:#e0f2fe;border:1px solid #3b82f6;border-radius:6px;padding:8px 12px;cursor:pointer;}
+.chat-workspace-drawer button:disabled {opacity:.5;cursor:default;}
+.chat-workspace-drawer p {font-size:14px;line-height:1.5;}
+.chat-workspace-drawer ul {list-style:none;padding:0;}
+.chat-workspace-drawer li {border-top:1px solid #374151;padding:12px 0;overflow-wrap:anywhere;}
+.chat-workspace-drawer small {display:block;margin:6px 0;}
+.chat-workspace-drawer li div {display:flex;flex-wrap:wrap;gap:8px;}
+@media(max-width:600px){.chat-context-toolbar .context-btn{min-height:44px;}.chat-workspace-drawer button{min-height:44px;}}
+
+/* Reuse the artifact hub as a side drawer without changing its data authority. */
+.chat-artifacts-backdrop {justify-content:flex-end!important;padding:0!important;}
+.chat-artifacts-drawer {width:min(100%,1000px)!important;height:100dvh!important;border-radius:0!important;}
+@media(max-width:600px){.chat-artifacts-drawer>div:first-child {padding:12px!important;gap:8px;flex-wrap:wrap;}.chat-artifacts-drawer h2{font-size:16px!important;}.chat-artifacts-drawer button{min-height:44px;}.chat-artifacts-drawer>div{max-width:100%;box-sizing:border-box;}}
+
+.chat-artifacts-content {min-height:0;min-width:0;}
+.chat-artifacts-content>div {min-width:0;}
+@media(max-width:600px){.chat-artifacts-content {grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(100px,30%) minmax(0,1fr);}.chat-artifacts-content>div:first-child {border-bottom:1px solid #374151;}.chat-artifacts-content pre {overflow-wrap:anywhere;}}

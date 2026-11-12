@@ -1,0 +1,38 @@
+{
+  "id": "analytics_vision_native_recovery_20261110",
+  "utc": "2026-11-10T19:04:08.866545+00:00",
+  "qualification": "Scoped runtime repairs and ordinary saved6 recovery verified; full-game/capture goals incomplete",
+  "goal_complete": false,
+  "source_pins": [
+    {
+      "path": ".gitignore",
+      "sha256": "cf68ce2e4c5304b8ce9f41e886b0b159119fcf2a1ab3fb022b7f8388e5cf58de"
+    },
+    {
+      "path": "backend/core/thesimplechef_analytics_daemon.py",
+      "sha256": "9d595b876b01cc8c6b5181e6d913eefc3a97db65ece6173e8ac37f29b742759d"
+    },
+    {
+      "path": "backend/modules/vision_matting.py",
+      "sha256": "686418b901c775a19239bc8a07ffe892fab505a4382bf28cfb8cf575f0af5c26"
+    },
+    {
+      "path": "backend/routers/photo_studio.py",
+      "sha256": "90fd00556af4a58464773ecb780c358ad4ddbbe56e87118f51d447213a4fbaa2"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "sha256": "0c0eb6b3da6a148a122b5662ee3d1b683eaebe26109a05ceabf708315c15fdd3"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "sha256": "dfc7d88a2c43ac089cbf8121f7787ffeddd1a239a18113e7fff7a8544ba97de8"
+    },
+    {
+      "path": "engine/out/warm_beginning/monitor_summary.json",
+      "sha256": "3df2fa2c112f818ef66317f73212183884a319a596906c891c0ff35d8384c38c"
+    }
+  ],
+  "evidence": "C:\\AI-BS\\backups\\analytics_vision_recovery_20261110\\recovery-summary.json",
+  "next": "Short complete repair/Continue/ordinary capture check; separate performance and human gates. Revision6 recovery verified; all owned games stopped."
+}

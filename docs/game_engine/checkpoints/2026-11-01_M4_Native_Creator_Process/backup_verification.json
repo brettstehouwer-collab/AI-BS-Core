@@ -1,0 +1,162 @@
+{
+  "status": "verified local archive integrity and cloud metadata",
+  "archive_bytes": 3177977,
+  "archive_sha256": "cc5e152e219278c0cbe238c773bca8ecf5406ded87afab2736cc9112ae7dd243",
+  "selected_source_files": 379,
+  "source_manifest_checksum": "00e30ef9f854ab78bb28f134ad933046c24f73cf9dbb65f57de91749c6c3befe",
+  "local_crc": "passed",
+  "captured_file_byte_readback": "passed",
+  "cloud_exact_archive_size_and_parent": "passed",
+  "remote_cryptographic_checksum": "Not exposed; not compared",
+  "google_drive_remaining_quota": "Not exposed",
+  "goal_status": "active",
+  "cloud_files": [
+    {
+      "key": "archive",
+      "id": "1oXPCk2HePy2cZudCBu2b82D0UtbUDJmH",
+      "title": "AI_BS_M4_Native_Creator_Process_Source.zip",
+      "mime_type": null,
+      "size": "3177977",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "manifest",
+      "id": "15QeJDXWliIEkI4fDX4Uix3kTBm-PexaP",
+      "title": "source_manifest.json",
+      "mime_type": null,
+      "size": "69186",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "checkpoint",
+      "id": "1HO1VZ42PbvOS7g_VRiu5L5FWnAEr1o_v",
+      "title": "checkpoint.json",
+      "mime_type": null,
+      "size": "2711",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "readme",
+      "id": "1wNLqNoWZyt6dSKHE2BjSpxu_0cQgTCi_",
+      "title": "README.md",
+      "mime_type": null,
+      "size": "1204",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "resume",
+      "id": "1CarOFQShJHBMizc24qBNR2cXc4gHLT9K",
+      "title": "RESUME_NOTES.md",
+      "mime_type": null,
+      "size": "3494",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "delivery",
+      "id": "1prh8nvQUENXSmluJI2jxYYKMXB__rwRH",
+      "title": "archive_delivery.json",
+      "mime_type": null,
+      "size": "611",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "key": "protocol",
+      "id": "18V1R6Ti16lyLZoJ7fkvp4nq5ldZrQk4m",
+      "title": "CREATOR_PROTOCOL.md",
+      "mime_type": null,
+      "size": "8717",
+      "url": null,
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  ],
+  "post_archive_annotations": [
+    "ledger cloud delivery paragraph",
+    "BUILD_STATUS cloud delivery paragraph",
+    "checkpoint INDEX archive link",
+    "drive_destination IDs",
+    "milestone queue backup status"
+  ]
+}

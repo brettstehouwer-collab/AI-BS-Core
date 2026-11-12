@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-03T17:53:45.465793+00:00",
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\41A_Studio103_SDK0164_Software_Source_And_Verification.zip",
+  "bytes": 3100421,
+  "sha256": "19f364626893d8c5dc0b9af885e60cb1437611c42d61da8e810c4b23ec1bb8b0",
+  "members": 675,
+  "source_files": 496,
+  "goal_complete": false,
+  "scope": "Software source and evidence; binaries/family originals/user saves/art masters excluded",
+  "drive_file_id": "1fVbLUCN8vdntuKhn5A8qa9B7_30Nv7GJ",
+  "drive_folder_id": "1RkITbJ7kkMFUf9EANFXsA9hm3euu-FWg",
+  "drive_url": "https://drive.google.com/file/d/1fVbLUCN8vdntuKhn5A8qa9B7_30Nv7GJ/view?usp=drivesdk",
+  "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\19f364626893d8c5dc0b9af885e60cb1437611c42d61da8e810c4b23ec1bb8b0.zip",
+  "binary_cloud_restoration_verified": false
+}

@@ -1,0 +1,17 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_native95_creator\\AI_BS_Native95_Creator_Source.zip",
+  "bytes": 20284769,
+  "sha256": "e2593f376a379a77034f38181a4fa8ebc602bbd8f3c12066d5869aa5be0b6d0a",
+  "files": 1569,
+  "raw_selected_bytes": 634201800,
+  "changed_files": 98,
+  "crc": "passed",
+  "per_file_sha256_current_bytes": "passed",
+  "utc": "2026-11-01T23:15:59.238055+00:00",
+  "free_bytes": {
+    "C": 115676532736,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

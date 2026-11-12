@@ -1,0 +1,13 @@
+# AI-BS recovery save — 2026-11-11T08:04:26.903774+00:00
+
+Goal ACTIVE / INCOMPLETE. Canonical C:\AI-BS, branch codex/audit-v532976-20261031, commit 55c99f116e2c05025dd03e4b5e8a8f53b93cced7; unrelated dirty work retained.
+
+The user reinstalled Windows after a crash and supplied the BS game archive, Engineering Ledger and My Drive to recover the full prior work picture. Preserve current source and original data. Nested game checkpoints include newer Prop01/110P pointers than the stale Studio97 root index. The bounded reconciliation receipt records actual reads; no archive contents or complete Drive history were reviewed. Additional AI-BS Engineering, PC Backup C Drive, Sourcecode Files and Master AI-BS folders were found by root metadata only and remain unread.
+
+Current source save:63 complete selected source files. Explicit recovery-root fix passes6 checks; Windows token-profile helper passes15 checks and review but is not integrated. Two actual synthetic rich-editor edit/save/close phases passed with four source artifacts unchanged and exit0. Full fresh reopen/export failed twice; latest redemption200/read403 cause remains unproven. Failed-child fixture termination and unavailable final exit/job-drain evidence remain explicit. No further run this phase. Browser-control startup also failed; no UI action completed.
+
+No production native controller/candidate activated, backend restarted, model called, original manuscript/save overwritten or old source restored. Installed107 and all declined human/release gates remain retained. Earlier passing source/build/Drive evidence remains dated, with no full release claim.
+
+Engineering Ledger now permits anyone-with-link reading. Its earlier owner-only receipt is historical. Existing sharing was preserved; this save targets the freshly verified owner-only My Drive folder: https://drive.google.com/drive/folders/1qfPSt1VP0T7RAt5t8FsdWD7LBEcAjn-3. Credentials/profiles, saved databases/games, manuscripts/original media, private history/ledgers and installed distributions are excluded. This is a scoped overlay requiring a complete preserved base.
+
+Next: Reconstruct the full pre-crash ten-goal work map from the supplied Drive folders and surviving local ledgers, recording exact read scope and gaps. Read the new game-reconciliation receipt: nested Prop01/110P pointers are newer than the stale Studio97 index, but ZIP contents are unreviewed. Preserve all current source/saves; do not restore old files over current work. Native owned workflow remains halted after two failures: classify fresh read403 with attributable evidence before a later bounded attempt. The Windows profile helper is tested but not integrated into default recovery or a production candidate.

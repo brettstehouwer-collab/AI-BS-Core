@@ -27,21 +27,18 @@ from typing import Dict, List, Any, Optional, Set
 
 logger = logging.getLogger("ai_bs.network_telemetry")
 
-# Optional Scapy/Npcap bindings with non-blocking fallback
-try:
-    from scapy.all import IP, TCP, UDP, AsyncSniffer, Ether, Raw, conf
-    conf.use_pcap = True
-    NPCAP_AVAILABLE = bool(getattr(conf, "use_pcap", False))
-except (ImportError, Exception):
-    NPCAP_AVAILABLE = False
+# Importing the ASGI logger must not initialize hardware capture bindings.
+# These are loaded only during an explicit hardware availability query.
+NPCAP_AVAILABLE = False
+IP = TCP = UDP = AsyncSniffer = Ether = Raw = conf = None
 
 
 def is_npcap_available() -> bool:
-    global NPCAP_AVAILABLE
+    global NPCAP_AVAILABLE, IP, TCP, UDP, AsyncSniffer, Ether, Raw, conf
     if NPCAP_AVAILABLE:
         return True
     try:
-        from scapy.all import conf
+        from scapy.all import IP, TCP, UDP, AsyncSniffer, Ether, Raw, conf
         conf.use_pcap = True
         NPCAP_AVAILABLE = bool(getattr(conf, "use_pcap", False))
         return NPCAP_AVAILABLE
@@ -105,11 +102,56 @@ SENSITIVE_HEADERS: Set[str] = {
     "cookie",
     "set-cookie",
     "x-api-key",
+    "x-admin-key",
+    "x-local-token",
     "api-key",
     "password",
     "token",
     "secret"
 }
+
+# Header values are diagnostic metadata, never an authentication archive. Unknown
+# headers are redacted too, including differently punctuated credential names.
+SAFE_TELEMETRY_HEADERS: Set[str] = {
+    "accept", "acceptencoding", "acceptlanguage", "connection", "contentencoding",
+    "contentlength", "contenttype", "host", "origin", "useragent", "xclientid",
+    "xforwardedhost", "secfetchdest", "secfetchmode", "secfetchsite", "secfetchuser",
+}
+
+
+def sanitize_telemetry_headers(headers: Any) -> Dict[str, Any]:
+    """Return a detached allowlisted view; never retain credential header values."""
+    if not isinstance(headers, dict):
+        return {}
+    safe = {}
+    for name, value in headers.items():
+        normalized = "".join(c for c in str(name).casefold() if c.isalnum())
+        safe[name] = value if normalized in SAFE_TELEMETRY_HEADERS else "[REDACTED]"
+    return safe
+
+
+def sanitize_telemetry_record(value: Any) -> Any:
+    """Copy records for ingestion/readback, including legacy nested correlations.
+
+    This does not adopt caller labels as ownership. Host telemetry is globally
+    scoped administrative data; any old client_id is only an unverified label.
+    """
+    if isinstance(value, dict):
+        result = {}
+        for name, child in value.items():
+            normalized = str(name).casefold().replace("_", "-")
+            if normalized == "headers" or normalized.endswith("-headers"):
+                result[name] = None if child is None else sanitize_telemetry_headers(child)
+            else:
+                result[name] = sanitize_telemetry_record(child)
+        if "client_id" in result:
+            result.setdefault("client_label", result["client_id"])
+            result["client_id"] = None
+            result["client_identity_verified"] = False
+        return result
+    if isinstance(value, (list, tuple)):
+        return [sanitize_telemetry_record(child) for child in value]
+    return value
 
 TRUSTED_DOMAINS: Set[str] = {
     "stehouwer-publishing.com",
@@ -181,7 +223,7 @@ class NetworkTelemetryEngine:
         with self.lock:
             combined = list(self.transaction_buffer) + list(self.frame_buffer)
             combined.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
-            return deque(combined[:self.max_tx_buffer])
+            return deque(sanitize_telemetry_record(combined[:self.max_tx_buffer]))
 
     @property
     def total_requests(self) -> int:
@@ -407,6 +449,7 @@ class NetworkTelemetryEngine:
         Appends an L7 HTTP or WebSocket transaction to the transaction buffer,
         updates application metrics, and establishes formal flow correlation.
         """
+        record = sanitize_telemetry_record(record)
         with self.lock:
             self.transaction_buffer.appendleft(record)
             self.total_transactions += 1
@@ -500,6 +543,7 @@ class NetworkTelemetryEngine:
         Appends an L2/L3 physical wire frame to the frame buffer,
         updates wire metrics, and establishes formal flow correlation.
         """
+        record = sanitize_telemetry_record(record)
         with self.lock:
             self.frame_buffer.appendleft(record)
             self.total_frames += 1
@@ -601,7 +645,7 @@ class NetworkTelemetryEngine:
             tx_records = [tx for tx in self.transaction_buffer if tx.get("id") in tx_ids]
             frame_records = [frm for frm in self.frame_buffer if frm.get("id") in frame_ids]
 
-            return {
+            return sanitize_telemetry_record({
                 "flow_id": target_flow_id,
                 "metadata": fl,
                 "target_transaction": target_tx,
@@ -609,13 +653,13 @@ class NetworkTelemetryEngine:
                 "correlated_frames": frame_records,
                 "total_transactions": len(tx_records),
                 "total_wire_frames": len(frame_records)
-            }
+            })
 
     def _dispatch_to_subscribers(self, record: Dict[str, Any]):
         dead = []
         for q in self.subscribers:
             try:
-                q.put_nowait(record)
+                q.put_nowait(sanitize_telemetry_record(record))
             except Exception:
                 dead.append(q)
         for d in dead:
@@ -803,7 +847,7 @@ class NetworkTelemetryEngine:
                     continue
             results.append(r)
 
-        return results[offset : offset + limit]
+        return sanitize_telemetry_record(results[offset : offset + limit])
 
     def clear(self):
         """
@@ -860,15 +904,13 @@ class NetworkTelemetryMiddleware:
         path = scope.get("path", "/")
         method = scope.get("method", "WS" if protocol == "websocket" else "GET")
 
-        # Extract & sanitize headers
+        # Extract only allowlisted header values before any record is retained.
         raw_headers = scope.get("headers", [])
         headers: Dict[str, str] = {}
         for k, v in raw_headers:
             header_name = k.decode("latin1").lower()
-            if header_name in SENSITIVE_HEADERS:
-                headers[header_name] = "[REDACTED]"
-            else:
-                headers[header_name] = v.decode("latin1", errors="replace")
+            headers[header_name] = v.decode("latin1", errors="replace")
+        headers = sanitize_telemetry_headers(headers)
 
         # Multi-tenant ID extraction
         client_id = headers.get("x-client-id", "stehouwer_publishing")

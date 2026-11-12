@@ -1,0 +1,122 @@
+{
+  "handoff_id": "handoff_20261104T215346Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "timestamp_utc": "2026-11-04T21:53:46.962646+00:00",
+  "outgoing_agent": "Google Antigravity",
+  "receiving_agent": "OpenAI Codex",
+  "synchronization_score": "6/7",
+  "checklist": {
+    "1_git_commit_identity": true,
+    "2_source_file_hashes": true,
+    "3_architecture_ledger": true,
+    "4_dependency_environment": true,
+    "5_acceptance_tests": false,
+    "6_handoff_manifest": true,
+    "7_task_continuity": true
+  },
+  "git": {
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "is_clean": false,
+    "status_summary": "3992 modified/untracked files"
+  },
+  "critical_file_hashes": {
+    "AGENTS.md": "72e761feebe2673dc6cf912cd8b45e24ef27c8b448f0f05f28de26a07ec51bf9",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "da4ae4865cf45ddc24bda3d275af2b0711a4743f77d42fc3f1ee7d576ab8b8ec",
+    "docs/CODEX_HANDOFF.md": "26c98d781c7558da31c3f9d40f9d8d346d6e2122f2013001252f3a47e722fb6f",
+    "docs/CODEX_DECISIONS.md": "3adf4f7fa42cf1a6850128101e2f7eb576aac6199b23c5ec6db0c324360d9c7c",
+    "docs/CODEX_JOURNAL.md": "ba59fb2ca6fe49a05456bbdfe9f29c07e94be44351da3d62d6f141090f720a94",
+    "docs/CODEX_TASKS.md": "dcac3e305a0bfd510dc72232220bf0cff34344cc8b665995f6e5e856be66f773",
+    "docs/memory/Conversation_Learning_and_RAG.md": "7c2425a91c1d9f66c133f44c907a3f961db5eb73e546443e0f37411323b186ab",
+    "backend/AI_BS_Backend.py": "dff360d85bf0b99e0084398b5d244fbdf8ed5a2cb69efe512a93b8d254cf0768",
+    "backend/routers/chat_router.py": "825ea504e83a030892f6ca3523d32f60ce1f136bbd1b29ad6f32ee527f17327d",
+    "backend/core/coding_guest_runner.py": "df591b2b548c143dbefc5812bd860e3f0f610245b2d4c98e840b5250d2069e69",
+    "backend/core/coding_workflow.py": "3967f093238f64b79b4868aa3fe3cf9a9ad308c6ad19511ddfd8cc45791e5e8c",
+    "backend/core/coding_chat.py": "788ed664688d31364fca92d09a9219a4a2d5391038ea4d5da69cd592a75c44da",
+    "backend/core/coding_review.py": "003f220a5fa74346dcd35c3e8851448b953bc0a1cbd39213fde56e6892d42c9f",
+    "backend/core/hybrid_reasoning_engine.py": "5286ea74ca685150142a7b34ae1ad8c15a620a3a037b57d0d333fa7b319c2d4c",
+    "backend/core/optional_web_search.py": "a8b5fdfc7a75bfe6dbac36cb5ea42d9b348d53b5ff98ec91c4ebe11d0b925111",
+    "backend/tools/tool_registry.py": "62539debf29d3bde36919ac0ec406153fd78593cfd9ad7593e2364a71a7558ec",
+    "backend/core/sovereign_reasoning/document_engine.py": "1dd1a27f0300578332bf1f4025f3b6b728c5b2bb30d28923e62cde5baef62b58",
+    "frontend/src/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+    "scripts/verify_and_connect_guest_runner.py": "3ad26fe1d993c4b3fd7fe6b53bfa0996a23eb2aa73b25ba8abf8a4b3032ab0d8",
+    "scripts/tests/test_coding_guest_runner.py": "344c10872b75fbcbb57dcd931182e26d9c52df14348897ecddce86f09934f657",
+    "scripts/agent_sync/sync_gateway.py": "329575e0d30483dc3e3cf74b44f356b3141ae3182deda6be1f2ac71dd90eb521"
+  },
+  "mirror_parity": {
+    "ChatTab.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/ChatTab.jsx": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0",
+        "frontend/components/ChatTab.jsx": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0",
+        "frontend/src/components/components/ChatTab.jsx": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0",
+        "frontend/components/components/ChatTab.jsx": "3d322516f3827f81e92badcf4d8069c1856c076619818d6f865815e5bfcc14e0"
+      }
+    },
+    "MobileStehouwerChat.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/MobileStehouwerChat.jsx": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec",
+        "frontend/components/MobileStehouwerChat.jsx": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec",
+        "frontend/src/components/components/MobileStehouwerChat.jsx": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec",
+        "frontend/components/components/MobileStehouwerChat.jsx": "269e8a2b4f85da58809bb1a4743ec0f29e76880c6541a0cb2c63c7cf0c6ef3ec"
+      }
+    },
+    "CodingTaskReviewCard.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/src/components/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/components/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922"
+      }
+    }
+  },
+  "acceptance_tests": {
+    "schema": "aibs.observable_test_evidence.v1",
+    "scope": "configured_unittest_suite_only",
+    "command": [
+      "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "scripts.tests.test_coding_guest_runner",
+      "scripts.tests.test_chat_attachment_upload",
+      "scripts.tests.test_router_mount_integrity",
+      "scripts.tests.test_audio_router_trace"
+    ],
+    "returncode": 1,
+    "elapsed_seconds": 11.61,
+    "status": "failed",
+    "passed": false,
+    "counts": {
+      "run": 47,
+      "confirmed_passed": null,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0
+    },
+    "stdout": "",
+    "stderr": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n  from starlette.testclient import TestClient as TestClient  # noqa\n.............................F.....F.......C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\threading.py:277: ResourceWarning: unclosed file <_io.FileIO name='C:\\\\Users\\\\footb\\\\AppData\\\\Local\\\\Temp\\\\tmp258exlxk\\\\synthetic_test.wav' mode='rb' closefd=True>\n  def __init__(self, lock=None):\nResourceWarning: Enable tracemalloc to get the object allocation traceback\n....\n======================================================================\nFAIL: test_chef_orders_router_orders_endpoint (scripts.tests.test_router_mount_integrity.RouterOfflineRequestTests.test_chef_orders_router_orders_endpoint)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\AI-BS\\scripts\\tests\\test_router_mount_integrity.py\", line 244, in test_chef_orders_router_orders_endpoint\n    self.assertEqual(resp.status_code, 200)\nAssertionError: 403 != 200\n\n======================================================================\nFAIL: test_double_mount_reproduces_duplicate_warnings (scripts.tests.test_router_mount_integrity.RouterOpenAPIDuplicateTests.test_double_mount_reproduces_duplicate_warnings)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\AI-BS\\scripts\\tests\\test_router_mount_integrity.py\", line 204, in test_double_mount_reproduces_duplicate_warnings\n    self.assertEqual(\nAssertionError: 84 != 81 : Expected 81 duplicate operation ID warnings on rec_debut_router double mount, got 84\n\n----------------------------------------------------------------------\nRan 47 tests in 10.954s\n\nFAILED (failures=2)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "6a445a2d80a8be00d0fd83348567bff97a4389d7e92d8e0817331f150fd30427",
+    "error": null
+  },
+  "model_quality_evaluation": {
+    "status": "not_run",
+    "affects_acceptance": false,
+    "rubric_id": null,
+    "evaluator_id": null,
+    "scores": []
+  },
+  "tasks_completed": [
+    "With explicit user approval in Antigravity IDE, unregistered and removed the two powered-off VirtualBox VM guest folders: C:\\AI-BS\\isolated_workers\\windows\\runtime\\base_preparation_v2\\vms\\AI-BS-Eval-Base-20261023 (96,550,446,942 logical bytes / 89.92 GiB on C:) and E:\\AI-BS-DisposableProbe-v1 (68,726,302,806 logical bytes / 64.01 GiB on E:).",
+    "Clarification for Codex: When the user typed anytgravity ide in answer to What did you remove or move?, they meant they used Antigravity IDE to remove the two VirtualBox VM folders \u2014 Antigravity IDE itself was NOT removed.",
+    "Preserved VirtualBox app, Windows Enterprise Evaluation ISO on E:\\Downloads_Backup, all Phase 4 control scripts/media/docs, all 198 E: Muse audio files, and backed up pre-removal .vbox configs/logs/inventory in C:\\AI-BS\\backups\\vm_decommission_20261104\\vm_decommission_manifest.json.",
+    "Scheduled November 11, 2026 (10:00 AM) continuation reminder in C:\\AI-BS\\database\\calendar.db (appointment_id=5, task_id=21)."
+  ],
+  "next_step": "Codex reconciles the 89.92 GiB C: and 64.01 GiB E: VM removal receipt (manifest_20261104_antigravity_vm_decommission.json) separately from its cleanup accounting and continues the encrypted E: Muse audio and C: backup workflow."
+}

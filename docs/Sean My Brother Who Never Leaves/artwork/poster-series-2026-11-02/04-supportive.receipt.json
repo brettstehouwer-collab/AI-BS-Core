@@ -1,0 +1,21 @@
+{
+  "id": "04-supportive",
+  "source": "C:\\Users\\footb\\.codex\\generated_images\\01a19b4a-b5a3-7d12-9526-759110caf3ed\\exec-f1a5532f-8a62-4c96-985d-612430dd1ee8.png",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\04-supportive.png",
+  "tool": "built-in image_gen",
+  "prompt_source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\generation-prompts.json",
+  "prompt_fields": [
+    "common",
+    "posters[id=04-supportive].brief"
+  ],
+  "transparent_background": false,
+  "qa": {
+    "status": "accepted",
+    "identity": "Sean on left with voluminous dark hair, stubble, referenced watch and tattoo; Brett on right with shorter lighter hair and distinct clean-shaven facial structure. Recognizable illustrated likenesses preserved.",
+    "composition": "Reciprocal script and technical/music notebook exchange at rehearsal table; rain and equal warm light; two men only.",
+    "wording": "Both requested texts accurate and legible: YOU GOT THIS, BROTHER / ONE STEP. THEN THE NEXT.",
+    "medium": "Gouache and colored-pencil style with textured paper; natural hands and warm half-smiles.",
+    "limitations": "Imaginative illustration, not a verified event; script marks are intentionally unreadable."
+  },
+  "generated_at_utc": "2026-11-02T08:47:50.3276485Z"
+}

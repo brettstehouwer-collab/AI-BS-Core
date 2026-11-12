@@ -1,0 +1,207 @@
+{
+  "folder": {
+    "success": true,
+    "id": "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31",
+    "url": "https://drive.google.com/drive/folders/16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31",
+    "title": "2026-11-01_M5_Local_AI_Authoring",
+    "parent_id": "1KOSg1J46caKoLSuKkvFQp1wGfwmt99Fz"
+  },
+  "completed_at": "2026-11-01T22:46:22.206Z",
+  "files": [
+    {
+      "file_uri": "C:/AI-BS/backups/checkpoint_20261101_local_ai_authoring/AI_BS_M5_Local_AI_Authoring_Source.zip",
+      "metadata": {
+        "id": "1rkPfWjIMoRdG-iUx1tTj9ZHoRWY-dnBA",
+        "title": "AI_BS_M5_Local_AI_Authoring_Source.zip",
+        "mime_type": null,
+        "size": "14837738",
+        "url": "https://drive.google.com/file/d/1rkPfWjIMoRdG-iUx1tTj9ZHoRWY-dnBA/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1rkPfWjIMoRdG-iUx1tTj9ZHoRWY-dnBA/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "79b4c991776c91ec9edf649a96f38f952f5e848c2ffdef246973038d6d75a67b"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Local_AI_Authoring/README.md",
+      "metadata": {
+        "id": "1w4MtsHs-e5fPUuQ8DACh-YM5kpwuMWow",
+        "title": "README.md",
+        "mime_type": null,
+        "size": "1713",
+        "url": "https://drive.google.com/file/d/1w4MtsHs-e5fPUuQ8DACh-YM5kpwuMWow/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1w4MtsHs-e5fPUuQ8DACh-YM5kpwuMWow/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "d0c971c72a91b431dca43b30f070849e3684ead6818d045fe83ca5ac9520fe90"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Local_AI_Authoring/source_manifest.json",
+      "metadata": {
+        "id": "1JTGFbQt6cFrSmlcQE6jhA0_7DNB8YJaM",
+        "title": "source_manifest.json",
+        "mime_type": null,
+        "size": "318892",
+        "url": "https://drive.google.com/file/d/1JTGFbQt6cFrSmlcQE6jhA0_7DNB8YJaM/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1JTGFbQt6cFrSmlcQE6jhA0_7DNB8YJaM/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "cd6583e4928ba71744d37706cb6b7fa9e495c3b1a74f329bb17b7a79dbd30b6d"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Local_AI_Authoring/delivery.json",
+      "metadata": {
+        "id": "1D_a2o2cNa62fvuEvPKKcJH7CZ72sJrGd",
+        "title": "delivery.json",
+        "mime_type": null,
+        "size": "481",
+        "url": "https://drive.google.com/file/d/1D_a2o2cNa62fvuEvPKKcJH7CZ72sJrGd/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1D_a2o2cNa62fvuEvPKKcJH7CZ72sJrGd/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "f17a32ef821ef9ff0a6b94f81ad64395cbd59ae16b5cf305af129c6fa4023eed"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/out/ai_authoring_verification.json",
+      "metadata": {
+        "id": "1OCikzmb60Sf8HHrnBQUf0w1mKAc4o-Oj",
+        "title": "ai_authoring_verification.json",
+        "mime_type": null,
+        "size": "3249",
+        "url": "https://drive.google.com/file/d/1OCikzmb60Sf8HHrnBQUf0w1mKAc4o-Oj/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1OCikzmb60Sf8HHrnBQUf0w1mKAc4o-Oj/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "9714701c1e3289e59ab4ecdb23317fe0bad77f759d98e23ddb0326c8f246acce"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/out/ai-authoring-current.png",
+      "metadata": {
+        "id": "1vhlMc_3RE35E8QEgiVx285WA5HyyM1z-",
+        "title": "ai-authoring-current.png",
+        "mime_type": null,
+        "size": "247756",
+        "url": "https://drive.google.com/file/d/1vhlMc_3RE35E8QEgiVx285WA5HyyM1z-/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1vhlMc_3RE35E8QEgiVx285WA5HyyM1z-/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "8bb840841df300b150473f69e004482b7a8776b7b3e09391e72175d70d5b4ee5"
+    },
+    {
+      "file_uri": "C:/AI-BS/engine/AI_AUTHORING.md",
+      "metadata": {
+        "id": "1Pti2YGzaNTWUk1v_OxiUQK923yEzNg5c",
+        "title": "AI_AUTHORING.md",
+        "mime_type": null,
+        "size": "4595",
+        "url": "https://drive.google.com/file/d/1Pti2YGzaNTWUk1v_OxiUQK923yEzNg5c/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1Pti2YGzaNTWUk1v_OxiUQK923yEzNg5c/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "150e95924390f4cd40abe45284d417a78560c1e1f7d130cb3f02921865e863a6"
+    },
+    {
+      "file_uri": "C:/AI-BS/docs/agent_sync/manifest_m5_local_ai_authoring_20261101.json",
+      "metadata": {
+        "id": "1jJPvKCcFVdgIvrfpY0rpEX19lJwtO2RD",
+        "title": "manifest_m5_local_ai_authoring_20261101.json",
+        "mime_type": null,
+        "size": "326975",
+        "url": "https://drive.google.com/file/d/1jJPvKCcFVdgIvrfpY0rpEX19lJwtO2RD/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1jJPvKCcFVdgIvrfpY0rpEX19lJwtO2RD/view?usp=drivesdk",
+        "file_or_folder": null,
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "16QT1wW9fBBg8iWjsL5ROu78aXRKCsd31"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "local_sha256": "51675949415d12786620e8312413b95ac2108d12efc43551b6b1f59c21ac522c"
+    }
+  ],
+  "independent_source_validation": "VERIFIED1446 selected files:streamed CRC/length/SHA256/current captured bytes/embedded+standalone+aggregate manifest/branch/commit;Qwen14/155tests/bothunchanged8Bfailurespresent",
+  "remote_validation_scope": "Cloud size and parent metadata only; remote cryptographic identity and remaining Drive quota unavailable",
+  "cloud_size_parent": "passed"
+}

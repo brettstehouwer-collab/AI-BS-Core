@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-04T04:27:38.853903+00:00",
+  "status": "SDK0171_STAGING_AND_BACKUP_VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_status_local": "D:\\AI-BS-Game-Resources\\P80\\SDK0171Qualification\\local-worktree-status.txt",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\80A_SDK0171_Qualification.zip",
+    "bytes": 1592350,
+    "sha256": "286b135bc5fb4231dd1f5d7fe77239c6e165911782e25a6ad16d3f7e1dde3540",
+    "members": 567,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T04:27:04.669731+00:00",
+    "drive_folder_id": "1VM3LSuMV4HYODIshsmsDpgbbQkfhPZsY",
+    "drive_file_id": "1YJMQBnXjYaq_j-w3zJUAhwSg23ScoPxW",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "source_manifest": "D:\\AI-BS-Game-Resources\\P80\\SDK0171Qualification\\source-before.json",
+  "source_manifest_sha256": "0e28733e66832e156b7ade0036e39cbc3d0be7793849b96069edc8e6959fb1a1",
+  "source_files": 430,
+  "verification": "D:\\AI-BS-Game-Resources\\P80\\SDK0171Qualification\\verification.json",
+  "owned_jobs_joined": 15,
+  "canonical0171_published": false,
+  "installed106_and_SDK0170_preserved": true,
+  "next_step": "80Abackup verified. Publish0.17.1new prefixes/runtime and retest relocated consumers using prepared P81_publish.py. Then add0171source discovery with frozen/old precedence and qualify next Studio package. Human/art/media/performance/final acceptance remain required.",
+  "goal_complete": false
+}

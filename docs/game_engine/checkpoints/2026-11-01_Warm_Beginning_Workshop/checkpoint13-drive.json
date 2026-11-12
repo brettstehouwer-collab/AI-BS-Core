@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "completed_at": "2026-11-02T07:54:46.456371+00:00",
+  "drive_file_id": "1VzdmGJewPPwG8SzwU2brFksKLxx-VRVI",
+  "drive_url": "https://drive.google.com/file/d/1VzdmGJewPPwG8SzwU2brFksKLxx-VRVI/view?usp=drivesdk",
+  "bytes": 2954470,
+  "sha256": "f4ef67814fe34ebdb81fafa942f7ef6ae5c54c253481ada0e9936cd9d0fd0599",
+  "source_manifest_sha256": "5dcc53cdf369e305978917297eb10b7a4e7c7a2402ee5ff06e2bfb6741259a4a",
+  "files": 167,
+  "remote_full_byte_roundtrip": true,
+  "downloaded_zip_crc_verified": true,
+  "all_manifest_member_hashes_verified": true,
+  "archive_on_D": "D:\\AI-BS-Game-Resources\\Backups\\13_Staged_Memory_Audio_And_Storage_Checkpoint.zip",
+  "bulk_evidence_archive_cloud_backed_up": false,
+  "scope": "Staged source/art/storage index safeguard; not canonical audio integration or opening completion",
+  "free_bytes_now": {
+    "C": 83984625664,
+    "D": 171989917696,
+    "E": 146813599744
+  },
+  "next_large_build_root": "D:/AI-BS-Game-Resources/Builds/WarmBeginningAudio"
+}

@@ -1,0 +1,5 @@
+# AI-BS HUD-fit checkpoint
+
+Responsive HUD candidate4324fca3 passed actual long chapter at640x480,800x600,960x640,1440x900, eight native seed/reload processes and a genuine saved launch/normalstop/freshresume. GPU regression passed6,764,456 checks with zero debug errors/warnings. Layout/restore/lifetime tests passed; cold-resource false-positive diagnostics and prior failed evidence retained. Original creator project unchanged.
+
+Includes158 compiled native source pins/fullselectedsource and exact candidate runtime9file closure. Not installed/default-launcher, ordinary performance/human play or release. Source overlay requires previous130829Z/basechain; authored test asset/saves/captures and failures additionally retained locally in D:\AI-BS-Game-Resources\RTX_Local_Checkpoints\HUD_Fit_20261111T132423Z.zip. Cloud excludes original private stores/manuscripts/media/credentials/profiles/privatehistory and external build/runtime dependencies. Next Nsight and separate ordinary-performance gates; preserve all browser/creative/installed/hosted/release requirements. Allten+six goals remain active/incomplete.

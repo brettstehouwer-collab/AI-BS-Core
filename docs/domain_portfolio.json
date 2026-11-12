@@ -1,0 +1,1813 @@
+{
+  "schema_version": 1,
+  "record": 153,
+  "recorded_date": "2026-10-27",
+  "purpose": "Shared domain planning and provenance register; not runtime configuration",
+  "human_register": "docs/DOMAIN_PORTFOLIO.md",
+  "historical_connection_map": "docs/CREDENTIALS_AND_CONNECTIONS_MAP.md",
+  "source": "Operator-provided current/historical control list, prior partner access report, and bounded read-only local source review",
+  "verification_scope": "Dated public DNS, TLS and root HEAD observations; local provider authentication and metadata only; no ownership, renewal, mail delivery or application acceptance",
+  "control_assertion_scope": "Reported current or historical control; current control remains unverified",
+  "counts": {
+    "reported_custom_domains": 9,
+    "provider_hostnames": 2,
+    "partner_domains": 1
+  },
+  "defaults": {
+    "current_control_verified": false,
+    "registrar": null,
+    "expiration_date": null,
+    "auto_renew": null,
+    "live_health_verified": false,
+    "dns_verified": false,
+    "email_authentication_verified": false,
+    "canonical_selection_verified": false,
+    "activation_authorized_by_register": false,
+    "interpretation": "These defaults remain conservative; per-host latest_observation records measured DNS/TLS/HEAD evidence only, never ownership or full application health"
+  },
+  "entries": [
+    {
+      "hostname": "stehouwerproductions.com",
+      "kind": "custom_domain",
+      "project": "stehouwer_productions",
+      "reported_operator_control": true,
+      "reported_role": "Corporate publishing/production and business email",
+      "proposed_use": "Preserve established business communication identity; verify sending before outreach",
+      "evidence": [
+        {
+          "type": "local_configuration_reference",
+          "reference": "Private local mail configuration; values excluded",
+          "establishes": "Configured email identity only"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "_dmarc.stehouwerproductions.com.",
+                "type": 5,
+                "ttl": 3600,
+                "data": "dmarc.ionos.com."
+              },
+              {
+                "name": "dmarc.ionos.com.",
+                "type": 16,
+                "ttl": 21600,
+                "data": "v=DMARC1; p=none;"
+              }
+            ]
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 1,
+                "ttl": 3570,
+                "data": "74.208.236.96"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 28,
+                "ttl": 3600,
+                "data": "2607:f1c0:100f:f000::200"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns.ui-global-dns.de."
+              },
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns.ui-global-dns.com."
+              },
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns.ui-global-dns.biz."
+              },
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns.ui-global-dns.org."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 15,
+                "ttl": 3600,
+                "data": "10 mx00.ionos.com."
+              },
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 15,
+                "ttl": 3600,
+                "data": "10 mx01.ionos.com."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwerproductions.com.",
+                "type": 16,
+                "ttl": 3600,
+                "data": "v=spf1 include:_spf-us.ionos.com ~all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "error",
+          "error_type": "SSLError"
+        },
+        "https_root_head": {
+          "outcome": "request_error",
+          "hops": [],
+          "error_type": "SSLError"
+        },
+        "tls_followup": {
+          "outcome": "tls_handshake_failed",
+          "error_type": "SSLError",
+          "reason": "TLSV1_ALERT_INTERNAL_ERROR",
+          "followup_utc": "2026-10-27T17:28:56.676005+00:00"
+        },
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      },
+      "mail_connection_observation": {
+        "connection_label": "saved_smtp_1",
+        "checked_utc": "2026-10-27T17:29:29.570857+00:00",
+        "status": "AUTHENTICATED_TLS1.3_NO_MESSAGE_SENT",
+        "sender_approved": false,
+        "dkim_alignment_verified": false,
+        "delivery_verified": false
+      }
+    },
+    {
+      "hostname": "stehouwer-publishing.com",
+      "kind": "custom_domain",
+      "project": "stehouwer_publishing",
+      "reported_operator_control": true,
+      "reported_role": "Publishing business/holding domain",
+      "proposed_use": "Candidate canonical publishing site; selection pending verification of both spellings",
+      "evidence": [
+        {
+          "type": "local_source_reference",
+          "reference": "backend/AI_BS_Backend.py:1880",
+          "establishes": "CORS configuration only"
+        },
+        {
+          "type": "historical_documentation",
+          "reference": "docs/CREDENTIALS_AND_CONNECTIONS_MAP.md:37",
+          "establishes": "Documented ingress only"
+        }
+      ],
+      "aliases": [
+        {
+          "hostname": "www.stehouwer-publishing.com",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "www.stehouwer-publishing.com.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "172.67.180.43"
+                  },
+                  {
+                    "name": "www.stehouwer-publishing.com.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "104.21.51.119"
+                  }
+                ]
+              },
+              "AAAA": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "www.stehouwer-publishing.com.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3030::ac43:b42b"
+                  },
+                  {
+                    "name": "www.stehouwer-publishing.com.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3036::6815:3377"
+                  }
+                ]
+              },
+              "CNAME": {
+                "outcome": "NOERROR",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "validated",
+              "version": "TLSv1.3",
+              "not_before": "Sep 22 06:20:35 2026 GMT",
+              "not_after": "Dec 21 07:19:22 2026 GMT",
+              "hostname_checked": true,
+              "ca_checked": true
+            },
+            "https_root_head": {
+              "outcome": "http_response",
+              "hops": [
+                {
+                  "url": "https://www.stehouwer-publishing.com/",
+                  "status": 200,
+                  "content_type": "text/html",
+                  "server": "cloudflare"
+                }
+              ],
+              "final_status": 200,
+              "final_url": "https://www.stehouwer-publishing.com/"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        }
+      ],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "_dmarc.stehouwer-publishing.com.",
+                "type": 16,
+                "ttl": 300,
+                "data": "v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:[redacted-report-address]"
+              }
+            ]
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 1,
+                "ttl": 300,
+                "data": "104.21.51.119"
+              },
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 1,
+                "ttl": 300,
+                "data": "172.67.180.43"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3036::6815:3377"
+              },
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3030::ac43:b42b"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "howard.ns.cloudflare.com."
+              },
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "mckinley.ns.cloudflare.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 15,
+                "ttl": 300,
+                "data": "61 route2.mx.cloudflare.net."
+              },
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 15,
+                "ttl": 300,
+                "data": "82 route3.mx.cloudflare.net."
+              },
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 15,
+                "ttl": 300,
+                "data": "71 route1.mx.cloudflare.net."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "stehouwer-publishing.com.",
+                "type": 16,
+                "ttl": 270,
+                "data": "v=spf1 include:_spf.mx.cloudflare.net ~all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Sep 22 06:20:35 2026 GMT",
+          "not_after": "Dec 21 07:19:22 2026 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://stehouwer-publishing.com/",
+              "status": 200,
+              "content_type": "text/html",
+              "server": "cloudflare"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://stehouwer-publishing.com/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "stehouwerpublishing.com",
+      "kind": "custom_domain",
+      "project": "stehouwer_publishing",
+      "reported_operator_control": true,
+      "reported_role": "Alternate publishing spelling",
+      "proposed_use": "Preserve separately until canonical website and mailbox behavior are verified",
+      "evidence": [
+        {
+          "type": "historical_documentation",
+          "reference": "docs/CREDENTIALS_AND_CONNECTIONS_MAP.md:39",
+          "establishes": "Documented ingress only"
+        },
+        {
+          "type": "local_source_reference",
+          "reference": "backend/routers/email_client_router.py:316",
+          "establishes": "Legacy mailbox normalization only"
+        }
+      ],
+      "aliases": [
+        {
+          "hostname": "www.stehouwerpublishing.com",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NXDOMAIN",
+                "answers": []
+              },
+              "AAAA": {
+                "outcome": "NXDOMAIN",
+                "answers": []
+              },
+              "CNAME": {
+                "outcome": "NXDOMAIN",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "error",
+              "error_type": "gaierror"
+            },
+            "https_root_head": {
+              "outcome": "request_error",
+              "hops": [],
+              "error_type": "ConnectionError"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        }
+      ],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "A": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "AAAA": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "CNAME": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "MX": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "TXT": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "error",
+          "error_type": "gaierror"
+        },
+        "https_root_head": {
+          "outcome": "request_error",
+          "hops": [],
+          "error_type": "ConnectionError"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "brettstehouwer.live",
+      "kind": "custom_domain",
+      "project": "shared_infrastructure",
+      "reported_operator_control": true,
+      "reported_role": "Edge API and tunnel hub",
+      "proposed_use": "Retain historical infrastructure roles; verify exact route and authentication before reuse",
+      "evidence": [
+        {
+          "type": "historical_documentation",
+          "reference": "docs/CREDENTIALS_AND_CONNECTIONS_MAP.md:33",
+          "establishes": "Documented subdomain ingress only"
+        }
+      ],
+      "aliases": [
+        {
+          "hostname": "api.brettstehouwer.live",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "api.brettstehouwer.live.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "172.67.129.140"
+                  },
+                  {
+                    "name": "api.brettstehouwer.live.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "104.21.2.184"
+                  }
+                ]
+              },
+              "AAAA": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "api.brettstehouwer.live.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3035::ac43:818c"
+                  },
+                  {
+                    "name": "api.brettstehouwer.live.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3030::6815:2b8"
+                  }
+                ]
+              },
+              "CNAME": {
+                "outcome": "NOERROR",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "validated",
+              "version": "TLSv1.3",
+              "not_before": "Sep 14 12:48:06 2026 GMT",
+              "not_after": "Dec 13 13:45:35 2026 GMT",
+              "hostname_checked": true,
+              "ca_checked": true
+            },
+            "https_root_head": {
+              "outcome": "http_response",
+              "hops": [
+                {
+                  "url": "https://api.brettstehouwer.live/",
+                  "status": 404,
+                  "content_type": "text/plain; charset=utf-8",
+                  "server": "cloudflare"
+                }
+              ],
+              "final_status": 404,
+              "final_url": "https://api.brettstehouwer.live/"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        },
+        {
+          "hostname": "ai-bs.brettstehouwer.live",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "ai-bs.brettstehouwer.live.",
+                    "type": 1,
+                    "ttl": 270,
+                    "data": "104.21.2.184"
+                  },
+                  {
+                    "name": "ai-bs.brettstehouwer.live.",
+                    "type": 1,
+                    "ttl": 270,
+                    "data": "172.67.129.140"
+                  }
+                ]
+              },
+              "AAAA": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "ai-bs.brettstehouwer.live.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3035::ac43:818c"
+                  },
+                  {
+                    "name": "ai-bs.brettstehouwer.live.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3030::6815:2b8"
+                  }
+                ]
+              },
+              "CNAME": {
+                "outcome": "NOERROR",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "validated",
+              "version": "TLSv1.3",
+              "not_before": "Sep 14 12:48:06 2026 GMT",
+              "not_after": "Dec 13 13:45:35 2026 GMT",
+              "hostname_checked": true,
+              "ca_checked": true
+            },
+            "https_root_head": {
+              "outcome": "http_response",
+              "hops": [
+                {
+                  "url": "https://ai-bs.brettstehouwer.live/",
+                  "status": 530,
+                  "content_type": "text/html; charset=UTF-8",
+                  "server": "cloudflare"
+                }
+              ],
+              "final_status": 530,
+              "final_url": "https://ai-bs.brettstehouwer.live/"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        }
+      ],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "brettstehouwer.live.",
+                "type": 1,
+                "ttl": 300,
+                "data": "172.67.129.140"
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 1,
+                "ttl": 300,
+                "data": "104.21.2.184"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "brettstehouwer.live.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3035::ac43:818c"
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3030::6815:2b8"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "brettstehouwer.live.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "howard.ns.cloudflare.com."
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "mckinley.ns.cloudflare.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "brettstehouwer.live.",
+                "type": 15,
+                "ttl": 300,
+                "data": "20 eforward5.registrar-servers.com."
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 15,
+                "ttl": 300,
+                "data": "15 eforward4.registrar-servers.com."
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 15,
+                "ttl": 300,
+                "data": "10 eforward3.registrar-servers.com."
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 15,
+                "ttl": 300,
+                "data": "10 eforward2.registrar-servers.com."
+              },
+              {
+                "name": "brettstehouwer.live.",
+                "type": 15,
+                "ttl": 300,
+                "data": "10 eforward1.registrar-servers.com."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "brettstehouwer.live.",
+                "type": 16,
+                "ttl": 300,
+                "data": "v=spf1 include:spf.efwd.registrar-servers.com ~all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Sep 14 12:48:06 2026 GMT",
+          "not_after": "Dec 13 13:45:35 2026 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://brettstehouwer.live/",
+              "status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "server": "cloudflare"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://brettstehouwer.live/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "ai-bs-dashboard.web.app",
+      "kind": "provider_hostname",
+      "project": "aibs",
+      "reported_operator_control": true,
+      "reported_role": "AI-BS Firebase Hosting dashboard",
+      "proposed_use": "Retain existing dashboard address of record",
+      "evidence": [
+        {
+          "type": "local_configuration_reference",
+          "reference": "frontend/.firebaserc:3",
+          "establishes": "Selected Firebase project"
+        },
+        {
+          "type": "local_configuration_reference",
+          "reference": "frontend/firebase.json:3",
+          "establishes": "Selected Hosting site"
+        },
+        {
+          "type": "dated_release_record",
+          "reference": "docs/RECDEBUT_INBOX_TIMELINE_2026-10-27.md",
+          "establishes": "Record149 deployment evidence, not a fresh public probe"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "ai-bs-dashboard.web.app.",
+                "type": 1,
+                "ttl": 21600,
+                "data": "199.36.158.100"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "ai-bs-dashboard.web.app.",
+                "type": 28,
+                "ttl": 21600,
+                "data": "2620:0:890::100"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Sep 23 17:59:58 2026 GMT",
+          "not_after": "Dec 22 17:59:57 2026 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://ai-bs-dashboard.web.app/",
+              "status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "server": null
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://ai-bs-dashboard.web.app/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "ai-bs-dashboard.firebaseapp.com",
+      "kind": "provider_hostname",
+      "project": "aibs",
+      "reported_operator_control": true,
+      "reported_role": "Firebase project platform/authentication address",
+      "proposed_use": "Preserve existing authentication callbacks; verify any hosting or redirect use separately",
+      "evidence": [
+        {
+          "type": "local_configuration_reference",
+          "reference": "frontend/src/firebase.js:12",
+          "establishes": "Configured authentication domain only"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "ai-bs-dashboard.firebaseapp.com.",
+                "type": 1,
+                "ttl": 300,
+                "data": "199.36.158.100"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "ai-bs-dashboard.firebaseapp.com.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2620:0:890::100"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Sep 23 18:00:29 2026 GMT",
+          "not_after": "Dec 22 18:00:28 2026 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://ai-bs-dashboard.firebaseapp.com/",
+              "status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "server": null
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://ai-bs-dashboard.firebaseapp.com/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "recdebut-recruit.org",
+      "kind": "custom_domain",
+      "project": "recdebut",
+      "reported_operator_control": true,
+      "reported_role": "Campaign tracking links, redirects and webhook integration",
+      "proposed_use": "Reviewed campaign links and narrowly scoped verified business endpoints; sending remains held",
+      "evidence": [
+        {
+          "type": "local_source_reference",
+          "reference": "backend/routers/rec_debut_router.py:1241",
+          "establishes": "Tracking URL construction only"
+        },
+        {
+          "type": "historical_documentation",
+          "reference": "docs/CREDENTIALS_AND_CONNECTIONS_MAP.md:41",
+          "establishes": "Documented ingress only"
+        }
+      ],
+      "aliases": [
+        {
+          "hostname": "r.recdebut-recruit.org",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "r.recdebut-recruit.org.",
+                    "type": 1,
+                    "ttl": 270,
+                    "data": "172.67.159.140"
+                  },
+                  {
+                    "name": "r.recdebut-recruit.org.",
+                    "type": 1,
+                    "ttl": 270,
+                    "data": "104.21.58.121"
+                  }
+                ]
+              },
+              "AAAA": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "r.recdebut-recruit.org.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3034::6815:3a79"
+                  },
+                  {
+                    "name": "r.recdebut-recruit.org.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3032::ac43:9f8c"
+                  }
+                ]
+              },
+              "CNAME": {
+                "outcome": "NOERROR",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "validated",
+              "version": "TLSv1.3",
+              "not_before": "Oct 20 21:55:47 2026 GMT",
+              "not_after": "Jan 18 21:55:46 2027 GMT",
+              "hostname_checked": true,
+              "ca_checked": true
+            },
+            "https_root_head": {
+              "outcome": "http_response",
+              "hops": [
+                {
+                  "url": "https://r.recdebut-recruit.org/",
+                  "status": 200,
+                  "content_type": "text/html; charset=utf-8",
+                  "server": "cloudflare"
+                }
+              ],
+              "final_status": 200,
+              "final_url": "https://r.recdebut-recruit.org/"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        },
+        {
+          "hostname": "www.recdebut-recruit.org",
+          "status": "measured_dns_tls_head_only_control_unverified",
+          "prior_status_record151": "historically_documented_unverified",
+          "latest_observation": {
+            "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+            "dns": {
+              "A": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "www.recdebut-recruit.org.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "104.21.58.121"
+                  },
+                  {
+                    "name": "www.recdebut-recruit.org.",
+                    "type": 1,
+                    "ttl": 300,
+                    "data": "172.67.159.140"
+                  }
+                ]
+              },
+              "AAAA": {
+                "outcome": "NOERROR",
+                "answers": [
+                  {
+                    "name": "www.recdebut-recruit.org.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3032::ac43:9f8c"
+                  },
+                  {
+                    "name": "www.recdebut-recruit.org.",
+                    "type": 28,
+                    "ttl": 300,
+                    "data": "2606:4700:3034::6815:3a79"
+                  }
+                ]
+              },
+              "CNAME": {
+                "outcome": "NOERROR",
+                "answers": []
+              }
+            },
+            "tls": {
+              "outcome": "validated",
+              "version": "TLSv1.3",
+              "not_before": "Oct 20 21:55:47 2026 GMT",
+              "not_after": "Jan 18 21:55:46 2027 GMT",
+              "hostname_checked": true,
+              "ca_checked": true
+            },
+            "https_root_head": {
+              "outcome": "http_response",
+              "hops": [
+                {
+                  "url": "https://www.recdebut-recruit.org/",
+                  "status": 200,
+                  "content_type": "text/html; charset=utf-8",
+                  "server": "cloudflare"
+                }
+              ],
+              "final_status": 200,
+              "final_url": "https://www.recdebut-recruit.org/"
+            },
+            "tls_followup": null,
+            "current_control_verified": false,
+            "application_acceptance_verified": false,
+            "sender_domain_accepted": false,
+            "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+          }
+        }
+      ],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "_dmarc.recdebut-recruit.org.",
+                "type": 5,
+                "ttl": 270,
+                "data": "dmarc.ionos.com."
+              },
+              {
+                "name": "dmarc.ionos.com.",
+                "type": 16,
+                "ttl": 19414,
+                "data": "v=DMARC1; p=none;"
+              }
+            ]
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 1,
+                "ttl": 300,
+                "data": "172.67.159.140"
+              },
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 1,
+                "ttl": 300,
+                "data": "104.21.58.121"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3032::ac43:9f8c"
+              },
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 28,
+                "ttl": 300,
+                "data": "2606:4700:3034::6815:3a79"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "mckinley.ns.cloudflare.com."
+              },
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "howard.ns.cloudflare.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 15,
+                "ttl": 300,
+                "data": "10 mx01.ionos.com."
+              },
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 15,
+                "ttl": 300,
+                "data": "10 mx00.ionos.com."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut-recruit.org.",
+                "type": 16,
+                "ttl": 300,
+                "data": "v=spf1 include:_spf-us.ionos.com ~all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Oct 20 21:55:47 2026 GMT",
+          "not_after": "Jan 18 21:55:46 2027 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://recdebut-recruit.org/",
+              "status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "server": "cloudflare"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://recdebut-recruit.org/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "thesimplechef.com",
+      "kind": "custom_domain",
+      "project": "the_simple_chef",
+      "reported_operator_control": true,
+      "reported_role": "Culinary brand and catering/storefront",
+      "proposed_use": "Candidate storefront and customer service site after ownership/hosting verification",
+      "evidence": [
+        {
+          "type": "local_source_reference",
+          "reference": "backend/routers/chef_orders_router.py:322",
+          "establishes": "Storefront email/footer template reference only"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplechef.com.",
+                "type": 2,
+                "ttl": 14400,
+                "data": "ns1.dreamhost.com."
+              },
+              {
+                "name": "thesimplechef.com.",
+                "type": 2,
+                "ttl": 14400,
+                "data": "ns3.dreamhost.com."
+              },
+              {
+                "name": "thesimplechef.com.",
+                "type": 2,
+                "ttl": 14400,
+                "data": "ns2.dreamhost.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "error",
+          "error_type": "gaierror"
+        },
+        "https_root_head": {
+          "outcome": "request_error",
+          "hops": [],
+          "error_type": "ConnectionError"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "thesimplecheff.com",
+      "kind": "custom_domain",
+      "project": "the_simple_chef",
+      "reported_operator_control": true,
+      "reported_role": "Historical or alternate chef spelling",
+      "proposed_use": "Preserve spelling; evaluate retention or redirect after verification",
+      "evidence": [
+        {
+          "type": "operator_report",
+          "reference": "2026-10-27 domain portfolio request",
+          "establishes": "Reported current/historical control only"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplecheff.com.",
+                "type": 1,
+                "ttl": 1770,
+                "data": "216.198.79.65"
+              },
+              {
+                "name": "thesimplecheff.com.",
+                "type": 1,
+                "ttl": 1770,
+                "data": "216.198.79.1"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplecheff.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns1.vercel-dns.com."
+              },
+              {
+                "name": "thesimplecheff.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns2.vercel-dns.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Sep 15 22:43:08 2026 GMT",
+          "not_after": "Dec 14 22:43:07 2026 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://thesimplecheff.com/",
+              "status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "server": "Vercel"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://thesimplecheff.com/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "thesimplechefs.com",
+      "kind": "custom_domain",
+      "project": "the_simple_chef",
+      "reported_operator_control": true,
+      "reported_role": "Historical or alternate chef spelling",
+      "proposed_use": "Preserve spelling; evaluate retention or redirect after verification",
+      "evidence": [
+        {
+          "type": "operator_report",
+          "reference": "2026-10-27 domain portfolio request",
+          "establishes": "Reported current/historical control only"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "_dmarc.thesimplechefs.com.",
+                "type": 16,
+                "ttl": 570,
+                "data": "v=DMARC1; p=quarantine; rua=mailto:[redacted-report-address];"
+              }
+            ]
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplechefs.com.",
+                "type": 1,
+                "ttl": 3600,
+                "data": "185.230.63.171"
+              },
+              {
+                "name": "thesimplechefs.com.",
+                "type": 1,
+                "ttl": 3600,
+                "data": "185.230.63.186"
+              },
+              {
+                "name": "thesimplechefs.com.",
+                "type": 1,
+                "ttl": 3600,
+                "data": "185.230.63.107"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplechefs.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns2.wixdns.net."
+              },
+              {
+                "name": "thesimplechefs.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns3.wixdns.net."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplechefs.com.",
+                "type": 15,
+                "ttl": 121,
+                "data": "10 thesimplechefs-com.mail.protection.outlook.com."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "thesimplechefs.com.",
+                "type": 16,
+                "ttl": 3600,
+                "data": "v=spf1 include:secureserver.net include:spf.protection.outlook.com -all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Oct  3 09:47:32 2026 GMT",
+          "not_after": "Jan  1 09:47:31 2027 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://thesimplechefs.com/",
+              "status": 301,
+              "content_type": null,
+              "server": "Pepyaka"
+            },
+            {
+              "url": "https://www.thesimplechefs.com/",
+              "status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "server": "cloudflare"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://www.thesimplechefs.com/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "global-contribute.live",
+      "kind": "custom_domain",
+      "project": "contributor_compute",
+      "reported_operator_control": true,
+      "reported_role": "Distributed contributor/compute endpoint",
+      "proposed_use": "Planning reserve; no compute or outbound activation",
+      "evidence": [
+        {
+          "type": "operator_report",
+          "reference": "2026-10-27 domain portfolio request",
+          "establishes": "Reported current/historical control and role only; no confirming reference in bounded review"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "A": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "AAAA": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "CNAME": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "MX": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          },
+          "TXT": {
+            "outcome": "NXDOMAIN",
+            "answers": []
+          }
+        },
+        "tls": {
+          "outcome": "error",
+          "error_type": "gaierror"
+        },
+        "https_root_head": {
+          "outcome": "request_error",
+          "hops": [],
+          "error_type": "ConnectionError"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    },
+    {
+      "hostname": "recdebut.com",
+      "kind": "partner_domain",
+      "project": "recdebut",
+      "reported_operator_control": false,
+      "reported_role": "Dennis's client-facing website",
+      "proposed_use": "Partner registration connection after delegated access and acceptance testing",
+      "evidence": [
+        {
+          "type": "prior_operator_access_report",
+          "reference": "docs/RECDEBUT_WEBSITE_CONNECTION.md:3",
+          "establishes": "Partner website dependency; operator administrator access unavailable"
+        }
+      ],
+      "aliases": [],
+      "latest_observation": {
+        "checked_utc": "2026-10-27T17:28:39.298122+00:00",
+        "dns": {
+          "DMARC": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "_dmarc.recdebut.com.",
+                "type": 16,
+                "ttl": 14400,
+                "data": "v=DMARC1;p=none;sp=none;adkim=r;aspf=r;pct=100"
+              }
+            ]
+          },
+          "A": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut.com.",
+                "type": 1,
+                "ttl": 1800,
+                "data": "82.25.83.66"
+              }
+            ]
+          },
+          "AAAA": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut.com.",
+                "type": 28,
+                "ttl": 1800,
+                "data": "2a02:4780:2b:2057:0:cc3:7adf:2"
+              }
+            ]
+          },
+          "CNAME": {
+            "outcome": "NOERROR",
+            "answers": []
+          },
+          "NS": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns1.dns-parking.com."
+              },
+              {
+                "name": "recdebut.com.",
+                "type": 2,
+                "ttl": 21600,
+                "data": "ns2.dns-parking.com."
+              }
+            ]
+          },
+          "MX": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut.com.",
+                "type": 15,
+                "ttl": 14400,
+                "data": "10 mx2.titan.email."
+              },
+              {
+                "name": "recdebut.com.",
+                "type": 15,
+                "ttl": 14400,
+                "data": "5 mx1.titan.email."
+              }
+            ]
+          },
+          "TXT": {
+            "outcome": "NOERROR",
+            "answers": [
+              {
+                "name": "recdebut.com.",
+                "type": 16,
+                "ttl": 14400,
+                "data": "v=spf1 include:spf.titan.email ~all"
+              }
+            ]
+          }
+        },
+        "tls": {
+          "outcome": "validated",
+          "version": "TLSv1.3",
+          "not_before": "Oct 19 14:18:21 2026 GMT",
+          "not_after": "Jan 17 14:18:20 2027 GMT",
+          "hostname_checked": true,
+          "ca_checked": true
+        },
+        "https_root_head": {
+          "outcome": "http_response",
+          "hops": [
+            {
+              "url": "https://recdebut.com/",
+              "status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "server": "LiteSpeed"
+            }
+          ],
+          "final_status": 200,
+          "final_url": "https://recdebut.com/"
+        },
+        "tls_followup": null,
+        "current_control_verified": false,
+        "application_acceptance_verified": false,
+        "sender_domain_accepted": false,
+        "evidence": "backups/recdebut_send_setup_20261027_record152/domain_checks/observations.json"
+      }
+    }
+  ],
+  "unassigned_projects": [
+    {
+      "project": "bs_pc_service",
+      "domain": null,
+      "status": "No domain supplied; future service area or subdomain is a proposal only"
+    },
+    {
+      "project": "fe_express",
+      "domain": null,
+      "status": "No dedicated domain supplied; preserve existing AI-BS workspace"
+    },
+    {
+      "project": "future_clients",
+      "domain": null,
+      "status": "Record client control and delegated access separately from operator ownership"
+    }
+  ],
+  "constraints": {
+    "runtime_consumption_enabled": false,
+    "automatic_dns_or_redirect_changes": false,
+    "automatic_trust_or_cors_admission": false,
+    "recdebut_sending_authorized": false,
+    "cloud_sync_status": "pending",
+    "credentials_and_account_identifiers_included": false
+  },
+  "updated_utc": "2026-10-27T17:36:52.157376+00:00",
+  "latest_report": "docs/RECDEBUT_SENDING_SETUP_2026-10-27.md",
+  "verification_summary": {
+    "hostnames_checked": 18,
+    "https_root_final_200": 11,
+    "tls_ca_hostname_validated": 13,
+    "source_record": 153,
+    "no_dns_or_runtime_changes": true,
+    "registrar_control_and_renewal": "not_verified",
+    "sending_authorized": false
+  }
+}

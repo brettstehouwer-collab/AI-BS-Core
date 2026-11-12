@@ -14,10 +14,19 @@ import math
 import ntpath
 import os
 import re
+import socket
+import threading
+import time
 
 ORIGIN = 'http://127.0.0.1:8080'
 TARGET = 'AI-BS/Native/LocalBackend/v1/127.0.0.1:8080'
 MAX_BLOB = 2400
+_probe_activity = threading.local()
+
+
+def _probe_counts():
+    return (getattr(_probe_activity, 'attempts', 0),
+            getattr(_probe_activity, 'connected', 0))
 
 
 class LocalConnectionError(RuntimeError):
@@ -81,12 +90,29 @@ def _current_identity():
 
 def _listener_identity():
     import psutil
-    listeners = [entry for entry in psutil.net_connections(kind='tcp')
+    entries = psutil.net_connections(kind='tcp')
+    listeners = [entry for entry in entries
                  if entry.status == psutil.CONN_LISTEN and entry.laddr.port == 8080]
     # Credentials target literal IPv4 loopback. A separate ::1 listener (for
     # example WSL forwarding) is never selected or given these credentials.
     if not listeners:
-        return None
+        # Some current Windows hosts report their bound listener row as raw
+        # state0/NONE while accepted connections retain ESTABLISHED correctly.
+        # NONE alone never proves listening. It only admits an exact, byte-free
+        # peer ownership probe when the candidate row is unique and loopback.
+        candidates = [entry for entry in entries
+                      if entry.status == psutil.CONN_NONE and entry.laddr.port == 8080
+                      and not getattr(entry, 'raddr', ())]
+        if not candidates:
+            return None
+        if any(entry.laddr.ip not in {'127.0.0.1', '::1'} for entry in candidates):
+            raise _unavailable()
+        ipv4 = [entry for entry in candidates if entry.laddr.ip == '127.0.0.1']
+        if not ipv4:
+            return None
+        if len(ipv4) != 1 or type(ipv4[0].pid) is not int or ipv4[0].pid <= 0:
+            raise _unavailable()
+        return _established_peer_identity(ipv4[0].pid)
     if any(entry.laddr.ip not in {'127.0.0.1', '::1'} for entry in listeners):
         raise _unavailable()
     ipv4 = [entry for entry in listeners if entry.laddr.ip == '127.0.0.1']
@@ -95,6 +121,57 @@ def _listener_identity():
     if len(ipv4) != 1 or not ipv4[0].pid:
         raise _unavailable()
     return _process_identity(ipv4[0].pid)
+
+
+def _established_peer_identity(candidate_pid):
+    """Prove an anomalous row using its exact accepted connection's kernel PID.
+
+    No HTTP, authentication or application bytes are sent. Keep the probe open
+    while querying the complete reverse tuple; PID reuse is fenced by process
+    identity both before and after observation. Existing owner/vault checks are
+    still applied by LocalConnection to the returned identity.
+    """
+    import psutil
+    try:
+        before = _validate_identity(_process_identity(candidate_pid))
+        if before.pid != candidate_pid:
+            raise _unavailable()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            probe.settimeout(1.0)
+            _probe_activity.attempts = _probe_counts()[0] + 1
+            probe.connect(('127.0.0.1', 8080))
+            _probe_activity.connected = _probe_counts()[1] + 1
+            local_ip, local_port = probe.getsockname()
+            if (probe.getpeername() != ('127.0.0.1', 8080) or local_ip != '127.0.0.1'
+                    or type(local_port) is not int or not 0 < local_port <= 65535):
+                raise _unavailable()
+            deadline = time.monotonic() + 1.0
+            while True:
+                peers = [entry for entry in psutil.net_connections(kind='tcp')
+                         if entry.laddr.ip == '127.0.0.1' and entry.laddr.port == 8080
+                         and getattr(entry, 'raddr', ())
+                         and entry.raddr.ip == local_ip and entry.raddr.port == local_port]
+                if peers:
+                    if (len(peers) != 1 or type(peers[0].pid) is not int
+                            or peers[0].pid != candidate_pid):
+                        raise _unavailable()
+                    if peers[0].status == psutil.CONN_ESTABLISHED:
+                        after = _process_identity(candidate_pid)
+                        if not _same_service(before, after):
+                            raise _unavailable()
+                        return after
+                    # A known handshake state may settle within the existing
+                    # deadline, but is never itself proof. NONE, closing states,
+                    # different PIDs and ambiguity still reject immediately.
+                    if peers[0].status not in (psutil.CONN_SYN_SENT, psutil.CONN_SYN_RECV):
+                        raise _unavailable()
+                if time.monotonic() >= deadline:
+                    raise _unavailable()
+                time.sleep(.025)
+    except LocalConnectionError:
+        raise
+    except Exception:
+        raise _unavailable() from None
 
 
 class WindowsCredentialVault:
@@ -141,7 +218,13 @@ class LocalConnection:
             if not isinstance(secret, str) or not secret.strip():
                 return False
             current = _validate_identity(self.current_identity())
-            listener = self.listener_identity()
+            try:
+                listener = self.listener_identity()
+            except LocalConnectionError:
+                # Startup may expose a bound row before its accept loop is
+                # ready. Refuse publication now; the bounded owner task waits.
+                # Credential writes remain outside this retryable observation.
+                return False
             if listener is None or not _same_service(current, listener):
                 return False
             blob = json.dumps({'schema': 1, 'origin': ORIGIN,
@@ -194,6 +277,7 @@ def connection_diagnostics(*, connection=None):
     """Read only this application's profile; return no credentials or identities."""
     connection = connection or LocalConnection()
     report = {'available': False, 'stage': 'vault_read'}
+    probe_before = _probe_counts()
     try:
         blob = connection.vault.read()
         report['profilePresent'] = blob is not None
@@ -230,6 +314,13 @@ def connection_diagnostics(*, connection=None):
         code = getattr(error, 'winerror', None)
         if type(code) is int:
             report['windowsErrorCode'] = code
+    finally:
+        probe_after = _probe_counts()
+        attempts = probe_after[0] - probe_before[0]
+        connected = probe_after[1] - probe_before[1]
+        report.update(tcpProbeAttempts=attempts, tcpConnectionsOpened=connected,
+                      networkRequestsSent=bool(attempts), httpRequestsSent=False,
+                      credentialBytesSent=0)
     return report
 
 
@@ -244,7 +335,7 @@ def write_connection_diagnostic():
         _secure_directory(base)
         _secure_directory(folder)
         report = connection_diagnostics()
-        report.update(frozen=bool(getattr(sys, 'frozen', False)), networkRequestsSent=False,
+        report.update(frozen=bool(getattr(sys, 'frozen', False)),
                       profileWritten=False, utc=datetime.now(timezone.utc).isoformat())
         filename = 'local_connection_' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.json'
         with (folder / filename).open('x', encoding='utf-8') as stream:

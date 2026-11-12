@@ -1,0 +1,587 @@
+{
+  "handoff_id": "firebase_payment_release_20261030T204732Z",
+  "created_utc": "2026-10-30T20:54:30.364673+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Pending independent receiver",
+  "status": "VERIFIED_HOSTING_RELEASE; BACKEND_ROLLOUT_UNVERIFIED",
+  "version": "v5.329.73",
+  "project": "ai-bs-dashboard",
+  "site": "ai-bs-dashboard",
+  "url": "https://ai-bs-dashboard.web.app",
+  "deployment_scope": [
+    "hosting:ai-bs-dashboard"
+  ],
+  "git": {
+    "commit": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "branch": "main"
+  },
+  "source_manifest_checksum": "045ef4780e6cd1e925f33e6a07e4d01c91f9c90927f1ee76d440e8b926dd2f5b",
+  "checksum_definition": "SHA256 compact sorted JSON path-to-after_sha256 map; manifest itself excluded",
+  "files": {
+    "AGENTS.md": {
+      "before_sha256": "7c016d498802a0451ba53d46eed1dea32a0df798e44781f60fcab494ba1b8f06",
+      "after_sha256": "7c016d498802a0451ba53d46eed1dea32a0df798e44781f60fcab494ba1b8f06",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": {
+      "before_sha256": "708bace85d179084b5dc7a8181b64906f6f8aab1c32e9929b1d18db18d0cab9d",
+      "after_sha256": "0b0c0f54b7d8270303421f21f256191bbd0579d1fa19581c42819b39e2fcd1dc",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "BroadcastStudioApp/package-lock.json": {
+      "before_sha256": "d5298c6e7fb8df777366dd1a5eef287ac2a58d704ab0f40872eee4a68823d572",
+      "after_sha256": "d5298c6e7fb8df777366dd1a5eef287ac2a58d704ab0f40872eee4a68823d572",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "BroadcastStudioApp/package.json": {
+      "before_sha256": "1b8d252e05598411e78e40c9d4676bea3ca908809499ab87560ba307384bc164",
+      "after_sha256": "1b8d252e05598411e78e40c9d4676bea3ca908809499ab87560ba307384bc164",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "BroadcastStudioApp/src/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "Crypto-Swarm/drip_ledger.json": {
+      "before_sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+      "after_sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "MASTER_HISTORICAL_INDEX.md": {
+      "before_sha256": "226e656fe8bc401b356c8287c7ceb6d61ad432e11c819435fb9151d86027340e",
+      "after_sha256": "990043da483a954c5660981df54ab17fc057fd25dc5fe69e32013ea8a433ae6a",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md": {
+      "before_sha256": "8f925b0a89f7ab00b815a974e6ca52b12b42bc8a09bd67601f51937b8aec041e",
+      "after_sha256": "ae1d3ab105d38ac814470e141a7aab1b5f64d0f3df6997e4d1a11f2415e82330",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "MASTER_TASKS_CHRONOLOGY.md": {
+      "before_sha256": "8f2d8c51d42aee85860d5148b0724475d738f5044c849bd16e6a0ddf5c2980a5",
+      "after_sha256": "c55dfd3a39600e4665eff07c62ade002c2e25065dd5363dc2d1e15999826b7b7",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "NotebookLM_Records/artifact_history.md": {
+      "before_sha256": "b2e143a0411a09174f30ee176bb83ee2c086e68ae96ee15d30a897661c9fde8c",
+      "after_sha256": "a2b7e0bd7b0b5855e24bf498c8f344909a061528f133e1d3d29fe69dbc943cd3",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/commercial_gateway/api_key_manager.py": {
+      "before_sha256": "984f90e49636deb97b25d3d3cf4ab1987055015b71a033d10bb49dfbb723fc14",
+      "after_sha256": "984f90e49636deb97b25d3d3cf4ab1987055015b71a033d10bb49dfbb723fc14",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/commercial_gateway/billing_provisioner.py": {
+      "before_sha256": "6b822b4b494009c1b5a0f887f3a3781b261eed93439f74f6e11c43bfb021b8e0",
+      "after_sha256": "6b822b4b494009c1b5a0f887f3a3781b261eed93439f74f6e11c43bfb021b8e0",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/commercial_gateway/gateway_router.py": {
+      "before_sha256": "0f448b9b4f49f0b26df3bcd3eba229398e784127ea5382e59e087348ad0b0959",
+      "after_sha256": "0f448b9b4f49f0b26df3bcd3eba229398e784127ea5382e59e087348ad0b0959",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/core/crypto_execution_controls.py": {
+      "before_sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+      "after_sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/core/crypto_execution_safety.py": {
+      "before_sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+      "after_sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/core/payment_receipts.py": {
+      "before_sha256": "29b537af7695f89f6844b6de8bdd8993b1554eef215737b3c1c516c4acc96e04",
+      "after_sha256": "29b537af7695f89f6844b6de8bdd8993b1554eef215737b3c1c516c4acc96e04",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/crypto_ledger.json": {
+      "before_sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+      "after_sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/modules/accounting_router.py": {
+      "before_sha256": "266bf13c4f091eff246704902e0bfd7eff8850995647b9e5f56dfa62a11d4583",
+      "after_sha256": "266bf13c4f091eff246704902e0bfd7eff8850995647b9e5f56dfa62a11d4583",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/routers/chef_orders_router.py": {
+      "before_sha256": "bdc947309e7f2f5f2aeb585c6c3c06ab604230bfd522c9e39446a55ed87305de",
+      "after_sha256": "bdc947309e7f2f5f2aeb585c6c3c06ab604230bfd522c9e39446a55ed87305de",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "backend/security/financial_auth.py": {
+      "before_sha256": "00e5c0f4a7c04ddc600b26f087a8eeb26fde42d810da6a76e8075f5e35ec8a23",
+      "after_sha256": "00e5c0f4a7c04ddc600b26f087a8eeb26fde42d810da6a76e8075f5e35ec8a23",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/CODEX_DECISIONS.md": {
+      "before_sha256": "f2f471154230142f39e23a8c37fd225470d71e79133b624511d84dbe012b4520",
+      "after_sha256": "6d7611de4dc66a4ce11af61494f69cfd7d63d0c109f5c2ae71c3b9d7afa9d884",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/CODEX_HANDOFF.md": {
+      "before_sha256": "4b219c3a253f7c59224386dfcefccf76b7458f216f416305ce1a73668d365713",
+      "after_sha256": "32fe346d3dbfaebb224fb4c3f5f7b78e23079ad4ea9346b224357294fb179d51",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/CODEX_JOURNAL.md": {
+      "before_sha256": "f5bf50a46b2602420e11484d8bed580e96a950020bcca10d06f26f6ceef51571",
+      "after_sha256": "2578f4e635fe2cd6257db941da99a09e3ed7e16b10def55c89393fb9b05476b2",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/CODEX_TASKS.md": {
+      "before_sha256": "d90a3842456b11497a048006471297c76079b1ada9778ad4de73bd2c2f9dd46a",
+      "after_sha256": "2289aed610cacb89071d5cdc8a5879b8e1a58c7a0e64ca040e89045446a25bcb",
+      "changed": true,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/PAYMENT_ACCOUNTING_INTEGRITY_2026-10-30.md": {
+      "before_sha256": "b740124efb856ae471d2bd4ca28b9b297ac5f43a45b8259ecd7ccd2011949766",
+      "after_sha256": "b740124efb856ae471d2bd4ca28b9b297ac5f43a45b8259ecd7ccd2011949766",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/.firebaserc": {
+      "before_sha256": "fce88e996dc77f317468dbc5c9d9ab4382d342b3939131fe59b75a63d4f97e60",
+      "after_sha256": "fce88e996dc77f317468dbc5c9d9ab4382d342b3939131fe59b75a63d4f97e60",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/CryptoAccountingTab.jsx": {
+      "before_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "after_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/FinancialAccountBoundary.jsx": {
+      "before_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "after_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/MasterAccountingTab.jsx": {
+      "before_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "after_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/ReceiptReconciliationPanel.jsx": {
+      "before_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "after_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/components/CryptoAccountingTab.jsx": {
+      "before_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "after_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/components/FinancialAccountBoundary.jsx": {
+      "before_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "after_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/components/MasterAccountingTab.jsx": {
+      "before_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "after_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/components/ReceiptReconciliationPanel.jsx": {
+      "before_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "after_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/components/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/components/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/firebase.json": {
+      "before_sha256": "db42d18af583f770481e93a3da7fc27936e24c0604665a1fed4ba4603687753b",
+      "after_sha256": "db42d18af583f770481e93a3da7fc27936e24c0604665a1fed4ba4603687753b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/index.html": {
+      "before_sha256": "39b9c37bf8eb48b2b3d55848f3b96a0bd0082f58bcbed59e9218120ea7be708f",
+      "after_sha256": "39b9c37bf8eb48b2b3d55848f3b96a0bd0082f58bcbed59e9218120ea7be708f",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/package-lock.json": {
+      "before_sha256": "3c4046cc2db49a2444f35d77650d8d27bd3d2c746e4a35a34e8ff539c1ab6e06",
+      "after_sha256": "3c4046cc2db49a2444f35d77650d8d27bd3d2c746e4a35a34e8ff539c1ab6e06",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/package.json": {
+      "before_sha256": "ad2aa678454f94c66f867313379dc727930f63e53e8bb2a375e52682593dcdc5",
+      "after_sha256": "ad2aa678454f94c66f867313379dc727930f63e53e8bb2a375e52682593dcdc5",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/public/version.json": {
+      "before_sha256": "8b3978e70e7966f5db9f895b545a9ce6f3e10b121da253810a3873f47d3c52fb",
+      "after_sha256": "8b3978e70e7966f5db9f895b545a9ce6f3e10b121da253810a3873f47d3c52fb",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/CryptoAccountingTab.jsx": {
+      "before_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "after_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/FinancialAccountBoundary.jsx": {
+      "before_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "after_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/MasterAccountingTab.jsx": {
+      "before_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "after_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/ReceiptReconciliationPanel.jsx": {
+      "before_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "after_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/components/CryptoAccountingTab.jsx": {
+      "before_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "after_sha256": "1eb491629c0ec08d8c471e77f778d593d0240b8891c9d537092decc863820e8e",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/components/FinancialAccountBoundary.jsx": {
+      "before_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "after_sha256": "73e0607a5ba7b77cc27f8211c4c527ba8a904e407e1d82e5d70e0b6f586af25b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/components/MasterAccountingTab.jsx": {
+      "before_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "after_sha256": "fc186c9b08e5aa630c3789b2a2694268659d6beb00eb03adc61fb10bef543b9a",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/components/ReceiptReconciliationPanel.jsx": {
+      "before_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "after_sha256": "ce80375ba812dc00021444a7c7ae7d9ab58cc730a1c9cc2f994e784713b87059",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/components/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/components/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/utils/accountingSession.js": {
+      "before_sha256": "5db792af03e554fae6fab89e2d1efdf3ea52f1db2c49c1040e7d1468610ed26e",
+      "after_sha256": "5db792af03e554fae6fab89e2d1efdf3ea52f1db2c49c1040e7d1468610ed26e",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/src/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/tsconfig.json": {
+      "before_sha256": "074e22c38a225ef0d9f3282f62316e36923f983b9c0f6f964861a1a460e876c4",
+      "after_sha256": "074e22c38a225ef0d9f3282f62316e36923f983b9c0f6f964861a1a460e876c4",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/version.js": {
+      "before_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "after_sha256": "025275276ff4051ce4760c7a91d8cf1255dead0730cf66e9abe40492741c9568",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/vite.config.js": {
+      "before_sha256": "5f2ff937e8182c0013bf6335728b99cec2adc8e84f9b4fc9052cd734e20ff95b",
+      "after_sha256": "5f2ff937e8182c0013bf6335728b99cec2adc8e84f9b4fc9052cd734e20ff95b",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "frontend/writer.html": {
+      "before_sha256": "02e55b10666f0293aa35dd868138fcf2ad8786944b070dffcd28cfbe09dbedfe",
+      "after_sha256": "02e55b10666f0293aa35dd868138fcf2ad8786944b070dffcd28cfbe09dbedfe",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "package-lock.json": {
+      "before_sha256": "f184b0d25fbb3be3b022f17081619a13ce7e2f9b298b4f33ae0bcf43586eb311",
+      "after_sha256": "f184b0d25fbb3be3b022f17081619a13ce7e2f9b298b4f33ae0bcf43586eb311",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "package.json": {
+      "before_sha256": "460cd293af78e8d864b198851914a8fa05f4b33a528bef5afed1a7f625a3f047",
+      "after_sha256": "460cd293af78e8d864b198851914a8fa05f4b33a528bef5afed1a7f625a3f047",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "release.json": {
+      "before_sha256": "f29c6fbcc8cb13261f522996d301adf5096e691ee43bdcb061c09e8420e7e0eb",
+      "after_sha256": "f29c6fbcc8cb13261f522996d301adf5096e691ee43bdcb061c09e8420e7e0eb",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "scripts/tests/test_accounting_access.py": {
+      "before_sha256": "12dc0f297c3a529f6c945c536a75e7c60adf5cff8738a8a4483471647d290b27",
+      "after_sha256": "12dc0f297c3a529f6c945c536a75e7c60adf5cff8738a8a4483471647d290b27",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "scripts/tests/test_accounting_session.mjs": {
+      "before_sha256": "8a3cf60916d3f6b28fda541ee4ade2a9e20cb0b273e177c5bcf0ac62e34cad92",
+      "after_sha256": "8a3cf60916d3f6b28fda541ee4ade2a9e20cb0b273e177c5bcf0ac62e34cad92",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "scripts/tests/test_commercial_access.py": {
+      "before_sha256": "e06e989ff654327b49feed3eb769d5f734cf9b3174844bedbe51684208fa76ac",
+      "after_sha256": "e06e989ff654327b49feed3eb769d5f734cf9b3174844bedbe51684208fa76ac",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "scripts/tests/test_economics_summary_client.mjs": {
+      "before_sha256": "ed626c3e31710e1e4786a013cfe6dc69a9dc16b39483f185d2cb5499871e145f",
+      "after_sha256": "ed626c3e31710e1e4786a013cfe6dc69a9dc16b39483f185d2cb5499871e145f",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "scripts/tests/test_payment_integrity.py": {
+      "before_sha256": "152dfda06000f233a13322c00b7313873d34ec84c9ae49630621958a4f60f2d5",
+      "after_sha256": "152dfda06000f233a13322c00b7313873d34ec84c9ae49630621958a4f60f2d5",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "version.txt": {
+      "before_sha256": "be37839646f9ed0089924e2588e5ec17adb19f8894983c8621f1aec04dfdfe04",
+      "after_sha256": "be37839646f9ed0089924e2588e5ec17adb19f8894983c8621f1aec04dfdfe04",
+      "changed": false,
+      "original_byte_prefix_preserved": true
+    },
+    "docs/PAYMENT_FIREBASE_RELEASE_2026-10-30.md": {
+      "before_sha256": null,
+      "after_sha256": "a570a442bd891a00cbbab525d7b625f51eb77a239534e64cee3c08e1967fb02f",
+      "changed": true,
+      "created": true
+    }
+  },
+  "evidence_directory": "C:\\AI-BS\\backups\\firebase_payment_release_20261030T204732Z",
+  "checks": {
+    "source_hashes_unchanged": 66,
+    "version": "v5.329.73",
+    "artifact_count": 1139,
+    "artifact_bytes": 922607506,
+    "forbidden_artifacts": [],
+    "credential_pattern_findings": [],
+    "typecheck": {
+      "status": "FAILED; strict JavaScript annotation/unused diagnostics, not a configured Vite build gate",
+      "errors": 9601,
+      "accounting_related": 112,
+      "independent_source_review": "All112 scoped diagnostics reviewed; no runtime defect, undefined identifier or broken import identified. Some diagnostics involve new untyped files."
+    },
+    "production_build": "passed, 7343 modules, 32.57 seconds",
+    "initial_build_diagnostic": "Initial invocation from repository root could not resolve relative writer.html; reran from frontend directory without source changes."
+  },
+  "hosting_verification": {
+    "checked_utc": "2026-10-30T20:52:56.903369+00:00",
+    "url": "https://ai-bs-dashboard.web.app",
+    "resources": [
+      {
+        "path": "index.html",
+        "status": 200,
+        "bytes": 2881,
+        "sha256": "19985ff45d50d18ec140f1a4681fa161e3c54b5bdf22bc05d4a7238bbbd93855",
+        "matches_local": true,
+        "content_type": "text/html; charset=utf-8",
+        "cache_control": "public, max-age=0, must-revalidate",
+        "references_current_main": true
+      },
+      {
+        "path": "writer.html",
+        "status": 200,
+        "bytes": 1426,
+        "sha256": "8c1cbe038369035ca1d820687fe021697d158e3929e3f9a4b1b1c7ce336f8f0a",
+        "matches_local": true,
+        "content_type": "text/html; charset=utf-8",
+        "cache_control": "public, max-age=0, must-revalidate"
+      },
+      {
+        "path": "version.json",
+        "status": 200,
+        "bytes": 194,
+        "sha256": "8b3978e70e7966f5db9f895b545a9ce6f3e10b121da253810a3873f47d3c52fb",
+        "matches_local": true,
+        "content_type": "application/json",
+        "cache_control": "public, max-age=0, must-revalidate",
+        "version": "v5.329.73"
+      },
+      {
+        "path": "js/main.BQvgpwIr.js",
+        "status": 200,
+        "bytes": 328281,
+        "sha256": "6cc30b8eabc1280ce3f85b390b3699c2f796bc64575c3fa464223cee48533383",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      },
+      {
+        "path": "js/MasterAccountingTab.oOgyrcU9.js",
+        "status": 200,
+        "bytes": 20838,
+        "sha256": "0f83e20a0a2ac0d9acd4be6c4c6469b5c7331ddf9d949b253e1257d3abaa98ed",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      },
+      {
+        "path": "js/UnifiedCryptoHub.COSYz1Dc.js",
+        "status": 200,
+        "bytes": 72511,
+        "sha256": "2c991e0c370c6f3051e3808b1cbe6866ce8ee3631ca9057331367a73532fad03",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      },
+      {
+        "path": "js/FinancialAccountBoundary.DKP3pJZQ.js",
+        "status": 200,
+        "bytes": 2966,
+        "sha256": "c1f6a2ac1f413171f2e98183c8be3088062898a48b9aac7862241349f9190c98",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      },
+      {
+        "path": "js/UnifiedSystemEconomics.Ds4bcx9q.js",
+        "status": 200,
+        "bytes": 366,
+        "sha256": "3ec342d7fc736317b6be2ac5c9b255d077272c5c31604457d3917e41bb5d2f88",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      },
+      {
+        "path": "js/EconomicsSummaryPanel.DPNXtcJC.js",
+        "status": 200,
+        "bytes": 6787,
+        "sha256": "995cc4fb3a0e23642696b93908bacad2dc6794b159bfc1639b9379dd60696351",
+        "matches_local": true,
+        "content_type": "text/javascript; charset=utf-8",
+        "cache_control": "public, max-age=31536000, immutable"
+      }
+    ],
+    "all_match": true
+  },
+  "crypto_health_after": {
+    "status": "alive",
+    "dispatch_enabled": false,
+    "reconciliation_required": true,
+    "halt_marker_present": false,
+    "reason": "Reconciliation required: fills, fees, slippage and shared risk limits are unverified."
+  },
+  "report": "docs/PAYMENT_FIREBASE_RELEASE_2026-10-30.md",
+  "ledgers_append_only": [
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_HISTORICAL_INDEX.md",
+    "NotebookLM_Records/artifact_history.md"
+  ],
+  "completed": [
+    "isolated production build",
+    "Hosting deployment",
+    "9 exact remote file matches",
+    "private asset exclusions preserved",
+    "source and crypto hold preservation checks",
+    "append-only deployment ledger update"
+  ],
+  "known_failures": [
+    "strict JavaScript typecheck9601 diagnostics,112 scoped; not all pre-existing",
+    "initial wrong build working directory and artifact-verifier assumptions corrected; logs retained"
+  ],
+  "not_performed": [
+    "Python service restart/reload",
+    "Functions/Firestore/Storage/rules deployment",
+    "other Hosting sites",
+    "exchange/payment API operation",
+    "credential configuration",
+    "Git commit/push"
+  ],
+  "incomplete": [
+    "Python payment/access/receipt runtime rollout",
+    "signed-in browser acceptance",
+    "real provider acceptance",
+    "fee/reference recovery and entitlement migration"
+  ],
+  "architectural_decision": "ADR-119 holds preserved; Hosting release changes no backend activation boundary",
+  "next_step": "Prepare backend rollout preserving every activation flag; verify anonymous accounting denial and disabled crypto dispatch without payment/exchange calls.",
+  "documentation_patch": {
+    "path": "C:\\AI-BS\\backups\\firebase_payment_release_20261030T204732Z\\documentation.diff",
+    "sha256": "edbd2cba700a9c414ecd2de183360355c0e8ab7cf6c018ecb931736c9287fd46"
+  },
+  "firebase_cli_registry_verification": {
+    "registry_latest": "15.34.2",
+    "verified_cli_version": "15.34.2",
+    "matches": true
+  }
+}

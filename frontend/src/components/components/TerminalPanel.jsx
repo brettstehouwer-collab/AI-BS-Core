@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
 
 // injectRef: a React ref whose .current is set to a function (cmd) => void
 // that types the command into the terminal and executes it.
@@ -70,7 +71,7 @@ const runCommand = async ( cmd) => {
       try {
         const res = await fetch(`${backendUrl}/api/terminal/run`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ command: cmd })
         });
         /** @type {{detail?: string | Array<{msg?: string}>, error?: string, stdout?: string, stderr?: string, exit_code?: number}} */

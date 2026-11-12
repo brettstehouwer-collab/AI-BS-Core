@@ -1,8 +1,9 @@
 """Authenticated shared BS-Chat transport; no local model, tool or subprocess execution."""
 from __future__ import annotations
+import json
 import re
 import httpx
-from native_studio.local_connection import local_service_headers
+from native_studio.local_connection import LocalConnectionError, local_service_headers
 
 ORIGIN='http://127.0.0.1:8080'
 ROUTE='/api/v1/hybrid-chat/stream'
@@ -10,17 +11,68 @@ ROUTE='/api/v1/hybrid-chat/stream'
 class NativeChatError(RuntimeError):
     pass
 
+
+def safe_chat_failure_notice(message):
+    """Display curated causes, never arbitrary worker/transport/server details."""
+    if not isinstance(message, str):
+        message = ''
+    if message.startswith('NativeChatError: '):
+        message = message[len('NativeChatError: '):]
+    notices = {
+        'The private chat connection is not ready. No API key entry is required.':
+            'The private local connection could not be verified. Check that the local AI-BS service is running; no API key entry is required.',
+        'The local chat service refused this connection. Your draft is retained.':
+            'The local chat service refused authentication. Your draft is retained.',
+        'The chat service timed out before confirming a response. Your draft is retained.':
+            'The chat service timed out before confirming a response. Your draft is retained.',
+        'The local chat service could not be reached. Your draft is retained.':
+            'The local chat service could not be reached. Your draft is retained.',
+        'The service returned no visible response. Your draft is retained.':
+            'The service returned no visible response. Your draft is retained.',
+        'The chat service could not complete the reply. Your draft is retained.':
+            'The chat service could not complete the reply. Your draft is retained.',
+        'The local model context limit was reached before it produced an answer. Your draft is retained.':
+            'The local model context limit was reached before it produced an answer. Your draft is retained.',
+        'The selected model is unavailable in the local service. Your draft is retained.':
+            'The selected model is unavailable in the local service. Your draft is retained.',
+        'The response exceeds the display limit. Partial text and your draft are retained.':
+            'The response exceeds the display limit. Partial text and your draft are retained.',
+    }
+    if message in notices:
+        return notices[message]
+    if re.fullmatch(r'The chat service returned HTTP[1-5][0-9]{2}; no complete response was confirmed\.', message):
+        return message
+    return 'The response was not confirmed. Check local service status before trying again.'
+
 class _VisibleStream:
     """Suppress split metadata comments without delaying ordinary visible text."""
     marker='<!--AI-BS-METADATA:'
-    def __init__(self):self.pending='';self.hidden=False
+    def __init__(self):
+        self.pending='';self.hidden=False;self.body=''
+        self.latest_primary=None;self.invalid_metadata=False
+    def _metadata(self,text,*,complete=False):
+        if len(self.body)+len(text)>65536:
+            self.invalid_metadata=True;self.body='';return
+        self.body+=text
+        if complete:
+            try:
+                frame=json.loads(self.body)
+                if not isinstance(frame,dict):raise ValueError('metadata shape')
+                if frame.get('role')=='primary':
+                    self.latest_primary={key:frame.get(key) for key in ('status','generation_verified','completion_verified','error_code')}
+            except ValueError:
+                self.invalid_metadata=True
+            self.body=''
     def feed(self,text,final=False):
         self.pending+=text;visible=''
         while self.pending:
             if self.hidden:
                 end=self.pending.find('-->')
                 if end<0:
+                    self._metadata(self.pending[:-2] if len(self.pending)>2 else '')
+                    if final:self.invalid_metadata=True
                     self.pending=self.pending[-2:];break
+                self._metadata(self.pending[:end],complete=True)
                 self.pending=self.pending[end+3:];self.hidden=False;continue
             start=self.pending.find(self.marker)
             if start>=0:
@@ -94,7 +146,27 @@ class NativeChatService:
                         if on_text:on_text(tail)
             result=''.join(output)
             if not result.strip():raise NativeChatError('The service returned no visible response. Your draft is retained.')
+            if result.lstrip().startswith('Error in sovereign reasoning matrix:'):
+                raise NativeChatError('The chat service could not complete the reply. Your draft is retained.')
+            failure=result.strip()
+            if failure == 'Local inference did not complete (context_budget_exceeded). No answer is claimed.':
+                raise NativeChatError('The local model context limit was reached before it produced an answer. Your draft is retained.')
+            if re.fullmatch(r'Local inference did not complete \([a-z0-9_]{1,64}\)\. No answer is claimed\.',failure):
+                raise NativeChatError('The chat service could not complete the reply. Your draft is retained.')
+            receipt=visible.latest_primary
+            if receipt and receipt.get('error_code')=='provider_http_404':
+                raise NativeChatError('The selected model is unavailable in the local service. Your draft is retained.')
+            if visible.invalid_metadata or (receipt is not None and not (
+                    receipt.get('status')=='completed' and receipt.get('generation_verified') is True
+                    and receipt.get('completion_verified') is True)):
+                raise NativeChatError('The chat service could not complete the reply. Your draft is retained.')
             return result
         except NativeChatError:raise
+        except LocalConnectionError:
+            raise NativeChatError('The private chat connection is not ready. No API key entry is required.')from None
+        except httpx.TimeoutException:
+            raise NativeChatError('The chat service timed out before confirming a response. Your draft is retained.')from None
+        except httpx.ConnectError:
+            raise NativeChatError('The local chat service could not be reached. Your draft is retained.')from None
         except Exception:
             raise NativeChatError('The chat response was not confirmed. Partial text and your draft are retained. No automatic retry was sent.')from None

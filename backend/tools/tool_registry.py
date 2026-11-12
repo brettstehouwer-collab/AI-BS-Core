@@ -14,6 +14,66 @@ from .tool_call_contract import ToolCallValidationError, validate_tool_call
 
 logger = logging.getLogger("ToolRegistry")
 
+
+def _resolve_host_read_path(file_path: str, workspace_root: str = r"C:\AI-BS") -> str:
+    """Keep explicit paths; resolve one known bare project-document alias only."""
+    if os.path.isabs(file_path):
+        return file_path
+    target = os.path.abspath(os.path.join(workspace_root, file_path))
+    if os.path.exists(target):
+        return target
+    if file_path.casefold() == "codex_handoff.md":
+        canonical = os.path.join(workspace_root, "docs", "CODEX_HANDOFF.md")
+        root_real = os.path.normcase(os.path.realpath(workspace_root))
+        canonical_real = os.path.normcase(os.path.realpath(canonical))
+        try:
+            contained = os.path.commonpath([root_real, canonical_real]) == root_real
+        except ValueError:
+            contained = False
+        if contained and os.path.isfile(canonical):
+            return canonical
+    return target
+
+
+def _write_host_text_atomic(target: str, content: str, workspace_root: str = r"C:\AI-BS"):
+    """Preserve each prior file and publish complete bytes for cooperating writers."""
+    import hashlib
+    import tempfile
+    import uuid
+    from core.coding_locks import record_lock
+
+    data = content.encode("utf-8")
+    target = os.path.abspath(target)
+    parent = os.path.dirname(target)
+    os.makedirs(parent, exist_ok=True)
+    identity = os.path.normcase(os.path.realpath(target))
+    lock_name = hashlib.sha256(identity.encode("utf-8")).hexdigest() + ".lock"
+    lock_path = os.path.join(workspace_root, "workspace", "host_write_locks", lock_name)
+    with record_lock(lock_path):
+        if os.path.islink(target) or (hasattr(os.path, "isjunction") and os.path.isjunction(target)):
+            raise ValueError("Linked host files require an explicit canonical target.")
+        backup_path = None
+        if os.path.lexists(target):
+            if not os.path.isfile(target):
+                raise ValueError("The target is not a regular file.")
+            backup_path = f"{target}.{uuid.uuid4().hex}.bak"
+            with open(target, "rb") as source, open(backup_path, "xb") as backup:
+                shutil.copyfileobj(source, backup)
+                backup.flush()
+                os.fsync(backup.fileno())
+            shutil.copystat(target, backup_path)
+        descriptor, staged = tempfile.mkstemp(prefix=".aibs-host-write-", suffix=".tmp", dir=parent)
+        # Failed staging files and complete backups remain available for recovery.
+        with os.fdopen(descriptor, "wb") as output:
+            output.write(data)
+            output.flush()
+            os.fsync(output.fileno())
+        if backup_path is not None:
+            shutil.copymode(target, staged)
+        os.replace(staged, target)
+        return backup_path, len(data)
+
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from comfy_bridge import (
     queue_comfyui_workflow,
@@ -576,7 +636,7 @@ class ToolRegistry:
             },
             {
                 "name": "write_host_file",
-                "description": "Writes or mutates any file across host drives with automated timestamped .bak backup creation prior to mutation.",
+                "description": "Writes or mutates a host file with a unique .bak preimage and atomic publication of complete content.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -840,7 +900,7 @@ class ToolRegistry:
             },
             {
                 "name": "build_project",
-                "description": "Executes builds (compilation, package installs, and build scripts) on a software project directory or program. Supports npm, cargo, go, cmake, make, pip, dotnet, build.ps1/bat/sh.",
+                "description": "Builds a software project. Default canonical AI-BS/frontend/backend builds run durable local check/update jobs and restart only the authenticated loopback API; use maintenance_action=status and maintenance_job_id to poll. Custom commands and other projects retain their existing build behavior; no cloud deployment is implied.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -855,6 +915,14 @@ class ToolRegistry:
                         "timeout_seconds": {
                             "type": "integer",
                             "description": "Build timeout in seconds (default: 300)"
+                        },
+                        "maintenance_action": {
+                            "type": "string", "enum": ["start", "status", "restart"],
+                            "description": "Default start; status reads a durable local job; restart queues only the verified loopback API restart."
+                        },
+                        "maintenance_job_id": {
+                            "type": "string",
+                            "description": "Canonical32hex identifier for idempotent local submission/status."
                         }
                     },
                     "required": ["project_name_or_dir"]
@@ -4291,13 +4359,7 @@ class ToolRegistry:
                 if not file_path:
                     return {"status": "error", "message": "Missing required argument 'file_path'."}
                 
-                target = file_path
-                if not os.path.isabs(target):
-                    candidate = os.path.join(r"C:\AI-BS", target)
-                    if os.path.exists(candidate):
-                        target = candidate
-                    else:
-                        target = os.path.abspath(os.path.join(r"C:\AI-BS", target))
+                target = _resolve_host_read_path(file_path)
                 
                 if not os.path.exists(target):
                     return {"status": "error", "message": f"File not found: {target}"}
@@ -4305,14 +4367,25 @@ class ToolRegistry:
                     return {"status": "error", "message": f"Path is a directory, not a file: {target}"}
 
                 try:
-                    with open(target, "r", encoding="utf-8", errors="replace") as f:
-                        content = f.read()
+                    import hashlib
+                    with open(target, "rb") as f:
+                        raw = f.read()
+                    decoding_errors_replaced = False
+                    try:
+                        content = raw.decode("utf-8")
+                    except UnicodeDecodeError:
+                        content = raw.decode("utf-8", errors="replace")
+                        decoding_errors_replaced = True
                     return {
                         "status": "success",
                         "file_path": os.path.abspath(target),
                         "content": content,
-                        "size_bytes": os.path.getsize(target),
-                        "lines": len(content.splitlines())
+                        "size_bytes": len(raw),
+                        "lines": len(content.splitlines()),
+                        "sha256": hashlib.sha256(raw).hexdigest(),
+                        "encoding": "utf-8",
+                        "decoding_errors_replaced": decoding_errors_replaced,
+                        "truncated": False
                     }
                 except Exception as e:
                     return {"status": "error", "message": f"Failed to read file: {e}"}
@@ -4329,20 +4402,12 @@ class ToolRegistry:
 
                 backup_path = None
                 try:
-                    import shutil
-                    import time
-                    os.makedirs(os.path.dirname(target), exist_ok=True)
-                    if os.path.exists(target):
-                        backup_path = f"{target}.{int(time.time())}.bak"
-                        shutil.copy2(target, backup_path)
-                    
-                    with open(target, "w", encoding="utf-8", errors="replace") as f:
-                        f.write(content)
+                    backup_path, bytes_written = _write_host_text_atomic(target, content)
                     
                     return {
                         "status": "success",
                         "file_path": os.path.abspath(target),
-                        "bytes_written": len(content.encode("utf-8")),
+                        "bytes_written": bytes_written,
                         "backup_path": backup_path,
                         "message": f"Successfully wrote {len(content.encode('utf-8'))} bytes to {target}."
                     }
@@ -4481,6 +4546,10 @@ class ToolRegistry:
                     port_num = int(port)
                 except ValueError:
                     return {"status": "error", "message": f"Invalid port number: {port}"}
+
+                if port_num == 8080 and action == "restart":
+                    from core.project_maintenance import submit as submit_project_maintenance
+                    return submit_project_maintenance('backend', 'restart')
 
                 def _probe_port(p: int):
                     pid = None
@@ -5517,6 +5586,13 @@ class ToolRegistry:
                 )
 
             elif tool_name in ["build_project", "execute_build", "run_build", "project_build"]:
+                from core.project_maintenance import dispatch as dispatch_project_maintenance
+                target_project = arguments.get("project_name_or_dir", arguments.get("project_name", arguments.get("project_dir", "")))
+                maintenance = dispatch_project_maintenance(target_project, arguments.get("build_command"),
+                    maintenance_action=arguments.get("maintenance_action", "start"),
+                    job_id=arguments.get("maintenance_job_id"))
+                if maintenance is not None:
+                    return maintenance
                 from core.program_builder_engine import AutonomousProgramBuilder
                 return AutonomousProgramBuilder.build_project(
                     project_name_or_dir=arguments.get("project_name_or_dir", arguments.get("project_name", arguments.get("project_dir", ""))),

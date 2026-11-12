@@ -1,0 +1,88 @@
+{
+  "title": "Every Expression, Same Brotherhood",
+  "images": [
+    {
+      "file": "01-short-hair-laughing.png",
+      "title": "YOU HAD TO BE THERE",
+      "look": "Short hair \u00b7 white T-shirt",
+      "expression": "Unrestrained laughter",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2612361
+    },
+    {
+      "file": "02-glasses-reaction.png",
+      "title": "DID YOU JUST SAY THAT?",
+      "look": "Glasses \u00b7 turquoise T-shirt",
+      "expression": "Raised eyebrow / disbelief",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3039065
+    },
+    {
+      "file": "03-long-hair-focus.png",
+      "title": "IN THE ZONE",
+      "look": "Longer waves \u00b7 black T-shirt",
+      "expression": "Deep concentration",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2176685
+    },
+    {
+      "file": "04-beanie-exasperated.png",
+      "title": "NOT TODAY, BROTHER",
+      "look": "Beanie \u00b7 gray shirt \u00b7 light stubble",
+      "expression": "Exasperated / overwhelmed",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3547222
+    },
+    {
+      "file": "05-sunglasses-mischief.png",
+      "title": "UP TO ABSOLUTELY NOTHING",
+      "look": "Sunglasses \u00b7 orange shirt",
+      "expression": "Mischievous / conspiratorial",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2592421
+    },
+    {
+      "file": "06-curly-hair-relief.png",
+      "title": "ALL GOOD, MAN",
+      "look": "Short curls \u00b7 tan hoodie",
+      "expression": "Relieved / warmly sincere",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3193118
+    },
+    {
+      "file": "07-backpack-excited.png",
+      "title": "BACK ON OUR BULLSHIT",
+      "look": "Short spiky hair \u00b7 gray T-shirt \u00b7 backpack",
+      "expression": "Exhilarated / triumphant",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3577544
+    },
+    {
+      "file": "08-glasses-thoughtful.png",
+      "title": "WHAT IF WE ACTUALLY DID IT?",
+      "look": "Glasses \u00b7 navy crewneck",
+      "expression": "Thoughtful / quietly hopeful",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2965567
+    },
+    {
+      "file": "09-brett-expression-study.png",
+      "title": "EVERY VERSION OF BRETT",
+      "look": "Nine looks and expressions",
+      "expression": "Expression study",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3360584
+    }
+  ],
+  "contents": "Eight brotherhood posters and one nine-expression Brett portrait study.",
+  "generation": "Built-in imagegen; original reference photographs preserved."
+}

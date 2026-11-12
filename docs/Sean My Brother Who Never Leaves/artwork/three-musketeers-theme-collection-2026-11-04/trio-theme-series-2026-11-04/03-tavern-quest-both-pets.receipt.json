@@ -1,0 +1,20 @@
+{
+  "id": "03-tavern-quest-both-pets",
+  "mode": "built-in image_gen edit",
+  "prompt": "Edit reference image 1, the finished fantasy tavern trio poster, by ADDING TONTO AS A SECOND DISTINCT DOG. References 2 and 3 show the SAME real dog TONTO: use reference2 for his broad square facial structure, brown nose, amber eyes and naturally folded/rose ears; reference3 for current short chocolate/russet brown coat, muscular normal build, graying muzzle and white chest patch. No cropped ears, no long hair, no white forehead blaze on Tonto. Show Tonto as a calm friendly dog seated or comfortably lying in the lower-right foreground beside the existing dog, both faces clearly visible and equally cherished. A small tasteful leather collar with exact tag 'TONTO' is allowed. Match the warm candle lighting, native illustration finish, coherent scale, paws and shadows. You may shift only minor lower-right mushrooms to fit him; do not cover important words or the parchment approval trail.\n\nABSOLUTELY KEEP THE EXISTING DOG: the lower-left fluffy red-brown/white/tan herding dog with broad white forehead blaze, freckled muzzle, tan points, amber eyes, raised sunglasses and HR harness/badge is SEAN'S DIFFERENT DOG. Preserve that dog's identity, expression, coat, harness, pose and placement. Do not turn him into Tonto, blend them, duplicate him or replace him. Final exactly THREE humans and TWO clearly distinct dogs, one fluffy marked herding dog and one short-coated solid-brown muscular Tonto with white chest patch.\n\nPreserve all three humans' exact recognizable faces, positions, clothes, natural hands, expressions and the entire original portrait composition. Preserve every existing title/catchphrase and major label word-for-word, including THREE MUSKETEERS, THE QUEST CAN WAIT, ROAST FIRST. SHOW UP ANYWAY., QUEST LOG: OVERDUE, ADULT SUPERVISION IS A PAID FEATURE, NOT MY DEPARTMENT, BAD IDEA JUICE, SHELL COMPANY, HR ACCEPTS TREATS and MEETING COULD'VE BEEN A MEME. Keep snail terrarium, court model, maps, props and all good anatomy. Do not add people, more dogs, clutter, watermarks or new background changes. Only add the distinct real Tonto in a fitting foreground space. Preserve native 2:3 portrait framing.",
+  "refs": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/03-tavern-quest-seans-dog.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-a521-7652-a521-e1e66a785cbd/exec-f51003c8-64db-4f30-944f-d2b3f1369dd3.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/03-tavern-quest-both-pets.png",
+  "qa": {
+    "humanCount": 3,
+    "dogCount": 2,
+    "existingDog": "Sean's fluffy red-brown/white/tan dog remains lower left with broad white blaze, freckles, amber eyes, raised sunglasses and HR harness.",
+    "tonto": "Distinct short-coated chocolate/russet dog lower right with broad square head, amber eyes, brown nose, natural rose ears, light muzzle and white chest patch; TONTO tag correct.",
+    "invariants": "Visual comparison: faces, expressions, good hands, major typography, native fantasy tavern portrait composition and causally linked paperwork preserved. Approval parchment shifted slightly to fit Tonto without covering words.",
+    "limitations": "No pixel equivalence claimed; four original baby snails remain instead of requested five. All prior assets preserved."
+  }
+}

@@ -1,5 +1,10 @@
 # The Stehouwer Master Ecosystem Manual
 
+## 5.329.72 - 🛡️ BS-Chat Attachment Upload Defect Remediation, Router Mount Deduplication & Multi-Platform Release (2026-10-27)
+- **BS-Chat Attachment Upload Defect Remediation**: Hardened `ChatTab.jsx`, `MobileGeminiChat.jsx`, and `MobileStehouwerChat.jsx` with defensive `res.text()` parsing and zero-loss client `FileReader` fallback for text, code, and images, eliminating `Unexpected end of JSON input`. Sanitized `chat_attach_file` in `backend/AI_BS_Backend.py` with `os.path.basename` path traversal prevention and two-tier UTF-8/Latin-1 decoding. 15/15 automated tests passing in `scripts/tests/test_chat_attachment_upload.py`.
+- **Router Mount Audit & Deduplication**: Deduplicated 5 unconditional duplicate router mounts in `backend/AI_BS_Backend.py` (`updater_router`, `rec_debut_router`, `chef_orders_router`, `gateway_router`, `syndication_router`), eliminating 81 OpenAPI schema operation ID collision warnings and reducing router mount count from 112 to 107. 13/13 automated tests passing in `scripts/tests/test_router_mount_integrity.py`.
+- **Full Parity Multi-Platform Release**: Synchronized 4-mirror frontend parity (489/489 components identical), compiled production Vite distribution, deployed live to Firebase Hosting (`https://ai-bs-dashboard.web.app`), refreshed native Windows desktop shortcuts, and synchronized `mobile-app/package.json` to `5.329.72`.
+
 ## 5.328.0 - 🛡️ Recreational Debut Athlete SMS Isolation, Carrier Audit, 19/20 Daemon Matrix & Master Ledger Sync (2026-10-21)
 - **Strict Athlete-Only SMS Whitelist**: Verified against 7,202 student-athlete phone numbers (`7,356` athletes in `rec_debut.db`) with all 263 personal contacts quarantined.
 - **Class of 2027 Tracking & Webhook**: 903 athletes contacted, 745 queued (`#3705` -> `#7573`) with `recdebut-recruit.org/r/{athlete_id}` -> `https://recdebut.com/all-registration/` and live TextBee webhook.
@@ -24,9 +29,9 @@
 - **v5.322.0 — Generation Kill-Switch (`■ Stop`) & Tap-to-Run Code Executor (`▶ Run`):**
   - Bound `AbortController` kill-switch to immediately halt LLM generation on demand; integrated `▶ Run` button on code snippets streaming workstation stdout/stderr directly into chat.
 
-**Current Ecosystem Version:** 5.328.0
-**Last Major Update:** October 21, 2026
-**Last Updated:** 2026-10-21
+**Current Ecosystem Version:** 5.329.72
+**Last Major Update:** October 27, 2026
+**Last Updated:** 2026-10-27
 **Primary Architect & Operator:** Brett Stehouwer
 
 ## 5.321.0 - 🎬 Universal Hollywood Screenwriting Studio 1:1 Ecosystem Parity, View Stack Modes, Native Dropdown Menus & Full Ecosystem Audit (2026-10-15)

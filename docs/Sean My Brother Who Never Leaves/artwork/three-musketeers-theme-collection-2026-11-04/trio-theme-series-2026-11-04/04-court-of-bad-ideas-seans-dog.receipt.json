@@ -1,0 +1,18 @@
+{
+  "id": "04-court-of-bad-ideas-seans-dog",
+  "mode": "built-in image_gen edit",
+  "prompt": "Make a tightly localized dog-identity correction to reference image 1, the finished landscape trio mock courtroom poster. Replace ONLY the golden retriever judge with the specific real dog in reference image 2, Sean's actual dog. Faithfully match this dog's fluffy red-brown/chocolate coat with white/tan markings, broad white forehead blaze continuing down the nose, freckled white muzzle, white chest, tan cheeks and eyebrow markings, amber eyes, pinkish brown nose and soft folded triangular ears. Preserve the existing happy friendly expression, dog-sized foreground judge dais and paw near the toy squeaky gavel, adapting to the actual dog's proportions. Keep the exact HR badge, harness and regal little burgundy judicial cape. Rest the existing colorful sunglasses on the dog's forehead rather than concealing its eyes and facial markings. Exactly one dog.\n\nStrict invariants: preserve the entire composition, landscape aspect ratio and all three humans' recognizable faces, expressions, hands, clothes, positions and dignity. Preserve all wording and typography exactly, especially THREE MUSKETEERS, THE COURT OF BAD IDEAS, ADULT SUPERVISION IS A PAID FEATURE, NOT MY DEPARTMENT, HR, the two yellow evidence cards, CHILD SUPPORT DIVISION, SHELL ASSETS: FROZEN, LEGAL FEES: RECURRING, SETTLEMENT: TWO TREATS and QUESTIONABLE IDEAS. BETTER PEOPLE. Keep the snail annex, evidence string, pizza, controllers, papers, books, lighting and curtain design. Do not redraw unrelated parts, add objects, duplicate humans, crop or change the framing. Final image exactly three human adults plus one friendly dog. Only the dog's identity/coat/anatomy changes.",
+  "refs": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/04-court-of-bad-ideas.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-a521-7652-a521-e1e66a785cbd/exec-dc66eb99-f5d9-4bc8-8d77-df85685db450.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/04-court-of-bad-ideas-seans-dog.png",
+  "qa": {
+    "humanCount": 3,
+    "dogCount": 1,
+    "dog": "Sean's red-brown/white/tan fluffy herding dog, white blaze and chest, freckles, amber eyes and pinkish-brown nose. Sunglasses raised above eyes, exact HR badge, harness and judicial cape preserved.",
+    "invariants": "Visual comparison shows recognizable three faces, title/subtitle/evidence/sign wording, courtroom composition, paw and toy gavel preserved. No pixel equivalence claimed.",
+    "limitations": "Four baby snails clearly visible instead of requested five. Original golden-dog draft preserved."
+  }
+}

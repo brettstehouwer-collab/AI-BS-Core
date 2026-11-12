@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-04T22:58:35.707526+00:00",
+  "status": "studio109_build_and_D_compression_running",
+  "goal_complete": false,
+  "previous_goal_turn_classification": "progress_SDK_publication_verified_backups_and_new_candidate_preflight",
+  "build_session": 96171,
+  "compression_session": 55192,
+  "compression_summary": "E:/AI_BS_Resources/Storage_Recovery/2026-11-04/d_qualified_cleanup/d_cold_full_v01_summary.json",
+  "cleanup_receipt": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\D_cleanup_result_20261104.json",
+  "cache_logical_bytes_removed": 5957499271,
+  "AI_content_deletion": false,
+  "cloud_proposal": "Future authenticated status pilot and read-only Adam phone companion after playable opening; planning only. No cloud deployment.",
+  "free_GiB": {
+    "C": 287.36,
+    "D": 41.94,
+    "E": 90.32
+  },
+  "next_step": "Observe the existing Studio109 build session96171 and D lossless-compression session55192; do not restart on observation timeout. Then qualify actual frozen saved-play/creator/hub/normal startup and native repair/bypass route/control/restart checks, back up verified evidence, and only then consider launcher updates. Preserve installed107, failed108, original family material and real saves. Final likeness/captions/human pacing/current gameplay performance remain open."
+}

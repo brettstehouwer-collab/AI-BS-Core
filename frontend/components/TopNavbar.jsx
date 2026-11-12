@@ -13,7 +13,7 @@ import { SYSTEM_VERSION } from './version';
 import './MomMode.css';
 
 /** @param {{"localTrustEnabled"?: boolean, "trustedUserEmails"?: string[], "activeTab": string, "onTabChange": (arg0: string) => void, "navLayout"?: string, "onToggleNavLayout"?: () => void, "backendUrl": string, "backendOnline"?: boolean, "backendStatus"?: string, "comfyOnline"?: boolean, "selectedModel"?: string, "onSelectModel": (arg0: string) => void, "availableModels"?: string[], "onOpenProfile"?: () => void, "userProfile"?: unknown, "currentUser": import('firebase/auth').User | null, "userTier": {"id": string}, "isAdmin"?: boolean, "simulatedTier"?: string, "onSimulateTier"?: (tierKey: string) => void, "workspaceMode"?: string, "onToggleWorkspaceMode": () => void, "momMode"?: boolean, "onToggleMomMode": () => void, "zoomLevel"?: number, "onZoomChange": (zoom: number) => void, "zenMode"?: boolean, "onToggleZenMode": () => void, "onOpenMobileDrawer": () => void}} props */
-export default function TopNavbar({ activeTab, onTabChange, backendUrl, onSelectModel, currentUser, userTier, workspaceMode = 'simple', onToggleWorkspaceMode, momMode = false, onToggleMomMode, zoomLevel = 125, onZoomChange, zenMode = false, onToggleZenMode, onOpenMobileDrawer }) {
+export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentUser, userTier, workspaceMode = 'simple', onToggleWorkspaceMode, momMode = false, onToggleMomMode, zoomLevel = 125, onZoomChange, zenMode = false, onToggleZenMode, onOpenMobileDrawer }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export default function TopNavbar({ activeTab, onTabChange, backendUrl, onSelect
   const [showChatModal, setShowChatModal] = useState(false);
   const [onlineCount, setOnlineCount] = useState(1);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [, setActiveAIProvider] = useState(localStorage.getItem('aibs_active_ai_provider') || 'local');
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const navRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const scrollRibbonRef = useRef(/** @type {HTMLDivElement | null} */ (null));
@@ -200,7 +199,9 @@ item => item.key === activeTab)
           flexWrap: 'nowrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '6px 12px',
+          paddingLeft: '12px',
+          paddingRight: '12px',
+          paddingBottom: '6px',
           paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)',
           color: '#c9d1d9',
           userSelect: 'none',
@@ -334,7 +335,10 @@ item => item.key === activeTab)
         borderBottom: '1px solid #30363d',
         display: 'flex',
         alignItems: 'center',
-        padding: '6px 12px',
+        paddingLeft: '12px',
+        paddingRight: '12px',
+        paddingBottom: '6px',
+        paddingTop: '6px',
         color: '#c9d1d9',
         fontSize: '0.88rem',
         userSelect: 'none',
@@ -973,7 +977,7 @@ item => {
         onNavigateTab={onTabChange} 
       />
       <AIProviderSettingsModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} backendUrl={backendUrl} onProviderChange={
-(p,  m) => { setActiveAIProvider(p); if (onSelectModel && m) onSelectModel(m); }} />
+(p,  m) => { useAppStore.getState().setAIProviderSelection(p, m); }} />
       <GlobalWalkthroughGuide isOpen={showGuideModal} onClose={() => setShowGuideModal(false)} onNavigateTab={onTabChange} initialTab={activeTab} onStartTour={
 ( tabKey) => { if (tabKey && onTabChange) onTabChange(tabKey); setShowTour(true); }} />
       <TourGuideEngine activeTab={activeTab} isOpen={showTour} onClose={() => setShowTour(false)} />

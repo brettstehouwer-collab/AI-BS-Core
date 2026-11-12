@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_chapter_play\\AI_BS_M4_Chapter_Play_Source.zip",
+  "bytes": 13518579,
+  "files": 1409,
+  "sha256": "adab653b8d5eb897f840cf8b610faade535b58447d4f499ec0e6d613837c3739",
+  "crc": "passed",
+  "captured_byte_readback": "passed",
+  "free_bytes": {
+    "C": 58578157568,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

@@ -111,6 +111,11 @@ class SystemHealthNativeView(QWidget):
         title_lbl.setStyleSheet("font-size: 13pt; font-weight: bold; color: #f8fafc;")
         h_lay.addWidget(title_lbl)
 
+        from native_studio.process_batch_view import open_batch_controls
+        self.batch_controls_button = QPushButton('Background batch controls')
+        self.batch_controls_button.clicked.connect(lambda: open_batch_controls(self.bus, self))
+        h_lay.addWidget(self.batch_controls_button)
+
         h_lay.addStretch()
 
         # Mode buttons (Live Stream vs Persistent Archive)

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "checkpoint": "ROOM-STATE-PLAN-20261104",
+  "recorded_utc": "2026-11-05T03:41:01Z",
+  "status": "PLANNING_DESIGN_BACKUP_VERIFIED",
+  "local_path": "C:/AI-BS/docs/game_engine/sheltered_hub_and_pencil_room.md",
+  "bytes": 31643,
+  "sha256": "fdb87bad0da8fa7303752e054fcbebc1d2e54b33d05b7ec95f0010a8c9db10bf",
+  "drive_file_id": "1VYURw_GsKbNSEEm1-RFuJjpbgFiSUhD4",
+  "drive_file_url": "https://drive.google.com/file/d/1VYURw_GsKbNSEEm1-RFuJjpbgFiSUhD4/view?usp=drivesdk",
+  "drive_folder_id": "1bVkdDGU9WsHXalULX93l2sYGCnmTyNND",
+  "workshop_parent_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "authorization_record": "C:/AI-BS/docs/game_engine/checkpoints/workshop_backup_authorization_20261103.json",
+  "metadata_bytes_and_parent_verified": true,
+  "authenticated_restore_sha256_matches": true,
+  "cloud_backup_verified": true,
+  "restore_path": "C:/Users/footb/.codex/visualizations/2026/11/01/01a19491-7a5c-71e0-a6ba-0dc4a3f58f44/room_state_planning_20261104/Sheltered_Hub_Pencil_Room_Plan_restored.md",
+  "scope": "Updated derived design document only. Original family media, manuscript, saves, source/art packages, credentials and private Git/Master-ledger data are not included. This is not the final game backup.",
+  "verification": {
+    "original_document_lines_retained": true,
+    "source_review_helper": "prop01_plan_review",
+    "factual_review_corrections": ["Initially unlocked Pencil door and direct arrival semantics preserved", "Placement references remain immutable; replacement is explicit or in a fresh branch"],
+    "actual_monitor_reader_status": "available",
+    "prior_native_candidate_deployed_evidence_unchanged": true,
+    "all_proposed_future_branches_labelled": true,
+    "new_runtime_tests_or_model_edits": false
+  },
+  "local_free_gib_observed": {"C": 257.83, "D": 86.76},
+  "E_used": false,
+  "drive_quota_remaining": "unknown",
+  "planning_only": true,
+  "goal_complete": false
+}

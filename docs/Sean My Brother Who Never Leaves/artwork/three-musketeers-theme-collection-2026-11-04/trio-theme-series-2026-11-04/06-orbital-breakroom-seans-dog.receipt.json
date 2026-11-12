@@ -1,0 +1,23 @@
+{
+  "id": "06-orbital-breakroom-seans-dog",
+  "poster_id": "06-orbital-breakroom",
+  "variant": "final-corrected-dog",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-ad4d1801-583a-4164-b436-51bf72c27506.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom-seans-dog.png",
+  "prompt": "Edit image1 only by replacing its single golden HR dog with the SAME real dog in image2. Image1 is the finished tall portrait poster; retain the rest of it unchanged. Image2 is Sean's actual red-brown, tan and white fluffy herding dog: broad white forehead blaze down onto its freckled white muzzle, tan brows/cheeks, amber-brown eyes, liver/pink-brown nose, red-brown ears and fluffy white chest. Preserve the specific dog's recognizable face shape and exact characteristic coat pattern, not a generic golden retriever. Keep the happy dog in precisely the same lower-left foreground position, same scale and relaxed paws, with the black pet flight harness and exact HR badge. Remove the old dog sunglasses so the actual amber eyes and facial markings are clearly visible. Preserve all THREE human faces, positions, outfits, hands, expressions, Anna's brown-haired light-eyed appearance, every title/sign/mug/prop word including PWAY, all floating coffee/spoon/sugar effects, snail boarding passes, UFO/cow, paperwork printer, color/light and portrait2:3 framing. No new people or animals, no extra text, no changed scene layout. Match the original tactile photorealistic-surreal illustration and illumination. Only the dog identity and its obstructing sunglasses should change.",
+  "references": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "transparent_background": false,
+  "supersedes": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/06-orbital-breakroom.png",
+  "original_preserved": true,
+  "qa": {
+    "status": "accepted",
+    "inspection": "Real dog portrait viewed and compared visually to corrected output; generated original was inspected before edit.",
+    "notes": "Sean's actual red-tricolor herding dog rendered with distinctive white blaze, muzzle freckles, tan brows, amber eyes and liver nose. Comfortable HR harness retained. Three human portraits and principal text/composition visibly preserved; source golden-dog version kept.",
+    "limitations": "Generative identity correction; fine texture details are an artistic rendering. No claim of byte-for-byte identity outside the edited region.",
+    "retry_required": false
+  }
+}

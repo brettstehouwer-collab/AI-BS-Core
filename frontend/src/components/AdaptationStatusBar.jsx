@@ -1,6 +1,7 @@
-/** @typedef {{projectName: string, status: string, progress?: number, current_chunk?: number, total_chunks?: number, adaptation_type?: string, book_style?: string, error?: string, previous_summary?: string}} AdaptationJob */
+/** @typedef {{projectName: string, job_id: string, contract: string, connectionError?: string, status: string, progress?: number, current_chunk?: number, total_chunks?: number, adaptation_type?: string, book_style?: string, error?: string, previous_summary?: string}} AdaptationJob */
 import { useState, useEffect, useRef } from 'react';
 import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
+import { readAdaptationJob, monitorAdaptation, isAdaptationTerminal, isAdaptationComplete, requestAdaptationAction } from '/src/utils/screenplayAdaptation.js';
 
 /**
  * AdaptationStatusBar.jsx
@@ -12,136 +13,125 @@ export default function AdaptationStatusBar({ backendUrl, onSwitchToProject, onR
   const baseUrl = backendUrl || 'http://127.0.0.1:8000';
   const [activeJob, setActiveJob] = useState(/** @type {AdaptationJob | null} */ (null));
   const [isDismissed, setIsDismissed] = useState(false);
-  const eventSourceRef = useRef(/** @type {ReturnType<typeof createAuthenticatedEventSource> | null} */ (null));
+  const activeJobRef = useRef(/** @type {AdaptationJob | null} */ (null));
+  const monitorRef = useRef(/** @type {(() => void) | null} */ (null));
+  const monitorKeyRef = useRef('');
+  const failedStreamRef = useRef('');
+  const actionBusyRef = useRef(false);
+  const [isChanging, setIsChanging] = useState(false);
+  /** @param {AdaptationJob} value */
+  const updateJob = value => { activeJobRef.current = value; setActiveJob(value); };
 
-  // Poll for active jobs on mount and when not connected to SSE
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkActiveJobs = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/api/screenplay/adapt/active-jobs`);
-        if (!res.ok) return;
-        const data = await res.json();
-        const jobs = data.jobs || {};
-        
-        // Find first processing or recently modified job
-        const processingProject = Object.keys(jobs).find(
-          (k) => jobs[k] && jobs[k].status === 'processing'
-        );
-
-        if (processingProject && isMounted) {
-          const jobData = { projectName: processingProject, ...jobs[processingProject] };
-          setActiveJob(jobData);
-          setIsDismissed(false);
-          connectStream(processingProject);
-        } else if (!processingProject && isMounted) {
-          // If previously active job finished or no active jobs
-          if (activeJob && activeJob.status === 'processing') {
-            setActiveJob((prev) => (prev ? { ...prev, status: 'complete', progress: 100 } : null));
-            setTimeout(() => {
-              if (isMounted) setActiveJob(null);
-            }, 6000);
-          }
+  /** @param {AdaptationJob} job */
+  const connectStream = job => {
+    const key = `${job.projectName}:${job.job_id}`;
+    if (monitorKeyRef.current === key || failedStreamRef.current === key || isAdaptationTerminal(job.status)) return;
+    monitorRef.current?.();
+    monitorKeyRef.current = key;
+    monitorRef.current = monitorAdaptation({ baseUrl, projectName: job.projectName, jobId: job.job_id,
+      eventSourceFactory: createAuthenticatedEventSource,
+      onStatus: data => {
+        if (activeJobRef.current?.job_id !== job.job_id || activeJobRef.current.projectName !== job.projectName) return;
+        updateJob(data);
+        if (isAdaptationTerminal(data.status)) monitorKeyRef.current = '';
+        if (isAdaptationComplete(data.status)) onRefreshScreenplay?.(job.projectName);
+      },
+      onError: error => {
+        failedStreamRef.current = key;
+        monitorKeyRef.current = '';
+        const current = activeJobRef.current;
+        if (current?.job_id === job.job_id && current.projectName === job.projectName) {
+          updateJob({ ...current, connectionError: error instanceof Error ? error.message : 'Progress connection unavailable.' });
         }
-      } catch (err) {
-        // Backend offline or polling error
+      },
+    });
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    let polling = false;
+    /** @type {AbortController | null} */
+    let catalogController = null;
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    let catalogTimeout = null;
+    const checkActiveJobs = async () => {
+      if (!mounted || polling || actionBusyRef.current) return;
+      polling = true;
+      const observed = activeJobRef.current;
+      const requestController = new AbortController();
+      catalogController = requestController;
+      const requestTimeout = setTimeout(() => requestController.abort(), 15000);
+      catalogTimeout = requestTimeout;
+      try {
+        const res = await fetch(`${baseUrl}/api/screenplay/adapt/active-jobs`, { signal: requestController.signal });
+        if (!res.ok) throw new Error(`Job status returned HTTP ${res.status}.`);
+        const data = await res.json();
+        if (!mounted || activeJobRef.current !== observed || actionBusyRef.current) return;
+        const jobs = data.jobs;
+        if (!jobs || typeof jobs !== 'object' || Array.isArray(jobs)) throw new Error('Job status is invalid.');
+        const nextProject = (!observed || isAdaptationTerminal(observed.status))
+          ? Object.keys(jobs).find(name => ['queued', 'processing'].includes(jobs[name]?.status)) : undefined;
+        if (nextProject) {
+          const job = readAdaptationJob(jobs[nextProject], nextProject);
+          updateJob(job);
+          setIsDismissed(false);
+          connectStream(job);
+        } else if (observed) {
+          const raw = jobs[observed.projectName];
+          if (!raw) throw new Error('This job is absent from the returned status catalog. Completion is unverified.');
+          const job = readAdaptationJob(raw, observed.projectName, observed.job_id);
+          updateJob(job);
+          if (isAdaptationTerminal(job.status)) { monitorRef.current?.(); monitorKeyRef.current = ''; }
+          else connectStream(job);
+        }
+      } catch (error) {
+        if (mounted && observed && activeJobRef.current === observed) {
+          updateJob({ ...observed, connectionError: error instanceof Error ? error.message : 'Job status unavailable.' });
+        }
+      } finally {
+        clearTimeout(requestTimeout);
+        if (catalogController === requestController) { catalogController = null; catalogTimeout = null; }
+        polling = false;
       }
     };
-
-    checkActiveJobs();
+    void checkActiveJobs();
     const interval = setInterval(checkActiveJobs, 3500);
-
     return () => {
-      isMounted = false;
+      mounted = false;
       clearInterval(interval);
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      catalogController?.abort();
+      if (catalogTimeout !== null) clearTimeout(catalogTimeout);
+      monitorRef.current?.();
+      monitorKeyRef.current = '';
     };
   }, [baseUrl]);
 
-  /** @param {string} projectName */
-const connectStream = (projectName) => {
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-    }
-
+  /** @param {'cancel' | 'reset'} action */
+  const handleAction = async action => {
+    const captured = activeJobRef.current;
+    if (!captured || actionBusyRef.current) return;
+    actionBusyRef.current = true;
+    setIsChanging(true);
     try {
-      const es = createAuthenticatedEventSource(`${baseUrl}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projectName)}`);
-      eventSourceRef.current = es;
-
-      es.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data && data.status && data.status !== 'not_found') {
-            setActiveJob({ projectName, ...data });
-
-            if (onRefreshScreenplay && data.status === 'processing') {
-              onRefreshScreenplay(projectName);
-            }
-
-            if (data.status === 'complete' || data.status === 'error' || data.status === 'canceled') {
-              es.close();
-              if (onRefreshScreenplay) {
-                onRefreshScreenplay(projectName);
-              }
-              if (data.status === 'complete') {
-                setTimeout(() => setActiveJob(null), 8000);
-              }
-            }
-          }
-        } catch (e) {
-          console.error("Failed to parse SSE data:", e);
-        }
-      };
-
-      es.onerror = () => {
-        es.close();
-      };
-    } catch (e) {
-      console.error("SSE Connection error:", e);
-    }
+      const acknowledged = await requestAdaptationAction(baseUrl, captured, action);
+      if (activeJobRef.current?.job_id !== captured.job_id || activeJobRef.current.projectName !== captured.projectName) return;
+      monitorRef.current?.();
+      monitorKeyRef.current = '';
+      updateJob(acknowledged);
+    } catch (error) {
+      alert(`Adaptation state change not confirmed: ${error instanceof Error ? error.message : String(error)}`);
+    } finally { actionBusyRef.current = false; setIsChanging(false); }
   };
-
-  const handleCancel = async () => {
-    if (!activeJob) return;
-    try {
-      await fetch(`${baseUrl}/api/screenplay/adapt/cancel`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_name: activeJob.projectName }),
-      });
-      setActiveJob((prev) => (prev ? { ...prev, status: 'canceled', error: 'Canceled by user' } : null));
-      if (eventSourceRef.current) eventSourceRef.current.close();
-      setTimeout(() => setActiveJob(null), 3000);
-    } catch (err) {
-      alert(`Failed to cancel: ${errorMessage(err)}`);
-    }
-  };
-
-  const handleReset = async () => {
-    if (!activeJob) return;
-    try {
-      await fetch(`${baseUrl}/api/screenplay/adapt/reset`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_name: activeJob.projectName }),
-      });
-      setActiveJob(null);
-      if (eventSourceRef.current) eventSourceRef.current.close();
-      alert(`Reset adaptation state for "${activeJob.projectName}". You can now start a fresh adaptation.`);
-    } catch (err) {
-      alert(`Failed to reset: ${errorMessage(err)}`);
-    }
-  };
+  const handleCancel = () => handleAction('cancel');
+  const handleReset = () => handleAction('reset');
 
   if (!activeJob || isDismissed) return null;
 
-  const isProcessing = activeJob.status === 'processing';
-  const isComplete = activeJob.status === 'complete';
-  const isError = activeJob.status === 'error';
-  const isCanceled = activeJob.status === 'canceled';
+  const isProcessing = ['queued', 'processing'].includes(activeJob.status);
+  const isComplete = isAdaptationComplete(activeJob.status);
+  const isError = ['error', 'failed'].includes(activeJob.status);
+  const isCanceled = ['canceled', 'cancelled'].includes(activeJob.status);
+  const isStopped = ['interrupted', 'reset', 'not_found'].includes(activeJob.status);
   const progressPct = Math.min(100, Math.max(0, activeJob.progress || 0));
 
   let statusBg = '#161b22';
@@ -149,7 +139,15 @@ const connectStream = (projectName) => {
   let statusText = '#facc15';
   let badgeLabel = '⚡ PROCESSING ADAPTATION';
 
-  if (isComplete) {
+  if (activeJob.connectionError) {
+    statusBorder = '#f59e0b';
+    statusText = '#f59e0b';
+    badgeLabel = 'STATUS UNVERIFIED';
+  } else if (isStopped) {
+    statusBorder = '#9ca3af';
+    statusText = '#9ca3af';
+    badgeLabel = `ADAPTATION ${activeJob.status.toUpperCase()}`;
+  } else if (isComplete) {
     statusBorder = '#22c55e';
     statusText = '#22c55e';
     badgeLabel = '✓ ADAPTATION COMPLETE';
@@ -241,6 +239,7 @@ const connectStream = (projectName) => {
           {isProcessing && (
             <button
               onClick={handleCancel}
+              disabled={isChanging}
               style={{
                 background: '#ef444422',
                 border: '1px solid #ef4444',
@@ -257,9 +256,10 @@ const connectStream = (projectName) => {
             </button>
           )}
 
-          {(isError || isCanceled || isComplete) && (
+          {(isError || isCanceled || isComplete || isStopped) && (
             <button
               onClick={handleReset}
+              disabled={isChanging}
               style={{
                 background: '#9ca3af22',
                 border: '1px solid #9ca3af',
@@ -269,7 +269,7 @@ const connectStream = (projectName) => {
                 fontSize: '0.75rem',
                 cursor: 'pointer'
               }}
-              title="Clear job state"
+              title="Release worker ownership; existing files and project names are retained"
             >
               🔄 Reset
             </button>
@@ -291,6 +291,8 @@ const connectStream = (projectName) => {
           </button>
         </div>
       </div>
+
+      {activeJob.connectionError && <div role="status">{activeJob.connectionError} Last observed state: {activeJob.status}.</div>}
 
       {/* Progress Bar Row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -343,8 +345,3 @@ const connectStream = (projectName) => {
   );
 }
 
-/** @param {unknown} error @returns {string} */
-function errorMessage(error) {
-  if (error instanceof Error) return error.message;
-  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
-}

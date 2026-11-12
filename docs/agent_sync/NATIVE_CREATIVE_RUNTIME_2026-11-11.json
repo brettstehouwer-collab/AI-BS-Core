@@ -1,0 +1,43 @@
+{
+  "status": "VERIFIED_REVIEWED_LOCAL_RUNTIME",
+  "services_http": {
+    "backend": 200,
+    "gateway": 200,
+    "frontend": 200
+  },
+  "backend_worker_pid": 17976,
+  "backend_wrapper_pid": 10560,
+  "backend_created": 1794394782.0525963,
+  "activation_flags_false": true,
+  "authorization": {
+    "admin": 200,
+    "anonymous": 403
+  },
+  "private_database_snapshots": 21,
+  "unchanged_databases": 20,
+  "master_database_delta": "Only GPU thermal observations appended; no previous observation removed; matching autoincrement sequence advanced. All other table row fingerprints unchanged.",
+  "existing_project_files_checked": 1272,
+  "existing_project_file_changes": 0,
+  "provider_configuration_unchanged": true,
+  "native_candidate_enabled": true,
+  "candidate_sha256": "bdd85e5ae37cc7d33f3a022c6e5db3a80bc5744b77241e7965d86edc9fda490b",
+  "candidate_source_dependencies": 16,
+  "runtime_qualification": "Listed source/executable closure; not full Python/Qt DLL release attestation",
+  "tests": {
+    "automated_total": 137,
+    "passed": 136,
+    "skipped": 1,
+    "seconds": 19.992,
+    "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-reviewed-runtime-final.log",
+    "separate_cua_fixed_launcher": "PASS; actual synthetic rich source displayed, normal Alt+F4 close, exit0; source and original-tree pins unchanged"
+  },
+  "fixed_launcher_receipt": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-fixed-launcher-20261111T105702695074Z\\result.json",
+  "signed_in_browser_observed": true,
+  "fresh_real_account_native_handoff_qualified": true,
+  "browser_blocker": "Earlier upload-helper permission limitation remains; existing owned source qualified without upload or permission changes.",
+  "private_original_data_uploaded": false,
+  "next": "Mounted synthetic owner-isolated attachment/index/retrieval/restart acceptance; retain remaining original-document export and installed/release gates.",
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_REVIEWED_RUNTIME_CHECKPOINT",
+  "drive_receipt": "C:\\AI-BS\\backups\\native_reviewed_runtime_20261111T110736Z\\drive_verified.json",
+  "real_owner_acceptance": "docs/agent_sync/NATIVE_CREATIVE_REAL_OWNER_2026-11-11.json"
+}

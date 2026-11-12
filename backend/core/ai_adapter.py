@@ -85,8 +85,9 @@ def _extract_text_from_file(file_path: Path) -> str:
     if suffix in [".docx", ".doc"]:
         try:
             import docx
+            from core.document_text import iter_docx_paragraphs
             doc = docx.Document(str(file_path))
-            full_text = "\n".join([p.text for p in doc.paragraphs if p.text.strip()])
+            full_text = "\n".join(p.text for p in iter_docx_paragraphs(doc) if p.text.strip())
             if full_text.strip():
                 return full_text
         except Exception:

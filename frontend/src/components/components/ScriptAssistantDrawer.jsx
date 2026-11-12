@@ -1,10 +1,27 @@
 import { useState, useEffect, useRef } from "react";
+import { auth } from '/src/firebase.js';
+import { onAuthStateChanged } from 'firebase/auth';
+
+/** @param {Response} response */
+async function readReply(response) {
+  const data = await response.json();
+  if (!response.ok) throw new Error(data?.detail?.message || data?.detail || data?.message || `Request failed (${response.status}).`);
+  return data;
+}
+
+/** @param {any} receipt */
+function verifiedReceipt(receipt) {
+  return receipt?.schema === 'aibs.project_rag_snapshot.v2' && receipt.complete === true
+    && /^[a-f0-9]{64}$/.test(receipt.snapshot_sha256) && Array.isArray(receipt.sources);
+}
 
 /** @param {import('react').ComponentProps<typeof ScriptAssistantSession>} props */
 export default function ScriptAssistantDrawer( props) {
   // Each project owns a separate mounted session. Pending results remain with
   // their original session when a project switch unmounts it.
-  return <ScriptAssistantSession key={props.projectName || 'Default Project'} {...props} />;
+  const [identity, setIdentity] = useState(auth.currentUser?.uid || 'signed-out');
+  useEffect(() => onAuthStateChanged(auth, user => setIdentity(user?.uid || 'signed-out')), []);
+  return <ScriptAssistantSession key={JSON.stringify([identity, props.backendUrl || '', props.projectName || 'Default Project'])} {...props} />;
 }
 
 /** @param {{"projectName"?: string, "isOpen"?: boolean, "onClose"?: () => void, "onInsertScript"?: (arg0: string) => void, "backendUrl"?: string}} props */
@@ -15,31 +32,35 @@ function ScriptAssistantSession({
   onInsertScript,
   backendUrl = ''
 }) {
-  const [messages, setMessages] = useState(/** @type {Array<{id: string, role: string, content: string, sources?: Array<{type?: string, label?: string, excerpt?: string}>}>} */ ([
+  const [messages, setMessages] = useState(/** @type {Array<{id: string, role: string, content: string, sources?: Array<{type?: string, label?: string, excerpt?: string, source_revision?: string, chunk_sha256?: string, source_file?: string}>, canInsert?: boolean, coverage?: string}>} */ ([
     {
       id: 'welcome',
       role: 'assistant',
-      content: `👋 **Script & Memoir Assistant for *${projectName}*.**\n\nI can query this project's indexed manuscript and screenplay excerpts. Corpus isolation is not verified; responses may include model knowledge.\n\nCheck the index status and review cited sources before inserting revisions.`,
+      content: `👋 **Script & Memoir Assistant for *${projectName}*.**\n\nQueries use checked excerpts from this owner's current saved project. Only a bounded selection enters the model; replies can still be mistaken.\n\nSync after saving changes, review source revisions and missing coverage, then decide whether to insert a suggestion.`,
       sources: []
     }
   ]));
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [stats, setStats] = useState({ total_docs: 0, book_chunks: 0, script_scenes: 0 });
+  const [stats, setStats] = useState(/** @type {{status: string, total_docs: number, receipt?: any}} */ ({ status: 'not_checked', total_docs: 0 }));
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
   const messagesEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const live = useRef(true);
+  const requests = useRef(new Set(/** @type {AbortController[]} */ ([])));
+  useEffect(() => {
+    live.current = true;
+    return () => { live.current = false; requests.current.forEach(controller => controller.abort()); };
+  }, []);
 
   const fetchStats = async () => {
+    const controller = new AbortController(); requests.current.add(controller);
     try {
-      const res = await fetch(`${backendUrl}/api/screenwriting/project-assistant/stats?project_name=${encodeURIComponent(projectName)}`);
-      const data = await res.json();
-      if (data.status === 'success') {
-        setStats(data);
-      }
+      const data = await readReply(await fetch(`${backendUrl}/api/screenwriting/project-assistant/stats?project_name=${encodeURIComponent(projectName)}`, { signal: controller.signal }));
+      if (live.current) setStats({ ...data, status: data.status === 'success' && verifiedReceipt(data.receipt) ? 'success' : data.status === 'success' ? 'unverified' : data.status, total_docs: verifiedReceipt(data.receipt) ? data.total_docs : 0 });
     } catch (err) {
-      console.error('Failed to fetch project stats:', err);
-    }
+      if (live.current) { setStats({ status: 'unavailable', total_docs: 0 }); setSyncMessage(`❌ Index status: ${err instanceof Error ? err.message : String(err)}`); }
+    } finally { requests.current.delete(controller); }
   };
 
   useEffect(() => {
@@ -53,26 +74,30 @@ function ScriptAssistantSession({
   }, [messages, isLoading]);
 
   const handleSync = async () => {
+    const controller = new AbortController(); requests.current.add(controller);
     setIsSyncing(true);
-    setSyncMessage('Syncing screenplay & memoir into isolated Vector DB...');
+    setSyncMessage('Checking and indexing the current saved sources...');
     try {
       const res = await fetch(`${backendUrl}/api/screenwriting/project-assistant/sync`, {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ project_name: projectName })
       });
-      const data = await res.json();
-      if (data.status === 'success') {
-        setSyncMessage(`✅ Synced ${data.indexed_scenes} scenes! (${data.total_docs} total vectors)`);
+      const data = await readReply(res);
+      if (!live.current) return;
+      if (data.status === 'success' && verifiedReceipt(data.receipt)) {
+        setSyncMessage(`✅ Verified ${data.indexed_docs} source chunks at ${data.receipt.snapshot_sha256.slice(0, 12)}.`);
         await fetchStats();
       } else {
-        setSyncMessage(`❌ Sync error: ${data.message}`);
+        setStats({ status: data.status || 'unverified', total_docs: 0 });
+        setSyncMessage(`❌ ${data.message || (data.status === 'no_source' ? 'No saved sources were found; nothing was indexed.' : 'Synchronization has no verified receipt.')}`);
       }
     } catch (err) {
-      setSyncMessage(`❌ Sync failed: ${(err instanceof Error ? err.message : String(err))}`);
+      if (live.current) setSyncMessage(`❌ Sync failed: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
-      setIsSyncing(false);
-      setTimeout(() => setSyncMessage(''), 4000);
+      requests.current.delete(controller);
+      if (live.current) setIsSyncing(false);
     }
   };
 
@@ -90,10 +115,12 @@ function ScriptAssistantSession({
     setMessages(prev => [...prev, userMsg]);
     if (!textToSend) setInputValue('');
     setIsLoading(true);
+    const controller = new AbortController(); requests.current.add(controller);
 
     try {
       const res = await fetch(`${backendUrl}/api/screenwriting/project-assistant/chat`, {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           project_name: projectName,
@@ -101,13 +128,18 @@ function ScriptAssistantSession({
           model: 'stehouwer_dolphin:latest'
         })
       });
-      const data = await res.json();
+      const data = await readReply(res);
+      if (!live.current) return;
       if (data.status === 'success' || data.response) {
+        const qualified = data.status === 'success' && data.generation_verified === true && verifiedReceipt(data.receipt) && data.sources?.length > 0;
+        const missing = data.retrieval?.missing_source_indices;
         const assistantMsg = {
           id: crypto.randomUUID(),
           role: 'assistant',
           content: data.response || 'No response generated.',
-          sources: data.sources || []
+          sources: data.sources || [],
+          canInsert: qualified,
+          coverage: verifiedReceipt(data.receipt) ? `Snapshot ${data.receipt.snapshot_sha256.slice(0, 12)} · ${data.context_docs_count ?? data.sources?.length ?? 0} passages. ${Array.isArray(missing) && missing.length ? `${missing.length} sources not covered by these excerpts.` : 'Bounded excerpts; this is not a full-project review.'}` : 'No verified current-source evidence; no generated suggestion is qualified.'
         };
         setMessages(prev => [...prev, assistantMsg]);
       } else {
@@ -122,6 +154,8 @@ function ScriptAssistantSession({
         ]);
       }
     } catch (err) {
+      if (!live.current) return;
+      if (!textToSend) setInputValue(previous => previous || query);
       setMessages(prev => [
         ...prev,
         {
@@ -132,7 +166,8 @@ function ScriptAssistantSession({
         }
       ]);
     } finally {
-      setIsLoading(false);
+      requests.current.delete(controller);
+      if (live.current) setIsLoading(false);
     }
   };
 
@@ -195,8 +230,8 @@ function ScriptAssistantSession({
           fontSize: '0.75rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8' }}>
-            <span style={{ color: '#22c55e' }}>●</span>
-            <span>ChromaDB: <strong>{stats.total_docs || 0} vectors</strong> ({stats.book_chunks || 0} book, {stats.script_scenes || 0} scenes)</span>
+            <span style={{ color: stats.status === 'success' ? '#22c55e' : '#eab308' }}>●</span>
+            <span>Index: {stats.status} · <strong>{stats.total_docs || 0} source chunks</strong></span>
           </div>
           <button
             onClick={handleSync}
@@ -211,11 +246,17 @@ function ScriptAssistantSession({
               fontWeight: 'bold',
               cursor: isSyncing ? 'wait' : 'pointer'
             }}
-            title="Re-index current script and book into this project's isolated Vector DB"
+            title="Index current saved screenplay, book and transcript sources for this owner and project"
           >
             {isSyncing ? '⏳ Syncing...' : '🔄 Sync DB'}
           </button>
         </div>
+        {verifiedReceipt(stats.receipt) && (
+          <details style={{ fontSize: '0.7rem', color: '#8b949e', overflowWrap: 'anywhere' }}>
+            <summary>Current source revisions · {stats.receipt.snapshot_sha256.slice(0, 12)}</summary>
+            {stats.receipt.sources.map((/** @type {{type: string, source_file: string, revision: string}} */ source, /** @type {number} */ index) => <div key={index} title={source.revision}>{source.type} · {source.source_file} · {source.revision.slice(0, 12)}</div>)}
+          </details>
+        )}
         {syncMessage && (
           <div style={{ color: syncMessage.includes('❌') ? '#f87171' : '#4ade80', fontSize: '0.75rem' }}>
             {syncMessage}
@@ -292,6 +333,7 @@ function ScriptAssistantSession({
             }}>
               {m.content}
             </div>
+            {m.coverage && <div style={{ fontSize: '0.7rem', color: '#8b949e', marginTop: '5px' }}>{m.coverage}</div>}
 
             {/* Action buttons on Assistant Messages */}
             {m.role === 'assistant' && m.id !== 'welcome' && (
@@ -302,7 +344,7 @@ function ScriptAssistantSession({
                 >
                   📋 Copy
                 </button>
-                {typeof onInsertScript === 'function' && (
+                {m.canInsert && typeof onInsertScript === 'function' && (
                   <button
                     onClick={() => onInsertScript(m.content)}
                     style={{ background: 'transparent', border: '1px solid #238636', color: '#3fb950', borderRadius: '4px', padding: '2px 6px', fontSize: '0.7rem', cursor: 'pointer' }}
@@ -324,6 +366,9 @@ function ScriptAssistantSession({
                     <div key={sIdx} style={{ background: '#161b22', padding: '6px', borderRadius: '4px', borderLeft: src.type === 'script_scene' ? '3px solid #3b82f6' : '3px solid #eab308' }}>
                       <div style={{ color: src.type === 'script_scene' ? '#93c5fd' : '#fde047', fontWeight: 'bold', fontSize: '0.7rem' }}>
                         {src.label}
+                      </div>
+                      <div style={{ color: '#8b949e', fontSize: '0.65rem', overflowWrap: 'anywhere' }} title={`Revision: ${src.source_revision || 'unverified'}; chunk: ${src.chunk_sha256 || 'unverified'}`}>
+                        {src.source_file} · revision {src.source_revision?.slice(0, 12) || 'unverified'} · chunk {src.chunk_sha256?.slice(0, 12) || 'unverified'}
                       </div>
                       <div style={{ color: '#8b949e', fontSize: '0.7rem', marginTop: '2px', fontStyle: 'italic' }}>
                         "{src.excerpt}"

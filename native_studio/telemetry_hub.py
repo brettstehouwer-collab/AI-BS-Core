@@ -56,16 +56,20 @@ class TelemetryHub(QThread):
     def attach_ai(self, last_metrics: Callable[[], dict[str, Any]]) -> None:
         self._ai_last = last_metrics
 
-    def shutdown(self) -> bool:
+    def shutdown(self, timeout_ms: int = 2000) -> bool:
         """Request a stop and report whether the bounded drain completed.
 
         The sampling thread owns the mapping through its final write. Callers
         must retain this QThread while False is returned and defer window
         destruction until it finishes; closing the mapping here would race a
         sampler still waiting on a local service or hardware read.
+        Pass timeout_ms=0 from the GUI close coordinator to keep it responsive;
+        the legacy default remains 2000ms for other callers.
         """
+        if not isinstance(timeout_ms, int) or timeout_ms < 0:
+            raise ValueError('Sampler shutdown requires a bounded nonnegative timeout')
         self._stop.set()
-        return bool(self.wait(2000))
+        return bool(self.wait(timeout_ms))
 
     def run(self) -> None:
         try:

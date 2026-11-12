@@ -1,0 +1,35 @@
+{
+  "id": "20261104_P82A_studio107_restart_backup_verified",
+  "at": "2026-11-04T05:09:29.371980+00:00",
+  "outgoing_agent": "Codex",
+  "receiving_agent": "Codex after restart",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "working_tree_status": "D:\\AI-BS-Game-Resources\\P82\\Studio107Preparation\\git-status.local.txt",
+  "local_patch": "D:\\AI-BS-Game-Resources\\P82\\Studio107Preparation\\git-diff.local.patch",
+  "checkpoint": {
+    "at": "2026-11-04T05:09:06.790306+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\82A_Studio107_Restart_Checkpoint.zip",
+    "bytes": 18952704,
+    "sha256": "7946336c1da7c9c617444298f896ea8b4a166f3b4fcf9744ee12ebe4a150b90b",
+    "members": 801,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1j_H96znI5yiUZA-ZCyMAlUdaLvSR3FVz",
+    "drive_file_id": "1ap0_tegn0x85iqX3O-hIw-4454Nxx72V",
+    "drive_restore_verified": true
+  },
+  "verified": "Studio107/SDK0171 package, both routes and restart, ordinary companion controls/F9, all owned jobs joined; 82A archive raw downloaded and all 801 members checked",
+  "incomplete": [
+    "Studio107 shortcut deployment",
+    "separate Studio107 human review launcher",
+    "naturalistic likeness approval",
+    "caption listening review",
+    "actual 8-12 minute human pacing",
+    "current 1080p60 Release performance",
+    "remaining current-content regression acceptance",
+    "final accepted backup"
+  ],
+  "next_step": "User requested Codex restart. Do not start native work or change launchers until reopened. After restart validate current pins and 82A receipt, prepare predeployment-verification.json, then guarded five-shortcut deployment and readback. No rebuild solely due restart.",
+  "goal_complete": false
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "status": "PLANNING_ONLY",
+  "planning_date": "2026-10-31",
+  "timezone": "America/New_York",
+  "current_instruction": "Continue planning before building. No installation, native engine implementation or compilation is authorized by this document itself.",
+  "user_direction": {
+    "creation_workflow": {
+      "status": "USER_SELECTED",
+      "user_answer": "combination of the three",
+      "meaning": ["AI prompting", "Full visual editing", "Code-first developer SDK"],
+      "requirement": "The three workflows must cooperate on one project. None is removed from the target."
+    },
+    "world_building": {
+      "status": "USER_SELECTED_BROAD_SCOPE",
+      "user_answer": "everything",
+      "planned_interpretation": [
+        "Repair existing systems",
+        "Place and connect modular structures",
+        "Freely place and transform objects",
+        "Author and edit freeform mesh objects",
+        "Sculpt terrain surfaces",
+        "Excavate caves and edit volumetric regions",
+        "Construct, dismantle and modify structures under game rules",
+        "Generate worlds and structures procedurally",
+        "Generate and revise assets and behaviors with AI",
+        "Extend systems through visual logic, scripts and native code"
+      ],
+      "interpretation_status": "PROPOSED_FEATURE_BREAKDOWN_OF_CONFIRMED_DIRECTION",
+      "delivery_rule": "Stages introduce working subsets while preserving the broader destination. The initial repair demo is not the complete building specification."
+    },
+    "adam": {
+      "status": "USER_SELECTED",
+      "personal_foundation": "Adam is the creator's brother and safe person. This is the creator's story, using his brother's memory as the guide in the game.",
+      "characterization_policy": "The creator's memories guide the portrayal, including warmth, humor, encouragement and safety. Separate sourced recollections and historical quotations from newly written game dialogue.",
+      "direction": "Adam anchors the entire architecture as the internal compass and living core of AI-BS, connecting structural continuity, meaningful memory, authoring and gameplay.",
+      "first_contact": "I’m here. Start with what still responds.",
+      "connection_verified": "That connection holds. We can build from here.",
+      "implementation_status": "PROPOSED: required native continuity core at M2/M3, asynchronous provider enrichment at M5."
+    }
+  },
+  "decisions": [
+    {
+      "id": "DESIGN-001", "status": "PROPOSED", "topic": "Engine and game ownership",
+      "recommendation": "Generic engine supplies registration, actions, events, assets, construction interfaces and scheduling. First Boot-specific faults, power rules and story live in its game module.",
+      "requirements": ["ENGINE-016"],
+      "acceptance": "Build and package a second mechanically different game without editing generic engine source."
+    },
+    {
+      "id": "DESIGN-002", "status": "PROPOSED", "topic": "Shared authored project",
+      "recommendation": "Use a versioned project manifest and shared scene/prefab/asset/behavior definitions across AI, visual tools and code. Maintain separate authoring, Play and saved-player states.",
+      "requirements": ["ENGINE-015", "ENGINE-020"],
+      "acceptance": "Each authoring route opens the same entities and registered behavior bindings; stopping Play does not silently rewrite authoring."
+    },
+    {
+      "id": "DESIGN-003", "status": "PROPOSED", "topic": "Scene operations and durable edits",
+      "recommendation": "Versioned typed operations include operation ID, expected revision, preconditions, affected IDs/bounds and inverse information. A grouped scene operation validates and applies atomically. Committed operation results and deltas are recorded together.",
+      "requirements": ["ENGINE-017"],
+      "acceptance": "Retry a committed placement without duplicate entities or costs; reject an invalid grouped operation without partial changes; undo restores references and game resource state."
+    },
+    {
+      "id": "DESIGN-004", "status": "PROPOSED", "topic": "AI creation workflow",
+      "recommendation": "AI produces inspectable change sets, generated assets or source patches. Scene changes use ordinary transactions; source patches use staged files and ordinary compile/validate/preview. Preview and automatic draft application are configurable product modes.",
+      "requirements": ["ENGINE-015", "ENGINE-021"],
+      "acceptance": "An AI-authored scene edit appears in visual tools and undo history; generated source compiles through the same SDK build as handwritten source."
+    },
+    {
+      "id": "DESIGN-005", "status": "PROPOSED", "topic": "Prefab and variant model",
+      "recommendation": "Begin with prefab-local IDs, per-instance UUID maps, one base variant and explicit field overrides. Record override provenance and report conflicts after base updates. Add nested/structural variants after basic identity/undo behavior is proven.",
+      "requirements": ["ENGINE-003", "ENGINE-015"],
+      "acceptance": "Duplicate a multi-object prefab with remapped internal references; update its base without losing valid instance overrides."
+    },
+    {
+      "id": "DESIGN-006", "status": "PROPOSED", "topic": "Behavior authoring",
+      "recommendation": "Use registered typed actions/events/components for visual logic and scripts; native C++ extends systems. Preserve visual graph source and expose native functions as nodes, without claiming arbitrary C++ converts to a graph. Lua remains a later researched candidate, not an installed scripting backend.",
+      "requirements": ["ENGINE-021"],
+      "acceptance": "Equivalent visual and scripted interactions emit the declared events and save the same progression. A native extension registers a new typed action and inspector metadata."
+    },
+    {
+      "id": "DESIGN-007", "status": "PROPOSED", "topic": "World representation",
+      "recommendation": "Layer modular/prefab objects, editable mesh objects, broad heightfield surfaces and localized sparse volumetric regions. Keep volume source semantics explicit: density and signed-distance fields are distinct choices.",
+      "requirements": ["ENGINE-018", "ENGINE-019"],
+      "acceptance": "Place a module, reshape an object, sculpt a surface and excavate a cross-chunk tunnel; each introduced mode supports matching collision, undo and reload.",
+      "sources": ["https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu"]
+    },
+    {
+      "id": "DESIGN-008", "status": "PROPOSED", "topic": "Persistent world identity",
+      "recommendation": "Persist authored and created UUIDs, owning-cell IDs, creation records, deletion tombstones, terrain source edits and generator/content versions. Start with frozen unloaded simulation and explicit unavailable references.",
+      "requirements": ["ENGINE-003", "ENGINE-018"],
+      "acceptance": "Create and delete objects, edit ground, unload/reload and restart without duplicates, resurrected deletions or lost edits."
+    },
+    {
+      "id": "DESIGN-009", "status": "PROPOSED", "topic": "Edit publication and navigation",
+      "recommendation": "Prepare geometry/collision revisions off-thread and admit a matching ready revision at a simulation boundary. Dirty navigation tiles remain unavailable until the appropriate obstacle update or source-geometry rebake completes. Discard stale job results.",
+      "requirements": ["ENGINE-019"],
+      "acceptance": "Build a bridge, walk across it, admit rebuilt NPC routing, remove it and save/reload. A stale rebuild never replaces a newer edit.",
+      "sources": [
+        "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Collision/Shape/HeightFieldShape.h",
+        "https://github.com/recastnavigation/recastnavigation",
+        "https://github.com/recastnavigation/recastnavigation/blob/main/DetourTileCache/Include/DetourTileCache.h"
+      ]
+    },
+    {
+      "id": "DESIGN-010", "status": "PROPOSED", "topic": "Editor versus player authority",
+      "recommendation": "Share placement and geometry services. Editor tools retain structural validation and may bypass game economy/reach checks; player construction follows the game's registered cost, support, ownership and collision policies.",
+      "requirements": ["ENGINE-017"],
+      "acceptance": "The same recipe is placeable in the editor while an in-game attempt can fail with a clear resource/support/reach reason."
+    },
+    {
+      "id": "DESIGN-011", "status": "PROPOSED", "topic": "Scalable rendering",
+      "recommendation": "Define forward PBR opaque/alpha-test/transparent passes, material and shader variants, basic culling/instancing, immutable render snapshots and bounded upload/remesh queues before high-detail mutable worlds.",
+      "requirements": ["ENGINE-002", "ENGINE-012", "ENGINE-019"],
+      "acceptance": "Construction, deletion and region transitions retain measured frame/memory budgets, and released content returns toward the established memory baseline."
+    },
+    {
+      "id": "DESIGN-012", "status": "PROPOSED", "topic": "Release tiers",
+      "recommendation": "R0 foundation, R1 playable systems, R2 hybrid creator alpha, R3 editable streamed worlds, R4 reusable engine beta. Every tier has demonstrable creator/player outcomes and carries deferred target capabilities forward.",
+      "requirements": ["ENGINE-015", "ENGINE-016", "ENGINE-018"],
+      "acceptance": "Two distinct projects export offline packages; AI, visual and code authoring are each exercised before claiming the creator alpha."
+    },
+    {
+      "id": "DESIGN-013", "status": "PROPOSED", "topic": "Adam as living continuity core",
+      "recommendation": "Implement AIBS::Adam as required native identity, semantic memory, evidence-backed interpretation, restoration-sensitive planning and expression across authoring and player contexts. AdamAnchor binds scene lore/presentation; model providers enrich an already-present core.",
+      "requirements": ["ENGINE-011", "ENGINE-022", "ENGINE-023", "ENGINE-024", "ENGINE-025"],
+      "acceptance": "Recall real choices, shortcuts and hazards after durable save/reopen offline; keep timeline branches scoped; commit memory with world deltas; play First Boot cues only from valid outcomes; presentation settings do not erase continuity."
+    }
+  ],
+  "open_design_items": [
+    {"id":"OPEN-001","topic":"Construction/game economy","details":"Choose resource, support, dismantling, damage and structural-collapse policies for First Boot; keep generic policy interfaces reusable."},
+    {"id":"OPEN-002","topic":"Mutable volume format","details":"Choose density versus signed-distance semantics, chunk resolution, meshing/seam/LOD scheme and persistence after a budgeted editing prototype."},
+    {"id":"OPEN-003","topic":"Visual logic language","details":"Choose initial event/condition/action graph serialization, node typing, cycle/loop rules, debug stepping and scripting backend/version."},
+    {"id":"OPEN-004","topic":"Asset creation quality","details":"Declare mesh/texture/rig/animation providers, accepted formats, generated-asset provenance and validation criteria; source images alone do not define these outputs."},
+    {"id":"OPEN-005","topic":"Rendering quality profiles","details":"Specify visual references, material/light/geometry budgets, animation count and minimum player hardware after measured native rendering."},
+    {"id":"OPEN-006","topic":"World/content compatibility","details":"Specify authored-world updates versus player modifications, conflict handling, migrations and rollback/export behavior."},
+    {"id":"OPEN-007","topic":"Product distribution","details":"Choose SDK/editor support policy, exact dependency versions and selected distribution terms during implementation planning."},
+    {"id":"OPEN-008","topic":"Adam expression tuning","details":"Select authored voice direction, motif assets, caption pacing and real-device haptic patterns while preserving Adam's stable identity and accessible cues."},
+    {"id":"OPEN-009","topic":"Adam history publication","details":"Define which real AI-BS development records become versioned First Boot lore, and any explicit narrative policy for recalling alternate attempts without presenting them as current-world facts."}
+  ]
+}

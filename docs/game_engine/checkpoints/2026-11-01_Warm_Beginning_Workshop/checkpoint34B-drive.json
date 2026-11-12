@@ -1,0 +1,13 @@
+{
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\34B_Opening_Entry_Monitor_Correction.zip",
+  "bytes": 198343,
+  "sha256": "f898ec5450d97291131b9021306137ad547e1cfc38d19dfcb5b91ff7fe07bb61",
+  "members": 8,
+  "goal_complete": false,
+  "at": "2026-11-03T14:59:58.691958+00:00",
+  "folder_id": "1zGYuM73glnp3vPtHFJXrOeG3CInePhZF",
+  "file_id": "1GuL49jN2PR8FGptavZiAX7Vz_5W2fWqk",
+  "url": "https://drive.google.com/file/d/1GuL49jN2PR8FGptavZiAX7Vz_5W2fWqk/view?usp=drivesdk",
+  "all_member_sizes_hashes_crc_and_exact_set_verified": true
+}

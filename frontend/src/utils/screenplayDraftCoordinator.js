@@ -1,10 +1,11 @@
+import { cloneRichFDX, prepareRichFDXWrite, richFDXIdentity } from './richFdxDraft.js';
 /**
  * @typedef {{kind: string; id: string; source_branch: string; target_branch: string; before_revision: string; after_revision: string; [key: string]: unknown}} WorkflowOperation
  * @typedef {{initialized?: boolean; workflow_revision?: number; active_branch?: string; pending_operation?: WorkflowOperation | null}} WorkflowResponse
  * @typedef {{workflowAvailable: false; workflowInitialized: false; workflowRevision: undefined; activeBranch: undefined; pendingOperation: null} | {workflowAvailable: true; workflowInitialized: boolean; workflowRevision: number; activeBranch: string; pendingOperation: WorkflowOperation | null}} WorkflowState
- * @typedef {WorkflowState & {revision: string; savedContent: string; context: number; blocked: boolean; error: unknown}} DraftState
- * @typedef {{project_name: string; expected_revision: string; expected_workflow_revision?: number; content?: string; branch?: string; branch_name?: string}} DraftWrite
- * @typedef {WorkflowResponse & {revision?: string; project?: string; content?: string; unchanged?: boolean; status?: string; parsed?: import("/types/screenwriting").ParsedScreenplay; warning?: string}} DraftResponse
+ * @typedef {WorkflowState & {revision: string; savedContent: string; fdxDocument?: any; context: number; blocked: boolean; error: unknown}} DraftState
+ * @typedef {{project_name: string; expected_revision: string; expected_workflow_revision?: number; content?: string; branch?: string; branch_name?: string; fdx_document?: any}} DraftWrite
+ * @typedef {WorkflowResponse & {revision?: string; project?: string; content?: string; unchanged?: boolean; status?: string; parsed?: import("/types/screenwriting").ParsedScreenplay; warning?: string; fdx_document?:any}} DraftResponse
  * @typedef {(payload: DraftWrite) => Promise<DraftResponse>} DraftRequest
  */
 // One request queue for every interactive manuscript mutation. Revision baselines
@@ -57,8 +58,9 @@ export function createScreenplayDraftCoordinator({ write }) {
     initialized: state.workflowInitialized, workflow_revision: state.workflowRevision,
     active_branch: state.activeBranch, pending_operation: state.pendingOperation,
   } : {};
-  /** @param {string} project @param {string | undefined} content @param {DraftRequest} request @param {string} [branch] @param {string} [mode] @param {boolean} [skipUnchanged] */
-  const mutate = (project, content, request, branch, mode = 'write', skipUnchanged = false) => {
+  /** @param {string} project @param {string | undefined} content @param {DraftRequest} request @param {string} [branch] @param {string} [mode] @param {boolean} [skipUnchanged] @param {any} [fdxDocument] */
+  const mutate = (project, content, request, branch, mode = 'write', skipUnchanged = false, fdxDocument) => {
+    const richDraft=cloneRichFDX(fdxDocument);
     // Capture the load/branch context when queued, not when eventually dispatched.
     // Metadata-only acknowledgements may advance the epoch of this same context.
     const captured = projects.get(project);
@@ -77,11 +79,12 @@ export function createScreenplayDraftCoordinator({ write }) {
       }
       if (mode === 'write' && typeof content !== 'string') throw new Error('A manuscript change requires text content.');
       if (mode === 'switch' && (typeof branch !== 'string' || !branch.trim())) throw new Error('A target branch is required.');
-      if (skipUnchanged && state.savedContent === content) return { revision: state.revision, unchanged: true, ...workflowPayload(state) };
+      if (skipUnchanged && state.savedContent === content && richFDXIdentity(state.fdxDocument)===richFDXIdentity(richDraft)) return { revision: state.revision, unchanged: true, fdx_document:cloneRichFDX(state.fdxDocument), ...workflowPayload(state) };
       /** @type {DraftWrite} */
       const payload = { project_name: project, expected_revision: state.revision };
       if (state.workflowAvailable) payload.expected_workflow_revision = state.workflowRevision;
       if (mode === 'write') Object.assign(payload, { content, branch });
+      if (mode === 'write' && state.fdxDocument) payload.fdx_document=prepareRichFDXWrite(richDraft,state.fdxDocument);
       if (mode === 'switch') payload.branch_name = branch;
       try {
         const result = await request(payload);
@@ -91,6 +94,7 @@ export function createScreenplayDraftCoordinator({ write }) {
         }
         if (result.project !== undefined && result.project !== project) throw new Error('Save response belongs to a different project.');
         if (result.content !== undefined && typeof result.content !== 'string') throw new Error('Save response contains invalid manuscript content.');
+        if (state.fdxDocument && (!result.fdx_document || result.fdx_document.document_sha256!==result.revision || typeof result.content!=='string')) throw new Error('Rich FDX save acknowledgement is incomplete; retain the local draft and reload explicitly.');
         const next = readWorkflow(result, state.workflowAvailable || mode !== 'write');
         if (next.pendingOperation) throw new Error('An interrupted workflow operation requires explicit recovery.');
         if (!state.workflowAvailable && next.workflowInitialized) throw new Error('Reload initialized workflow state before saving this project.');
@@ -126,6 +130,7 @@ export function createScreenplayDraftCoordinator({ write }) {
           result.unchanged === true ? content : typeof result.content === 'string' ? result.content : content;
         if (mode === 'switch' && branch !== state.activeBranch) state.context++;
         Object.assign(state, next, { revision: result.revision, savedContent });
+        if(state.fdxDocument) state.fdxDocument=cloneRichFDX(result.fdx_document);
         return result;
       } catch (error) {
         // A lost response may have committed on the server. Never re-read and
@@ -139,15 +144,15 @@ export function createScreenplayDraftCoordinator({ write }) {
     });
   };
   return {
-    /** @param {string} project @param {string} content @param {string} revision @param {WorkflowResponse} [workflow] */
-    load(project, content, revision, workflow) {
+    /** @param {string} project @param {string} content @param {string} revision @param {WorkflowResponse} [workflow] @param {any} [fdxDocument] */
+    load(project, content, revision, workflow, fdxDocument) {
       try {
         if (!project || typeof content !== 'string' || typeof revision !== 'string' || !revision) {
           throw new Error('Project response is missing its content or revision; saving is disabled.');
         }
         const metadata = readWorkflow(workflow, workflow !== undefined);
         const error = metadata.pendingOperation ? new Error('An interrupted writing operation requires explicit recovery before saving.') : null;
-        projects.set(project, { revision, savedContent: content, ...metadata, context: 0, blocked: Boolean(error), error });
+        projects.set(project, { revision, savedContent: content, fdxDocument:cloneRichFDX(fdxDocument), ...metadata, context: 0, blocked: Boolean(error), error });
       } catch (error) {
         const previous = projects.get(project);
         if (previous) {
@@ -160,10 +165,10 @@ export function createScreenplayDraftCoordinator({ write }) {
     },
     /** @param {string} project @returns {DraftState | null} */
     snapshot(project) { const state = projects.get(project); return state ? {...state} : null; },
-    /** @param {string} project @param {string} content */
-    isDirty(project, content) { return !projects.has(project) || projects.get(project)?.savedContent !== content; },
-    /** @param {string} project @param {string} content @param {string} [branch] */
-    save(project, content, branch) { return mutate(project, content, write, branch, 'write', true); },
+    /** @param {string} project @param {string} content @param {any} [fdxDocument] */
+    isDirty(project, content, fdxDocument) { const state=projects.get(project);return !state || state.savedContent!==content || richFDXIdentity(state.fdxDocument)!==richFDXIdentity(fdxDocument); },
+    /** @param {string} project @param {string} content @param {string} [branch] @param {any} [fdxDocument] */
+    save(project, content, branch, fdxDocument) { return mutate(project, content, write, branch, 'write', true, fdxDocument); },
     /** @param {string} project @param {string} content @param {DraftRequest} request */
     mutate(project, content, request) { return mutate(project, content, request); },
     /** @param {string} project @param {DraftRequest} request */

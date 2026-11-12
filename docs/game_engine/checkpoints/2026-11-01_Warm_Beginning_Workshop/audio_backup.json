@@ -1,0 +1,13 @@
+{
+  "scope": "Working derived family references only; not part of source or distributable assets",
+  "audio": {
+    "drive_file_id": "1AWyMlWburFH9S4cyXT0mBeesxIlCoRDC",
+    "bytes": 34738254,
+    "sha256": "1464299dbe1280b979384f12fc34db1f6626b52ed3d1fb699541cf74082c2a08"
+  },
+  "provenance_drive_file_id": "1Th6vCBblIuh2xVdJ8UaV19B846ywR4bY",
+  "draft_captions_drive_file_id": "1VqSHxLYFrml8R-Kns3_8eElLhHIINfYl",
+  "folder_url": "https://drive.google.com/drive/folders/1zVU6vz2P0LtmObi0sW3binqAp7NIhA_E",
+  "verification": "Remote size and parent metadata verified; remote full-byte hash not checked. Local SHA recorded. Original photos/video untouched.",
+  "captions": "DRAFT_REQUIRES_LISTENING_REVIEW"
+}

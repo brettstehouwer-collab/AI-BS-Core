@@ -89,6 +89,40 @@ if not getattr(sys, 'frozen', False):
 from native_studio.runtime_policy import configure_frozen_dependencies
 configure_frozen_dependencies()
 
+# Explicit delegated launches finish their stdin/authorization handshake before
+# Qt imports, worker pools, full-shell views or background hub initialization.
+if __name__ == '__main__' and any(flag in sys.argv for flag in ('--native-creative-bootstrap','--native-creative-pipe-bootstrap')):
+    from native_studio.native_creative_entry import main as native_creative_main
+    sys.exit(native_creative_main(sys.argv))
+
+# Release acceptance intentionally bypasses MainWindow, daemon management,
+# samplers and the broad application-view import graph. It is opt-in only.
+if __name__ == '__main__' and '--packaged-authoring-acceptance' in sys.argv:
+    from native_studio.packaged_authoring_acceptance import main as packaged_authoring_main
+    sys.exit(packaged_authoring_main(sys.argv[1:]))
+
+if __name__ == '__main__' and '--packaged-chapter-acceptance' in sys.argv:
+    from native_studio.packaged_chapter_acceptance import main as packaged_chapter_acceptance_main
+    sys.exit(packaged_chapter_acceptance_main(sys.argv[1:]))
+
+if __name__ == '__main__' and '--saved-play-release-smoke' in sys.argv:
+    from native_studio.saved_play_release_smoke import saved_play_release_smoke_main
+    sys.exit(saved_play_release_smoke_main(sys.argv[1:]))
+
+if __name__ == '__main__' and any(flag in sys.argv for flag in
+        ('--placement-release-smoke', '--placement-reopen-smoke')):
+    from native_studio.placement_release_smoke import placement_release_smoke_main
+    sys.exit(placement_release_smoke_main(sys.argv[1:]))
+
+if __name__ == '__main__' and '--asset-release-smoke' in sys.argv:
+    from native_studio.asset_release_smoke import asset_release_smoke_main
+    sys.exit(asset_release_smoke_main(sys.argv[1:]))
+
+if __name__ == '__main__' and any(flag in sys.argv for flag in
+        ('--game-build-smoke', '--creator-release-smoke')):
+    from native_studio.game_release_smoke import release_smoke_main
+    sys.exit(release_smoke_main(sys.argv[1:]))
+
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QColor, QFont, QPainter, QPixmap, QLinearGradient
 from PyQt6.QtWidgets import (
@@ -97,6 +131,7 @@ from PyQt6.QtWidgets import (
     QFrame,
     QGridLayout,
     QHBoxLayout,
+    QLayout,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -104,6 +139,7 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QSplitter,
     QStackedWidget,
     QStatusBar,
@@ -112,6 +148,7 @@ from PyQt6.QtWidgets import (
 )
 
 from native_studio import __version__
+from native_studio.window_geometry import fit_startup_geometry
 from native_studio.runtime_policy import allow_background_daemon_management, allow_exit_process_cleanup, allow_background_update_checks
 from native_studio.engine import EngineBus, GpuProbe
 from native_studio.theme import STYLESHEET, PALETTE, apply_dark_titlebar
@@ -427,6 +464,7 @@ class MainWindow(QMainWindow):
         self._hub_category_buttons: List[QPushButton] = []
 
         self._build_ui()
+        self._fit_startup_to_screen()
 
         # Telemetry sampler
         self.hub.frame.connect(self._on_hub_frame)
@@ -452,6 +490,25 @@ class MainWindow(QMainWindow):
         # Permission may have been revoked while the startup timer was pending.
         if allow_background_update_checks():
             self.bus.submit(check_for_updates_worker, on_result=self._on_bg_update_check_result)
+
+    def _fit_startup_to_screen(self) -> None:
+        screen = self.screen() or QApplication.primaryScreen()
+        if screen is None:
+            return
+        available = screen.availableGeometry()
+        # Qt frame styling is not the Windows resize border/title decoration.
+        # Realize the still-hidden native window so frameMargins is meaningful;
+        # reserve conservative decoration if the platform reports zero margins.
+        self.winId()
+        handle = self.windowHandle()
+        margins = handle.frameMargins() if handle is not None else None
+        frame_width = max(16, margins.left()+margins.right()) if margins is not None else 16
+        frame_height = max(40, margins.top()+margins.bottom()) if margins is not None else 40
+        fitted = fit_startup_geometry((available.x(), available.y(), available.width(), available.height()),
+                                      frame=(frame_width, frame_height))
+        self.setMinimumSize(fitted.minimum_width, fitted.minimum_height)
+        self.resize(fitted.width, fitted.height)
+        self.move(fitted.x, fitted.y)
 
     def _build_ui(self) -> None:
         self.trippy_root = TrippyRootWidget()
@@ -525,8 +582,12 @@ class MainWindow(QMainWindow):
     def _build_top_navbar(self) -> QWidget:
         nav = QFrame()
         nav.setObjectName("TopNavbar")
-        nav.setFixedHeight(54)
-        lay = QHBoxLayout(nav)
+        # Every existing action keeps its natural readable width. Overflow is
+        # navigable rather than squeezing labels into unreadable fragments.
+        nav.setFixedHeight(76)
+        row = QWidget()
+        lay = QHBoxLayout(row)
+        lay.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         lay.setContentsMargins(14, 4, 14, 4)
         lay.setSpacing(10)
 
@@ -564,6 +625,7 @@ class MainWindow(QMainWindow):
             txt = pill_labels[idx] if idx < len(pill_labels) else f"{hub.icon}  {hub.label}"
             btn = QPushButton(txt)
             btn.setStyleSheet(self._get_category_pill_style(is_active=(idx == 0)))
+            btn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             btn.clicked.connect(lambda checked, i=idx: self._select_hub_category(i))
             self._hub_category_buttons.append(btn)
             lay.addWidget(btn)
@@ -590,6 +652,7 @@ class MainWindow(QMainWindow):
 
         self.quick_container = QWidget()
         quick_lay = QHBoxLayout(self.quick_container)
+        quick_lay.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         quick_lay.setContentsMargins(0, 0, 0, 0)
         quick_lay.setSpacing(5)
 
@@ -600,9 +663,11 @@ class MainWindow(QMainWindow):
                 "QPushButton:hover { background: rgba(56, 189, 248, 0.2); color: #ffffff; border-color: #38bdf8; }"
             )
             btn.clicked.connect(lambda checked, k=pt["key"]: self.jump_to_tab(k))
+            btn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             quick_lay.addWidget(btn)
 
         self.quick_scroll.setWidget(self.quick_container)
+        self.quick_scroll.setMinimumWidth(180)
         lay.addWidget(self.quick_scroll)
 
         self.btn_quick_right = QPushButton("▶")
@@ -658,6 +723,20 @@ class MainWindow(QMainWindow):
         self.btn_update.clicked.connect(self._open_update_dialog)
         lay.addWidget(self.btn_update)
 
+        for widget in (self.btn_toggle_sidebar, self.hw_chip, self.search_btn,
+                       self.btn_mom_toggle, self.btn_wallpaper_toggle, self.btn_update):
+            widget.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.nav_scroll = QScrollArea(nav)
+        self.nav_scroll.setObjectName('MainNavigationScroll')
+        self.nav_scroll.setAccessibleName('Main navigation — scroll horizontally for all controls')
+        self.nav_scroll.setWidgetResizable(True)
+        self.nav_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.nav_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.nav_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.nav_scroll.setWidget(row)
+        nav_layout = QVBoxLayout(nav)
+        nav_layout.setContentsMargins(0, 0, 0, 0)
+        nav_layout.addWidget(self.nav_scroll)
         return nav
 
     def _toggle_trippy_wallpaper(self) -> None:
@@ -692,6 +771,7 @@ class MainWindow(QMainWindow):
 
         self.subtab_container = QWidget()
         self.subtab_container_lay = QHBoxLayout(self.subtab_container)
+        self.subtab_container_lay.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.subtab_container_lay.setContentsMargins(4, 2, 4, 2)
         self.subtab_container_lay.setSpacing(6)
         self.subtab_container_lay.addStretch()
@@ -778,6 +858,7 @@ class MainWindow(QMainWindow):
             is_active = (sub.key == self._active_subtab_key)
             btn = QPushButton(f"{sub.icon}  {sub.label}")
             btn.setStyleSheet(self._get_subtab_pill_style(is_active=is_active))
+            btn.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             btn.clicked.connect(lambda checked, k=sub.key: self.jump_to_tab(k))
             self._subtab_buttons[sub.key] = btn
             self.subtab_container_lay.addWidget(btn)
@@ -989,6 +1070,9 @@ class MainWindow(QMainWindow):
             view = NocoVisionNativeView(self.bus)
         elif key in ("unified_crypto", "crypto_trader"):
             view = CryptoSwarmNativeView(self.bus)
+        elif key == "game_build":
+            from native_studio.game_build_view import GameBuildNativeView
+            view = GameBuildNativeView(self.bus)
         elif key == "gaming_lab":
             view = GamingLabNativeView(self.bus)
         elif key == "steam_gaming":
@@ -1042,49 +1126,123 @@ class MainWindow(QMainWindow):
             self.hw_chip.setText(f"❄️ {t}°C | ⚡ {v_used:.1f}/{v_tot:.0f}G | 💻 {cpu:.0f}% ↗")
 
     def closeEvent(self, event) -> None:
-        if getattr(self, '_sampler_close_pending', False):
-            event.ignore()
+        state = getattr(self, '_close_state', 'OPEN')
+        if state == 'CLOSED':
+            event.accept()
             return
-        for part in (self.view_daw,):
+        if state == 'READY':
+            # Closing a client does not authorize terminating other processes.
             try:
-                part.shutdown()
+                if allow_exit_process_cleanup():
+                    from backend.zombie_node_cleaner import sweep_zombie_nodes
+                    sweep_zombie_nodes(dry_run=False)
             except Exception:
                 pass
-        for subview in getattr(self, "_subviews_cache", {}).values():
-            if hasattr(subview, "shutdown"):
-                try:
-                    subview.shutdown()
-                except Exception:
-                    pass
-        if hasattr(self, "_daemon_watchdog_timer") and self._daemon_watchdog_timer.isActive():
-            self._daemon_watchdog_timer.stop()
-        if self.hub.shutdown() is False:
-            event.ignore()
-            self._sampler_close_pending = True
-            self.hub.finished.connect(self._finish_sampler_shutdown)
-            # The sampler may have finished between the bounded wait and this
-            # connection. Recheck after connecting so either order closes once.
-            if not self.hub.isRunning():
-                QTimer.singleShot(0, self._finish_sampler_shutdown)
+            self._close_state = 'CLOSED'
+            super().closeEvent(event)
             return
-        self.bus.shutdown()
-        # Closing a client does not authorize terminating other processes.
+        if state == 'STOPPING' or getattr(self, '_preparing_close', False):
+            event.ignore()
+            return
+        self._preparing_close = True
+        parts = list({id(part): part for part in
+                      [self.view_daw, *getattr(self, '_subviews_cache', {}).values()]}.values())
         try:
-            if allow_exit_process_cleanup():
-                from backend.zombie_node_cleaner import sweep_zombie_nodes
-                sweep_zombie_nodes(dry_run=False)
-        except Exception:
-            pass
-        super().closeEvent(event)
+            game_workspace = getattr(self, '_subviews_cache', {}).get('game_build')
+            if game_workspace is not None and not game_workspace.prepare_close(
+                    lambda: QTimer.singleShot(0, self.close)):
+                event.ignore()
+                return
+            # Chapter shutdown can take time. Recheck every live chat's newest
+            # snapshot after it completes, before disabling editing or teardown.
+            for part in parts:
+                recovery = getattr(part, '_chat_recovery', None)
+                if recovery is not None and not recovery.flush_for_close():
+                    event.ignore()
+                    return
+        finally:
+            self._preparing_close = False
 
-    def _finish_sampler_shutdown(self) -> None:
-        if getattr(self, '_sampler_close_pending', False):
-            self._sampler_close_pending = False
-            self.close()
+        self._close_state = 'STOPPING'
+        self._shutdown_setup_complete = False
+        self._shutdown_error = None
+        self.setEnabled(False)
+        # Prevent submission-producing GUI timers from racing bus admission.
+        # The bus's drain timer has a separate QObject owner and stays active.
+        for timer in self.findChildren(QTimer):
+            timer.stop()
+        self._shutdown_timer = QTimer(self)
+        self._shutdown_timer.setInterval(20)
+        self._shutdown_timer.timeout.connect(self._poll_shutdown)
+        self.bus.drained.connect(self._poll_shutdown)
+        self.hub.finished.connect(self._poll_shutdown)
+        terminal = getattr(self.bus, '_native_terminal', None)
+        if terminal is not None:
+            try:
+                terminal.shutdown()
+            except Exception as exc:
+                self._shutdown_error = type(exc).__name__
+        batch_controller = getattr(self.bus, '_process_batch_controller', None)
+        if batch_controller is not None:
+            try:
+                batch_controller.shutdown()
+            except Exception as exc:
+                self._shutdown_error = type(exc).__name__
+        self.bus.shutdown(0)
+        for part in parts:
+            if hasattr(part, 'shutdown'):
+                try:
+                    part.shutdown()
+                except Exception as exc:
+                    # Retain the session on teardown failure; never silently
+                    # claim its owners are safe to destroy.
+                    self._shutdown_error = type(exc).__name__
+        self.hub.shutdown(0)
+        self._shutdown_setup_complete = True
+        event.ignore()
+        self._shutdown_timer.start()
+        self._poll_shutdown()
+
+    def _poll_shutdown(self) -> None:
+        if (getattr(self, '_close_state', 'OPEN') != 'STOPPING'
+                or not self._shutdown_setup_complete):
+            return
+        if self._shutdown_error is not None:
+            self._shutdown_timer.stop()
+            if hasattr(self, 'statusBar'):
+                self.statusBar().showMessage('Shutdown needs attention; the session is retained. ' + self._shutdown_error)
+            return
+        # finished signals are notifications; only the actual native barriers
+        # authorize window destruction (including QThread final TLS cleanup).
+        batch_controller = getattr(self.bus, '_process_batch_controller', None)
+        if batch_controller is not None and batch_controller.snapshot().get('drain_failed'):
+            self._shutdown_error = 'Owned batch cleanup is not confirmed; session retained.'
+            self._shutdown_timer.stop()
+            self.statusBar().showMessage(self._shutdown_error)
+            return
+        batches_drained = batch_controller is None or batch_controller.is_drained
+        terminal = getattr(self.bus, '_native_terminal', None)
+        terminal_drained = terminal is None or terminal.is_drained
+        if self.bus.is_drained and self.hub.wait(0) and batches_drained and terminal_drained:
+            self._shutdown_timer.stop()
+            self._close_state = 'READY'
+            QTimer.singleShot(0, self.close)
 
 
 
 def main() -> int:
+    if any(flag in sys.argv for flag in ('--placement-release-smoke', '--placement-reopen-smoke')):
+        from native_studio.placement_release_smoke import placement_release_smoke_main
+        return placement_release_smoke_main(sys.argv[1:])
+    if '--creator-release-smoke' in sys.argv:
+        from native_studio.game_release_smoke import release_smoke_main
+        return release_smoke_main(sys.argv[1:])
+    if "--game-build-smoke" in sys.argv:
+        from native_studio.game_release_smoke import run_game_release_smoke
+        index = sys.argv.index("--game-build-smoke")
+        if index + 1 >= len(sys.argv):
+            return 2
+        return run_game_release_smoke(Path(sys.argv[index + 1]))
     if "--check-local-connection" in sys.argv:
         from native_studio.local_connection import write_connection_diagnostic
         return 0 if write_connection_diagnostic() else 2
@@ -1099,6 +1257,13 @@ def main() -> int:
     win = MainWindow()
     apply_dark_titlebar(win)
     win.show()
+    if '--game-development' in sys.argv:
+        win.jump_to_tab('game_build')
+    if '--bs-chat' in sys.argv:
+        win.jump_to_tab('ide')
+    if '--work-controls' in sys.argv:
+        from native_studio.process_batch_view import open_batch_controls
+        open_batch_controls(win.bus, win)
     code = app.exec()
     return code
 

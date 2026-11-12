@@ -33,7 +33,7 @@ MODEL_FLEET_TAXONOMY: Dict[str, Dict[str, Any]] = {
         ],
         "regex_patterns": [
             r"\bdef\s+[a-zA-Z_]\w*\(", r"\bfunction\s+[a-zA-Z_]\w*\(", r"\bconst\s+[a-zA-Z_]\w*\s*=",
-            r"\bimport\s+[\w\s,{}]+from", r"\bclass\s+[a-zA-Z_]\w*", r"\bSELECT\s+.+\s+FROM\b",
+            r"\bimport\s+[\w\s,{}]+from", r"\bclass\s+[a-zA-Z_]\w*(?:\([^\n)]*\))?\s*:", r"\bclass\s+[A-Za-z_]\w*(?:\s+final)?(?:\s+(?:extends|implements)\s+[A-Za-z_][\w., <>\[\]]*)?(?:\s*:\s*(?:(?:public|protected|private)\s+)?[A-Za-z_][\w: <>,]*)?\s*\{", r"\bSELECT\s+.+\s+FROM\b",
             r"\b<\w+(?:\s+[^>]+)?>", r"\b(?:npm|pip|cargo|go\s+run|git\s+commit)\b"
         ]
     },
@@ -455,6 +455,11 @@ class ModelDomainMatrix:
                 # Word boundary search for accurate match
                 pattern = r"\b" + re.escape(kw) + r"\b"
                 matches = len(re.findall(pattern, prompt_lower))
+                if model_name == "qwen2.5-coder:latest" and kw == "class" and not (
+                        re.search(r"\bclass\s+[A-Za-z_]\w*(?:\([^\n)]*\))?\s*:", prompt)
+                        or re.search(r"\bclass\s+[A-Za-z_]\w*(?:\s+final)?(?:\s+(?:extends|implements)\s+[A-Za-z_][\w., <>\[\]]*)?(?:\s*:\s*(?:(?:public|protected|private)\s+)?[A-Za-z_][\w: <>,]*)?\s*\{", prompt)
+                        or re.search(r"\b(?:python|java|c\+\+|typescript|method|inheritance|constructor|object-oriented)\b", prompt_lower)):
+                    matches = 0
                 if matches > 0:
                     kw_score = (1.5 if len(kw.split()) > 1 else 1.0) * matches
                     score += kw_score

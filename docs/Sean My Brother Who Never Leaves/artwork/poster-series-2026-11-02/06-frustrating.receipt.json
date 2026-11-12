@@ -1,0 +1,21 @@
+{
+  "id": "06-frustrating",
+  "source": "C:\\Users\\footb\\.codex\\generated_images\\01a19b4a-b5a3-7d12-9526-759110caf3ed\\exec-fc8cc22e-7824-492c-9168-2fad24ffd299.png",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\06-frustrating.png",
+  "tool": "built-in image_gen",
+  "prompt_source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\generation-prompts.json",
+  "prompt_fields": [
+    "common",
+    "posters[id=06-frustrating].brief"
+  ],
+  "transparent_background": false,
+  "qa": {
+    "status": "accepted",
+    "identity": "Sean left with recognizable dark voluminous hair, stubble, tattoo/watch; Brett right with shorter lighter hair, distinct clean-shaven facial structure. Both consistent across panels.",
+    "composition": "Upper frustrated phone scene with tangled angular ribbons; lower calm reconnection panel with amber/blue palette and loose warm line; equal dignity, no threats.",
+    "wording": "All requested wording accurate: WE BOTH SWUNG AND MISSED; Sean: I READ IT DIFFERENTLY.; Brett: THAT'S NOT WHAT I MEANT.; LET'S TRY THAT AGAIN.",
+    "medium": "Expressive semi-real ink/graphic novel with cream/crimson upper palette, accurate hands and natural seated poses.",
+    "limitations": "Imaginative illustration of tone mismatch and repair, not a verified event. Phones and notebook marks have no readable UI or extra words."
+  },
+  "generated_at_utc": "2026-11-02T08:49:26.4327332Z"
+}

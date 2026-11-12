@@ -313,7 +313,8 @@ class RouteContainmentTests(unittest.TestCase):
                 effect()
             paths = ['/documents/upload','/documents/list','/api/v1/media/upload',
                      '/api/v1/audio/demucs/upload_and_separate','/api/v1/executive/vibe-rollback',
-                     '/api/usb-recovery/rebuild-partition']
+                     '/api/usb-recovery/rebuild-partition', '/api/ai/config',
+                     '/api/ai/validate-key', '/api/ai/generate']
             for path in paths:
                 app.add_api_route(path,forbidden,methods=['POST'])
             app.add_middleware(namespace['AdminExecutionBoundaryMiddleware'])

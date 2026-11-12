@@ -20,11 +20,14 @@ class ChatRequest(BaseModel):
     web_search_query: str = ""
     prompt: str
     user_prompt: Optional[StrictStr] = Field(default=None, min_length=1, max_length=128000)
+    source_references: Optional[list] = Field(default=None, max_length=4)
     mode: Optional[str] = None
     plan_only: bool = False
     execution_backend: Optional[str] = None
+    provider: Optional[StrictStr] = None
+    model: Optional[StrictStr] = None
     messages: Optional[list] = None
-    temperature: float = 0.7
+    temperature: float = Field(default=0.7, strict=True, ge=0.0, le=2.0)
     stream: bool = True
 
 
@@ -586,33 +589,15 @@ def detect_tool_intent(prompt: str) -> Tuple[Optional[str], Optional[Dict[str, A
 
 
 
-async def fetch_technical_whisper(prompt: str) -> str:
-    """
-    Shadow Co-Processor:
-    Executes locally on port 11435 with zero VRAM impact on the primary 4090, 
-    extracting key technical facts, exact code structures, and logical guardrails.
-    """
-    system_instruction = (
-        "You are a silent technical co-processor. Analyze the query and provide ONLY "
-        "concise factual bullets, exact code snippets, or mathematical formulas. "
-        "Do not speak to the user. Keep it under 150 words."
-    )
-    system_instruction = inject_safety_directive(system_instruction)
-    payload = {
-        "model": "qwen2.5-coder:7b",
-        "prompt": prompt,
-        "system": system_instruction,
-        "stream": False
-    }
-    try:
-        async with httpx.AsyncClient(timeout=6.0) as client:
-            res = await client.post(SHADOW_OLLAMA_URL, json=payload)
-            if res.status_code == 200:
-                return res.json().get("response", "")
-    except Exception as e:
-        print(f"[Hybrid Engine] Shadow whisper notice: {e}")
-        pass
-    return ""
+
+async def fetch_technical_whisper(prompt: str, *, source_context_bundle=None) -> str:
+    """Optional bounded technical helper; inference evidence stays separate from host actions."""
+    from core.local_chat_inference import complete_local,context_profile
+    profile=context_profile("Provide concise factual technical observations for the current request; do not claim execution or verification.",source_context_bundle)
+    result=await complete_local(model="qwen2.5-coder:7b",prompt=prompt,
+        endpoints=[SHADOW_OLLAMA_URL,PRIMARY_OLLAMA_URL],role="technical_whisper",options={"num_ctx":8192,"num_predict":350,"temperature":.4},
+        source_context_bundle=source_context_bundle,timeout=35,**profile)
+    return result['text']
 
 
 def is_coding_intent(prompt: str) -> Tuple[bool, str]:
@@ -650,122 +635,34 @@ def is_coding_intent(prompt: str) -> Tuple[bool, str]:
     return False, prompt
 
 
-async def stream_shadow_coder_response(prompt: str, messages: Optional[list] = None) -> AsyncGenerator[str, None]:
-    """
-    Dedicated Coding Sub-Agent Model Routing (The Shadow Coder Bridge):
-    Routes coding and refactoring queries directly to qwen2.5-coder:7b on Port 11435.
-    Provides sub-second token generation with zero VRAM interference on the primary RTX 4090.
-    """
-    system_instruction = (
-        "You are the Stehouwer Autonomous Coding Sub-Agent running on Port 11435 (qwen2.5-coder:7b). "
-        "You are an elite, production-grade software engineer working within the C:\\AI-BS ecosystem. "
-        "Rules:\n"
-        "1. Write clean, complete, modern, syntactically flawless code.\n"
-        "2. Before generating your final response, outline your concise step-by-step reasoning or execution plan inside <think>...</think> tags.\n"
-        "3. When proposing file modifications, use targeted diffs or precise replacement blocks that can be applied with patch_host_file.\n"
-        "4. When creating frontend components, adhere to the 4-mirror architecture (write_mirror_component).\n"
-        "5. Output executable markdown code blocks with language tags (```python, ```javascript, ```jsx, ```json, ```powershell, ```go, ```sql).\n"
-        "6. Explain changes concisely without unnecessary conversational filler."
-    )
-    system_instruction = inject_safety_directive(system_instruction)
 
-    full_prompt = prompt
-    if messages and isinstance(messages, list) and len(messages) > 1:
-        history_text = ""
-        for m in messages[-4:]:
-            role = m.get("role", "user")
-            content = m.get("content", "")
-            if content:
-                history_text += f"{role.upper()}: {content}\n\n"
-        full_prompt = f"{history_text}USER: {prompt}\nASSISTANT:"
-
-    # Query live hardware telemetry snapshot for maximum live system visibility
-    live_gpu = {}
-    try:
-        from modules.gpu_hardware_telemetry import gpu_telemetry_engine
-        live_gpu = gpu_telemetry_engine.query_nvml_telemetry()
-    except Exception:
-        pass
-
-    metadata_obj = {
-        "type": "aibs_cognitive_meta",
-        "model": "qwen2.5-coder:latest",
-        "display_name": "Qwen2.5-Coder (Shadow Coder)",
-        "reason": "Polyglot programming & syntax formatting detected. Routed to Qwen2.5-Coder on RTX 4090 for verified syntax, high throughput, and host execution.",
-        "device": f"{live_gpu.get('gpu_name', 'NVIDIA GeForce RTX 4090')} (24GB VRAM)",
-        "live_telemetry": {
-            "vram_used_gb": round(live_gpu.get("memory_used_mb", 0) / 1024, 1),
-            "vram_total_gb": round(live_gpu.get("memory_total_mb", 24564) / 1024, 0),
-            "core_temp_c": live_gpu.get("core_temp_c", 38),
-            "power_usage_w": round(live_gpu.get("power_usage_w", 0), 1),
-            "gpu_util_pct": live_gpu.get("gpu_util_pct", 0),
-            "fan_speed_pct": live_gpu.get("fan_speed_pct", 30),
-            "core_clock_mhz": live_gpu.get("core_clock_mhz", 2520),
-            "sys_ram_used_gb": live_gpu.get("ram_used_gb", 0),
-            "sys_ram_total_gb": live_gpu.get("ram_total_gb", 61.6),
-            "nvml_online": live_gpu.get("nvml_online", True),
-            "timestamp": live_gpu.get("timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        },
-        "context_tokens": 32768,
-        "keep_alive": "persistent_vram",
-        "thinking_scope": "Point A to Point Infinity (Full Exhaustive Chain-of-Thought)",
-        "steps": [
-            {"id": 1, "name": "Ingestion & Intent Analysis", "status": "done", "detail": "Polyglot Coding"},
-            {"id": 2, "name": "Model & VRAM Route", "status": "done", "detail": "Qwen2.5-Coder (RTX 4090)"},
-            {"id": 3, "name": "Personal Memory Vault", "status": "done", "detail": "stehouwer_vault.db active"},
-            {"id": 4, "name": "CoT Reasoning Trace (Point A ➔ ∞)", "status": "active", "detail": "Synthesizing internal thought chain"},
-            {"id": 5, "name": "Token Stream Generation", "status": "pending", "detail": "Direct NVML streaming"},
-            {"id": 6, "name": "Sandbox Verification", "status": "pending", "detail": "Interactive ▶ Run ready"}
-        ]
-    }
-    yield f"<!--AI-BS-METADATA:{json.dumps(metadata_obj)}-->\n\n"
-
-    payload = {
-        "model": "qwen2.5-coder:7b",
-        "prompt": full_prompt,
-        "system": system_instruction,
-        "stream": True,
-        "keep_alive": -1,  # Keep hot in VRAM forever
-        "options": {
-            "temperature": 0.2,
-            "num_ctx": 32768,
-        }
-    }
-
-    yield "⚡ **Stehouwer Autonomous Coding Sub-Agent (Port 11435: qwen2.5-coder:7b)**\n\n"
-
-    streamed_success = False
-    target_endpoints = [PRIMARY_OLLAMA_URL, SHADOW_OLLAMA_URL]
-
-    for ep in target_endpoints:
-        try:
-            async with httpx.AsyncClient(timeout=httpx.Timeout(180.0, connect=15.0, read=120.0, write=15.0)) as client:
-                async with client.stream("POST", ep, json=payload) as response:
-                    if response.status_code == 200:
-                        async for line in response.aiter_lines():
-                            if line:
-                                try:
-                                    chunk = json.loads(line)
-                                    text_piece = chunk.get("response", "")
-                                    if text_piece:
-                                        yield text_piece
-                                        streamed_success = True
-                                except json.JSONDecodeError:
-                                    continue
-                        if streamed_success:
-                            return
-        except Exception as e:
-            print(f"[Shadow Coder] Endpoint {ep} connection failed: {e}")
-            continue
-
-    if not streamed_success:
-        yield "*(Shadow Coder offline on 11435/11434 — falling back to Sovereign Reasoning Matrix)*\n\n"
+async def stream_shadow_coder_response(prompt: str, messages: Optional[list] = None, *, source_context_bundle=None, primary_model=None, role_request="explicit_user", current_turn=None) -> AsyncGenerator[str, None]:
+    """Explicit coding role; generated code stays a proposal, with actual transport evidence."""
+    from core.local_chat_inference import stream_local,conversation_prompt,context_profile
+    system=("You are the AI-BS coding specialist. Provide concise engineering conclusions and proposed code or targeted diffs. "
+        "Do not reveal private reasoning or claim compilation, testing, execution, GPU placement or file changes without actual tool evidence. "
+        "The reviewed coding/tool workflow retains execution authority.")
+    profile=context_profile(inject_safety_directive(system),source_context_bundle)
+    yield "Coding specialist requested; proposed output is not host execution.\n\n"
+    receipts=[]
+    def recover_existing_service():
+        from core.sovereign_reasoning.dispatcher import ensure_ollama_running
+        ensure_ollama_running()
+    async for chunk in stream_local(model="qwen2.5-coder:7b",requested_model=primary_model or "qwen2.5-coder:7b",
+        prompt=conversation_prompt(prompt,messages,current_turn=current_turn),endpoints=[PRIMARY_OLLAMA_URL,SHADOW_OLLAMA_URL],
+        role="explicit_shadow_coder" if role_request=="explicit_user" else "unified_coding_specialist",
+        options={"temperature":.2,"num_ctx":8192,"num_predict":1024},source_context_bundle=source_context_bundle,
+        receipt_sink=receipts.append,recovery=recover_existing_service,**profile):
+        yield chunk
+    if (receipts and receipts[-1].get('error_code')=='local_connection_unavailable'
+            and receipts[-1].get('output_characters',0)==0 and primary_model!="qwen2.5-coder:7b"):
+        yield "Coding helper had no provider response. Continuing with the selected local primary; no helper success is claimed.\n"
         from core.sovereign_reasoning import stream_sovereign_response
-        async for chunk in stream_sovereign_response(prompt, messages=messages):
-            yield chunk
+        async for chunk in stream_sovereign_response(prompt,messages=messages,source_context_bundle=source_context_bundle,
+                primary_model=primary_model,intent_prompt=prompt,current_turn=current_turn):yield chunk
 
 
-async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list] = None, *, intent_prompt: Optional[str] = None) -> AsyncGenerator[str, None]:
+async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list] = None, *, intent_prompt: Optional[str] = None, source_context_bundle=None, primary_model=None) -> AsyncGenerator[str, None]:
     """
     Gathers tool intents, shadow co-processor briefings, and streams the response 
     directly through Stehouwer LLM's authentic voice with live rendered media.
@@ -787,9 +684,16 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
     t_name, t_args = detect_tool_intent(intent)
     
     # Check for dedicated coding sub-agent intent
-    is_code, clean_code_prompt = is_coding_intent(prompt)
-    if is_code and not t_name:
-        async for chunk in stream_shadow_coder_response(clean_code_prompt, messages=messages):
+    is_code, clean_code_prompt = is_coding_intent(intent)
+    explicit_coder = bool(re.match(r"^/(?:coder|code|patch|syntax|mirror|refactor|diff)(?:\s|$)", intent.strip(), re.IGNORECASE)
+                          or re.match(r"^(?:please\s+)?shadow\s+coder\b", intent.strip(), re.IGNORECASE))
+    unified_primary = primary_model in (None, "", "default", "stehouwer_llm", "stehouwer_llm:latest", "stehouwer-llm", "stehouwer-llm:latest")
+    # Unified mode retains automatic coding roles. A selected primary remains
+    # the final model unless the user explicitly requested the coding role.
+    if is_code and not t_name and (unified_primary or explicit_coder):
+        code_request=clean_code_prompt if prompt==intent else prompt
+        async for chunk in stream_shadow_coder_response(code_request, messages=messages, source_context_bundle=source_context_bundle,
+                primary_model=primary_model, role_request="explicit_user" if explicit_coder else "unified_automatic", current_turn=prompt):
             yield chunk
         return
     
@@ -935,11 +839,11 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
                     from core.sovereign_reasoning import stream_sovereign_response
                     analysis_prompt = (
                         f"The user requested reading and analyzing host file '{abs_path}'.\n\n"
-                        f"FILE CONTENTS:\n```{syntax_lang}\n{content[:25000]}\n```\n\n"
+                        f"FILE CONTENTS:\n```{syntax_lang}\n{content}\n```\n\n"
                         f"USER INSTRUCTION / QUESTION: {question}\n\n"
                         f"Answer directly, accurately, and thoroughly based on the file contents above."
                     )
-                    async for chunk in stream_sovereign_response(analysis_prompt, messages=messages):
+                    async for chunk in stream_sovereign_response(analysis_prompt, messages=messages, source_context_bundle=source_context_bundle, primary_model=primary_model, intent_prompt=intent, current_turn=prompt):
                         yield chunk
                 else:
                     preview = content if len(content) <= 30000 else content[:30000] + f"\n\n... [Truncated: showing 30,000 of {len(content)} characters]"
@@ -1255,6 +1159,14 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
             yield f"🔨 **Executing Project Build:** `{proj}`" + (f" with command `{cmd}`" if cmd else " (auto-detecting build tools)") + "... ⏳\n\n"
             from tools.tool_registry import ToolRegistry
             res = await asyncio.to_thread(ToolRegistry.execute_tool, "build_project", t_args)
+            if res.get("job_id"):
+                state = res.get("state", "queued")
+                terminal = state in {"succeeded", "failed", "interrupted"}
+                badge = "✅ Local update completed" if state == "succeeded" else "❌ Local update failed" if terminal else "⏳ Local update in progress"
+                yield (f"**{badge}**\n- **Job:** `{res['job_id']}`\n- **Stage:** `{state}`\n"
+                       f"- **Deployment:** Local\n\n{res.get('message', '')}\n\n"
+                       + ("" if terminal else "The recorded worker continues independently through the API restart. Its durable status can be read with build_project maintenance_action=status and this maintenance_job_id.\n"))
+                return
             st = res.get("status", "error")
             exit_code = res.get("exit_code", 1)
             p_dir = res.get("project_dir", proj)
@@ -1366,7 +1278,8 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 
         fence_tail = ""
         has_code_block = False
-        async for chunk in stream_sovereign_response(prompt, messages=messages):
+        async for chunk in stream_sovereign_response(prompt, messages=messages, primary_model=primary_model, intent_prompt=intent,
+                **({'source_context_bundle':source_context_bundle} if source_context_bundle is not None else {})):
             combined = fence_tail + chunk
             has_code_block = has_code_block or "```" in combined
             fence_tail = combined[-2:]
@@ -1386,6 +1299,8 @@ async def stream_stehouwer_hybrid_response(prompt: str, messages: Optional[list]
 @router.post("/stream")
 async def chat_hybrid_endpoint(req: ChatRequest):
     body = req.model_dump() if hasattr(req, 'model_dump') else req.dict()
+    from core.attached_source_context import validate_request_sources, request_source_bundle
+    source_references = validate_request_sources(body)
     from core.media_intent_policy import media_status_response
     observation = await media_status_response(body)
     if observation is not None:
@@ -1425,8 +1340,15 @@ async def chat_hybrid_endpoint(req: ChatRequest):
             else "INVALID_EXECUTION_BACKEND: unsupported execution backend."
         )
         return StreamingResponse(iter([reason + " No host tool or model was invoked.\n"]), media_type="text/plain")
+    from core.bs_chat_provider import bs_chat_reply, hybrid_reply_response
+    provider_reply = await bs_chat_reply(body)
+    if provider_reply is not None:
+        return hybrid_reply_response(provider_reply)
+    source_context_bundle = (await request_source_bundle(req.user_prompt or req.prompt, source_references)
+                             if source_references else None)
     async def events():
         messages = list(req.messages or [])
-        async for chunk in stream_stehouwer_hybrid_response(req.prompt, messages=messages, intent_prompt=req.user_prompt):
+        async for chunk in stream_stehouwer_hybrid_response(req.prompt, messages=messages, intent_prompt=req.user_prompt, primary_model=req.model,
+                **({'source_context_bundle':source_context_bundle} if source_context_bundle is not None else {})):
             yield chunk
     return StreamingResponse(events(), media_type="text/event-stream")

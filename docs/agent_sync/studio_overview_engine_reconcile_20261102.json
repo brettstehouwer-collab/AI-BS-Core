@@ -1,0 +1,91 @@
+{
+  "status": "VERIFIED_BYTES_ONLY",
+  "upstream_manifest": "C:\\AI-BS\\docs\\agent_sync\\manifest_studio_overview_20261102T042646Z.json",
+  "paths": [
+    {
+      "path": "native_studio/executive_cockpit_full.py",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/ExecutiveCockpitTab.jsx",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/ExecutiveCockpitTab.jsx",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/components/ExecutiveCockpitTab.jsx",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/components/ExecutiveCockpitTab.jsx",
+      "matched": true
+    },
+    {
+      "path": "native_studio/chat_recovery.py",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/tokens.json",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/schema.json",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/compiler.py",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/compile_overview.py",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.py",
+      "matched": true
+    },
+    {
+      "path": "ui_modernization/generated/studio_overview.qss",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/StudioOverview.tokens.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/StudioOverview.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/StudioOverview.tokens.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/src/components/components/StudioOverview.tokens.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.css",
+      "matched": true
+    },
+    {
+      "path": "frontend/components/components/StudioOverview.tokens.css",
+      "matched": true
+    },
+    {
+      "path": "scripts/tests/test_executive_status_truth204.cjs",
+      "matched": true
+    }
+  ],
+  "scope": "Read-only canonical source reconciliation; upstream tests reported by coordinated UI chat, not rerun by engine work. Include at final coordinated Studio build; do not cherry-pick isolated snapshot baseline."
+}

@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "status": "CONTROLLED_MOTION_MEASURED_NSIGHT_CAPTURE_ACCEPTANCE_FAILED",
+  "candidate_sha256": "4324fca383f876db588997f6353cde2915a5613f8e31c3fe3571f95a807c55ce",
+  "motion": {
+    "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Motion_LH_20261111_v01",
+    "process": {
+      "pid": 30400,
+      "created": 1794403914.58407,
+      "executable": "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01\\aibs_motherboard.exe",
+      "retained_exact_handle": true,
+      "terminal": true,
+      "exit_code": 0
+    },
+    "foreground_assistance": {
+      "pid": 30400,
+      "created": 1794403914.58407,
+      "window_id": 133668,
+      "executable": "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01\\aibs_motherboard.exe",
+      "method": "CUA performSecondaryAction on observed Window0 Raise",
+      "initial_refresh": "AX unavailable; did not repeatRaise",
+      "subsequent_observation": "AX explicitly reports focusedWindow0, active aiming prompt, following companion and SAVED revision0",
+      "manual_user_input_requested": false,
+      "ordinary_focus_input_qualified": false,
+      "unexpected_prompt_observed": "Nsight Windows network-access notice appeared in one screenshot; noAllow/permission action was taken; absent from subsequent native inventory",
+      "security_settings_changed": false
+    },
+    "native_report": {
+      "version": 1,
+      "status": "measured",
+      "error": "",
+      "completed_at": "2026-11-11T13:35:18+00:00",
+      "clock": "std::chrono::steady_clock / actual completed Present intervals",
+      "synthetic_chapter_ticks_used_for_fps": false,
+      "engine_requested_inference": false,
+      "background_gpu_users": "unknown_not_enumerated_not_isolated",
+      "recording_enabled": false,
+      "measurement_profile": "controlled-motion",
+      "normal_player_close": false,
+      "saved_close_complete": true,
+      "gameplay_includes_reading_inspection_and_saving": false,
+      "measured_reading_frames": 0,
+      "measured_inspection_frames": 0,
+      "measured_saving_frames": 0,
+      "scope": {
+        "world_id": "7c66f912-2990-4ebf-aeba-25365efe8481",
+        "timeline_id": "c94f40b8-d6c8-4b09-bc33-f587f59cbc6c"
+      },
+      "content_fingerprint": "03d41a2bc1e400d9bf507613b11398c95ee7c84246deef2a2ee967188c2baf20",
+      "visible_revision": 0,
+      "durable_revision": 0,
+      "requested_width": 1920,
+      "requested_height": 1080,
+      "warmup_min_seconds": 2,
+      "requested_measure_seconds": 180,
+      "setup_wall_seconds": 21.4209769,
+      "hud_text_publications_lifetime": 277,
+      "adapter": "NVIDIA GeForce RTX 4090",
+      "present_policy": "DX12 Present(1,0)",
+      "gpu_debug_layer_observed": false,
+      "gpu_debug_errors": 0,
+      "gpu_debug_warnings": 0,
+      "setup_readiness": {
+        "observations": 1278,
+        "foreground_observations": 9,
+        "memory_valid_observations": 1278,
+        "last_foreground": true,
+        "last_minimized": false,
+        "last_reading": false,
+        "last_inspection": false,
+        "last_pending_save": false,
+        "last_exit_requested": false,
+        "last_memory_valid": true,
+        "memory_error": 0
+      },
+      "capture_nonbackground_pixels": 1742903,
+      "capture_is_after_measurement": true,
+      "cpu_asset_projection_bytes": 47871666,
+      "scene_gpu_accounting_excludes": [
+        "swapchain",
+        "depth buffers",
+        "descriptors",
+        "driver heaps",
+        "temporary replacement uploads"
+      ],
+      "process_memory_includes_instrumentation": true,
+      "sampling_note": "Per-frame memory queries and stats observation overhead are included. Private/working-set sampled maxima are not unsampled peaks. Peak working set is lifetime-wide.",
+      "player_feet_start": [
+        -32,
+        0.20000000298023224,
+        -25
+      ],
+      "player_feet_end": [
+        -32.33283615112305,
+        0.08000002801418304,
+        -25
+      ],
+      "dropped_simulation_seconds": 0,
+      "controlled_input": true,
+      "os_focus_input_verified": false,
+      "human_pacing_measured": false,
+      "motion": {
+        "policy": "full-requested-time;90-percent-moving-physics;95-percent-physics-coverage;3.5m-per-wall-second;two-arrivals",
+        "physical_steps": 10801,
+        "moving_steps": 10801,
+        "physical_seconds": 180.01666666669738,
+        "moving_physical_seconds": 180.01666666669738,
+        "horizontal_metres": 1241.5648574829102,
+        "commanded_wall_seconds": 180.00607160000106,
+        "invalid": false,
+        "arrivals": 270,
+        "revision_before": 0,
+        "revision_after": 0,
+        "first": [
+          -32,
+          0.08000937849283218,
+          -25
+        ],
+        "second": [
+          -37,
+          0.08000937849283218,
+          -25
+        ],
+        "invalid_reason": "none",
+        "invalid_observations": 0,
+        "first_invalid_observation": 0,
+        "first_invalid_elapsed": 0,
+        "first_invalid_distance": 0,
+        "first_ticks_before": 0,
+        "first_ticks_after": 0,
+        "first_dropped_before": 0,
+        "first_dropped_after": 0,
+        "rejected_elapsed_seconds": 0,
+        "movement_counters_exclude_invalid_samples": true,
+        "commanded_wall_includes_rejected_intervals": true
+      },
+      "phase_timings": {
+        "clock": "steady_clock seconds relative to performance loop start",
+        "causality": "loop_gap sampled at iteration start; frame N stall may cause frame N+1 dropped physics",
+        "fixed_storage_bytes": 8392,
+        "outlier_capacity": 16,
+        "outlier_threshold_seconds": 0.05,
+        "observations": 12199,
+        "invalid_samples": 0,
+        "outlier_count": 2,
+        "maxima": {
+          "loop_gap": 0.1242189,
+          "command": 3.2e-06,
+          "window_poll": 0.0068458,
+          "owner_input": 0.0001049,
+          "physics_gameplay": 0.0015995,
+          "guide_memory": 0.0013385,
+          "hud": 0.0093398,
+          "render": 0.1224937,
+          "tail_close": 1e-06,
+          "stats_memory": 0.0001066,
+          "sampler": 2.5e-06
+        },
+        "outliers": [
+          {
+            "current": {
+              "frame_index": 1255,
+              "measuring": false,
+              "frame_completed": true,
+              "observation_completed": true,
+              "foreground_active_observed": false,
+              "memory_valid_observed": true,
+              "loop_started_seconds": 20.9519957,
+              "frame_started_seconds": 20.951997,
+              "frame_finished_seconds": 21.0761285,
+              "observation_finished_seconds": 21.0762125,
+              "sampler_finished_seconds": 0,
+              "durations": {
+                "loop_gap": 0.0170555,
+                "command": 6e-07,
+                "window_poll": 2e-07,
+                "owner_input": 4.46e-05,
+                "physics_gameplay": 2e-06,
+                "guide_memory": 0.0009766,
+                "hud": 0.0006104,
+                "render": 0.1224937,
+                "tail_close": 3e-07,
+                "stats_memory": 8.38e-05,
+                "sampler": 0
+              },
+              "phase_ended_seconds": {
+                "loop_gap": 0,
+                "command": 0,
+                "window_poll": 20.9519972,
+                "owner_input": 20.9520418,
+                "physics_gameplay": 20.9520438,
+                "guide_memory": 20.9530204,
+                "hud": 20.9536308,
+                "render": 21.0761245,
+                "tail_close": 21.0761248,
+                "stats_memory": 0,
+                "sampler": 0
+              }
+            },
+            "preceding": {
+              "frame_index": 1254,
+              "measuring": false,
+              "frame_completed": true,
+              "observation_completed": true,
+              "foreground_active_observed": false,
+              "memory_valid_observed": true,
+              "loop_started_seconds": 20.9349402,
+              "frame_started_seconds": 20.9349416,
+              "frame_finished_seconds": 20.9519359,
+              "observation_finished_seconds": 20.9519938,
+              "sampler_finished_seconds": 0,
+              "durations": {
+                "loop_gap": 0.0170318,
+                "command": 6e-07,
+                "window_poll": 3e-07,
+                "owner_input": 3.82e-05,
+                "physics_gameplay": 2.1e-06,
+                "guide_memory": 0.0011914,
+                "hud": 0.0011066,
+                "render": 0.0146528,
+                "tail_close": 1e-07,
+                "stats_memory": 5.77e-05,
+                "sampler": 0
+              },
+              "phase_ended_seconds": {
+                "loop_gap": 0,
+                "command": 0,
+                "window_poll": 20.9349419,
+                "owner_input": 20.9349801,
+                "physics_gameplay": 20.9349822,
+                "guide_memory": 20.9361736,
+                "hud": 20.9372802,
+                "render": 20.951933,
+                "tail_close": 20.9519331,
+                "stats_memory": 0,
+                "sampler": 0
+              }
+            }
+          },
+          {
+            "current": {
+              "frame_index": 1256,
+              "measuring": false,
+              "frame_completed": true,
+              "observation_completed": true,
+              "foreground_active_observed": false,
+              "memory_valid_observed": true,
+              "loop_started_seconds": 21.0762146,
+              "frame_started_seconds": 21.0762157,
+              "frame_finished_seconds": 21.0792363,
+              "observation_finished_seconds": 21.0792957,
+              "sampler_finished_seconds": 0,
+              "durations": {
+                "loop_gap": 0.1242189,
+                "command": 8e-07,
+                "window_poll": 3e-07,
+                "owner_input": 5.98e-05,
+                "physics_gameplay": 3e-06,
+                "guide_memory": 0.001223,
+                "hud": 0.001,
+                "render": 0.0007337,
+                "tail_close": 0,
+                "stats_memory": 5.89e-05,
+                "sampler": 0
+              },
+              "phase_ended_seconds": {
+                "loop_gap": 0,
+                "command": 0,
+                "window_poll": 21.076216,
+                "owner_input": 21.0762758,
+                "physics_gameplay": 21.0762788,
+                "guide_memory": 21.0775018,
+                "hud": 21.0785018,
+                "render": 21.0792355,
+                "tail_close": 21.0792355,
+                "stats_memory": 0,
+                "sampler": 0
+              }
+            },
+            "preceding": {
+              "frame_index": 1255,
+              "measuring": false,
+              "frame_completed": true,
+              "observation_completed": true,
+              "foreground_active_observed": false,
+              "memory_valid_observed": true,
+              "loop_started_seconds": 20.9519957,
+              "frame_started_seconds": 20.951997,
+              "frame_finished_seconds": 21.0761285,
+              "observation_finished_seconds": 21.0762125,
+              "sampler_finished_seconds": 0,
+              "durations": {
+                "loop_gap": 0.0170555,
+                "command": 6e-07,
+                "window_poll": 2e-07,
+                "owner_input": 4.46e-05,
+                "physics_gameplay": 2e-06,
+                "guide_memory": 0.0009766,
+                "hud": 0.0006104,
+                "render": 0.1224937,
+                "tail_close": 3e-07,
+                "stats_memory": 8.38e-05,
+                "sampler": 0
+              },
+              "phase_ended_seconds": {
+                "loop_gap": 0,
+                "command": 0,
+                "window_poll": 20.9519972,
+                "owner_input": 20.9520418,
+                "physics_gameplay": 20.9520438,
+                "guide_memory": 20.9530204,
+                "hud": 20.9536308,
+                "render": 21.0761245,
+                "tail_close": 21.0761248,
+                "stats_memory": 0,
+                "sampler": 0
+              }
+            }
+          }
+        ],
+        "first_motion_fault_context": null
+      },
+      "actual_client_width": 1920,
+      "actual_client_height": 1080,
+      "measured_wall_seconds": 180.0106088,
+      "frame_count": 10800,
+      "actual_present_delta": 10800,
+      "fps": 59.99646394174075,
+      "frame_ms": {
+        "mean": 16.66764896296296,
+        "p50": 16.6593,
+        "p95": 17.3911,
+        "p99": 20.6608
+      },
+      "private_bytes": {
+        "start": 235593728,
+        "end": 230141952,
+        "maximum_sampled": 235593728
+      },
+      "working_set_bytes": {
+        "start": 175476736,
+        "end": 170213376,
+        "maximum_sampled": 175476736,
+        "lifetime_peak": 197685248
+      },
+      "scene_content_gpu_bytes": {
+        "start": 29163520,
+        "end": 29163520,
+        "maximum_sampled": 29163520
+      },
+      "instrumentation_owned_bytes": 7680232,
+      "long_frames": {
+        "over16_67ms": 4760,
+        "over33_33ms": 0,
+        "over50ms": 0
+      },
+      "opening_outcomes": {
+        "first_route": "none",
+        "shelter_secured": false,
+        "pencil_visited": false
+      }
+    },
+    "scope": "Internally commanded collision-checked shuttle; CUA-assisted focus. No ordinary input/human/release claim.",
+    "original_source_unchanged": true
+  },
+  "nsight": {
+    "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01",
+    "status": "FAILED_NATIVE_DEBUG_GUARD",
+    "process": {
+      "pid": 20456,
+      "birth": 1794403857.7919073,
+      "command": [
+        "C:\\Program Files\\NVIDIA Corporation\\Nsight Graphics 2026.4.0\\host\\windows-desktop-nomad-x64\\ngfx-capture.exe",
+        "--exe",
+        "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01\\aibs_motherboard.exe",
+        "--working-dir",
+        "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01",
+        "--args",
+        "--durable-world --content-definition D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\project\\opening.aibd --asset-root D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\project\\assets\\packs --database D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\world.sqlite --project prop01-native-acceptance --branch independent-prop01-v1 --play-session 00b34e60-86f2-4e5d-be1c-9f99054cce29 --stop-file D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\seed.stop.request --durable-step seed --capture D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\seed.bmp --durable-report D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\seed.json --width 1440 --height 900",
+        "--output-dir",
+        "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\capture",
+        "--output-file",
+        "lh-frame.ngfx-bincap",
+        "--capture-frame",
+        "10",
+        "--frame-count",
+        "1",
+        "--no-hud",
+        "--no-bundle-replayer"
+      ],
+      "working_directory": "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01",
+      "exact_popen_handle_retained": true,
+      "terminal": true,
+      "exit_code": 4294967295,
+      "deadline_exceeded": false,
+      "wall_seconds": 1.735000000000582,
+      "player_processes": [
+        {
+          "pid": 37912,
+          "birth": 1794403857.8301673,
+          "executable": "C:\\AI-BS\\t\\hudfit_build01\\frozen_v01\\aibs_motherboard.exe",
+          "exact_handle_retained": true,
+          "terminal": true,
+          "exit_code": 1
+        }
+      ]
+    },
+    "capture_artifact": {
+      "bytes": 9789336,
+      "sha256": "6667cf36d1f5072283cf7f4cd9188741a91d5e943de489f2623b0045e5d6d702"
+    },
+    "capture_generated": true,
+    "replay_run": false,
+    "metadata_commands_exit0": true,
+    "blank_render_ruled_out": true,
+    "pixel_diagnosis": {
+      "scope": "CPU analysis of retained BMP; no GPU replay",
+      "dimensions": [
+        1440,
+        900
+      ],
+      "exact_renderer_nonbackground_pixels": 1016027,
+      "threshold_passes": true,
+      "logic": "Stored BMP BGRA is mapped back to original RGBA threshold from render_dx12.cpp627",
+      "capture_pin": {
+        "bytes": 5184054,
+        "sha256": "0014902c503911e507d591b220c4afbadf8463e4aea5dd00e8cdd30cc291c916"
+      },
+      "conclusion": "Chapter combined guard failed with nonbackground threshold satisfied, so at least one native DX12 debug error/warning counter was nonzero; exact messages remain unavailable."
+    },
+    "actual_debug_message_unknown": true,
+    "guard_not_weakened": true,
+    "original_source_unchanged": true
+  },
+  "limits": [
+    "Ordinary/human gameplay and full repair-route performance remain unqualified",
+    "Release benchmark debug layer disabled by normal policy; do not infer debug-layer validation from its zero counters",
+    "Per-frame stats/memory observation overhead included; backgroundGPUusers not isolated",
+    "Two premeasurement phase outliers retained; no whole-session zero-hitch claim",
+    "SceneGPU bytes exclude swapchain/depth/driver and other stated buffers",
+    "Nsight binary capture exists but native acceptance and replay/GPUTrace not qualified"
+  ],
+  "next": "Build separately pinned diagnostic candidate emitting existing bounded RenderStats debug_messages before unchanged chapter GPU guard. One capture after diagnostics reviewed; diagnose actual message without suppression. Keep measured candidate and all sources/saves intact."
+}

@@ -40,6 +40,8 @@ function StehouwerStar({ size = 28, className = '' }) {
 
 // ─── Code Block with Syntax Highlighting & 1-Click Copy ──────────────────────
 const MobileCodeBlock = React.memo(function MobileCodeBlock({ language, code }) {
+  const safeCode = (typeof code === 'string' && code !== 'undefined' && code !== 'null') ? code : '';
+  if (!safeCode) return null;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -137,10 +139,12 @@ function MobileFormattedContent({ content, role, onImageClick }) {
       components={{
           code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
-            const codeString = String(children).replace(/\n$/, '');
+            const rawText = Array.isArray(children) ? children.join('') : (children != null ? String(children) : '');
+            const codeString = (rawText === 'undefined' || rawText === 'null') ? '' : rawText.replace(/\n$/, '');
             const isMultiLine = codeString.includes('\n');
 
             if (!inline && (match || isMultiLine)) {
+              if (!codeString) return null;
               return (
                 <MobileCodeBlock
                   language={match ? match[1] : ''}

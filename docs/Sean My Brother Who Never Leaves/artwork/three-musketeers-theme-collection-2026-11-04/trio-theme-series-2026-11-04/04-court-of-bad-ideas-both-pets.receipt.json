@@ -1,0 +1,20 @@
+{
+  "id": "04-court-of-bad-ideas-both-pets",
+  "mode": "built-in image_gen edit",
+  "prompt": "Edit reference image1, the finished landscape THREE MUSKETEERS courtroom poster, by ADDING TONTO AS A SECOND DISTINCT DOG. References2 and3 are the SAME actual real dog TONTO: broad square face, short chocolate/russet brown coat, muscular normal body, brown nose, amber eyes, natural folded/rose ears, lightly graying muzzle and white chest patch. Reference2 gives detailed facial identity; reference3 gives his current appearance and full-body build. No long fur, no white forehead blaze, no cropped ears on Tonto. Add him calmly lying or seated in the lower-right foreground as a friendly courtroom companion, slightly beneath the evidence/pizza level so he does not hide the evidence cards or human faces. Allow minimal displacement of a few books/loose props to fit him naturally. Give only a tasteful collar tag reading TONTO. Match the existing warm light, tactile finish, coherent scale and anatomy. His face must be clear and obviously distinct from the other dog.\n\nPRESERVE EXISTING DOG EXACTLY: the left foreground judge is Sean's DIFFERENT dog: fluffy red-brown/white/tan herding dog with broad white blaze, freckles, amber eyes, tan points, sunglasses above eyes, HR badge/harness and burgundy judicial cape. Do NOT replace him, recolor him into Tonto, merge dogs or duplicate either. Keep his pose and paw near the squeaky gavel. Final image exactly THREE humans plus TWO different real dogs.\n\nAll three humans' recognizable faces, positions, expressions, hands, clothes and good anatomy remain unchanged. Keep the original native landscape composition and aspect ratio. Preserve all major typography word-for-word: THREE MUSKETEERS; THE COURT OF BAD IDEAS; ADULT SUPERVISION IS A PAID FEATURE; NOT MY DEPARTMENT; HR; THAT WAS SUPPOSED TO BE A GOOGLE SEARCH; THAT'S WHAT SHE SAID TO BLAKE; CHILD SUPPORT DIVISION; SHELL ASSETS: FROZEN; LEGAL FEES: RECURRING; SETTLEMENT: TWO TREATS; QUESTIONABLE IDEAS. BETTER PEOPLE. Keep the evidence-string logic, controllers, snail annex and tiny jokes. No more people, third dog, additional clutter, watermark, source date/phone UI or other redesign. Only add the actual Tonto fittingly in a foreground space.",
+  "refs": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/04-court-of-bad-ideas-seans-dog.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-a521-7652-a521-e1e66a785cbd/exec-714d8137-5f04-4b3c-a4f5-9fe0eba66c82.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/04-court-of-bad-ideas-both-pets.png",
+  "qa": {
+    "humanCount": 3,
+    "dogCount": 2,
+    "existingDog": "Sean's fluffy marked HR judge remains foreground left with white blaze, freckles, amber eyes, raised sunglasses, harness, cape and paw near toy gavel.",
+    "tonto": "Distinct short-coated chocolate/russet muscular dog lower right, broad face, brown nose, amber eyes, natural rose ears, graying muzzle, white chest and correct TONTO tag.",
+    "invariants": "Visual comparison: three recognizable humans, expressions, hands, all major labels and landscape composition preserved. Minor foreground books/pizza moved to accommodate Tonto without covering wording.",
+    "limitations": "No pixel equivalence claimed. Four original baby snails remain instead of requested five; prior assets preserved."
+  }
+}

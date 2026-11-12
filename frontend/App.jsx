@@ -10,6 +10,8 @@ import { auth, db } from './firebase.js';
 import { SYSTEM_VERSION } from './version.js';
 import { useBackendHealth } from './components/useBackendHealth.js';
 import { useAppStore } from './components/useAppStore.js';
+import { chatAuthHeaders } from './src/utils/chatAuth.js';
+import { readBSChatProviderConfig, discoverBSChatModels } from './src/utils/bsChatProvider.js';
 import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS } from './components/accessControl.js';
 import FeatureGateLockedCard from './components/FeatureGateLockedCard.jsx';
 import MomAccessibilityHUD from './components/MomAccessibilityHUD.jsx';
@@ -69,6 +71,7 @@ const BibleStudyTab = safeLazy(() => import('./src/components/BibleStudyTab.jsx'
 const DashboardView = safeLazy(() => import('./components/CommandCenterTab'));
 const IdeView = safeLazy(() => import('./components/SplitPaneIDEWorkspace.jsx'));
 const CentralGamingHubTab = safeLazy(() => import('./components/CentralGamingHubTab.jsx'));
+const BSGameHubTab = safeLazy(() => import('./components/BSGameHubTab.jsx'));
 
 const AdvertisingTab = safeLazy(() => import('./components/AdvertisingTab'));
 const SyndicationTab = safeLazy(() => import('./components/SyndicationTab.jsx'));
@@ -135,6 +138,7 @@ const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSu
 const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
 const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressPinPortal.jsx'));
 const ClusterEngineDashboard = safeLazy(() => import('./src/components/ClusterEngineDashboard.jsx'));
+const SpecialistSwarmExplorer = safeLazy(() => import('./src/components/SpecialistSwarmExplorer.jsx'));
 
 /** @extends {React.Component<{children?: import('react').ReactNode}, {hasError: boolean; error: unknown}>} */
 class TabErrorBoundary extends React.Component {
@@ -197,6 +201,7 @@ class TabErrorBoundary extends React.Component {
 const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
+  { key: 'specialist_swarm', label: '🤖 64-Specialist Swarm Explorer', description: 'SQLite WAL Specialist Registry, 7 Operational Domains & Verification Gates', Component: SpecialistSwarmExplorer },
   { key: 'chat', label: '💬 BS-CHAT Assistant', description: 'Autonomous Sovereign Mobile & Desktop AI Assistant & Swarm', Component: MobileStehouwerChat },
   { key: 'video_streaming', label: '🎬 VLC Media Player & Video Studio', description: 'Integrated VLC Player for Rendered & Uploaded Videos, HLS Streaming & UE5 Bridge', Component: VideoStudioTab },
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
@@ -204,6 +209,7 @@ const tabs = [
   { key: 'sovereign_apps', label: '🤖 Sovereign Agent Apps Hub', description: '14-Tool Sovereign Agent Suite (Claude Code, Codex, OpenClaw, OpenCode, Hermes, Droid, Pi, Cline, Copilot) & MoE Specialist Router', Component: SovereignAgentAppsTab },
   { key: 'gpu_telemetry', label: '🔥 GPU Hardware Telemetry Hub', description: 'NVIDIA GeForce RTX 4090 NVML Hardware Telemetry, Fan Speed Lock & SQLite Thermal Vault', Component: GpuHardwareTelemetryTab },
   { key: 'central_gaming_hub', label: '🎮 Central Gaming Hub', description: 'Unified Ludic Nexus: 2-Player P2P Dyadic Hub, Steam Game Library & Win32 Memory Trainer', Component: CentralGamingHubTab },
+  { key: 'bs_game', label: '🛠️ BS Game · First Boot', description: 'Custom PC engine progress & playable motherboard concept', Component: BSGameHubTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder', Component: VisualWorkflowDAGTab },
@@ -276,7 +282,6 @@ export default function App() {
   const selectedModel = useAppStore(state => state.selectedModel);
   const setSelectedModel = useAppStore(state => state.setSelectedModel);
   const availableModels = useAppStore(state => state.availableModels);
-  const setAvailableModels = useAppStore(state => state.setAvailableModels);
   const efficiencyMode = useAppStore(state => state.efficiencyMode);
   const isEditingLayout = useAppStore(state => state.isEditingLayout);
   const toggleEditMode = useAppStore(state => state.toggleEditMode);
@@ -580,6 +585,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!currentUser?.uid) return;
+    let current = true;
+    const revision = useAppStore.getState().aiProviderSelectionRevision;
+    const uid = currentUser.uid;
+    const loadProviders = async () => {
+      try {
+        const response = await fetch(`${backendUrl}/api/ai/providers`, {
+          headers: await chatAuthHeaders({}, uid),
+        });
+        if (!response.ok) return;
+        const configuration = readBSChatProviderConfig(await response.json());
+        if (current && auth.currentUser?.uid === uid) {
+          useAppStore.getState().setAIProviderConfiguration(configuration, revision);
+        }
+      } catch (error) {
+        console.warn('Unable to load AI provider selection.', error);
+      }
+    };
+    loadProviders();
+    return () => { current = false; };
+  }, [backendUrl, currentUser?.uid]);
+
+  useEffect(() => {
     fetch(`${backendUrl}/api/models`)
       .then(res => res.json())
       .then(data => {
@@ -594,17 +622,11 @@ export default function App() {
 
         // Append Gemini backup fallback models
         const geminiModels = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-2.0-flash'];
-        modelList = [...new Set([...modelList, ...geminiModels])];
-
-        if (modelList.length > 0) {
-          setAvailableModels(modelList);
-          if (!selectedModel || !modelList.includes(selectedModel)) {
-            setSelectedModel(modelList[0]);
-          }
-        }
+        // Use current state after the request; discovery cannot overwrite a cloud choice.
+        useAppStore.setState(discoverBSChatModels(useAppStore.getState(), [...modelList, ...geminiModels]));
       })
       .catch(err => console.error('Failed to fetch models:', err));
-  }, [backendUrl, setAvailableModels, selectedModel, setSelectedModel]);
+  }, [backendUrl]);
 
   const [navLayout, setNavLayout] = useState(
     () => localStorage.getItem('sp-ai-nav-layout') || 'top'

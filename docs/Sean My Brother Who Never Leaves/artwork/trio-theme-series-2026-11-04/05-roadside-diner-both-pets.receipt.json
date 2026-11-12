@@ -1,0 +1,27 @@
+{
+  "id": "05-roadside-diner-both-pets",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-b5a3-7d12-9526-759110caf3ed/exec-1b77695b-cc2d-4a61-b7ac-b5829c94d382.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/05-roadside-diner-both-pets.png",
+  "prompt": "Edit image1, the finished wide16:9 diner poster. Images2 and3 show the SAME second real dog TONTO, the close facial view and current whole-body view. ADD TONTO as a SECOND clearly separate foreground pet in this scene. He is a short-haired muscular chocolate/russet-brown dog with his own recognizable broad square face, brown nose, amber eyes, naturally folded/rose ears, gently graying muzzle and white chest patch. Use image2 for precise face and image3 for current build and mature muzzle. Friendly calm expression, natural anatomy and ordinary proportions, a simple collar tag reading TONTO is welcome. Do not copy source camera timestamps, eye-flash reflections, bedroom background or source human limbs. He should have a separate front-of-booth foreground presence, clearly visible head/chest/front paws if practical, angled naturally toward the group. Preserve the existing full composition; use the lower foreground space sensibly without hiding any human face or main readable sign. Keep all three adults Brett-left, Anna-middle, Sean-right completely unchanged: identical faces, poses, expressions, clothing and hands. CRITICAL: KEEP Sean's existing fluffy reddish-brown/white/tan dog on the RIGHT EXACTLY AS IT IS, including white blaze, freckles, amber eyes, pink-brown nose, HR harness, paws and clipboard. Do NOT replace it with Tonto or merge their faces/coats, do not add a second fluffy dog. Final exact count THREE adult humans plus TWO clearly different dogs: existing fluffy HR dog AND newly added short-coated TONTO. Keep the complete diner/camper/rain/map/pizza/coffee/snail scene and ALL current title/catchphrase/prop lettering verbatim and readable. Keep the same original high-detail tactile photorealistic-surreal illustration, coherent warm neon lighting, sharp faces and existing framing. New text only optional TONTO collar tag. No extra adults, extra pets, duplicated heads, new watermarks or other unrelated changes. This is an imaginative comedy artwork.",
+  "referenced_image_paths": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/05-roadside-diner-seans-dog.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "transparent_background": false,
+  "edit_scope": "Added Tonto as a second separate dog; preserved previous Sean-dog poster.",
+  "qa": {
+    "status": "accepted",
+    "pets": "Exactly two distinct dogs. Tonto has short russet/chocolate coat, muscular broad chest, square face, amber eyes, brown nose, folded ears, subtle gray muzzle, white chest patch and readable TONTO tag. Sean's fluffy red-brown/white dog remains on the right with same face/HR harness/paws/clipboard.",
+    "humans": "Exactly three adults, same Brett-left/Anna-middle/Sean-right recognizable faces, poses and expressions. No extra human or merged animals.",
+    "typography": "Title, subtitle and all major catchphrases/labels/mug text remain accurate and readable.",
+    "composition": "Diner/parked camper/rain/map/snails/pizza preserved; Tonto naturally fits between Sean and existing HR dog in separate foreground presence.",
+    "limitations": "Minor loose-prop spacing adjusts to fit added dog; part of Sean's hand is naturally occluded by the new foreground dog. No source pixels claimed byte-identical."
+  },
+  "dimensions": [
+    1672,
+    941
+  ],
+  "bytes": 3119581
+}

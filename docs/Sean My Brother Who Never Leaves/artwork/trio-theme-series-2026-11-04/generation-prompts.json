@@ -1,0 +1,100 @@
+{
+  "common": "Create ONE new finished, highly detailed THREE MUSKETEERS trio comedy poster, reinterpreting the supplied approved artwork in the new setting described below. Use built-in image generation at the highest native detail available. This is a complete artwork, not a photographed poster mockup.\n\nREFERENCE ROLES: Images1 and2 are the approved expanded-world panorama and zoom poster, defining the THREE main human characters and the visual joke style. Image3 is real Brett (glasses-wearing man on LEFT); image4 is real Sean (man on RIGHT), supplementary facial-structure references. Anna in MIDDLE must preserve her particular light-eyed brown-haired appearance, glasses on head, subtle nose jewelry and burgundy clothing from images1/2. Exactly THREE full-size human adults, each once. Image5 is Sean's ACTUAL DOG and is now the highest-priority pet identity reference: a medium fluffy reddish/chocolate-brown and white herding dog with tan eyebrow/cheek points, broad white forehead blaze, white chest and ruff, freckled white muzzle, pinkish-brown nose, amber eyes and folded ears. Preserve these specific markings and face. ONE dog only, wearing the playful HR harness/badge; let its face be recognizable, with sunglasses optional on head rather than obscuring eyes. The supplied earlier posters' generic golden dog is superseded by this specific real pet reference. Keep all source photographs unchanged. No extra people or duplicate faces; tiny nonhuman fantasy creatures such as snails allowed.\n\nTHE CORE: affectionate roasting, practical care, creative ambition, gaming, everyday exhaustion and absurd ideas. All three are friends with agency; Anna can participate in the nonsense rather than always parent the men. The HR dog is delighted and takes his ridiculous role seriously. Main people retain equal dignity; humor is in absurd objects and shared situations. These are imaginative art scenes, not claims of real historical events. Rich small connected discoveries like the source: a tiny accident creates a paper trail; a snail family acquires legal files; game or coffee logistics spill into office bureaucracy. Visual jokes should be causally linked and adapted to this setting. Main faces and dog must remain much larger and clearer than the discoveries.\n\nART AND TYPE: beautiful believable portrait faces within an imaginative tactile photorealistic-surreal illustration. The source's playful sophistication and layered discoveries persist, but use the theme's palette, atmosphere and composition. First read title then faces/dog then medium jokes then tiny discoveries. Distinct depth planes, calm zones behind every text label, generous margins, crisp edges, coherent light, no noisy confetti over faces. Short exact text only, integrated into actual signs, mugs, cards and props with flat pale surfaces and dark ink; neon glow outside letter edges. Legible requested words before extra decoration. Do not copy a whole wall of small text from the references indiscriminately. No fake paragraphs, pseudo-writing or garbled lettering. Keep specified recurring wording verbatim, including PWAY when requested. Crude double meanings and profanity allowed, no slurs, explicit sexual content, sexual violence, self-harm imagery, real disasters, diagnostic claims or memorial motifs. Do not add watermarks, timestamps or camera UI. Natural hands, correct human anatomy, no obstructed faces. Change setting/poses enough that this is a distinct new theme rather than the same counter with a new background.",
+  "refs": [
+    "C:/Users/footb/OneDrive/Documents/ChatGPT/Image creation studio/output/imagegen/three-musketeers-expanded-world-v2.png",
+    "C:/Users/footb/OneDrive/Documents/ChatGPT/Image creation studio/output/imagegen/three-musketeers-zoom-poster-v1.png",
+    "C:/Users/footb/AppData/Local/Temp/20250922_191349.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014412_Photos.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "posters": [
+    {
+      "id": "01-coop-cabin",
+      "title": "CO-OP CHAOS",
+      "theme": "Cozy arcade cabin",
+      "format": "portrait 2:3",
+      "brief": "Tall2:3 composition. A cozy timber cabin game night, rain outside, electric blue arcade light balanced with warm fireplace and amber lamps. Brett-left wears casual glasses/gray shirt, Anna-middle burgundy knit is actively winning with controller and a triumphant raised eyebrow, Sean-right dark hoodie openly laughs and playfully protests, all three sharing a deep couch. Sean's red-brown-and-white HR dog foreground paws a comic incident slip. Faces dominate. A proper little snail terrarium has a crowned sunglass snail plus five babies; miniature controllers and tiny legal folders connect to the pet's paperwork. On a side table pizza, popcorn, a paused game showing snail race with no tiny fake UI, and modest fairy lights. Main sign exact \"THREE MUSKETEERS\"; second line \"CO-OP CHAOS\". Medium separate signs exact \"WHO WANNA PWAY?\" and \"ROAST FIRST. SHOW UP ANYWAY.\" Anna's mug \"NOT MY DEPARTMENT\". Dog badge \"HR\". Three small reward labels exact \"RESPAWN: PENDING\", \"ESCALATED TO THE DOG\", \"5+ SNAIL BABIES (ALREADY)\". Bottom small caption \"SAME IDIOTS. DIFFERENT CHAOS.\" Source density but a new relaxed diagonal couch composition, not central laboratory counter.",
+      "final_filename": "01-coop-cabin-both-pets.png",
+      "previous_final_filename": "01-coop-cabin-seans-dog.png"
+    },
+    {
+      "id": "02-chaos-lab",
+      "title": "QUESTIONABLE RESEARCH",
+      "theme": "Neon laboratory and office",
+      "format": "landscape 16:9",
+      "brief": "Wide16:9 panoramic secret group-chat laboratory with violet/cyan/magenta neon, warm gold metal and rich glass reflections. Not a copy of source composition: arrange trio in a broad semicircular workshop with Anna-middle mixing a harmless rainbow foaming experiment herself, smirking at Brett-left's mock-serious scientific note-taking; Sean-right holds a comically tiny fire extinguisher and laughs at the grandiosity. Sean's red-brown-and-white HR dog in front stamps report with paw. Each human large, recognizable. Five miniature discovery zones: snail nursery leads to shell-shaped tiny court; rainbow tube feeds an incident-report printer; tiny espresso gravity well pulls sugar; arcade cable tangles with overdue files; small emergency pizza station. Crisp title \"THREE MUSKETEERS\"; subtitle \"QUESTIONABLE RESEARCH\". Medium labels \"SCIENCE MAKES BETTER BAD DECISIONS\", \"ADULT SUPERVISION IS A PAID FEATURE\", \"BAD IDEA JUICE\". Anna's flipped clipboard \"NOT MY DEPARTMENT\". Dog badge \"HR\"; little report \"HR CASE #404\". Two distinct machine buttons \"FUCK AROUND\" and \"FIND OUT\"; tiny treat tray \"SETTLEMENT: TWO TREATS\". Only harmless comic experiments, nobody hurt, no explicit drugs. Make the interactions and new arrangement genuinely fresh.",
+      "final_filename": "02-chaos-lab-both-pets.png",
+      "previous_final_filename": "02-chaos-lab-seans-dog.png"
+    },
+    {
+      "id": "03-tavern-quest",
+      "title": "THE QUEST CAN WAIT",
+      "theme": "Fantasy tavern and quest paperwork",
+      "format": "portrait 2:3",
+      "brief": "Tall2:3 fantasy-tavern illustration, lush moss green, candle gold, wine burgundy and carved dark wood, softly luminous mushrooms and stained-glass windows. Same three recognizable adults together around a small round tavern table: Brett-left rectangular glasses in purple-and-gold traveling cloak over simple white tunic considers an absurd quest map with exaggerated concentration; Anna-middle burgundy adventurer vest laughs while crossing a quest off her scroll; Sean-right dark hooded traveling cloak leans back in open hearty laughter, holding a colorful potion mug. Sean's red-brown-and-white HR dog at their feet wearing tasteful leather harness and HRbadge guards two bone-shaped biscuits. Giant crowned snail in a terrarium hanging at upper corner; five baby snails carry miniature scrolls along shelf into shell court model. A trail of parchment from group leads to the dog's little approval pawprint. Main hanging sign exact \"THREE MUSKETEERS\"; subtitle \"THE QUEST CAN WAIT\". Medium texts \"QUEST LOG: OVERDUE\", \"ADULT SUPERVISION IS A PAID FEATURE\", \"NOT MY DEPARTMENT\". A mug \"BAD IDEA JUICE\". Small reward labels \"SHELL COMPANY\", \"HR ACCEPTS TREATS\", \"MEETING COULD'VE BEEN A MEME\". Bottom modest caption \"ROAST FIRST. SHOW UP ANYWAY.\" No fighting, gore or dangerous action; swords only as small decorative title emblem.",
+      "final_filename": "03-tavern-quest-both-pets.png",
+      "previous_final_filename": "03-tavern-quest-seans-dog.png"
+    },
+    {
+      "id": "04-court-of-bad-ideas",
+      "title": "THE COURT OF BAD IDEAS",
+      "theme": "Mock courtroom and snail bureaucracy",
+      "format": "landscape 16:9",
+      "brief": "Wide16:9 elaborate theatrical mock courtroom with burgundy velvet, cream papers, navy shadows, polished golden wood. All three full-size humans together in the jury bench, comfortably close: Brett-left glasses raises a skeptical eyebrow over the absurd evidence, Anna-middle tries not to laugh while holding her clipboard and a cookie, Sean-right openly laughing with palm-up theatrical innocence. Sean's red-brown-and-white HR dog occupies a LITTLE dog-sized judge dais in foreground, harness plus tiny judicial cape, one paw near a squeaky gavel toy. No other people. Miniature snail court annex on a side cabinet with crowned snail/five babies, shell files and an absurdly long receipt; evidence string connects discarded idea notes to a pizza box and controllers. Main exact title \"THREE MUSKETEERS\"; subtitle \"THE COURT OF BAD IDEAS\". Large wall plaque \"ADULT SUPERVISION IS A PAID FEATURE\". Anna clipboard \"NOT MY DEPARTMENT\". Dog dais \"HR\". Separate evidence cards \"THAT WAS SUPPOSED TO BE A GOOGLE SEARCH\", \"THAT'S WHAT SHE SAID TO BLAKE\". Miniature annex \"CHILD SUPPORT DIVISION\"; other small labels \"SHELL ASSETS: FROZEN\", \"LEGAL FEES: RECURRING\", \"SETTLEMENT: TWO TREATS\". Footer \"QUESTIONABLE IDEAS. BETTER PEOPLE.\" An affectionate parody of bureaucracy, no real legal case or serious accusations.",
+      "final_filename": "04-court-of-bad-ideas-both-pets.png",
+      "previous_final_filename": "04-court-of-bad-ideas-seans-dog.png"
+    },
+    {
+      "id": "05-roadside-diner",
+      "title": "ONE MORE WRONG TURN",
+      "theme": "Road trip and midnight diner",
+      "format": "landscape 16:9",
+      "brief": "Wide16:9 richly detailed retro roadside diner pit stop with a PARKED little camper visible through rain-streaked window, dusty rose booths, turquoise chrome, warm coffee glow and cobalt midnight outside. Trio together in curved booth: Brett-left glasses/whiteT holds an upside-down map with an incredulous grin, Anna-middle burgundy cardigan points at an obvious map location while laughing, Sean-right dark jacket holds a pizza slice and laughs with them. No driving action, everyone safely seated. HR dog curls on booth-end bench in harness, front paws over dog-sized clipboard. Cozy neon, tactile photo-real faces and details. A small travel terrarium contains crowned snail plus five babies; tiny road signs and a snail-sized overdue receipt connect to napkin map. Main diner neon exact \"THREE MUSKETEERS\"; subtitle \"ONE MORE WRONG TURN\". Medium separate labels \"THAT WAS SUPPOSED TO BE A GOOGLE SEARCH\", \"NOT MY DEPARTMENT\", \"ROAST FIRST. SHOW UP ANYWAY.\" Two small mugs \"EMERGENCY COFFEE\" and \"BAD IDEA JUICE\". Dog badge \"HR\". Small map note \"DESTINATION: QUESTIONABLE\"; terrarium tag \"SNAIL MAIL: STILL PENDING\"; tabletop label \"QUALITY CONTROL IS ON BREAK\". No unreadable license plates or tiny fake menu text.",
+      "final_filename": "05-roadside-diner-both-pets.png",
+      "previous_final_filename": "05-roadside-diner-seans-dog.png"
+    },
+    {
+      "id": "06-orbital-breakroom",
+      "title": "THE BREAK ROOM EVENT HORIZON",
+      "theme": "Retro space lounge and cosmic coffee",
+      "format": "portrait 2:3",
+      "brief": "Tall2:3 retro-futurist cozy orbital lounge, midnight indigo, silver chrome, apricot upholstery and aqua glow with a huge round cosmic window. Same trio half-body large at a floating booth: Brett-left glasses and casual retro space jacket watches his coffee spoon orbit a tiny harmless espresso black hole with delighted disbelief; Anna-middle burgundy jumpsuit deliberately floats a sugar cube toward it with a mischievous smile; Sean-right dark hoodie inside an open casual space jacket laughs at the situation while keeping his mug level. Sean's red-brown-and-white HR dog in snug comfortable pet flight harness at foreground, no intimidating helmets hiding faces. Window Ufo and tiny toy-like cow as distant visual pun; little snail nursery in a self-contained glass habitat; five tiny snails have miniature boarding passes. A coffee tube becomes a cartoon cosmic-paperwork printer ending near HRdog. Main title \"THREE MUSKETEERS\"; subtitle \"THE BREAK ROOM EVENT HORIZON\". Medium sign \"MILK: EXTRATERRESTRIAL\". Anna's tablet-back sticker \"NOT MY DEPARTMENT\". Mug \"I CAN'T WAIT TO LOOK IN DEPTH\". Separate panel label \"ADULT SUPERVISION: OUT OF ORBIT\". Dog \"HR\". Three small labels \"UNPAID BILLS: STILL IN ORBIT\", \"WHO WANNA PWAY?\", \"HR ACCEPTS TREATS\". Cozy safe impossible comedy, no actual spacecraft emergencies or danger.",
+      "final_filename": "06-orbital-breakroom-both-pets.png",
+      "previous_final_filename": "06-orbital-breakroom-seans-dog.png"
+    },
+    {
+      "id": "07-campsite-chaos",
+      "title": "FORECAST: POOR DECISIONS",
+      "theme": "Rainy camping and shared shelter",
+      "format": "portrait 2:3",
+      "brief": "Tall2:3 adventurous cozy camping poster, deep pine green, blue rain, burgundy sleeping bags and warm lantern gold. All three inside a spacious open-front canvas tent safely dry and comfortable, large close figures with distinct actual faces. Brett-left glasses/dark knitbeanie and gray shirt gives an exaggerated weary eye-roll at a stubborn foldout camping chair; Anna-middle burgundy fleece is laughing as she wins the harmless struggle with a marshmallow packet; Sean-right hooded campingjacket laughs and offers an extra blanket. Sean's red-brown-and-white HR dog contentedly occupies the best sleeping mat, harnessHRvisible. Outside rain is gentle, no storm hazard. A tiny closed terrarium with crownedsnail/fivebabies oncrate, miniature boots and tiny legal-envelope trail towarddog. A well-balanced dense scene of campinggear and jokes, believable cozy portrait lighting. Main sign on tent exact \"THREE MUSKETEERS\"; subtitle \"FORECAST: POOR DECISIONS\". Medium board \"ADULT SUPERVISION: OUT OF COVERAGE\". Anna's mug \"NOT MY DEPARTMENT\". Small gear tags \"EMOTIONAL SUPPORT MEMES\", \"ESCALATED TO THE DOG\", \"SNAIL MAIL: STILL PENDING\". A cooler label \"BAD IDEA JUICE\". Bottom caption \"SAME IDIOTS. DIFFERENT WEATHER.\" No duplicatedpeople or faceshiddenbygear.",
+      "final_filename": "07-campsite-chaos-both-pets.png",
+      "previous_final_filename": "07-campsite-chaos-seans-dog.png"
+    },
+    {
+      "id": "08-rooftop-afterglow",
+      "title": "SAME TEAM. NEW DAY.",
+      "theme": "Quiet dawn rooftop and optimism",
+      "format": "landscape 16:9",
+      "brief": "Wide16:9 emotionally warm but quietly funny rooftop greenhouse breakfast at dawn, muted lavender sky, sage plants, apricot sunlight and soft burgundy. Large trio sitting close along a cozy outdoor couch, relaxed after a long night: Brett-left short hair/glasses and graycrewneck is smiling softly toward Anna; Anna-middle burgundy sweater laughs naturally while pointing at a tiny snail baby crawling harmlessly on a closed notebook; Sean-right dark hoodie grins at both, one arm along couchback in friendly easy company. Sean's red-brown-and-white HR dog asleep-with-happyexpression on blanket infront; harnessvisible. The miniature terrarium with crownedsnail/fivebabies nearby, small pizza box, three individualmugs, controllersrestingidle and plant-covered greenhouse serve discreet recurringdetails. Let faces, closeness and dawn lead, with significantly more breathingroom than laboratory, while still rewardinginspection. Tasteful roofsign exact \"THREE MUSKETEERS\"; subtitle \"SAME TEAM. NEW DAY.\" Six clearly separated small proptexts only: \"ROAST FIRST. SHOW UP ANYWAY.\", \"NOT MY DEPARTMENT\", \"HR\", \"GOOD MEMES. GOOD DAY.\", \"QUALITY CONTROL IS ON BREAK\", \"QUESTIONABLE IDEAS. BETTER PEOPLE.\" No memorialfeeling, forcedtears, romantic triangle or exaggerated perfect-familyadvertisement. Allthreefriendsalive, involvedandatpeace.",
+      "final_filename": "08-rooftop-afterglow-both-pets.png",
+      "previous_final_filename": "08-rooftop-afterglow.png"
+    }
+  ],
+  "sourcePromptFiles": [
+    "C:/Users/footb/OneDrive/Documents/ChatGPT/Image creation studio/output/imagegen/three-musketeers-zoom-poster-v1-prompt.txt",
+    "C:/Users/footb/OneDrive/Documents/ChatGPT/Image creation studio/output/imagegen/three-musketeers-expanded-world-v2-prompt.txt"
+  ],
+  "note": "Existing prompts treated as creative source material; latest user requests theme variations. Source files preserved.",
+  "petUpdate": {
+    "reference": "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg",
+    "description": "Latest user-provided Sean dog replaces the generic golden dog from source artwork. Existing initial drafts preserved; corrected siblings used in final gallery."
+  },
+  "tontoUpdate": {
+    "references": [
+      "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+      "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+    ],
+    "description": "User identifies this second dog as Tonto. Add alongside Sean's dog, preserve both distinctly; use current graying muzzle and short brown coat with white chest."
+  }
+}

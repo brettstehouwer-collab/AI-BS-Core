@@ -19,12 +19,13 @@ import sys
 import threading
 import time
 import traceback
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable
 
 import psutil
-from PyQt6.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal
+from PyQt6.QtCore import QObject, QRunnable, QThreadPool, QTimer, Qt, pyqtSignal, pyqtSlot
 
 AI_BS_ROOT = Path(os.environ.get("AI_BS_ROOT", r"C:\AI-BS"))
 BACKEND_DIR = AI_BS_ROOT / "backend"
@@ -110,16 +111,192 @@ class Task(QRunnable):
                 pass
 
 
+class _TaskRelay(QObject):
+    """GUI-owned delivery fence; workers never invoke widget callbacks."""
+
+    def __init__(self, bus, task, generation, on_result, on_error):
+        super().__init__(bus)
+        self.bus, self.task, self.generation = bus, task, generation
+        self.on_result, self.on_error = on_result, on_error
+
+    def _admitted(self):
+        return (self.task is not None and not self.bus._stopping
+                and self.generation == self.bus._generation
+                and not self.task.cancel_event.is_set())
+
+    @pyqtSlot(object)
+    def result(self, value):
+        if self._admitted() and self.on_result is not None:
+            self.on_result(value)
+
+    @pyqtSlot(str)
+    def error(self, message):
+        if self._admitted() and self.on_error is not None:
+            self.on_error(message)
+
+    @pyqtSlot()
+    def finished(self):
+        if self.task is not None:
+            self.bus._retire(self.task)
+
+
 class EngineBus(QObject):
     """Dedicated thread pool + bookkeeping for in-flight tasks."""
 
     active_changed = pyqtSignal(int)
+    admission_changed = pyqtSignal(object)
+    drained = pyqtSignal()
 
     def __init__(self, max_threads: int = 8):
         super().__init__()
         self.pool = QThreadPool()
         self.pool.setMaxThreadCount(max_threads)
         self._active: set[Task] = set()
+        # finished is emitted before QRunnable.run actually returns. Keep all
+        # wrappers/signals alive until a real pool barrier, including clear()'s
+        # queued tasks which will never emit finished.
+        self._owned: dict[Task, _TaskRelay] = {}
+        self._retired: set[Task] = set()
+        self._generation = 0
+        self._stopping = False
+        self._drained = False
+        self._drain_timer = QTimer(self)
+        self._drain_timer.setInterval(20)
+        self._drain_timer.timeout.connect(self._poll_pool_barrier)
+        self._pending = deque()
+        self._running: set[Task] = set()
+        self._admission_configured = False
+        self._admission_paused = False
+        self._admission_max_workers = max_threads
+        self._admission_start_interval_ms = 0
+        self._admission_batch_size = 128
+        self._admission_cooldown_ms = 0
+        self._admission_next_start = 0.0
+        self._admission_batch_started = 0
+        self._admission_batch_wait = False
+        self._admission_timer = QTimer(self)
+        self._admission_timer.setInterval(15)
+        self._admission_timer.timeout.connect(self._admit_pending)
+
+    def admission_snapshot(self) -> dict[str, Any]:
+        return {
+            'max_workers': self._admission_max_workers,
+            'start_interval_ms': self._admission_start_interval_ms,
+            'batch_size': self._admission_batch_size,
+            'batch_cooldown_ms': self._admission_cooldown_ms,
+            'paused': self._admission_paused,
+            'queued': len(self._pending),
+            'in_flight': len(self._running),
+            'active_threads': self.pool.activeThreadCount(),
+            'stopping': self._stopping,
+            'scope': 'All tasks submitted through this native EngineBus; external services retain their own controls.',
+        }
+
+    def _admission_changed(self) -> None:
+        self.admission_changed.emit(self.admission_snapshot())
+
+    def _withdraw_pool_queue(self) -> None:
+        # Preserve the legacy immediate QThreadPool admission until controls are
+        # explicitly used. On activation, recover only jobs tryTake proves have
+        # not started. Running callables are never interrupted.
+        withdrawn = []
+        for task in self._owned:
+            if task in self._running and self.pool.tryTake(task):
+                self._running.discard(task)
+                withdrawn.append(task)
+        self._pending = deque([*withdrawn, *self._pending])
+
+    def configure_admission(self, max_workers: int, start_interval_ms: int = 0,
+                            batch_size: int = 128, batch_cooldown_ms: int = 0) -> None:
+        for name, value, lower, upper in (
+            ('max_workers', max_workers, 1, 64),
+            ('start_interval_ms', start_interval_ms, 0, 3600000),
+            ('batch_size', batch_size, 1, 4096),
+            ('batch_cooldown_ms', batch_cooldown_ms, 0, 3600000),
+        ):
+            if type(value) is not int or not lower <= value <= upper:
+                raise ValueError(f'{name} is outside its bounded range')
+        if self._stopping:
+            raise RuntimeError('EngineBus is shutting down')
+        self._admission_configured = True
+        self._withdraw_pool_queue()
+        self._admission_max_workers = max_workers
+        self._admission_start_interval_ms = start_interval_ms
+        self._admission_batch_size = batch_size
+        self._admission_cooldown_ms = batch_cooldown_ms
+        self.pool.setMaxThreadCount(max_workers)
+        if self._admission_batch_started >= batch_size:
+            self._admission_batch_wait = True
+        self._admit_pending()
+
+    def pause_admission(self) -> None:
+        if self._stopping:
+            return
+        self._admission_configured = True
+        self._admission_paused = True
+        self._withdraw_pool_queue()
+        self._admission_timer.stop()
+        self._admission_changed()
+
+    def resume_admission(self) -> None:
+        if not self._stopping:
+            self._admission_paused = False
+            self._admit_pending()
+
+    def cancel_pending(self) -> int:
+        self._admission_configured = True
+        self._withdraw_pool_queue()
+        count = 0
+        while self._pending:
+            task = self._pending.popleft()
+            task.cancel_event.set()
+            self._active.discard(task)
+            self._retired.add(task)
+            count += 1
+        self._admission_timer.stop()
+        self.active_changed.emit(len(self._active))
+        self._admission_changed()
+        self._poll_pool_barrier()
+        return count
+
+    @pyqtSlot()
+    def _admit_pending(self) -> None:
+        if self._stopping or self._admission_paused:
+            self._admission_timer.stop()
+            return
+        now = time.monotonic()
+        if (self._admission_batch_wait and not self._running
+                and self.pool.waitForDone(0)):
+            self._admission_batch_wait = False
+            self._admission_batch_started = 0
+            self._admission_next_start = max(
+                self._admission_next_start, now + self._admission_cooldown_ms / 1000)
+        while self._pending:
+            if self._admission_configured and (
+                    len(self._running) >= self._admission_max_workers
+                    or self._admission_batch_wait or now < self._admission_next_start):
+                break
+            task = self._pending.popleft()
+            if task.cancel_event.is_set():
+                self._active.discard(task)
+                self._retired.add(task)
+                self.active_changed.emit(len(self._active))
+                continue
+            self._running.add(task)
+            self.pool.start(task)
+            self._admission_batch_started += 1
+            if self._admission_configured:
+                self._admission_next_start = now + self._admission_start_interval_ms / 1000
+                if self._admission_batch_started >= self._admission_batch_size:
+                    self._admission_batch_wait = True
+                now = time.monotonic()
+        if self._pending:
+            self._admission_timer.start()
+        else:
+            self._admission_timer.stop()
+        if self._retired:
+            self._poll_pool_barrier()
+        self._admission_changed()
 
     def submit(
         self,
@@ -129,15 +306,20 @@ class EngineBus(QObject):
         on_error: Callable[[str], None] | None = None,
         **kwargs: Any,
     ) -> Task:
+        if self._stopping:
+            raise RuntimeError('EngineBus is shutting down; new work is not admitted')
+        if len(self._active) >= 4096:
+            raise RuntimeError('Native background queue is full')
         task = Task(fn, args, kwargs)
-        if on_result is not None:
-            task.signals.result.connect(on_result)
-        if on_error is not None:
-            task.signals.error.connect(on_error)
-        task.signals.finished.connect(lambda t=task: self._retire(t))
+        relay = _TaskRelay(self, task, self._generation, on_result, on_error)
+        task.signals.result.connect(relay.result, Qt.ConnectionType.QueuedConnection)
+        task.signals.error.connect(relay.error, Qt.ConnectionType.QueuedConnection)
+        task.signals.finished.connect(relay.finished, Qt.ConnectionType.QueuedConnection)
+        self._owned[task] = relay
         self._active.add(task)
         self.active_changed.emit(len(self._active))
-        self.pool.start(task)
+        self._pending.append(task)
+        self._admit_pending()
         return task
 
     def dispatch(
@@ -153,17 +335,89 @@ class EngineBus(QObject):
 
     def _retire(self, task: Task) -> None:
         self._active.discard(task)
+        self._running.discard(task)
+        self._retired.add(task)
         self.active_changed.emit(len(self._active))
+        self._poll_pool_barrier()
+        self._admit_pending()
 
     @property
     def active_count(self) -> int:
         return len(self._active)
 
-    def shutdown(self, timeout_ms: int = 3000) -> None:
-        for t in list(self._active):
-            t.cancel_event.set()
-        self.pool.clear()
-        self.pool.waitForDone(timeout_ms)
+    @property
+    def is_drained(self) -> bool:
+        return self._drained
+
+    def _release(self, tasks) -> None:
+        for task in list(tasks):
+            relay = self._owned.pop(task, None)
+            self._retired.discard(task)
+            if relay is None:
+                continue
+            for signal, slot in ((task.signals.result, relay.result),
+                                 (task.signals.error, relay.error),
+                                 (task.signals.finished, relay.finished)):
+                try:
+                    signal.disconnect(slot)
+                except (TypeError, RuntimeError):
+                    pass
+            # Already posted Qt events can outlive disconnect. Make the receiver
+            # inert before deferred QObject deletion on its owning GUI thread.
+            relay.task = relay.on_result = relay.on_error = None
+            relay.deleteLater()
+
+    def _complete_stop(self) -> None:
+        if self._drained:
+            return
+        self._drain_timer.stop()
+        self._admission_timer.stop()
+        self._release(self._owned)
+        self._active.clear()
+        self._pending.clear()
+        self._running.clear()
+        self._drained = True
+        self.active_changed.emit(0)
+        self._admission_changed()
+        self.drained.emit()
+
+    @pyqtSlot()
+    def _poll_pool_barrier(self) -> None:
+        if self._drained:
+            return
+        if self.pool.waitForDone(0):
+            if self._stopping:
+                self._complete_stop()
+            else:
+                self._release(self._retired)
+                self._drain_timer.stop()
+        elif self._stopping or self._retired:
+            self._drain_timer.start()
+
+    def shutdown(self, timeout_ms: int = 3000) -> bool:
+        """Request stop once; True requires a real native pool join.
+
+        Use timeout_ms=0 on the window-close path and retain this bus/window
+        while False is returned. The GUI timer emits drained after work returns.
+        Cancellation never forcibly terminates a callable.
+        """
+        if not isinstance(timeout_ms, int) or timeout_ms < 0:
+            raise ValueError('EngineBus shutdown requires a bounded nonnegative timeout')
+        if self._drained:
+            return True
+        if not self._stopping:
+            self._stopping = True
+            self._admission_timer.stop()
+            self._pending.clear()
+            self._generation += 1
+            for task in self._owned:
+                task.cancel_event.set()
+            self.pool.clear()
+        if self.pool.waitForDone(timeout_ms):
+            self._complete_stop()
+            return True
+        self._drain_timer.start()
+        return False
 
 
 # ---------------------------------------------------------------------------

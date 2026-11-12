@@ -1,0 +1,3312 @@
+{
+  "schema_version": 1,
+  "captured_utc": "2026-11-11T17:50:02.440628+00:00",
+  "goal_status": "PAUSED",
+  "canonical_project": "C:/AI-BS",
+  "main_bs_game_drive_folder": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+  "purpose": "Preserve exact source-location history and review coverage without moving, executing, ingesting or uploading its contents.",
+  "policy": {
+    "registration_is_not_content_verification": true,
+    "registration_does_not_grant_execution_or_account_authority": true,
+    "contents_read_recursively": false,
+    "credential_contents_read_or_copied": false,
+    "private_db_contents_read": false,
+    "uploads_performed_by_this_registration": false,
+    "old_sources_and_indexes_modified": false,
+    "reparse_targets_followed": false,
+    "historical_material_is_reference_not_current_instructions": true,
+    "private_path_references_present": true,
+    "shared_destination_not_private_backup": true
+  },
+  "counts": {
+    "explicit_C_root_list": 26,
+    "ancestor_fixtures": 15,
+    "additional_profile_project_directories": 61,
+    "user_file_shortcut_binary_references": 19,
+    "sensitive_operational_path_references": 9,
+    "chat_attachment_path_references": 12,
+    "core_drive_folders": 2,
+    "older_drive_folders": 18,
+    "new_nested_drive_folders": 6,
+    "drive_folder_references_total": 26,
+    "concept_file_references": 14,
+    "explicit_footb_relative_directories": 51,
+    "explicit_footb_root_plus_directories": 52
+  },
+  "count_reconciliation": "The actual retained user C: list has26 roots including15ancestor fixtures; retain every exact entry rather than truncating to an earlier24-count shorthand.",
+  "prior_indexes": [
+    {
+      "path": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+      "scope_read": "Parsed registration and all26exact source-location records; no folder content read."
+    },
+    {
+      "path": "docs/architecture/ECOSYSTEM_SOURCE_REGISTER_2026-11-11.json",
+      "scope_read": "Bounded leading static inventory and top-level keys only; no claim of reading all thousands of entries."
+    },
+    {
+      "path": "docs/DIRECTORY_INDEX.md",
+      "scope_read": "Initial bounded read revealed private authored material rather than a normal directory index; stopped; no excerpts copied here; original untouched.",
+      "qualification": "CLASSIFICATION_GAP_DO_NOT_UPLOAD_BODY_AS_PUBLIC_INDEX"
+    }
+  ],
+  "local_roots": [
+    {
+      "path": "C:\\Library",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-08-27T21:30:23.906976+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\M-AI_BS_Android_Build",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-22T15:37:59.946342+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AI-BS",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:46:30.260784+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "canonical_project",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_1bc95637dde84db2bb0e99fec483796f",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:12:03.163475+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_1f5dc45cadef45dda55d30ec3496a8fb",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:12:03.146804+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_03de2134ad0f4f57bc621c1ccf49cec7",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T12:16:03.283064+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_8a3449548aa147d4837d8c21bae9df6a",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:12:03.164475+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_519a9918aa1546728ce3007d407f1e5f",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:12:03.161474+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_02375a83729a44abb02b115a12f9afe1",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:11:25.402255+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_6859de34b8ca4f268666fd6425195f0e",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:12:03.154316+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_25886c0e133147ffbbbadfac347224f7",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T12:16:03.299597+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_98234e8f8ae44ca89828bdb1cf4c5433",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:11:25.384310+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_22695059e7864623b052adaf75e8e41f",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T12:16:03.297539+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_c1d1af89634a44988dd042077335ecec",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:11:25.399967+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_c1e0257a04f043749a45e2812ff883bb",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:11:25.403776+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_d48a2aba2cb845dcab4c92bbb503056d",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T12:16:03.293328+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_dddef73bf04c4485a947dbb0a9ab318d",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T12:16:03.288722+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_e0c3806bbe4840079be6f38eb47baf0f",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-26T11:11:25.391963+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "ancestor_fixture_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AI-BS-Models",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "REPARSE_REFERENCE_NOT_FOLLOWED",
+        "directory": true,
+        "reparse_point": true,
+        "modified_utc": "2026-10-15T17:38:07.265943+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AI-BS-Recovery",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-04T17:58:17.605996+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AI-BS-UI-Preview",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-02T04:19:49.309441+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AI-BS-UI-Preview-Output",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-02T03:57:36.658642+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\AMD",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-06T06:09:01.450014+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\BS-Studio",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-13T16:40:49.207013+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\Certbot",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T17:41:17.060723+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    },
+    {
+      "path": "C:\\inetpub",
+      "category": "user_designated_local_root",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T21:10:20.930947+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "historical_or_supporting_reference_pending_verification",
+      "prior_registration": {
+        "source": "docs/agent_sync/LOCAL_HISTORY_SOURCES.json",
+        "registered_at": "2026-11-11T08:29:19.842819+00:00",
+        "content_review": "NOT_REVIEWED",
+        "available_then": true
+      }
+    }
+  ],
+  "additional_directories": [
+    {
+      "path": "C:/AI-BS/saved_data",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:00:06.621908+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Existing saved-data authority; not a disposable cache."
+    },
+    {
+      "path": "C:/AI-BS/frontend",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:20:48.763190+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Existing frontend source; no whole-tree acceptance follows."
+    },
+    {
+      "path": "C:/AI-BS/backend",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:49:24.479885+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Existing backend/source/private stores; no recursive content read."
+    },
+    {
+      "path": "C:/Windows.old",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:19:09.661466+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Retained pre-reinstallation Windows source; never delete or migrate wholesale."
+    },
+    {
+      "path": "C:/Program Files/NVIDIA Corporation/RTX Remix",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T21:55:27.051609+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "User-supplied installed-tool location; installation is not asset compatibility qualification."
+    },
+    {
+      "path": "C:/Users/footb",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:15:09.140676+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original Windows profile continuity; do not reassign private owners based on path names.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Windows.old/Users/footb",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:15:09.140676+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Possible preserved original profile; retained source, not active account identity."
+    },
+    {
+      "path": "C:/Users/footb/Documents",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T02:14:50.974412+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original-profile document history; contents remain private/unreviewed.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/Desktop",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-21T19:36:53.443299+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original launcher and document references; metadata only.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/Downloads",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T01:31:12.079866+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original downloads/history; do not run retained scripts automatically.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/AppData",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:15:08.083129+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original application history/configuration; not a migration authorization."
+    },
+    {
+      "path": "C:/Users/footb/AI-BS",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-15T17:38:07.319365+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original-profile project reference; canonical working root stays C:/AI-BS.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/AI-BS_Matrix",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-23T19:44:21.800875+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original-profile related project reference.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.codex",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T15:04:56.551418+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Private original assistant configuration/history; do not upload contents from registration.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.cloudflared",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-25T21:35:43.532444+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original tunnel configuration/credentials remain owner-scoped.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.ssh",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-08-12T18:17:17.071494+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Credential-location reference only; contents excluded.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.gemini",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-21T17:21:34.140815+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original assistant configuration/history; content unreviewed.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.claude",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-08-14T14:40:44.148735+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original assistant configuration/history; content unreviewed.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/footb/.ollama",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "REPARSE_REFERENCE_NOT_FOLLOWED",
+        "directory": true,
+        "reparse_point": true,
+        "modified_utc": "2026-10-05T08:03:07.338318+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Original model configuration/store reference; no model loading.",
+      "user_supplied_original_profile_list": true
+    },
+    {
+      "path": "C:/Users/Administrator/AppData/Local/AI-BS/NativeStudio",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:21:08.612267+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Current native private profile/recovery location; separate from footb ownership."
+    },
+    {
+      "path": "C:/Users/Administrator/Desktop",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:46:30.558631+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Current launcher destination; actual launcher acceptance is in the latest handoff."
+    },
+    {
+      "path": "C:/Users/footb/Muse Hub",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "REPARSE_REFERENCE_NOT_FOLLOWED",
+        "directory": true,
+        "reparse_point": true,
+        "modified_utc": "2026-08-27T21:38:04.379901+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.agents",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-25T06:41:33.118231+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.aibs-control-proof-c4cc78d60dbb42b9855c1b8496e4cc35",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-31T19:25:05.195945+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.aibs-private",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-31T19:33:46.840172+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.android",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-12T21:51:25.747750+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.antigravity-ide",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-18T22:11:58.799756+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.cache",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-23T01:10:43.007892+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.cache - Copy",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-31T14:26:38.735494+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.chia_keys",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-29T01:15:36.328784+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.claude-server-commander",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-24T15:20:10.513935+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.config",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-07T12:56:14.333841+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.copilot",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-13T13:03:21.285720+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.desktop-commander-device",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-24T15:05:23.640439+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.duckdb",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-14T18:58:45.227918+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.expo",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-10T17:15:29.835097+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.gnutls",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-12T14:56:03.713464+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.gradle",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-09T16:24:34.671101+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.gsutil",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-18T22:23:58.045249+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.ipython",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-13T11:20:47.929979+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.javacpp",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-22T15:37:04.596318+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.jdks",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-10-13T12:29:08.136657+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.keras",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-19T17:52:54.209455+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.local",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-29T03:14:36.927165+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.nvidia-omniverse",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-07T16:02:18.057137+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.pearl-wallet",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-07T19:15:50.333585+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.rembg",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-09-07T21:36:15.913602+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.supabase",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-08-29T06:56:30.266952+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.th-client",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-19T14:52:17.365395+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.thumbnails",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-02T02:14:50.078870+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.VirtualBox",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-04T21:43:52.190879+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.vscode",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-21T16:12:34.229426+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/.vscode-shared",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-21T16:12:32.417522+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/_test_junction_src",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "REPARSE_REFERENCE_NOT_FOLLOWED",
+        "directory": true,
+        "reparse_point": true,
+        "modified_utc": "2026-08-27T21:35:12.147055+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/ansel",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-19T12:55:12.947520+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/Contacts",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-18T20:14:16.250330+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/CrossDevice",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-22T20:07:40.420911+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/Favorites",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:15:07.814457+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/go",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-28T17:28:17.128826+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/Installer Files",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-07-19T20:50:55.984556+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    },
+    {
+      "path": "C:/Users/footb/Links",
+      "category": "additional_profile_or_project_directory",
+      "registration_authority": "Explicit full original-profile list supplied by the user in current chat",
+      "metadata_checked_utc": "2026-11-11T17:51:55.954359+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T18:15:09.424402+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no file contents, recursive enumeration or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "user_supplied_original_profile_list": true,
+      "note": "Original footb-profile history reference. Trusted source location is not code-execution authority; private/configuration/credential contents remain excluded."
+    }
+  ],
+  "user_file_references": [
+    {
+      "path": "C:/AI-BS/package.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:05:38.517472+00:00",
+        "file_bytes": 430,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/package-lock.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:05:38.518229+00:00",
+        "file_bytes": 201,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/release.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:05:38.539973+00:00",
+        "file_bytes": 195,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/version.txt",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:05:38.584793+00:00",
+        "file_bytes": 11,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T04:09:18.515722+00:00",
+        "file_bytes": 1215226,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/MobileStehouwerChat.jsx",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-09T11:03:56.643569+00:00",
+        "file_bytes": 9011,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/.gitignore",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:56:27.878452+00:00",
+        "file_bytes": 8274,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/.aibs-project.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-05T04:00:20.247891+00:00",
+        "file_bytes": 441,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/AGENTS.md",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T16:56:08.929890+00:00",
+        "file_bytes": 18153,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/error.log",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-02T00:22:55.417402+00:00",
+        "file_bytes": 438,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/symbol_graph.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-08-05T17:46:42.189815+00:00",
+        "file_bytes": 252361897,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/py_health_audit.json",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-07-26T16:14:38.474161+00:00",
+        "file_bytes": 24755795,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/GEMINI.md",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T23:16:10.696060+00:00",
+        "file_bytes": 362,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/AI-BS/PLAN.md",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:49:05.432566+00:00",
+        "file_bytes": 100463,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/Users/Administrator/Downloads/Custom_Engine_Foundation_BUILD_STATUS.md",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T06:51:01.786974+00:00",
+        "file_bytes": 150434,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/Users/footb/Downloads/Configure-PrivateGameStreaming.ps1",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-08T05:23:53.607132+00:00",
+        "file_bytes": 20958,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/Users/Public/Desktop/RTX Remix.lnk",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T22:22:51.802758+00:00",
+        "file_bytes": 2341,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/Users/Administrator/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Blender/Blender 5.3.lnk",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T01:02:23.322762+00:00",
+        "file_bytes": 1340,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    },
+    {
+      "path": "C:/Users/Administrator/AppData/Local/agy/bin/agy.exe",
+      "category": "user_mentioned_file_or_shortcut",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T21:05:22.394603+00:00",
+        "file_bytes": 226117784,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Referenced only. Retained scripts/binaries/shortcuts were not executed by this registration."
+    }
+  ],
+  "sensitive_operational_references": [
+    {
+      "path": "C:/Users/Administrator/Downloads/ai-bs-dashboard-38dd42a39425.json",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T20:19:26.402357+00:00",
+        "file_bytes": 2359,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "User-supplied Firebase service-account credential location; contents, key material and tokens excluded."
+    },
+    {
+      "path": "C:/Users/footb/.cloudflared/config.yml",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-10-25T21:35:43.529939+00:00",
+        "file_bytes": 1204,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Known tunnel configuration reference; this pass does not reread its contents."
+    },
+    {
+      "path": "C:/Users/footb/.cloudflared/d1acbd25-06c3-4be0-a7f4-ae3943263aed.json",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-07-22T17:37:00.948442+00:00",
+        "file_bytes": 175,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Known tunnel credential location; no content read/copy."
+    },
+    {
+      "path": "C:/Users/footb/.cloudflared/cert.pem",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-07-22T17:36:38.758669+00:00",
+        "file_bytes": 282,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Known Cloudflare account certificate location; no content read/copy."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/config.toml",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T09:28:39.389859+00:00",
+        "file_bytes": 3263,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Current assistant integration configuration reference only."
+    },
+    {
+      "path": "C:/AI-BS/.env",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-10-31T04:48:46.651372+00:00",
+        "file_bytes": 7901,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Environment-file discovery candidate; availability checked, contents never read."
+    },
+    {
+      "path": "C:/AI-BS/backend/aibs_master.db",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:49:24.476883+00:00",
+        "file_bytes": 247607296,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Private relational/state store; no database query, migration or copy in this registration."
+    },
+    {
+      "path": "C:/StehouwerPublishing.com/nginx.conf",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T16:01:34.382977+00:00",
+        "file_bytes": 6691,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Known restored publishing proxy reference; current server evidence lives in the recovery report."
+    },
+    {
+      "path": "C:/StehouwerPublishing.com/conf.d/thesimplechef.conf",
+      "category": "sensitive_or_operational_reference",
+      "registration_authority": "User supplied or previously verified operational path; not a new content authorization",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T16:01:10.977838+00:00",
+        "file_bytes": 702,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Known recovered Chef virtual-host reference."
+    }
+  ],
+  "chat_attachment_references": [
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/e0c64d1c-e4c7-422e-80a5-4b5145a724fc/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T21:09:35.866532+00:00",
+        "file_bytes": 20639,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/22cd5bbd-eebf-49cf-8f42-5a955083ec37/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-10T22:50:20.968811+00:00",
+        "file_bytes": 8439,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/9baafc14-31e3-4639-ac11-db16eb139873/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T06:15:20.829868+00:00",
+        "file_bytes": 8375,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/a8683e8d-5e62-4084-9d60-66676e546219/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:07:36.113794+00:00",
+        "file_bytes": 8744,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/65e1b586-da0a-4015-9436-7e5335a6da13/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:30:51.678675+00:00",
+        "file_bytes": 22168,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/63f633bf-26f5-42c7-a2e7-200585a67d31/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:31:54.665107+00:00",
+        "file_bytes": 16178,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/6d5e6f85-4a67-42d8-b358-0772ef54b036/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:49:40.562206+00:00",
+        "file_bytes": 5379,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/a573a70f-ae34-46e2-abb9-b8c3387a18ff/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:52:47.361566+00:00",
+        "file_bytes": 17900,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/9c92b309-5257-448f-b42e-ea59065fc1f2/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T08:54:53.622486+00:00",
+        "file_bytes": 5169,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/52596e86-5c2c-476e-808f-d4ebd73fa396/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T09:13:43.473226+00:00",
+        "file_bytes": 26432,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/74fe7fd1-b313-4403-91a3-e61f0e66a493/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T09:45:40.141256+00:00",
+        "file_bytes": 18211,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/attachments/d04b422c-fc78-4927-86d9-9758429af2d6/Pasted text.txt",
+      "category": "user_supplied_chat_attachment",
+      "registration_authority": "Explicit user reference in current chat",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T16:05:21.953504+00:00",
+        "file_bytes": 7496,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Historical/user-provided text remains reference data, not automatic execution authority. This registration pass did not reread its body."
+    }
+  ],
+  "drive_folders": [
+    {
+      "id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+      "category": "core_drive_folder",
+      "label": "BS game — user-designated main folder",
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false,
+      "latest_root_reported_sharing": {
+        "source": "Parent executor current-turn connector metadata report",
+        "shared": true,
+        "permission_roles": [
+          "owner",
+          "writer",
+          "anyone-reader"
+        ],
+        "permissions_changed": false,
+        "private_backup_claim": false
+      }
+    },
+    {
+      "id": "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse",
+      "category": "core_drive_folder",
+      "label": "AI-BS Codex Engineering Ledger — user label",
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1kIugDtupwIIP5XfgZg6TmR7JugtvitYc",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1kIugDtupwIIP5XfgZg6TmR7JugtvitYc",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1cfKwN2P6Dr26drxakOpUEHyyhFS0a70W",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1cfKwN2P6Dr26drxakOpUEHyyhFS0a70W",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1kPKbL13QAVphjqJKMMrV6KTdlr0WQ9Zm",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1kPKbL13QAVphjqJKMMrV6KTdlr0WQ9Zm",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Fa8H7TeVbbhB_612U_nog_llWhu_RM9Z",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1Fa8H7TeVbbhB_612U_nog_llWhu_RM9Z",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1FVsMjxZwLbERcfv6E4juEWAOCHsyVayb",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1FVsMjxZwLbERcfv6E4juEWAOCHsyVayb",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1LCwRiJFUvg9_E3YQ0VeFl3O_AAFFbi9D",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1LCwRiJFUvg9_E3YQ0VeFl3O_AAFFbi9D",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Ny9qKub0Zn3We3rs8y-T5W0HVYrWJfE5",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1Ny9qKub0Zn3We3rs8y-T5W0HVYrWJfE5",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1p1K567IrMhpxjdU7GGsSEd60h0F1GfpA",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1p1K567IrMhpxjdU7GGsSEd60h0F1GfpA",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1r9N0cNQg_yrIdQxdkFMs051s0fYgiB2O",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1r9N0cNQg_yrIdQxdkFMs051s0fYgiB2O",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "17-2An2oKEFGamQ0gHGnwhtdKfVi9dlwN",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/17-2An2oKEFGamQ0gHGnwhtdKfVi9dlwN",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "13S2__-rHU55u4HIlAh7biNol8B3_oKJ6",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/13S2__-rHU55u4HIlAh7biNol8B3_oKJ6",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1vUOfndvRAeEpWuuckt0HDjR9ME7z4G6c",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1vUOfndvRAeEpWuuckt0HDjR9ME7z4G6c",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1HSmg6MHeALuhextuX6CYt6U1NatEMIt6",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1HSmg6MHeALuhextuX6CYt6U1NatEMIt6",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "11jEAihl-ehMR7lwzHrQ1ShWpu4BVxzBs",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/11jEAihl-ehMR7lwzHrQ1ShWpu4BVxzBs",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1wfdoUtrIi3hXFbt775H8o8SUwonlQB-L",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1wfdoUtrIi3hXFbt775H8o8SUwonlQB-L",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1frrSk_9QsTL52gG_X4oHFaBdK3Btial8",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1frrSk_9QsTL52gG_X4oHFaBdK3Btial8",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1hEFRL1PoCIRFjnE69Y4MfIY9UQwUgN60",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1hEFRL1PoCIRFjnE69Y4MfIY9UQwUgN60",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Qe8gxHvGG7jlpveANBAw9LEBgv09CBgl",
+      "category": "older_history_drive_folder",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1Qe8gxHvGG7jlpveANBAw9LEBgv09CBgl",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1285TlSfCJf4QZQI3T06IW7CruytwoAjT",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1285TlSfCJf4QZQI3T06IW7CruytwoAjT",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1GOZGHqbIxl5M4yc7nMCw4tfWyU0dlYw0",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1GOZGHqbIxl5M4yc7nMCw4tfWyU0dlYw0",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Q6KuwA6N6-_6QJvxhHGGNs08Yy3xcTG9",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1Q6KuwA6N6-_6QJvxhHGGNs08Yy3xcTG9",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1nR8EK07iy1taOIJcP2aPnEBK7whuDqkB",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1nR8EK07iy1taOIJcP2aPnEBK7whuDqkB",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Xp38MnqvvTRj2ouL0tkrSTMn6VVFsHu2",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1Xp38MnqvvTRj2ouL0tkrSTMn6VVFsHu2",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1JSQs3Dl02Ro6VO8sxVk7wMq3d0cn8T6z",
+      "category": "new_nested_drive_folder_user_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/drive/folders/1JSQs3Dl02Ro6VO8sxVk7wMq3d0cn8T6z",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    }
+  ],
+  "concept_files": [
+    {
+      "id": "1-6ZkaKN1yN2_7oX6uDqeTpORpdFq9Blu",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1-6ZkaKN1yN2_7oX6uDqeTpORpdFq9Blu/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1WVPJMmQ4HqciIfUKbVsoeg3ZglUZ-1ps",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1WVPJMmQ4HqciIfUKbVsoeg3ZglUZ-1ps/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1qcZ0aQIiCDwCHJAi1nrc364rqutDe5OY",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1qcZ0aQIiCDwCHJAi1nrc364rqutDe5OY/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1J8ORH__QDdOSF08qYp9zTnuuHRWG7MRb",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1J8ORH__QDdOSF08qYp9zTnuuHRWG7MRb/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "17StuiDRYL1N07bcT4FKjd7Do6gfXKjfr",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/17StuiDRYL1N07bcT4FKjd7Do6gfXKjfr/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1AD9DkTIeqDpF2NXVV_QhIjeivgkRm0GK",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1AD9DkTIeqDpF2NXVV_QhIjeivgkRm0GK/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1Dvm-_0L70XVapiJ12NYvd8tAPzOI_Zfk",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1Dvm-_0L70XVapiJ12NYvd8tAPzOI_Zfk/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1HXaO1HLm_PQQnWsHPaoc_-6eqXIsT2dL",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1HXaO1HLm_PQQnWsHPaoc_-6eqXIsT2dL/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1e0p-XhMpwhQgp5U9qHj-KVL1aJiin3fV",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1e0p-XhMpwhQgp5U9qHj-KVL1aJiin3fV/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1WgbnwTg_BRmQGXO6UBSqOivEyWyVxraT",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1WgbnwTg_BRmQGXO6UBSqOivEyWyVxraT/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "18I-fVUNM_c2xXRaleY8NaMrj0eNoRmEc",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/18I-fVUNM_c2xXRaleY8NaMrj0eNoRmEc/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1ZGuhY-m3Qq1PgIkh5gpY_nI8xa0JUfMm",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1ZGuhY-m3Qq1PgIkh5gpY_nI8xa0JUfMm/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "18NSLgYdXbjdJ2-K1WVZGSqX6sYRS9I5p",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/18NSLgYdXbjdJ2-K1WVZGSqX6sYRS9I5p/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    },
+    {
+      "id": "1DdyDLk4h7LFZmsOjo2KTCz0IB4d9RLaN",
+      "category": "user_concept_file_reference",
+      "label": null,
+      "title_metadata_verified": false,
+      "url": "https://drive.google.com/file/d/1DdyDLk4h7LFZmsOjo2KTCz0IB4d9RLaN/view",
+      "registration": "USER_SUPPLIED_REFERENCE",
+      "metadata_check_in_this_agent_pass": false,
+      "content_review": "UNREVIEWED_IN_THIS_REGISTRATION",
+      "copied_downloaded_uploaded_by_this_registration": false,
+      "parent_membership_verified_in_this_registration": false
+    }
+  ],
+  "current_runtime_pointers": [
+    {
+      "path": "C:/AI-BS/docs/CODEX_HANDOFF.md",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:49:05.431567+00:00",
+        "file_bytes": 1487273,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/docs/AI_BS_TAKEOVER_GOAL_2026-11-09.md",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T09:22:49.010325+00:00",
+        "file_bytes": 34422,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/PROJECT_INDEX.md",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T15:38:45.726918+00:00",
+        "file_bytes": 119630,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/docs/architecture/AI_BS_MASTER_ECOSYSTEM_ARCHITECTURE_2026-11-11.md",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:49:05.433568+00:00",
+        "file_bytes": 93655,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/docs/architecture/SITES_SERVERS_REGISTER_2026-11-11.json",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:03:18.095565+00:00",
+        "file_bytes": 14224,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/native_studio/releases/v5.329.144/AI_BS_Studio/AI_BS_Studio.exe",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": false,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:31:58.114305+00:00",
+        "file_bytes": 10083616,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "C:/AI-BS/backups/studio144_package_20261111_v02",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:32:36.285426+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "D:/AI-BS-Game-Resources/RTX_Variants_20261111/Creator_LH_20261111_v05/project",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T12:32:33.341506+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    },
+    {
+      "path": "D:/AI-BS-Game-Resources/Standalone_Studio144_v01",
+      "category": "current_engineering_pointer",
+      "registration_authority": "Existing verified handoff/runtime evidence; not an original user-root registration",
+      "metadata_checked_utc": "2026-11-11T17:50:02.440628+00:00",
+      "metadata": {
+        "status": "METADATA_PRESENT",
+        "directory": true,
+        "reparse_point": false,
+        "modified_utc": "2026-11-11T17:25:58.217683+00:00",
+        "file_bytes": null,
+        "read_scope": "Exact-path lstat only; no recursive enumeration, file-content read or reparse traversal."
+      },
+      "content_review": "NOT_REVIEWED_IN_THIS_REGISTRATION",
+      "copied_or_restored_by_this_registration": false,
+      "execution_authority_granted_by_registration": false,
+      "note": "Latest handoff governs current qualification. This pass checks path metadata only."
+    }
+  ],
+  "related_user_links": [
+    {
+      "url": "https://drive.google.com/drive/my-drive",
+      "role": "User Drive landing page; not an archive inventory."
+    },
+    {
+      "url": "sites-project://appgprj_6af244fe0bb481919916930646b23aae",
+      "role": "AI-BS Agent Foundry user reference; no local integration implied."
+    },
+    {
+      "url": "page://page_0c34c8baf1108191b9757b3df8b0f9d8",
+      "role": "AI BS Host and VM Handoff user reference; no content read in this registration."
+    }
+  ],
+  "historical_examples_not_canonical": [
+    {
+      "path": "C:/workspace/AI-BS",
+      "role": "Example path in pasted setup instructions, not canonical current project."
+    },
+    {
+      "path": "G:/Stehouwer_Server/Projects/.temp_executor",
+      "role": "Historical architectural example; not a present containment or execution authority claim."
+    },
+    {
+      "path": "path/to/serviceAccountKey.json",
+      "role": "Placeholder from SDK example; no actual credential location inferred."
+    }
+  ],
+  "remaining_unreviewed": [
+    "Full contents of the26root folders and additionalprofiledirectories.",
+    "Names, MIMEtypes, ownership, current permissions, nesting and contents of suppliedDrivefolders/files except the narrow root-reported mainfolder sharing observation.",
+    "All14conceptfile contents and their exacttitles.",
+    "Configure-PrivateGameStreaming.ps1 contents and behavior; it was not executed.",
+    "Original-profile identity/data migration, credential recovery and private encrypted-store reconciliation.",
+    "Full cross-check/deduplication of all older chats and backups; no complete-source/saved-data restore claim.",
+    "Correct classification of docs/DIRECTORY_INDEX.md before using it as an index or publicupload."
+  ],
+  "updated_utc": "2026-11-11T17:51:55.954359+00:00",
+  "original_profile_explicit_list": {
+    "root": "C:/Users/footb",
+    "relative_entries": [
+      "Muse Hub",
+      ".agents",
+      ".aibs-control-proof-c4cc78d60dbb42b9855c1b8496e4cc35",
+      ".aibs-private",
+      ".android",
+      ".antigravity-ide",
+      ".cache",
+      ".cache - Copy",
+      ".chia_keys",
+      ".claude",
+      ".claude-server-commander",
+      ".cloudflared",
+      ".codex",
+      ".config",
+      ".copilot",
+      ".desktop-commander-device",
+      ".duckdb",
+      ".expo",
+      ".gemini",
+      ".gnutls",
+      ".gradle",
+      ".gsutil",
+      ".ipython",
+      ".javacpp",
+      ".jdks",
+      ".keras",
+      ".local",
+      ".nvidia-omniverse",
+      ".ollama",
+      ".pearl-wallet",
+      ".rembg",
+      ".ssh",
+      ".supabase",
+      ".th-client",
+      ".thumbnails",
+      ".VirtualBox",
+      ".vscode",
+      ".vscode-shared",
+      "_test_junction_src",
+      "AI-BS",
+      "AI-BS_Matrix",
+      "ansel",
+      "Contacts",
+      "CrossDevice",
+      "Desktop",
+      "Documents",
+      "Downloads",
+      "Favorites",
+      "go",
+      "Installer Files",
+      "Links"
+    ],
+    "relative_entry_count": 51,
+    "root_plus_entry_count": 52,
+    "coverage": "Every exact supplied entry individually registered and lstat-checked; no content traversal or execution."
+  }
+}

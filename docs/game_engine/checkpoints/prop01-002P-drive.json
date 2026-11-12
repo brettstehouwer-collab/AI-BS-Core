@@ -1,0 +1,33 @@
+{
+  "checkpoint": "PROP01-002P",
+  "status": "reconciled_and_cloud_verified",
+  "timestamp": "2026-11-05T23:53:00Z",
+  "parent_folder_url": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "checkpoint_folder_url": "https://drive.google.com/drive/folders/1akwchu7mYA2y93phjVZDF6-WFFIH9Oo9",
+  "archives": [
+    {
+      "name": "Prop01_002P_Implementation_Complete.zip",
+      "drive_id": "12PwodYpORThBZIcoP8da4-4e8RABRgrB",
+      "folder_id": "1akwchu7mYA2y93phjVZDF6-WFFIH9Oo9",
+      "bytes": 127593569,
+      "sha256": "c36fac2640d9af5a8af29b97ca89835d9000f1b1743b54e2a4171db673be5ffe",
+      "members": 225,
+      "verified": true
+    },
+    {
+      "name": "Prop01_002P_Reconciliation_Supplement.zip",
+      "drive_id": "1f9NN347Kr_IR_AKDYA41iFPhRKNrKq0H",
+      "folder_id": "1akwchu7mYA2y93phjVZDF6-WFFIH9Oo9",
+      "bytes": 20835638,
+      "sha256": "9c36cc8f173ad3565d846523587272f198ae0d15eb2f528c0dee781ee6350b2d",
+      "members": 19,
+      "verified": true
+    }
+  ],
+  "restore_verification": {
+    "status": "PASSED",
+    "byte_parity": "100%",
+    "sha256_parity": "100%",
+    "zip_crc32_test": "PASSED_0_ERRORS"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "07-backpack-excited",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-ade76b96-0af7-4bdc-8fd2-d1d9a8db56f5.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/expression-series-2026-11-02/07-backpack-excited.png",
+  "prompt": "Create ONE new high-detail portrait-format 2:3 friendship poster. The PRIMARY CHANGE requested by the user is a much wider range of BRETT'S ACTUAL LOOKS AND EXPRESSIONS, grounded in his different reference photographs. Avoid repeating a neutral smirk, the same olive overshirt, same face angle, same table composition or same brown-and-gold palette across these new works.\n\nIDENTITY MAPPING: References1 and2 are Sean (same person); reference3 is the PRIMARY LOOK reference for Brett for this specific poster; any subsequent references are further photos of the SAME Brett. Exactly TWO real adult men in the final scene: Sean and Brett. Use strong faithful likeness to their actual facial structures, noses, lips, eye spacing, cheek and jaw shapes; never merge the men, make generic models or replace Brett's face with Sean's. Sean's dark swept-up hair and light stubble remain identifiable. Brett's hair length/style, glasses, beanie, visible light facial stubble and clothing must follow THIS poster's primary look reference rather than the earliest shirtless photo. All Brett photographs show the same adult across different looks. Preserve his real physique; don't add tattoos or unrealistic bodybuilding. When Sean's tattoo is visible, it belongs ONLY to Sean and is based on reference2; mirror orientation may differ in reference selfie. Photos are identity inputs, not final pose/background. Exclude all source camera stamps, phone watermarks, filters, background bystanders and unrelated photo content. Preserve natural skin where realistic, no beauty filter.\n\nEXPRESSION DIRECTION: The specified expression must be unmistakable and different from the other posters yet anatomically natural and recognizable: believable eyes, brows, cheek muscles and mouth, no distorted teeth or grotesque open mouths. Sean should have an appropriate distinct reaction and equal human dignity. Stage imaginative brotherhood scenes, never claim they are historical photographs or real message screenshots. Their dynamic is affectionate and reciprocal, with irreverent humor, gaming, writing/theater/music and ambitious ideas, occasional frustration and repair. No fixed helpless/rescuer roles. Typography exact, legible, cleanly spaced with safe margins, strong poster design and dominant expressive portraits. No slurs, explicit sex, sexual violence, actual self-harm, invented tragedies or memorial symbolism. Unless specified no more readable text than title and footer.\n\nA kinetic original pop-art screenprint poster, saturated royal blue, chartreuse, white and punchy orange-red, layered halftones and dynamic diagonal framing. Brett right in plain light gray T-shirt and simple brown backpack straps with short spiky hair per reference3, clearly exhilarated: huge genuine grin, bright open eyes, one hand lifted in celebration. Sean left throws his head slightly toward Brett with a delighted laugh and a simple fist raised at shoulder level. They stand outside a modest theater/studio doorway into daylight, celebrating one small good idea, no trophies or invented achieved success. Real likenesses translated into excellent bold graphic portraits; physically credible hands and normal physiques. Exact large title \"BACK ON OUR BULLSHIT\"; exact footer \"GO FUCKIN' TEAM.\" Neither aggressive nor threatening.\n\nReference clarification: reference3 supplies Brett's actual build and brown backpack straps. Reference4 supplies his short swept/spiky hairstyle; reference5 reinforces the same underlying face. Keep the requested plain light gray T-shirt.",
+  "references": [
+    "C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014412_Photos.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014500_Photos.png",
+    "C:/Users/footb/AppData/Local/Temp/Snapchat-582014601.jpg",
+    "C:/Users/footb/AppData/Local/Temp/Snapchat-293339984.jpg",
+    "C:/Users/footb/AppData/Local/Temp/f329783e-2d40-48e1-b308-10f5176214b5.jpg"
+  ],
+  "transparent_background": false,
+  "qa": {
+    "status": "accepted",
+    "inspection": "All available identity reference photos inspected, including appropriate alternate Brett looks; generated output visually reviewed.",
+    "notes": "Brett visibly exhilarated with bright open eyes and wide credible grin; short hair, plain gray shirt, brown backpack straps. Sean laughing with raised fist, reciprocal celebration. Requested headline/footer exact. Minor incidental Columbia shirt and theater/studio sign text.",
+    "identities": "Distinct recognizable Sean-left and Brett-right faces retained; no additional people, no anatomy concerns observed",
+    "expression_variation": "07 exuberant celebration is clearly different from 08 restrained hopeful reflection",
+    "limitations": "Creative interpretation with generative facial/tattoo fine detail; not a historical photograph",
+    "retry_required": false
+  },
+  "reference_substitution": {
+    "original": "C:/Users/footb/AppData/Local/Temp/20251011_150656.jpg",
+    "actual": "C:/Users/footb/AppData/Local/Temp/Snapchat-582014601.jpg",
+    "reason": "Root authorized same-person backpack/build substitute after original 200MP reference exceeded image-viewer support; original preserved."
+  }
+}

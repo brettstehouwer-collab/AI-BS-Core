@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "utc": "2026-11-11T12:03:00.807572+00:00",
+  "status": "VERIFIED_SCOPED_LH_ADAPTER_AND_PREVIEW_LIGHTING_CONTROLLED_NATIVE_PASS",
+  "decision_id": "RTX-COORD-20261111",
+  "run_root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Prop01_LH_20261111_v01",
+  "source_pins": {
+    "engine/tools/export_blender_rtx_variant.py": "0e8950994eb84c13323f697d8642a10f56501529c8c4a038c1a3f224fa0d4d5c",
+    "engine/tools/review_blender_rtx_lighting.py": "aa75afb9a1b61f52af87d6a32e76142839151871d4795b6e80e51bd58446d7c7",
+    "engine/tools/qualify_blender_rtx_variant.py": "7e4e2a183281c1b0af7b6a9e5f105646af8f081a05e71d7ca3c822bd9a7b278a"
+  },
+  "cause": "Actual LH camera composition reverses authoredtopchart under legacyproperrotation; all40500cookedUVs and decodedRGBAverified, noPNGorUflip. Determinant+1rotation itself is not a reflection.",
+  "adapter": {
+    "option": "--coordinate-convention dx12-left-handed",
+    "positions_and_normals": "(x,y,z)->(x,z,y)",
+    "determinant": -1,
+    "face_winding": "i0,i2,i1; UV/VN remain attached to their corners",
+    "default": "legacy-rotation unchanged",
+    "old_packs_and_renderer": "Unchanged; newUUIDs and isolated worlds only",
+    "editable_blender_master": "Original RH geometry and bothUVsets retained"
+  },
+  "checks": {
+    "fresh_blender_reimport": "PASS exactIEEEfloat32 triangle-corner positions/UV/winding; localmaps and actualcolorspaces",
+    "cpu_create_assertions": 81,
+    "fresh_cpu_reopen_assertions": 35,
+    "gpu": "RTX4090 1600x900 debuglayer;0errors/0warnings",
+    "fresh_gpu_reopen_contextual_pixel_difference": 0,
+    "fresh_gpu_reopen_closeup_pixel_difference": 0,
+    "all_owned_stages_terminal_exit0": true,
+    "default_legacy_compatibility": "Actualexport withoutflag andfreshreimportPASS; allgeometry/UV/normal/face rows byteequal priorlegacy",
+    "protected_existing_files": 44,
+    "protected_unchanged": true,
+    "visual_review": "Newnativefront lettering readable/unmirrored; topglyphs are rotated by camera but not reflected. Separate512quarter/toppreview showsunclipped capdetails; calibratedrig integratedintoexporter."
+  },
+  "remaining": [
+    "Actual creator source-GUI acceptance/currentplayer integration",
+    "Nsightcapture and separate ordinaryperformance qualification",
+    "Full art/user likeness/caption/pacing acceptance",
+    "Browser/mobile/account and originalcreativeexport/installed/hostedrelease gates"
+  ],
+  "local_asset_archive": {
+    "status": "VERIFIED_LOCAL_NEW_LH_LIGHTING_ARCHIVE_MEMBER_READBACK",
+    "archive": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Prop01_LH_Lighting_20261111_v01.zip",
+    "archive_bytes": 70557162,
+    "archive_sha256": "5401565f4b3547a18d88d32c714aa777fdbaa7a9a864277de6744491fd7957ee",
+    "members": 131,
+    "source_bytes": 268550530,
+    "not_cloud_uploaded": true,
+    "scope": "Complete NEWleft-handed variant/test scope, defaultlegacycompatibility scope and separate512lightingreview. Prior originals/SDK/fullproject remain separate."
+  },
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_SOURCE_EVIDENCE_120410Z",
+  "no_business_provider_deployment_activation": true,
+  "drive_receipt": "C:\\AI-BS\\backups\\rtx_lh_lighting_20261111T120410Z\\drive_verified.json"
+}

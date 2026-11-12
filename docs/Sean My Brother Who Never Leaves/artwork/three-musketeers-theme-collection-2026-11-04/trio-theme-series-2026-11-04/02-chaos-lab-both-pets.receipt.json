@@ -1,0 +1,44 @@
+{
+  "id": "02-chaos-lab-both-pets",
+  "poster_id": "02-chaos-lab",
+  "variant": "final-both-pets",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-7510a121-56bf-4b07-89c8-6280d6f4dbd8.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab-both-pets.png",
+  "prompt": "Make one very small precise correction to this finished landscape poster: restore a small pale clipboard/sign on the front counter, just right of Tonto and below/near the incident-report printer, reading exactly NOT MY DEPARTMENT in clean dark uppercase lettering. It is Anna's recurring clipboard joke and must be clearly readable. Position it in a clear unlettered reflective-counter patch without hiding any existing wording, button, pet face or human. Keep EVERYTHING else as it is: all THREE human faces, both distinct dogs (the fluffy red/white/brown HR dog and short-coated brown Tonto with TONTO tag), their exact appearances and poses, every current title/sign/prop phrase, all miniature discoveries and laboratory/neon composition. Do not replace either dog or add people/pets. The only addition is this small readable NOT MY DEPARTMENT clipboard/sign. Preserve original landscape aspect and detail.",
+  "references": [
+    "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-5f6fd24f-da4b-49d6-afe4-9b24c552b28f.png"
+  ],
+  "transparent_background": false,
+  "supersedes": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab-seans-dog.png",
+  "original_preserved": true,
+  "edit_chain": [
+    {
+      "stage": "Add Tonto alongside Sean's existing HR dog",
+      "prompt": "Edit image1 to ADD ONE second distinct real dog, TONTO, using images2 and3 as identity references for the SAME Tonto. Preserve the existing fluffy red/brown/tan/white HR dog from image1 completely: do NOT replace it, recolor it, merge the two dogs, or remove its white blaze, freckled muzzle, amber eyes, black HR harness or report-stamping role. Final scene contains exactly THREE main adult humans plus TWO distinct dogs. Tonto is short-coated and muscular, chocolate/russet brown, with a broad square face and head, brown/liver nose, amber eyes, folded/rose ears, lightly graying muzzle, and a distinct white chest patch as in photos. Keep Tonto naturally friendly and relaxed, not exaggerated or aggressive, with a small simple collar tag reading TONTO. Add him clearly in the lower foreground beside the existing HR dog, at a believable similar pet scale; find a comfortable position without hiding either dog face, the three people, or important lettering. A minimal rearrangement of unlettered foreground objects is allowed only if needed to fit him. Keep the original landscape framing, exact THREE human faces/expressions/poses/outfits, Anna's appearance, all title/sign/button/prop wording and their legibility, neon laboratory environment, colors, light, snail nursery/court, coffee gravity well, report printer, arcade, pizza and every main visual joke. No new humans, no duplicate human faces, no third dog, no other text changes or redesign. Match image1's tactile photorealistic-surreal illustration. Images2/3 are solely Tonto identity inputs; do not copy their rooms, timestamps or camera text.",
+      "references": [
+        "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab-seans-dog.png",
+        "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+        "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+      ],
+      "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-5f6fd24f-da4b-49d6-afe4-9b24c552b28f.png",
+      "qa": "Two distinct dogs and all three human faces retained; Anna's NOT MY DEPARTMENT clipboard was occluded, prompting a targeted restoration."
+    },
+    {
+      "stage": "Restore the exact clipboard lettering",
+      "prompt": "Make one very small precise correction to this finished landscape poster: restore a small pale clipboard/sign on the front counter, just right of Tonto and below/near the incident-report printer, reading exactly NOT MY DEPARTMENT in clean dark uppercase lettering. It is Anna's recurring clipboard joke and must be clearly readable. Position it in a clear unlettered reflective-counter patch without hiding any existing wording, button, pet face or human. Keep EVERYTHING else as it is: all THREE human faces, both distinct dogs (the fluffy red/white/brown HR dog and short-coated brown Tonto with TONTO tag), their exact appearances and poses, every current title/sign/prop phrase, all miniature discoveries and laboratory/neon composition. Do not replace either dog or add people/pets. The only addition is this small readable NOT MY DEPARTMENT clipboard/sign. Preserve original landscape aspect and detail.",
+      "references": [
+        "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-5f6fd24f-da4b-49d6-afe4-9b24c552b28f.png"
+      ],
+      "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-7510a121-56bf-4b07-89c8-6280d6f4dbd8.png",
+      "qa": "Accepted: small NOT MY DEPARTMENT clipboard restored in clear counter space, without covering faces, dogs, or principal type."
+    }
+  ],
+  "qa": {
+    "status": "accepted",
+    "inspection": "Both Tonto reference photos and each generated edit were viewed.",
+    "notes": "Tonto has a short chocolate/russet coat, broad square head, graying muzzle and TONTO tag; Sean's fluffy blaze-faced HR dog remains alongside him. Three adult identities, major titles and neon lab layout visually retained. Exact NOT MY DEPARTMENT wording restored.",
+    "limitations": "Generative edit; fine texture and small incidental props can differ. Preservation outside the edited region is a visual assessment, not a byte identity claim.",
+    "retry_required": false
+  }
+}

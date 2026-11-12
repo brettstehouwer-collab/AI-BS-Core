@@ -1,0 +1,77 @@
+{
+  "created_utc": "2026-10-30 21:32:33 UTC",
+  "folder_id": "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse",
+  "status": "UPLOADED; name, size and destination verified by connector metadata readback",
+  "uploads": [
+    {
+      "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+      "name": "2026-10-30_Codex_Engineering_Ledger.md",
+      "url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+      "local_fingerprint": {
+        "bytes": 726770,
+        "sha256": "2578f4e635fe2cd6257db941da99a09e3ed7e16b10def55c89393fb9b05476b2",
+        "md5": "cf7642002c8a15f234f74d6e417d4102"
+      },
+      "remote_metadata": {
+        "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+        "title": "2026-10-30_Codex_Engineering_Ledger.md",
+        "mime_type": "text/markdown",
+        "size": "726770",
+        "url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      }
+    },
+    {
+      "id": "1e4r8GpVjQc5n6KaOW0Au73pYegX7g82A",
+      "name": "AI-BS_History_through_Record193_2026-10-30.zip",
+      "url": "https://drive.google.com/file/d/1e4r8GpVjQc5n6KaOW0Au73pYegX7g82A/view?usp=drivesdk",
+      "local_fingerprint": {
+        "bytes": 1296993,
+        "sha256": "cfa357c58dade7c8413358517188dfe156e2e4e0ca656b59289f7b716a303b50",
+        "md5": "4fe6bb4fcf0af5311431a3c9b78717bc"
+      },
+      "remote_metadata": {
+        "id": "1e4r8GpVjQc5n6KaOW0Au73pYegX7g82A",
+        "title": "AI-BS_History_through_Record193_2026-10-30.zip",
+        "mime_type": "application/zip",
+        "size": "1296993",
+        "url": "https://drive.google.com/file/d/1e4r8GpVjQc5n6KaOW0Au73pYegX7g82A/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1e4r8GpVjQc5n6KaOW0Au73pYegX7g82A/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      }
+    }
+  ],
+  "archive_payload_files": 26,
+  "archive_entries": 28,
+  "scope": "nine canonical history ledgers, seven Records187–193 reports, four current manifests and six earlier crypto evidence summaries",
+  "prior_drive_files": "preserved",
+  "credentials_and_financial_databases": "excluded",
+  "provider_checksum_readback": "not exposed by connector metadata; no remote byte-equivalence claim",
+  "firebase_release": "v5.329.73 Hosting deployed and nine remote files matched build in separate release receipt",
+  "python_backend_rollout": "not performed",
+  "live_trading_enabled": false,
+  "standing_preference_saved": "C:/Users/footb/.codex/memories_v2/extensions/ad_hoc/notes/2026-10-30-ai-bs-history-drive-sync.md"
+}

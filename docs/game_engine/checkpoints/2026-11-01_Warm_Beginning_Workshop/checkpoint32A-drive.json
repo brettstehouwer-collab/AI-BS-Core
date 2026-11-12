@@ -1,0 +1,60 @@
+{
+  "label": "32A_Studio102_Engine_Creator_Source",
+  "status": "verified_authenticated_Drive_full_raw_restore",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\32A_Studio102_Engine_Creator_Source.zip",
+  "bytes": 29494612,
+  "sha256": "8a450f72c607d194168dcb5cb7cbd0223f6689954206c03f70a39583b8bd98c2",
+  "members": 833,
+  "selected_files": 832,
+  "uncompressed_bytes": 83734563,
+  "scope": "Engine+declared native Creator component source and frozen runtime; not whole enterprise AI-BS/backend/user-data restoration. Full clean-machine rebuild not claimed.",
+  "cloud_uploaded": true,
+  "upload_parts": [
+    {
+      "file": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\32A_Studio102_Engine_Creator_Source_parts\\32A_Studio102_Engine_Creator_Source.zip.part001",
+      "name": "32A_Studio102_Engine_Creator_Source.zip.part001",
+      "bytes": 25165824,
+      "sha256": "9c4d39c797c99caab0ed615862364644536d8c25cdbed0041d9cb124d8d8a504"
+    },
+    {
+      "file": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\32A_Studio102_Engine_Creator_Source_parts\\32A_Studio102_Engine_Creator_Source.zip.part002",
+      "name": "32A_Studio102_Engine_Creator_Source.zip.part002",
+      "bytes": 4328788,
+      "sha256": "c63098a6ceae885b7c90cfdaebcfc0ee8509de711181ec3b804b4c678826a83e"
+    }
+  ],
+  "verified_at": "2026-11-03T14:08:02.893966+00:00",
+  "folder": {
+    "success": true,
+    "id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+    "url": "https://drive.google.com/drive/folders/1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+    "title": "32A_Engine_Creator_Source",
+    "parent_id": "1Hhddoomn1nEPQ3OV9qICPG9aBkLTcI17"
+  },
+  "remote_parts": [
+    {
+      "file": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\32A_Studio102_Engine_Creator_Source_parts\\32A_Studio102_Engine_Creator_Source.zip.part001",
+      "name": "32A_Studio102_Engine_Creator_Source.zip.part001",
+      "bytes": 25165824,
+      "sha256": "9c4d39c797c99caab0ed615862364644536d8c25cdbed0041d9cb124d8d8a504",
+      "archive_index": 0,
+      "part_index": 0,
+      "parent": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+      "id": "1C2_1KyWo1NsMz9KZCu2aPXnjrIdC8BN5",
+      "url": "https://drive.google.com/file/d/1C2_1KyWo1NsMz9KZCu2aPXnjrIdC8BN5/view?usp=drivesdk"
+    },
+    {
+      "file": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\32A_Studio102_Engine_Creator_Source_parts\\32A_Studio102_Engine_Creator_Source.zip.part002",
+      "name": "32A_Studio102_Engine_Creator_Source.zip.part002",
+      "bytes": 4328788,
+      "sha256": "c63098a6ceae885b7c90cfdaebcfc0ee8509de711181ec3b804b4c678826a83e",
+      "archive_index": 0,
+      "part_index": 1,
+      "parent": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+      "id": "1fzdOeBBv8UadhprvVLLP9jUTWd245qkK",
+      "url": "https://drive.google.com/file/d/1fzdOeBBv8UadhprvVLLP9jUTWd245qkK/view?usp=drivesdk"
+    }
+  ],
+  "every_member_size_SHA256_CRC_and_exact_membership_verified": true,
+  "restore_archive": "D:\\AI-BS-Game-Resources\\Backups\\32_Studio102\\authenticated-restore\\32A_Studio102_Engine_Creator_Source.zip"
+}

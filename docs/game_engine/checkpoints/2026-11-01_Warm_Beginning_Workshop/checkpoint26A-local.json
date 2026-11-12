@@ -1,0 +1,22 @@
+{
+  "ZIP_members_including_manifest": 1524,
+  "all_live_inputs_before_after_verified": true,
+  "all_member_CRC_size_SHA_fresh_process_verified": true,
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\26A_Studio100_Source_Art_Content.zip",
+  "archive_bytes": 36634192,
+  "archive_sha256": "faf75c633a7f51035b35ed041df38a14a80d41e3260fff80812bf00a93e6f26c",
+  "cloud_uploaded": false,
+  "disk_free_bytes": {
+    "C:/": 73686581248,
+    "D:/": 111374450688,
+    "E:/": 146813599744
+  },
+  "embedded_manifest_sha256": "b82c6be89563ad6ad379c9d9c2957eca4ab19f4e9e192118c086ebe357c81600",
+  "goal_complete": false,
+  "schema": 1,
+  "selected_files": 1523,
+  "selected_uncompressed_bytes": 190197983,
+  "source_ready_files": 480,
+  "source_ready_sha256": "6111f6070b8b11909c6d7a499e3c1105b8340b19b077678e5db74ed73d85de95",
+  "status": "verified_local_only_not_cloud_backed"
+}

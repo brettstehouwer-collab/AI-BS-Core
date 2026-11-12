@@ -2,6 +2,7 @@ import { paginateScreenplayBlocks } from '/utils/screenplayPagination.js';
 import { studioViewport, watchStudioViewport } from '/src/utils/studioViewport.js';
 import { useState, useEffect, useRef } from "react";
 import { createAuthenticatedEventSource } from '/src/utils/authenticatedEventSource.js';
+import { validateAdaptationAcceptance, monitorAdaptation, isAdaptationTerminal, isAdaptationComplete } from '/src/utils/screenplayAdaptation.js';
 import { createScreenplayDraftCoordinator } from '/src/utils/screenplayDraftCoordinator.js';
 import { Fountain } from 'fountain-js';
 const fountainParser = new Fountain();
@@ -9,13 +10,16 @@ import { useAppStore } from './useAppStore';
 import CharacterVaultModal from './CharacterVaultModal';
 import CoverageReportModal from './CoverageReportModal';
 import ScreenplayEditor from './ScreenplayEditor';
+import RichFDXEditor, { richRunStyle } from '/src/components/RichFDXEditor.jsx';
+import { cloneRichFDX, importRichFDX, richFDXProjection, prepareRichFDXWrite } from '/src/utils/richFdxDraft.js';
 import ScreenplayViewer from './ScreenplayViewer';
 import AdaptationStatusBar from './AdaptationStatusBar';
 import ScriptAssistantDrawer from './ScriptAssistantDrawer';
 import ProjectAudioPlayer from './ProjectAudioPlayer';
-import { parseFDX } from '/utils/FDXParser.js';
-import { serializeFDX } from '/utils/FDXSerializer.js';
-import { fountainToAST, astToFountain } from '/utils/FountainAdapter.js';
+import { fountainToAST, astToFountain, fountainTitleHeader } from '/utils/FountainAdapter.js';
+import { readScreenplayHandoff, validateScreenplayRead, sourceScreenplayAST, importPdfScreenplay, screenplayErrorMessage, validateScreenplayExport, screenplayExportFilename } from '/src/utils/screenplayHandoff.js';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { launchNativeScreenplay } from '/src/utils/nativeScreenplayHandoff.js';
 import "./collaborationService";
 import ScriptToBookNovelizerModal from './ScriptToBookNovelizerModal';
 import ScreenplayTableReadModal from './ScreenplayTableReadModal';
@@ -76,8 +80,8 @@ const GUIDE_DATA = [
   { cat: 1, title: "⚡ Thoughts & Pages Telemetry", badge: "Action Bar • Row 2B", badgeColor: "#0284c7", desc: "Opens the comprehensive Script Telemetry & Analytics modal displaying estimated screen time, dialogue vs. action percentage, character lines, and three-act pacing curves.", steps: ["Click '⚡ Thoughts & Pages Telemetry'.", "Review the Dialogue/Action ratio meter (industry sweet spot is 30%-45% dialogue).", "Inspect character dialogue distribution and unique location counts."], tip: "Clicking this button also automatically reveals the '🎮 3D & Previs' pipeline ribbon deck in Row 3." },
   { cat: 1, title: "📥 Import", badge: "Action Bar • Row 2B", badgeColor: "#34d399", desc: "Imports existing screenplays from industry standard file formats with automatic scene slugline and character cue parsing.", steps: ["Click '📥 Import' to open the import dropdown menu.", "Select your file format: Final Draft (.fdx), Fountain (.fountain), Screenplay PDF (.pdf), or Plain Text (.txt).", "Choose your file in the file browser; the studio parses scenes and pagination instantly."], tip: "Fountain is an open, plain-text format that preserves all screenplay formatting across any operating system." },
   { cat: 1, title: "🔍 Find & Replace", badge: "Action Bar • Row 2B", badgeColor: "#a855f7", desc: "Toggles the inline search and replace bar located directly above the manuscript canvas.", steps: ["Click '🔍 Find & Replace' or press Ctrl+F.", "Enter search text in 'Find text...' and replacement text in 'Replace with...'.", "Click 'Find Next' to cycle through occurrences, or 'Replace All' to update the entire manuscript."], tip: "Press Escape or click the '✕' close button on the right to dismiss the inline search bar." },
-  { cat: 1, title: "📄 Export FDX", badge: "Action Bar • Row 2B", badgeColor: "#38bdf8", desc: "Exports the manuscript into industry-standard Final Draft XML (.fdx) and Fountain (.fountain) file formats.", steps: ["Click '📄 Export FDX' to open the export format dropdown.", "Choose 'Export Final Draft (.fdx)' or 'Export Fountain Script (.fountain)'.", "Choose your save location; the file is saved with full scene, character, and dialogue XML tags intact."], tip: "Final Draft (.fdx) files exported here are 100% compatible with Final Draft 12/13, WriterDuet, and StudioBinder." },
-  { cat: 1, title: "📑 Export PDF", badge: "Action Bar • Row 2B", badgeColor: "#f87171", desc: "Renders a print-ready, industry-standard formatted screenplay PDF complete with title page, page headers, numbers, and optional call sheets.", steps: ["Click '📑 Export PDF' to open the PDF export options.", "Select 'Export Screenplay PDF (.pdf)' for the full manuscript.", "Select 'Export Call Sheet & Shooting Schedule PDF' to generate daily production call sheets."], tip: "PDFs are generated using standard Courier 11pt font with exact 1-inch top/bottom/right margins and 1.5-inch left margins." },
+  { cat: 1, title: "📄 Export FDX", badge: "Action Bar • Row 2B", badgeColor: "#38bdf8", desc: "Exports the manuscript into industry-standard Final Draft XML (.fdx) and Fountain (.fountain) file formats.", steps: ["Click '📄 Export FDX' to open the export format dropdown.", "Choose 'Export Final Draft (.fdx)' or 'Export Fountain Script (.fountain)'.", "Choose your save location; the file is saved with full scene, character, and dialogue XML tags intact."], tip: "FDX exports retain validated XML script roles, a separate title page and recorded manual breaks. Pagination and compatibility in an external writing application require a separate check." },
+  { cat: 1, title: "📑 Export PDF", badge: "Action Bar • Row 2B", badgeColor: "#f87171", desc: "Renders a print-ready, industry-standard formatted screenplay PDF complete with title page, page headers, numbers, and optional call sheets.", steps: ["Click '📑 Export PDF' to open the PDF export options.", "Select 'Export Screenplay PDF (.pdf)' for the full manuscript.", "Select 'Export Call Sheet & Shooting Schedule PDF' to generate daily production call sheets."], tip: "Preserve-source PDF mode retains the supported original page layout (the supplied screenplay uses Courier 12pt). Reflow mode lays out edited content again and can change page count." },
   { cat: 1, title: "💾 Save / 🟢 Autosaved", badge: "Action Bar • Row 2B", badgeColor: "#22c55e", desc: "Autosave status and manual save for the current project file. The server checks the loaded revision before accepting a write.", steps: ["The studio automatically saves edits in the background, updating the timestamp badge.", "Click '💾 Save' to save the current draft. If saving fails, keep the local draft and use the recovery controls."], tip: "Browser recovery copies can be downloaded from this studio. Save does not create a SQLite vault checkpoint." },
 
   // Category 2: 5 Dynamic Ribbon Decks
@@ -88,7 +92,7 @@ const GUIDE_DATA = [
   { cat: 2, title: "Deck 4: 🚀 Production & CMS Ribbon", badge: "Ribbon Deck 4 • Production & Budget", badgeColor: "#4ade80", desc: "Professional film and theatrical production management, script coverage, budgeting, colored revisions, and CMS publishing.", steps: ["🎭 Character Vault: Cast roster displaying line counts, dialogue frequency, and actor assignments.", "📊 Script Coverage: AI Script Doctor analyzing premise, structure, character arcs, dialogue, and commercial viability.", "📈 Analytics: Telemetry graphs showing pacing, act breaks, dialogue vs. action, and location counts.", "🎬 Film Budget: 4-tab suite with 50-State Tax Credit calculator, stripboard, and DOOD matrix.", "🎭 Theatrical Budget: Stage play capitalization and weekly operating budget suite.", "⚪ Revision Mode & Colors: Industry revision tracking (Blue, Pink, Yellow, Green revision pages).", "📄 Title Page: Configures script title, author, draft date, and WGA contact info.", "🚀 Publish to CMS: Archives the verified draft directly in the Stehouwer Publications CMS Vault."], tip: "Always engage Revision Mode before starting second-draft rewrites to highlight altered scenes with industry standard revision colors." },
 
   // Category 3: Navigation, Sidebar & Layout
-  { cat: 3, title: "View Mode Switchers (Editor, Page View, Split, Beat Board)", badge: "Row 4 • Navigation Strip", badgeColor: "#38bdf8", desc: "Four distinct view modes tailored for every stage of writing and reviewing.", steps: ["Editor: High-performance distraction-free typing in Courier 11pt with live scene highlighting.", "Page View: Paginated 8.5\" x 11\" paper view showing exact Hollywood page boundaries and page numbers.", "Split: Side-by-side split screen with manuscript editor on the left and live formatted page preview on the right.", "Beat Board: Story index card canvas displaying beats grouped with day/night badges and emotional arc icons."], tip: "Switch to Page View before exporting to ensure dialogue blocks do not awkwardly break across page bottoms." },
+  { cat: 3, title: "View Mode Switchers (Editor, Page View, Split, Beat Board)", badge: "Row 4 • Navigation Strip", badgeColor: "#38bdf8", desc: "Four distinct view modes tailored for every stage of writing and reviewing.", steps: ["Editor: Editable screenplay blocks with scene highlighting; the editor view is separate from the preserved source PDF.", "Page View: Editor pagination uses retained manual source boundaries when available, otherwise a layout estimate; export pagination is checked separately.", "Split: Side-by-side split screen with manuscript editor on the left and live formatted page preview on the right.", "Beat Board: Story index card canvas displaying beats grouped with day/night badges and emotional arc icons."], tip: "Switch to Page View before exporting to ensure dialogue blocks do not awkwardly break across page bottoms." },
   { cat: 3, title: "Pagination Controls (First, Prev, Next, Last)", badge: "Row 4 • Navigation Strip", badgeColor: "#94a3b8", desc: "Instant page navigation and jump controls.", steps: ["⏮ First: Jump immediately to Page 1.", "◀ Prev: Go to previous page.", "Page X of Y: Dynamic label indicating active page and total script length.", "Next ▶: Go to next page.", "Last ⏭: Jump immediately to the final page of the manuscript."], tip: "You can also use the 'Jump to Page' box in the bottom telemetry strip to type any specific page number directly." },
   { cat: 3, title: "🟣 Review Pg X Format Doctor", badge: "Row 4 • Navigation Strip", badgeColor: "#a855f7", desc: "Intelligent side-by-side page proofing engine that audits the active 54-line page slice against standard Hollywood formatting rules.", steps: ["Click '🟣 Review Pg X' to open the Format Doctor for the active page.", "The engine checks 54-line height limits, orphaned cues, and improper sluglines.", "Click '✨ Apply Proof & Advance' to commit the clean formatted text and automatically advance to the next page."], tip: "Run Review Pg X across all pages before submitting to talent agencies, festivals, or production companies." },
   { cat: 3, title: "Scene Selector Dropdown", badge: "Row 4 • Navigation Strip", badgeColor: "#eab308", desc: "Dynamic dropdown menu listing every detected scene slugline in the screenplay along with its estimated page number.", steps: ["Click the 'Scene: Select Scene...' dropdown in Row 4.", "Select any scene header (e.g. '3. INT. SUBURBAN LIVING ROOM - DAY... (p.2)').", "The editor immediately scrolls and positions the cursor at that exact scene header."], tip: "Selecting a scene also updates the 8.5x11 page viewer to display that scene's page." },
@@ -279,9 +283,19 @@ const setScreenplay = ( content) => {
   };
   const [ast, setAst] = useState(/** @type {import("/types/domain").ScreenplayBlock[]} */ ([]));
   const [isInternalChange, setIsInternalChange] = useState(false);
+  const richDocumentRef=useRef(/** @type {any} */(null));
+  const [richEditorEpoch,setRichEditorEpoch]=useState(0);
+  const richAckEpochRef=useRef(0);
+  const astRef=useRef(ast);astRef.current=ast;
+  const [richWorkingDraft,setRichWorkingDraft]=useState(/** @type {string|null} */(null));
+  const currentRichDocument=()=>richDocumentRef.current?{...cloneRichFDX(richDocumentRef.current),blocks:cloneRichFDX(astRef.current)}:undefined;
   const [parsed, setParsed] = useState(/** @type {import("/types/screenwriting").ParsedScreenplay | null} */ (null));
   const [, setLiveHtml] = useState('');
-  const [projectMetadata, setProjectMetadata] = useState(/** @type {{"beat_videos": Record<string, string>} | null} */ (null));
+  const [projectMetadata, setProjectMetadata] = useState(/** @type {{beat_videos?: Record<string,string>, source_fdx?: any, source_pdf?: {source_id:string,sha256:string,page_count:number,body_page_count?:number,title_page_count?:number,canonical_revision?:string,printed_page_labels?:(string|number|null)[]}} | null} */ (null));
+  const [exportLayout, setExportLayout] = useState('source');
+  const [exportReceipt, setExportReceipt] = useState(/** @type {Awaited<ReturnType<typeof validateScreenplayExport>> | null} */ (null));
+  const titleHeaderRef = useRef('');
+  const handoffLoadRef = useRef(/** @type {(() => void) | null} */ (null));
   const [animatingBeats, setAnimatingBeats] = useState(/** @type {Record<string, boolean>} */ ({}));
   
   // Responsive layout state never replaces the loaded draft or editor instance.
@@ -398,24 +412,26 @@ const handleMobileDialogKey =  event => {
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const handleUndo = () => {
+    if(richDocumentRef.current){setSaveProblem({message:'Rich paragraph edits use the text field undo history. Structural/history replacement can be retained as a separate working copy.'});return;}
     if (historyIndex > 0) {
       const prevIdx = historyIndex - 1;
       setHistoryIndex(prevIdx);
       const prevAst = history[prevIdx];
       setAst(prevAst);
       setIsInternalChange(true);
-      setScreenplay(astToFountain(prevAst));
+      setScreenplay(titleHeaderRef.current + astToFountain(prevAst));
     }
   };
 
   const handleRedo = () => {
+    if(richDocumentRef.current){setSaveProblem({message:'Rich paragraph edits use the text field redo history. Original XML remains retained.'});return;}
     if (historyIndex < history.length - 1) {
       const nextIdx = historyIndex + 1;
       setHistoryIndex(nextIdx);
       const nextAst = history[nextIdx];
       setAst(nextAst);
       setIsInternalChange(true);
-      setScreenplay(astToFountain(nextAst));
+      setScreenplay(titleHeaderRef.current + astToFountain(nextAst));
     }
   };
 
@@ -458,6 +474,8 @@ const setCurrentProject = ( project) => {
   }
   const saveCoordinator = saveCoordinatorRef.current;
   const [saveProblem, setSaveProblem] = useState(/** @type {import("/types/screenwriting").SaveProblem | null} */ (null));
+  const [isNativeLaunching,setIsNativeLaunching]=useState(false);
+  const [nativeLaunchMessage,setNativeLaunchMessage]=useState('');
   const manualReviewRef = useRef(new Set());
   const [recoveryDrafts, setRecoveryDrafts] = useState(/** @type {import("/types/screenwriting").RecoveryDraft[]} */ ([]));
   const [incomingWorkspaceDraft, setIncomingWorkspaceDraft] = useState(/** @type {{"project": string, "content": string} | null} */ (null));
@@ -561,10 +579,21 @@ const handleGlobalKeyDown = ( e) => {
   // AI Adapter State
   const [showAdaptModal, setShowAdaptModal] = useState(false);
   const [adaptFile, setAdaptFile] = useState(/** @type {File | null} */ (null));
+  const [pdfImportMode, setPdfImportMode] = useState('screenplay');
   const [adaptProjectName, setAdaptProjectName] = useState('');
   const [adaptType, setAdaptType] = useState('Feature Film');
   const [adaptProgress, setAdaptProgress] = useState(/** @type {{"progress": number, "current_chunk": number, "total_chunks": number, "status": string} | null} */ (null));
   const [isAdapting, setIsAdapting] = useState(false);
+  const adaptationStartRef = useRef(false);
+  const adaptationMountedRef = useRef(true);
+  const adaptationMonitorRef = useRef(/** @type {(() => void) | null} */ (null));
+  useEffect(() => {
+    adaptationMountedRef.current = true;
+    return () => {
+      adaptationMountedRef.current = false;
+      adaptationMonitorRef.current?.();
+    };
+  }, []);
 
   // AI Ghostwriter State
   const [isGhostwriting, setIsGhostwriting] = useState(false);
@@ -737,7 +766,7 @@ const parseScreenplay = async ( contentToParse) => {
 
   // Instantaneous parse effect
   useEffect(() => {
-    if (!isInternalChange && screenplay) {
+    if (!isInternalChange && screenplay && !richDocumentRef.current) {
         setAst(fountainToAST(screenplay));
     }
     setIsInternalChange(false);
@@ -750,9 +779,18 @@ const parseScreenplay = async ( contentToParse) => {
 
   /** @param {typeof ast} newAst */
 const handleAstChange = ( newAst) => {
+    if(richDocumentRef.current){
+      const old=richDocumentRef.current.blocks;
+      if(newAst.length!==old.length||newAst.some((block,index)=>block.id!==old[index].id)){
+        const content=titleHeaderRef.current+astToFountain(newAst);setRichWorkingDraft(content);
+        preserveDraft({project:currentProjectRef.current,content,fdx_document:currentRichDocument()});
+        manualReviewRef.current.add(currentProjectRef.current);setSaveProblem({reviewOnly:true,message:'This operation changes rich FDX structure. The unsaved working text and original XML were retained. Create a separate working copy to continue.'});return;
+      }
+      setAst(newAst);astRef.current=newAst;setIsInternalChange(true);setScreenplay(richFDXProjection({...richDocumentRef.current,blocks:newAst}));return;
+    }
     setAst(newAst);
     setIsInternalChange(true);
-    setScreenplay(astToFountain(newAst));
+    setScreenplay(titleHeaderRef.current + astToFountain(newAst));
     setHistory(prev => {
       const upToCurrent = prev.slice(0, historyIndex + 1);
       const updated = [...upToCurrent, newAst];
@@ -775,8 +813,8 @@ const handleAstChange = ( newAst) => {
 
   const loadedProjectRef = useRef('');
   const screenplayLoadSequenceRef = useRef(0);
-  /** @param {string} [targetProj] @param {{reload?: boolean}} [options] */
-const loadScreenplay = async ( targetProj = '', { reload = false } = {}) => {
+  /** @param {string} [targetProj] @param {{reload?: boolean, handoff?: {project:string,revision:string,source_sha256:string}}} [options] */
+const loadScreenplay = async ( targetProj = '', { reload = false, handoff } = {}) => {
     // Fetch first, then replace the visible draft only if no edit happened while
     // saving or loading. Failed reads leave the existing editor/project intact.
     if (reorderInFlightRef.current) return false;
@@ -793,10 +831,13 @@ const loadScreenplay = async ( targetProj = '', { reload = false } = {}) => {
       if (!res.ok) throw new Error(`Project load failed (${res.status})`);
       const data = await res.json();
       if (sequence !== screenplayLoadSequenceRef.current) return false;
+      if (handoff) validateScreenplayRead(data,handoff);
+      const sourceAst = sourceScreenplayAST(data);
       if ((captured && !draftStillCurrent(captured)) || draftRevisionRef.current !== initialEdit) {
         throw new Error('Your draft changed during loading. It is still open; retry the project change when ready.');
       }
-      saveCoordinator.load(data.project, data.content, data.revision);
+      saveCoordinator.load(data.project, data.content, data.revision, undefined, data.fdx_document);
+      richDocumentRef.current=cloneRichFDX(data.fdx_document);richAckEpochRef.current++;setRichWorkingDraft(null);setRichEditorEpoch(epoch=>epoch+1);
       manualReviewRef.current.delete(data.project);
       loadedProjectRef.current = data.project;
       setCurrentProject(data.project);
@@ -805,8 +846,13 @@ const loadScreenplay = async ( targetProj = '', { reload = false } = {}) => {
       setShowCharacterVault(false);
       setDraggedBeatIndex(null);
       const content = hasSharedDraft ? initialDraft : data.content;
+      titleHeaderRef.current = fountainTitleHeader(content);
+      setExportLayout('source');
+      setExportReceipt(null);
       setScreenplay(content);
-      setAst(fountainToAST(content));
+      if (data.fdx_document && content===data.content) {setIsInternalChange(true);setAst(data.fdx_document.blocks);astRef.current=data.fdx_document.blocks;}
+      else if (sourceAst && content === data.content) { setIsInternalChange(true); setAst(sourceAst); }
+      else setAst(fountainToAST(content));
       setLastSavedTime(null);
       setAutoSaveStatus(content === data.content ? 'saved' : 'unsaved');
       // A shared-workspace draft has no historical disk baseline. Keep it visible,
@@ -854,11 +900,24 @@ const loadScreenplay = async ( targetProj = '', { reload = false } = {}) => {
   };
 
   // Initial Load
+  handoffLoadRef.current = () => {
+    try {
+      const handoff = readScreenplayHandoff(window.location.search);
+      if (handoff) void loadScreenplay(handoff.project,{handoff});
+    } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
+  };
   useEffect(() => {
     loadProjects();
-    loadScreenplay();
+    try {
+      const handoff = readScreenplayHandoff(window.location.search);
+      if (handoff) void loadScreenplay(handoff.project,{handoff});
+      else void loadScreenplay();
+    } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
     loadBranches();
     loadSprints();
+    const followHandoff = () => handoffLoadRef.current?.();
+    window.addEventListener('popstate',followHandoff);
+    return () => window.removeEventListener('popstate',followHandoff);
   }, []);
 
   const autoSaveTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
@@ -869,12 +928,12 @@ const loadScreenplay = async ( targetProj = '', { reload = false } = {}) => {
   const captureDraft = () => {
     const project = loadedProjectRef.current;
     if (!project || project !== currentProjectRef.current) return null;
-    return { project, content: screenplayRef.current, edit: draftRevisionRef.current, branch: currentBranch,
-      revision: saveCoordinator.snapshot(project)?.revision };
+    return { project, content: richWorkingDraft??screenplayRef.current, edit: draftRevisionRef.current, branch: currentBranch,
+      revision: saveCoordinator.snapshot(project)?.revision, fdx_document:currentRichDocument() };
   };
   /** @param {import("/types/screenwriting").CapturedDraft | null} draft */
 const draftStillCurrent =  draft => !draft || (loadedProjectRef.current === draft.project && currentProjectRef.current === draft.project &&
-    screenplayRef.current === draft.content && draftRevisionRef.current === draft.edit);
+    (richWorkingDraft??screenplayRef.current) === draft.content && draftRevisionRef.current === draft.edit);
   /** @param {import("/types/screenwriting").DraftContent | null} draft @param {string} [recoveryId] */
   const preserveDraft = ( draft, recoveryId = recoveryIdRef.current) => {
     if (!draft) return false;
@@ -900,10 +959,10 @@ const refreshRecoveryDrafts =  project => {
   /** @param {import("/types/screenwriting").DraftContent | null} [draft] */
   const downloadLocalDraft = (draft = captureDraft()) => {
     if (!draft) return;
-    const url = URL.createObjectURL(new Blob([draft.content], { type: 'text/plain;charset=utf-8' }));
+    const url = URL.createObjectURL(new Blob([draft.fdx_document?JSON.stringify({...draft,content:richWorkingDraft??draft.content},null,2):draft.content], { type: draft.fdx_document?'application/json':'text/plain;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${draft.project}-recovered-${Date.now()}.fountain`;
+    link.download = `${draft.project}-recovered-${Date.now()}.${draft.fdx_document?'rich-fdx-draft.json':'fountain'}`;
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -917,9 +976,18 @@ const reportSaveFailure = ( draft,  error) => {
   /** @param {import("/types/screenwriting").CapturedDraft | null} draft */
 const saveCapturedDraft = async  draft => {
     if (!draft) throw new Error('Wait for the project to load before saving.');
-    if (saveCoordinator.isDirty(draft.project, draft.content)) preserveDraft(draft);
+    if (saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document)) preserveDraft(draft);
     try {
-      const result = await saveCoordinator.save(draft.project, draft.content, draft.branch);
+      if(richWorkingDraft!==null&&draft.project===loadedProjectRef.current)throw new Error('This visible rich FDX draft contains an unqualified edit. The full text is retained; return to a known state or create a separate working copy before saving.');
+      const result = await saveCoordinator.save(draft.project, draft.content, draft.branch, draft.fdx_document);
+      if(result.fdx_document){
+        const local=currentRichDocument();
+        const acknowledged=cloneRichFDX(result.fdx_document);
+        // Keep the exact acknowledged anchor even while newer edits remain visible.
+        // The write coordinator never rereads/rebases against an unknown server state.
+        const rebased=local?prepareRichFDXWrite(local,acknowledged):acknowledged;
+        richDocumentRef.current=acknowledged;richAckEpochRef.current++;astRef.current=rebased.blocks;setAst(rebased.blocks);
+      }
       if (draftStillCurrent(draft)) {
         setAutoSaveStatus('saved'); setSaveProblem(null);
         if (!result.unchanged) setLastSavedTime(new Date().toLocaleTimeString());
@@ -965,7 +1033,7 @@ const saveCapturedDraft = async  draft => {
     /** @param {BeforeUnloadEvent} event */
 const onUnload =  event => {
       const draft = captureDraft();
-      if (draft && (saveCoordinator.isDirty(draft.project, draft.content) || saveCoordinator.snapshot(draft.project)?.blocked)) {
+      if (draft && (saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document) || saveCoordinator.snapshot(draft.project)?.blocked)) {
         preserveDraft(draft); event.preventDefault(); event.returnValue = '';
       }
     };
@@ -976,7 +1044,7 @@ const onUnload =  event => {
   useEffect(() => {
     const draft = captureDraft();
     if (!draft) return;
-    if (!saveCoordinator.isDirty(draft.project, draft.content)) return;
+    if (!saveCoordinator.isDirty(draft.project, draft.content, draft.fdx_document)) return;
     preserveDraft(draft);
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current ?? undefined);
     if (isLoading || isReordering || transitionRef.current || reorderInFlightRef.current || saveCoordinator.snapshot(draft.project)?.blocked || manualReviewRef.current.has(draft.project)) return;
@@ -987,7 +1055,26 @@ const onUnload =  event => {
       try { await saveCapturedDraft(draft); } catch { /* The visible recovery notice retains the error. */ }
     }, 1500);
     return () => clearTimeout(autoSaveTimerRef.current ?? undefined);
-  }, [screenplay, currentProject, currentBranch, BACKEND_URL, isLoading, isReordering, saveProblem?.reviewOnly]);
+  }, [screenplay, ast, currentProject, currentBranch, BACKEND_URL, isLoading, isReordering, saveProblem?.reviewOnly]);
+
+  const handleOpenNativeScreenplay = async () => {
+    if(!adaptationMountedRef.current||transitionRef.current||isNativeLaunching||isLoading)return;
+    const backend=BACKEND_URL,source=projectMetadata?.source_pdf?.sha256||projectMetadata?.source_fdx?.sha256;
+    const loadSequence=screenplayLoadSequenceRef.current;
+    const contextCurrent=()=>adaptationMountedRef.current&&screenplayLoadSequenceRef.current===loadSequence&&backendUrlRef.current===backend;
+    transitionRef.current=true;setIsNativeLaunching(true);setNativeLaunchMessage('Saving before opening the native writer…');
+    try{
+      const draft=await flushDraftForTransition();
+      if(!draft||!source||(projectMetadata?.source_pdf&&projectMetadata?.source_fdx))throw Error('Load one verified PDF or FDX source project first. Your draft remains open.');
+      const saved=saveCoordinator.snapshot(draft.project);
+      await launchNativeScreenplay({backendUrl:backend,
+        handoff:{project:draft.project,revision:saved?.revision,source_sha256:source},
+        getFreshHeaders:()=>chatAuthHeaders({},'',{forceRefresh:true}),
+        isCurrent:()=>contextCurrent()&&draftStillCurrent(draft)&&loadedProjectRef.current===draft.project});
+      setNativeLaunchMessage('Native launch requested. Your browser project remains open.');
+    }catch(error){if(contextCurrent())setNativeLaunchMessage(error instanceof Error?error.message:'Native launch was not confirmed. Your draft remains open.');}
+    finally{transitionRef.current=false;if(adaptationMountedRef.current)setIsNativeLaunching(false);}
+  };
 
   const handleSaveScreenplay = async () => {
     if (transitionRef.current || reorderInFlightRef.current) return;
@@ -1002,18 +1089,7 @@ const onUnload =  event => {
     finally { setIsLoading(false); }
   };
 
-  const handleExportFDX = () => {
-    const xml = serializeFDX(ast);
-    const blob = new Blob([xml], { type: "text/xml" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${currentProject || 'screenplay'}.fdx`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
+  const handleExportFDX = () => downloadScreenplayExport('fdx');
 
   /** @param {string} format */
 const downloadScreenplayExport = async ( format, watermark = '') => {
@@ -1027,22 +1103,26 @@ const downloadScreenplayExport = async ( format, watermark = '') => {
     setIsLoading(true);
     try {
       if (manualReviewRef.current.has(project)) throw new Error('Review and save the local draft before exporting, or download it from the draft protection notice.');
-      await saveCapturedDraft(draft);
+      const saved = await saveCapturedDraft(draft);
       const query = new URLSearchParams({ project_name: project });
+      if (projectMetadata?.source_pdf || projectMetadata?.source_fdx) {
+        if (typeof saved.revision !== 'string' || !/^[a-f0-9]{64}$/.test(saved.revision)) throw new Error('Export requires the acknowledged current manuscript revision.');
+        query.set('layout',exportLayout); query.set('expected_revision',saved.revision);
+      }
       if (watermark) query.set('watermark', watermark);
       const response = await fetch(`${BACKEND_URL}/api/screenwriting/export/${format}?${query}`);
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
-        throw new Error(error.detail || `Export failed (HTTP ${response.status}).`);
+        throw new Error(screenplayErrorMessage(error,`Export failed (HTTP ${response.status}).`));
       }
       const blob = await response.blob();
-      if (format === 'pdf' && (await blob.slice(0, 5).text()) !== '%PDF-') {
-        throw new Error('The export service did not return a PDF.');
-      }
+      const receipt = await validateScreenplayExport(blob,{format,layout:projectMetadata?.source_pdf||projectMetadata?.source_fdx?exportLayout:'reflow',headers:response.headers});
+      if (!adaptationMountedRef.current || !draftStillCurrent(draft)) throw new Error('The draft or selected project changed during export. Your draft remains open; export again when ready.');
+      setExportReceipt(receipt);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${project}.${format}`;
+      link.download = projectMetadata?.source_pdf||projectMetadata?.source_fdx ? screenplayExportFilename(project,format,exportLayout) : `${project}.${format}`;
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -1272,6 +1352,16 @@ const handleAnimateBeat = async ( beat) => {
       return fountain.trim();
   });
 
+  const createRichWorkingCopy = async () => {
+    const draft=captureDraft();if(!draft?.fdx_document||isLoading)return;
+    const name=prompt('Create a separate plain-text working project (original rich FDX and metadata remain archived):',`${draft.project}_working`);if(!name)return;
+    setIsLoading(true);
+    try{preserveDraft(draft);const response=await fetch(`${BACKEND_URL}/api/screenwriting/projects/fdx-working-copy`,{method:'POST',headers:await chatAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({project_name:draft.project,new_project_name:name,content:richWorkingDraft??draft.content,expected_revision:saveCoordinator.snapshot(draft.project)?.revision,request_id:crypto.randomUUID().replaceAll('-','')})});const result=await response.json();if(!response.ok)throw new Error(screenplayErrorMessage(result,'Working copy creation was not confirmed.'));
+      if(!draftStillCurrent(draft))throw new Error('Working copy created; newer edits remain open. Select the copy when ready.');
+      await loadProjects();await loadScreenplay(result.project,{reload:true});
+    }catch(error){setSaveProblem({message:error instanceof Error?error.message:String(error)});}finally{setIsLoading(false);}
+  };
+
   const handleImportClick = () => {
       fileInputRef.current?.click();
   };
@@ -1294,7 +1384,26 @@ const handleFileChange = async ( e) => {
       
       const defaultName = currentProject || "Default Project";
       
-      // If it's a manuscript/book file, open the Hollywood Adaptation Modal
+      // Faithful PDF import is separate from explicitly selected book adaptation.
+      if (fileName.endsWith('.pdf') && pdfImportMode === 'screenplay') {
+        if (transitionRef.current) return;
+        transitionRef.current = true; setIsLoading(true);
+        try {
+          const departingDraft = await flushDraftForTransition();
+          const form = new FormData(); form.append('file',file);
+          const response = await fetch(`${BACKEND_URL}/api/chat/attach`,{method:'POST',headers:await chatAuthHeaders(),body:form});
+          const data = await response.json();
+          if (!response.ok || data.status !== 'success') throw new Error(screenplayErrorMessage(data,'PDF parsing was not confirmed.'));
+          const imported = await importPdfScreenplay({backendUrl:BACKEND_URL,file:data.file,
+            requestId:data.file.source_id,headers:() => chatAuthHeaders({'Content-Type':'application/json'})});
+          if (!isCurrent() || !draftStillCurrent(departingDraft)) return;
+          await loadProjects();
+          if (isCurrent()) await loadScreenplay(imported.project,{handoff:imported.handoff});
+        } catch(error) { setSaveProblem({project:loadedProjectRef.current,message:error instanceof Error?error.message:String(error)}); }
+        finally { transitionRef.current=false;setIsLoading(false);e.target.value=''; }
+        return;
+      }
+      // Manuscript/book formats retain the existing adaptation workflow.
       if (fileName.endsWith('.pdf') || fileName.endsWith('.docx') || fileName.endsWith('.doc') || fileName.endsWith('.epub') || fileName.endsWith('.rtf') || fileName.endsWith('.txt') || fileName.endsWith('.md') || fileName.endsWith('.markdown')) {
           setAdaptFile(file);
           setAdaptProjectName(defaultName);
@@ -1310,16 +1419,22 @@ const handleFileChange = async ( e) => {
           return;
       }
       
+      if(fileName.endsWith('.fdx')){
+        if(!isCurrent()||transitionRef.current)return;
+        transitionRef.current=true;setIsLoading(true);
+        try{const departingDraft=await flushDraftForTransition();const imported=await importRichFDX({backendUrl:BACKEND_URL,file,project:projName,headers:()=>chatAuthHeaders()});
+          if(!isCurrent()||!draftStillCurrent(departingDraft)){setSaveProblem({message:'Rich FDX imported under its new project. Your newer draft remains open; select the imported project when ready.'});return;}
+          await loadProjects();if(isCurrent())await loadScreenplay(imported.project);
+        }catch(error){setSaveProblem({message:error instanceof Error?error.message:String(error)});}
+        finally{transitionRef.current=false;setIsLoading(false);e.target.value='';}return;
+      }
       const reader = new FileReader();
       reader.onload = async (ev) => {
           const result = ev.target?.result;
           if (typeof result !== "string") return;
           let text = result;
           
-          if (file.name.toLowerCase().endsWith('.fdx')) {
-              const newAst = parseFDX(text);
-              text = astToFountain(newAst);
-          }
+          // FDX was handled above using its original byte stream.
           
           if (!isCurrent() || transitionRef.current) return;
           transitionRef.current = true;
@@ -1355,93 +1470,70 @@ const handleFileChange = async ( e) => {
       e.target.value = '';
   };
 
-  const handleStartAdaptation = async (forceRestart = false) => {
-      if (!adaptFile || !adaptProjectName) return;
-      try { await flushDraftForTransition(); } catch (error) { alert((error instanceof Error ? error.message : String(error))); return; }
-      setIsAdapting(true);
-      setShowAdaptModal(false);
-      setAdaptProgress({ status: 'processing', progress: 0, current_chunk: 0, total_chunks: 0 });
-      
-      const formData = new FormData();
-      formData.append('file', adaptFile);
-      formData.append('project_name', adaptProjectName);
-      formData.append('adaptation_type', adaptType);
-      if (forceRestart) {
-        formData.append('force', 'true');
-      }
-      
+  const handleStartAdaptation = async () => {
+      if (!adaptFile || !adaptProjectName.trim() || adaptationStartRef.current) return;
+      const projectName = adaptProjectName.trim();
+      adaptationStartRef.current = true;
       try {
-          const res = await fetch(`${BACKEND_URL}/api/screenplay/adapt`, {
-              method: 'POST',
-              body: formData
-          });
-          const resData = await res.json();
-          if (res.status === 409 || resData.status === 'processing') {
-              const doForce = confirm(
-                `An adaptation job is already in progress for "${adaptProjectName}".\n\n` +
-                `• Click OK to FORCE RESTART from the beginning.\n` +
-                `• Click Cancel to attach to the live stream.`
-              );
-              if (doForce) {
-                handleStartAdaptation(true);
-                return;
-              }
-          } else if (!res.ok || resData.status === 'error') {
-              throw new Error(resData.message || `HTTP error! status: ${res.status}`);
+          await flushDraftForTransition();
+          if (!adaptationMountedRef.current) return;
+          adaptationMonitorRef.current?.();
+          setIsAdapting(true);
+          setAdaptProgress({ status: 'submitting', progress: 0, current_chunk: 0, total_chunks: 0 });
+          const capabilities = await fetch(`${BACKEND_URL}/api/screenplay/adapt/capabilities`);
+          const contract = await capabilities.json();
+          if (!capabilities.ok || contract.contract !== 'create-only-v1' || contract.create_only !== true) {
+              throw new Error('The backend must support protected, create-only adaptation before this action can run.');
           }
-          startAdaptationStream(adaptProjectName);
-      } catch (err) {
-          console.error('Adaptation error:', err);
+          const formData = new FormData();
+          formData.append('file', adaptFile);
+          formData.append('project_name', projectName);
+          formData.append('adaptation_type', adaptType);
+          const res = await fetch(`${BACKEND_URL}/api/screenplay/adapt`, { method: 'POST', body: formData });
+          const data = await res.json();
+          if (res.status === 409) {
+              throw new Error('That project already exists. Choose a new project name; existing manuscripts and jobs were preserved.');
+          }
+          if (!res.ok) throw new Error(data.detail || data.message || `Adaptation request returned HTTP ${res.status}.`);
+          const accepted = validateAdaptationAcceptance(data, projectName);
+          if (!adaptationMountedRef.current) return;
+          setShowAdaptModal(false);
+          startAdaptationStream(accepted.projectName, accepted.job_id);
+      } catch (error) {
+          if (!adaptationMountedRef.current) return;
           setIsAdapting(false);
           setAdaptProgress(null);
-          alert(`Adaptation note: ${(err instanceof Error ? err.message : String(err))}`);
-      }
+          alert(`Adaptation note: ${error instanceof Error ? error.message : String(error)}`);
+      } finally { adaptationStartRef.current = false; }
   };
 
-  /** @param {string} projName */
-const startAdaptationStream = ( projName) => {
-      const eventSource = createAuthenticatedEventSource(`${BACKEND_URL}/api/screenplay/adapt/stream?project_name=${encodeURIComponent(projName)}`);
-      let lastProgress = -1;
-
-      eventSource.onmessage = /** @param {{"data": string}} event */
-async ( event) => {
-          try {
-              const data = JSON.parse(event.data);
-              if (data.status && data.status !== 'not_found') {
-                  setAdaptProgress(data);
-                  
-                  if (data.status === 'processing' && data.progress !== lastProgress) {
-                      lastProgress = data.progress;
-                      lastProgress = data.progress;
-                      // Progress never replaces the active draft or steals project focus.
-                  }
-
-                  if (data.status === 'complete' || data.status === 'error') {
-                      eventSource.close();
-                      setIsAdapting(false);
-                      setTimeout(() => setAdaptProgress(null), 3000);
-                      
-                      if (data.status === 'error') {
-                          alert(`AI Adaptation Failed: ${data.error || 'Unknown error'}`);
-                      }
-                      
-                      await loadProjects();
-                      if (currentProjectRef.current === projName) {
-                        manualReviewRef.current.add(projName);
-                        setSaveProblem({ project: projName, reviewOnly: true, message: 'Adaptation finished. Download any local edits, then use Reload saved version to view the generated manuscript.' });
-                      }
-                  }
+  /** @param {string} projectName @param {string} jobId */
+  const startAdaptationStream = (projectName, jobId) => {
+      adaptationMonitorRef.current?.();
+      adaptationMonitorRef.current = monitorAdaptation({ baseUrl: BACKEND_URL, projectName, jobId,
+          eventSourceFactory: createAuthenticatedEventSource,
+          onStatus: async data => {
+              if (!adaptationMountedRef.current) return;
+              setAdaptProgress(data);
+              if (!isAdaptationTerminal(data.status)) return;
+              setIsAdapting(false);
+              if (!isAdaptationComplete(data.status)) {
+                  alert(`Adaptation ended with status ${data.status}. Source and generated files are retained on the host.`);
+                  return;
               }
-          } catch(err) {
-              console.error(err);
-          }
-      };
-
-      eventSource.onerror = (err) => {
-          console.error("SSE Error:", err);
-          eventSource.close();
-          setIsAdapting(false);
-      };
+              await loadProjects();
+              if (adaptationMountedRef.current && currentProjectRef.current === projectName) {
+                  manualReviewRef.current.add(projectName);
+                  setSaveProblem({ project: projectName, reviewOnly: true,
+                      message: 'Adaptation finished. Download any local edits, then use Reload saved version to view the generated manuscript.' });
+              }
+          },
+          onError: error => {
+              if (!adaptationMountedRef.current) return;
+              setIsAdapting(false);
+              alert(`Adaptation progress is unverified: ${error instanceof Error ? error.message : String(error)}. Check job status before retrying; existing files are retained.`);
+          },
+      });
   };
 
   /** @param {string} syntax */
@@ -2052,6 +2144,7 @@ const handleInsertScriptAssistantText = ( textToInsert) => {
           {' '}<button type="button" onClick={() => downloadLocalDraft(incomingWorkspaceDraft)}>Download workspace draft</button>
         </div>
       )}
+      {projectMetadata?.source_fdx&&<div role="status" style={{padding:12,background:'#172033',color:'#e2e8f0'}}><strong>Preserved rich FDX source</strong><p>Original XML and prior versions are retained. Supported: existing paragraph text and type. Styles, revision attributes, notes, title/author, manual breaks, dual groups and unknown sections remain preserved; editing those structures requires a separate working copy. External pagination and vendor feature parity are unverified.</p><p>Retained XML sections (read only): {projectMetadata.source_fdx.preserved_sections?.join(', ')||'None beyond body/title'}</p>{projectMetadata.source_fdx.warnings?.map((/** @type {string} */ message,/** @type {number} */ index)=><p key={index}>{message}</p>)}<details><summary>Retained title and author</summary>{projectMetadata.source_fdx.title_page?.map((/** @type {any} */ block)=><p key={block.id}>{block.type}: {block.text}</p>)}</details><button type="button" onClick={createRichWorkingCopy} disabled={isLoading}>Create separate plain working copy</button></div>}
       {saveProblem && (
         <div role="alert" style={{ padding: '12px', background: '#422006', color: '#fef3c7', border: '1px solid #d97706' }}>
           <strong>Draft protection — {saveProblem.project || 'Screenwriting Studio'}</strong>
@@ -2255,6 +2348,10 @@ event=>toggleMobilePanel('tools',event)}>Tools</button>
             <button onClick={handleImportClick} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #34d399', color: '#34d399', padding: '4px 8px', fontSize: '0.8rem' }}>
               📥 Import
             </button>
+            <select aria-label="PDF import purpose" value={pdfImportMode} onChange={e=>setPdfImportMode(e.target.value)} style={{background:'#111827',color:'#d1fae5',fontSize:'0.8rem'}}>
+              <option value="screenplay">PDF: preserve screenplay</option>
+              <option value="adaptation">PDF: adapt book (AI)</option>
+            </select>
             <button onClick={() => setShowFindReplace(!showFindReplace)} className="sw-ribbon-btn" style={{ background: showFindReplace ? 'rgba(168, 85, 247, 0.3)' : 'transparent', border: '1px solid #a855f7', color: '#a855f7', padding: '4px 8px', fontSize: '0.8rem' }}>
               🔍 Find & Replace
             </button>
@@ -2264,6 +2361,17 @@ event=>toggleMobilePanel('tools',event)}>Tools</button>
             <button onClick={handleExportPDF} className="sw-ribbon-btn" style={{ background: 'transparent', border: '1px solid #e11d48', color: '#e11d48', padding: '4px 8px', fontSize: '0.8rem' }}>
               📄 Export PDF
             </button>
+            {projectMetadata?.source_fdx&&<><select aria-label="Rich FDX export mode" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}}><option value="source">Current preserved FDX</option><option value="original">Original imported FDX</option><option value="reflow">Explicit legacy text reflow</option></select><span>Rich PDF export requires explicit legacy reflow; rich XML/style fidelity applies to preserved FDX only.</span></>}
+            {projectMetadata?.source_pdf && <>
+              <select aria-label="Screenplay export layout" value={exportLayout} onChange={e=>{setExportLayout(e.target.value);setExportReceipt(null);}} style={{background:'#111827',color:'#cbd5e1',fontSize:'0.8rem'}}>
+                <option value="source">Archival: preserve source pages</option>
+                <option value="professional">Professional U.S. spec: natural pages</option>
+                <option value="reflow">Legacy reflow: export edited draft</option>
+              </select>
+              <span role="status" style={{color:'#cbd5e1',fontSize:'0.75rem'}}>{exportLayout==='professional' ? 'Professional Courier 12 uses natural pagination; page count may change. No words-per-page quota or runtime guarantee. Available for the original imported draft; edited drafts can use Legacy reflow.' : exportLayout==='source' ? 'Archival mode retains the recorded source page boundaries; it is separate from professional reflow.' : 'Legacy reflow uses the existing formatter for edited content; it is separate from the professional preset.'}</span>
+              {exportReceipt?.layout==='professional' && <span role="status" style={{color:'#a7f3d0',fontSize:'0.75rem'}}>Professional profile confirmed: {exportReceipt.profile_id}. {exportReceipt.pdf_page_count ? `${exportReceipt.pdf_page_count} PDF pages generated. ` : 'FDX pagination requires review in the writing application. '}Output SHA-256: {exportReceipt.output_sha256}.</span>}
+              <span role="status" style={{color:'#cbd5e1',fontSize:'0.75rem'}}>Source PDF: {projectMetadata.source_pdf.page_count} pages ({projectMetadata.source_pdf.title_page_count ?? 1} title + {projectMetadata.source_pdf.body_page_count ?? projectMetadata.source_pdf.page_count-1} body). {projectMetadata.source_pdf.printed_page_labels?.length && projectMetadata.source_pdf.printed_page_labels.every(label=>label!==null) ? `Printed source labels: ${projectMetadata.source_pdf.printed_page_labels[0]}–${projectMetadata.source_pdf.printed_page_labels.at(-1)}. ` : ''}Editor pages are separate; external FDX pagination unverified.</span>
+            </>}
             <button 
               onClick={() => setShowHelpGuideModal(true)} 
               className="sw-ribbon-btn" 
@@ -2283,6 +2391,12 @@ event=>toggleMobilePanel('tools',event)}>Tools</button>
             <button onClick={handleSaveScreenplay} disabled={isLoading} className="sw-save-btn" style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
               {isLoading ? 'Saving...' : '💾 Save'}
             </button>
+            {(projectMetadata?.source_pdf?.sha256||projectMetadata?.source_fdx?.sha256) && <button type="button" className="sw-save-btn"
+              onClick={handleOpenNativeScreenplay} disabled={isLoading||isNativeLaunching}
+              title="Save this project and request the native writer on the local AI-BS computer">
+              {isNativeLaunching?'Opening…':'Save & open native'}
+            </button>}
+            {nativeLaunchMessage && <span role="status" style={{fontSize:'0.75rem'}}>{nativeLaunchMessage}</span>}
           </div>
         </div>
       )}
@@ -2967,7 +3081,7 @@ async ( proj) => {
             {/* Primary View (Editor) */}
             {(activeView === 'editor' || splitMode !== 'none') && (
                 <div className="sw-editor-container" style={{ flex: 1, height: '100%', maxHeight: '100%', minHeight: 0, display: 'flex', overflow: 'hidden', borderRight: splitMode === 'vertical' ? '1px solid #1f2937' : 'none', borderBottom: splitMode === 'horizontal' ? '1px solid #1f2937' : 'none' }}>
-                    <ScreenplayEditor
+                    {richDocumentRef.current ? <div style={{overflow:'auto',width:'100%'}}><RichFDXEditor key={`${currentProject}:${richEditorEpoch}`} blocks={ast} baselineBlocks={richDocumentRef.current.blocks} revision={`${richDocumentRef.current.document_sha256}:${richAckEpochRef.current}`} onChange={handleAstChange} onQualified={()=>{if(richWorkingDraft!==null){setRichWorkingDraft(null);manualReviewRef.current.delete(currentProjectRef.current);setSaveProblem(null);}}} onUnqualified={(blocks,message)=>{const content=richFDXProjection({...richDocumentRef.current,blocks});setRichWorkingDraft(content);preserveDraft({project:currentProjectRef.current,content,fdx_document:{...richDocumentRef.current,blocks}});manualReviewRef.current.add(currentProjectRef.current);setSaveProblem({reviewOnly:true,message});}}/></div> : <ScreenplayEditor
                         ast={ast}
                         onChange={handleAstChange}
                         zoomLevel={zoomLevel}
@@ -2979,7 +3093,7 @@ async ( proj) => {
                         onProofPage={(p) => handleProofPage(p)}
                         isRevisionMode={isRevisionMode}
                         revisionColor={revisionColor}
-                    />
+                    />}
                 </div>
             )}
 
@@ -2987,7 +3101,7 @@ async ( proj) => {
             {(activeView !== 'editor' || splitMode !== 'none') && (
                 <div className="sw-preview-container" style={{ flex: 1, height: '100%', background: '#0a0a0a', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                     {(activeView === 'preview' || (splitMode !== 'none' && activeView !== 'beats')) ? (
-                         <ScreenplayViewer
+                         richDocumentRef.current ? <div style={{overflow:'auto',padding:18,color:'#e2e8f0'}}><p>Rich FDX preview · external pagination unverified</p>{ast.map(block=><div key={block.id} style={{whiteSpace:'pre-wrap',marginBottom:16,fontFamily:'Courier New,monospace'}}><strong>{block.type}{block.dualGroup?` · dual ${block.dualSide}`:''}</strong><div>{block.runs?.map((run,index)=><span key={index} style={richRunStyle(run)}>{run.text}</span>)}</div></div>)}</div> : <ScreenplayViewer
                              ref={viewerRef}
                              fitToWidth={compactStudio}
                              ast={ast}
@@ -3131,7 +3245,7 @@ event=>toggleMobilePanel('stats',event)}>{mobilePanel==='stats'?'Close stats':'S
         <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
           {compactStudio && <button type="button" className="sw-mobile-panel-close" onClick={()=>setMobilePanel(null)}>Close stats</button>}
           <span style={{ color: '#fff', fontWeight: 'bold' }}>🎬 SCRIPT TELEMETRY:</span>
-          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>📜 {scriptDiag.pages} Pages (~{scriptDiag.runtimeStr} screen time)</span>
+          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>📜 {projectMetadata?.source_fdx?'Rich XML · pagination unverified':`${scriptDiag.pages} Pages (~${scriptDiag.runtimeStr} screen time)`}</span>
           <span style={{ color: '#4ade80' }}>⚖️ {scriptDiag.dialoguePct}% Dialogue / {scriptDiag.actionPct}% Action</span>
           <span style={{ color: '#facc15' }}>🎭 {scriptDiag.characterCount} Roles</span>
           <span style={{ color: '#e2e8f0' }}>🎬 {scriptDiag.sceneCount} Scenes</span>

@@ -1,0 +1,135 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-11-02T09:44:42.740235+00:00",
+  "gallery": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\expression-series-2026-11-02\\index.html",
+  "posters": 9,
+  "video_elements": 0,
+  "assets": [
+    {
+      "path": "01-short-hair-laughing.png",
+      "exists": true,
+      "bytes": 2612361
+    },
+    {
+      "path": "02-glasses-reaction.png",
+      "exists": true,
+      "bytes": 3039065
+    },
+    {
+      "path": "03-long-hair-focus.png",
+      "exists": true,
+      "bytes": 2176685
+    },
+    {
+      "path": "04-beanie-exasperated.png",
+      "exists": true,
+      "bytes": 3547222
+    },
+    {
+      "path": "05-sunglasses-mischief.png",
+      "exists": true,
+      "bytes": 2592421
+    },
+    {
+      "path": "06-curly-hair-relief.png",
+      "exists": true,
+      "bytes": 3193118
+    },
+    {
+      "path": "07-backpack-excited.png",
+      "exists": true,
+      "bytes": 3577544
+    },
+    {
+      "path": "08-glasses-thoughtful.png",
+      "exists": true,
+      "bytes": 2965567
+    },
+    {
+      "path": "09-brett-expression-study.png",
+      "exists": true,
+      "bytes": 3360584
+    }
+  ],
+  "dimensions": [
+    {
+      "src": "01-short-hair-laughing.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "02-glasses-reaction.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "03-long-hair-focus.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "04-beanie-exasperated.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "05-sunglasses-mischief.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "06-curly-hair-relief.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "07-backpack-excited.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "08-glasses-thoughtful.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "09-brett-expression-study.png",
+      "width": 1024,
+      "height": 1536
+    }
+  ],
+  "browser": {
+    "name": "Installed Chrome via Python Playwright, headless",
+    "desktop": "1440x1000",
+    "mobile": "375x812",
+    "horizontal_overflow": false,
+    "filters": "passed: laughter2, reaction3, quiet3, study1, all9",
+    "lightbox": "passed: opening, keyboard navigation, Escape, focus restoration, one-item disabled navigation, mobile hero link",
+    "external_requests": [],
+    "script_errors": []
+  },
+  "expression_review": {
+    "all_nine_visually_inspected": true,
+    "01": "Open delighted laugh, short hair, white T-shirt",
+    "02": "Glasses/turquoise, skeptical side-eye and lifted brow",
+    "03": "Longer waves/black, intense concentration",
+    "04": "Beanie/gray, clear weary eye-roll and palm at forehead",
+    "05": "Lowered sunglasses/orange, mischievous expression",
+    "06": "Short curls/tan hoodie, soft eyes and relieved small smile",
+    "07": "Short hair/gray/backpack, emphatic exhilaration and open grin",
+    "08": "Glasses/navy, reflective upward gaze and hopeful almost-smile",
+    "09": "Brett-only nine-panel study with clearly different expressions and multiple actual looks",
+    "material_issues": [],
+    "minor_notes": [
+      "Some posters retain incidental source clothing lettering.",
+      "09 AT PEACE panel retains a beanie; expressions are otherwise distinctly varied.",
+      "Generated likenesses and fine details remain artistic interpretations."
+    ]
+  },
+  "screenshots_reviewed": [
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\expression-gallery-desktop-20261102.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\expression-gallery-collection-20261102.png",
+    "C:\\Users\\footb\\AppData\\Local\\Temp\\expression-gallery-mobile-20261102.png"
+  ],
+  "visual_layout_review": "Desktop hero, poster grid, and mobile screenshots inspected: strong hierarchy, no cropped primary content; mobile navigation labels shortened for comfortable fit."
+}

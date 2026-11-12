@@ -26,9 +26,12 @@ export function paginateScreenplayBlocks(ast = []) {
   let blocks = [];
   let lines = 0;
   let startIndex = 0;
+  // Source pages/manual breaks are explicit boundaries, independent of the
+  // approximate editor line budget. This is not a claim about an external FDX app.
+  const explicitPages = ast.some(block => block.startsNewPage || Number.isSafeInteger(block.sourcePage));
   ast.forEach((block, index) => {
     const count = estimateScreenplayBlockLines(block);
-    if (lines + count > 54 && blocks.length) {
+    if ((block.startsNewPage || (!explicitPages && lines + count > 54)) && blocks.length) {
       pages.push({ blocks, startIndex, endIndex: index, estimatedLines: lines });
       blocks = [];
       lines = 0;

@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "status": "ERROR1421_IDENTIFIED_REPLAY_MATCHED_NATIVE_INJECTION_OPEN",
+  "diagnostic_player": "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01\\aibs_motherboard.exe",
+  "diagnostic_player_pin": {
+    "bytes": 4031488,
+    "sha256": "2a91b1ed51c19772006800945ee6ed0bc2e79345e15a44b2d095a0da2c2e1b75"
+  },
+  "diagnostic_manifest": {
+    "bytes": 45058,
+    "sha256": "125f2b6779e81a1cdbb49e102b7115276f888c130509d4ca169bc273ebb86bc4"
+  },
+  "isolated_only_stderr_insertion": true,
+  "canonical_origin_unchanged": true,
+  "runs": [
+    {
+      "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01",
+      "capture_internal_pipeline_cache_disabled": false,
+      "direct_baseline_passed": true,
+      "capture_process": {
+        "pid": 23312,
+        "birth": 1794404786.3484666,
+        "command": [
+          "C:\\Program Files\\NVIDIA Corporation\\Nsight Graphics 2026.4.0\\host\\windows-desktop-nomad-x64\\ngfx-capture.exe",
+          "--exe",
+          "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01\\aibs_motherboard.exe",
+          "--working-dir",
+          "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01",
+          "--args",
+          "--durable-world --content-definition D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\project\\opening.aibd --asset-root D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\project\\assets\\packs --database D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\world.sqlite --project prop01-native-acceptance --branch independent-prop01-v1 --play-session a969a85d-0c18-471f-9502-28f9684da598 --stop-file D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\seed.stop.request --durable-step seed --capture D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\seed.bmp --durable-report D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\seed.json --width 1440 --height 900",
+          "--output-dir",
+          "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Diagnostic_20261111_v01\\capture",
+          "--output-file",
+          "lh-frame.ngfx-bincap",
+          "--capture-frame",
+          "10",
+          "--frame-count",
+          "1",
+          "--no-hud",
+          "--no-bundle-replayer"
+        ],
+        "working_directory": "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01",
+        "exact_popen_handle_retained": true,
+        "terminal": true,
+        "exit_code": 4294967295,
+        "deadline_exceeded": false,
+        "wall_seconds": 1.1409999999996217,
+        "player_processes": [
+          {
+            "pid": 10148,
+            "birth": 1794404786.3820012,
+            "executable": "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01\\aibs_motherboard.exe",
+            "exact_handle_retained": true,
+            "terminal": true,
+            "exit_code": 1
+          }
+        ]
+      },
+      "stderr": "AIBS_NSIGHT_DIAGNOSTIC nonbackground_pixels=1016027 debug_errors=2 debug_warnings=0 debug_layer=1\r\nAIBS_NSIGHT_DIAGNOSTIC DX12 message 1421: ID3D12Device::ID3D12DeviceTools1::GetApplicationSpecificDriverBlobStatus: Device does not support application specific driver state, see CheckFeatureSupport.\r\nAIBS_NSIGHT_DIAGNOSTIC DX12 message 1421: ID3D12Device::ID3D12DeviceTools1::GetApplicationSpecificDriverState: Device does not support application specific driver state, see CheckFeatureSupport.\r\nNative durable world failed: Chapter GPU readback or debug diagnostics failed\r\n",
+      "original_source_unchanged": true,
+      "native_capture_acceptance_passed": false
+    },
+    {
+      "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01",
+      "capture_internal_pipeline_cache_disabled": true,
+      "direct_baseline_passed": true,
+      "capture_process": {
+        "pid": 29752,
+        "birth": 1794404856.4489388,
+        "command": [
+          "C:\\Program Files\\NVIDIA Corporation\\Nsight Graphics 2026.4.0\\host\\windows-desktop-nomad-x64\\ngfx-capture.exe",
+          "--exe",
+          "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01\\aibs_motherboard.exe",
+          "--working-dir",
+          "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01",
+          "--args",
+          "--durable-world --content-definition D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\project\\opening.aibd --asset-root D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\project\\assets\\packs --database D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\world.sqlite --project prop01-native-acceptance --branch independent-prop01-v1 --play-session 00242783-a7d3-4fe5-9f8e-32d03bda3136 --stop-file D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\seed.stop.request --durable-step seed --capture D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\seed.bmp --durable-report D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\seed.json --width 1440 --height 900",
+          "--output-dir",
+          "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_CacheOff_20261111_v01\\capture",
+          "--output-file",
+          "lh-frame.ngfx-bincap",
+          "--capture-frame",
+          "10",
+          "--frame-count",
+          "1",
+          "--no-hud",
+          "--no-bundle-replayer",
+          "--no-internal-pipeline-caches"
+        ],
+        "working_directory": "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01",
+        "exact_popen_handle_retained": true,
+        "terminal": true,
+        "exit_code": 4294967295,
+        "deadline_exceeded": false,
+        "wall_seconds": 1.140000000001237,
+        "player_processes": [
+          {
+            "pid": 38244,
+            "birth": 1794404856.4804685,
+            "executable": "C:\\AI-BS\\t\\nsight_diag_build01\\frozen_v01\\aibs_motherboard.exe",
+            "exact_handle_retained": true,
+            "terminal": true,
+            "exit_code": 1
+          }
+        ]
+      },
+      "stderr": "AIBS_NSIGHT_DIAGNOSTIC nonbackground_pixels=1016027 debug_errors=2 debug_warnings=0 debug_layer=1\r\nAIBS_NSIGHT_DIAGNOSTIC DX12 message 1421: ID3D12Device::ID3D12DeviceTools1::GetApplicationSpecificDriverBlobStatus: Device does not support application specific driver state, see CheckFeatureSupport.\r\nAIBS_NSIGHT_DIAGNOSTIC DX12 message 1421: ID3D12Device::ID3D12DeviceTools1::GetApplicationSpecificDriverState: Device does not support application specific driver state, see CheckFeatureSupport.\r\nNative durable world failed: Chapter GPU readback or debug diagnostics failed\r\n",
+      "original_source_unchanged": true,
+      "native_capture_acceptance_passed": false
+    }
+  ],
+  "replay": {
+    "root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Replay_20261111_v01",
+    "process": {
+      "pid": 22048,
+      "birth": 1794404947.4442272,
+      "command": [
+        "C:\\Program Files\\NVIDIA Corporation\\Nsight Graphics 2026.4.0\\host\\windows-desktop-nomad-x64\\ngfx-replay.exe",
+        "--loop-count",
+        "1",
+        "--max-worker-threads",
+        "4",
+        "--temp-resource-dir",
+        "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Replay_20261111_v01\\replay-temp",
+        "--perf-report-dir",
+        "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_Replay_20261111_v01\\replay-performance",
+        "--no-crash-reporting",
+        "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Nsight_LH_20261111_v01\\capture\\lh-frame.ngfx-bincap"
+      ],
+      "working_directory": "C:\\Program Files\\NVIDIA Corporation\\Nsight Graphics 2026.4.0\\host\\windows-desktop-nomad-x64",
+      "exact_popen_handle_retained": true,
+      "terminal": true,
+      "exit_code": 0,
+      "deadline_exceeded": false,
+      "wall_seconds": 1.0470000000004802,
+      "player_processes": []
+    },
+    "visual": {
+      "capture_image": {
+        "bytes": 212186,
+        "sha256": "69fcd42c988ae58ef581525c2f0177e4ba5aa69efd09262cb67294f3cdd3203c"
+      },
+      "replayed_image": {
+        "bytes": 212186,
+        "sha256": "69fcd42c988ae58ef581525c2f0177e4ba5aa69efd09262cb67294f3cdd3203c"
+      },
+      "capture_and_replay_png_bytes_equal": true,
+      "comparison_mean_absolute_error": 0,
+      "frames": 1,
+      "ordinary_gameplay_fps_qualification": false
+    },
+    "capture_pin": {
+      "bytes": 9789336,
+      "sha256": "6667cf36d1f5072283cf7f4cd9188741a91d5e943de489f2623b0045e5d6d702"
+    },
+    "clean_released_objects": 43,
+    "failed_or_skipped_objects": 0,
+    "native_capture_acceptance_still_failed": true
+  },
+  "guard_changed": false,
+  "debug_layer_disabled": false,
+  "error_filters_added": false,
+  "global_settings_changed": false,
+  "next": "Stop equivalent capture trials; retain1421 vendor/API repro and do read-only compatibility review. Continue next independent installed/default-launcher package acceptance. GPUTrace/native injection, ordinary/human/browser/creative/hosted/release gates remain open."
+}

@@ -1,0 +1,33 @@
+{
+  "archive": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\96A_Detailed_Walkthrough_And_Integrated_Draft.zip",
+  "bytes": 110775658,
+  "sha256": "97a5e91c74606d92ad86db769196a6dc2017e61e50fb2ad59325123843d57680",
+  "members": 57,
+  "cloud_upload_authorized": true,
+  "cloud_backup_verified": true,
+  "at": "2026-11-04T20:07:19.830745+00:00",
+  "drive_folder_id": "1-5aRqF4J6OMvHdOro0aF5F8BAcxNPbhf",
+  "drive_file_id": "1ZyMFqaTeSBEIR5wM3FXMXRALoHAMKl9i",
+  "drive_restore_verified": true,
+  "all_members_verified": true,
+  "goal_complete": false,
+  "authorization_record": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\derived_art_backup_authorization_20261104.json",
+  "restore_method": "ordered_byte_parts_downloaded_reassembled_and_verified",
+  "drive_file_kind": "multipart_index_json",
+  "parts": [
+    {
+      "name": "96A.part01",
+      "bytes": 67108864,
+      "sha256": "2317f8df437000e70cf3f942982a9b620997b31b0f4d76fff7eaf10eb7aa3fde",
+      "drive_file_id": "1-XVmEmru869Vf0CgVvlrAiXiV18t9mQX",
+      "downloaded_sha_verified": true
+    },
+    {
+      "name": "96A.part02",
+      "bytes": 43666794,
+      "sha256": "a62b50f1ff0f846b8ebfada7f808426aa624c18e8af9c8d8c2b1245e655da93c",
+      "drive_file_id": "1L6egLNis51THQ6LtGqUtLwjGgFufPa4j",
+      "downloaded_sha_verified": true
+    }
+  ]
+}

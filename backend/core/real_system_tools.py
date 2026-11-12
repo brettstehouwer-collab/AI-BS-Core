@@ -141,87 +141,64 @@ def execute_real_hardware_telemetry() -> str:
 
 
 def execute_real_osint_lead_scan(query: str = "") -> str:
-    """Executes live commercial B2B lead intelligence and OSINT scan across West Michigan databases."""
-    try:
-        backend_dir = os.path.join(WORKSPACE_ROOT, "backend")
-        master_db = os.path.join(backend_dir, "aibs_master.db")
-        wm_db = master_db if os.path.exists(master_db) else os.path.join(backend_dir, "west_michigan.db")
-        state_db = master_db if os.path.exists(master_db) else os.path.join(backend_dir, "state.db")
-        
-        # 1. Query Growth Leads from state.db
-        growth_leads = []
-        if os.path.exists(state_db):
-            conn_state = sqlite3.connect(state_db)
-            c_state = conn_state.cursor()
-            try:
-                c_state.execute("SELECT business_name, niche, website, email, match_score, value_prop FROM growth_leads ORDER BY match_score DESC LIMIT 5")
-                growth_leads = c_state.fetchall()
-            except Exception:
-                pass
-            conn_state.close()
-            
-        # 2. Query High-Value Properties & Commercial Assets from west_michigan.db
-        properties = []
-        total_props = 0
-        if os.path.exists(wm_db):
-            conn_wm = sqlite3.connect(wm_db)
-            c_wm = conn_wm.cursor()
-            try:
-                c_wm.execute("SELECT count(*) FROM properties")
-                total_props = c_wm.fetchone()[0]
-                c_wm.execute("SELECT address, propertyType, daysOnZillow FROM properties ORDER BY daysOnZillow ASC LIMIT 6")
-                properties = c_wm.fetchall()
-            except Exception:
-                pass
-            conn_wm.close()
+    """Read stored local records; never substitute demonstration leads or claim web verification."""
+    from pathlib import Path
+    import html
 
-        md = "### 🎯 Real-Time West Michigan B2B Commercial Reconnaissance & Lead Intelligence\n\n"
-        md += f"**Execution Status:** `SUCCESS` | **Indexed Regional Assets:** `{total_props} Properties` | **Target Region:** `West Michigan (Grand Rapids / Holland / Ottawa County)`\n\n"
-        
-        md += "#### 🏢 High-Probability Commercial B2B & Agency Prospects\n\n"
-        md += "| Business / Agency Target | Sector / Niche | Match Score | Contact Vector | Status |\n"
-        md += "|---|---|---|---|---|\n"
-        
-        if growth_leads:
-            for g in growth_leads:
-                b_name, niche, web, email, score, _ = g
-                md += f"| **{b_name}** | {niche} | `🔥 {score}%` | `{email or web}` | 🟢 **ACTIVE** |\n"
-        else:
-            md += "| **Grand Rapids Creative Studio Hub** | Media & Agency Production | `🔥 92%` | `contact@grcreativestudio.com` | 🟢 **ACTIVE** |\n"
-            md += "| **Lakeshore Logistics & Fleet** | Commercial Transport (Holland, MI) | `🔥 88%` | `ops@lakeshorefleet.com` | 🟢 **ACTIVE** |\n"
-            md += "| **Jenison Commercial Properties LLC** | Real Estate Asset Management | `🔥 85%` | `management@jenisonproperties.com` | 🟢 **ACTIVE** |\n"
+    def cell(value):
+        return html.escape(str(value if value is not None else 'Unknown')).replace('|', '&#124;').replace('\n', ' ').replace('\r', ' ')
 
-        md += "\n#### 📍 High-Valuation Regional Real Estate & Commercial Assets\n\n"
-        md += "| Location / Property Address | Asset Type | Market Age | Recommended Monetization |\n"
-        md += "|---|---|---|---|\n"
-        
-        for p in properties:
-            addr, p_type, days = p
-            tier = "Tier III ($1,495/mo Monopolization)" if "Grand Rapids" in addr else "Tier II ($995/mo Growth)"
-            md += f"| {addr} | `{p_type}` | `{days} days on market` | **{tier}** |\n"
-
-        md += "\n#### 💰 Stehouwer Retainer Capitalization Matrix\n\n"
-        md += "- **Tier I (Organic Primer):** `$495/month` — Local Google SEO, Business Listing Optimization & Automated CRM Ingestion.\n"
-        md += "- **Tier II (Target Baseline):** `$995/month` ($495 Retainer + $500 Dedicated Ad Spend) — Multi-channel Meta & TikTok Lead Gen.\n"
-        md += "- **Tier III (Sector Monopolization):** `$1,495/month` ($745 Retainer + $750 Dedicated Ad Spend) — Full West Michigan Category Saturation & AI Receptionist.\n\n"
-        
-        md += "---\n*Intelligence pulled dynamically from `west_michigan.db` and `state.db` on NVMe memory matrix.*"
+    backend_dir = Path(WORKSPACE_ROOT) / 'backend'
+    master = backend_dir / 'aibs_master.db'
+    selected = master if master.is_file() else None
+    queries = [
+        ('growth_leads', selected or backend_dir / 'state.db',
+         'SELECT business_name, niche, website, email, match_score, value_prop FROM growth_leads ORDER BY match_score DESC LIMIT 5'),
+        ('properties', selected or backend_dir / 'west_michigan.db',
+         'SELECT address, propertyType, daysOnZillow FROM properties ORDER BY daysOnZillow ASC LIMIT 6'),
+    ]
+    rows, provenance, failures = {}, [], []
+    for table, path, sql in queries:
+        if not path.is_file():
+            failures.append(f'{table}: database unavailable')
+            continue
+        conn = None
         try:
-            from core.personal_intelligence_memory import personal_memory
-            personal_memory.record_ecosystem_event(
-                event_type="osint_b2b_recon",
-                summary=f"OSINT Commercial B2B Recon: Scanned {total_props} regional properties & {len(growth_leads)} growth leads in West Michigan",
-                metadata={"total_props": total_props, "lead_count": len(growth_leads), "query": query}
-            )
-        except Exception:
-            pass
-        return md
-    except Exception as e:
-        return f"⚠️ Error executing OSINT commercial scan: {e}"
+            conn = sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True, timeout=2)
+            conn.execute('PRAGMA query_only=ON')
+            rows[table] = conn.execute(sql).fetchall()
+            provenance.append(f'{path.name} / {table}')
+        except sqlite3.Error:
+            failures.append(f'{table}: query unavailable')
+        finally:
+            if conn is not None:
+                conn.close()
+    status = ('UNAVAILABLE' if not rows else 'PARTIAL' if failures
+              else 'OK' if any(rows.values()) else 'EMPTY')
+    md = f'### Local business records\n\n**Read status:** `{status}`\n\n'
+    md += 'Stored records only; current business status, contacts and market ages have not been independently verified. No web scan was performed.\n\n'
+    for failure in failures:
+        md += f'- {failure}\n'
+    leads = rows.get('growth_leads', [])
+    if leads:
+        md += '\n| Business | Sector | Stored score | Stored contact |\n|---|---|---|---|\n'
+        for name, niche, website, email, score, _ in leads:
+            md += '| ' + ' | '.join(cell(v) for v in (name, niche, score, email or website)) + ' |\n'
+    else:
+        md += '\nNo business leads available from this read.\n'
+    properties = rows.get('properties', [])
+    if properties:
+        md += '\n| Stored address | Type | Stored days on market |\n|---|---|---|\n'
+        for row in properties:
+            md += '| ' + ' | '.join(cell(v) for v in row) + ' |\n'
+    else:
+        md += '\nNo property records available from this read.\n'
+    md += '\n**Sources read:** ' + (', '.join(provenance) if provenance else 'None') + '\n'
+    return md
 
 
 def execute_program_builder_from_prompt(prompt: str) -> str:
-    """Autonomously scaffolds, generates, syntax-checks, executes, and packages software programs."""
+    """Prepare a starter scaffold and report its actual build/smoke-run receipt."""
     try:
         from core.program_builder_engine import AutonomousProgramBuilder
         
@@ -231,31 +208,24 @@ def execute_program_builder_from_prompt(prompt: str) -> str:
         tokens = [w.lower() for w in clean_p.split() if w.isalnum() and w.lower() not in stop_words]
         proj_name = "_".join(tokens[:4]) if tokens else f"program_{int(time.time())}"
         
-        # Build functional executable Python script
-        code_content = f'''"""
-Stehouwer AI-BS Autonomous Software Suite
-Program: {proj_name}
-Target: {clean_p}
-Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
-"""
-import os, sys, time, json, platform
+        # Record user text as data, never as generated Python syntax or f-string expressions.
+        code_content = f'''"""AI-BS starter scaffold; requested program logic is not implemented."""
+import platform
+import time
+
+PROJECT_NAME = {proj_name!r}
+TARGET_OBJECTIVE = {clean_p!r}
 
 def execute_main():
     print("=" * 60)
-    print(f"🚀 AI-BS AUTONOMOUS PROGRAM: {proj_name.upper()}")
+    print("AI-BS STARTER SCAFFOLD:", PROJECT_NAME.upper())
     print("=" * 60)
-    print(f"⚙️ Target Objective: {clean_p}")
-    print(f"🖥️ Execution Environment: {platform.system()} {platform.release()} ({platform.machine()})")
-    print(f"⏰ Initialized Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print("Recorded target objective:", ascii(TARGET_OBJECTIVE))
+    print(f"Execution Environment: {{platform.system()}} {{platform.release()}} ({{platform.machine()}})")
+    print("Runtime timestamp:", time.strftime('%Y-%m-%d %H:%M:%S'))
     print("-" * 60)
-    
-    # Execution telemetry
-    time.sleep(0.3)
-    print("[1/3] Scaffolding runtime environment... OK")
-    print("[2/3] Processing multi-threaded telemetry worker pipeline... OK")
-    print("[3/3] Synchronizing outputs with local NVMe vault... OK")
-    print("-" * 60)
-    print("✅ Program execution completed successfully with exit code 0.")
+    print("Scaffold smoke run only; requested program logic is not implemented.")
+    print("No telemetry worker pipeline or vault synchronization was performed.")
     print("=" * 60)
 
 if __name__ == '__main__':
@@ -263,7 +233,7 @@ if __name__ == '__main__':
 '''
         files = [
             {"path": "main.py", "content": code_content},
-            {"path": "README.md", "content": f"# {proj_name.upper()}\n\nAutonomously engineered by AI-BS Sovereign Build Matrix.\n\n**Goal:** {clean_p}\n\n**Usage:**\n```bash\npython main.py\n```\n"},
+            {"path": "README.md", "content": f"# {proj_name.upper()} starter scaffold\n\nThe objective is recorded below. Requested program logic, telemetry workers and vault synchronization are not implemented by this template.\n\n**Recorded objective:** {clean_p}\n\n**Scaffold smoke run:**\n```bash\npython main.py\n```\n"},
             {"path": "run.bat", "content": f"@echo off\npython main.py\npause\n"}
         ]
         
@@ -276,25 +246,53 @@ if __name__ == '__main__':
             run_immediately=True
         )
         
-        stdout = res["execution"].get("stdout", "").strip()
-        status = "SUCCESS" if res["execution"].get("status") == "success" or res["execution"].get("exit_code") == 0 else "ERROR"
-        
-        md = f"### ⚡ Autonomous Program Builder Execution Card\n\n"
-        md += f"**Project Name:** `{res['project_name']}` | **Language:** `Python 3.12` | **Status:** `🟢 {status}`\n\n"
-        md += f"**Directory:** `saved_data/built_programs/{res['project_name']}/` | **ZIP Package:** `saved_data/built_programs/{res['zip_name']}`\n\n"
+        execution = res.get("execution") or {}
+        build = res.get("build") or {}
+        quality = res.get("code_quality") or {}
+        blocked = (res.get("status") == "error" or quality.get("valid") is False
+                   or str(execution.get("status", "")).startswith("blocked_"))
+        executed = execution.get("executed") is True
+        smoke_passed = (executed and execution.get("status") == "success"
+                        and execution.get("exit_code") == 0)
+        if blocked:
+            status = "BLOCKED"
+        elif smoke_passed:
+            status = "SCAFFOLD SMOKE RUN PASSED"
+        elif executed:
+            status = "SCAFFOLD SMOKE RUN FAILED"
+        else:
+            status = "SCAFFOLD PREPARED; NOT RUN"
+
+        md = "### AI-BS Starter Scaffold Receipt\n\n"
+        md += f"**Project Name:** `{res.get('project_name', proj_name)}` | **Language:** `Python` | **Status:** `{status}`\n\n"
+        md += "This fixed template records your objective. It does not implement the requested program, telemetry workers or vault synchronization. A successful smoke run only shows that the scaffold ran.\n\n"
+        if res.get("zip_name"):
+            md += f"**Directory:** `saved_data/built_programs/{res.get('project_name', proj_name)}/` | **ZIP Package:** `saved_data/built_programs/{res['zip_name']}`\n\n"
+        else:
+            md += "**ZIP Package:** Not reported.\n\n"
         
         md += "#### 📁 Scaffolding & Manifest\n\n"
-        md += "| File Name | Size | Verification |\n"
+        md += "| File Name | Size | Source Check |\n"
         md += "|---|---|---|\n"
-        for f in res["files"]:
-            md += f"| `{f['name']}` | `{f['size_bytes']} bytes` | `✓ PASSED` |\n"
+        for f in res.get("files", []):
+            file_check = quality.get("files", {}).get(f["name"], {})
+            check_label = "Compile check passed" if file_check.get("valid") is True else "Written; source check not reported"
+            md += f"| `{f['name']}` | `{f['size_bytes']} bytes` | `{check_label}` |\n"
             
-        md += "\n#### 🖥️ Pre-Flight Execution Output\n\n"
-        md += "```text\n"
-        md += stdout if stdout else "[Process completed with exit code 0]"
-        md += "\n```\n\n"
-        
-        md += "---\n*Program is compiled, validated, and ready for immediate deployment or 1-click execution.*"
+        def report_text(value):
+            # Keep program output from terminating its Markdown evidence fence.
+            return str(value or "").replace("```", "` ` `")
+
+        md += f"\n**Build receipt:** executed={build.get('executed') is True}; status={build.get('status', 'not reported')}; exit={build.get('exit_code', 'not reported')}.\n"
+        md += f"**Execution receipt:** executed={executed}; status={execution.get('status', 'not reported')}; exit={execution.get('exit_code', 'not reported')}.\n"
+        for label, output in (("Scaffold stdout", execution.get("stdout")),
+                              ("Scaffold stderr", execution.get("stderr")),
+                              ("Build stderr", build.get("stderr"))):
+            md += f"\n#### {label}\n\n```text\n{report_text(output) or '[No output reported]'}\n```\n"
+        errors = quality.get("errors") or res.get("syntax_errors") or []
+        if errors:
+            md += "\n#### Source check errors\n\n```text\n" + report_text("\n".join(str(error) for error in errors)) + "\n```\n"
+        md += "\nRequested functionality and deployment readiness remain unverified."
         return md
     except Exception as e:
         return f"⚠️ Error in autonomous program builder: {e}"
@@ -433,12 +431,21 @@ def check_and_execute_system_tools(prompt: str) -> Optional[str]:
     ]):
         return execute_real_space_ingestion(prompt)
 
-    # 5. Autonomous Program Builder Intent
-    if any(k in p for k in [
-        "build a program", "create a program", "write a program", "code a program",
-        "generate a program", "build a script", "create a script", "write a script",
-        "build an app", "create an app", "automatic program", "program builder"
-    ]):
+    # 5. Creating a project requires a leading action request, not a quoted mention.
+    import re
+    builder_request = re.sub(r"^please[,\s]+", "", p, count=1)
+    builder_request = re.sub(
+        r"^(?:(?:can|could|would|will)\s+you\s+(?:please\s+)?"
+        r"|i\s+(?:want|need)\s+(?:you\s+)?to\s+"
+        r"|i(?:'d|\s+would)\s+like\s+(?:you\s+)?to\s+)",
+        "", builder_request, count=1)
+    builder_request = re.sub(r"^please[,\s]+", "", builder_request, count=1)
+    if (re.match(
+        r"^(?:build|create|make|generate|write|code)\s+(?:me\s+)?"
+        r"(?:(?:a|an|the)\s+)?"
+        r"(?:(?:new|starter|simple|sample|python|javascript|typescript|powershell|bash|shell|rust|go|java|c\+\+|c#)\s+){0,2}"
+        r"(?:program|script|app|application|scaffold)\b", builder_request)
+        or re.match(r"^(?:run|use|start)\s+(?:(?:the|ai-bs|autonomous)\s+)*program\s+builder\b", builder_request)):
         return execute_program_builder_from_prompt(prompt)
 
     # 6. OSINT Commercial Lead Reconnaissance Intent

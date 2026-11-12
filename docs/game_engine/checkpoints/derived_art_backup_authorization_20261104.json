@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-04T20:00:21.080836+00:00",
+  "source_question_id": "call_27e18808a1cc49429b50fbc1e150f549",
+  "exact_reply": "Approve these and future checkpoints",
+  "question_scope": "Verified96Aarchive(111MB:walkthrough,Adamderiveddraftmodel,source/evidence),held90A,andfutureverifiedderived-game-artcheckpoints",
+  "destination_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "destination_folder_url": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "excluded": [
+    "original family photos/videos",
+    "credentials",
+    "real saves",
+    "private Git state",
+    "Master-ledger data"
+  ],
+  "authorization_persists": true,
+  "likeness_approval_inferred": false
+}

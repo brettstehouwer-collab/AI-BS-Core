@@ -1,0 +1,67 @@
+{
+  "id": "20261104_backup_running_vm_reconciled_d_review",
+  "utc": "2026-11-04T22:26:11.914096+00:00",
+  "status": "E_AUDIO_COPY_RUNNING_C_PREPARED_NOT_STARTED_D_REVIEW_ONLY",
+  "accounting": {
+    "prior_C_logical_offload_removal_bytes": 112731378928,
+    "verified_C_compression_allocation_saved_bytes": 16887353099,
+    "separate_diagnosed_C_canary_bytes": 38047744,
+    "approved_Antigravity_C_VM_logical_removed_bytes": 96550446942,
+    "approved_Antigravity_E_VM_logical_removed_bytes": 68726302806,
+    "combined_C_mixed_basis_estimate_GiB": 210.6718967789784,
+    "net_Git_compaction_savings_bytes": 0,
+    "exact_whole_volume_delta_claimed": false
+  },
+  "free_bytes": {
+    "C": 308791341056,
+    "D": 25900298240,
+    "E": 99704111104
+  },
+  "backup_scope": "C file recovery with explicit raw/bootstrap/volatile and metadata exceptions, plus exact198 Eoffloaded Muse WAVs; Dnotincluded peruserchoice",
+  "transport": "restic0.19.1 client encryption+rclone1.75.2 GoogleDrive app-owned private root; no source deletion/mirroring",
+  "destination": "https://drive.google.com/drive/folders/1waaZECrzSuTz3aYGRhxrY0MB6CryfD_W",
+  "E_audio_files": 198,
+  "E_audio_source_bytes": 85686866220,
+  "progress_at_checkpoint": {
+    "updated_utc": "2026-11-04T22:26:06.455000+00:00",
+    "files_done": 16,
+    "bytes_done": 8530745042,
+    "total_files": 198,
+    "total_bytes": 85686866220
+  },
+  "E_audio_complete": false,
+  "full_C_complete": false,
+  "C_worker_launched": false,
+  "D_backup_authorized": false,
+  "source_originals_moved_or_deleted_this_backup_phase": false,
+  "encryption_and_E_key_restore_canary_verified": true,
+  "E_local_recovery_kit_verified": true,
+  "offline_offsite_key_custody_verified": false,
+  "VM_decommission_actor": "Antigravity IDEwith explicituserapproval; IDEitselfretained",
+  "VM_paths_absent_and_retained_app_ISO_control_media_docs_music_metadata_checked": true,
+  "VM_handoff_tests": "Antigravity configured suite reported47run/2failures; not promoted to acceptance by storage/backup work",
+  "history_scope": "Selective actualmessages from9chats plus latest owninghandoff/VMreceipts; notallhistory/all-docreview",
+  "local_C_source_qualification": [
+    "34001byte fullresidentcloud nativeNoRecall/immutablemetadata\u2192ordinarymirror\u2192actualpinnedResticlocalrestore exactpath/fullSHA",
+    "39682byte ordinary-under-cloudancestor actualpinnedRestic directexactCshadow literal-list\u2192localrestore exactpath/fullSHA"
+  ],
+  "D_review": {
+    "files": 646453,
+    "logical_bytes": 482149086417,
+    "unique_default_stream_allocated_bytes": 483102868968,
+    "changes_or_uploads": false,
+    "deletion_or_compression_qualified": false,
+    "gaps": {
+      "DIRECTORY_ENUMERATION_UNAVAILABLE": 1,
+      "REPARSE_OR_RECALL_NOT_FOLLOWED": 36
+    }
+  },
+  "evidence_sha256": {
+    "C:\\AI-BS\\docs\\agent_sync\\manifest_20261104_antigravity_vm_decommission.json": "02e6417f54a4ddbd83cb87d8fefea5e1485f68aec7073024df5e6ee0c79ea485",
+    "C:\\AI-BS\\docs\\agent_sync\\handoff_20261104T215346Z.md": "9d814a54f42faa62e5adc3c4f01310a7c61c133e888d106df337b870f29d59fb",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\d_space_review_summary.json": "d10bd3cf48e89ec7d95b76a48c8eed6ed4a9e365896e8149a6c8686a6fb4e732",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\e_recovery_bootstrap_verified_receipt.json": "6f9fe106b542cfd2d3f8b7a26382cd95d4e90f650e6433078146d157a61725b3",
+    "C:\\Users\\footb\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\AI-BS-PrivateDriveAuth-20261104\\root_deliberate_stale_lock_cleanup_receipt.json": "d28004c99b68403de262900d1d21af36be562af87093589b09bc68645fdca43c"
+  },
+  "next_step": "Supervise exact E copy, release only its own point and verify all encrypted data+sample restores. Finish source/policy review and queue C after the entire E coordinator succeeds; keep D review-only and all originals in place."
+}

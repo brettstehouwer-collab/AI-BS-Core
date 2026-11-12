@@ -1,0 +1,41 @@
+{
+  "status": "VERIFIED_SCOPED_CLEANUP_AND_LOCAL_OFFLOAD_FULL_C_CLOUD_BACKUP_INCOMPLETE",
+  "timestamp_utc": "2026-11-04T18:06:49.310207+00:00",
+  "recorded_c_bytes_reclaimed": 112731378928,
+  "recorded_c_GiB_reclaimed": 104.98927806317806,
+  "c_free_bytes": 203278340096,
+  "e_free_bytes": 58683830272,
+  "initial_c_free_bytes": 69765111808,
+  "changes": {
+    "package_cache_bytes_removed_recorded": 2628648292,
+    "synthetic_fixture_bytes_removed": 13694416276,
+    "secondary_sample_bytes_offloaded_to_E": 85686866220,
+    "unindexed_identical_sample_bytes_removed": 10721448140
+  },
+  "qualifications": {
+    "all_indexed_samples_available": 298,
+    "unchanged_primary_samples": 100,
+    "secondary_samples_copied_sha256_verified": 198,
+    "duplicate_wavs_fully_hashed": 8,
+    "synthetic_fixtures_full_bytes_archive_verified": 2373,
+    "listed_paths_metadata_reviewed": 488,
+    "root_listed_documents_metadata_classified": 77,
+    "all_documents_semantically_read": false,
+    "whole_C_drive_backed_up": false
+  },
+  "review_scope": "1,382,223 project files inventoried by metadata, not full content. Outside-project scan recorded seven access errors and skipped reparse points. Supplied list fully read and488pathmetadata reviewed. Only selected supporting documents fully read. Unreviewed documents preserved; no personal document deletion or movement.",
+  "source_files_changed": [
+    "backend/muse_samples_cache/predecoded_index.json"
+  ],
+  "data_destination": "E:\\AI_BS_Resources\\AI-BS-Cache\\Muse\\Secondary_Samples",
+  "backup_root_url": "https://drive.google.com/drive/folders/1LkvLlv26CtdvJgYNvuR-Yw03r1eMyJA4",
+  "backup_receipts_local": "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04",
+  "limits": [
+    "Free-space counters also changed due concurrent work; only recorded actions are attributed here.",
+    "E secondary samples are local offload, not yet cloud-backed-up. Keep E available.",
+    "Explicitly rerunning backend/predecode_muse_samples.py can regenerate secondary cache on C.",
+    "Existing old encrypted recovery-key custody remains unverified; no old backup was used as deletion proof.",
+    "Observed connector upload transport limit100MiB per file; test archive was split64MiB and fully downloaded/reassembled/hashverified.",
+    "No program uninstallation, source/code deletion, Git object removal, VM cleanup, personal media deletion, service restart or runtime activation."
+  ]
+}

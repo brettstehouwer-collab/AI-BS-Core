@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "passed_local_zip_readback",
+  "created_at": "2026-11-02T07:51:54.217615+00:00",
+  "archive": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\13_Staged_Memory_Audio_And_Storage_Checkpoint.zip",
+  "bytes": 2954470,
+  "sha256": "f4ef67814fe34ebdb81fafa942f7ef6ae5c54c253481ada0e9936cd9d0fd0599",
+  "files": 167,
+  "uncompressed_bytes": 7923705,
+  "source_manifest_sha256": "5dcc53cdf369e305978917297eb10b7a4e7c7a2402ee5ff06e2bfb6741259a4a",
+  "existing_module_hash_validation_checks": 111,
+  "validation_failures": 0,
+  "zip_crc_verified": true,
+  "all_member_sha256_verified": true,
+  "scope": "Incremental staged source and art safeguard; not canonical integration, not a deployable release, not full goal completion. No family originals or compiled outputs.",
+  "canonical_goal_complete": false,
+  "canonical_modules_integrated": false,
+  "compiled_outputs_included": false,
+  "family_originals_included": false,
+  "drive_backup_verified": false,
+  "bulk_test_archive_data_included": false,
+  "bulk_test_archive_manifest_sha256": "5d2368435ff7a4ed047c1e11f8d8e39121ebcda9e46b36c26fff55d205f49285"
+}

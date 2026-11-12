@@ -543,6 +543,10 @@ def inspect_vbox_provider() -> dict:
             raise ValueError('Decrypted guest credential is empty')
         del secret
         info['enrolled'] = True
+        if cfg.get('test_only') and os.environ.get('AI_BS_VBOX_TEST_ONLY_VERIFY') != 'true':
+            info['reason'] = 'Windows VM is enrolled for explicit test-only verification; ordinary windows_vm execution remains fail closed.'
+            info['test_only'] = True
+            return info
         vm_uuid = cfg['vm_uuid']
         snapshot_uuid = cfg['snapshot_uuid']
         vbox_home = cfg.get('vbox_user_home')

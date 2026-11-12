@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "verified_authenticated_roundtrip",
+  "verified_at": "2026-11-02T16:46:01.725784+00:00",
+  "archive_sha256": "4899389c7a1cd6295b61554b207a86ef0f05497549825896310c65f9ac4f8d3a",
+  "archive_bytes": 51796616,
+  "embedded_manifest_sha256": "32b38ed201907dd5813d48c6109e30e443abdf1ee26270f7d20bf3d3504213d1",
+  "selected_files": 277,
+  "all_members_including_manifest": 278,
+  "whole_download_hash_verified": true,
+  "every_member_crc_length_sha_verified": true,
+  "cache_archive": "D:\\AI-BS-Game-Resources\\cache\\4899389c7a1cd6295b61554b207a86ef0f05497549825896310c65f9ac4f8d3a.zip",
+  "goal_complete": false,
+  "sharing_modified": false,
+  "drive_files": [
+    {
+      "key": "21A-part1",
+      "id": "198YKeULHoK9g3hfLYvuvUtlxaV5nqF4r",
+      "url": "https://drive.google.com/file/d/198YKeULHoK9g3hfLYvuvUtlxaV5nqF4r/view?usp=drivesdk"
+    },
+    {
+      "key": "21A-part2",
+      "id": "1mXNQIT0PntS4baD1cPb8OQazN8wE4HNx",
+      "url": "https://drive.google.com/file/d/1mXNQIT0PntS4baD1cPb8OQazN8wE4HNx/view?usp=drivesdk"
+    }
+  ],
+  "parts": [
+    {
+      "path": "D:\\AI-BS-Game-Resources\\Backups\\21A_Adam_v09_Native_And_Station_Workshops.zip.part01of02",
+      "bytes": 26000000,
+      "sha256": "b16bd9ebb7d3ed4ea1da6a022a00edc5cb0bef25726a90e8e5bbf317906494c0"
+    },
+    {
+      "path": "D:\\AI-BS-Game-Resources\\Backups\\21A_Adam_v09_Native_And_Station_Workshops.zip.part02of02",
+      "bytes": 25796616,
+      "sha256": "712e8d7a259e0079335b4093ccd119cb259bbda0e0df269f9e456907380b072d"
+    }
+  ]
+}

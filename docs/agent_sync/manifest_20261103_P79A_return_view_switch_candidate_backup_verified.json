@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-04T03:58:18.026548+00:00",
+  "status": "SCOPED_RETURN_VIEW_SWITCH_CANDIDATE_AND_BACKUP_VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_status_local": "D:\\AI-BS-Game-Resources\\P79\\ReturnViewAndSwitch\\local-worktree-status.txt",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\79A_Return_View_Switch_Candidate.zip",
+    "bytes": 2053912,
+    "sha256": "edd1b66530c9c37f6bafa85d46704ddda42dc8cb15863b37235da4998982f394",
+    "members": 555,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T03:57:50.398693+00:00",
+    "drive_folder_id": "1MBD57ZI6cS1He9exCdygSAFG32Xnrt4G",
+    "drive_file_id": "1XIKEmBCevpnaQtSHVYtQUIibBp3kFB3p",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "source_manifest": "D:\\AI-BS-Game-Resources\\P79\\ReturnViewAndSwitch\\source-current.json",
+  "source_manifest_sha256": "5a208c2e5b2e44f18a5d5ccd234a0b17ebbab168a0a073d92f8aac51d817d641",
+  "source_files": 425,
+  "patch": "D:\\AI-BS-Game-Resources\\P79\\ReturnViewAndSwitch\\source-changes.patch",
+  "verification": "D:\\AI-BS-Game-Resources\\P79\\ReturnViewAndSwitch\\verification.json",
+  "source_baseline_gap": "P64selected inventory omitted engine/apps;32apps newly captured. Historical app equality not inferred.",
+  "owned_jobs_joined": 16,
+  "candidate_deployed": false,
+  "installed106_and_SDK0170_preserved": true,
+  "incomplete": [
+    "candidate packaging and launcher qualification",
+    "remaining current-content route/rebuild/fall matrix",
+    "naturalistic likeness",
+    "checked captions and original recording binding",
+    "human8-12minute pacing and1080p60",
+    "final accepted package and verified backup"
+  ],
+  "next_step": "Qualify/package P79return-view/switch candidate through existing launcher workflow. Expand future source qualification to include engine/apps. Preserve106/SDK0170/saves. Complete current rebuild/fall/final route matrix, likeness, checked captions/original recording, human8-12minute pacing and1080p60 before final acceptance/backup.",
+  "goal_complete": false
+}

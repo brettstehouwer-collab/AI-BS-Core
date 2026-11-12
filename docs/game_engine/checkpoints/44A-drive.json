@@ -1,0 +1,13 @@
+{
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\44A_Manual_Opening_Review_Kit.zip",
+  "bytes": 9624,
+  "sha256": "5324d57e8aba829d949abd8fb05fed63093ec31029ac7697d4f4339b02b3dcff",
+  "members": 13,
+  "drive_restore_verified": true,
+  "at": "2026-11-03T18:58:48.288367+00:00",
+  "every_member_sha_size_crc_and_exact_set": true,
+  "drive_file_id": "1bw1ybD44u84JDNrwQEJ1nYqIMHPHYudZ",
+  "drive_folder_id": "1FJlc5W6SC6_jkIXeO0k51x-NNrkN2_Z2",
+  "scope": "Manual review source, test evidence and starter. No user save or family reference. No game window launched.",
+  "restore_diagnostic": "First exact-set comparison failed because three Windows manifest keys used backslashes while ZIP stores forward slashes. CRC, count and archive hash matched. Corrected verifier normalizes separators with an injectivity check; archive and source bytes unchanged."
+}

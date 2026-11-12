@@ -1,0 +1,1507 @@
+[
+  {
+    "id": "1LkvLlv26CtdvJgYNvuR-Yw03r1eMyJA4",
+    "name": "PC Backup - C Drive",
+    "modified": "2026-11-04T17:47:44.348Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1yPta2lsq6b6PnYSzPOAT3m2cpP6ryFym",
+        "name": "00 - Index and Restore Guide",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1rY-8aPVxXs3E6b5nrvzy_dvAZDar6HXs",
+        "name": "01 - AI-BS Project",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1osIz3RbMyopT-5b1X6P6tJVPHF8PdGzC",
+        "name": "02 - Personal Files and Creative Work",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1XvwMyVW4VhdTcCBsz_GthnCZmawZ-z6c",
+        "name": "03 - Programs and Installers",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1cFD51i3Le4vMOwW1RLQ-JzwnehYeOvYL",
+        "name": "04 - Windows Recovery",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1sH031KNT2RCAgPVgue45lxzSg7-Pg0Sn",
+        "name": "05 - Large Archives",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1QO5WHFFON_Btynqv5tJv5WFuIL4StvAE",
+        "name": "06 - Verification and Cleanup Receipts",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1waaZECrzSuTz3aYGRhxrY0MB6CryfD_W",
+        "name": "07 - Encrypted Full PC Backups",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1F_02jQAL6iP6aHQoajhR-H3oEj13TGGSegM8rffDCpU",
+        "name": "Backup Complete",
+        "type": "application/vnd.google-apps.document",
+        "size": "2814"
+      },
+      {
+        "id": "1pZSO6IdhrbL4hoC0VpvMFSsjDrxNWWlnK23t4BlqZbI",
+        "name": "Windows Admin Terminal Commands Reference",
+        "type": "application/vnd.google-apps.document",
+        "size": "11283"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1qfPSt1VP0T7RAt5t8FsdWD7LBEcAjn-3",
+    "name": "AI-BS Private Recovery - 2026-11-11",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1YxLmnxYy8oYIlyIVSxHihmcyrET3JUbq",
+        "name": "AI-BS_Ecosystem_Architecture_Checkpoint_20261111T092855Z.zip",
+        "type": "application/zip",
+        "size": "135055"
+      },
+      {
+        "id": "14Mm6WoEbcrmoiU3G0pdnuHPOb3ZynI6L",
+        "name": "AI-BS_HUD_Fit_20261111T132423Z.zip",
+        "type": "application/zip",
+        "size": "2810699"
+      },
+      {
+        "id": "1EYgyEw4-SH5255HCAlG1Yuz9gzByi6y1",
+        "name": "AI-BS_HUD_Fit_Handoff_20261111T132423Z.md",
+        "type": "text/markdown",
+        "size": "1122"
+      },
+      {
+        "id": "1yzwQK0lxO2_9joQPTzPWay01tNL1JQel",
+        "name": "AI-BS_MASTER_ECOSYSTEM_ARCHITECTURE_20261111T092855Z.md",
+        "type": "text/markdown",
+        "size": "65527"
+      },
+      {
+        "id": "1ATrztAIXb1e0WkySSvFfd9_Eb6eXsYYz",
+        "name": "AI-BS_Native_Creative_V2_GUI_20261111T100300Z.zip",
+        "type": "application/zip",
+        "size": "203756"
+      },
+      {
+        "id": "1-boL2oiDpXsjQO-XYtD49v089uenursC",
+        "name": "AI-BS_Native_Creative_V2_GUI_Handoff_20261111T100300Z.md",
+        "type": "text/markdown",
+        "size": "2198"
+      },
+      {
+        "id": "1cM5DzJuRNLjI5u8s7f74DgW67OJv9O-D",
+        "name": "AI-BS_Native_Recovery_20261111T102831Z.zip",
+        "type": "application/zip",
+        "size": "151578"
+      },
+      {
+        "id": "1vdWg-J5jVuzEiITfqR5ETKWMNl-I_I0R",
+        "name": "AI-BS_Native_Recovery_Handoff_20261111T102831Z.md",
+        "type": "text/markdown",
+        "size": "1230"
+      },
+      {
+        "id": "1O-fF3ru3TwjcQc3ouRR2IuQmhhgwvj-7",
+        "name": "AI-BS_Native_Rich_GUI_20261111T104217Z.zip",
+        "type": "application/zip",
+        "size": "412027"
+      },
+      {
+        "id": "1zh8rkSH8DetatApauLYD5mFh9zNLJQjc",
+        "name": "AI-BS_Native_Rich_Handoff_20261111T104217Z.md",
+        "type": "text/markdown",
+        "size": "1318"
+      },
+      {
+        "id": "1kXiTYlWnrtW1bfFv5DdEF3r-JL2HGKtM",
+        "name": "AI-BS_Nsight_Diagnostic_20261111T135744Z.zip",
+        "type": "application/zip",
+        "size": "2387895"
+      },
+      {
+        "id": "15ciDKCBZOZPRXny6vdhE_PRzprCfqaE3",
+        "name": "AI-BS_Nsight_Diagnostic_Handoff_20261111T135744Z.md",
+        "type": "text/markdown",
+        "size": "1272"
+      },
+      {
+        "id": "1fOtj-uLLo_HhkUa-dcli2n3dn9fECAoM",
+        "name": "AI-BS_Real_Owner_Mobile_RAG_20261111T112913Z.zip",
+        "type": "application/zip",
+        "size": "357962"
+      },
+      {
+        "id": "1e9InXvGeoPF4DNpiRQgWdBaBY2uvYlgd",
+        "name": "AI-BS_Real_Owner_Mobile_RAG_Handoff_20261111T112913Z.md",
+        "type": "text/markdown",
+        "size": "1717"
+      },
+      {
+        "id": "1aqQTaLAzTZHQS48sGvBHdSQp6cK0uceY",
+        "name": "AI-BS_Recovery_Drive_Reference_Links_20261111.json",
+        "type": "application/json",
+        "size": "9986"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse",
+    "name": "AI-BS Codex Engineering Ledger",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1fmeaL-V5HGqRFC87U83c4gUYh7T3pp4tIOHQcgosMu4",
+        "name": "(venv) PS G:\\Stehouwer_Server>\n(venv) PS G:\\Steho...",
+        "type": "application/vnd.google-apps.document",
+        "size": "25182"
+      },
+      {
+        "id": "1AOnYibtqO6X2ViItiJ7zmeKS5P0hUzxs",
+        "name": "2026-10-23 Codex Engineering Ledger.md",
+        "type": "text/markdown",
+        "size": "17926"
+      },
+      {
+        "id": "1vovsSPpyJRA4np2ErRt5vIgdV6-Qoojj",
+        "name": "2026-10-24_Codex_Engineering_Ledger.md",
+        "type": "text/markdown",
+        "size": "356203"
+      },
+      {
+        "id": "1szBL-cshNmlefeKoyiXMONMw8ab5Nu9r",
+        "name": "2026-10-30_AI-BS_History_Upload_Receipt.json",
+        "type": "application/json",
+        "size": "3414"
+      },
+      {
+        "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+        "name": "2026-10-30_Codex_Engineering_Ledger.md",
+        "type": "text/markdown",
+        "size": "731486"
+      },
+      {
+        "id": "1ZjnyPfkEMGGknPNzpGJs1DtuRye8FtLB8QlYcMyCVLw",
+        "name": "AI-BS Architecture Components and Operational Directives",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "4016"
+      },
+      {
+        "id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+        "name": "AI-BS Complete Audit 2026-10-30",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1jplqx6a5zgJqusYbJ2Nbg7R5wViL7ett",
+        "name": "AI-BS VM Test Fixtures",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1mSm44XzDKhrKsulEZYRgH1gWvO4984yO",
+        "name": "AI-BS-Creative-Drive-verification.json",
+        "type": "application/json",
+        "size": "1579"
+      },
+      {
+        "id": "1olftjCCUZ2jG4Hz3d7hgG96r25LeY4BE",
+        "name": "AI-BS-Creative-Paused-Checkpoint-20261111T003942Z.json",
+        "type": "application/json",
+        "size": "2516"
+      },
+      {
+        "id": "1vswqlxBfIojDqsdytVi8myQSLsgFs7Rr",
+        "name": "AI-BS-Creative-Paused-Handoff-20261111T003942Z.txt",
+        "type": "text/plain",
+        "size": "1851"
+      },
+      {
+        "id": "1pRX_ftIirbEXRBcAXo_-SD6T7iSZicf5",
+        "name": "AI-BS-Drive-Verified-Receipt-20261110T215948Z.json",
+        "type": "application/json",
+        "size": "6914"
+      },
+      {
+        "id": "1cYzslPjNMdcEn3AR9sqpWIJI-xM59LAs",
+        "name": "AI-BS-HUD-Swarm-checkpoint-20261110T235106349961Z.json",
+        "type": "application/json",
+        "size": "3377"
+      },
+      {
+        "id": "14igahTIapeOQa8KOINVlDwBlvGCZoXaw",
+        "name": "AI-BS-HUD-Swarm-checkpoint-20261111T001649359687Z.json",
+        "type": "application/json",
+        "size": "3699"
+      },
+      {
+        "id": "13_uv1zQ0Rz8vgaS2QpWl-_wuXr7akiKK",
+        "name": "AI-BS-HUD-Swarm-Handoff-20261110T235106349961Z.txt",
+        "type": "text/plain",
+        "size": "5243"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+    "name": "BS game",
+    "modified": "2026-11-11T07:54:42.303Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "185BJC9bd2nYmZl-bph0e9NEt9hnITT6y",
+        "name": "01 Story and World Design",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy",
+        "name": "02 Core Engine Architecture",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1LGTSchDbnSKZ-vfLlLWFwWqgMKrZg7TP",
+        "name": "03 Concept Art",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT",
+        "name": "04 Progress and Decisions",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1lt7a8OHIa9BN8uLkAqT5iAL8QnXAeq-G",
+        "name": "05 Separate Experiments",
+        "type": "application/vnd.google-apps.folder",
+        "size": null
+      },
+      {
+        "id": "1vaOAzeaFmo1oFi4OcU0kiMywrca6C_jM",
+        "name": "AI-BS_CURRENT_HANDOFF_2026-11-11.md",
+        "type": "text/markdown",
+        "size": "4313"
+      },
+      {
+        "id": "1vk7pWALEdlzTd3rdJMm-4b1bRtuCSiJr",
+        "name": "AI-BS_Release144_Final_Progress_20261111T175413023695Z.zip",
+        "type": "application/zip",
+        "size": "1383387"
+      },
+      {
+        "id": "1nC9yJxCdOxvbCmDcbwZ3LWeg1YsYYYVK",
+        "name": "AI-BS_Release144_Final_Progress_20261111T175413023695Z_HANDOFF.md",
+        "type": "text/markdown",
+        "size": "5313"
+      },
+      {
+        "id": "1dOp6Lu9tqaG_ISu9BKzBMSoB2LZSEpEZ",
+        "name": "AI-BS_Release144_VERIFIED_BACKUP_20261111T175505613282Z_750cbfb9.json",
+        "type": "application/json",
+        "size": "3839"
+      },
+      {
+        "id": "1zrH8DjmcxcBG1Bhulq3_uaLMiOOtOKcw",
+        "name": "AI-BS_Studio144_Runtime_20261111T174915Z.zip",
+        "type": "application/zip",
+        "size": "85749319"
+      },
+      {
+        "id": "1HEme2S-3CKs1vr32peUmoQnw1dnVBeoE",
+        "name": "AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md",
+        "type": "text/markdown",
+        "size": "46712"
+      },
+      {
+        "id": "1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX",
+        "name": "PROJECT_INDEX.md",
+        "type": "text/markdown",
+        "size": "10379"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1G_S80cLrKEpoZwPD0wMcG64Dg2LU0uO4",
+    "name": "Echos Within Memoir Manuscripts",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1-6NH9DUJTT1OxZEOSrT6kwcr40OfVEbzC-j9S12U6g0",
+        "name": "garry did acctually die below is copied text from...",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1098"
+      },
+      {
+        "id": "1HgzVJ_3kcQ75k2k_BqhsmCrnujHm2mz6lvDTaDKEwoA",
+        "name": "process \"The Treadmill & The Row Boat (Final)\" (S...",
+        "type": "application/vnd.google-apps.document",
+        "size": "159321"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1SfUxwQU-jw9f9VjqxRJCMD0zC-vpRR7U",
+    "name": "Memoir Manuscripts & Outlines",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1oKkI5KOv3gLLnPl13ajLSPqNieL2_J_8dpB6bllbKDQ",
+        "name": " Multi interest subjects.",
+        "type": "application/vnd.google-apps.document",
+        "size": "20401"
+      },
+      {
+        "id": "1o4HP3p_5Q-OdsygoPYXe1moSNxmPyMSJPP4rXWXZeVM",
+        "name": "Analyzing Brett Stehouwer's \"Echos Within\"",
+        "type": "application/vnd.google-apps.document",
+        "size": "15927"
+      },
+      {
+        "id": "1ZooptvQ0zyl2TuD-qq-0zTAeIvNWiVAxPQVevjvXOI4",
+        "name": "create a toc based of myt structure rules",
+        "type": "application/vnd.google-apps.document",
+        "size": "18644"
+      },
+      {
+        "id": "16OddJA_tBBoipAEbHa21aCvNCc--YH4M",
+        "name": "create a toc based of myt structure rules.md",
+        "type": "text/markdown",
+        "size": "10178"
+      },
+      {
+        "id": "10nGOC7_Kx4t_gLKx4DIQ7EybL1bY99J_",
+        "name": "Echos Within 12_03_25.pdf",
+        "type": "application/pdf",
+        "size": "7464270"
+      },
+      {
+        "id": "1D5s0sLJiJRmMxyDYRwGEMhXf4RX24yaNSJvOKzeAO_k",
+        "name": "how much of a timeline of events can you map out?",
+        "type": "application/vnd.google-apps.document",
+        "size": "6526"
+      },
+      {
+        "id": "1R0-BDTcWn4MadG1dWhUaRu6vy3_f3FulUqdmGq37ddE",
+        "name": "The Echoes Within-Full Book",
+        "type": "application/vnd.google-apps.document",
+        "size": "60796"
+      },
+      {
+        "id": "1IufyK1mUDvdf5j9NbCCAqbN9mbPhJCtzX7BMe4uZgAc",
+        "name": "Untitled document",
+        "type": "application/vnd.google-apps.document",
+        "size": "13511"
+      },
+      {
+        "id": "1VHck1m3fff_RblfYn1kJda866pms3H95mYRAWEMmGss",
+        "name": "Untitled document",
+        "type": "application/vnd.google-apps.document",
+        "size": "2824"
+      },
+      {
+        "id": "1fpb-_2E1kXLjFZNgfTtlnVVdOD53dUXinaJOMyESql8",
+        "name": "Untitled document",
+        "type": "application/vnd.google-apps.document",
+        "size": "11758"
+      },
+      {
+        "id": "1_5uldRDihP60jUPeGsxVmnmYOBeCuMe8ZK1mUSCQ7CA",
+        "name": "Untitled spreadsheet",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "4379"
+      },
+      {
+        "id": "1kF8qpONLUJs_VxEwlOzAngH11OlycFPpWwBaOU3bu_g",
+        "name": "use canvas for this",
+        "type": "application/vnd.google-apps.document",
+        "size": "16495"
+      },
+      {
+        "id": "10nWzodzjO7NE1Fabk3LnhDE12pEPULN73Ll2puT2NMQ",
+        "name": "will you put this into a table or a better vidual...",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2255"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1DF1zKb6jNYrWCQFcUM9kbc4HT2D1IvRf",
+    "name": "Legal & Workplace Disputes",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1dJV-p1FPmlz0QcCuHEhQDO942rMz4yno7xws1MAcBqo",
+        "name": "Stehouwer_B_EEOC_Michigan_Department_of_Civil RightsComplaint_DriveSafeLogLogistics_2025-09-19.pdf",
+        "type": "application/vnd.google-apps.document",
+        "size": "4458"
+      },
+      {
+        "id": "19QKzq8GwNLiMAFwxRYA0ymgdhgyENFKItDME3X3ZKW8",
+        "name": "Stehouwer_B_Ethics_Complaint_AmazonDSP_DriveSafeLogistics_2025-09-19.pdf",
+        "type": "application/vnd.google-apps.document",
+        "size": "4126"
+      },
+      {
+        "id": "1DiEfx3j2IEvDMGfb3Bym__zbmgSntNjH3-nJ6-xz8Ug",
+        "name": "Untitled document",
+        "type": "application/vnd.google-apps.document",
+        "size": "777097"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1vXhImRqX4Uxtkb9eOKy4cHwSsATStK2B",
+    "name": "Memoir & Creative Archival",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1MxAjsC-MIAewtuRUobj_0JDZ7VwZuCgTrFV4DLd_3RA",
+        "name": "Archival Data Finalization and Verification",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1288"
+      },
+      {
+        "id": "1Lu-7FNSNBeaMi9-o5F1V0z3AmA4JLkrKcQN7cK0BI3o",
+        "name": "Deleting Chat History and Master Index",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1103"
+      },
+      {
+        "id": "1Hniunm27xWMCKF9lhhtZNqWzykgkyUcHIEjiKsr1qT4",
+        "name": "Echos Within",
+        "type": "application/vnd.google-apps.document",
+        "size": "5598375"
+      },
+      {
+        "id": "1jQ13dfVs0w5i-1RlvEQmPY4EkEguyxx6JRp5xRdQ79k",
+        "name": "Fragment Archival Display",
+        "type": "application/vnd.google-apps.document",
+        "size": "5398"
+      },
+      {
+        "id": "1uGXrKEClARnj50W5Q6ILbnIqRkPAFjm2",
+        "name": "throw words adam.docx",
+        "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "size": "11166"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1vbmmJcitPsA0408xqXeTYlzuB3JT38bx",
+    "name": "Trading SOPs & Market Strategy",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1KJT-jDRb7sntd6LCK-hVRPwcau854NUuu2n4c-iEnNI",
+        "name": "Day Trading Techniques and Strategies",
+        "type": "application/vnd.google-apps.document",
+        "size": "22915"
+      },
+      {
+        "id": "1aAdS9SVGIylHSyvJIf6tF01H1ACrSX4F40oDsJvf7nM",
+        "name": "Day Trading Techniques and Strategies",
+        "type": "application/vnd.google-apps.document",
+        "size": "50647"
+      },
+      {
+        "id": "1pG1M68oSPSfiUmV1PXC24liI7ukzkmXem7bHViouP5Y",
+        "name": "Macro Filter Module Research",
+        "type": "application/vnd.google-apps.document",
+        "size": "48496"
+      },
+      {
+        "id": "1zkbY7r5Ga2-idv2EyPsQWlRkHtvnxlk2aQGf8cG1048",
+        "name": "TRD-LOGIC-V4: OPERATING PROCEDURE (SOP)",
+        "type": "application/vnd.google-apps.document",
+        "size": "4949"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1VKkSBXMgipdixRXwyttMISLRnz6OYdV9",
+    "name": "Supplement Protocols & Fasting",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "11g6oT4t82IBTih17R_Z-YgUrJIAH911V8RnXZIAyqdo",
+        "name": "21-Day Dirty Fast Supplement Matrix",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2442"
+      },
+      {
+        "id": "1oWnwx9gIfbay4NPJPEzvYeyy5H1jhHxWXZmkYzxPy38",
+        "name": "Ketogenic High-Protein Meal Configurations",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1XmWN4EPizjaoFaiMvBfaIF1TyKSabE57STxn_ZWzrW8",
+        "name": "Master 22-Day Integration Plan",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "4093"
+      },
+      {
+        "id": "10UF84N27S-n8be0I6E5KK0oVd4uQh50JzfijZaaV9IM",
+        "name": "Master Data Sheet: Pharmacological Events",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2781"
+      },
+      {
+        "id": "1yP74rnt4NDA7QXm02HzFuCKC6JkNxJnvzxjAtZkhcNY",
+        "name": "Supplement Dosing for Dirty Fasting",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1344"
+      },
+      {
+        "id": "1q4yS7RPaF5HAAzPtjy4SGRM4dTMpjrzKQ4SyJZ3c5mg",
+        "name": "Supplement Logic Scale Audit",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2522"
+      },
+      {
+        "id": "1Rkl36OHrYMrnASesFzlDrRJmOK2mGx_V7giY0NMmUTQ",
+        "name": "Supplement Stack Analysis and Optimization",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1qKwyEujGjRc7FK1iShh5AWQpb5YWI_YZPJiKdEKxGZ0",
+        "name": "Unified Supplement Execution Matrix",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "4666"
+      },
+      {
+        "id": "1ZOtafV2MkD8mlJ-V_H7ZHdwD6D_BKLxLUhQH4imW9Z4",
+        "name": "Untitled spreadsheet",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1PchebDy5Wp-33eKIuJeLuR5HT6__QQ_6cJwALD0f3X4",
+        "name": "Untitled spreadsheet",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "3312"
+      },
+      {
+        "id": "1RQwcD24J74y2dm0kcvs7hD_srGCmHiK8spMbX-nmZgA",
+        "name": "We put all this information into a new graph data...",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2695"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1dZ5HeDTFlVRVtzLEQxbqFK-UPz6hDWCh",
+    "name": "Academic Research & Data",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "18RvKUsWr8uTfoozPhLQM1Ex8RoFqO1z2wIkwDJhB0Nc",
+        "name": "Macroeconomic Stability and Fiscal Governance: A Comprehensive Analysis of the Clinton Era and Institutional Frameworks",
+        "type": "application/vnd.google-apps.document",
+        "size": "28819"
+      },
+      {
+        "id": "1OuUH_XB87CCSGVg6yTJ0JY3u3BybwEMxjOEZDUGL6jo",
+        "name": "The Partisan Prism: Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023)",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1061"
+      },
+      {
+        "id": "1R0T4-ylP5ljs_tp3V596owlXQOErxNXt0-DCA8VqCpk",
+        "name": "The Partisan Prism: Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023)",
+        "type": "application/vnd.google-apps.document",
+        "size": "6905"
+      },
+      {
+        "id": "1L6vYte7bq_iwYL4vxUSTfFRDlI48J_V-4cyTfUlGcjM",
+        "name": "US Fiscal Policy and Public Institutional Trust Metrics",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "5939"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1PNGrAUt_yu-jxGReM59zN7kKqEqYt3Ap",
+    "name": "Personal Clinical & Daily Notes",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "18jrDBls_24X1dGM4rP5R8wTRTP8loc5pLXOBEaXuvRg",
+        "name": "Clinical Session Summary",
+        "type": "application/vnd.google-apps.document",
+        "size": "8604"
+      },
+      {
+        "id": "1cn_Av_XCXqoR0w7T1R0QKhWGkf81fU4EmPiVgy6YPeg",
+        "name": "Clinical Session Summary",
+        "type": "application/vnd.google-apps.document",
+        "size": "11160"
+      },
+      {
+        "id": "1g_ST-yjolhZK_9lIma7LLavh8X4fl_8C",
+        "name": "Clinical Session Summary.txt",
+        "type": "text/plain",
+        "size": "20303"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1OzQre4Cnkq3oNNkSZ0mu0j4JKZkiFzJF",
+    "name": "Creative Manuscripts & Screenplays",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1BCw5RppAomiIGIVirPFKWGrewkFGflH9H5gqNpQwirE",
+        "name": "@Google Docs come up with 100 Hashtags that descr...",
+        "type": "application/vnd.google-apps.document",
+        "size": "4835"
+      },
+      {
+        "id": "1YTI87-7KQxlkjMyNILczwr2HQEu_OCyh",
+        "name": "Mom- look what is new for NoteBook.eml",
+        "type": "message/rfc822",
+        "size": "24076874"
+      },
+      {
+        "id": "1kW2IVZXzX7IG8rEsn-0FBZgu10xFHEP8",
+        "name": "NearlyTenYears_ClinicalAudit.docx",
+        "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "size": "20815"
+      },
+      {
+        "id": "1RUKq6_K-QA2zhemz-AHQvuflvS720gY3KnduteheDWI",
+        "name": "Red Line No More",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      },
+      {
+        "id": "1B-7XOoZxX0d3LUvtVp8IugtDw9K4hgTV9lNomF8CVyA",
+        "name": "Sean My Brother Who Never Leaves",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      },
+      {
+        "id": "1uVC4n5EiDI7Jy3QxPy8Ir-YS6F-GVFiGKfL00xeVzZ0",
+        "name": "Sean My Brother Who Never Leaves",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1g4y2J6dveKoZ72hKWhpk9PpbAViKGCLF",
+    "name": "AI Protocols & System Workflows",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1ndSqWllQagL0dPe3lsxs-sX-2OdvaeBydEgD6gf3MeA",
+        "name": "Gemini Export March 11, 2026 at 8:33:07 PM EDT",
+        "type": "application/vnd.google-apps.document",
+        "size": "2620"
+      },
+      {
+        "id": "1NyRUts8rVDS5WfVNt9hK9KDXfFwFFhH39q0ozUWkFeM",
+        "name": "Google Drive Organization 2015-Present",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1123"
+      },
+      {
+        "id": "1x44UD5oGniRvM9FxveFD-GLO_a6APkfiTAGo7g0SBkU",
+        "name": "Protocol 25/7 Workflow Expansion",
+        "type": "application/vnd.google-apps.document",
+        "size": "5766"
+      },
+      {
+        "id": "1tETIyGA_0C32ThVNKAE9YCvh3OYEjKgCN8YxYxHEX40",
+        "name": "trade logic audit",
+        "type": "application/vnd.google-apps.document",
+        "size": "3198289"
+      },
+      {
+        "id": "1b1Re-0gT_ylyw0bIYyadQN6wervHIbx4GZl-lRccTZc",
+        "name": "Untitled spreadsheet",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2991"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1VWKkUaB7Zz2KQcevcltmXvxTm1lSIN29",
+    "name": "Protocol 25-7 & Satire Works",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1hKBdNHSO5KrqyPmnFwX_PnoszgyJJMG06gd8Zr0F43o",
+        "name": "Jeffrey and His Friends: Technical Roast",
+        "type": "application/vnd.google-apps.document",
+        "size": "4489"
+      },
+      {
+        "id": "1rJuZLzcN5Wr9Pk7O__aQcX5VTA3Es1Gt",
+        "name": "Jeffrey and His Friends: Technical Roast.pdf",
+        "type": "application/pdf",
+        "size": "94634"
+      },
+      {
+        "id": "1stS7YHKr3WDi7ITKFw9UyHjbAskOjfVtTEokJr_vsTI",
+        "name": "Manuscript Roast: Trauma and Resilience",
+        "type": "application/vnd.google-apps.document",
+        "size": "4803"
+      },
+      {
+        "id": "1yv_o-v32aiRyRBZrtnYp7RSORX4YDgg0w5e_yF9lvV0",
+        "name": "Protocol 25/7 Satire Gem Instructions",
+        "type": "application/vnd.google-apps.document",
+        "size": "3732"
+      },
+      {
+        "id": "1mMIuBhZOSgBpylF3p6sCNolKp7Jjdrn9hSbxED39s5s",
+        "name": "Quantum Gastronomy: The Tupperware Postulate",
+        "type": "application/vnd.google-apps.document",
+        "size": "4098"
+      },
+      {
+        "id": "1BWR9F63GeDX8p0Cmg42iisEhv2N_XliI",
+        "name": "Quantum Gastronomy: The Tupperware Postulate.pdf",
+        "type": "application/pdf",
+        "size": "103734"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1SMHTEsz56uKShyEN5ce1sOh0KWH5E099",
+    "name": "Psilocybin & TBI Recovery Research",
+    "modified": "2026-11-11T21:46:37.926Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1_s4ElSmUGGknxhEsTMAUMG5gUhqZk1maUSBuml7XykA",
+        "name": "Psilocybin for TBI, PTSD, and Apathy",
+        "type": "application/vnd.google-apps.document",
+        "size": "20186"
+      },
+      {
+        "id": "1iaKVvDsuL3ejpfe7X8J71dnwrJcqnL_sNY51K_dX3L4",
+        "name": "Psilocybin Protocol for TBI and PTSD Recovery",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "3066"
+      },
+      {
+        "id": "1s3H80hPO5qnUk1CjaDoPx607wYAurKBT8OBAq-zBOpI",
+        "name": "Trauma and Psilocybin Brain Recovery",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1515"
+      },
+      {
+        "id": "1pxQtH82_cjv9f_YwuLB9Eux42fM0a4iKtACGN0qJhD0",
+        "name": "tripping session",
+        "type": "application/vnd.google-apps.document",
+        "size": "675486"
+      },
+      {
+        "id": "1lHZ47_0qbcsjP90N7qQLTL_FZ6PNNXz4",
+        "name": "tripping session.docx",
+        "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "size": "1232989"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1g5hbYBGo-Q95bp8HYnPN0xF8GkgYflh9",
+    "name": "Economic & Educational Research",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1EVaFqD-hgZwWvHH1heLmj4r281KOv1nbhCl6h0F4Wwg",
+        "name": "AI's Impact on Education Data",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "11zB0FZbrqBJC5A5ChbfGSvmrE4SShnfa8l_cGny7tLk",
+        "name": "Macro-Economic & Infrastructure Matrix",
+        "type": "application/vnd.google-apps.document",
+        "size": "9288"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1f6honDav5gHksEOV6tM4CVlU7ZhI0oc-",
+    "name": "Local Revenue Prospectus",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1sTDDrC0tDsJzPhizYnHt4hsau2mx1xN7b75DmuOzed8",
+        "name": "Gemini Export March 26, 2026 at 5:15:30\u202fPM UTC-4",
+        "type": "application/vnd.google-apps.document",
+        "size": "137416"
+      },
+      {
+        "id": "1u3_m6QXkl7ZQo56kDhztAYY09bg7xZuQjqIsp1W2pD4",
+        "name": "Localized Revenue Maximization Prospectus",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "12052"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1uQpPzflF83pg6IYEsyyXM_QjiA5BiZwr",
+    "name": "Personal Writings & Memoirs",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "14Qhag7nry0RenC2k20Ebc0Ebwj5OIfV1k1-zAiFFTQg",
+        "name": "Copy of October 7th year 6",
+        "type": "application/vnd.google-apps.document",
+        "size": "2821"
+      },
+      {
+        "id": "12S9HOxdyX_Lu6_9eYMGHtp1zwzQ74DQOkmCiBHT9Y_4",
+        "name": "Engagement Rating Of Personal Narrative",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1064"
+      },
+      {
+        "id": "1u9DBaIXp9gzk-zeXHr9VP2I97lItxtL9ypYhz-QMffk",
+        "name": "Journal notes for Dr. Bartholomew before the next follow up appointment.\n",
+        "type": "application/vnd.google-apps.document",
+        "size": "1736"
+      },
+      {
+        "id": "1OTCkvztf6YfVV6RV90LfpbJ5ADKk4QhewdT8h86uH3w",
+        "name": "March2026",
+        "type": "application/vnd.google-apps.document",
+        "size": "9289"
+      },
+      {
+        "id": "1610LEO5G015HZ5Cc5-hgNziz63lA_GgiPU9qZznIYFA",
+        "name": "satire",
+        "type": "application/vnd.google-apps.document",
+        "size": "7237"
+      },
+      {
+        "id": "18A_pWC_FdJEo0IFzP5UtRS9EfU1acES7l-MBf3JT8DA",
+        "name": "Stehouwer Document Matrix Analysis",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1n3qo9AyeHmueXSPZ1rWzddfkKNOffEtcvLCjSJZPT38",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "type": "application/vnd.google-apps.document",
+        "size": "18628"
+      },
+      {
+        "id": "1Fw782FZlZv329EzP4ndNhHHTP__ArVP_chzBMJEv3gQ",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "type": "application/vnd.google-apps.document",
+        "size": "10432"
+      },
+      {
+        "id": "1Ui8NkqM2U1tq0cyMvhQQf6jHUxXRwQaXgZMx7C3k7m4",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "type": "application/vnd.google-apps.document",
+        "size": "4879"
+      },
+      {
+        "id": "1fpfZliAw9nU4GUHMFAggApcJDPUHg-stKPw97mfDx_g",
+        "name": "Subjective Reader Analysis Protocol",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "19HzAz1ojShFjxELEWcBcO2RkPtrIuoKl",
+        "name": "Tomorrow Is Todays Surennder. .pdf",
+        "type": "application/pdf",
+        "size": "118393"
+      },
+      {
+        "id": "1tuJfmuepwzLcg404venWMRnq6UlqoHEJkNBIslHHgKc",
+        "name": "Total satire brett sean humor",
+        "type": "application/vnd.google-apps.document",
+        "size": "3434"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1ou4GhTN0pPxmCNKABV2MNUIGdIVOFJDz",
+    "name": "Macroeconomic Synthesis Engine",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "19ozSg-_modoZifZ6jYJIuj-ty5aWEEXnEEntiSVWVKI",
+        "name": "app.py",
+        "type": "application/vnd.google-apps.document",
+        "size": "5810"
+      },
+      {
+        "id": "186dI9t0Ga-JnfppmG6ks4EdJn9BHzrgLiGDTo45qAEs",
+        "name": "Fiscal Policy, Fed Independence, Savings",
+        "type": "application/vnd.google-apps.document",
+        "size": "74939"
+      },
+      {
+        "id": "1C5TOJJdynNgaLzeu0QxqL5wcYSeDiwlwuHC-WsQVycY",
+        "name": "Macroeconomic Synthesis Engine",
+        "type": "application/vnd.google-apps.document",
+        "size": "3537"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1FBqzb_gmsXy9kD-cQP0wCY9EGPBKTfXy",
+    "name": "NoCo Real Estate",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1wYTCb3qyhPXn-X1301b184ET49VKA7gVjAePv-rGPys",
+        "name": "NoCo Property Acquisition & Realtor Due Diligence Questionnaire",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "13749"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1C-zl9s8Eh9rej9Os1EKn4bXaeHazJtzF",
+    "name": "Writing & Literary Works",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1ffT9SUOshCbOllf_R-KEnpJ3WzXxELf3NeVxaXOgLW0",
+        "name": "Full script ",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      },
+      {
+        "id": "1os0ZmW9uy4EJZv8K4CjdaSDimQFaoPM-LqAQeod8kYw",
+        "name": "intro",
+        "type": "application/vnd.google-apps.document",
+        "size": "7877"
+      },
+      {
+        "id": "1GXNiuQCc3cKbiShc18SvkeDkGgiK-3uxmntCAPzAsTw",
+        "name": "Julie Stehouwer's Professional Profile",
+        "type": "application/vnd.google-apps.document",
+        "size": "23975"
+      },
+      {
+        "id": "1P8JEr1q6IWabCg4O78XonN5bC8qGVr63pFymo9J5yDY",
+        "name": "The Judge Made Him Go! FNLC",
+        "type": "application/vnd.google-apps.document",
+        "size": "33253"
+      },
+      {
+        "id": "1vK-qa_fvl3W53jPoW7SqUfxfp4etzfPlJZIRL-I6u_o",
+        "name": "writing videos",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1MwzZuqa0ZXdY5Uplm_oyTAG5Ptup1UCS",
+    "name": "Suno AI Music Guides",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1b8n5BsBAG7NYkSRjyr5zYtZ6DrAirDfgQGo0Pq_6W5Y",
+        "name": "Can you make a song about all the ladies that want...",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      },
+      {
+        "id": "1ORqQ8kTT8QZiCeTji_7cppnjNZJz-SYx4e8q9Mz3pwE",
+        "name": "Put together everything you found into one full in...",
+        "type": "application/vnd.google-apps.document",
+        "size": "5596"
+      },
+      {
+        "id": "1rRr2MCG6wkRycn3fRmljU_9WKxGYFmUG",
+        "name": "Put together everything you found into one full in....pdf",
+        "type": "application/pdf",
+        "size": "103749"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1AIyyTx4_ws4BxVMGaP_p-Yzx7PKS4rmZ",
+    "name": "Medical & Health Notes",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1XApmNB-NfqDF9Qo_0rDQontRZO342csG",
+        "name": "Journal notes for Dr. Bartholomew before the next follow up appointment.\n.pdf",
+        "type": "application/pdf",
+        "size": "33115"
+      },
+      {
+        "id": "1BCYzznfNucZzLIVoSXpKMalZOwwxOkIo5eNQGTVP-lI",
+        "name": "Notes for Dr. Andrew Bartholomew ",
+        "type": "application/vnd.google-apps.document",
+        "size": "6383"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1MUU9482JMKD87jwBDW8dpF4qmMxyr3x0",
+    "name": "West Michigan Market Leads",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1ityXn4hYNWBdmaeGC7JjK4qETyh7gcKdiVu1RPL3MwU",
+        "name": "50-State Apex Chamber Database & Executive Roster",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1xQ-WTi20yAzeEGs3aLnudn9sD_SOSlDcItsnIaIuBIU",
+        "name": "pull public as many member contacts you can show...",
+        "type": "application/vnd.google-apps.document",
+        "size": "19892"
+      },
+      {
+        "id": "1tUiSkuM1Qb-zP2HqKQ6zVlJF2WmldfNOqUFo6CcBdpQ",
+        "name": "West Michigan Lead Research",
+        "type": "application/vnd.google-apps.document",
+        "size": "143365"
+      },
+      {
+        "id": "1tLvAHIRR7A4eqhsTjjs2MvfgQ1qAOf7eqrz3a-_GWTk",
+        "name": "West Michigan Target Lead Manifest - Stehouwer Advertising",
+        "type": "application/vnd.google-apps.document",
+        "size": "3819"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1zS7awgJlbETFxaHDDPVH6TglEyMP99ie",
+    "name": "The Simple Chef Project",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1daWZ2ZJkwA-LbgQLaKW6FdR7LruOIvC8",
+        "name": "cleaned_homepage.zip",
+        "type": "application/zip",
+        "size": "6492"
+      },
+      {
+        "id": "1rltkCUi9Hm9P6p_VFKrENK_iGZ3YkkiYKFo2fcyR69s",
+        "name": "Gemini Export July 6, 2026 at 5:44:25 PM EDT",
+        "type": "application/vnd.google-apps.document",
+        "size": "3485"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1Vf6Pu2Bidc0mxbXbLe2M7ic8qbQZXo1V",
+    "name": "PTCE Exam Preparation",
+    "modified": "2026-11-11T21:46:37.930Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1sW0EHidBfNSUqJKxUNtTzDn1zoCxJD45tuZXbl8K4Rg",
+        "name": "can we put together a collective study practice c...",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "2320488"
+      },
+      {
+        "id": "1nmAYAQ3pH6R6aLba3czmEBbxmlnOh7zc_oZ0s-lYzjA",
+        "name": "PTCE Practice Quiz (Google Forms Ready)",
+        "type": "application/vnd.google-apps.document",
+        "size": "1539"
+      },
+      {
+        "id": "125hKRzhyXav55TA1QlanLr3DAcg0rFxM",
+        "name": "PTCE Study Guide And Preparation - Google Gemini.pdf",
+        "type": "application/pdf",
+        "size": "2495924"
+      },
+      {
+        "id": "1mUm15Swfb9Eghxb_pO8NtssgNwwjIVNDqqTd4kidFtA",
+        "name": "Top 200 Database (Google Sheets Ready)",
+        "type": "application/vnd.google-apps.document",
+        "size": "1525"
+      },
+      {
+        "id": "14ky2kIVGQ6wtY9oZ3lrnTBY-L6kGFcJckbDXsiJosqQ",
+        "name": "Untitled spreadsheet",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "9104"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1QMe7DtuJRCV4HA4bFHUGmoP7gfqjO4ea",
+    "name": "Legal & Corporate Agreements",
+    "modified": "2026-11-11T21:46:37.928Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1lzAqqcc4V5Dl424ZTEXhWkuGHAnJVba1nesh4Si4wxU",
+        "name": "AI-BS NDA",
+        "type": "application/vnd.google-apps.document",
+        "size": "4884"
+      },
+      {
+        "id": "1hssw2zNWE1o7JPQ5ne7TxMVF4N-7cLGU7qOGv1tyxxY",
+        "name": "AI-BS Non-Disclosure and Confidentiality Agreement - Finalized",
+        "type": "application/vnd.google-apps.document",
+        "size": "5778"
+      },
+      {
+        "id": "14bNVcdhwluaV7mFSsZGNUZm-jekvXxDdtw5RHRxzQZ4",
+        "name": "Master Services Agreement",
+        "type": "application/vnd.google-apps.document",
+        "size": "13486"
+      },
+      {
+        "id": "1YZx6Um-Cm3qm8zvT1AAZquUlAUaPhzyKWx_0GFPDCGE",
+        "name": "Stehouwer Publishing NDA",
+        "type": "application/vnd.google-apps.document",
+        "size": "13486"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1AuKV45cCnZhiNSVEt9BqVXn9VlyxcLLF",
+    "name": "AI-BS Engineering",
+    "modified": "2026-11-11T21:46:37.929Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "13iNTaeDCPHh_W78oRaxPSGFxRoYkbZtH",
+        "name": "AI BS Feature Option Pitch",
+        "type": "application/vnd.google.colaboratory",
+        "size": "6198"
+      },
+      {
+        "id": "1rNO5OIep4ve4HLOUJgBKknG8UvFKxtzC-juSljxb0IU",
+        "name": "AI BS OUTLINE and any details needed for potential use",
+        "type": "application/vnd.google-apps.document",
+        "size": "225197"
+      },
+      {
+        "id": "1RYIUn7M15uTQA48I32rpTza7VZ6Rz-g8YzF5ua34QBI",
+        "name": "AI-BS_Matrix_Master_Session_Log",
+        "type": "application/vnd.google-apps.document",
+        "size": "9127"
+      },
+      {
+        "id": "1OK1up3twdDCKB_gKT8EqcqmtwGv6N5hk0D4ZrDRLg4c",
+        "name": "also add the Mentorship Directive: Bit-by-Bit Gui...",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1T_b-eOZTDgV0xFOBD4LepKPGnolF6bQFCN-jg2EXfWE",
+        "name": "back end port 8000",
+        "type": "application/vnd.google-apps.document",
+        "size": "14295"
+      },
+      {
+        "id": "12n_CA6IyulMNFWCyI0zlTR3sBXfMr6AzQpkGWgVRpGs",
+        "name": "Build review2",
+        "type": "application/vnd.google-apps.document",
+        "size": "54586"
+      },
+      {
+        "id": "1lBV7TbSOVbJK7gB22mv1N-hAPpTHyCRsx1BWiIrelxo",
+        "name": "Chat log IDE",
+        "type": "application/vnd.google-apps.document",
+        "size": "1024"
+      },
+      {
+        "id": "1JsnVAP6R1C2qLKYtIclJm7wTe5SYx4xgEmGOPYH7lo8",
+        "name": "Instead of the daemons running multiple at once co...",
+        "type": "application/vnd.google-apps.document",
+        "size": "3925"
+      },
+      {
+        "id": "1QE_SPK93b2DzSLggfHd_CSL4AMrSGLiqWrOIgwuXzpA",
+        "name": "Memory for CodeCoach",
+        "type": "application/vnd.google-apps.spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1i8gYKr0Zl5fvsUdVgBpchVj5iwoUAT7EdcJrS3V7Kk4",
+        "name": "Multi agent unifided bifuricated mining tools/agent/modual.",
+        "type": "application/vnd.google-apps.document",
+        "size": "14295"
+      },
+      {
+        "id": "112Yf_zzebU38bfxsOZtRo5AEPxprMRuMUnrnyUOrzek",
+        "name": "path directories",
+        "type": "application/vnd.google-apps.document",
+        "size": "9889"
+      },
+      {
+        "id": "177YjZe_D8jBbbFX3Q_58UpM2dQBqyxjqoCLm1cQtBN6qoCISVwUADMoK",
+        "name": "Untitled project",
+        "type": "application/vnd.google-apps.script",
+        "size": null
+      },
+      {
+        "id": "1fJYRPycNFihjkhuB6BWbQnPrm8p3ti_BYIJRK6j5Sbw",
+        "name": "we need to work on going fom mock to live and fun...",
+        "type": "application/vnd.google-apps.document",
+        "size": "5964"
+      },
+      {
+        "id": "1M0iBvrs_d06cF6FVdar2uDS-b9uPM0CtPIUt5pCbXyg",
+        "name": "what launauge of code is being used while perfomi...",
+        "type": "application/vnd.google-apps.document",
+        "size": "3971"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "1xD0KssY1RW77MO3BmumWwh5pdBGg0rCW",
+    "name": "Personal Documents",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "1qmefawzOJBu3YlQhygV3CEETz757aVeE",
+        "name": "20260727_065146.jpg",
+        "type": "image/jpeg",
+        "size": "2763212"
+      },
+      {
+        "id": "1qkte-kv4DT1Pv6NAU9mhMsv2MxTBaZI7",
+        "name": "20260727_065156.jpg",
+        "type": "image/jpeg",
+        "size": "2462828"
+      },
+      {
+        "id": "1-KNGAmv_SV3zo90rK9gsHKGwWOopxom-",
+        "name": "20260727_165316.jpg",
+        "type": "image/jpeg",
+        "size": "2073982"
+      },
+      {
+        "id": "1gnvbtGTQy3WOp4LHUnBYRNtFFTvn43c6",
+        "name": "20260727_165354.jpg",
+        "type": "image/jpeg",
+        "size": "1568386"
+      },
+      {
+        "id": "1HxT7BGM3SJ3aichp2npCrOm5ONNfH8fZ",
+        "name": "20260727_165401(1).jpg",
+        "type": "image/jpeg",
+        "size": "749925"
+      },
+      {
+        "id": "1hY7LWTnfk-0pLVHMi6vk20vujsgqt0e1",
+        "name": "20260727_165401.jpg",
+        "type": "image/jpeg",
+        "size": "2934711"
+      },
+      {
+        "id": "1iTMKnnV3ljuB9BrCE8uBBmdOZ37QS5lI",
+        "name": "20260727_170944.jpg",
+        "type": "image/jpeg",
+        "size": "2692209"
+      },
+      {
+        "id": "1zDTu92l1RQMEy0EjMtu9va83iH2_6uCv",
+        "name": "20260727_170957.jpg",
+        "type": "image/jpeg",
+        "size": "2252204"
+      },
+      {
+        "id": "1A5SiN867PtcOw1ND6qJr7AYKh0OKunimo_t2Fts4mOk",
+        "name": "brett patrick 5th hour My auto biography on reading",
+        "type": "application/vnd.google-apps.document",
+        "size": null
+      },
+      {
+        "id": "17NLhYHAvzpwn0CPvauiEBQCb2-HBXjz9qeSTv3T4WGQ",
+        "name": "Elephant man essay doc created 02/08/2012",
+        "type": "application/vnd.google-apps.document",
+        "size": "2823"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": "19Lo5oh_F9dgdlV0HJj4RHDc26tGuaFfl",
+    "name": "Recreational Debut",
+    "modified": "2026-11-11T21:46:37.927Z",
+    "owners": [
+      "Brett Stehouwer"
+    ],
+    "children": [
+      {
+        "id": "181ieOoVyeiIre24XZQ897imToRbMwLEu-_1zwOBBF84",
+        "name": "May 14 2020- While in Pivot-Cover letter job app to Hope Network",
+        "type": "application/vnd.google-apps.document",
+        "size": null
+      },
+      {
+        "id": "1ecjA3G4370CLVIdtt0d8Qg_dqmdrK6zzDyvhE4LqsHs",
+        "name": "RecDebut_Tracking_Upgrade_Patch_Script",
+        "type": "application/vnd.google-apps.document",
+        "size": "11436"
+      },
+      {
+        "id": "1amBANf7pFKj4h4bZ9Fu7nXRAXnY1wMXZvogqUKdZ3uM",
+        "name": "RecDebut_Tracking_Upgrade_Patch_Script",
+        "type": "application/vnd.google-apps.document",
+        "size": "11306"
+      },
+      {
+        "id": "1JP7DbmAdSu3-Cb8_G0ReJlyEYFmQppHvFfC1R3msSnI",
+        "name": "RecDebut_Tracking_Upgrade_Production_Script",
+        "type": "application/vnd.google-apps.document",
+        "size": "10022"
+      },
+      {
+        "id": "1s9Iqbh2Qft8zdIzC5adNJhfnUBPiu1KBHU2ReYCYeAg",
+        "name": "RecDebut_Tracking_Upgrade_Production_Script",
+        "type": "application/vnd.google-apps.document",
+        "size": "11436"
+      },
+      {
+        "id": "1tDcSQyT2af06z7Xghp_JCn0QhpjgVeIFxP8_ALg3Xbg",
+        "name": "Untitled document",
+        "type": "application/vnd.google-apps.document",
+        "size": "181297"
+      }
+    ],
+    "error": null
+  }
+]

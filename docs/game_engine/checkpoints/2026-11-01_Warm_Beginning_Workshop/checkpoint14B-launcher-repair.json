@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "repaired_normal_gui_verified",
+  "timestamp": "2026-11-02T10:24:25.088898+00:00",
+  "reason": "Frozen native source closure omitted local ui_modernization styling imports",
+  "package_root": "C:\\AI-BS\\native_studio\\releases\\v5.329.98\\AI_BS_Studio",
+  "existing_package_files_verified_unchanged": 2275,
+  "executable_sha256": "05b42903df4341c4834f670007918bc1d97c1fabd8662782006a2af9dc49ab33",
+  "added_files": [
+    {
+      "relative": "ui_modernization/__init__.py",
+      "source_sha256": "851626a38d373a1517b335e827e42a11400141c0c8c3133a849921819bf10853",
+      "bytes": 82,
+      "target_existed": false,
+      "target_sha256": null
+    },
+    {
+      "relative": "ui_modernization/components/__init__.py",
+      "source_sha256": "8687c46bb820bab6b97f8d3bb8dccd14f707e0210d78229ce380cdb4f4b26cd8",
+      "bytes": 71,
+      "target_existed": false,
+      "target_sha256": null
+    },
+    {
+      "relative": "ui_modernization/components/native_badge.py",
+      "source_sha256": "6a1ae14a215164dd3f0cf350c6f0c0e37dda872c7be4283ec138a8b3d9a867ab",
+      "bytes": 722,
+      "target_existed": false,
+      "target_sha256": null
+    },
+    {
+      "relative": "ui_modernization/generated/studio_overview.py",
+      "source_sha256": "129b7a03350f05cde307d677243c4de43fb952fe6ef17e4b8702d278ef144f5b",
+      "bytes": 3360,
+      "target_existed": false,
+      "target_sha256": null
+    },
+    {
+      "relative": "ui_modernization/generated/native_palette.py",
+      "source_sha256": "33a38d5083f9438cf9d8d98aa9e20cb1068652b8edfcb3090cf4e48f6b462c96",
+      "bytes": 841,
+      "target_existed": false,
+      "target_sha256": null
+    }
+  ],
+  "namespace_generated_init_added": false,
+  "rollback": "Remove only added files after matching their recorded hashes; original package bytes remain preserved",
+  "full_normal_startup_verified": true,
+  "gui_observed_at_utc": "2026-11-02T10:32:13+00:00",
+  "gui_window": {
+    "id": 1117524,
+    "title": "AI-BS Sovereign Studio v5.329.98 [Windows 10/11 x64 Pure Native]",
+    "application": "C:\\AI-BS\\native_studio\\releases\\v5.329.98\\AI_BS_Studio\\AI_BS_Studio.exe"
+  },
+  "gui_evidence": "Computer-use observation: normal Studio overview visible; screenshot 1622x1010; no missing-module error",
+  "source_packaging_files": [
+    {
+      "path": "scripts/build_native_web_parity.py",
+      "preimage_sha256": "8876c89362a53e119862a343df89d4bf1325eff96d28e3778692ce2ba5871e41",
+      "staged_sha256": "52b128f42f5e33d8c124053f485044f6629b98a82885e1e357529507fea11b98",
+      "bytes": 18194
+    },
+    {
+      "path": "scripts/build_native_game_release.py",
+      "preimage_sha256": "85712fc90692c92bb2d68ea82b518f00031dec90a415d4637389116e20105514",
+      "staged_sha256": "8d8db2a862c2dc5aea27793eae5c47a202219a2de147c6a029fdadc608f55e5a",
+      "bytes": 20110
+    },
+    {
+      "path": "scripts/verify_native_creator_release.py",
+      "preimage_sha256": "aac8b3ebf5a64fd854bb5aa4279daf23b0baf39c0a514a6602b46b3f7070745e",
+      "staged_sha256": "51b49438d869a781f2572e81e6b01caecc64a4b4c53c2503d748168c025bdf15",
+      "bytes": 39424
+    },
+    {
+      "path": "scripts/tests/test_native_ui_module_closure.py",
+      "preimage_sha256": null,
+      "staged_sha256": "ac173b0c6098b5f8d2842af3fb01e3951f7e6feddbb3ca76825da42d25e62b5b",
+      "bytes": 8556
+    }
+  ],
+  "source_regression_status": "passed",
+  "updated_at_utc": "2026-11-02T10:35:02.478743+00:00",
+  "executable_rebuilt": false,
+  "engine_sdk_or_saves_modified": false,
+  "canonical_regression_tests": {
+    "run": 71,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "transcript_sha256": "29abed7f4eca874de2e6605ecccab5b10e3e54e36822144daf7b07ea7917bcb1"
+  },
+  "verified_at_utc": "2026-11-02T10:36:00.887841+00:00"
+}

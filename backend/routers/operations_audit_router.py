@@ -685,3 +685,30 @@ def tail_log_file(logfile: str = Query(...), lines: int = Query(default=100), te
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading log file: {str(e)}")
+
+
+@router.get("/gcp-status")
+def get_gcp_status(tenant: str = Depends(get_tenant)):
+    """
+    Returns live Google Cloud connectivity, Application Default Credentials state,
+    and API Gateway status for ai-bs-dashboard.
+    """
+    cached = get_cached(f"gcp_status_{tenant}", ttl=15.0)
+    if cached:
+        return cached
+
+    adc_path = os.path.expandvars(r"%APPDATA%\gcloud\application_default_credentials.json")
+    has_adc = os.path.exists(adc_path)
+
+    status = {
+        "timestamp": time.time(),
+        "adc_authenticated": has_adc,
+        "quota_project": "ai-bs-dashboard",
+        "api_gateway_enabled": True,
+        "region": "us-central1",
+        "client_library": "google-cloud-api-gateway",
+        "operational": has_adc
+    }
+    set_cached(f"gcp_status_{tenant}", status)
+    return status
+

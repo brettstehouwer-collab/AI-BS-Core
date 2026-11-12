@@ -1,15 +1,20 @@
 /** @typedef {{status: string, message?: string, stdout?: string, stderr?: string, returncode?: number, execution_time_ms?: number, result?: unknown}} ExecutionResult */
 /** @typedef {{attempt: number, root_cause?: string, fix_explanation?: string, timestamp: string}} HealAttempt */
-/** @typedef {{display_name?: string, model?: string, device?: string, reason?: string, coding_task_id?: string, steps?: {id?: string, name: string}[]}} CognitiveMeta */
+/** @typedef {{display_name?: string, model?: string, device?: string, reason?: string, coding_task_id?: string, runtime_receipt_frame?: boolean, schema?: string, type?: string, provider?: string, request_id?: string, status?: string, generation_verified?: boolean, completion_verified?: boolean, completion_reason?: string, steps?: {id?: string, request_id?: string, name: string, model?: string, status?: string, generation_verified?: boolean, completion_verified?: boolean}[]}} CognitiveMeta */
 /** @typedef {{vram_used_gb?: number, vram_total_gb?: number, core_temp_c?: number, power_usage_w?: number, gpu_util_pct?: number, sys_ram_used_gb?: number, sys_ram_total_gb?: number, core_clock_mhz?: number, fan_speed_pct?: number, timestamp?: string}} CognitiveTelemetry */
 /** @typedef {{name: string, arguments?: {command?: string, timeout_seconds?: number, distro?: string, code?: string, script_path?: string, file_path?: string, content?: string, old_path?: string, new_name?: string, new_path?: string, dir_path?: string, action?: string, port?: number}}} ToolCall */
 import { useConversationMemory, ConversationMemoryStatus } from '/src/hooks/useConversationMemory.jsx';
-import { stageRagSource } from '/src/utils/ragSourceStage.js';
+import { stageRagSource, indexSavedRagSource, searchRagSources } from '/src/utils/ragSourceStage.js';
 import { archiveChatAndClear } from '/src/utils/chatArchive.js';
 import CodingPreparationPanel from './CodingPreparationPanel';
 import { readChatHttpResponse, chatResponseText } from '/src/utils/chatHttpResponse.js';
 import { chatAuthHeaders } from '/src/utils/chatAuth.js';
+import { streamBSChatProvider } from '/src/utils/bsChatProvider.js';
+import { isOpenCodeWorkerCommand, requestOpenCodeWorker } from '/src/utils/opencodeWorkers.js';
+import { isLocalMaintenanceBuild, requestProjectBuild, waitForProjectMaintenance, pendingProjectMaintenance, projectMaintenanceReply } from '/src/utils/projectMaintenance.js';
 import { isComfyStatusQuery } from '/src/utils/chatRequestIntent.js';
+import { screenplayWorkflowIntent, isPdfAttachment, selectPdfSource, attachmentPromptContent, importPdfScreenplay, navigateToScreenplay, fetchScreenplayExport, downloadScreenplayBlob } from '/src/utils/screenplayHandoff.js';
+import { attachmentSourceReferences, sourceRetrievalSummary } from '/src/utils/attachedSources.js';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SYSTEM_VERSION } from './version';
 import ReactMarkdown from 'react-markdown';
@@ -33,7 +38,7 @@ import TapToRunCanvas, { extractStagedPayloads } from './TapToRunCanvas';
 
 const CodeBlock = React.memo(/** @param {{language: string, code: string}} props */
 function CodeBlock({ language, code }) {
-  const [activeCode, setActiveCode] = useState(code);
+  const [activeCode, setActiveCode] = useState(typeof code === 'string' ? code : '');
   const [copied, setCopied] = useState(false);
   const [isExecutingUE, setIsExecutingUE] = useState(false);
   const [ueResult, setUeResult] = useState(/** @type {ExecutionResult | null} */ (null));
@@ -51,7 +56,7 @@ function CodeBlock({ language, code }) {
   const [healHistory, setHealHistory] = useState(/** @type {HealAttempt[]} */ ([]));
 
   useEffect(() => {
-    setActiveCode(code);
+    setActiveCode(typeof code === 'string' ? code : '');
   }, [code]);
 
   const handleValidateSyntax = async () => {
@@ -1067,6 +1072,54 @@ const handleCopyPath = (e) => {
 }
 
 // ─── Cognitive Parser & Desktop Architecture Components ──────────────────────
+/** Merge successive server-reported frames; text inside a frame never grants tool authority.
+ * @param {string} text */
+function readCognitiveMetadata(text) {
+  if (typeof text !== 'string') return null;
+  let merged = null;
+  let runtimeReceiptFrame = false;
+  for (const match of text.matchAll(/<!--AI-BS-METADATA:([\s\S]*?)-->/g)) {
+    try {
+      const value = JSON.parse(match[1]);
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const stages = new Map();
+        for (const row of [...(Array.isArray(merged?.steps) ? merged.steps : []), ...(Array.isArray(value.steps) ? value.steps : [])]) {
+          if (row && typeof row === 'object') stages.set(row.request_id || `${row.id || row.name}:${row.model || ''}`, row);
+        }
+        // Completion provenance belongs to a complete current protocol frame;
+        // unversioned legacy fragments cannot borrow an earlier pending schema.
+        if (['schema', 'type', 'provider', 'request_id', 'status', 'generation_verified', 'completion_verified', 'completion_reason', 'steps', 'model', 'actual_model']
+            .some(key => Object.prototype.hasOwnProperty.call(value, key))) {
+          runtimeReceiptFrame = value.schema === 'aibs.local_inference.v1' && value.type === 'aibs_cognitive_meta' && value.provider === 'local'
+            && typeof value.request_id === 'string' && /^[0-9a-f]{32}$/.test(value.request_id)
+            && typeof value.model === 'string' && !!value.model
+            && typeof value.generation_verified === 'boolean' && typeof value.completion_verified === 'boolean'
+            && ['pending', 'running', 'completed', 'error', 'cancelled'].includes(value.status);
+        }
+        merged = { ...(merged || {}), ...value, runtime_receipt_frame: runtimeReceiptFrame };
+        if (stages.size) merged.steps = [...stages.values()];
+      }
+    } catch (_) { /* An incomplete or malformed frame is not a receipt. */ }
+  }
+  return merged;
+}
+
+/** Legacy compatibility applies only when the stream route is absent, before any response evidence.
+ * @param {number} status @param {boolean} aborted @param {boolean} received */
+function canFallbackToLegacyStream(status, aborted, received) {
+  return !aborted && !received && (status === 404 || status === 405);
+}
+
+/** Preserve UTF8 over network boundaries; malformed terminal bytes are an interruption. */
+function createChatStreamDecoder() {
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  return {
+    /** @param {Uint8Array} value */
+    decode: value => decoder.decode(value, { stream: true }),
+    finish: () => decoder.decode(),
+  };
+}
+
 /** @param {string} rawContent */
 function parseCognitiveContent(rawContent) {
   if (typeof rawContent !== 'string') {
@@ -1076,16 +1129,9 @@ function parseCognitiveContent(rawContent) {
   let text = rawContent;
   let meta = null;
 
-  // 1. Extract metadata comment <!--AI-BS-METADATA:...-->
-  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(text);
-  if (metaMatch) {
-    try {
-      meta = JSON.parse(metaMatch[1]);
-    } catch (e) {
-      console.warn("Failed to parse AI-BS cognitive metadata", e);
-    }
-    text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/, '').trimStart();
-  }
+  // Report the latest stage/final frame while retaining earlier source provenance.
+  meta = readCognitiveMetadata(text);
+  text = text.replace(/<!--AI-BS-METADATA:[\s\S]*?-->/g, '').trimStart();
 
   // 2. Extract <think>...</think> block (complete or in-progress stream)
   let thought = null;
@@ -1109,6 +1155,50 @@ function parseCognitiveContent(rawContent) {
   return { meta, thought, body, isThinking };
 }
 
+/** Present known local transport receipts without promoting legacy metadata or answer correctness.
+ * @param {CognitiveMeta | null} meta */
+function cognitiveStagePresentation(meta) {
+  const hasRuntimeReceipt = !!meta && meta.runtime_receipt_frame === true && meta.schema === 'aibs.local_inference.v1'
+    && meta.type === 'aibs_cognitive_meta' && meta.provider === 'local'
+    && typeof meta.request_id === 'string' && /^[0-9a-f]{32}$/.test(meta.request_id)
+    && typeof meta.model === 'string' && !!meta.model
+    && typeof meta.generation_verified === 'boolean' && typeof meta.completion_verified === 'boolean'
+    && ['pending', 'running', 'completed', 'error', 'cancelled'].includes(meta.status || '');
+  const finalStop = hasRuntimeReceipt && meta?.status === 'completed'
+    && meta.generation_verified === true && meta.completion_verified === true && meta.completion_reason === 'stop';
+  let summary = 'Completion not verified';
+  if (hasRuntimeReceipt) {
+    if (finalStop) summary = 'Final provider stop recorded';
+    else if (meta.status === 'pending' || meta.status === 'running') summary = 'Provider request in progress';
+    else if (meta.status === 'error') summary = 'Request failed; completion not verified';
+    else if (meta.status === 'cancelled') summary = 'Request cancelled; completion not verified';
+    else if (meta.generation_verified === true) summary = meta.completion_reason === 'length'
+      ? 'Output limit reached; completion not verified' : 'Output received; completion not verified';
+  }
+  const steps = (Array.isArray(meta?.steps) ? meta.steps : []).filter(step => step && typeof step === 'object').map(step => {
+    const stage = { id: step.request_id || step.id, name: step.name, status: 'unverified',
+      detail: 'Reported stage; no runtime completion receipt attached.' };
+    const known = hasRuntimeReceipt && typeof step.request_id === 'string' && /^[0-9a-f]{32}$/.test(step.request_id)
+      && typeof step.model === 'string' && !!step.model
+      && typeof step.generation_verified === 'boolean' && typeof step.completion_verified === 'boolean';
+    if (!known) return stage;
+    if (step.status === 'completed' && step.generation_verified === true && step.completion_verified === true
+        && (step.request_id !== meta.request_id || finalStop)) {
+      stage.status = 'done'; stage.detail = 'Provider stop recorded for this stage; answer content is not independently verified.';
+    } else if (step.status === 'completed' && step.generation_verified === true) {
+      stage.status = 'partial'; stage.detail = 'Output received; clean completion not verified.';
+    } else if (step.status === 'error') {
+      stage.status = 'error'; stage.detail = 'Stage failed; no completed generation recorded.';
+    } else if (step.status === 'cancelled') {
+      stage.status = 'cancelled'; stage.detail = 'Stage cancelled; received output may be partial.';
+    } else if (step.status === 'pending' || step.status === 'running') {
+      stage.status = 'active'; stage.detail = 'Stage in progress; no completed generation recorded.';
+    }
+    return stage;
+  });
+  return { steps, summary, hasRuntimeReceipt };
+}
+
 /** @param {{meta: CognitiveMeta | null}} props */
 function DesktopCognitiveMetaHeader({ meta }) {
   const [showWhy, setShowWhy] = useState(false);
@@ -1116,12 +1206,9 @@ function DesktopCognitiveMetaHeader({ meta }) {
 
   if (!meta) return null;
 
-  // Legacy inline metadata is a response claim, not an authenticated runtime receipt.
+  // Known transport evidence records provider completion; it does not grant tool authority.
   const t = /** @type {CognitiveTelemetry | null} */ (null);
-  const steps = Array.isArray(meta.steps) ? meta.steps.map(step => ({
-    id: step.id, name: step.name, status: 'unverified',
-    detail: 'Reported stage; no runtime completion receipt attached.'
-  })) : [];
+  const { steps, summary, hasRuntimeReceipt } = cognitiveStagePresentation(meta);
 
   return (
     <div style={{ marginBottom: '10px', fontSize: '0.78rem' }}>
@@ -1276,7 +1363,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
           </div>
           <div style={{ marginTop: '8px', fontSize: '0.72rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <span>Inline metadata does not verify model execution, hardware use, memory retrieval, or sandbox checks.</span>
+              <span>{hasRuntimeReceipt ? 'Reported provider completion does not verify answer correctness, hardware use, memory retrieval or host actions.' : 'Inline metadata does not verify model execution, hardware use, memory retrieval, or sandbox checks.'}</span>
             </div>
             {t && (
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', color: '#64748b', fontSize: '0.7rem', marginTop: '2px' }}>
@@ -1303,7 +1390,7 @@ function DesktopCognitiveMetaHeader({ meta }) {
         }}>
           <div style={{ color: '#c084fc', fontWeight: 600, marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Reported pipeline stages</span>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Completion not verified</span>
+            <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{summary}</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px' }}>
             {steps.map(step => (
@@ -1317,8 +1404,8 @@ function DesktopCognitiveMetaHeader({ meta }) {
                 gap: '8px',
                 fontSize: '0.75rem'
               }}>
-                <span style={{ color: step.status === 'done' ? '#34d399' : step.status === 'active' ? '#60a5fa' : '#94a3b8', fontWeight: 700 }}>
-                  {step.status === 'done' ? '✓' : step.status === 'active' ? '⟳' : '○'}
+                <span style={{ color: step.status === 'done' ? '#34d399' : step.status === 'active' ? '#60a5fa' : step.status === 'error' ? '#f87171' : step.status === 'partial' || step.status === 'cancelled' ? '#fbbf24' : '#94a3b8', fontWeight: 700 }}>
+                  {step.status === 'done' ? '✓' : step.status === 'active' ? '⟳' : step.status === 'error' ? '!' : '○'}
                 </span>
                 <div>
                   <div style={{ fontWeight: 600, color: step.status === 'done' ? '#f1f5f9' : '#cbd5e1' }}>
@@ -1458,10 +1545,14 @@ const renderMarkdownBlock = (markdownText, key) => (
       components={{
         code({ node, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
-          const codeString = String(children).replace(/\n$/, '');
+          const rawText = Array.isArray(children)
+            ? children.map(child => child == null ? '' : String(child)).join('')
+            : children == null ? '' : String(children);
+          const codeString = rawText.replace(/\n$/, '');
           const isMultiLine = codeString.includes('\n');
 
           if (match || isMultiLine) {
+            if (!codeString) return null;
             return (
               <CodeBlock
                 language={match ? match[1] : ''}
@@ -1790,7 +1881,7 @@ function ReasoningInspector({ msg }) {
               🧠 Memory retrieval:
             </div>
             <div style={{ color: '#94a3b8' }}>
-              No per-message memory retrieval evidence was attached to this reply.
+              {sourceRetrievalSummary(msg.source_retrieval || (msg.meta && 'source_retrieval' in msg.meta ? msg.meta.source_retrieval : null)) || 'No per-message memory retrieval evidence was attached to this reply.'}
             </div>
           </div>
         </div>
@@ -2427,14 +2518,19 @@ const SLASH_COMMANDS = [
   },
   {
     cmd: '/build',
-    aliases: ['/conclude-grill', '/approve-spec'],
-    title: 'Conclude Grill & Launch Execution',
-    desc: 'Locks specification into mission_spec.md and immediately triggers Stage 2 planning and 5-phase execution.',
+    title: 'Build and update local AI-BS',
+    desc: 'Build/check/update AI-BS, frontend or backend and verify the loopback API restart. A grill session ID retains the legacy conclude workflow.',
     category: '🎯 Missions',
-    zeroArg: true,
-    badge: 'Lock & Build',
-    example: '/build'
+    zeroArg: false,
+    badge: 'Local build',
+    template: '/build AI-BS',
+    example: '/build AI-BS'
   },
+  { cmd:'/conclude-grill', aliases:['/approve-spec'], title:'Conclude an existing grill session', desc:'Retain the existing specification-lock and mission execution workflow; /build <grill_session_id> remains supported.', category:'🎯 Missions', zeroArg:true, example:'/conclude-grill' },
+  { cmd:'/opencode', title:'Additional OpenCode coding/review workers', desc:'Use a hosted worker for an explicit task while keeping your selected primary. View model privacy with /opencode models.', category:'🛠️ Workbench', zeroArg:false, template:'/opencode models', example:'/opencode beam-free Review this loop' },
+  { cmd:'/rag', title:'Index or search preserved sources', desc:'Index a saved context file or retrieve bounded passages for your signed-in account.', category:'🛠️ Workbench', zeroArg:false, template:'/rag search ', example:'/rag search screenplay dialogue' },
+  { cmd:'/backend', title:'Local backend status or restart', desc:'Read API health or queue a checked, durable restart of only the local API.', category:'🛠️ Workbench', zeroArg:false, template:'/backend status', example:'/backend restart' },
+  { cmd:'/screenplay', title:'Open a PDF in Screenwriting', desc:'Use an attached parsed/indexed PDF to create a preserved screenplay project, open the writing tool and export FDX/PDF.', category:'🛠️ Workbench', zeroArg:false, template:'/screenplay open', example:'/screenplay convert FDX and export PDF' },
   // 🛠️ Autonomous Developer Workbench
   {
     cmd: '/audit',
@@ -3107,12 +3203,15 @@ const SLASH_COMMANDS = [
   }
 ];
 
-export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 }) {
+/** @param {{isNested?: boolean, wirelessCastOpenRequest?: number, showRightPane?: boolean, onToggleSplitPane?: (() => void) | null}} props */
+export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0, showRightPane = false, onToggleSplitPane = null }) {
   const BACKEND_URL = useAppStore(state => state.BACKEND_URL);
   const storedChatMessages = useAppStore(state => state.chatMessages);
   const storedFooterInput = useAppStore(state => state.footerInput);
   const messageFeedRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const selectedModel = useAppStore(state => state.selectedModel);
+  const selectedProvider = useAppStore(state => state.aiProvider);
+  const providerModels = useAppStore(state => state.aiProviderModels);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isBackendDisabled, setIsBackendDisabled] = useState(false);
@@ -3122,6 +3221,23 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   const footerInput = conversationMemory.viewReady ? storedFooterInput : '';
   const setChatMessages = conversationMemory.setMessages;
   const setFooterInput = conversationMemory.setDraft;
+
+  useEffect(() => {
+    if (!conversationMemory.viewReady) return;
+    const pending = pendingProjectMaintenance();
+    if (!pending) return;
+    let attached = true;
+    void waitForProjectMaintenance({ baseUrl: BACKEND_URL, pending,
+      headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }), active: () => attached
+    }).then(data => {
+      if (attached) setChatMessages(prev => [...prev, { role: 'assistant',
+        content: projectMaintenanceReply(data.result || data), model: 'Local Project Maintenance' }]);
+    }).catch(error => {
+      if (attached) setChatMessages(prev => [...prev, { role: 'assistant',
+        content: `Local build status remains saved: ${errorMessage(error)}`, model: 'Local Project Maintenance' }]);
+    });
+    return () => { attached = false; };
+  }, [BACKEND_URL, conversationMemory.viewReady, setChatMessages]);
 
   const handleStopOrToggleBackend = () => {
     if (isLoading) {
@@ -3157,7 +3273,15 @@ export default function ChatTab({ isNested = false, wirelessCastOpenRequest = 0 
   const [commandSearchQuery, setCommandSearchQuery] = useState('');
   const [selectedCommandCategory, setSelectedCommandCategory] = useState('All');
   const commandsDropdownRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const quickActionsMenuRef = useRef(/** @type {HTMLDivElement | null} */ (null));
   const chatInputRef = useRef(/** @type {HTMLTextAreaElement | null} */ (null));
+
+  // BS-Chat Decluttering Drawer & Toolbar State
+  const [showControlDrawer, setShowControlDrawer] = useState(false);
+  const [showToolBar, setShowToolBar] = useState(false);
+  const [showTagsBar, setShowTagsBar] = useState(false);
+  const [showQuickActionsMenu, setShowQuickActionsMenu] = useState(false);
+  const [showSynergyDock, setShowSynergyDock] = useState(false);
 
   // File Upload State (GPT Style)
   const [attachments, setAttachments] = useState(/** @type {import('/types/domain').ChatAttachment[]} */ ([]));
@@ -3642,6 +3766,9 @@ const handleClickOutside = (event) => {
       if (commandsDropdownRef.current && !commandsDropdownRef.current.contains(event.target instanceof Node ? event.target : null)) {
         setShowCommandsDropdown(false);
       }
+      if (quickActionsMenuRef.current && !quickActionsMenuRef.current.contains(event.target instanceof Node ? event.target : null)) {
+        setShowQuickActionsMenu(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -3653,7 +3780,7 @@ const handleInputChange = (e) => {
     setFooterInput(val);
     if (val.startsWith('/') && !val.includes('\n')) {
       setShowCommandsDropdown(true);
-      setCommandSearchQuery(val.slice(1).trim());
+      setCommandSearchQuery(val.slice(1).trim().split(/\s+/)[0]);
     } else if (!val.startsWith('/') && showCommandsDropdown) {
       setShowCommandsDropdown(false);
     }
@@ -3824,14 +3951,59 @@ const handleSendMessage = async (customText = null) => {
       return;
     }
 
+    // Explicit user intent controls this tool handoff. PDF instructions are data.
+    const openCodeWorkerCommand = isOpenCodeWorkerCommand(rawText);
+    const screenplayIntent = openCodeWorkerCommand ? null : screenplayWorkflowIntent(rawText);
+    if (screenplayIntent && (attachments.some(isPdfAttachment) || /^\/screenplay(?:\s|$)/i.test(rawText))) {
+      setIsLoading(true);
+      try {
+        if (activeTools?.plan_and_review) throw new Error('Plan mode: PDF import/export was not started. Input and attachments were retained.');
+        const source = selectPdfSource(attachments);
+        const headers = () => chatAuthHeaders({ 'Content-Type':'application/json' });
+        const imported = await importPdfScreenplay({backendUrl:BACKEND_URL,file:source,headers,
+          requestId:source.source_id});
+        if (!conversationMemory.isCurrent()) return;
+        /** @type {string[]} */
+        const exports = [];
+        for (const format of /** @type {('fdx'|'pdf')[]} */ (['fdx','pdf'])) {
+          if (!screenplayIntent[format]) continue;
+          try {
+            const blob = await fetchScreenplayExport({backendUrl:BACKEND_URL,project:imported.project,revision:imported.revision,format,headers});
+            if (!conversationMemory.isCurrent()) return;
+            downloadScreenplayBlob(blob,`${imported.project}.${format}`);
+            exports.push(`${format.toUpperCase()} download prepared`);
+          } catch (error) { exports.push(`${format.toUpperCase()} export failed: ${errorMessage(error)}. Project remains saved.`); }
+        }
+        setChatMessages(prev => [...prev,{role:'user',content:rawText,displayContent:rawText,attachments:[{name:source.name,type:source.type}],
+          source_references:[{source_id:source.source_id,source_sha256:source.source_sha256}],
+          source_reference_scope:{owner:conversationMemory.owner || '',conversation_id:conversationMemory.conversationId || '',backend_url:BACKEND_URL}},
+          {role:'assistant',model:'PDF → Screenwriting',content:`Preserved PDF parsed and indexed for your account; matching source passages were read back.\n\n` +
+            `Project: **${imported.project}**\nOriginal PDF SHA-256: \`${source.source_sha256}\`\n` +
+            `Source: ${source.page_count} pages (title/body details appear in Screenwriting). Source layout is preserved for unchanged exports; editor/reflow pagination is separate.\n\n` +
+            exports.join('\n') + '\n\nOpening the saved project in Screenwriting. No model call or document instruction was executed.'}]);
+        setFooterInput(current => current.trim() === rawText.trim() ? '' : current);
+        setAttachments(current => current.filter(file => file !== source));
+        navigateToScreenplay(imported.handoff);
+      } catch (error) {
+        if (conversationMemory.isCurrent()) setChatMessages(prev => [...prev,{role:'assistant',model:'PDF → Screenwriting',content:errorMessage(error)}]);
+      } finally { setIsLoading(false); }
+      return;
+    }
+
+    // Source identity travels separately from prose and never authorizes tools.
+    const sourceReferenceScope = {owner:conversationMemory.owner,conversation_id:conversationMemory.conversationId,backend_url:BACKEND_URL};
+    let sourceReferences;
+    try { sourceReferences = openCodeWorkerCommand ? [] : attachmentSourceReferences(attachments, chatMessages, sourceReferenceScope); }
+    catch (error) { setErrorPopup(errorMessage(error)); return; }
+
     // Format attachments into prompt context
     let formattedPrompt = rawText;
     /** @type {import("/types/domain").ChatAttachment[]} */
 let attachmentBadges = [];
 
-    if (attachments.length > 0) {
+    if (!openCodeWorkerCommand && attachments.length > 0) {
       let attachmentText = attachments.map(att => (
-        `\n[ATTACHED FILE: ${att.name} (${((att.size ?? 0)/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${att.content}\n\`\`\`\n`
+        `\n[ATTACHED FILE: ${att.name} (${((att.size ?? 0)/1024).toFixed(1)} KB)]\n\`\`\`${(att.ext || '').replace('.', '')}\n${attachmentPromptContent(att)}\n\`\`\`\n`
       )).join('\n');
 
       formattedPrompt = `${attachmentText}\n[USER PROMPT]:\n${rawText || 'Please review and analyze the attached files in detail.'}`;
@@ -3842,14 +4014,16 @@ let attachmentBadges = [];
       role: 'user',
       content: formattedPrompt,
       displayContent: rawText || 'Attached Files Analysis',
-      attachments: attachmentBadges
+      attachments: attachmentBadges,
+      source_references:sourceReferences,
+      source_reference_scope:sourceReferenceScope
     };
 
     const updatedHistory = [...useAppStore.getState().chatMessages || chatMessages, userMsg];
     setChatMessages(updatedHistory);
 
     setFooterInput('');
-    setAttachments([]);
+    if (!openCodeWorkerCommand) setAttachments([]);
     setIsLoading(true);
 
     // Setup AbortController with 90-minute ceiling (5,400,000 ms)
@@ -3869,13 +4043,132 @@ let attachmentBadges = [];
       'X-Client-ID': 'stehouwer_publishing'
     });
 
+    // 1. Direct Large Pasted Context Buffer: preserve source before analysis.
+    if (!openCodeWorkerCommand && rawText.trim().length > 16000) {
+      if (activeTools?.plan_and_review) {
+        setFooterInput(current => current || rawText);
+        setChatMessages(prev => [...prev, { role:'assistant', content:'Plan mode: source was not saved or indexed. Input was retained.' }]);
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const staged = await stageRagSource({ backendUrl:BACKEND_URL, text:rawText });
+        if (typeof window !== 'undefined') window.__aibsLastHostFile = staged.path;
+        const stageUrl = `file:///${staged.path.replace(/\\/g, '/')}`;
+        const indexed = staged.indexing_status === 'lexical_chunks_indexed';
+        setChatMessages(prev => [...prev, {
+          role:'assistant', model:'Large Context Source Staging',
+          content:`Source write confirmed: [${staged.path}](${stageUrl})\n\n` +
+            `${staged.bytes_written.toLocaleString()} UTF-8 bytes preserved; SHA-256: \`${staged.sha256}\`.\n\n` +
+            (indexed ? `Parsed into ${staged.chunk_count} chunks for your signed-in account; ${staged.retrieval_hits} matching passage readbacks verified.\n\n` +
+              'Bounded local lexical retrieval is available. Ask a specific question about this source. No model call or document instruction was executed.' :
+              'Source bytes are preserved, but parsing/indexing/retrieval were not confirmed. ' + staged.indexing_error),
+        }]);
+        if (!indexed) setFooterInput(current => current || rawText);
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      } catch (err) {
+        setFooterInput(current => current || rawText);
+        setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
+          content:'Source staging was not confirmed; analysis stopped and input was retained. ' + errorMessage(err) }]);
+        setErrorPopup(errorMessage(err));
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      }
+    }
+
     // --- BS-CHAT SLASH COMMAND INTERCEPTORS (Zero-Mock Host Management) ---
-    if (rawText.startsWith('/')) {
+    if (openCodeWorkerCommand || rawText.startsWith('/')) {
       const parts = rawText.trim().split(/\s+/);
       const command = parts[0].toLowerCase();
       const rest = rawText.trim().substring(command.length).trim();
 
+
+      if (command === '/opencode') {
+        try {
+          const reply = await requestOpenCodeWorker({ command:rawText, backendUrl:BACKEND_URL,
+            headers:reqHeaders, signal:controller.signal, planOnly:!!activeTools?.plan_and_review });
+          if (!controller.signal.aborted && conversationMemory.isCurrent()) {
+            setChatMessages(prev => [...prev, {role:'assistant', content:reply.content, model:reply.displayName,
+              ...(reply.receipt ? {opencode_worker_receipt:reply.receipt} : {})}]);
+          }
+        } catch (error) {
+          if (!controller.signal.aborted && conversationMemory.isCurrent()) {
+            setChatMessages(prev => [...prev, {role:'assistant', model:'OpenCode worker',
+              content:`OpenCode worker did not complete: ${errorMessage(error)}`}]);
+          }
+        } finally {
+          clearTimeout(timeoutId);
+          if (abortControllerRef.current === controller) {
+            abortControllerRef.current = null;
+            if (conversationMemory.isCurrent()) setIsLoading(false);
+          }
+        }
+        return;
+      }
+
+      if (command === '/rag') {
+        try {
+          const [action, filename, expectedSha256 = ''] = rest.split(/\s+/);
+          if (action === 'index') {
+            if (activeTools?.plan_and_review) throw new Error('Plan mode: source was not indexed.');
+            const receipt = await indexSavedRagSource({ backendUrl:BACKEND_URL, filename, expectedSha256 });
+            setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Index',
+              content:`Saved source parsed and indexed for your signed-in account.\n\n` +
+                `Source: \`${receipt.path}\`\nUTF-8 bytes: ${receipt.bytes_written}\n` +
+                `SHA-256: \`${receipt.sha256}\`\nChunks: ${receipt.chunk_count}\n` +
+                `Matching passage readbacks: ${receipt.retrieval_hits}\n\n` +
+                'Retrieval uses bounded local lexical search. No model call, embedding, command execution, or expanded model context was used.',
+            }]);
+          } else if (action === 'search') {
+            const result = await searchRagSources({ backendUrl:BACKEND_URL, query:rest.substring(action.length).trim() });
+            const evidence = result.results.map(hit =>
+              `- \`${hit.source}\` chunk ${hit.chunk_index}: bytes ${hit.byte_start}–${hit.byte_end}; source SHA-256 \`${hit.source_sha256}\``).join('\n');
+            setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Retrieval',
+              content:`Retrieved ${result.count} bounded source passages for your signed-in account.\n\n${evidence || 'No matching indexed source passages were found.'}\n\nNo model call was made. Source excerpts were not printed in this receipt.`,
+            }]);
+          } else {
+            throw new Error('Use /rag index context_<32hex>.txt [SHA-256] or /rag search <question>.');
+          }
+        } catch (err) {
+          setChatMessages(prev => [...prev, { role:'assistant', model:'Owned Source Retrieval',
+            content:'Source indexing/retrieval was not confirmed. Original files were retained. ' + errorMessage(err) }]);
+        } finally {
+          clearTimeout(timeoutId);
+          setIsLoading(false);
+        }
+        return;
+      }
+
       // 🧹 Session Clear & Memory Persist
+      if (command === '/backend') {
+        try {
+          const action = rest.trim().toLowerCase() || 'status';
+          if (action === 'restart') {
+            const data = await requestProjectBuild({baseUrl:BACKEND_URL,target:'backend',action:'restart',
+              headers:() => chatAuthHeaders({'Content-Type':'application/json'})});
+            setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:projectMaintenanceReply(data.result || data)}]);
+          } else if (action === 'status') {
+            const pending = pendingProjectMaintenance();
+            if (pending) {
+              const data = await waitForProjectMaintenance({baseUrl:BACKEND_URL,pending,
+                headers:() => chatAuthHeaders({'Content-Type':'application/json'}),active:conversationMemory.isCurrent});
+              setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:projectMaintenanceReply(data.result || data)}]);
+            } else {
+              const response = await fetch(`${BACKEND_URL}/api/health`,{headers:reqHeaders});
+              const health = await response.json();
+              if (!response.ok) throw new Error(`API health returned HTTP ${response.status}`);
+              setChatMessages(prev => [...prev,{role:'assistant',model:'Local Backend',content:`Local API responded. Durable maintenance protocol: ${health.local_maintenance_protocol === 1 ? 'available' : 'unavailable'}. No build or restart was requested.`}]);
+            }
+          } else throw new Error('Use /backend status or /backend restart.');
+        } catch(error) { setChatMessages(prev => [...prev,{role:'assistant',content:`Backend request failed: ${errorMessage(error)}`}]); }
+        finally { setIsLoading(false); }
+        return;
+      }
+
       if (command === '/clear') {
         handleSaveToMemoryAndClear();
         setIsLoading(false);
@@ -4434,7 +4727,8 @@ const extLangMap = {
         return;
       }
 
-      if (['/build', '/conclude-grill', '/approve-spec'].includes(command)) {
+      if (['/build', '/conclude-grill', '/approve-spec'].includes(command) &&
+          !(command === '/build' && rest.trim() && isLocalMaintenanceBuild(rest.trim(), null))) {
         try {
           const res = await fetch(`${BACKEND_URL}/api/mission/grill-conclude`, {
             method: 'POST',
@@ -5625,25 +5919,14 @@ const extLangMap = {
         const customCmd = parts.length > 1 ? parts.slice(1).join(' ') : null;
 
         try {
-          const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
-            method: 'POST',
-            headers: reqHeaders,
-            body: JSON.stringify({
-              command_type: 'build_project',
-              target: projDir,
-              payload: {
-                build_command: customCmd,
-                timeout_seconds: 300
-              }
-            })
-          });
-          const data = await res.json();
+          const data = await requestProjectBuild({ baseUrl: BACKEND_URL, target: projDir, command: customCmd,
+            headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }) });
           const bRes = data.result || data;
           const statusIcon = bRes.status === 'success' ? '✅' : '❌';
           const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
           const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
           const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
-          const reply = `${statusIcon} **Project Build Output: \`${bRes.project_dir || projDir}\`**\n- **Command:** \`${bRes.command || customCmd || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+          const reply = bRes.job_id ? projectMaintenanceReply(bRes) : `${statusIcon} **Project Build Output: \`${bRes.project_dir || projDir}\`**\n- **Command:** \`${bRes.command || customCmd || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
 
           setChatMessages(prev => [
             ...prev,
@@ -5719,25 +6002,14 @@ const extLangMap = {
             return;
           }
           try {
-            const res = await fetch(`${BACKEND_URL}/api/executive/run`, {
-              method: 'POST',
-              headers: reqHeaders,
-              body: JSON.stringify({
-                command_type: 'build_project',
-                target: progName,
-                payload: {
-                  build_command: extraArg,
-                  timeout_seconds: 300
-                }
-              })
-            });
-            const data = await res.json();
+            const data = await requestProjectBuild({ baseUrl: BACKEND_URL, target: progName, command: extraArg,
+              headers: () => chatAuthHeaders({ 'Content-Type': 'application/json' }) });
             const bRes = data.result || data;
             const statusIcon = bRes.status === 'success' ? '✅' : '❌';
             const out = bRes.stdout ? `\n\n**Build Output:**\n\`\`\`\n${bRes.stdout}\n\`\`\`` : '';
             const errText = bRes.stderr ? `\n\n**Stderr / Diagnostic Trace:**\n\`\`\`\n${bRes.stderr}\n\`\`\`` : '';
             const emptyNotice = (!bRes.stdout && !bRes.stderr) ? '\n\n*(Build completed with no console output)*' : '';
-            const reply = `${statusIcon} **Program Build: \`${bRes.project_dir || progName}\`**\n- **Command:** \`${bRes.command || extraArg || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
+            const reply = bRes.job_id ? projectMaintenanceReply(bRes) : `${statusIcon} **Program Build: \`${bRes.project_dir || progName}\`**\n- **Command:** \`${bRes.command || extraArg || 'Auto-detected'}\`\n- **Exit Code:** \`${bRes.exit_code ?? 0}\`\n- **Status:** \`${(bRes.status || 'unknown').toUpperCase()}\`${out}${errText}${emptyNotice}`;
 
             setChatMessages(prev => [
               ...prev,
@@ -6559,7 +6831,7 @@ const extLangMap = {
       }
     }
 
-    // --- NATURAL LANGUAGE HOST FILE & 1M+ RAG OFFLOAD AUTONOMOUS ENGINE (No Slash Commands Required) ---
+    // --- NATURAL LANGUAGE HOST FILE AND BOUNDED SOURCE INGESTION ---
     {
       const nlText = rawText.trim();
       const nlLower = nlText.toLowerCase();
@@ -6648,29 +6920,6 @@ const extLangMap = {
           setIsLoading(false);
         }
         return;
-      }
-
-      // 1. Direct Large Pasted Context Buffer: preserve source before analysis.
-      if (nlText.length > 16000) {
-        try {
-          const staged = await stageRagSource({ backendUrl:BACKEND_URL, text:rawText });
-          if (typeof window !== 'undefined') window.__aibsLastHostFile = staged.path;
-          const stageUrl = `file:///${staged.path.replace(/\\/g, '/')}`;
-          setChatMessages(prev => [...prev, {
-            role:'assistant', model:'Large Context Source Staging',
-            content:`Source write confirmed: [${staged.path}](${stageUrl})\n\n` +
-              `${staged.bytes_written.toLocaleString()} UTF-8 bytes preserved; SHA-256: \`${staged.sha256}\`.\n\n` +
-              'Parsing/indexing/retrieval are not yet confirmed. This receipt does not establish a million-token model context.',
-          }]);
-        } catch (err) {
-          setFooterInput(current => current || rawText);
-          setChatMessages(prev => [...prev, { role:'assistant', model:'Large Context Source Staging',
-            content:'Source staging was not confirmed; analysis stopped and input was retained. ' + errorMessage(err) }]);
-          setErrorPopup(errorMessage(err));
-          clearTimeout(timeoutId);
-          setIsLoading(false);
-          return;
-        }
       }
 
       // 2. Natural Language File Rename (e.g. "rename it testfilbrett", "re name it testfilbrett", "C:\AI-BS\exampleFile.txt rename it to bretttest")
@@ -6823,7 +7072,24 @@ const extLangMap = {
         'X-Client-ID': 'stehouwer_publishing'
       });
 
+      if (selectedProvider === 'openai' && !isPlanMode) {
+        const startedAt = Date.now();
+        setChatMessages(prev => [...prev, { role: 'assistant', content: '', model: `OpenAI · ${targetModel}` }]);
+        const reply = await streamBSChatProvider({ backendUrl: BACKEND_URL,
+          provider: selectedProvider, model: targetModel, prompt: formattedPrompt,
+          userPrompt: rawText || 'Please review and analyze the attached files.',
+          useWebSearch: !!activeContexts.web,
+          messages: updatedHistory, headers: reqHeaders, signal: controller.signal,
+          onText: (content, displayName) => setChatMessages(prev => prev.map((message, index) =>
+            index === prev.length - 1 && message.role === 'assistant'
+              ? { ...message, content, model: displayName, client_elapsed_ms: Date.now() - startedAt } : message)),
+        });
+        if (autoSpeak) speakText(reply.content);
+        return;
+      }
+
       let streamingSucceeded = false;
+      let legacyStreamUnavailable = false;
 
       if (useHybridStream) {
         const streamStartedAt = performance.now();
@@ -6850,7 +7116,7 @@ const extLangMap = {
           const streamRes = await fetch(`${BACKEND_URL}/api/v1/hybrid-chat/stream`, {
             method: 'POST',
             headers: reqHeaders,
-            body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', messages: recentHistory, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
+            body: JSON.stringify({ prompt: formattedPrompt, user_prompt: rawText || 'Please review and analyze the attached files.', source_references:sourceReferences, messages: recentHistory, provider: selectedProvider, model: targetModel, stream: true, use_web_search: !!activeContexts.web, web_search_query: activeContexts.web ? rawText : undefined }),
             signal: controller.signal,
           });
 
@@ -6862,13 +7128,20 @@ const extLangMap = {
             throw authorizationError;
           }
 
+          if (!streamRes.ok) {
+            legacyStreamUnavailable = canFallbackToLegacyStream(streamRes.status, controller.signal.aborted, false);
+            if (!legacyStreamUnavailable) throw new Error(`Local chat stream returned HTTP ${streamRes.status}. No replay was attempted.`);
+          } else if (!streamRes.body) {
+            throw new Error('Local chat returned no readable stream. No replay was attempted.');
+          }
+
           if (streamRes.ok && streamRes.body) {
             const reader = streamRes.body.getReader();
-            const decoder = new TextDecoder();
+            const decoder = createChatStreamDecoder();
 
             while (true) {
               const { done, value } = await reader.read();
-              if (done) break;
+              if (done) { decoder.finish(); break; }
               const chunk = decoder.decode(value);
               assistantMessage += chunk;
               
@@ -6876,15 +7149,10 @@ const extLangMap = {
                 const newArr = [...prev];
                 if (newArr.length > 0 && newArr[newArr.length - 1].role === 'assistant') {
                   newArr[newArr.length - 1].content = assistantMessage;
-                  const metaMatch = /<!--AI-BS-METADATA:([\s\S]*?)-->/.exec(assistantMessage);
-                  if (metaMatch) {
-                    try {
-                      const parsedMeta = JSON.parse(metaMatch[1]);
-                      if (parsedMeta.display_name) {
-                        newArr[newArr.length - 1].model = parsedMeta.display_name;
-                      }
-                      newArr[newArr.length - 1].meta = parsedMeta;
-                    } catch (e) {}
+                  const parsedMeta = readCognitiveMetadata(assistantMessage);
+                  if (parsedMeta) {
+                    if (parsedMeta.display_name) newArr[newArr.length - 1].model = parsedMeta.display_name;
+                    newArr[newArr.length - 1].meta = parsedMeta;
                   }
                 }
                 return newArr;
@@ -6901,34 +7169,40 @@ const extLangMap = {
               }
             }
           }
+          if (streamRes.ok && !assistantMessage.trim()) throw new Error('The accepted local stream was empty. No replay was attempted.');
         } catch (streamErr) {
+          if (controller.signal.aborted || (streamErr && typeof streamErr === 'object' && 'name' in streamErr && streamErr.name === 'AbortError')) {
+            setChatMessages(prev => prev.map((message, index) => index === prev.length - 1 && message.role === 'assistant'
+              ? { ...message, client_elapsed_ms: performance.now() - streamStartedAt,
+                  decision_context: { ...message.decision_context, status: 'cancelled' } } : message));
+            return;
+          }
           if (streamErr && typeof streamErr === 'object' && 'status' in streamErr &&
               (streamErr.status === 401 || streamErr.status === 403)) throw streamErr;
-          console.warn('Streaming failed, engaging fallback endpoint...', streamErr);
+          console.warn('Stream interrupted; preserving received evidence without replay.', streamErr);
           if (assistantMessage.trim().length > 0) {
             setChatMessages(prev => prev.map((msg, index) => index === prev.length - 1 && msg.role === 'assistant'
               ? { ...msg, client_elapsed_ms: performance.now() - streamStartedAt,
                   decision_context: { ...msg.decision_context, status: 'stream_interrupted' } } : msg));
             streamingSucceeded = true;
           } else {
-            // Pop the empty placeholder if no tokens received
-            setChatMessages(prev => {
-              if (prev.length > 0 && prev[prev.length - 1].content === '') {
-                return prev.slice(0, -1);
-              }
-              return prev;
-            });
+            // A network/provider failure is not proof that the first request never ran.
+            throw streamErr;
           }
         }
       }
 
       if (!streamingSucceeded) {
+        if (controller.signal.aborted) return;
+        if (useHybridStream && !legacyStreamUnavailable) throw new Error('Local stream did not confirm a reply. No replay was attempted.');
         // --- NON-STREAMING ENGINE OR FAILOVER RECOVERY ---
         const endpoint = isPlanMode ? '/v1/ide/plan' : '/api/chat';
         
         const payloadBody = JSON.stringify({
           user_prompt: rawText || 'Please review and analyze the attached files.',
+          source_references:isPlanMode ? undefined : sourceReferences,
           messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
+          provider: selectedProvider,
           model: targetModel,
           prompt: isPlanMode ? rawText : undefined,
           active_file: isPlanMode ? 'C:\\AI-BS\\backend\\AI_BS_Backend.py' : undefined,
@@ -6987,6 +7261,7 @@ const extLangMap = {
             client_elapsed_ms: Date.now() - responseStartedAt,
             decision_context: { operation: isPlanMode ? 'Plan requested' : activeContexts.web ? 'Web research requested' : 'Chat requested', route: res?.url ? new URL(res.url).pathname : endpoint, status: 'response_received' },
             tool_trace: data.tool_trace || null,
+            source_retrieval:data.source_retrieval || null,
             planData: planData,
             codingTaskId: data.coding_task?.task_id || null
           }
@@ -6998,6 +7273,12 @@ const extLangMap = {
       }
     } catch (err) {
       console.error('Chat error:', err);
+      if (selectedProvider === 'openai' || sourceReferences.length) {
+        if (!(useAppStore.getState().footerInput || '').trim()) setFooterInput(rawText);
+        setAttachments(prev => prev.length ? prev : attachments);
+        setChatMessages(prev => prev.length && prev[prev.length - 1].role === 'assistant' && !prev[prev.length - 1].content
+          ? prev.slice(0, -1) : prev);
+      }
       setErrorPopup(errorMessage(err) || 'Failed to reach AI-BS backend.');
       setChatMessages(prev => [
         ...prev,
@@ -7328,290 +7609,337 @@ const extLangMap = {
         style={{ display: 'none' }}
       />
 
-      {/* System Status Dashboard Bar */}
+      {/* Sleek Unified Hub Bar (Decluttered 42px Single Row) */}
       <div style={{
-        padding: '12px 20px',
+        padding: '6px 14px',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(15, 19, 28, 0.95)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '10px',
+        gap: '8px',
+        minHeight: '42px',
+        flexWrap: 'nowrap'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        {/* Left: Indicator, Title & Model Picker */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
           <div style={{
-            width: '10px', height: '10px', borderRadius: '50%',
+            width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
             background: isLoading ? '#f59e0b' : '#10b981',
-            boxShadow: isLoading ? '0 0 10px #f59e0b' : '0 0 10px #10b981',
+            boxShadow: isLoading ? '0 0 8px #f59e0b' : '0 0 8px #10b981',
           }} />
-          <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc', letterSpacing: '0.5px' }}>
-            STEHOUWER LLM CENTRAL HUB
+          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#f8fafc', letterSpacing: '0.3px', whiteSpace: 'nowrap' }}>
+            STEHOUWER LLM
           </span>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>Active Model:</span>
-            <select
-              value={selectedModel || 'stehouwer_llm'}
-              onChange={(e) => useAppStore.getState().setSelectedModel(e.target.value)}
-              style={{
-                fontSize: '0.75rem',
-                background: 'rgba(59, 130, 246, 0.15)',
-                border: '1px solid rgba(59, 130, 246, 0.4)',
-                color: '#60a5fa',
-                padding: '4px 12px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="stehouwer_llm" style={{ background: '#0d1117', color: '#60a5fa' }}>⚡ Stehouwer LLM (Unified Swarm System)</option>
-              <option value="gemini-1.5-pro" style={{ background: '#0d1117', color: '#60a5fa' }}>✨ Google Gemini 1.5 Pro (Cloud Backup)</option>
-              <option value="gemini-1.5-flash" style={{ background: '#0d1117', color: '#38bdf8' }}>⚡ Google Gemini 1.5 Flash (Fast Backup)</option>
-              <option value="gemini-2.0-flash" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Google Gemini 2.0 Flash (Next-Gen)</option>
-              <option value="stehouwer_qwen:latest" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Stehouwer Qwen 23B (High Capacity)</option>
-              <option value="stehouwer_dolphin:latest" style={{ background: '#0d1117', color: '#f43f5e' }}>🐬 Stehouwer Dolphin 8.5B (Uncensored)</option>
-              <option value="stehouwer_hermes:latest" style={{ background: '#0d1117', color: '#38bdf8' }}>🔮 Stehouwer Hermes 8.5B (Reasoning)</option>
-              <option value="qwen2.5-coder:latest" style={{ background: '#0d1117', color: '#34d399' }}>💻 Qwen 2.5 Coder (Polyglot Engineer)</option>
-              <option value="gemma4:12b" style={{ background: '#0d1117', color: '#fbbf24' }}>💎 Google Gemma 4 12B</option>
-              <option value="qwen3.6:latest" style={{ background: '#0d1117', color: '#c084fc' }}>🧠 Qwen 3.6 23B (Heavy Reasoning)</option>
-              <option value="command-r:latest" style={{ background: '#0d1117', color: '#818cf8' }}>📚 Cohere Command-R (RAG Specialist)</option>
-              <option value="mixtral:latest" style={{ background: '#0d1117', color: '#f472b6' }}>🧩 Mixtral 8x7B (MoE Architecture)</option>
-              <option value="llama3.1:latest" style={{ background: '#0d1117', color: '#cbd5e1' }}>🦙 Llama 3.1 8B (Base Model)</option>
-            </select>
-          </div>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>Target:</span>
-            <select
-              value={targetDevice}
-              onChange={(e) => setTargetDevice(e.target.value)}
-              style={{
-                fontSize: '0.75rem',
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                color: '#34d399',
-                padding: '4px 12px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="Host PC (Local)" style={{ background: '#0d1117', color: '#34d399' }}>🖥️ Host PC (Local)</option>
-              <option value="Mobile Phone (ADB)" style={{ background: '#0d1117', color: '#f59e0b' }}>📱 Mobile Phone (ADB)</option>
-            </select>
-          </div>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>DPI Profile:</span>
-            <select
-              value={dpiScaleProfile}
-              onChange={(e) => handleSwitchDpiProfile(e.target.value, false)}
-              title="Resolution & DPI Scaling Profile for Phone Displays + Bluetooth Keyboard/Trackpad"
-              style={{
-                fontSize: '0.75rem',
-                background: dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.12)',
-                border: `1px solid ${dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(56, 189, 248, 0.35)'}`,
-                color: dpiScaleProfile !== 'desktop_native' ? '#fbbf24' : '#38bdf8',
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                outline: 'none'
-              }}
-            >
-              <option value="desktop_native" style={{ background: '#0d1117', color: '#38bdf8' }}>🖥️ 100% Native Desktop</option>
-              <option value="mobile_1440p_125" style={{ background: '#0d1117', color: '#34d399' }}>📱 1440p @ 125% DPI (Bluetooth Trackpad Pro)</option>
-              <option value="mobile_1080p_150" style={{ background: '#0d1117', color: '#fbbf24' }}>📲 1080p @ 150% DPI (High-Contrast Touch)</option>
-            </select>
-            <button
-              onClick={() => {
-                const next = !mobileSynergyMode;
-                setMobileSynergyMode(next);
-                try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
-              }}
-              title="Toggle BS-Chat Mobile Synergy & Bluetooth Trackpad Command Dock"
-              style={{
-                background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(255, 255, 255, 0.06)',
-                color: mobileSynergyMode ? '#ffffff' : '#cbd5e1',
-                border: `1px solid ${mobileSynergyMode ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)'}`,
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontSize: '0.73rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
-            >
-              <span>📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile Dock'}</span>
-            </button>
-            <button
-              onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
-              title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Wireless Display, PC➔Phone, Phone➔PC)"
-              style={{
-                background: showWirelessCastHub ? 'linear-gradient(135deg, #0284c7, #2563eb)' : 'rgba(56, 189, 248, 0.14)',
-                color: showWirelessCastHub ? '#ffffff' : '#38bdf8',
-                border: `1px solid ${showWirelessCastHub ? '#60a5fa' : 'rgba(56, 189, 248, 0.45)'}`,
-                padding: '4px 10px',
-                borderRadius: '8px',
-                fontSize: '0.73rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                boxShadow: showWirelessCastHub ? '0 0 12px rgba(56, 189, 248, 0.4)' : 'none'
-              }}
-            >
-              <span>📡 {showWirelessCastHub ? 'Wireless Cast: OPEN' : 'Wireless Cast & Mirror'}</span>
-            </button>
-          </div>
+          <select
+            value={selectedModel || 'stehouwer_llm'}
+            onChange={(e) => useAppStore.getState().setSelectedModel(e.target.value)}
+            style={{
+              fontSize: '0.72rem',
+              background: 'rgba(59, 130, 246, 0.15)',
+              border: '1px solid rgba(59, 130, 246, 0.4)',
+              color: '#60a5fa',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              outline: 'none',
+              maxWidth: '180px',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            <option value="stehouwer_llm" style={{ background: '#0d1117', color: '#60a5fa' }}>⚡ Stehouwer LLM (Unified Swarm)</option>
+            {(providerModels?.openai || []).map(model => (
+              <option key={`openai-${model}`} value={model} style={{ background: '#0d1117', color: '#60a5fa' }}>OpenAI · {model} (API credits)</option>
+            ))}
+            <option value="gemini-1.5-pro" style={{ background: '#0d1117', color: '#60a5fa' }}>✨ Gemini 1.5 Pro</option>
+            <option value="gemini-1.5-flash" style={{ background: '#0d1117', color: '#38bdf8' }}>⚡ Gemini 1.5 Flash</option>
+            <option value="gemini-2.0-flash" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Gemini 2.0 Flash</option>
+            <option value="stehouwer_qwen:latest" style={{ background: '#0d1117', color: '#a855f7' }}>🚀 Qwen 23B</option>
+            <option value="stehouwer_dolphin:latest" style={{ background: '#0d1117', color: '#f43f5e' }}>🐬 Dolphin 8.5B</option>
+            <option value="stehouwer_hermes:latest" style={{ background: '#0d1117', color: '#38bdf8' }}>🔮 Hermes 8.5B</option>
+            <option value="qwen2.5-coder:latest" style={{ background: '#0d1117', color: '#34d399' }}>💻 Qwen 2.5 Coder</option>
+            <option value="gemma4:12b" style={{ background: '#0d1117', color: '#fbbf24' }}>💎 Gemma 4 12B</option>
+            <option value="qwen3.6:latest" style={{ background: '#0d1117', color: '#c084fc' }}>🧠 Qwen 3.6 23B</option>
+            <option value="command-r:latest" style={{ background: '#0d1117', color: '#818cf8' }}>📚 Command-R</option>
+            <option value="mixtral:latest" style={{ background: '#0d1117', color: '#f472b6' }}>🧩 Mixtral 8x7B</option>
+            <option value="llama3.1:latest" style={{ background: '#0d1117', color: '#cbd5e1' }}>🦙 Llama 3.1 8B</option>
+          </select>
         </div>
 
-        {/* Feature Badges & Quick Action Controls */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399', padding: '3px 8px', borderRadius: '6px' }}>
-            ⚡ 70+ DBs Ready (2ms)
-          </span>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)', color: '#c084fc', padding: '3px 8px', borderRadius: '6px' }}>
-            🛠️ 8 Master Tools
-          </span>
-          <span style={{ fontSize: '0.72rem', background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', padding: '3px 8px', borderRadius: '6px' }}>
-            🎨 ComfyUI Port 8189
-          </span>
-
+        {/* Center / Action Controls: Split View Toggle (if nested) */}
+        {onToggleSplitPane && (
           <button
-            onClick={() => {
-              const url = `${window.location.origin}${window.location.pathname}?tab=chat`;
-              navigator.clipboard.writeText(url).then(() => {
-                setCopiedChatUrl(true);
-                setTimeout(() => setCopiedChatUrl(false), 2500);
-              });
-            }}
+            onClick={onToggleSplitPane}
             style={{
-              background: copiedChatUrl ? '#10b981' : 'rgba(56, 189, 248, 0.12)',
-              color: copiedChatUrl ? '#ffffff' : '#38bdf8',
-              border: '1px solid #38bdf8',
-              padding: '4px 10px',
+              background: showRightPane ? 'rgba(37, 99, 235, 0.25)' : 'rgba(255,255,255,0.06)',
+              border: `1px solid ${showRightPane ? '#3b82f6' : 'rgba(255,255,255,0.15)'}`,
+              color: showRightPane ? '#93c5fd' : '#cbd5e1',
+              padding: '3px 8px',
               borderRadius: '6px',
               cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700'
-            }}
-          >
-            🔗 {copiedChatUrl ? 'Copied!' : 'Share IDE'}
-          </button>
-
-          <button
-            onClick={handleSaveToMemoryAndClear}
-            disabled={isSavingMemory || isLoading}
-            title="Archive the complete conversation to SQLite; clear only after confirmation"
-            style={{
-              background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(99, 102, 241, 0.25))',
-              color: '#c084fc',
-              border: '1px solid rgba(168, 85, 247, 0.5)',
-              padding: '4px 12px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 600,
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(147, 51, 234, 0.3)'
+              gap: '4px',
+              whiteSpace: 'nowrap'
             }}
+            title={showRightPane ? "Hide IDE Editor Pane" : "Open Split IDE Editor Pane"}
           >
-            <span>💾</span>
-            <span>{isSavingMemory ? 'Archiving...' : 'Archive Chat & Clear'}</span>
+            <span>↔</span> <span>{showRightPane ? 'Hide IDE' : 'Split IDE'}</span>
           </button>
+        )}
 
+        {/* Right: Quick toggles + Drawer toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
           <button
-            onClick={handleSaveToMemoryAndClear}
-            title="Reset Chat & View 18 Quick Starter Showcase Cards"
+            onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+            title="Toggle Wireless Screen Mirror & Cast Hub"
             style={{
-              background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
-              color: '#ffffff',
-              border: '1px solid #60a5fa',
-              padding: '4px 12px',
+              background: showWirelessCastHub ? 'linear-gradient(135deg, #0284c7, #2563eb)' : 'rgba(56, 189, 248, 0.12)',
+              color: showWirelessCastHub ? '#ffffff' : '#38bdf8',
+              border: `1px solid ${showWirelessCastHub ? '#60a5fa' : 'rgba(56, 189, 248, 0.35)'}`,
+              padding: '3px 8px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
           >
-            ⚡ 18 Quick Starters
+            <span>📡 Cast</span>
           </button>
 
           <button
             onClick={() => {
-              setFooterInput('/mission ');
-              document.querySelector('textarea')?.focus();
+              const next = !mobileSynergyMode;
+              setMobileSynergyMode(next);
+              try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
             }}
-            title="Launch an Autonomous 5-Phase Mission (AI-BS Sovereign Execution Unison)"
+            title="Toggle Mobile Synergy & Trackpad Mode"
             style={{
-              background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.25))',
-              color: '#f472b6',
-              border: '1px solid rgba(236, 72, 153, 0.5)',
-              padding: '4px 12px',
+              background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(255, 255, 255, 0.06)',
+              color: mobileSynergyMode ? '#ffffff' : '#cbd5e1',
+              border: `1px solid ${mobileSynergyMode ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)'}`,
+              padding: '3px 8px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(236, 72, 153, 0.25)'
+              gap: '4px'
             }}
           >
-            <span>🎯</span>
-            <span>Mission Control</span>
+            <span>📱 Mobile</span>
           </button>
 
           <button
-            onClick={() => {
-              setFooterInput('/grill ');
-              document.querySelector('textarea')?.focus();
-            }}
-            title="Pre-Flight Architectural Grill: stress-test proposals across 4 branches with 1-click recommendations"
+            onClick={() => setShowControlDrawer(!showControlDrawer)}
+            title="Toggle Controls, Hardware Targets, DPI, and Showcase Starters"
             style={{
-              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(245, 158, 11, 0.25))',
-              color: '#fb923c',
-              border: '1px solid rgba(245, 158, 11, 0.5)',
-              padding: '4px 12px',
+              background: showControlDrawer ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255, 255, 255, 0.06)',
+              color: showControlDrawer ? '#a5b4fc' : '#e2e8f0',
+              border: `1px solid ${showControlDrawer ? '#818cf8' : 'rgba(255, 255, 255, 0.18)'}`,
+              padding: '3px 9px',
               borderRadius: '6px',
-              cursor: 'pointer',
               fontSize: '0.72rem',
-              fontWeight: '700',
-              display: 'flex',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
-              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.25)'
+              gap: '4px'
             }}
           >
-            <span>🔥</span>
-            <span>Grill Architecture</span>
-          </button>
-
-          <button
-            onClick={() => setShowTips(!showTips)}
-            style={{
-              background: '#21262d',
-              color: '#c9d1d9',
-              border: '1px solid #30363d',
-              padding: '4px 10px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.72rem',
-              fontWeight: '600'
-            }}
-          >
-            💡 {showTips ? 'Hide Tips' : 'IDE Guide'}
+            <span>⚙️ Hub Controls {showControlDrawer ? '▴' : '▾'}</span>
           </button>
         </div>
       </div>
 
+      {/* Collapsible Secondary Control Drawer */}
+      {showControlDrawer && (
+        <div style={{
+          padding: '8px 14px',
+          background: 'rgba(13, 17, 23, 0.98)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          {/* Target + DPI Row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Target:</span>
+                <select
+                  value={targetDevice}
+                  onChange={(e) => setTargetDevice(e.target.value)}
+                  style={{
+                    fontSize: '0.72rem',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.4)',
+                    color: '#34d399',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="Host PC (Local)" style={{ background: '#0d1117', color: '#34d399' }}>🖥️ Host PC (Local)</option>
+                  <option value="Mobile Phone (ADB)" style={{ background: '#0d1117', color: '#f59e0b' }}>📱 Mobile Phone (ADB)</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>DPI:</span>
+                <select
+                  value={dpiScaleProfile}
+                  onChange={(e) => handleSwitchDpiProfile(e.target.value, false)}
+                  style={{
+                    fontSize: '0.72rem',
+                    background: dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.12)',
+                    border: `1px solid ${dpiScaleProfile !== 'desktop_native' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(56, 189, 248, 0.35)'}`,
+                    color: dpiScaleProfile !== 'desktop_native' ? '#fbbf24' : '#38bdf8',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="desktop_native" style={{ background: '#0d1117', color: '#38bdf8' }}>🖥️ Native Desktop</option>
+                  <option value="mobile_1440p_125" style={{ background: '#0d1117', color: '#34d399' }}>📱 1440p @ 125% DPI</option>
+                  <option value="mobile_1080p_150" style={{ background: '#0d1117', color: '#fbbf24' }}>📲 1080p @ 150% Touch</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#34d399', padding: '2px 6px', borderRadius: '4px' }}>
+                ⚡ 70+ DBs (2ms)
+              </span>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)', color: '#c084fc', padding: '2px 6px', borderRadius: '4px' }}>
+                🛠️ 8 Master Tools
+              </span>
+              <span style={{ fontSize: '0.68rem', background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.3)', color: '#f472b6', padding: '2px 6px', borderRadius: '4px' }}>
+                🎨 ComfyUI 8189
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons Row in Drawer */}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '4px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}${window.location.pathname}?tab=chat`;
+                navigator.clipboard.writeText(url).then(() => {
+                  setCopiedChatUrl(true);
+                  setTimeout(() => setCopiedChatUrl(false), 2500);
+                });
+              }}
+              style={{
+                background: copiedChatUrl ? '#10b981' : 'rgba(56, 189, 248, 0.12)',
+                color: copiedChatUrl ? '#ffffff' : '#38bdf8',
+                border: '1px solid #38bdf8',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🔗 {copiedChatUrl ? 'Copied!' : 'Share IDE'}
+            </button>
+
+            <button
+              onClick={handleSaveToMemoryAndClear}
+              disabled={isSavingMemory || isLoading}
+              style={{
+                background: 'rgba(147, 51, 234, 0.2)',
+                color: '#c084fc',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              💾 {isSavingMemory ? 'Archiving...' : 'Archive & Clear'}
+            </button>
+
+            <button
+              onClick={handleSaveToMemoryAndClear}
+              style={{
+                background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                color: '#ffffff',
+                border: '1px solid #60a5fa',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              ⚡ 18 Quick Starters
+            </button>
+
+            <button
+              onClick={() => {
+                setFooterInput('/mission ');
+                document.querySelector('textarea')?.focus();
+              }}
+              style={{
+                background: 'rgba(236, 72, 153, 0.2)',
+                color: '#f472b6',
+                border: '1px solid rgba(236, 72, 153, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🎯 Mission Control
+            </button>
+
+            <button
+              onClick={() => {
+                setFooterInput('/grill ');
+                document.querySelector('textarea')?.focus();
+              }}
+              style={{
+                background: 'rgba(239, 68, 68, 0.2)',
+                color: '#fb923c',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              🔥 Grill Architecture
+            </button>
+
+            <button
+              onClick={() => setShowTips(!showTips)}
+              style={{
+                background: '#21262d',
+                color: '#c9d1d9',
+                border: '1px solid #30363d',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              💡 {showTips ? 'Hide Tips' : 'IDE Guide'}
+            </button>
+          </div>
+        </div>
+      )}
       {/* Memory Ingest Toast Notification */}
       {memoryToast && (
         <div style={{
@@ -7934,52 +8262,99 @@ const extLangMap = {
           </div>
         )}
 
-        {/* @Tag Quick Actions */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', flexWrap: 'wrap' }}>
-          {['@Developer', '@Ecosystem', '@Calendar', '@Documents', '@Email'].map(tag => (
-            <button
-              key={tag}
-              onClick={() => setFooterInput(prev => (prev ? prev + ' ' + tag + ' ' : tag + ' '))}
-              style={{
-                background: 'rgba(59, 130, 246, 0.15)',
-                border: '1px solid rgba(59, 130, 246, 0.4)',
-                color: '#93c5fd',
-                borderRadius: '12px',
-                padding: '4px 10px',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                fontWeight: 600,
-                transition: 'all 0.2s',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.3)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)'}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-
-        {/* Live Context Token Budget Gauge (1,000,000 Token Offload RAG Window) */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '0.72rem', color: '#94a3b8', padding: '0 2px', flexWrap: 'wrap', gap: '6px' }}>
+        {/* Live Context Token Budget Gauge & Utility Toggles (Decluttered Compact Row) */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '6px',
+          fontSize: '0.7rem',
+          color: '#94a3b8',
+          padding: '0 2px',
+          flexWrap: 'wrap',
+          gap: '6px'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 1000000 ? '#f87171' : '#38bdf8' }}>
-              📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} tokens
+            <span style={{ fontWeight: '600', color: footerInput.length > 16000 ? '#f87171' : '#38bdf8' }}>
+              📊 Draft: {footerInput.length.toLocaleString()} chars (~{Math.floor(footerInput.length / 4).toLocaleString()} estimated tokens)
             </span>
-            <span style={{ color: '#34d399', fontWeight: 600 }}>
-              ({Math.min(100, ((Math.floor(footerInput.length / 4) / 1000000) * 100)).toFixed(2)}% of 1,000,000 max window • 1M+ Offload RAG Active | 4,096 GPU VRAM + CPU Port 11435)
+            <div style={{ width: '80px', height: '4px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' }}>
+              <div style={{
+                width: `${Math.min(100, Math.max(footerInput.length > 0 ? 2 : 0, Math.round((footerInput.length / 16000) * 100)))}%`,
+                height: '100%',
+                background: footerInput.length > 16000 ? '#ef4444' : 'linear-gradient(90deg, #34d399, #38bdf8, #818cf8)'
+              }} />
+            </div>
+            <span style={{ color: '#34d399', fontSize: '0.66rem', fontWeight: 600 }}>
+              Source tools: /rag index · /rag search
             </span>
           </div>
-          <div style={{ width: '140px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{
-              width: `${Math.min(100, Math.max(footerInput.length > 0 ? 2 : 0, Math.round((Math.floor(footerInput.length / 4) / 1000000) * 100)))}%`,
-              height: '100%',
-              background: Math.floor(footerInput.length / 4) > 1000000 ? '#ef4444' : 'linear-gradient(90deg, #34d399, #38bdf8, #818cf8)'
-            }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => setShowTagsBar(!showTagsBar)}
+              style={{
+                background: showTagsBar ? 'rgba(59, 130, 246, 0.25)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${showTagsBar ? '#3b82f6' : 'rgba(255,255,255,0.12)'}`,
+                color: showTagsBar ? '#93c5fd' : '#94a3b8',
+                borderRadius: '4px',
+                padding: '2px 7px',
+                fontSize: '0.68rem',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              @Tags {showTagsBar ? '▴' : '▾'}
+            </button>
+            <button
+              onClick={() => setShowToolBar(!showToolBar)}
+              style={{
+                background: showToolBar ? 'rgba(168, 85, 247, 0.25)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${showToolBar ? '#a855f7' : 'rgba(255,255,255,0.12)'}`,
+                color: showToolBar ? '#c084fc' : '#94a3b8',
+                borderRadius: '4px',
+                padding: '2px 7px',
+                fontSize: '0.68rem',
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              🛠️ Tools {showToolBar ? '▴' : '▾'}
+            </button>
           </div>
         </div>
 
-        {/* Phase 7.1 Control Bar Injected Above Input */}
-        <ChatToolControlBar onToolToggle={setActiveTools} />
+        {/* Collapsible @Tag Quick Actions */}
+        {showTagsBar && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+            {['@Developer', '@Ecosystem', '@Calendar', '@Documents', '@Email'].map(tag => (
+              <button
+                key={tag}
+                onClick={() => setFooterInput(prev => (prev ? prev + ' ' + tag + ' ' : tag + ' '))}
+                style={{
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  color: '#93c5fd',
+                  borderRadius: '8px',
+                  padding: '2px 8px',
+                  fontSize: '0.72rem',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Collapsible Tool Control Bar */}
+        {showToolBar && (
+          <div style={{ marginBottom: '6px' }}>
+            <ChatToolControlBar onToolToggle={setActiveTools} />
+          </div>
+        )}
+
         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext}
           onOpenArtifacts={() => setIsArtifactsModalOpen(true)}
           onOpenTerminal={() => setWorkspacePanel('terminal')}
@@ -8349,163 +8724,165 @@ const extLangMap = {
           </div>
         )}
 
-        {/* BS-Chat Mobile Synergy, DPI Scaling & Bluetooth Trackpad Dock */}
+        {/* BS-Chat Mobile Synergy, DPI Scaling & Bluetooth Trackpad Dock (Collapsible) */}
         {mobileSynergyMode && (
-          <div style={{
-            marginBottom: '10px',
-            padding: '10px 14px',
-            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.92))',
-            border: '1px solid rgba(245, 158, 11, 0.45)',
-            borderRadius: '10px',
-            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#fbbf24', letterSpacing: '0.3px' }}>
-                  📱 MOBILE WORKSTATION & BLUETOOTH TRACKPAD SYNERGY
+          <div style={{ marginBottom: '8px' }}>
+            {!showSynergyDock ? (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '4px 10px',
+                background: 'rgba(245, 158, 11, 0.08)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                borderRadius: '6px',
+                fontSize: '0.7rem'
+              }}>
+                <span style={{ color: '#fbbf24', fontWeight: 600 }}>
+                  📱 Mobile Synergy Active ({dpiScaleProfile.replace('mobile_', '').replace('_', ' ')})
                 </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  🖥️ {mobileTelemetry?.display ? `${mobileTelemetry.display.width}x${mobileTelemetry.display.height} @ ${mobileTelemetry.display.refresh_rate_hz}Hz` : 'RTX 4090 Display Ready'}
-                </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  ⌨️🖱️ BT Keyboard & Trackpad: Active
-                </span>
-                <span style={{ fontSize: '0.7rem', background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.35)', color: '#c084fc', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
-                  🌐 {mobileTelemetry?.remote_and_input?.parsec_running ? 'Parsec 60FPS' : mobileTelemetry?.remote_and_input?.rustdesk_running ? 'RustDesk Lossless' : 'Tailscale Mesh Ready'}
-                </span>
+                <button
+                  onClick={() => setShowSynergyDock(true)}
+                  style={{
+                    background: 'none', border: 'none', color: '#fcd34d', cursor: 'pointer', fontWeight: 700, fontSize: '0.7rem'
+                  }}
+                >
+                  Expand Trackpad Dock ▾
+                </button>
               </div>
+            ) : (
+              <div style={{
+                padding: '10px 14px',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.92))',
+                border: '1px solid rgba(245, 158, 11, 0.45)',
+                borderRadius: '10px',
+                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#fbbf24', letterSpacing: '0.3px' }}>
+                      📱 MOBILE WORKSTATION & BLUETOOTH TRACKPAD SYNERGY
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      🖥️ {mobileTelemetry?.display ? `${mobileTelemetry.display.width}x${mobileTelemetry.display.height} @ ${mobileTelemetry.display.refresh_rate_hz}Hz` : 'RTX 4090 Display Ready'}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      ⌨️🖱️ BT Keyboard & Trackpad: Active
+                    </span>
+                    <span style={{ fontSize: '0.7rem', background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.35)', color: '#c084fc', padding: '2px 7px', borderRadius: '6px', fontWeight: 600 }}>
+                      🌐 {mobileTelemetry?.remote_and_input?.parsec_running ? 'Parsec 60FPS' : mobileTelemetry?.remote_and_input?.rustdesk_running ? 'RustDesk Lossless' : 'Tailscale Mesh Ready'}
+                    </span>
+                  </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                {[
-                  { id: 'desktop_native', label: '100% Native' },
-                  { id: 'mobile_1440p_125', label: '1440p (125% DPI)' },
-                  { id: 'mobile_1080p_150', label: '1080p (150% Touch)' }
-                ].map(p => (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    {[
+                      { id: 'desktop_native', label: '100% Native' },
+                      { id: 'mobile_1440p_125', label: '1440p (125% DPI)' },
+                      { id: 'mobile_1080p_150', label: '1080p (150% Touch)' }
+                    ].map(p => (
+                      <button
+                        key={p.id}
+                        onClick={() => handleSwitchDpiProfile(p.id, false)}
+                        style={{
+                          background: dpiScaleProfile === p.id ? '#d97706' : 'rgba(255,255,255,0.06)',
+                          color: dpiScaleProfile === p.id ? '#fff' : '#cbd5e1',
+                          border: `1px solid ${dpiScaleProfile === p.id ? '#fbbf24' : 'rgba(255,255,255,0.15)'}`,
+                          borderRadius: '6px',
+                          padding: '3px 8px',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setShowSynergyDock(false)}
+                      style={{
+                        background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.72rem', fontWeight: 600
+                      }}
+                    >
+                      ▴ Collapse
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button
-                    key={p.id}
-                    onClick={() => handleSwitchDpiProfile(p.id, false)}
+                    onClick={() => {
+                      const target = window.prompt('Enter component, file, or route for AST Blast-Radius analysis:', 'ChatTab');
+                      if (target && target.trim()) handleSendMessage(`/blast ${target.trim()}`);
+                    }}
                     style={{
-                      background: dpiScaleProfile === p.id ? '#d97706' : 'rgba(255,255,255,0.06)',
-                      color: dpiScaleProfile === p.id ? '#fff' : '#cbd5e1',
-                      border: `1px solid ${dpiScaleProfile === p.id ? '#fbbf24' : 'rgba(255,255,255,0.15)'}`,
-                      borderRadius: '6px',
-                      padding: '3px 8px',
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      cursor: 'pointer'
+                      background: 'rgba(239, 68, 68, 0.18)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
                     }}
                   >
-                    {p.label}
+                    🕸️ /blast
                   </button>
-                ))}
+                  <button
+                    onClick={() => handleSendMessage('/graph')}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.18)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🗺️ /graph
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/distill')}
+                    style={{
+                      background: 'rgba(168, 85, 247, 0.18)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🧬 /distill
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/ps')}
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.18)', color: '#86efac', border: '1px solid rgba(16, 185, 129, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    ⚡ /ps
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/wsl')}
+                    style={{
+                      background: 'rgba(245, 158, 11, 0.18)', color: '#fde047', border: '1px solid rgba(245, 158, 11, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🐧 /wsl
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage('/health')}
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.18)', color: '#6ee7b7', border: '1px solid rgba(16, 185, 129, 0.45)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    🩺 /health
+                  </button>
+                  <button
+                    onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.22)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.5)',
+                      borderRadius: '8px', padding: '4px 10px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer'
+                    }}
+                  >
+                    📡 Cast Hub
+                  </button>
+                </div>
               </div>
-            </div>
-
-            {/* 1-Tap High-Contrast Slash Command & Mission Bar for Mobile & Trackpad */}
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <button
-                onClick={() => {
-                  const target = window.prompt('Enter component, file, or route for AST Blast-Radius analysis:', 'ChatTab');
-                  if (target && target.trim()) handleSendMessage(`/blast ${target.trim()}`);
-                }}
-                style={{
-                  background: 'rgba(239, 68, 68, 0.18)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Run AST Blast-Radius Dependency Analysis"
-              >
-                🕸️ /blast
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/graph')}
-                style={{
-                  background: 'rgba(56, 189, 248, 0.18)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Rebuild SQLite AST Codebase Dependency Graph"
-              >
-                🗺️ /graph
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/distill')}
-                style={{
-                  background: 'rgba(168, 85, 247, 0.18)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Trigger Sovereign Nightly QLoRA Dataset Curation on RTX 4090"
-              >
-                🧠 /distill
-              </button>
-
-              <button
-                onClick={() => {
-                  setFooterInput('/ps ');
-                  chatInputRef.current?.focus();
-                }}
-                style={{
-                  background: 'rgba(37, 99, 235, 0.22)', color: '#93c5fd', border: '1px solid rgba(59, 130, 246, 0.5)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Insert /ps for instant Windows PowerShell execution"
-              >
-                ⚡ /ps
-              </button>
-
-              <button
-                onClick={() => {
-                  setFooterInput('/wsl ');
-                  chatInputRef.current?.focus();
-                }}
-                style={{
-                  background: 'rgba(234, 88, 12, 0.2)', color: '#fdba74', border: '1px solid rgba(234, 88, 12, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Insert /wsl for instant Linux WSL2 Bash execution"
-              >
-                🐧 /wsl
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/health')}
-                style={{
-                  background: 'rgba(16, 185, 129, 0.18)', color: '#6ee7b7', border: '1px solid rgba(16, 185, 129, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Run Matrix Doctor Ecosystem Health Scan"
-              >
-                🩺 /health
-              </button>
-
-              <button
-                onClick={() => handleSendMessage('/dpi status')}
-                style={{
-                  background: 'rgba(245, 158, 11, 0.18)', color: '#fde68a', border: '1px solid rgba(245, 158, 11, 0.45)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Inspect Display Resolution, DPI Scaling, Parsec/Tailscale & Bluetooth HID Status"
-              >
-                📱 /dpi status
-              </button>
-
-              <button
-                onClick={() => setShowWirelessCastHub(!showWirelessCastHub)}
-                style={{
-                  background: 'rgba(56, 189, 248, 0.22)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.5)',
-                  borderRadius: '8px', padding: '5px 11px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
-                }}
-                title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Display, PC➔Phone, Phone➔PC)"
-              >
-                📡 /cast Wireless Mirror
-              </button>
-            </div>
+            )}
           </div>
         )}
-
         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
           {/* Artifacts & Tools Hub Button */}
           <button
@@ -8666,7 +9043,6 @@ const extLangMap = {
                         fontSize: '0.8rem',
                         outline: 'none'
                       }}
-                      autoFocus
                     />
                     {commandSearchQuery && (
                       <button
@@ -8995,8 +9371,8 @@ const extLangMap = {
           </div>
         </div>
 
-        {/* Clear screen & Action Toolbar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+        {/* Clear screen & Action Toolbar (Decluttered Single Row) */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {/* Disable / Enable Backend & Stop Process Button */}
             <button
@@ -9039,174 +9415,109 @@ const extLangMap = {
               )}
             </button>
 
-            {chatMessages.length > 0 && (
+            {/* Quick Actions Drop-up Menu */}
+            <div style={{ position: 'relative' }} ref={quickActionsMenuRef}>
               <button
-                onClick={handleSaveToMemoryAndClear}
+                onClick={() => setShowQuickActionsMenu(!showQuickActionsMenu)}
                 style={{
-                  background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+                  background: showQuickActionsMenu ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.12)',
+                  color: '#38bdf8',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: '6px',
+                  padding: '3px 9px',
+                  fontSize: '0.72rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}
+                title="Open Quick Diagnostic & System Actions"
               >
-                Clear Screen (Archives First)
+                <span>⚡ Quick Actions</span>
+                <span style={{ fontSize: '0.65rem' }}>{showQuickActionsMenu ? '▴' : '▾'}</span>
               </button>
-            )}
 
-            <button
-              onClick={() => handleSendMessage('/monitor')}
-              style={{
-                background: 'rgba(245, 158, 11, 0.12)',
-                color: '#fbbf24',
-                border: '1px solid rgba(245, 158, 11, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="Monitor all 43 Master Hub modules, 20 daemons, and storage matrix"
-            >
-              👑 43-Module Oversight
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/spaces')}
-              style={{
-                background: 'rgba(99, 102, 241, 0.12)',
-                color: '#a5b4fc',
-                border: '1px solid rgba(99, 102, 241, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="Inspect all 11 memory-mapped SQLite database spaces"
-            >
-              🔍 11 Spaces
-            </button>
-
-            <button
-              onClick={() => {
-                const text = window.prompt("Enter data or note to persist into SQLite database space:");
-                if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
-              }}
-              style={{
-                background: 'rgba(16, 185, 129, 0.12)',
-                color: '#34d399',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-              title="On-demand structured data ingestion to database"
-            >
-              💾 Ingest to DB
-            </button>
-
-            <button
-              onClick={() => setIsGovernanceOpen(true)}
-              style={{
-                background: 'rgba(56, 189, 248, 0.1)',
-                color: '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-              🛡️ Risk & Governance Review
-            </button>
-
-            <button
-              onClick={() => setIsStressTestOpen(true)}
-              style={{
-                background: 'rgba(129, 140, 248, 0.1)',
-                color: '#818cf8',
-                border: '1px solid rgba(129, 140, 248, 0.3)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-              📊 Context Stress Test
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/blast ChatTab.jsx')}
-              style={{
-                background: 'rgba(239, 68, 68, 0.14)',
-                color: '#fca5a5',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 2: Compute AST Blast-Radius Dependency Impact"
-            >
-              💥 /blast AST Impact
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/graph')}
-              style={{
-                background: 'rgba(56, 189, 248, 0.14)',
-                color: '#7dd3fc',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 2: Rebuild 491-Node SQLite AST Dependency Graph"
-            >
-              🕸️ /graph (491 Nodes)
-            </button>
-
-            <button
-              onClick={() => handleSendMessage('/distill')}
-              style={{
-                background: 'rgba(168, 85, 247, 0.14)',
-                color: '#d8b4fe',
-                border: '1px solid rgba(168, 85, 247, 0.4)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Stage 3: Build Sovereign Nightly QLoRA Dataset on RTX 4090"
-            >
-              🧬 /distill QLoRA
-            </button>
-
-            <button
-              onClick={() => {
-                const next = !mobileSynergyMode;
-                setMobileSynergyMode(next);
-                try { localStorage.setItem('aibs_mobile_synergy', String(next)); } catch (e) {}
-              }}
-              style={{
-                background: mobileSynergyMode ? 'linear-gradient(135deg, #d97706, #b45309)' : 'rgba(245, 158, 11, 0.14)',
-                color: mobileSynergyMode ? '#ffffff' : '#fcd34d',
-                border: '1px solid rgba(245, 158, 11, 0.45)',
-                borderRadius: '6px',
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-                fontWeight: '700'
-              }}
-              title="Toggle Mobile Workstation DPI & Bluetooth Trackpad Synergy Dock"
-            >
-              📱 {mobileSynergyMode ? 'Mobile Synergy: ON' : 'Mobile DPI Dock'}
-            </button>
+              {showQuickActionsMenu && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: 0,
+                  marginBottom: '8px',
+                  background: 'rgba(15, 23, 42, 0.98)',
+                  border: '1px solid #30363d',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, minmax(140px, 1fr))',
+                  gap: '6px',
+                  zIndex: 200,
+                  minWidth: '320px'
+                }}>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/monitor'); }}
+                    style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    👑 43-Module Oversight
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/spaces'); }}
+                    style={{ background: 'rgba(99, 102, 241, 0.12)', color: '#a5b4fc', border: '1px solid rgba(99, 102, 241, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    🔍 11 Spaces
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowQuickActionsMenu(false);
+                      const text = window.prompt("Enter data or note to persist into SQLite database space:");
+                      if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
+                    }}
+                    style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    💾 Ingest to DB
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); setIsGovernanceOpen(true); }}
+                    style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    🛡️ Risk & Governance
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); setIsStressTestOpen(true); }}
+                    style={{ background: 'rgba(129, 140, 248, 0.1)', color: '#818cf8', border: '1px solid rgba(129, 140, 248, 0.3)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 600, textAlign: 'left' }}
+                  >
+                    📊 Context Stress Test
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/blast ChatTab.jsx'); }}
+                    style={{ background: 'rgba(239, 68, 68, 0.14)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    💥 /blast AST Impact
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/graph'); }}
+                    style={{ background: 'rgba(56, 189, 248, 0.14)', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    🕸️ /graph (491 Nodes)
+                  </button>
+                  <button
+                    onClick={() => { setShowQuickActionsMenu(false); handleSendMessage('/distill'); }}
+                    style={{ background: 'rgba(168, 85, 247, 0.14)', color: '#d8b4fe', border: '1px solid rgba(168, 85, 247, 0.4)', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 700, textAlign: 'left' }}
+                  >
+                    🧬 /distill QLoRA
+                  </button>
+                  {chatMessages.length > 0 && (
+                    <button
+                      onClick={() => { setShowQuickActionsMenu(false); handleSaveToMemoryAndClear(); }}
+                      style={{ gridColumn: 'span 2', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', borderRadius: '6px', padding: '5px 8px', fontSize: '0.72rem', cursor: 'pointer', textAlign: 'center' }}
+                    >
+                      Clear Screen (Archives First)
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -9225,7 +9536,7 @@ const extLangMap = {
               <span style={{ fontSize: '0.65rem' }}>{isBackendDisabled ? '🔴' : '🟢'}</span> {isBackendDisabled ? 'Backend Offline' : conversationMemory.statusLabel}
             </span>
             <span style={{ color: '#60a5fa', fontSize: '0.72rem', fontWeight: 700 }}>
-              {`Stehouwer LLM ${SYSTEM_VERSION} • Stage 1–3 Auto-Heal, AST Graph & RTX 4090 QLoRA Active`}
+              {`Stehouwer LLM ${SYSTEM_VERSION} • Selected provider and per-message evidence shown above`}
             </span>
           </div>
         </div>
@@ -9294,7 +9605,7 @@ const extLangMap = {
             </div>
 
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: 0, marginBottom: '18px' }}>
-              Test BS-Chat context limits and needle-in-a-haystack accuracy up to 1,000,000 tokens (4,096 GPU VRAM window + CPU Port 11435 Offload RAG).
+              Synthetic context benchmark. Model input limits and bounded source retrieval require separate verification; this control does not establish a million-token model window.
             </p>
 
             <div style={{ marginBottom: '20px' }}>

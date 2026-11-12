@@ -1,0 +1,33 @@
+Built-in imagegen generation prompt
+
+Reference 1 (Sean, face): C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014412_Photos.png
+Reference 2 (Sean, build and tattoo): C:/Users/footb/Downloads/Photos-1-001 (1)/Screenshot_20261031_014500_Photos.png
+Reference 3 (Brett): C:/Users/footb/Downloads/20250916_131125.jpg
+
+Create one exceptionally detailed, finished vertical portrait mural poster celebrating the real friendship and brotherhood of Sean and Brett. Tall 2:3 composition, highest available detail, a coherent hand-painted artwork suitable for a large wall print.
+
+REFERENCE IDENTITIES ARE CRITICAL:
+Reference 1 is Sean: use as the primary faithful facial likeness reference. Reference 2 is the SAME person, Sean, and supports his physique, dark swept-up hairstyle, forearm tattoo, and watch. Reference 3 is Brett: use as the faithful facial likeness and physique reference. There are exactly TWO men in the finished artwork. Sean and Brett must remain clearly distinct individuals, closely recognizable to their own photos; preserve their natural facial structure, eye spacing, noses, lips, jaw shapes, hairlines and coloring. Do not blend identities, genericize, beautify, over-age, or replace them with stock handsome actors. Reference photos establish identities rather than the final pose or background. Remove all source-image phone UI, timestamps and watermarks.
+
+ART DIRECTION:
+An intimate, richly painted contemporary mural combined with the compositional clarity of an outstanding illustrated theater/film poster. Highly realistic, carefully observed portrait faces, tactile oil/acrylic brushwork, weathered plaster, subtle layers of manuscript paper and hand-drawn planning marks in the background. Deep midnight blue and charcoal, warm copper and amber light, muted teal, parchment cream; inviting and alive. Layer detail deliberately, with strong visual hierarchy, clean silhouettes and a coherent shared environment. The faces are overwhelmingly the first focal point, with personal discoveries on closer inspection. Authentic human warmth, irreverence, loyalty, shared ambition, and pride.
+
+CENTRAL PORTRAIT:
+Sean on the viewer's left and Brett on the viewer's right, equal size, equal eye level, equal prominence, upper bodies close together behind one shared creative worktable. Both in relaxed casual clothes: Sean a fitted dark navy short-sleeved shirt with visible referenced forearm tattoo and watch; Brett a charcoal crewneck with a softly worn muted olive overshirt. Preserve their builds naturally. They lean slightly together with relaxed shoulders and subtle knowing half-smiles, the expression of close friends just after a private joke, with warmth and a hint of mischief. Their faithful faces should carry the relationship, not exaggerated posing. Natural anatomically correct hands resting comfortably on the shared table. One continuous warm light reaches both faces. Neither is portrayed as a rescuer, subordinate, or sidekick.
+
+ONE CONNECTED WORLD:
+The shared workshop extends into a warmly illuminated modest black-box theater behind them, with understated stage curtains, practical stage lights and an intimate wooden stage. Toward the far background, that same architecture opens onto a hopeful early-morning landscape with cultivated fields and a small greenhouse, representing an imagined future farm and creative community. Keep this future modest, believable and atmospheric, not palatial or triumphant. The surrounding wall has layered paint and gently repaired texture suggesting years of persistence without literal scenes of suffering.
+
+PERSONAL DETAILS, ALL SUBORDINATE TO PORTRAITS:
+On the single shared table, naturally overlap an open handwritten script with revision marks, a notebook, a subtle music waveform on one small laptop display and headphones. A pair of game controllers together near a slightly open pizza box represents daily gaming, company, and joking gifts. A small handwritten 'GO TEAM' note is tucked onto the pizza box. A tiny theater/farm sketch in the notebook visually connects the present work to the distant landscape. These belong to both men rather than being rigidly separated into his-and-his halves. Beautiful fine detail in paper edges, paint, light, wood and clothing, but avoid an inventory-like arrangement or crowded collage.
+
+TYPOGRAPHY:
+Integrate beautifully composed, highly legible hand-painted theater-poster lettering into the artwork with generous margins. At top, exact title on two balanced lines:
+'MY BROTHER'
+'WHO NEVER LEAVES'
+At the bottom, exact smaller strong caption:
+'UNDERDAWGS FOR FUCKIN’ ETERNITY'
+The title and bottom caption should be crisp, correctly spelled and carefully spaced in warm parchment cream, with restrained distressed texture. Only the small 'GO TEAM' note adds readable prop text. Do not add other slogans or blocks of text.
+
+CONSTRAINTS:
+Exactly two main portraits; no additional people or ghost faces. No invented personal memories or traumatic episodes. No copied bathroom, chair, selfie pose, or whiteboard from the references. Preserve Sean's own tattoo only where visible, and do not transfer it to Brett. No glossy plastic skin, cartoon caricatures, fantasy armor, flags, weapons, substances, or corporate branding. The final result should feel deeply personal and masterfully painted, with both recognizable men and their ordinary companionship at the emotional center.

@@ -1,0 +1,139 @@
+{
+  "status": "verified remote size and parent; local CRC and per-file SHA256 passed",
+  "scope": "No remote cryptographic hash or Drive quota claim",
+  "checks": [
+    {
+      "id": "100W4rFOfkPh-IpqpBhU0XrS4fZzEXuDx",
+      "local": "C:/AI-BS/backups/checkpoint_20261101_native95_restart/AI_BS_Native95_Restart_Source.zip",
+      "metadata": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "id": "100W4rFOfkPh-IpqpBhU0XrS4fZzEXuDx",
+          "title": "AI_BS_Native95_Restart_Source.zip",
+          "mime_type": null,
+          "size": "17836365",
+          "url": "https://drive.google.com/file/d/100W4rFOfkPh-IpqpBhU0XrS4fZzEXuDx/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/100W4rFOfkPh-IpqpBhU0XrS4fZzEXuDx/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E"
+          ],
+          "drive_id": null,
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        },
+        "isError": false
+      }
+    },
+    {
+      "id": "1w_jvP3aBpgCQ2nOyma9w2Vf8-PRCmmeg",
+      "local": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Restart_Save/README.md",
+      "metadata": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "id": "1w_jvP3aBpgCQ2nOyma9w2Vf8-PRCmmeg",
+          "title": "README.md",
+          "mime_type": null,
+          "size": "1597",
+          "url": "https://drive.google.com/file/d/1w_jvP3aBpgCQ2nOyma9w2Vf8-PRCmmeg/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1w_jvP3aBpgCQ2nOyma9w2Vf8-PRCmmeg/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E"
+          ],
+          "drive_id": null,
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        },
+        "isError": false
+      }
+    },
+    {
+      "id": "1fL6U_P0iajP4EUGBXjB_bFWR63b-L_tL",
+      "local": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_M5_Native95_Restart_Save/delivery.json",
+      "metadata": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "id": "1fL6U_P0iajP4EUGBXjB_bFWR63b-L_tL",
+          "title": "delivery.json",
+          "mime_type": null,
+          "size": "548",
+          "url": "https://drive.google.com/file/d/1fL6U_P0iajP4EUGBXjB_bFWR63b-L_tL/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1fL6U_P0iajP4EUGBXjB_bFWR63b-L_tL/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E"
+          ],
+          "drive_id": null,
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        },
+        "isError": false
+      }
+    },
+    {
+      "id": "1bBNJjK9lxOXdyfd7_XGUb47UhgJOn4j6",
+      "local": "C:/AI-BS/docs/agent_sync/manifest_m5_native95_restart_20261101.json",
+      "metadata": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "id": "1bBNJjK9lxOXdyfd7_XGUb47UhgJOn4j6",
+          "title": "manifest_m5_native95_restart_20261101.json",
+          "mime_type": null,
+          "size": "334109",
+          "url": "https://drive.google.com/file/d/1bBNJjK9lxOXdyfd7_XGUb47UhgJOn4j6/view?usp=drivesdk",
+          "display_url": "https://drive.google.com/file/d/1bBNJjK9lxOXdyfd7_XGUb47UhgJOn4j6/view?usp=drivesdk",
+          "file_or_folder": null,
+          "created_time": null,
+          "modified_time": null,
+          "parent_ids": [
+            "16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E"
+          ],
+          "drive_id": null,
+          "current_user_can_share": null,
+          "has_augmented_permissions": null,
+          "shared": null,
+          "permissions": null,
+          "source_visibility_status": "access_not_verified"
+        },
+        "isError": false
+      }
+    }
+  ],
+  "build_work_paused": true
+}

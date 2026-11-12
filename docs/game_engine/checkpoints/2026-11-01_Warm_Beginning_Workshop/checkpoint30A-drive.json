@@ -1,0 +1,22 @@
+{
+  "status": "verified_authenticated_Drive_raw_restore",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\30A_Chat_Filter_Lifetime_Source_20261103.zip",
+  "bytes": 348729,
+  "sha256": "a5f913e66a45db49aff59bb7817aac934197ba94bc7fc34497b09e4d3dd04085",
+  "members": 47,
+  "scope": "30A selected current source/design/evidence increment; not standalone complete project restoration. Excludes original family media, private memory/WER, credentials, Git metadata and Master ledger.",
+  "source_fix_tests_distinct": 39,
+  "goal_complete": false,
+  "owned_jobs_live": 0,
+  "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P30_source_lifecycle.json",
+  "space_free_bytes": {
+    "C": 64321380352,
+    "D": 88280834048,
+    "E": 146813599744
+  },
+  "at": "2026-11-03T13:18:45.854779+00:00",
+  "Drive_file_id": "1Ifsmnnf_7x5ujDOO56sPBqmwk_qd2Enk",
+  "Drive_url": "https://drive.google.com/file/d/1Ifsmnnf_7x5ujDOO56sPBqmwk_qd2Enk/view?usp=drivesdk",
+  "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "every_member_SHA256_size_CRC_and_exact_set_verified": true
+}

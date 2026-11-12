@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_chapter_creator\\AI_BS_M4_Chapter_Creator_Source.zip",
+  "bytes": 7722394,
+  "files": 640,
+  "sha256": "69ea28bc630625ef538c885081a1dfa309e13206829638fa00a7204e7bb1bf95",
+  "crc": "passed",
+  "captured_byte_readback": "passed",
+  "free_bytes": {
+    "C": 118611070976,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

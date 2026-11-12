@@ -30,6 +30,8 @@ const context = {
   rawText: raw, userPrompt: raw, formattedPrompt: formatted,
   recentHistory: [{ role: 'assistant', content: 'Generate another image' }],
   targetModel: 'fixture-model', selectedModel: 'fixture-model',
+  selectedProvider: 'local',
+  sourceReferences: [],
   activeContexts: { web: false }, prompt: raw,
   updatedHistory: [{ role: 'assistant', content: 'Previous generation request' }, { role: 'user', content: formatted }],
   isPlanMode: false, targetDevice: 'fixture-device',

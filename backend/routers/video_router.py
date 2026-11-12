@@ -9,6 +9,11 @@ from typing import Optional, Dict, Any, List
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Query, UploadFile, File, Form
 from pydantic import BaseModel
 import tempfile
+import mimetypes
+from urllib.parse import quote, urlencode
+from fastapi import Depends
+from fastapi.responses import FileResponse
+from security.document_access import require_document_access, require_video_access, issue_media_ticket, MEDIA_TICKET_TTL
 try:
     import whisper
 except ImportError:
@@ -35,6 +40,34 @@ class BatchPipelineRequest(BaseModel):
 
 class StreamRequest(BaseModel):
     video_path: str
+
+
+VIDEO_MIME_TYPES = {
+    '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.webm': 'video/webm',
+    '.mov': 'video/quicktime', '.mkv': 'video/x-matroska',
+    '.avi': 'video/x-msvideo', '.mpeg': 'video/mpeg', '.mpg': 'video/mpeg',
+    '.ogv': 'video/ogg', '.ts': 'video/mp2t',
+}
+
+
+def resolve_video_path(path: str) -> Path:
+    """One canonical file identity for issuing and consuming a video-only grant."""
+    if not isinstance(path, str) or not path.strip() or len(path) > 4096 or '\x00' in path:
+        raise HTTPException(status_code=400, detail='A valid video path is required.')
+    target = Path(path)
+    if not target.is_absolute():
+        target = SCREEN_RECORDINGS_DIR / path
+        if not target.is_file():
+            target = Path('C:/AI-BS/screenplay_projects/Echoes_Within') / path
+    try:
+        target = target.resolve(strict=True)
+    except (OSError, ValueError):
+        raise HTTPException(status_code=404, detail='Video file not found')
+    if not target.is_file():
+        raise HTTPException(status_code=404, detail='Video file not found')
+    if target.suffix.lower() not in VIDEO_MIME_TYPES:
+        raise HTTPException(status_code=415, detail='Select a supported video file.')
+    return target
 
 
 @router.post("/test_pipeline")
@@ -166,41 +199,38 @@ def get_batch_status(job_id: str):
         return {"status": "running", "message": "Updating...", "current": 0, "total": 1}
 
 
-@router.post("/start_stream")
+@router.post("/start_stream", dependencies=[Depends(require_document_access)])
 def start_video_stream(payload: StreamRequest):
-    p = Path(payload.video_path)
-    if not p.exists():
-        # Check in SCREEN_RECORDINGS_DIR
-        alt = SCREEN_RECORDINGS_DIR / p.name
-        if alt.exists():
-            p = alt
-        else:
-            raise HTTPException(status_code=404, detail=f"Video file not found at {payload.video_path}")
+    p = resolve_video_path(payload.video_path)
     return {
         "status": "success",
-        "stream_url": f"/api/video/stream?path={p.name}"
+        "stream_url": "/api/video/stream?path=" + quote(str(p.resolve()), safe='')
     }
 
 
-@router.get("/stream")
-def stream_video_file(path: str = Query(..., description="File name or absolute path")):
-    target = Path(path)
-    if not target.is_absolute():
-        target = SCREEN_RECORDINGS_DIR / path
-        if not target.exists():
-            target = Path("C:/AI-BS/screenplay_projects/Echoes_Within") / path
+@router.post('/media-ticket', dependencies=[Depends(require_document_access)])
+def create_video_media_ticket(payload: StreamRequest):
+    target = resolve_video_path(payload.video_path)
+    ticket = issue_media_ticket(target, 'video-preview')
+    from fastapi.responses import JSONResponse
+    return JSONResponse({'url': '/api/video/stream?' + urlencode({'path': str(target), 'ticket': ticket}),
+                         'expires_in': MEDIA_TICKET_TTL}, headers={'Cache-Control': 'no-store'})
 
-    if not target.exists():
-        raise HTTPException(status_code=404, detail="Video file not found")
+
+@router.api_route("/stream", methods=['GET', 'HEAD'], dependencies=[Depends(require_video_access)])
+def stream_video_file(path: str = Query(..., description="File name or absolute path")):
+    target = resolve_video_path(path)
         
     return FileResponse(
         path=str(target),
-        media_type="video/mp4",
-        filename=target.name
+        media_type=VIDEO_MIME_TYPES[target.suffix.lower()],
+        filename=target.name,
+        content_disposition_type="inline",
+        headers={'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff'}
     )
 
 
-@router.get("/script")
+@router.get("/script", dependencies=[Depends(require_document_access)])
 def get_script_content(path: str = Query(..., description="File name or absolute path to .py")):
     target = Path(path)
     if not target.is_absolute():

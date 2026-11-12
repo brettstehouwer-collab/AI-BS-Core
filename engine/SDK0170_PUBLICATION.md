@@ -1,0 +1,7 @@
+# SDK0.17.0 publication and native preview preparation
+
+2026-11-04T00:48:11.462410+00:00. New canonical Release/Debug prefixes are D:/AI-BS-Game-Resources/SDK/0.17.0/release and debug. Each449file prefix is byte-identical to the separately qualified P64 staging installation; each passes nine freshly configured independent public-header/library consumers at its final location. No source/build-tree or old staging include paths are used. C++ABI clients require a matching rebuild; default character payload2 remains supported and nondefault material factors use inner payload3.
+
+An18file deployable runtime mirror is published under engine/install/0.17.0/runtime-release. A new25file closed curated bundle is under engine/assets/cooked/warm-opening-v20-surface. Old profiles and curated bundles are retained. Source-mode discovery now prefers0170 and the new bundle, retains0166/older fallbacks, and preserves frozen-bundle authority. Test-first precedence/fallback checks pass 35cases. Exact diffs/preimages/RED evidence remain under P66.
+
+P64's full128engine tests/config qualify the unchanged C++SDK bytes. The Python discovery tests were edited afterward and separately rerun here; this is not represented as one new clean whole-CTest run. P65 separately verified the actual surface model through both chapter tours and normal restarts. Studio106 packaging is in progress under P67, not deployed; installed Studio105 remains retained. Final likeness, checked captions, human pacing/performance and the complete packaged opening remain unfinished.

@@ -1,0 +1,207 @@
+{
+  "root": {
+    "id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+    "url": "https://drive.google.com/drive/folders/1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+  },
+  "folders": {
+    "01 Story and World Design": {
+      "success": true,
+      "id": "185BJC9bd2nYmZl-bph0e9NEt9hnITT6y",
+      "url": "https://drive.google.com/drive/folders/185BJC9bd2nYmZl-bph0e9NEt9hnITT6y",
+      "title": "01 Story and World Design",
+      "parent_id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+    },
+    "02 Core Engine Architecture": {
+      "success": true,
+      "id": "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy",
+      "url": "https://drive.google.com/drive/folders/1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy",
+      "title": "02 Core Engine Architecture",
+      "parent_id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+    },
+    "03 Concept Art": {
+      "success": true,
+      "id": "1LGTSchDbnSKZ-vfLlLWFwWqgMKrZg7TP",
+      "url": "https://drive.google.com/drive/folders/1LGTSchDbnSKZ-vfLlLWFwWqgMKrZg7TP",
+      "title": "03 Concept Art",
+      "parent_id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+    },
+    "04 Progress and Decisions": {
+      "success": true,
+      "id": "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT",
+      "url": "https://drive.google.com/drive/folders/1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT",
+      "title": "04 Progress and Decisions",
+      "parent_id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m"
+    }
+  },
+  "character_references": {
+    "id": "1IptMxBgJ-fUSLQz9p8CP7Azb9JdA7XdE",
+    "url": "https://drive.google.com/drive/folders/1IptMxBgJ-fUSLQz9p8CP7Azb9JdA7XdE"
+  },
+  "policy": "User requested BS game work saved here. Upload new work or update verified file IDs; no automatic background sync configured.",
+  "checkpoints": {
+    "id": "1KOSg1J46caKoLSuKkvFQp1wGfwmt99Fz",
+    "url": "https://drive.google.com/drive/folders/1KOSg1J46caKoLSuKkvFQp1wGfwmt99Fz",
+    "parent_id": "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT",
+    "index_file_id": "1vaer0e322M_kbgM3ceWzm73u-tGZ8wcs",
+    "latest_folder": {
+      "id": "1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc",
+      "url": "https://drive.google.com/drive/folders/1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc",
+      "status": "VERIFIED complete selected source, local CRC/hash/readback and Drive size/parent; M4 unfinished",
+      "source_archive_file_id": "1oXPCk2HePy2cZudCBu2b82D0UtbUDJmH",
+      "manifest_file_id": "15QeJDXWliIEkI4fDX4Uix3kTBm-PexaP",
+      "state_file_id": "1HO1VZ42PbvOS7g_VRiu5L5FWnAEr1o_v",
+      "readme_file_id": "1wNLqNoWZyt6dSKHE2BjSpxu_0cQgTCi_",
+      "resume_notes_file_id": "1CarOFQShJHBMizc24qBNR2cXc4gHLT9K",
+      "archive_bytes": 3177977,
+      "source_files": 379,
+      "latest_incremental_overlay": {
+        "file_id": "1bSIoYgNJzWeuC5xLf76wLaHL_dlwdHw_",
+        "name": "Creator_Qt_Managed_Client.zip",
+        "bytes": 106615,
+        "source_files": 17,
+        "local_sha256": "ad68381f3cc8dcc250081c923d48e8a64950eed970934652f4cd31eb99f0d538",
+        "status": "VERIFIED local integrity and cloud size/parent"
+      }
+    },
+    "latest_archive": {
+      "sdk": "0.8.0",
+      "studio": "5.329.94",
+      "milestone": "M3",
+      "id": "1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A",
+      "url": "https://drive.google.com/file/d/1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A/view?usp=drivesdk",
+      "bytes": 1438265,
+      "files": 259
+    },
+    "previous_latest_folder": {
+      "id": "1z6RJ7icc_SNWGtHtuLPzHYA68vQhcl69",
+      "url": "https://drive.google.com/drive/folders/1z6RJ7icc_SNWGtHtuLPzHYA68vQhcl69",
+      "state_file_id": "1iu6AOrqSExqOIZ0buGZoSzqYrZ0ZF_8C",
+      "readme_file_id": "1812FeavG2gNmARaPGQNEcoF-cSZTeqEO",
+      "synthetic_save_file_id": "1nizqMX3zS_SSt5B9SJbGU2-14CMBgmCA",
+      "status": "M3_VERIFIED_INSTALLED_M4_ACTIVE"
+    },
+    "native94_images": {
+      "id": "121qC34M4RPYxCv7R20wnhrctWtetg64O",
+      "url": "https://drive.google.com/drive/folders/121qC34M4RPYxCv7R20wnhrctWtetg64O",
+      "count": 5,
+      "kind": "Actual prototype captures; lossless conversions of game/HUD proof and real frozen Qt screenshot"
+    },
+    "previous_pause_folder": {
+      "id": "1I3zl6KvXvyWl9PA77CNVY-riMO7UBQ8U",
+      "url": "https://drive.google.com/drive/folders/1I3zl6KvXvyWl9PA77CNVY-riMO7UBQ8U",
+      "state_file_id": "1S0iNFxVjBK2IthzJ-oj5IgUK4dnprQSO",
+      "readme_file_id": "1BybbELiDcvnY3_CmXzHIDqySF_2bnA8p",
+      "resume_notes_file_id": "1n3Vx9xooIA6wgsMVpce6OHGd-pX9ceLQ",
+      "manifest_file_id": "1DMeVFer9zICoDuxjkjp_1P8T-pjZa5S0",
+      "source_archive_file_id": "1aX2JU3seIxg2Wz01allY-wwb-xj2Ndzc",
+      "archive_bytes": 2346274,
+      "source_files": 272,
+      "status": "WORK_STOPPED_USER_REQUESTED_PAUSE",
+      "snapshot_scope": "Complete selected current source plus M4 missing-header RED fixture, hashes/status/diff and resume design. No M4 implementation claim."
+    },
+    "previous_creator_foundation": {
+      "id": "1NPutxCBJuZ7YFSGlqsz_PYvhKpq51WSr",
+      "url": "https://drive.google.com/drive/folders/1NPutxCBJuZ7YFSGlqsz_PYvhKpq51WSr",
+      "readme_file_id": "1XBcQXinCW6TvV_XwfIo3gtM6L4TZyRHI",
+      "status": "VERIFIED source foundation and Drive byte-size/parent readback; M4 unfinished",
+      "source_archive_file_id": "1HtI7W5zi5iD64M2o2gZFuzxnr09MKEd1",
+      "manifest_file_id": "1Mn302JIQOvKHIulvuqhB_aCrzRZ4x6t-",
+      "state_file_id": "1x96aTcHVVbyjSYpglut7Bb243J364LQd",
+      "resume_notes_file_id": "1HIPnr2m7Qa5342qRdSgRDIrwo5KxEfQM",
+      "archive_bytes": 3102870,
+      "source_files": 322
+    }
+  },
+  "checkpoint_policy": "User confirmed Codex context-window continuity: keep dated small development checkpoints and an index under Progress and Decisions/Checkpoints, plus larger milestone archives under Core Engine Architecture. Preserve prior snapshots; update ongoing ledger/status/index by their stable Drive IDs. No background sync or recurring automation is configured.",
+  "current_milestone_archive": {
+    "sdk": "0.8.0",
+    "studio": "5.329.94",
+    "milestone": "M3",
+    "id": "1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A",
+    "url": "https://drive.google.com/file/d/1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A/view?usp=drivesdk",
+    "bytes": 1438265,
+    "files": 259
+  },
+  "design_contracts": {
+    "streaming": {
+      "id": "1uRDCoPASuqhO5fk6zADz4UatWVLL1zkR",
+      "url": "https://drive.google.com/file/d/1uRDCoPASuqhO5fk6zADz4UatWVLL1zkR/view?usp=drivesdk",
+      "status": "PROPOSED_M7"
+    },
+    "narrative": {
+      "id": "1lUpWrbgsbJeS6CqCTi4LfqlPaoiVTeut",
+      "url": "https://drive.google.com/file/d/1lUpWrbgsbJeS6CqCTi4LfqlPaoiVTeut/view?usp=drivesdk",
+      "status": "STAGED_DESIGN_M4_M10"
+    },
+    "architecture_intake": {
+      "id": "1WVVNhF8G70mZX4XzDBqcjj-XrLggYQCa",
+      "url": "https://drive.google.com/file/d/1WVVNhF8G70mZX4XzDBqcjj-XrLggYQCa/view?usp=drivesdk",
+      "status": "SELECTED_CONCEPTS_WITH_EXPLICIT_STAGES"
+    },
+    "memory_sources": {
+      "id": "1L7GjrjblOGQFCozgWbQ1_pVvySkz7M4e",
+      "url": "https://drive.google.com/file/d/1L7GjrjblOGQFCozgWbQ1_pVvySkz7M4e/view?usp=drivesdk",
+      "status": "VERIFIED_SOURCE_LOCATORS_PROPOSED_PRESENTATION"
+    }
+  },
+  "previous_milestone_archives": [
+    {
+      "sdk": "0.6.0",
+      "studio": "5.329.91",
+      "milestone": "M1",
+      "id": "1YrtSTVQ4leXt9gnmgsxQurULfYQZmfOf",
+      "url": "https://drive.google.com/file/d/1YrtSTVQ4leXt9gnmgsxQurULfYQZmfOf/view?usp=drivesdk",
+      "bytes": 982304,
+      "files": 203
+    },
+    {
+      "sdk": "0.7.0",
+      "studio": "5.329.92",
+      "milestone": "M2",
+      "id": "1_aPyAgtwN3C767jBziybDhCZ0Y-166RQ",
+      "url": "https://drive.google.com/file/d/1_aPyAgtwN3C767jBziybDhCZ0Y-166RQ/view?usp=drivesdk",
+      "bytes": 1298652,
+      "files": 233
+    }
+  ],
+  "implementation_guides": {
+    "native_durable_world": {
+      "id": "18L5kLoSqdPtAS6zqoX0zR_8IjP3GYWpE",
+      "url": "https://drive.google.com/file/d/18L5kLoSqdPtAS6zqoX0zR_8IjP3GYWpE/view?usp=drivesdk"
+    },
+    "first_boot_chapter": {
+      "id": "1g5ONCj-jgwgVP61tn_dg17D6NM2oUTHi",
+      "url": "https://drive.google.com/file/d/1g5ONCj-jgwgVP61tn_dg17D6NM2oUTHi/view?usp=drivesdk"
+    },
+    "m3_audit": {
+      "id": "1UEWBR1me_-5xgPYenU8S_0IggkcOwMas",
+      "url": "https://drive.google.com/file/d/1UEWBR1me_-5xgPYenU8S_0IggkcOwMas/view?usp=drivesdk"
+    },
+    "m4_notes": {
+      "id": "1woH-hYFSiJ-8kQK7dXbQ2gJxGYulFqT4",
+      "url": "https://drive.google.com/file/d/1woH-hYFSiJ-8kQK7dXbQ2gJxGYulFqT4/view?usp=drivesdk"
+    },
+    "alpha_content_plan": {
+      "id": "1g2tIe3r2MYIGQXckjpTG9VWYRCOcMVEh",
+      "url": "https://drive.google.com/file/d/1g2tIe3r2MYIGQXckjpTG9VWYRCOcMVEh/view?usp=drivesdk"
+    }
+  },
+  "pause_checkpoint": {
+    "requested_by_user": true,
+    "all_agents_stopped": true,
+    "live_build_handles": [],
+    "folder_url": "https://drive.google.com/drive/folders/1I3zl6KvXvyWl9PA77CNVY-riMO7UBQ8U",
+    "archive_sha256": "c874787744b100c04b6d21f73e63035a941a83e5257b9a1c2b3a49e9ed7c6635",
+    "drive_metadata_verified": true
+  },
+  "latest_separate_unreal_backup": {
+    "folder_id": "12Jqs5Ei2hyWVB8XMLa5cqAu9hW3PdwFR",
+    "folder_url": "https://drive.google.com/drive/folders/12Jqs5Ei2hyWVB8XMLa5cqAu9hW3PdwFR",
+    "archive_id": "1bYAmRFUkwi7eznLU81rWkLCAQ4kPSL6X",
+    "archive_bytes": 9361585,
+    "selected_files": 110,
+    "content_assets": 16,
+    "status": "VERIFIED local CRC/SHA/byte-readback and Drive size/parent",
+    "video_folder": "https://drive.google.com/drive/folders/15jcCY20MgnpfQZIfbVlKXsOCFh9FF8qs"
+  }
+}

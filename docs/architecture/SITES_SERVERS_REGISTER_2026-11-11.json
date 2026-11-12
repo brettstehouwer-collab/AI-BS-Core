@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "captured_utc": "2026-11-11T09:22:48.999646+00:00",
+  "owned_sites": [
+    {
+      "id": "appgprj_6af244fe0bb481919916930646b23aae",
+      "title": "AI-BS \u00b7 Agent Foundry",
+      "description": "Design, compare, and verify AI-BS sub-agents.",
+      "current_user_role": "owner",
+      "status": "active",
+      "current_live_url": "https://aibs-agent-foundry.snugolive34.chatgpt.site",
+      "expected_url": null,
+      "access_mode": "custom",
+      "version": 1,
+      "updated_at": "2026-11-09T22:17:42.563348+00:00"
+    },
+    {
+      "id": "appgprj_6ae82a0e83748191aac0c2a6e6b6f194",
+      "title": "Stehouwer \u2014 Stories, Learning & Possibilities",
+      "description": "A unified hub for Stehouwer projects, creative work, and practical guides.",
+      "current_user_role": "owner",
+      "status": "active",
+      "current_live_url": "https://stehouwer-project-hub.snugolive34.chatgpt.site",
+      "expected_url": null,
+      "access_mode": "public",
+      "version": 2,
+      "updated_at": "2026-11-02T06:39:57.867846+00:00"
+    }
+  ],
+  "ownership_scope": "Selected connected Sites account owner listing complete. Other configured hostnames are not freshly verified registrar/DNS control.",
+  "site_custom_domain_result": [
+    {
+      "project_id": "appgprj_6af244fe0bb481919916930646b23aae",
+      "domains": [],
+      "error": false
+    },
+    {
+      "project_id": "appgprj_6ae82a0e83748191aac0c2a6e6b6f194",
+      "domains": [],
+      "error": false
+    }
+  ],
+  "configured_hostnames": [
+    {
+      "hostname": "ai-bs-dashboard.web.app",
+      "source": "frontend/firebase.json",
+      "routing": "Firebase SPA hosting",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "ai-bs-dashboard.firebaseapp.com",
+      "source": "frontend/src/firebase.js",
+      "routing": "Firebase auth domain",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "api.brettstehouwer.live",
+      "source": "C:/Users/footb/.cloudflared/config.yml",
+      "routing": "loopback8000; sse/messages404",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "ai-bs.brettstehouwer.live",
+      "source": "C:/Users/footb/.cloudflared/config.yml",
+      "routing": "loopback8080",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "stehouwer-publishing.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf + old-profile Cloudflare ingress",
+      "routing": "publishing loopback80",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "www.stehouwer-publishing.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf + old-profile Cloudflare ingress",
+      "routing": "publishing loopback80",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "stehouwerpublishing.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf + old-profile Cloudflare ingress",
+      "routing": "publishing loopback80",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "www.stehouwerpublishing.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf + old-profile Cloudflare ingress",
+      "routing": "publishing loopback80",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "stehouwerproductions.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf",
+      "routing": "Nginx virtual host only; no inspected tunnel ingress",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "www.stehouwerproductions.com",
+      "source": "C:/StehouwerPublishing.com/nginx.conf",
+      "routing": "Nginx virtual host only; no inspected tunnel ingress",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "recdebut-recruit.org",
+      "source": "old-profile Cloudflare ingress + publishing nginx.conf",
+      "routing": "RecDebut/tracking8080; activation unchanged",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "www.recdebut-recruit.org",
+      "source": "old-profile Cloudflare ingress + publishing nginx.conf",
+      "routing": "RecDebut/tracking8080; activation unchanged",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "r.recdebut-recruit.org",
+      "source": "old-profile Cloudflare ingress + publishing nginx.conf",
+      "routing": "RecDebut/tracking8080; activation unchanged",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "thesimplechef.com",
+      "source": "scripts/deploy_wsl_nginx.py",
+      "routing": "WSL template8055, not live deployment proof",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "www.thesimplechef.com",
+      "source": "scripts/deploy_wsl_nginx.py",
+      "routing": "WSL template8055, not live deployment proof",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "thesimplechef.local",
+      "source": "scripts/deploy_wsl_nginx.py",
+      "routing": "WSL template8055, not live deployment proof",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    },
+    {
+      "hostname": "turbine-jitters-chill.ngrok-free.dev",
+      "source": "backend/start_tunnel.bat",
+      "routing": "legacy tunnel-to8000 command only",
+      "ownership": "UNVERIFIED_CURRENT_EXTERNAL_CONTROL",
+      "http_auth_dns_tls_health": "NOT_CHECKED"
+    }
+  ],
+  "additional_hosting_variant": {
+    "site_id": "dyadic-hub",
+    "source": "frontend/public/dyadic/firebase.json",
+    "status": "CONFIGURED_NOT_LIVE_VERIFIED"
+  },
+  "server_catalog": [
+    {
+      "port": 80,
+      "name": "Nginx Gateway",
+      "tier": "network",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 3001,
+      "name": "Node Backend",
+      "tier": "backend",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 4455,
+      "name": "OBS WebSocket",
+      "tier": "streaming",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 5173,
+      "name": "Vite Dev & Studio",
+      "tier": "frontend",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8000,
+      "name": "Go Gateway",
+      "tier": "gateway",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8002,
+      "name": "ChromaDB Store",
+      "tier": "database",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8005,
+      "name": "Broadcast Daemon",
+      "tier": "streaming",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8006,
+      "name": "Social Hub (Twitch/IRC)",
+      "tier": "social",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8007,
+      "name": "Crypto Swarm & Scalp Bot",
+      "tier": "trading",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8010,
+      "name": "SHM Telemetry Gateway",
+      "tier": "telemetry",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8013,
+      "name": "VST3 Audio Bridge",
+      "tier": "audio",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8080,
+      "name": "FastAPI Core Engine",
+      "tier": "core",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8085,
+      "name": "Ubuntu-Bio Bridge",
+      "tier": "bridge",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8088,
+      "name": "Broadcast Kernel & NVENC",
+      "tier": "video",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8089,
+      "name": "WSL HLS Ingest",
+      "tier": "streaming",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8099,
+      "name": "Gemini Local MCP",
+      "tier": "ai",
+      "category": "static",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8189,
+      "name": "ComfyUI (RTX 4090)",
+      "tier": "diffusion",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 8888,
+      "name": "Unreal Engine Signaling",
+      "tier": "rendering",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 11434,
+      "name": "Ollama Host",
+      "tier": "llm",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    },
+    {
+      "port": 11435,
+      "name": "Ollama E-Drive",
+      "tier": "llm",
+      "category": "jit",
+      "source": "backend/core/daemon_manager.py:ECOSYSTEM_PORTS",
+      "live_health": "UNVERIFIED",
+      "catalog_is_not_process_admission": true
+    }
+  ],
+  "port_conflicts": [
+    {
+      "component": "Chroma",
+      "catalog": 8002,
+      "go_launcher": 8001
+    },
+    {
+      "component": "ComfyUI",
+      "catalog": 8189,
+      "other_config_reference": 8188
+    },
+    {
+      "component": "backend",
+      "canonical_gateway": 8000,
+      "canonical_fastapi": 8080,
+      "standalone_or_container_backend": 8000
+    }
+  ],
+  "listener_observation": {
+    "result": "No matching listeners in native selected-port psutil snapshot; earlier sandbox/CIM observation failed.",
+    "scope": "Selected local ports only, no HTTP/auth/DNS/TLS/public-health proof; no service changes."
+  },
+  "privacy": "No credentials, private-key values, process command lines or contact data included.",
+  "bounded_live_observation_2026_11_11": {
+    "utc": "2026-11-11T11:25:02.829787+00:00",
+    "backend_identity_unchanged": true,
+    "eight_activation_flags_false": true,
+    "http": {
+      "8080/health": 200,
+      "8080/api/memory/query": 403,
+      "8000/health": 200,
+      "8000/api/memory/query": 401
+    },
+    "scope": "Live health and anonymous rejection only; no authenticated live RAG or model call",
+    "public_domains_dns_tls_ownership": "Not rechecked by this loopback observation"
+  },
+  "last_nginx_recovery": {
+    "utc": "2026-11-11T17:03:18.095565+00:00",
+    "report": "docs/architecture/NGINX_CLOUDFLARE_RECOVERY_2026-11-11.md",
+    "public_publishing_https": 200,
+    "local_http_checks": 20,
+    "all_checks_http_200": true,
+    "nginx_sign_in_task": "AI-BS-Publishing-Nginx",
+    "tested_task_exit": 0,
+    "tunnel": "Existing user-launched cloudflared connector/config retained; no persistent tunnel startup installed",
+    "chef": "Recovered built-site local virtual host; public routing not added",
+    "open": [
+      "WSL ClassNotRegistered",
+      "HLS8089 refused",
+      "tunnel reboot persistence",
+      "other public alias/whole-control-center parity"
+    ]
+  }
+}

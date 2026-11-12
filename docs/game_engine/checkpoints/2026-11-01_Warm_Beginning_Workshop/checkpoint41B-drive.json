@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-03T18:02:22.042657+00:00",
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\41B_Studio103_Launcher_Deployment_And_Handoff.zip",
+  "bytes": 318619,
+  "sha256": "52a464186e85361c41cc4fac1360db7ef5a835ed58405bf45535786c17e944f7",
+  "members": 29,
+  "drive_folder_id": "1RkITbJ7kkMFUf9EANFXsA9hm3euu-FWg",
+  "goal_complete": false,
+  "scope": "Deployment metadata and version-source preimages. Raw shortcut originals are retained locally only; no executable or family originals included.",
+  "drive_file_id": "1OI0P2lIA-Sdif4TB2QSavazZA5TeHfan",
+  "drive_url": "https://drive.google.com/file/d/1OI0P2lIA-Sdif4TB2QSavazZA5TeHfan/view?usp=drivesdk",
+  "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\52a464186e85361c41cc4fac1360db7ef5a835ed58405bf45535786c17e944f7.zip",
+  "binary_cloud_restoration_verified": false
+}

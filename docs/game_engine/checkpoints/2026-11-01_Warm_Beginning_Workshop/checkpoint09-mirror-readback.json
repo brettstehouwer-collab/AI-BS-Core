@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "archive_full_byte_roundtrip": true,
+  "deployment_backup_full_byte_roundtrip": true,
+  "mirrors_and_receipts": [
+    {
+      "path": "C:/AI-BS/docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "file_id": "1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4",
+      "drive_url": "https://drive.google.com/file/d/1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4/view?usp=drivesdk",
+      "bytes": 196783,
+      "sha256": "553507327d6ba69f2bb37af4150975cfc22d7ecd07b33793942084b61eb39ca8",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/BUILD_STATUS.md",
+      "file_id": "1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK",
+      "drive_url": "https://drive.google.com/file/d/1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK/view?usp=drivesdk",
+      "bytes": 104145,
+      "sha256": "da356e57edb2bff1d2e650fd441da3713aad100824c072222445d7d2f5c17f48",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/milestone_queue.json",
+      "file_id": "1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl",
+      "drive_url": "https://drive.google.com/file/d/1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl/view?usp=drivesdk",
+      "bytes": 43655,
+      "sha256": "83999f8527e278c62da4e305da819c05452662cd971d79ab6a60ac4a97a0bea0",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/resource_catalog.json",
+      "file_id": "1f2MqXYg3A7TV3k5MzMHvZjL3-g0M54hp",
+      "drive_url": "https://drive.google.com/file/d/1f2MqXYg3A7TV3k5MzMHvZjL3-g0M54hp/view?usp=drivesdk",
+      "bytes": 7180,
+      "sha256": "f130bbffb508b507cf19f0a0829175a848ee60c4d387c9ea5a9ee9128271cb4d",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/WARM_BEGINNING.md",
+      "file_id": "1TyjoeKi2Qm9-ueDK4iDEOuCcbzTAWx_n",
+      "drive_url": "https://drive.google.com/file/d/1TyjoeKi2Qm9-ueDK4iDEOuCcbzTAWx_n/view?usp=drivesdk",
+      "bytes": 8652,
+      "sha256": "7754081360b0e40998270e5d0302f9b1c95736e4e48c4520c263d5c620ea26d6",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint09-local.json",
+      "file_id": "1P35DZVjvc86fqNdhFbssPry5n6ibPi9v",
+      "drive_url": "https://drive.google.com/file/d/1P35DZVjvc86fqNdhFbssPry5n6ibPi9v/view?usp=drivesdk",
+      "bytes": 12351,
+      "sha256": "35c8e466775957cc28ba7919ab84feff37df9566f02348ff24fd654b46e68e69",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint09-drive.json",
+      "file_id": "1nMNYTRJS_VBBl-LD39cYa7OwmrYjxpM6",
+      "drive_url": "https://drive.google.com/file/d/1nMNYTRJS_VBBl-LD39cYa7OwmrYjxpM6/view?usp=drivesdk",
+      "bytes": 2218,
+      "sha256": "5244d8dab13d27e48ddc9d092b1b4428118ea002d75c1c51b7f19806eefcb418",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint09-deployment.json",
+      "file_id": "1h2mkg0DwdQCvBc9Tcmwgli1hHrEMoF95",
+      "drive_url": "https://drive.google.com/file/d/1h2mkg0DwdQCvBc9Tcmwgli1hHrEMoF95/view?usp=drivesdk",
+      "bytes": 1205,
+      "sha256": "ea3b13e9c2fed374894baf26822d77671a756e021b044c1d8060808643e32ca6",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint09-deployment-backup.json",
+      "file_id": "1ZoS_0QMg3rON8qUBuMYAaNn6DAS4DMHR",
+      "drive_url": "https://drive.google.com/file/d/1ZoS_0QMg3rON8qUBuMYAaNn6DAS4DMHR/view?usp=drivesdk",
+      "bytes": 699,
+      "sha256": "8deba3a9eecaf968a347c82e46c96b3163ba9cd8c92a9283c170941ab222be96",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/09_README.md",
+      "file_id": "1hzRItqtcNfLsiZjbJBA6vfsHyQ-QVSjJ",
+      "drive_url": "https://drive.google.com/file/d/1hzRItqtcNfLsiZjbJBA6vfsHyQ-QVSjJ/view?usp=drivesdk",
+      "bytes": 2009,
+      "sha256": "a8b9201423e6a7619f0503aac2df34538b7d9901fde82d3283bbf9549d6b3244",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/agent_sync/manifest_checkpoint09.json",
+      "file_id": "1yhr5-yL-9hoHhFRwIaNXRp3HNGPCmQm-",
+      "drive_url": "https://drive.google.com/file/d/1yhr5-yL-9hoHhFRwIaNXRp3HNGPCmQm-/view?usp=drivesdk",
+      "bytes": 67216,
+      "sha256": "f822cd11df072d4c4417d7dd7f1e74b2bdb00887dced8f45f4f179bd5561809b",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/agent_sync/checkpoint09_handoff.md",
+      "file_id": "19DPxd1IQcmkpdCWbrA45A_aPh3_T9_mE",
+      "drive_url": "https://drive.google.com/file/d/19DPxd1IQcmkpdCWbrA45A_aPh3_T9_mE/view?usp=drivesdk",
+      "bytes": 2571,
+      "sha256": "84baaf4d8f950432ccf6932b57113b55746af31d31a128ded59a2e18ff1e30f7",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/backups/native_game98_checkpoint09/shortcut_deployment.json",
+      "file_id": "1PFHIvoKIi27Dpv9S-6byLZifdvgENsxK",
+      "drive_url": "https://drive.google.com/file/d/1PFHIvoKIi27Dpv9S-6byLZifdvgENsxK/view?usp=drivesdk",
+      "bytes": 199762,
+      "sha256": "ce91a91d56aa737251e71e6a4ace8b7e2f9569356bd9b1a1008162d8ad1f5543",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/CREATOR_QUICKSTART.md",
+      "file_id": "1IY7JW_dW4NQFe8NUno4XNuwGNrrzrYxf",
+      "drive_url": "https://drive.google.com/file/d/1IY7JW_dW4NQFe8NUno4XNuwGNrrzrYxf/view?usp=drivesdk",
+      "bytes": 5788,
+      "sha256": "ce9a11c8da416fc79b5663f9ef622bf6f1c1fbae49baa981518320473c709f5a",
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/README.md",
+      "file_id": "1WRxEGGEBT2sKYygLN_Et2TpnTdRbjkKD",
+      "drive_url": "https://drive.google.com/file/d/1WRxEGGEBT2sKYygLN_Et2TpnTdRbjkKD/view?usp=drivesdk",
+      "bytes": 23548,
+      "sha256": "eea2d3aa29b572fe600829640abf0af9580fef2bbd8251b8c91e42489260b50a",
+      "metadata_size_match": true
+    }
+  ],
+  "scope": "Post-seal mirror metadata sizes match; cryptographic full-byte proof applies to both sealed archives"
+}

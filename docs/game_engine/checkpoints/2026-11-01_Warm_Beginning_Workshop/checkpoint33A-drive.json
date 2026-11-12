@@ -1,0 +1,108 @@
+{
+  "status": "verified_authenticated_Drive_full_raw_restore",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\33A_Studio102_Handoff_Opening_Priorities.zip",
+  "bytes": 281181,
+  "sha256": "b8c574ad84014dcaa18d34c0d6e88ce74c39e8b96411f73d8b1289d4eb9bb77e",
+  "members": 26,
+  "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P33_deployed_priorities.json",
+  "deployed": "5.329.102",
+  "goal_complete": false,
+  "space_free_bytes": {
+    "C": 60726140928,
+    "D": 87117844480,
+    "E": 146813599744
+  },
+  "verified_at": "2026-11-03T14:29:51.803083+00:00",
+  "Drive_file_id": "1rniisuDQdP31zkfVnCveIMmsfHp-W4ia",
+  "Drive_url": "https://drive.google.com/file/d/1rniisuDQdP31zkfVnCveIMmsfHp-W4ia/view?usp=drivesdk",
+  "folder": {
+    "success": true,
+    "id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+    "url": "https://drive.google.com/drive/folders/1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+    "title": "33_Opening_First_Priorities_Studio102_Handoff",
+    "parent_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx"
+  },
+  "separate_plan": {
+    "accepted_input": "file_uri",
+    "success": true,
+    "id": "15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf",
+    "title": "OPENING_FIRST_PRIORITY_PLAN.md",
+    "file_name": "OPENING_FIRST_PRIORITY_PLAN.md",
+    "mime_type": "text/markdown",
+    "url": "https://drive.google.com/file/d/15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf/view?usp=drivesdk",
+    "parent_id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+    "structuredContent": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf",
+      "title": "OPENING_FIRST_PRIORITY_PLAN.md",
+      "file_name": "OPENING_FIRST_PRIORITY_PLAN.md",
+      "mime_type": "text/markdown",
+      "url": "https://drive.google.com/file/d/15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf/view?usp=drivesdk",
+      "parent_id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj"
+    }
+  },
+  "restore_sidecars": [
+    {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa",
+      "title": "RESTORE_32A_Source_Manifest.json",
+      "file_name": "RESTORE_32A_Source_Manifest.json",
+      "mime_type": "application/json",
+      "url": "https://drive.google.com/file/d/1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa/view?usp=drivesdk",
+      "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa",
+        "title": "RESTORE_32A_Source_Manifest.json",
+        "file_name": "RESTORE_32A_Source_Manifest.json",
+        "mime_type": "application/json",
+        "url": "https://drive.google.com/file/d/1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa/view?usp=drivesdk",
+        "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j"
+      }
+    },
+    {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm",
+      "title": "RESTORE_32B_Portable_Manifest.json",
+      "file_name": "RESTORE_32B_Portable_Manifest.json",
+      "mime_type": "application/json",
+      "url": "https://drive.google.com/file/d/1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm/view?usp=drivesdk",
+      "parent_id": "1qCMgftkkVnyGpMt9G8GJNeCeC6UtH4x6",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm",
+        "title": "RESTORE_32B_Portable_Manifest.json",
+        "file_name": "RESTORE_32B_Portable_Manifest.json",
+        "mime_type": "application/json",
+        "url": "https://drive.google.com/file/d/1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm/view?usp=drivesdk",
+        "parent_id": "1qCMgftkkVnyGpMt9G8GJNeCeC6UtH4x6"
+      }
+    },
+    {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0",
+      "title": "README_SOURCE.md",
+      "file_name": "README_SOURCE.md",
+      "mime_type": "text/markdown",
+      "url": "https://drive.google.com/file/d/1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0/view?usp=drivesdk",
+      "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0",
+        "title": "README_SOURCE.md",
+        "file_name": "README_SOURCE.md",
+        "mime_type": "text/markdown",
+        "url": "https://drive.google.com/file/d/1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0/view?usp=drivesdk",
+        "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j"
+      }
+    }
+  ],
+  "every_member_size_SHA256_CRC_and_exact_membership_verified": true
+}

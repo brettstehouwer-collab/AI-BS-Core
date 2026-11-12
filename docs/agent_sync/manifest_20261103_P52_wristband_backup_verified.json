@@ -1,0 +1,52 @@
+{
+  "id": "20261103_P52_wristband_backup_verified",
+  "at": "2026-11-03T21:25:03.355714+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_complete": false,
+  "deployed": "Studio104 SDK0.16.5 preview, installed Adamv10unchanged",
+  "new_model": "Separate v18right-wrist Pray for Kids band; finalized draft in P52/finished",
+  "model_master_sha256": "b39b30091ca0585453f9fba5f062e5a7ad08915bdded92eb98cb33452391193f",
+  "evidence": "D:\\AI-BS-Game-Resources\\P52\\Adam_Right_Wristband\\independent-verification.json",
+  "verification": [
+    "22joint skeleton nodes/inverse binds exact to v17",
+    "528 animation accessor comparisons exact",
+    "224source frames/57,344inner-band samples skin/cuff clearance",
+    "Specific band material and actual animation GPU pixels",
+    "Private full chapter admission at1080p",
+    "Current monitor readback available"
+  ],
+  "failures_retained": [
+    "Initial native diagnostic guessed camera and immediate resource-adoption frame produced zero band-specific difference; original source/exe/logs retained. Corrected fixture uses skinned band centroid and settling draws.",
+    "Initial lettering orientation and loose cuff retained as earlier drafts. Final lettering rotated and right cuff tapered."
+  ],
+  "new_personal_reference": "Mission trip: Adam left, Brett right, Brett in middle school, Adam youth leader; original image hash copied privately with user context; no date/location inferred",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\52A_Adam_Right_Wristband_Master_And_Native_Evidence.zip",
+    "bytes": 29185218,
+    "sha256": "20c294a826a1591be0ee63b5190a9ae56395274f5677622906baf5c993263698",
+    "members": 199,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T21:25:03.355714+00:00",
+    "drive_file_id": "1ZU5-X9g1Ytqju6iSll0YGB0R56DchSl2",
+    "drive_parent_id": "1ImyTQBS-tC_fuweN60lCXWXBlGeDnZ0q",
+    "crc_verified": true,
+    "exact_member_set_verified": true,
+    "all_member_hashes_verified": true,
+    "scope": "Separate unapproved v18model with right wristband, original and corrected art drafts and actual native/animation evidence. No original family photo/video pixels, user saves or executable binaries."
+  },
+  "all_owned_processes_joined": true,
+  "remaining": [
+    "Naturalistic likeness and cloth artist refinement/personal approval",
+    "Original recording listening/caption review and optional media binding",
+    "Actual combined gameplay performance and human8-12minute pacing",
+    "Final packaged opening/launcher acceptance and final verified backup"
+  ],
+  "next_step": "Improve adult likeness and fabric from references while retaining this rigged band; do not average all ages or invent autobiographical dialogue. Current separate review launcher remains ready for user gameplay when convenient.",
+  "storage_free_gib": {
+    "C": 59.92,
+    "D": 58.58,
+    "E": 136.73
+  }
+}

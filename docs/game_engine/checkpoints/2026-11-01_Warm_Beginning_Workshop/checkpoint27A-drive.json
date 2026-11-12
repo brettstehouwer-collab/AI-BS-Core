@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "checkpoint": "27A",
+  "status": "passed_remote_raw_restore",
+  "verified_at": "2026-11-03T01:13:23.036155+00:00",
+  "file_id": "1F7F7xVLx7Sa01e4UJvKQRW5EQlvDFRXQ",
+  "url": "https://drive.google.com/file/d/1F7F7xVLx7Sa01e4UJvKQRW5EQlvDFRXQ/view?usp=drivesdk",
+  "folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "archive_bytes": 3736086,
+  "archive_sha256": "cdf9497c1cf8bf6a0a6b5beca7356e1d9ce024ce206236b34c74cf13b80d8184",
+  "manifest_sha256": "9c589e5bad14e5106f9840161f3ae15c5501614051a24240e07abbd246b757ca",
+  "members": 1127,
+  "selected_complete_files": 1124,
+  "downloaded_from_authenticated_connector": true,
+  "every_member_size_SHA256_CRC_and_exact_set_verified": true,
+  "restore_requires26A": true,
+  "base26A_remote_restore_verified_in_this_receipt": false,
+  "original_family_media_uploaded": false,
+  "private_Master_Git_credentials_uploaded": false,
+  "goal_complete": false,
+  "authorization": "User explicitly approved27A and future verified project checkpoints in the existing Workshop folder; exclusions retained"
+}

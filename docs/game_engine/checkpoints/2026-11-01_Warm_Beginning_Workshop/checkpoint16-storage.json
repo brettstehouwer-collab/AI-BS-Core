@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-02T12:12:15.289939+00:00",
+  "disks": {
+    "C:": {
+      "free_bytes": 78922014720,
+      "total_bytes": 1796861837312
+    },
+    "D:": {
+      "free_bytes": 146715127808,
+      "total_bytes": 510770802688
+    },
+    "E:": {
+      "free_bytes": 146813599744,
+      "total_bytes": 899427594240
+    }
+  },
+  "new_bulk_output": "D:",
+  "cloud_quota": "Unavailable through connector",
+  "deletions_performed_by_checkpoint16": false
+}

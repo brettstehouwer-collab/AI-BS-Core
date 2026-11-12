@@ -156,6 +156,9 @@ _INTERNAL_SCHEMAS = {
 }
 
 _EXTRA_PROPERTIES = {
+    # Existing host-scanner callers also use an array or explicit null.
+    'scan_directory_tree': {'filter_ext': {'type': ['string', 'array', 'null'],
+                                         'items': {'type': 'string'}}},
     **{name: {'output_filename': {'type': 'string'}} for name in ('execute_headless_blender', 'convert_ebook', 'optimize_pdf_stream', 'process_dsp_filter', 'stretch_pitch_tempo')},
     'generate_comfy_image': {'video': {'type': 'boolean'}},
     'lookup_symbol': {'limit': {'type': 'integer'}, 'symbol_type': {'type': 'string'}},
@@ -180,7 +183,8 @@ def _check_schema(value, schema, path='arguments'):
         'boolean': kind is bool, 'integer': kind is int,
         'number': kind in (int, float), 'null': value is None,
     }
-    if expected is not None and not valid.get(expected, False):
+    allowed = expected if type(expected) is list else [expected]
+    if expected is not None and not any(valid.get(kind, False) for kind in allowed):
         raise ToolCallValidationError(f'{path} must have type {expected}.')
     if 'enum' in schema and value not in schema['enum']:
         raise ToolCallValidationError(f'{path} is not a declared choice.')

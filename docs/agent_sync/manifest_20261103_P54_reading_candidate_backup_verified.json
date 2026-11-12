@@ -1,0 +1,83 @@
+{
+  "id": "20261103_P54_reading_candidate_backup_verified",
+  "at": "2026-11-03T22:07:15.701384+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_complete": false,
+  "deployed": "Studio104 SDK0.16.5 original reading panels andv10art unchanged",
+  "source_candidate": "Reading presentation2 private app candidate, larger DPI-aware font/dark surface/optional exact source view; no public API/save schema changes",
+  "canonical_changed_source": {
+    "engine/apps/opening_inspection_panel.inl": {
+      "bytes": 14226,
+      "sha256": "ad80bda895257dfbe2d7c200561f3d1b67f8ef5e0e567f7286fa72f0ba21e2f9",
+      "before_sha256": "c462e7aad4178671f8eecdf65fe30b7145187ab99fbac6cb75f7e0cd2ba61f51"
+    },
+    "engine/apps/opening_native_proof.inl": {
+      "bytes": 7665,
+      "sha256": "d5242e1998a839243ced19d7a9306b308752eb02e73becbc2a523b8720b1ee76",
+      "before_sha256": "5bf3d10fc0f0b342510c05c003ef9b19918d08b08d58d0e314d59815be398354"
+    },
+    "engine/apps/opening_tour_runtime.inl": {
+      "bytes": 8730,
+      "sha256": "cb2687f2ebc0597afe688d13dd32c5674a1afde0c448f6bc3e430741add0a8de",
+      "before_sha256": "8ff79c9333bafad3eab5a25e279ed7d266554d16e572b10dea7702c4a15b2033"
+    },
+    "engine/CMakeLists.txt": {
+      "bytes": 61727,
+      "sha256": "c759a2cffc136c47d323032ee7be6cdeb5b8b603b2754f2b3745d5e98741af4c",
+      "before_sha256": "23d2a46aec0a7acf5ea590e9ecbe1f102089235554eecc4f4498394b1f185cbb"
+    },
+    "engine/tests/opening_panel_tests.cpp": {
+      "bytes": 5677,
+      "sha256": "5358fdc879251718e24c13d3a9a97894af9e71750ef07df05faa18108d7e4063",
+      "before_sha256": null
+    }
+  },
+  "new_registration": "opening_panel_presentation_contracts;127total Release contracts",
+  "Release_evidence": "120passed/7failed initially; all7then passed in short fresh fixtures. complete-release-verification.json retains initial failure scope and exact rerun commands; no clean single full CTest claim.",
+  "native_checks": {
+    "full_warm_driver": 465,
+    "actual_game_control_checks": 37,
+    "both_real_time_routes_and_normal_restarts": "passed_private_v18_candidate"
+  },
+  "native_evidence": "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\full-native-verification.json",
+  "route_evidence": "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\packaged-current-routes-verification.json",
+  "immutable_runtime": "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\CandidateRuntime",
+  "runtime_metadata": "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\candidate-runtime-verification.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\54A_Reading_Presentation2_Source_And_Qualification.zip",
+    "bytes": 17689795,
+    "sha256": "0f728aa3d70c58d3f97e88c861902838806724bd4c301adc862d49d9f43dd53d",
+    "members": 433,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T22:07:15.701384+00:00",
+    "drive_file_id": "1OjpvHv4ZbEpV9S1hz69BfRUgMk6RtTAa",
+    "drive_parent_id": "1KH5uxcnf3MhpjMzlT94vZBUXTwMs3n51",
+    "crc_verified": true,
+    "exact_member_set_verified": true,
+    "all_member_hashes_verified": true,
+    "scope": "Reading presentation2 changed source/preimages/patch and retained actual failed+successful Release/native/route evidence. Source candidate only; no family originals/usersaves/executable binaries or deployment claim."
+  },
+  "all_owned_processes_joined": true,
+  "monitor_readback": "available",
+  "known_initial_failures": [
+    "Expected red compile before source-disclosure API existed",
+    "Asset-store Windows long-path failure; surface-placement fixture write failed under long TEMP, passed under shortTEMP",
+    "Five native-render validation outputs refused reuse; rerun only with fresh destinations"
+  ],
+  "unverified": [
+    "New reader Debug configuration",
+    "A separately versioned runtime and Studio package with new reader",
+    "Naturalistic Adam face/fabric approval",
+    "Original recording checked captions/optional binding",
+    "Actual user gameplay performance and8-12minute first-time pacing",
+    "Final accepted opening release and final backup"
+  ],
+  "next_step": "Qualify Debug with shortTEMP and fresh renderer evidence destinations, preserving Release logs and all installed SDK/release prefixes. Then construct the new immutable runtime/Studio package. Face feature feedback remains optional/pending; do not assume an answer.",
+  "storage_free_gib": {
+    "C": 59.87,
+    "D": 56.11,
+    "E": 136.73
+  }
+}

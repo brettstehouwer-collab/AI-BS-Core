@@ -1,0 +1,23 @@
+{
+  "id": "02-chaos-lab-seans-dog",
+  "poster_id": "02-chaos-lab",
+  "variant": "final-corrected-dog",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-c3c4-7873-8427-efc48b1b4d05/exec-8e77c7a2-ac4a-483b-8106-35a17dc11e81.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab-seans-dog.png",
+  "prompt": "Edit image1 only by replacing its single golden HR dog with the SAME real dog in image2. Image1 is the finished landscape poster and must otherwise remain unchanged. Image2 is an identity reference for Sean's red-brown, tan and white fluffy herding dog: broad white forehead blaze continuing onto the muzzle, freckled white muzzle, tan brows and cheek accents, amber-brown eyes, pinkish liver-brown nose, fluffy white chest and red-brown ears. Preserve this specific dog's recognizable facial proportions, markings and coat, rather than a generic golden retriever. Keep the dog's happy playful pose in the same foreground location, one paw stamping the incident report, realistic proportion, and existing black HR harness with the exact HR badge. Reveal the actual amber eyes rather than obscuring them with the old sunglasses. Keep all THREE human faces, exact people positions, outfits, hands, expressions, Anna's appearance, all title/sign/prop lettering, neon lighting, miniature visual jokes, layout and landscape16:9 framing exactly as in image1. Do not add or remove people, faces, pets, text, or objects beyond the dog's identity/sunglasses correction. Match the original tactile photorealistic-surreal illustration and light on the replaced dog. This is a precise dog-only identity correction, not a scene redesign.",
+  "references": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "transparent_background": false,
+  "supersedes": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/02-chaos-lab.png",
+  "original_preserved": true,
+  "qa": {
+    "status": "accepted",
+    "inspection": "Real dog portrait viewed and compared visually to corrected output; generated original was inspected before edit.",
+    "notes": "Sean's specific red/brown/tan/white dog now has visible amber eyes, white forehead blaze and freckled muzzle, liver nose, fluffy white chest. Foreground HR harness and stamping pose retained. Three people, title/signs, laboratory miniatures and wide layout visually preserved.",
+    "limitations": "Generative identity correction; fine texture details are an artistic rendering. No claim of byte-for-byte identity outside the edited region.",
+    "retry_required": false
+  }
+}

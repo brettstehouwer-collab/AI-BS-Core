@@ -1,0 +1,16 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_persistent_placement\\AI_BS_Persistent_Placement_Source.zip",
+  "bytes": 36316275,
+  "sha256": "73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d",
+  "files": 3838,
+  "raw_selected_bytes": 1056888716,
+  "changed_files": 1378,
+  "CRC_and_per_file_current_SHA256": "passed",
+  "utc": "2026-11-02T01:05:09.770306+00:00",
+  "free_bytes": {
+    "C": 106379935744,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

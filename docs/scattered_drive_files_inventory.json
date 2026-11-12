@@ -1,0 +1,1660 @@
+{
+  "1LkvLlv26CtdvJgYNvuR-Yw03r1eMyJA4": {
+    "folder_name": "PC Backup - C Drive",
+    "category": "01_Engineering_Backups/PC_Backup_C_Drive",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\PC_Backup_C_Drive",
+    "file_count": 10,
+    "files": [
+      {
+        "id": "1yPta2lsq6b6PnYSzPOAT3m2cpP6ryFym",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:08.879Z",
+        "name": "00 - Index and Restore Guide"
+      },
+      {
+        "id": "1rY-8aPVxXs3E6b5nrvzy_dvAZDar6HXs",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:10.133Z",
+        "name": "01 - AI-BS Project"
+      },
+      {
+        "id": "1osIz3RbMyopT-5b1X6P6tJVPHF8PdGzC",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:11.469Z",
+        "name": "02 - Personal Files and Creative Work"
+      },
+      {
+        "id": "1XvwMyVW4VhdTcCBsz_GthnCZmawZ-z6c",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:13.227Z",
+        "name": "03 - Programs and Installers"
+      },
+      {
+        "id": "1cFD51i3Le4vMOwW1RLQ-JzwnehYeOvYL",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:14.401Z",
+        "name": "04 - Windows Recovery"
+      },
+      {
+        "id": "1sH031KNT2RCAgPVgue45lxzSg7-Pg0Sn",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:15.697Z",
+        "name": "05 - Large Archives"
+      },
+      {
+        "id": "1QO5WHFFON_Btynqv5tJv5WFuIL4StvAE",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T17:48:16.957Z",
+        "name": "06 - Verification and Cleanup Receipts"
+      },
+      {
+        "id": "1waaZECrzSuTz3aYGRhxrY0MB6CryfD_W",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-04T20:12:28.185Z",
+        "name": "07 - Encrypted Full PC Backups"
+      },
+      {
+        "id": "1F_02jQAL6iP6aHQoajhR-H3oEj13TGGSegM8rffDCpU",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-18T17:22:30.305Z",
+        "name": "Backup Complete",
+        "size": "2814"
+      },
+      {
+        "id": "1pZSO6IdhrbL4hoC0VpvMFSsjDrxNWWlnK23t4BlqZbI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-23T06:58:36.633Z",
+        "name": "Windows Admin Terminal Commands Reference",
+        "size": "11283"
+      }
+    ]
+  },
+  "1qfPSt1VP0T7RAt5t8FsdWD7LBEcAjn-3": {
+    "folder_name": "AI-BS Private Recovery - 2026-11-11",
+    "category": "01_Engineering_Backups/AI_BS_Private_Recovery",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\AI_BS_Private_Recovery",
+    "file_count": 20,
+    "files": [
+      {
+        "id": "1YxLmnxYy8oYIlyIVSxHihmcyrET3JUbq",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T09:29:04.309Z",
+        "name": "AI-BS_Ecosystem_Architecture_Checkpoint_20261111T092855Z.zip",
+        "size": "135055"
+      },
+      {
+        "id": "14Mm6WoEbcrmoiU3G0pdnuHPOb3ZynI6L",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T13:24:57.434Z",
+        "name": "AI-BS_HUD_Fit_20261111T132423Z.zip",
+        "size": "2810699"
+      },
+      {
+        "id": "1EYgyEw4-SH5255HCAlG1Yuz9gzByi6y1",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T13:24:59.762Z",
+        "name": "AI-BS_HUD_Fit_Handoff_20261111T132423Z.md",
+        "size": "1122"
+      },
+      {
+        "id": "1yzwQK0lxO2_9joQPTzPWay01tNL1JQel",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T09:29:06.361Z",
+        "name": "AI-BS_MASTER_ECOSYSTEM_ARCHITECTURE_20261111T092855Z.md",
+        "size": "65527"
+      },
+      {
+        "id": "1ATrztAIXb1e0WkySSvFfd9_Eb6eXsYYz",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T10:03:30.725Z",
+        "name": "AI-BS_Native_Creative_V2_GUI_20261111T100300Z.zip",
+        "size": "203756"
+      },
+      {
+        "id": "1-boL2oiDpXsjQO-XYtD49v089uenursC",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T10:03:32.931Z",
+        "name": "AI-BS_Native_Creative_V2_GUI_Handoff_20261111T100300Z.md",
+        "size": "2198"
+      },
+      {
+        "id": "1cM5DzJuRNLjI5u8s7f74DgW67OJv9O-D",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T10:28:46.725Z",
+        "name": "AI-BS_Native_Recovery_20261111T102831Z.zip",
+        "size": "151578"
+      },
+      {
+        "id": "1vdWg-J5jVuzEiITfqR5ETKWMNl-I_I0R",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T10:28:49.057Z",
+        "name": "AI-BS_Native_Recovery_Handoff_20261111T102831Z.md",
+        "size": "1230"
+      },
+      {
+        "id": "1O-fF3ru3TwjcQc3ouRR2IuQmhhgwvj-7",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T10:42:36.600Z",
+        "name": "AI-BS_Native_Rich_GUI_20261111T104217Z.zip",
+        "size": "412027"
+      },
+      {
+        "id": "1zh8rkSH8DetatApauLYD5mFh9zNLJQjc",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T10:42:38.825Z",
+        "name": "AI-BS_Native_Rich_Handoff_20261111T104217Z.md",
+        "size": "1318"
+      },
+      {
+        "id": "1kXiTYlWnrtW1bfFv5DdEF3r-JL2HGKtM",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T13:58:58.830Z",
+        "name": "AI-BS_Nsight_Diagnostic_20261111T135744Z.zip",
+        "size": "2387895"
+      },
+      {
+        "id": "15ciDKCBZOZPRXny6vdhE_PRzprCfqaE3",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T13:59:01.336Z",
+        "name": "AI-BS_Nsight_Diagnostic_Handoff_20261111T135744Z.md",
+        "size": "1272"
+      },
+      {
+        "id": "1fOtj-uLLo_HhkUa-dcli2n3dn9fECAoM",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T11:29:42.564Z",
+        "name": "AI-BS_Real_Owner_Mobile_RAG_20261111T112913Z.zip",
+        "size": "357962"
+      },
+      {
+        "id": "1e9InXvGeoPF4DNpiRQgWdBaBY2uvYlgd",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T11:29:45.192Z",
+        "name": "AI-BS_Real_Owner_Mobile_RAG_Handoff_20261111T112913Z.md",
+        "size": "1717"
+      },
+      {
+        "id": "1aqQTaLAzTZHQS48sGvBHdSQp6cK0uceY",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T08:09:02.022Z",
+        "name": "AI-BS_Recovery_Drive_Reference_Links_20261111.json",
+        "size": "9986"
+      },
+      {
+        "id": "1amfLCnnsVbDP7f0nvwnVBRSF9lyZ_f-B",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T08:05:08.049Z",
+        "name": "AI-BS_Recovery_Save_20261111T080426Z.zip",
+        "size": "494509"
+      },
+      {
+        "id": "1CY2YW1OuDM0A7teTNV4jX8Ipif4vvW6E",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T08:05:17.476Z",
+        "name": "AI-BS_Recovery_Save_Checkpoint_20261111T080426Z.json",
+        "size": "19064"
+      },
+      {
+        "id": "1m223lm0XT3rpPW_6k3iSznANI-7yU4mC",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T08:09:07.738Z",
+        "name": "AI-BS_Recovery_Save_Drive_Verification_20261111T080752Z.json",
+        "size": "1557"
+      },
+      {
+        "id": "1nUD5uIijan8dLXNGy1s5tgbfr2peyfq2",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T08:05:13.091Z",
+        "name": "AI-BS_Recovery_Save_Handoff_20261111T080426Z.md",
+        "size": "2751"
+      },
+      {
+        "id": "1ALGriYTJp2j0gBE_IuaSCatq_PNc7qh3",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T17:32:12.352Z",
+        "name": "AI-BS_Release144_Progress_20261111T173157Z.zip",
+        "size": "865594"
+      }
+    ]
+  },
+  "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse": {
+    "folder_name": "AI-BS Codex Engineering Ledger",
+    "category": "01_Engineering_Backups/AI_BS_Codex_Ledger",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\AI_BS_Codex_Ledger",
+    "file_count": 20,
+    "files": [
+      {
+        "id": "1fmeaL-V5HGqRFC87U83c4gUYh7T3pp4tIOHQcgosMu4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-16T10:46:05.201Z",
+        "name": "(venv) PS G:\\Stehouwer_Server>\n(venv) PS G:\\Steho...",
+        "size": "25182"
+      },
+      {
+        "id": "1AOnYibtqO6X2ViItiJ7zmeKS5P0hUzxs",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-10-24T03:51:30.842Z",
+        "name": "2026-10-23 Codex Engineering Ledger.md",
+        "size": "17926"
+      },
+      {
+        "id": "1vovsSPpyJRA4np2ErRt5vIgdV6-Qoojj",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-10-25T18:10:41.176Z",
+        "name": "2026-10-24_Codex_Engineering_Ledger.md",
+        "size": "356203"
+      },
+      {
+        "id": "1szBL-cshNmlefeKoyiXMONMw8ab5Nu9r",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-10-30T21:32:32.746Z",
+        "name": "2026-10-30_AI-BS_History_Upload_Receipt.json",
+        "size": "3414"
+      },
+      {
+        "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-10-30T22:47:12.413Z",
+        "name": "2026-10-30_Codex_Engineering_Ledger.md",
+        "size": "731486"
+      },
+      {
+        "id": "1ZjnyPfkEMGGknPNzpGJs1DtuRye8FtLB8QlYcMyCVLw",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-06-19T20:51:13.011Z",
+        "name": "AI-BS Architecture Components and Operational Directives",
+        "size": "4016"
+      },
+      {
+        "id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-10-31T01:09:16.032Z",
+        "name": "AI-BS Complete Audit 2026-10-30"
+      },
+      {
+        "id": "1jplqx6a5zgJqusYbJ2Nbg7R5wViL7ett",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-10-26T07:14:14.174Z",
+        "name": "AI-BS VM Test Fixtures"
+      },
+      {
+        "id": "1mSm44XzDKhrKsulEZYRgH1gWvO4984yO",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T00:40:48.266Z",
+        "name": "AI-BS-Creative-Drive-verification.json",
+        "size": "1579"
+      },
+      {
+        "id": "1olftjCCUZ2jG4Hz3d7hgG96r25LeY4BE",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T00:39:58.873Z",
+        "name": "AI-BS-Creative-Paused-Checkpoint-20261111T003942Z.json",
+        "size": "2516"
+      },
+      {
+        "id": "1vswqlxBfIojDqsdytVi8myQSLsgFs7Rr",
+        "mimeType": "text/plain",
+        "modifiedTime": "2026-11-11T00:39:56.574Z",
+        "name": "AI-BS-Creative-Paused-Handoff-20261111T003942Z.txt",
+        "size": "1851"
+      },
+      {
+        "id": "1pRX_ftIirbEXRBcAXo_-SD6T7iSZicf5",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-10T22:00:11.964Z",
+        "name": "AI-BS-Drive-Verified-Receipt-20261110T215948Z.json",
+        "size": "6914"
+      },
+      {
+        "id": "1cYzslPjNMdcEn3AR9sqpWIJI-xM59LAs",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-10T23:52:00.271Z",
+        "name": "AI-BS-HUD-Swarm-checkpoint-20261110T235106349961Z.json",
+        "size": "3377"
+      },
+      {
+        "id": "14igahTIapeOQa8KOINVlDwBlvGCZoXaw",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T00:19:58.502Z",
+        "name": "AI-BS-HUD-Swarm-checkpoint-20261111T001649359687Z.json",
+        "size": "3699"
+      },
+      {
+        "id": "13_uv1zQ0Rz8vgaS2QpWl-_wuXr7akiKK",
+        "mimeType": "text/plain",
+        "modifiedTime": "2026-11-10T23:51:57.967Z",
+        "name": "AI-BS-HUD-Swarm-Handoff-20261110T235106349961Z.txt",
+        "size": "5243"
+      },
+      {
+        "id": "1_r_6UDh8-Oh78eyxLXIKDXCs8dRpBjHs",
+        "mimeType": "text/plain",
+        "modifiedTime": "2026-11-11T00:19:55.699Z",
+        "name": "AI-BS-HUD-Swarm-Handoff-20261111T001649359687Z.txt",
+        "size": "6328"
+      },
+      {
+        "id": "1FsHXVBS6GwFF6qmuFpzsX4xB4BY225KR",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-10T23:53:36.735Z",
+        "name": "AI-BS-HUD-Tools-Drive-receipt-20261110.json",
+        "size": "8951"
+      },
+      {
+        "id": "1mkccvW_jNQNKbksznOo7SngNjP87l2Ms",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T00:20:41.904Z",
+        "name": "AI-BS-OpenCode-Drive-receipt-20261111.json",
+        "size": "6250"
+      },
+      {
+        "id": "1iTZiW3Ubouq2j1ztes445TrRxhMA2GZH",
+        "mimeType": "text/plain",
+        "modifiedTime": "2026-11-10T21:57:27.936Z",
+        "name": "AI-BS-Recovery-Handoff-20261110T215704Z.txt",
+        "size": "8241"
+      },
+      {
+        "id": "14le4WEV1TcihezzsOmZykAdSW3u0m97z",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T00:39:53.872Z",
+        "name": "AI-BS_Creative_Progress_20261111T003942Z.zip",
+        "size": "51618"
+      }
+    ]
+  },
+  "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m": {
+    "folder_name": "BS game",
+    "category": "01_Engineering_Backups/BS_Game",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\BS_Game",
+    "file_count": 12,
+    "files": [
+      {
+        "id": "185BJC9bd2nYmZl-bph0e9NEt9hnITT6y",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-01T04:09:33.526Z",
+        "name": "01 Story and World Design"
+      },
+      {
+        "id": "1ezdyPbgnc_i5cRlDSa6Ji9sVdq0hcYuy",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-01T04:09:34.830Z",
+        "name": "02 Core Engine Architecture"
+      },
+      {
+        "id": "1LGTSchDbnSKZ-vfLlLWFwWqgMKrZg7TP",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-01T04:09:36.051Z",
+        "name": "03 Concept Art"
+      },
+      {
+        "id": "1JBOo9VVgU-K322a3g7yYDNrqLu22b5iT",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-01T04:09:37.279Z",
+        "name": "04 Progress and Decisions"
+      },
+      {
+        "id": "1lt7a8OHIa9BN8uLkAqT5iAL8QnXAeq-G",
+        "mimeType": "application/vnd.google-apps.folder",
+        "modifiedTime": "2026-11-01T15:46:39.436Z",
+        "name": "05 Separate Experiments"
+      },
+      {
+        "id": "1vaOAzeaFmo1oFi4OcU0kiMywrca6C_jM",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T17:56:24.792Z",
+        "name": "AI-BS_CURRENT_HANDOFF_2026-11-11.md",
+        "size": "4313"
+      },
+      {
+        "id": "1vk7pWALEdlzTd3rdJMm-4b1bRtuCSiJr",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T17:54:29.345Z",
+        "name": "AI-BS_Release144_Final_Progress_20261111T175413023695Z.zip",
+        "size": "1383387"
+      },
+      {
+        "id": "1nC9yJxCdOxvbCmDcbwZ3LWeg1YsYYYVK",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T17:54:32.642Z",
+        "name": "AI-BS_Release144_Final_Progress_20261111T175413023695Z_HANDOFF.md",
+        "size": "5313"
+      },
+      {
+        "id": "1dOp6Lu9tqaG_ISu9BKzBMSoB2LZSEpEZ",
+        "mimeType": "application/json",
+        "modifiedTime": "2026-11-11T17:56:27.126Z",
+        "name": "AI-BS_Release144_VERIFIED_BACKUP_20261111T175505613282Z_750cbfb9.json",
+        "size": "3839"
+      },
+      {
+        "id": "1zrH8DjmcxcBG1Bhulq3_uaLMiOOtOKcw",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-11-11T17:49:51.431Z",
+        "name": "AI-BS_Studio144_Runtime_20261111T174915Z.zip",
+        "size": "85749319"
+      },
+      {
+        "id": "1HEme2S-3CKs1vr32peUmoQnw1dnVBeoE",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-11T17:52:45.915Z",
+        "name": "AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md",
+        "size": "46712"
+      },
+      {
+        "id": "1FBhTnefNTzJR2Qb85NAQDTFW1xP6GLkX",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2026-11-02T01:08:42.230Z",
+        "name": "PROJECT_INDEX.md",
+        "size": "10379"
+      }
+    ]
+  },
+  "1G_S80cLrKEpoZwPD0wMcG64Dg2LU0uO4": {
+    "folder_name": "Echos Within Memoir Manuscripts",
+    "category": "02_Memoirs_Manuscripts/Echos_Within_Manuscripts",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Echos_Within_Manuscripts",
+    "file_count": 2,
+    "files": [
+      {
+        "id": "1-6NH9DUJTT1OxZEOSrT6kwcr40OfVEbzC-j9S12U6g0",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-03T00:33:01.821Z",
+        "name": "garry did acctually die below is copied text from...",
+        "size": "1098"
+      },
+      {
+        "id": "1HgzVJ_3kcQ75k2k_BqhsmCrnujHm2mz6lvDTaDKEwoA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-01T20:22:00.706Z",
+        "name": "process \"The Treadmill & The Row Boat (Final)\" (S...",
+        "size": "159321"
+      }
+    ]
+  },
+  "1SfUxwQU-jw9f9VjqxRJCMD0zC-vpRR7U": {
+    "folder_name": "Memoir Manuscripts & Outlines",
+    "category": "02_Memoirs_Manuscripts/Memoir_Outlines",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Memoir_Outlines",
+    "file_count": 13,
+    "files": [
+      {
+        "id": "1oKkI5KOv3gLLnPl13ajLSPqNieL2_J_8dpB6bllbKDQ",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-01T18:25:25.429Z",
+        "name": " Multi interest subjects.",
+        "size": "20401"
+      },
+      {
+        "id": "1o4HP3p_5Q-OdsygoPYXe1moSNxmPyMSJPP4rXWXZeVM",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-04T20:27:41.455Z",
+        "name": "Analyzing Brett Stehouwer's \"Echos Within\"",
+        "size": "15927"
+      },
+      {
+        "id": "1ZooptvQ0zyl2TuD-qq-0zTAeIvNWiVAxPQVevjvXOI4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-29T18:22:01.668Z",
+        "name": "create a toc based of myt structure rules",
+        "size": "18644"
+      },
+      {
+        "id": "16OddJA_tBBoipAEbHa21aCvNCc--YH4M",
+        "mimeType": "text/markdown",
+        "modifiedTime": "2025-12-29T18:21:07.000Z",
+        "name": "create a toc based of myt structure rules.md",
+        "size": "10178"
+      },
+      {
+        "id": "10nGOC7_Kx4t_gLKx4DIQ7EybL1bY99J_",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2025-12-12T04:24:40.946Z",
+        "name": "Echos Within 12_03_25.pdf",
+        "size": "7464270"
+      },
+      {
+        "id": "1D5s0sLJiJRmMxyDYRwGEMhXf4RX24yaNSJvOKzeAO_k",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-03T02:40:37.450Z",
+        "name": "how much of a timeline of events can you map out?",
+        "size": "6526"
+      },
+      {
+        "id": "1R0-BDTcWn4MadG1dWhUaRu6vy3_f3FulUqdmGq37ddE",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-08-24T17:02:17.514Z",
+        "name": "The Echoes Within-Full Book",
+        "size": "60796"
+      },
+      {
+        "id": "1IufyK1mUDvdf5j9NbCCAqbN9mbPhJCtzX7BMe4uZgAc",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-03T03:05:24.002Z",
+        "name": "Untitled document",
+        "size": "13511"
+      },
+      {
+        "id": "1VHck1m3fff_RblfYn1kJda866pms3H95mYRAWEMmGss",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-12T03:42:51.028Z",
+        "name": "Untitled document",
+        "size": "2824"
+      },
+      {
+        "id": "1fpb-_2E1kXLjFZNgfTtlnVVdOD53dUXinaJOMyESql8",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-03T10:14:07.202Z",
+        "name": "Untitled document",
+        "size": "11758"
+      },
+      {
+        "id": "1_5uldRDihP60jUPeGsxVmnmYOBeCuMe8ZK1mUSCQ7CA",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2025-12-29T18:24:30.097Z",
+        "name": "Untitled spreadsheet",
+        "size": "4379"
+      },
+      {
+        "id": "1kF8qpONLUJs_VxEwlOzAngH11OlycFPpWwBaOU3bu_g",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-29T18:41:44.670Z",
+        "name": "use canvas for this",
+        "size": "16495"
+      },
+      {
+        "id": "10nWzodzjO7NE1Fabk3LnhDE12pEPULN73Ll2puT2NMQ",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-03T02:54:23.686Z",
+        "name": "will you put this into a table or a better vidual...",
+        "size": "2255"
+      }
+    ]
+  },
+  "1DF1zKb6jNYrWCQFcUM9kbc4HT2D1IvRf": {
+    "folder_name": "Legal & Workplace Disputes",
+    "category": "06_Health_Recovery/Fasting_Supplements_Health",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\06_Health_Recovery\\Fasting_Supplements_Health",
+    "file_count": 3,
+    "files": [
+      {
+        "id": "1dJV-p1FPmlz0QcCuHEhQDO942rMz4yno7xws1MAcBqo",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-09-19T17:03:28.997Z",
+        "name": "Stehouwer_B_EEOC_Michigan_Department_of_Civil RightsComplaint_DriveSafeLogLogistics_2025-09-19.pdf",
+        "size": "4458"
+      },
+      {
+        "id": "19QKzq8GwNLiMAFwxRYA0ymgdhgyENFKItDME3X3ZKW8",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-09-19T16:54:24.986Z",
+        "name": "Stehouwer_B_Ethics_Complaint_AmazonDSP_DriveSafeLogistics_2025-09-19.pdf",
+        "size": "4126"
+      },
+      {
+        "id": "1DiEfx3j2IEvDMGfb3Bym__zbmgSntNjH3-nJ6-xz8Ug",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-09-19T18:12:41.491Z",
+        "name": "Untitled document",
+        "size": "777097"
+      }
+    ]
+  },
+  "1vXhImRqX4Uxtkb9eOKy4cHwSsATStK2B": {
+    "folder_name": "Memoir & Creative Archival",
+    "category": "02_Memoirs_Manuscripts/Memoir_Archival",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Memoir_Archival",
+    "file_count": 5,
+    "files": [
+      {
+        "id": "1MxAjsC-MIAewtuRUobj_0JDZ7VwZuCgTrFV4DLd_3RA",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-31T04:44:38.072Z",
+        "name": "Archival Data Finalization and Verification",
+        "size": "1288"
+      },
+      {
+        "id": "1Lu-7FNSNBeaMi9-o5F1V0z3AmA4JLkrKcQN7cK0BI3o",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-16T03:06:14.594Z",
+        "name": "Deleting Chat History and Master Index",
+        "size": "1103"
+      },
+      {
+        "id": "1Hniunm27xWMCKF9lhhtZNqWzykgkyUcHIEjiKsr1qT4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-12-19T17:23:05.043Z",
+        "name": "Echos Within",
+        "size": "5598375"
+      },
+      {
+        "id": "1jQ13dfVs0w5i-1RlvEQmPY4EkEguyxx6JRp5xRdQ79k",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-31T05:21:56.614Z",
+        "name": "Fragment Archival Display",
+        "size": "5398"
+      },
+      {
+        "id": "1uGXrKEClARnj50W5Q6ILbnIqRkPAFjm2",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "modifiedTime": "2026-02-01T22:16:08.481Z",
+        "name": "throw words adam.docx",
+        "size": "11166"
+      }
+    ]
+  },
+  "1vbmmJcitPsA0408xqXeTYlzuB3JT38bx": {
+    "folder_name": "Trading SOPs & Market Strategy",
+    "category": "03_Finance_Trading/Trading_SOPs_Market_Strategy",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\03_Finance_Trading\\Trading_SOPs_Market_Strategy",
+    "file_count": 4,
+    "files": [
+      {
+        "id": "1KJT-jDRb7sntd6LCK-hVRPwcau854NUuu2n4c-iEnNI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-30T12:38:32.600Z",
+        "name": "Day Trading Techniques and Strategies",
+        "size": "22915"
+      },
+      {
+        "id": "1aAdS9SVGIylHSyvJIf6tF01H1ACrSX4F40oDsJvf7nM",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-30T10:22:30.409Z",
+        "name": "Day Trading Techniques and Strategies",
+        "size": "50647"
+      },
+      {
+        "id": "1pG1M68oSPSfiUmV1PXC24liI7ukzkmXem7bHViouP5Y",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-30T03:06:50.884Z",
+        "name": "Macro Filter Module Research",
+        "size": "48496"
+      },
+      {
+        "id": "1zkbY7r5Ga2-idv2EyPsQWlRkHtvnxlk2aQGf8cG1048",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-30T07:01:58.982Z",
+        "name": "TRD-LOGIC-V4: OPERATING PROCEDURE (SOP)",
+        "size": "4949"
+      }
+    ]
+  },
+  "1VKkSBXMgipdixRXwyttMISLRnz6OYdV9": {
+    "folder_name": "Supplement Protocols & Fasting",
+    "category": "07_Legal_Credentials/Personal_Identity_Records",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\07_Legal_Credentials\\Personal_Identity_Records",
+    "file_count": 11,
+    "files": [
+      {
+        "id": "11g6oT4t82IBTih17R_Z-YgUrJIAH911V8RnXZIAyqdo",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-30T04:03:49.525Z",
+        "name": "21-Day Dirty Fast Supplement Matrix",
+        "size": "2442"
+      },
+      {
+        "id": "1oWnwx9gIfbay4NPJPEzvYeyy5H1jhHxWXZmkYzxPy38",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-08T05:51:19.493Z",
+        "name": "Ketogenic High-Protein Meal Configurations",
+        "size": "1024"
+      },
+      {
+        "id": "1XmWN4EPizjaoFaiMvBfaIF1TyKSabE57STxn_ZWzrW8",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-16T23:08:04.955Z",
+        "name": "Master 22-Day Integration Plan",
+        "size": "4093"
+      },
+      {
+        "id": "10UF84N27S-n8be0I6E5KK0oVd4uQh50JzfijZaaV9IM",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-21T12:01:00.100Z",
+        "name": "Master Data Sheet: Pharmacological Events",
+        "size": "2781"
+      },
+      {
+        "id": "1yP74rnt4NDA7QXm02HzFuCKC6JkNxJnvzxjAtZkhcNY",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-31T23:17:30.996Z",
+        "name": "Supplement Dosing for Dirty Fasting",
+        "size": "1344"
+      },
+      {
+        "id": "1q4yS7RPaF5HAAzPtjy4SGRM4dTMpjrzKQ4SyJZ3c5mg",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-21T11:05:43.841Z",
+        "name": "Supplement Logic Scale Audit",
+        "size": "2522"
+      },
+      {
+        "id": "1Rkl36OHrYMrnASesFzlDrRJmOK2mGx_V7giY0NMmUTQ",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-31T23:35:41.134Z",
+        "name": "Supplement Stack Analysis and Optimization",
+        "size": "1024"
+      },
+      {
+        "id": "1qKwyEujGjRc7FK1iShh5AWQpb5YWI_YZPJiKdEKxGZ0",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-30T02:39:15.652Z",
+        "name": "Unified Supplement Execution Matrix",
+        "size": "4666"
+      },
+      {
+        "id": "1ZOtafV2MkD8mlJ-V_H7ZHdwD6D_BKLxLUhQH4imW9Z4",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-26T03:15:42.643Z",
+        "name": "Untitled spreadsheet",
+        "size": "1024"
+      },
+      {
+        "id": "1PchebDy5Wp-33eKIuJeLuR5HT6__QQ_6cJwALD0f3X4",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-16T23:19:15.473Z",
+        "name": "Untitled spreadsheet",
+        "size": "3312"
+      },
+      {
+        "id": "1RQwcD24J74y2dm0kcvs7hD_srGCmHiK8spMbX-nmZgA",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-01-21T11:46:38.153Z",
+        "name": "We put all this information into a new graph data...",
+        "size": "2695"
+      }
+    ]
+  },
+  "1dZ5HeDTFlVRVtzLEQxbqFK-UPz6hDWCh": {
+    "folder_name": "Academic Research & Data",
+    "category": "05_Music_Audio/Audio_Stems_Stem_Vault",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\05_Music_Audio\\Audio_Stems_Stem_Vault",
+    "file_count": 4,
+    "files": [
+      {
+        "id": "18RvKUsWr8uTfoozPhLQM1Ex8RoFqO1z2wIkwDJhB0Nc",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-10T00:08:56.042Z",
+        "name": "Macroeconomic Stability and Fiscal Governance: A Comprehensive Analysis of the Clinton Era and Institutional Frameworks",
+        "size": "28819"
+      },
+      {
+        "id": "1OuUH_XB87CCSGVg6yTJ0JY3u3BybwEMxjOEZDUGL6jo",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-10T00:37:33.988Z",
+        "name": "The Partisan Prism: Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023)",
+        "size": "1061"
+      },
+      {
+        "id": "1R0T4-ylP5ljs_tp3V596owlXQOErxNXt0-DCA8VqCpk",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-10T00:37:18.786Z",
+        "name": "The Partisan Prism: Institutional Analysis of Federal Reserve Credibility and Monetary Signaling (2001\u20132023)",
+        "size": "6905"
+      },
+      {
+        "id": "1L6vYte7bq_iwYL4vxUSTfFRDlI48J_V-4cyTfUlGcjM",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-10T00:56:36.745Z",
+        "name": "US Fiscal Policy and Public Institutional Trust Metrics",
+        "size": "5939"
+      }
+    ]
+  },
+  "1PNGrAUt_yu-jxGReM59zN7kKqEqYt3Ap": {
+    "folder_name": "Personal Clinical & Daily Notes",
+    "category": "07_Legal_Credentials/PTCE_Pharmacy_Prep",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\07_Legal_Credentials\\PTCE_Pharmacy_Prep",
+    "file_count": 3,
+    "files": [
+      {
+        "id": "18jrDBls_24X1dGM4rP5R8wTRTP8loc5pLXOBEaXuvRg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-09T22:15:18.776Z",
+        "name": "Clinical Session Summary",
+        "size": "8604"
+      },
+      {
+        "id": "1cn_Av_XCXqoR0w7T1R0QKhWGkf81fU4EmPiVgy6YPeg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-06T07:20:15.932Z",
+        "name": "Clinical Session Summary",
+        "size": "11160"
+      },
+      {
+        "id": "1g_ST-yjolhZK_9lIma7LLavh8X4fl_8C",
+        "mimeType": "text/plain",
+        "modifiedTime": "2026-03-06T07:20:58.247Z",
+        "name": "Clinical Session Summary.txt",
+        "size": "20303"
+      }
+    ]
+  },
+  "1OzQre4Cnkq3oNNkSZ0mu0j4JKZkiFzJF": {
+    "folder_name": "Creative Manuscripts & Screenplays",
+    "category": "02_Memoirs_Manuscripts/Creative_Screenplays",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Creative_Screenplays",
+    "file_count": 6,
+    "files": [
+      {
+        "id": "1BCw5RppAomiIGIVirPFKWGrewkFGflH9H5gqNpQwirE",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2024-10-11T16:22:59.107Z",
+        "name": "@Google Docs come up with 100 Hashtags that descr...",
+        "size": "4835"
+      },
+      {
+        "id": "1YTI87-7KQxlkjMyNILczwr2HQEu_OCyh",
+        "mimeType": "message/rfc822",
+        "modifiedTime": "2026-05-24T21:49:17.945Z",
+        "name": "Mom- look what is new for NoteBook.eml",
+        "size": "24076874"
+      },
+      {
+        "id": "1kW2IVZXzX7IG8rEsn-0FBZgu10xFHEP8",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "modifiedTime": "2026-03-14T21:38:41.097Z",
+        "name": "NearlyTenYears_ClinicalAudit.docx",
+        "size": "20815"
+      },
+      {
+        "id": "1RUKq6_K-QA2zhemz-AHQvuflvS720gY3KnduteheDWI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-28T11:57:03.665Z",
+        "name": "Red Line No More",
+        "size": "1024"
+      },
+      {
+        "id": "1B-7XOoZxX0d3LUvtVp8IugtDw9K4hgTV9lNomF8CVyA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-24T16:01:55.915Z",
+        "name": "Sean My Brother Who Never Leaves",
+        "size": "1024"
+      },
+      {
+        "id": "1uVC4n5EiDI7Jy3QxPy8Ir-YS6F-GVFiGKfL00xeVzZ0",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-24T15:17:03.322Z",
+        "name": "Sean My Brother Who Never Leaves",
+        "size": "1024"
+      }
+    ]
+  },
+  "1g4y2J6dveKoZ72hKWhpk9PpbAViKGCLF": {
+    "folder_name": "AI Protocols & System Workflows",
+    "category": "01_Engineering_Backups/AI_Protocols_Workflows",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\AI_Protocols_Workflows",
+    "file_count": 5,
+    "files": [
+      {
+        "id": "1ndSqWllQagL0dPe3lsxs-sX-2OdvaeBydEgD6gf3MeA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-12T00:33:08.488Z",
+        "name": "Gemini Export March 11, 2026 at 8:33:07 PM EDT",
+        "size": "2620"
+      },
+      {
+        "id": "1NyRUts8rVDS5WfVNt9hK9KDXfFwFFhH39q0ozUWkFeM",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-12T00:31:53.333Z",
+        "name": "Google Drive Organization 2015-Present",
+        "size": "1123"
+      },
+      {
+        "id": "1x44UD5oGniRvM9FxveFD-GLO_a6APkfiTAGo7g0SBkU",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-21T03:04:56.198Z",
+        "name": "Protocol 25/7 Workflow Expansion",
+        "size": "5766"
+      },
+      {
+        "id": "1tETIyGA_0C32ThVNKAE9YCvh3OYEjKgCN8YxYxHEX40",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-01-30T08:21:41.948Z",
+        "name": "trade logic audit",
+        "size": "3198289"
+      },
+      {
+        "id": "1b1Re-0gT_ylyw0bIYyadQN6wervHIbx4GZl-lRccTZc",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-21T05:23:35.362Z",
+        "name": "Untitled spreadsheet",
+        "size": "2991"
+      }
+    ]
+  },
+  "1VWKkUaB7Zz2KQcevcltmXvxTm1lSIN29": {
+    "folder_name": "Protocol 25-7 & Satire Works",
+    "category": "02_Memoirs_Manuscripts/Protocol_25_7_Satire",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Protocol_25_7_Satire",
+    "file_count": 6,
+    "files": [
+      {
+        "id": "1hKBdNHSO5KrqyPmnFwX_PnoszgyJJMG06gd8Zr0F43o",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T03:38:04.498Z",
+        "name": "Jeffrey and His Friends: Technical Roast",
+        "size": "4489"
+      },
+      {
+        "id": "1rJuZLzcN5Wr9Pk7O__aQcX5VTA3Es1Gt",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-03-16T03:38:20.258Z",
+        "name": "Jeffrey and His Friends: Technical Roast.pdf",
+        "size": "94634"
+      },
+      {
+        "id": "1stS7YHKr3WDi7ITKFw9UyHjbAskOjfVtTEokJr_vsTI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T02:34:06.537Z",
+        "name": "Manuscript Roast: Trauma and Resilience",
+        "size": "4803"
+      },
+      {
+        "id": "1yv_o-v32aiRyRBZrtnYp7RSORX4YDgg0w5e_yF9lvV0",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T04:12:49.344Z",
+        "name": "Protocol 25/7 Satire Gem Instructions",
+        "size": "3732"
+      },
+      {
+        "id": "1mMIuBhZOSgBpylF3p6sCNolKp7Jjdrn9hSbxED39s5s",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T03:55:51.090Z",
+        "name": "Quantum Gastronomy: The Tupperware Postulate",
+        "size": "4098"
+      },
+      {
+        "id": "1BWR9F63GeDX8p0Cmg42iisEhv2N_XliI",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-03-16T03:57:03.978Z",
+        "name": "Quantum Gastronomy: The Tupperware Postulate.pdf",
+        "size": "103734"
+      }
+    ]
+  },
+  "1SMHTEsz56uKShyEN5ce1sOh0KWH5E099": {
+    "folder_name": "Psilocybin & TBI Recovery Research",
+    "category": "05_Music_Audio/Suno_AI_Guides_Prompts",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\05_Music_Audio\\Suno_AI_Guides_Prompts",
+    "file_count": 5,
+    "files": [
+      {
+        "id": "1_s4ElSmUGGknxhEsTMAUMG5gUhqZk1maUSBuml7XykA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-11-07T13:06:59.678Z",
+        "name": "Psilocybin for TBI, PTSD, and Apathy",
+        "size": "20186"
+      },
+      {
+        "id": "1iaKVvDsuL3ejpfe7X8J71dnwrJcqnL_sNY51K_dX3L4",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-13T20:42:54.389Z",
+        "name": "Psilocybin Protocol for TBI and PTSD Recovery",
+        "size": "3066"
+      },
+      {
+        "id": "1s3H80hPO5qnUk1CjaDoPx607wYAurKBT8OBAq-zBOpI",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-13T20:20:54.409Z",
+        "name": "Trauma and Psilocybin Brain Recovery",
+        "size": "1515"
+      },
+      {
+        "id": "1pxQtH82_cjv9f_YwuLB9Eux42fM0a4iKtACGN0qJhD0",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-02-04T05:24:58.468Z",
+        "name": "tripping session",
+        "size": "675486"
+      },
+      {
+        "id": "1lHZ47_0qbcsjP90N7qQLTL_FZ6PNNXz4",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "modifiedTime": "2026-02-04T10:01:25.276Z",
+        "name": "tripping session.docx",
+        "size": "1232989"
+      }
+    ]
+  },
+  "1g5hbYBGo-Q95bp8HYnPN0xF8GkgYflh9": {
+    "folder_name": "Economic & Educational Research",
+    "category": "03_Finance_Trading/Economic_Research",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\03_Finance_Trading\\Economic_Research",
+    "file_count": 2,
+    "files": [
+      {
+        "id": "1EVaFqD-hgZwWvHH1heLmj4r281KOv1nbhCl6h0F4Wwg",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-10T20:48:34.373Z",
+        "name": "AI's Impact on Education Data",
+        "size": "1024"
+      },
+      {
+        "id": "11zB0FZbrqBJC5A5ChbfGSvmrE4SShnfa8l_cGny7tLk",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-09T22:49:49.440Z",
+        "name": "Macro-Economic & Infrastructure Matrix",
+        "size": "9288"
+      }
+    ]
+  },
+  "1f6honDav5gHksEOV6tM4CVlU7ZhI0oc-": {
+    "folder_name": "Local Revenue Prospectus",
+    "category": "03_Finance_Trading/Local_Revenue_Prospectus",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\03_Finance_Trading\\Local_Revenue_Prospectus",
+    "file_count": 2,
+    "files": [
+      {
+        "id": "1sTDDrC0tDsJzPhizYnHt4hsau2mx1xN7b75DmuOzed8",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-26T21:15:33.663Z",
+        "name": "Gemini Export March 26, 2026 at 5:15:30\u202fPM UTC-4",
+        "size": "137416"
+      },
+      {
+        "id": "1u3_m6QXkl7ZQo56kDhztAYY09bg7xZuQjqIsp1W2pD4",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-26T21:15:35.145Z",
+        "name": "Localized Revenue Maximization Prospectus",
+        "size": "12052"
+      }
+    ]
+  },
+  "1uQpPzflF83pg6IYEsyyXM_QjiA5BiZwr": {
+    "folder_name": "Personal Writings & Memoirs",
+    "category": "02_Memoirs_Manuscripts/Personal_Writings_Memoirs",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Personal_Writings_Memoirs",
+    "file_count": 12,
+    "files": [
+      {
+        "id": "14Qhag7nry0RenC2k20Ebc0Ebwj5OIfV1k1-zAiFFTQg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2023-12-02T16:47:44.685Z",
+        "name": "Copy of October 7th year 6",
+        "size": "2821"
+      },
+      {
+        "id": "12S9HOxdyX_Lu6_9eYMGHtp1zwzQ74DQOkmCiBHT9Y_4",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-19T16:45:17.392Z",
+        "name": "Engagement Rating Of Personal Narrative",
+        "size": "1064"
+      },
+      {
+        "id": "1u9DBaIXp9gzk-zeXHr9VP2I97lItxtL9ypYhz-QMffk",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-28T22:34:06.885Z",
+        "name": "Journal notes for Dr. Bartholomew before the next follow up appointment.\n",
+        "size": "1736"
+      },
+      {
+        "id": "1OTCkvztf6YfVV6RV90LfpbJ5ADKk4QhewdT8h86uH3w",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-22T02:24:32.589Z",
+        "name": "March2026",
+        "size": "9289"
+      },
+      {
+        "id": "1610LEO5G015HZ5Cc5-hgNziz63lA_GgiPU9qZznIYFA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T06:24:23.394Z",
+        "name": "satire",
+        "size": "7237"
+      },
+      {
+        "id": "18A_pWC_FdJEo0IFzP5UtRS9EfU1acES7l-MBf3JT8DA",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-21T04:05:05.378Z",
+        "name": "Stehouwer Document Matrix Analysis",
+        "size": "1024"
+      },
+      {
+        "id": "1n3qo9AyeHmueXSPZ1rWzddfkKNOffEtcvLCjSJZPT38",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-21T04:16:41.766Z",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "size": "18628"
+      },
+      {
+        "id": "1Fw782FZlZv329EzP4ndNhHHTP__ArVP_chzBMJEv3gQ",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-21T04:14:08.332Z",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "size": "10432"
+      },
+      {
+        "id": "1Ui8NkqM2U1tq0cyMvhQQf6jHUxXRwQaXgZMx7C3k7m4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-21T04:12:14.662Z",
+        "name": "Stehouwer Reality: Document Consolidation",
+        "size": "4879"
+      },
+      {
+        "id": "1fpfZliAw9nU4GUHMFAggApcJDPUHg-stKPw97mfDx_g",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-03-19T16:53:42.521Z",
+        "name": "Subjective Reader Analysis Protocol",
+        "size": "1024"
+      },
+      {
+        "id": "19HzAz1ojShFjxELEWcBcO2RkPtrIuoKl",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-04-02T00:25:15.363Z",
+        "name": "Tomorrow Is Todays Surennder. .pdf",
+        "size": "118393"
+      },
+      {
+        "id": "1tuJfmuepwzLcg404venWMRnq6UlqoHEJkNBIslHHgKc",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-03-16T05:03:11.386Z",
+        "name": "Total satire brett sean humor",
+        "size": "3434"
+      }
+    ]
+  },
+  "1ou4GhTN0pPxmCNKABV2MNUIGdIVOFJDz": {
+    "folder_name": "Macroeconomic Synthesis Engine",
+    "category": "03_Finance_Trading/Macroeconomic_Synthesis",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\03_Finance_Trading\\Macroeconomic_Synthesis",
+    "file_count": 3,
+    "files": [
+      {
+        "id": "19ozSg-_modoZifZ6jYJIuj-ty5aWEEXnEEntiSVWVKI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-20T05:00:27.815Z",
+        "name": "app.py",
+        "size": "5810"
+      },
+      {
+        "id": "186dI9t0Ga-JnfppmG6ks4EdJn9BHzrgLiGDTo45qAEs",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-19T15:06:28.899Z",
+        "name": "Fiscal Policy, Fed Independence, Savings",
+        "size": "74939"
+      },
+      {
+        "id": "1C5TOJJdynNgaLzeu0QxqL5wcYSeDiwlwuHC-WsQVycY",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-20T04:56:22.454Z",
+        "name": "Macroeconomic Synthesis Engine",
+        "size": "3537"
+      }
+    ]
+  },
+  "1FBqzb_gmsXy9kD-cQP0wCY9EGPBKTfXy": {
+    "folder_name": "NoCo Real Estate",
+    "category": "04_Real_Estate/NoCo_Real_Estate",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\04_Real_Estate\\NoCo_Real_Estate",
+    "file_count": 1,
+    "files": [
+      {
+        "id": "1wYTCb3qyhPXn-X1301b184ET49VKA7gVjAePv-rGPys",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-10-22T01:32:55.289Z",
+        "name": "NoCo Property Acquisition & Realtor Due Diligence Questionnaire",
+        "size": "13749"
+      }
+    ]
+  },
+  "1C-zl9s8Eh9rej9Os1EKn4bXaeHazJtzF": {
+    "folder_name": "Writing & Literary Works",
+    "category": "02_Memoirs_Manuscripts/Writing_Literary_Works",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\02_Memoirs_Manuscripts\\Writing_Literary_Works",
+    "file_count": 5,
+    "files": [
+      {
+        "id": "1ffT9SUOshCbOllf_R-KEnpJ3WzXxELf3NeVxaXOgLW0",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-03T19:16:56.290Z",
+        "name": "Full script ",
+        "size": "1024"
+      },
+      {
+        "id": "1os0ZmW9uy4EJZv8K4CjdaSDimQFaoPM-LqAQeod8kYw",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-01-30T00:50:05.357Z",
+        "name": "intro",
+        "size": "7877"
+      },
+      {
+        "id": "1GXNiuQCc3cKbiShc18SvkeDkGgiK-3uxmntCAPzAsTw",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-18T20:03:47.458Z",
+        "name": "Julie Stehouwer's Professional Profile",
+        "size": "23975"
+      },
+      {
+        "id": "1P8JEr1q6IWabCg4O78XonN5bC8qGVr63pFymo9J5yDY",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-17T18:30:50.262Z",
+        "name": "The Judge Made Him Go! FNLC",
+        "size": "33253"
+      },
+      {
+        "id": "1vK-qa_fvl3W53jPoW7SqUfxfp4etzfPlJZIRL-I6u_o",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-04-26T06:58:24.990Z",
+        "name": "writing videos",
+        "size": "1024"
+      }
+    ]
+  },
+  "1MwzZuqa0ZXdY5Uplm_oyTAG5Ptup1UCS": {
+    "folder_name": "Suno AI Music Guides",
+    "category": "05_Music_Audio/Music_Audio_Production",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\05_Music_Audio\\Music_Audio_Production",
+    "file_count": 3,
+    "files": [
+      {
+        "id": "1b8n5BsBAG7NYkSRjyr5zYtZ6DrAirDfgQGo0Pq_6W5Y",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-20T05:39:46.085Z",
+        "name": "Can you make a song about all the ladies that want...",
+        "size": "1024"
+      },
+      {
+        "id": "1ORqQ8kTT8QZiCeTji_7cppnjNZJz-SYx4e8q9Mz3pwE",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-29T17:53:33.647Z",
+        "name": "Put together everything you found into one full in...",
+        "size": "5596"
+      },
+      {
+        "id": "1rRr2MCG6wkRycn3fRmljU_9WKxGYFmUG",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-05-29T17:54:50.610Z",
+        "name": "Put together everything you found into one full in....pdf",
+        "size": "103749"
+      }
+    ]
+  },
+  "1AIyyTx4_ws4BxVMGaP_p-Yzx7PKS4rmZ": {
+    "folder_name": "Medical & Health Notes",
+    "category": "06_Health_Recovery/TBI_Psilocybin_Recovery",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\06_Health_Recovery\\TBI_Psilocybin_Recovery",
+    "file_count": 2,
+    "files": [
+      {
+        "id": "1XApmNB-NfqDF9Qo_0rDQontRZO342csG",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-05-28T22:34:34.308Z",
+        "name": "Journal notes for Dr. Bartholomew before the next follow up appointment.\n.pdf",
+        "size": "33115"
+      },
+      {
+        "id": "1BCYzznfNucZzLIVoSXpKMalZOwwxOkIo5eNQGTVP-lI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-28T22:30:25.652Z",
+        "name": "Notes for Dr. Andrew Bartholomew ",
+        "size": "6383"
+      }
+    ]
+  },
+  "1MUU9482JMKD87jwBDW8dpF4qmMxyr3x0": {
+    "folder_name": "West Michigan Market Leads",
+    "category": "04_Real_Estate/West_Michigan_Market_Leads",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\04_Real_Estate\\West_Michigan_Market_Leads",
+    "file_count": 4,
+    "files": [
+      {
+        "id": "1ityXn4hYNWBdmaeGC7JjK4qETyh7gcKdiVu1RPL3MwU",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-10-17T20:56:59.528Z",
+        "name": "50-State Apex Chamber Database & Executive Roster",
+        "size": "1024"
+      },
+      {
+        "id": "1xQ-WTi20yAzeEGs3aLnudn9sD_SOSlDcItsnIaIuBIU",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-19T13:46:58.854Z",
+        "name": "pull public as many member contacts you can show...",
+        "size": "19892"
+      },
+      {
+        "id": "1tUiSkuM1Qb-zP2HqKQ6zVlJF2WmldfNOqUFo6CcBdpQ",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-23T21:24:35.133Z",
+        "name": "West Michigan Lead Research",
+        "size": "143365"
+      },
+      {
+        "id": "1tLvAHIRR7A4eqhsTjjs2MvfgQ1qAOf7eqrz3a-_GWTk",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-23T20:33:47.785Z",
+        "name": "West Michigan Target Lead Manifest - Stehouwer Advertising",
+        "size": "3819"
+      }
+    ]
+  },
+  "1zS7awgJlbETFxaHDDPVH6TglEyMP99ie": {
+    "folder_name": "The Simple Chef Project",
+    "category": "04_Real_Estate/The_Simple_Chef",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\04_Real_Estate\\The_Simple_Chef",
+    "file_count": 2,
+    "files": [
+      {
+        "id": "1daWZ2ZJkwA-LbgQLaKW6FdR7LruOIvC8",
+        "mimeType": "application/zip",
+        "modifiedTime": "2026-06-27T16:02:44.625Z",
+        "name": "cleaned_homepage.zip",
+        "size": "6492"
+      },
+      {
+        "id": "1rltkCUi9Hm9P6p_VFKrENK_iGZ3YkkiYKFo2fcyR69s",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-06T21:44:25.870Z",
+        "name": "Gemini Export July 6, 2026 at 5:44:25 PM EDT",
+        "size": "3485"
+      }
+    ]
+  },
+  "1Vf6Pu2Bidc0mxbXbLe2M7ic8qbQZXo1V": {
+    "folder_name": "PTCE Exam Preparation",
+    "category": "06_Health_Recovery/Cognitive_Assessment_Clinical",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\06_Health_Recovery\\Cognitive_Assessment_Clinical",
+    "file_count": 5,
+    "files": [
+      {
+        "id": "1sW0EHidBfNSUqJKxUNtTzDn1zoCxJD45tuZXbl8K4Rg",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-05-29T22:19:32.872Z",
+        "name": "can we put together a collective study practice c...",
+        "size": "2320488"
+      },
+      {
+        "id": "1nmAYAQ3pH6R6aLba3czmEBbxmlnOh7zc_oZ0s-lYzjA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-29T22:49:02.107Z",
+        "name": "PTCE Practice Quiz (Google Forms Ready)",
+        "size": "1539"
+      },
+      {
+        "id": "125hKRzhyXav55TA1QlanLr3DAcg0rFxM",
+        "mimeType": "application/pdf",
+        "modifiedTime": "2026-05-29T22:29:48.000Z",
+        "name": "PTCE Study Guide And Preparation - Google Gemini.pdf",
+        "size": "2495924"
+      },
+      {
+        "id": "1mUm15Swfb9Eghxb_pO8NtssgNwwjIVNDqqTd4kidFtA",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-05-29T22:47:19.661Z",
+        "name": "Top 200 Database (Google Sheets Ready)",
+        "size": "1525"
+      },
+      {
+        "id": "14ky2kIVGQ6wtY9oZ3lrnTBY-L6kGFcJckbDXsiJosqQ",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-05-29T22:41:49.645Z",
+        "name": "Untitled spreadsheet",
+        "size": "9104"
+      }
+    ]
+  },
+  "1QMe7DtuJRCV4HA4bFHUGmoP7gfqjO4ea": {
+    "folder_name": "Legal & Corporate Agreements",
+    "category": "07_Legal_Credentials/Legal_NDAs_Disputes",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\07_Legal_Credentials\\Legal_NDAs_Disputes",
+    "file_count": 4,
+    "files": [
+      {
+        "id": "1lzAqqcc4V5Dl424ZTEXhWkuGHAnJVba1nesh4Si4wxU",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-30T06:09:37.336Z",
+        "name": "AI-BS NDA",
+        "size": "4884"
+      },
+      {
+        "id": "1hssw2zNWE1o7JPQ5ne7TxMVF4N-7cLGU7qOGv1tyxxY",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-30T17:41:34.693Z",
+        "name": "AI-BS Non-Disclosure and Confidentiality Agreement - Finalized",
+        "size": "5778"
+      },
+      {
+        "id": "14bNVcdhwluaV7mFSsZGNUZm-jekvXxDdtw5RHRxzQZ4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-30T21:06:38.137Z",
+        "name": "Master Services Agreement",
+        "size": "13486"
+      },
+      {
+        "id": "1YZx6Um-Cm3qm8zvT1AAZquUlAUaPhzyKWx_0GFPDCGE",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-30T21:08:11.617Z",
+        "name": "Stehouwer Publishing NDA",
+        "size": "13486"
+      }
+    ]
+  },
+  "1AuKV45cCnZhiNSVEt9BqVXn9VlyxcLLF": {
+    "folder_name": "AI-BS Engineering",
+    "category": "01_Engineering_Backups/AI_BS_Engineering",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\01_Engineering_Backups\\AI_BS_Engineering",
+    "file_count": 14,
+    "files": [
+      {
+        "id": "13iNTaeDCPHh_W78oRaxPSGFxRoYkbZtH",
+        "mimeType": "application/vnd.google.colaboratory",
+        "modifiedTime": "2026-06-24T14:48:38.174Z",
+        "name": "AI BS Feature Option Pitch",
+        "size": "6198"
+      },
+      {
+        "id": "1rNO5OIep4ve4HLOUJgBKknG8UvFKxtzC-juSljxb0IU",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-25T12:44:35.163Z",
+        "name": "AI BS OUTLINE and any details needed for potential use",
+        "size": "225197"
+      },
+      {
+        "id": "1RYIUn7M15uTQA48I32rpTza7VZ6Rz-g8YzF5ua34QBI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-14T17:26:59.147Z",
+        "name": "AI-BS_Matrix_Master_Session_Log",
+        "size": "9127"
+      },
+      {
+        "id": "1OK1up3twdDCKB_gKT8EqcqmtwGv6N5hk0D4ZrDRLg4c",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-06-23T14:53:30.653Z",
+        "name": "also add the Mentorship Directive: Bit-by-Bit Gui...",
+        "size": "1024"
+      },
+      {
+        "id": "1T_b-eOZTDgV0xFOBD4LepKPGnolF6bQFCN-jg2EXfWE",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-01T03:53:09.888Z",
+        "name": "back end port 8000",
+        "size": "14295"
+      },
+      {
+        "id": "12n_CA6IyulMNFWCyI0zlTR3sBXfMr6AzQpkGWgVRpGs",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-30T21:54:08.111Z",
+        "name": "Build review2",
+        "size": "54586"
+      },
+      {
+        "id": "1lBV7TbSOVbJK7gB22mv1N-hAPpTHyCRsx1BWiIrelxo",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-15T17:43:22.394Z",
+        "name": "Chat log IDE",
+        "size": "1024"
+      },
+      {
+        "id": "1JsnVAP6R1C2qLKYtIclJm7wTe5SYx4xgEmGOPYH7lo8",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-12T21:32:44.298Z",
+        "name": "Instead of the daemons running multiple at once co...",
+        "size": "3925"
+      },
+      {
+        "id": "1QE_SPK93b2DzSLggfHd_CSL4AMrSGLiqWrOIgwuXzpA",
+        "mimeType": "application/vnd.google-apps.spreadsheet",
+        "modifiedTime": "2026-07-13T16:27:43.904Z",
+        "name": "Memory for CodeCoach",
+        "size": "1024"
+      },
+      {
+        "id": "1i8gYKr0Zl5fvsUdVgBpchVj5iwoUAT7EdcJrS3V7Kk4",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-06T01:18:37.500Z",
+        "name": "Multi agent unifided bifuricated mining tools/agent/modual.",
+        "size": "14295"
+      },
+      {
+        "id": "112Yf_zzebU38bfxsOZtRo5AEPxprMRuMUnrnyUOrzek",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-01T05:26:05.609Z",
+        "name": "path directories",
+        "size": "9889"
+      },
+      {
+        "id": "177YjZe_D8jBbbFX3Q_58UpM2dQBqyxjqoCLm1cQtBN6qoCISVwUADMoK",
+        "mimeType": "application/vnd.google-apps.script",
+        "modifiedTime": "2026-09-13T17:33:23.380Z",
+        "name": "Untitled project"
+      },
+      {
+        "id": "1fJYRPycNFihjkhuB6BWbQnPrm8p3ti_BYIJRK6j5Sbw",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-06-23T19:53:52.821Z",
+        "name": "we need to work on going fom mock to live and fun...",
+        "size": "5964"
+      },
+      {
+        "id": "1M0iBvrs_d06cF6FVdar2uDS-b9uPM0CtPIUt5pCbXyg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-07-01T03:25:16.517Z",
+        "name": "what launauge of code is being used while perfomi...",
+        "size": "3971"
+      }
+    ]
+  },
+  "1xD0KssY1RW77MO3BmumWwh5pdBGg0rCW": {
+    "folder_name": "Personal Documents",
+    "category": "07_Legal_Credentials/Professional_Credentials",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\07_Legal_Credentials\\Professional_Credentials",
+    "file_count": 10,
+    "files": [
+      {
+        "id": "1qmefawzOJBu3YlQhygV3CEETz757aVeE",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:08.126Z",
+        "name": "20260727_065146.jpg",
+        "size": "2763212"
+      },
+      {
+        "id": "1qkte-kv4DT1Pv6NAU9mhMsv2MxTBaZI7",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:08.110Z",
+        "name": "20260727_065156.jpg",
+        "size": "2462828"
+      },
+      {
+        "id": "1-KNGAmv_SV3zo90rK9gsHKGwWOopxom-",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:08.107Z",
+        "name": "20260727_165316.jpg",
+        "size": "2073982"
+      },
+      {
+        "id": "1gnvbtGTQy3WOp4LHUnBYRNtFFTvn43c6",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:09.879Z",
+        "name": "20260727_165354.jpg",
+        "size": "1568386"
+      },
+      {
+        "id": "1HxT7BGM3SJ3aichp2npCrOm5ONNfH8fZ",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:09.775Z",
+        "name": "20260727_165401(1).jpg",
+        "size": "749925"
+      },
+      {
+        "id": "1hY7LWTnfk-0pLVHMi6vk20vujsgqt0e1",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:10.591Z",
+        "name": "20260727_165401.jpg",
+        "size": "2934711"
+      },
+      {
+        "id": "1iTMKnnV3ljuB9BrCE8uBBmdOZ37QS5lI",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:11.521Z",
+        "name": "20260727_170944.jpg",
+        "size": "2692209"
+      },
+      {
+        "id": "1zDTu92l1RQMEy0EjMtu9va83iH2_6uCv",
+        "mimeType": "image/jpeg",
+        "modifiedTime": "2026-08-02T15:38:11.678Z",
+        "name": "20260727_170957.jpg",
+        "size": "2252204"
+      },
+      {
+        "id": "1A5SiN867PtcOw1ND6qJr7AYKh0OKunimo_t2Fts4mOk",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2012-10-18T15:35:57.859Z",
+        "name": "brett patrick 5th hour My auto biography on reading"
+      },
+      {
+        "id": "17NLhYHAvzpwn0CPvauiEBQCb2-HBXjz9qeSTv3T4WGQ",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-07-04T19:18:25.544Z",
+        "name": "Elephant man essay doc created 02/08/2012",
+        "size": "2823"
+      }
+    ]
+  },
+  "19Lo5oh_F9dgdlV0HJj4RHDc26tGuaFfl": {
+    "folder_name": "Recreational Debut",
+    "category": "04_Real_Estate/Recreational_Debut",
+    "target_dir": "C:\\AI-BS\\synced_drive_assets\\04_Real_Estate\\Recreational_Debut",
+    "file_count": 6,
+    "files": [
+      {
+        "id": "181ieOoVyeiIre24XZQ897imToRbMwLEu-_1zwOBBF84",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2025-06-08T03:32:52.906Z",
+        "name": "May 14 2020- While in Pivot-Cover letter job app to Hope Network"
+      },
+      {
+        "id": "1ecjA3G4370CLVIdtt0d8Qg_dqmdrK6zzDyvhE4LqsHs",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-19T18:16:13.806Z",
+        "name": "RecDebut_Tracking_Upgrade_Patch_Script",
+        "size": "11436"
+      },
+      {
+        "id": "1amBANf7pFKj4h4bZ9Fu7nXRAXnY1wMXZvogqUKdZ3uM",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-19T18:08:52.340Z",
+        "name": "RecDebut_Tracking_Upgrade_Patch_Script",
+        "size": "11306"
+      },
+      {
+        "id": "1JP7DbmAdSu3-Cb8_G0ReJlyEYFmQppHvFfC1R3msSnI",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-19T18:39:56.118Z",
+        "name": "RecDebut_Tracking_Upgrade_Production_Script",
+        "size": "10022"
+      },
+      {
+        "id": "1s9Iqbh2Qft8zdIzC5adNJhfnUBPiu1KBHU2ReYCYeAg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-19T18:31:22.569Z",
+        "name": "RecDebut_Tracking_Upgrade_Production_Script",
+        "size": "11436"
+      },
+      {
+        "id": "1tDcSQyT2af06z7Xghp_JCn0QhpjgVeIFxP8_ALg3Xbg",
+        "mimeType": "application/vnd.google-apps.document",
+        "modifiedTime": "2026-10-27T16:02:01.213Z",
+        "name": "Untitled document",
+        "size": "181297"
+      }
+    ]
+  }
+}

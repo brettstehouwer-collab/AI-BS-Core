@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T15:16:22.056552+00:00",
+  "status": "PASS_RELOCATED_CONTROLLED_AND_NORMAL_UI_SAVED_RESUME",
+  "version": "5.329.142",
+  "summary": "Studio142 identical427file/216053240byte bundle relocated outside C:/AI-BS and executed from unrelated cwd with fresh owned profiles. Controlled frozen author/reopen, four viewport renders, hub and saved lifecycle passed with module/native paths in relocated bundle. Actual normal MainWindow opened copied chapter through folder picker, launched native13016/normal Alt+F4 exit0 and resumed native37880/Studio Stop saved chapter exit0. Same database, timeline, claim, slot and logical SHA65f9d842 persisted with0saved events. Native host30916 and Studio20820 exited0. Original12files/copy source bytes and427bundle files remain exact; installed107/shortcuts unchanged.",
+  "next_step": "Repair observed narrow-window Studio/GameBuild/Chapter layout at1150/1280 widths: readable navigation/action labels, usable chapter outliner and initial sizing within available display. Preserve held142 and installed107; qualify separate source/candidate before promotion. Then actual-account creative edit/export and browser/mobile gates; human pacing, signing/clean-machine/hosted/fullrelease and Nsight injection remain open.",
+  "previous_goal_turn": "PROGRESS",
+  "copy_verification": "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\copy-verification.json",
+  "controlled": "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\acceptance.json",
+  "normal_ui": {
+    "status": "PASS_NORMAL_MAINWINDOW_TWO_PLAYER_SAVED_RESUME",
+    "database": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Normal_LH_142_v01\\project\\.aibs-runtime\\saves\\03d41a2bc1e400d9bf507613b11398c95ee7c84246deef2a2ee967188c2baf20\\world.sqlite",
+    "timeline": "d2b15eb3-0378-4acc-a3c8-c73ba195b3d5",
+    "logical_sha256": "65f9d842157d3e37d90d24708687c1911d875cfd4c73e5e9aa2c5578a2daa066",
+    "claim_and_slot_unchanged": true,
+    "native_processes_distinct": [
+      13016,
+      37880
+    ],
+    "first_closed_via": "native window Alt+F4",
+    "second_closed_via": "Studio Stop saved chapter button",
+    "player_exit_codes": [
+      0,
+      0
+    ],
+    "ordinary_gameplay_input": false,
+    "inference_requested": false,
+    "actual_normal_shell_may_poll_local_status": true,
+    "full_release_qualified": false
+  },
+  "normal_shell": {
+    "pid": 20820,
+    "birth_unix": 1794409078.4719803,
+    "executable": "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "command": [
+      "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\AI_BS_Studio\\AI_BS_Studio.exe"
+    ],
+    "cwd": "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\unrelated-cwd",
+    "profile": "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\profile-normal",
+    "exact_popen_handle_retained": true,
+    "normal_mainwindow": true,
+    "activation_flags_omitted_false": [
+      "AI_BS_NATIVE_MANAGE_DAEMONS",
+      "AI_BS_NATIVE_EXIT_PROCESS_CLEANUP",
+      "AI_BS_NATIVE_BACKGROUND_UPDATES"
+    ],
+    "terminal": true,
+    "exit_code": 0,
+    "seconds": 852.3119999999981
+  },
+  "postflight": {
+    "status": "PASS_RELOCATED_NORMAL_POSTFLIGHT",
+    "bundle_files_identical": 427,
+    "bundle_bytes": 216053240,
+    "original_source_files_unchanged": 12,
+    "copied_source_files_unchanged": 12,
+    "compiled_engine_source_pins": 158,
+    "player_artifacts": 9,
+    "normal_shell_exit0": true,
+    "whole_project_saved_data_backup": false
+  },
+  "normal_ui_actions": [
+    "Ctrl+K game workspace",
+    "chapter tab",
+    "Open project folder picker on copied LH",
+    "Play saved chapter",
+    "native Alt+F4",
+    "Play saved chapter again",
+    "Studio Stop saved chapter",
+    "Close project",
+    "Studio Alt+F4"
+  ],
+  "known_limits": [
+    "Assistant GUI input occurred; no user manual play test or gameplay movement",
+    "Saved head0/events0 verifies lifecycle preservation, not gameplay action durability",
+    "Normal shell may poll local ports/Ollama tags+ps; no inference requested, not zero-network qualification",
+    "Canonical checkout still present and progress monitor reads canonical metadata; not clean-machine independence",
+    "Initial isolated profile lacked Desktop; created own Desktop/Documents/Downloads only",
+    "Default1620x980 exceeded test display; OS window sizing exposed clipped labels at1150width. No responsive UI pass",
+    "No installed107/global shortcut/registry/signing/deployment changes"
+  ],
+  "evidence_images_local_only": [
+    "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\normal-first-ready.jpg",
+    "D:\\AI-BS-Game-Resources\\Standalone_Studio142_v01\\normal-resume-ready.jpg"
+  ],
+  "independent_review": "/root/rtx_asset_next_gate read actual receipts/screenshots; no blocking scope flaw; responsive UI next",
+  "backup": {
+    "local": {
+      "path": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Studio142_Relocation_20261111T151622Z.zip",
+      "bytes": 132729183,
+      "sha256": "d9638158b68cfadb49fa077e559fc83b113c9ea79794339f24fd54a228ecdd15",
+      "members": 582,
+      "all_member_hashes_verified": true,
+      "filesystem_restore_executed": false,
+      "scope": "Complete owned relocated142 runtime/profiles and three synthetic project fixtures; not original user stores"
+    },
+    "drive": {
+      "status": "VERIFIED_PRIVATE_SCOPED",
+      "receipt": "C:\\AI-BS\\backups\\relocated142_checkpoint_20261111T151622Z\\drive_verified.json",
+      "archive_id": "1_ccW3ncf-uQ1ltU2_4zINyWDQqYBFmrn",
+      "members": 51,
+      "complete_selected_files": 15,
+      "requires142_base_chain": true
+    },
+    "whole_project_or_saved_data_cloud_backup": false
+  }
+}

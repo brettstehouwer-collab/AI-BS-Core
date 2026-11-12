@@ -1,0 +1,32 @@
+{
+  "id": "capture_repair_route_20261110",
+  "utc": "2026-11-10T19:24:00.643708+00:00",
+  "goal_complete": false,
+  "status": "SCOPED_CAPTURE_AND_CONTROLLED_ROUTE_VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source_pins": [
+    {
+      "path": "engine/apps/tour_diagnostics.hpp",
+      "sha256": "eb3d4bebe9ae6b6a46e060c61ff909f51b3736304afa724679e9dd47c5529300"
+    },
+    {
+      "path": "engine/tests/tour_diagnostics_tests.cpp",
+      "sha256": "dd4f22cced49199d9c0b5964cc62c44b081370ecf8b419110363c699c1c0bec9"
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "sha256": "ee31de9f921e6650a7a8a569306ce7117592f0f76afa0c59faae1ec21a5bdc8e"
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "sha256": "99cb50b037aa5547ac913cc48b749fafe587fba53856ab8031ddcac60c9a4efe"
+    },
+    {
+      "path": "engine/out/warm_beginning/monitor_summary.json",
+      "sha256": "50b57cba3050be8957b34a19220451cd8ab70ca79c97cf351e134ad8fc1f1d18"
+    }
+  ],
+  "report": "C:\\AI-BS\\backups\\capture_repair_20261110\\capture-fix.json",
+  "next": "Address isolation-switch discoverability/ordinary repair usability using the fixed private capture build; separate foreground Release1080p performance, human pacing/captions/likeness. Successful controlled repaired save at t/cap140route02 is available; human22 and original6 untouched. All full-goal gates retained."
+}

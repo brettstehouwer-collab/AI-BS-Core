@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "safe_pause_checkpoint_quiescent",
+  "at": "2026-11-03T02:44:55.958045+00:00",
+  "user_request": "safley pause",
+  "goal_complete": false,
+  "goal_system_pause_update_pending": true,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "dirty; no whole-repository equivalence claim, private raw status excluded",
+  "source_version": "5.329.101",
+  "deployed_launcher": "5.329.100",
+  "candidate101_normal_close": "FAILED_0xC0000005_SIP_offset0x104a6",
+  "owned_processes_live_reported": 0,
+  "no_new_diagnostic_or_source_fix_started": true,
+  "local_source_SHA256": {
+    "engine/CMakeLists.txt": "8d496c692219cc037a8798da28f46e3b70afb1234797aeb13d4a876c03f39b02",
+    "engine/apps/durable_world.cpp": "8fdbe95d63cf565155f50db0af33c76c5e5b38ab2fb1aae9142a932c8d33863f",
+    "engine/apps/chapter_aim_prompt.inl": "112937e2459a0b0c7ffe0c8e6d2fd5a049dce93c64378e01568bacb39f57587e",
+    "engine/tests/chapter_aim_prompt_tests.cpp": "b8d74e3d910d85f2530783cf9de28839097f73a88de9edfcfee849382f46b58f",
+    "native_studio/game_build_view.py": "c2af7d4a73b03b1bb096df1c524cf0b206cc96a553ad15cf14a4925e13e1e48c",
+    "engine/tests/test_game_build_runtime_discovery.py": "7a00614a37114b613fd533bfc1cb068ef735c718c767390bef16f7b89aec4982",
+    "version.txt": "b24d7be9ffacb25a8100f79ba20ba4eec136ca26edc63e3028d6ad16c6fe3b21"
+  },
+  "public_document_SHA256": {
+    "engine/out/warm_beginning/monitor_summary.json": "27b406ad9f0dd74ff59f872ba943c64029d0b99f37385f77589421ec3b05a2c3",
+    "engine/out/build_progress.json": "69af0008d9577a0dfa13cc093c57ec4bf818a295e80128b0a6649e5625e02bb0",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "c7b1e0bae5b45751fcc220122784a964c2838a3a2f70dd6a1855d279215381e3",
+    "engine/BUILD_STATUS.md": "0add62b1ad40882a7129a49e914eb6b376736fe15491dce9f999101e10fb9d97",
+    "engine/WARM_BEGINNING.md": "ce4a67ffe2c7daefa5b574cf32ee8bba8c67c769aa8ddae689df61109c8dc010"
+  },
+  "native_sdk_baseline": "0.16.3,118 aggregate entries each config;94 CPU+24native; plus3 actualfocus/GDI cases",
+  "cloud_verified": [
+    "27A with26A dependency",
+    "28A completev11-v13unapprovedartstudies"
+  ],
+  "latest_cloud_checkpoint_complete": false,
+  "local_art": [
+    "D:/AI-BS-Game-Resources/P28/Adam_v14",
+    "D:/AI-BS-Game-Resources/P28/Adam_v15"
+  ],
+  "lifetimes_unfixed": true,
+  "crash_cause_proven": false,
+  "private_debugger": "uncompiled/unreviewed/unvalidated source only; no dump created",
+  "resume_exact_next_step": "Validate the own-process debugger helper using harmless owned normal/AV fixtures and local-only dumps, then one separately leased unchanged101 normal-close trace. Keep101/100 immutable; make a new candidate only after a diagnosed fix. No global foreground/input/foreign process control.",
+  "handoffs": [
+    "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P29_shutdown_debugger\\pause-handoff.json",
+    "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P29_lifetime_probes\\pause_handoff.json"
+  ],
+  "backup_authorization": "docs/game_engine/checkpoints/workshop_backup_authorization_20261103.json",
+  "preimages": "D:\\AI-BS-Game-Resources\\Backups\\P29_Pause_Preimages\\d5b4aeb5c45f40f193ac524da5372979",
+  "space_free_bytes": {
+    "C": 69542072320,
+    "D": 88279605248,
+    "E": 146813599744
+  }
+}

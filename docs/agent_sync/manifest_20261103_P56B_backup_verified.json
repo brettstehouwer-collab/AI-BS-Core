@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-03T22:51:40.410346+00:00",
+  "status": "verified_Studio105_preview_deployed_backup_restored_goal_active",
+  "handoff": "docs/agent_sync/manifest_20261103_P56_Studio105_preview_deployed.json",
+  "source_snapshot_still_exact": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\56B_Studio105_Deployment_And_Monitor_Closeout.zip",
+    "bytes": 220121,
+    "sha256": "139da55fadef53e6eb54786091b04317ca09d2caed3913dc3cc11fe06f50d9da",
+    "members": 25,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "drive_file_id": "1a09-NJQ8S_k-YNt1UwcNc7vdB8QZr6xK",
+    "drive_folder_id": "1gkwCkPn92XCNEpWV1q7yXCxB5Eqlog_Z",
+    "at": "2026-11-03T22:51:40.410346+00:00",
+    "verification": "Metadata readback and raw download: SHA256, CRC, exact member set, embedded manifest and every member SHA256/length verified"
+  },
+  "next_step": "Update separate current gameplay-review collector pins/assets to verified105/0166/v18, run offline contracts, prepare user-run launcher and preserve historical103 reports; do not launch human review unattended. Continue goal, do not mark complete.",
+  "storage_free_GiB": {
+    "C:/": 58.48,
+    "D:/": 51.86,
+    "E:/": 136.73
+  },
+  "goal_complete": false
+}

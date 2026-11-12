@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "final_count": 8,
+  "images": [
+    {
+      "file": "01-coop-cabin-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "02-chaos-lab-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "03-tavern-quest-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "04-court-of-bad-ideas-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "05-roadside-diner-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "06-orbital-breakroom-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "07-campsite-chaos-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "png_integrity": "passed"
+    },
+    {
+      "file": "08-rooftop-afterglow-both-pets.png",
+      "width": 1671,
+      "height": 941,
+      "png_integrity": "passed"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Devin",
+  "company": "FE Express LLC",
+  "email": "Devin.feexpress@gmail.com",
+  "phone": "(616) 315-7483",
+  "phoneDigits": "6163157483",
+  "officePhone": "(616) 827-9366",
+  "mc": "MC-744829",
+  "usdot": "USDOT-2137128",
+  "address": "2700 Remico St SW, Wyoming, MI 49519",
+  "annualMiles": "3,624,940",
+  "safetyRating": "FMCSA Satisfactory / Active & In Good Standing",
+  "driverOosPct": "4.2% (Better than US 6.67% Avg)",
+  "insurance": "$1,000,000 Auto Liability / $100,000 Cargo",
+  "powerUnits": 43,
+  "drivers": 43,
+  "equipment": "26' Box Truck (Dock High - No Liftgate)",
+  "profile_verification": "Operator confirmation required before sending a bid"
+}

@@ -1,8 +1,11 @@
+import './StudioOverview.css';
+import { SYSTEM_VERSION } from './version';
 /** @typedef {{action_id?: string, pillar: string, action_name?: string, action?: string, tier?: number, status?: string, parameters?: unknown, result?: unknown}} ExecutiveAction */
 /** @typedef {{severity: string, category: string, title: string, message: string, metadata?: {file_hash?: string}}} SentinelAlert */
 /** @typedef {{running?: boolean, status?: string, bandwidth_mbps?: number, rigel_mining?: boolean}} SaladStatus */
 import { useState, useEffect, useRef } from 'react';
 import { useAppStore } from './useAppStore';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
 
 function emptyExecutiveMatrix() {
   return {
@@ -90,7 +93,8 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
 
   // Auto-scroll chat
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const transcript = chatEndRef.current?.parentElement;
+    transcript?.scrollTo({ top: transcript.scrollHeight, behavior: 'smooth' });
   }, [chatMessages]);
 
   // =========================================================================
@@ -99,7 +103,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 1. Fetch Matrix Status & Telemetry
   const fetchMatrixStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/matrix/status`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/matrix/status`, { headers: await chatAuthHeaders() });
       if (!res.ok) throw new Error('Matrix status request rejected');
       const data = await res.json();
       if (!data || typeof data !== 'object' || !data.pillars || typeof data.pillars !== 'object' || !data.hardware || typeof data.hardware !== 'object' || !data.vault || typeof data.vault !== 'object') throw new Error('Matrix status contract unavailable');
@@ -114,7 +118,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 2. Fetch Pending Queue
   const fetchPendingActions = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/actions/pending`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/actions/pending`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setPendingActions(data.pending_actions || []);
@@ -127,7 +131,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 3. Fetch Action History
   const fetchActionHistory = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/actions/history?limit=25`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/actions/history?limit=25`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setActionHistory(data.history || []);
@@ -140,7 +144,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 4. Fetch Sentinel Alerts
   const fetchSentinelAlerts = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/alerts?limit=10`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/alerts?limit=10`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setSentinelAlerts(data.alerts || []);
@@ -154,7 +158,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 5. Fetch Cloud / Sovereign GPU Status
   const fetchCloudStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/cloud/status`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/cloud/status`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (data.gpu_sovereignty) setCloudStatus(data.gpu_sovereignty);
@@ -167,7 +171,7 @@ export default function ExecutiveCockpitTab({ BACKEND_URL, backendUrl }) {
   // 6. Fetch Voice Status
   const fetchVoiceStatus = async () => {
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/voice/status`);
+      const res = await fetch(`${activeBackend}/api/v1/executive/voice/status`, { headers: await chatAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         setVoiceStatus(data);
@@ -259,7 +263,7 @@ const speakDirectorialResponse = (text) => {
   const handleTriggerSentinelScan = async () => {
     setIsScanningSentinel(true);
     try {
-      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/scan`, { method: 'POST' });
+      const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/scan`, { method: 'POST', headers: await chatAuthHeaders() });
       if (res.ok) {
         await fetchSentinelAlerts();
         await fetchMatrixStatus();
@@ -279,7 +283,7 @@ const handleExpandMedia = async (fileHash, action = 'reframe_9_16') => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/sentinel/expand-media`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ file_hash: fileHash, action })
       });
       if (res.ok) {
@@ -311,7 +315,7 @@ const handleSendMessage = async (textToSend) => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           prompt: text,
           model: selectedModel,
@@ -357,7 +361,7 @@ const handleResolveAction = async (actionId, decision) => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/actions/${actionId}/resolve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ decision, operator_note: `Manual resolution via Executive Cockpit HUD.` })
       });
       if (res.ok) {
@@ -384,7 +388,7 @@ const handleSetAutonomy = async (mode) => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/settings/autonomy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ mode })
       });
       if (res.ok) {
@@ -404,7 +408,8 @@ const handleSetAutonomy = async (mode) => {
     setIsHalting(true);
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/actions/halt`, {
-        method: 'POST'
+        method: 'POST',
+        headers: await chatAuthHeaders()
       });
       if (res.ok) {
         setAutonomyMode('SAFE');
@@ -427,7 +432,7 @@ const handleSetAutonomy = async (mode) => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/vibe-checkpoint`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ label: 'Manual Executive Vibe Checkpoint', author: 'Operator' })
       });
       if (res.ok) {
@@ -448,7 +453,7 @@ const handleSetAutonomy = async (mode) => {
     try {
       const res = await fetch(`${activeBackend}/api/v1/executive/vibe-rollback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({})
       });
       if (res.ok) {
@@ -467,29 +472,29 @@ const handleSetAutonomy = async (mode) => {
   const PRESET_COMMANDS = [
     { label: '🎬 Reframe 9:16 Short', prompt: 'Generate 9:16 Short from mtd.mp4' },
     { label: '⚡ Crypto Scalp Status', prompt: 'Query CRO Scalp Status' },
-    { label: '🏛️ Query Vault (305k)', prompt: 'Search Vault for Bio-Intelligence' },
+    { label: '🏛️ Query Vault', prompt: 'Search Vault for Bio-Intelligence' },
     { label: '💰 Stage CRO Buy Order', prompt: 'Stage a $50 CRO limit buy order at 0.125' },
     { label: '🏥 Full System Health Audit', prompt: 'Audit system health and check crypto daemon status' }
   ];
 
   return (
-    <div style={{
+    <div className="aibs-studio-overview" role="region" aria-label="Studio overview" style={{
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
       width: '100%',
-      backgroundColor: '#090d13',
-      color: '#c9d1d9',
+      backgroundColor: 'var(--overview-canvas)',
+      color: 'var(--overview-text)',
       fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace',
       overflow: 'hidden'
     }}>
       {/* ── TOP EXECUTIVE BANNER & GLOBAL HUD CONTROLS ── */}
-      <div style={{
+      <div className="overview-banner" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '10px clamp(10px, 2.5vw, 18px)',
-        backgroundColor: '#0d1117',
+        backgroundColor: 'var(--overview-surface)',
         borderBottom: '1px solid #21262d',
         flexShrink: 0,
         flexWrap: 'wrap',
@@ -499,19 +504,19 @@ const handleSetAutonomy = async (mode) => {
           <span style={{ fontSize: '1.4rem' }}>⚡</span>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span style={{ fontWeight: 800, fontSize: 'clamp(0.92rem, 3vw, 1.05rem)', color: '#58a6ff', letterSpacing: '0.04em' }}>
-                AI-BS EXECUTIVE COMMAND COCKPIT
+              <span className="overview-title" role="heading" aria-level={1} style={{ fontWeight: 800, fontSize: 'clamp(0.92rem, 3vw, 1.05rem)', color: 'var(--overview-cyan)', letterSpacing: '0.04em' }}>
+                Studio overview
               </span>
               <span style={{
                 background: 'rgba(88, 166, 255, 0.15)',
-                color: '#58a6ff',
+                color: 'var(--overview-cyan)',
                 fontSize: '0.68rem',
                 padding: '2px 7px',
                 borderRadius: '10px',
                 fontWeight: 700,
                 border: '1px solid rgba(88, 166, 255, 0.3)'
               }}>
-                v5.327.0
+                {SYSTEM_VERSION}
               </span>
               <span style={{
                 background: 'rgba(63, 185, 80, 0.15)',
@@ -526,7 +531,7 @@ const handleSetAutonomy = async (mode) => {
               </span>
               <span style={{
                 background: 'rgba(163, 113, 247, 0.15)',
-                color: '#d2a8ff',
+                color: 'var(--overview-violet)',
                 fontSize: '0.68rem',
                 padding: '2px 7px',
                 borderRadius: '10px',
@@ -544,10 +549,10 @@ const handleSetAutonomy = async (mode) => {
                 fontWeight: 700,
                 border: '1px solid rgba(56, 139, 253, 0.3)'
               }}>
-                SOVEREIGN RTX 4090 ($0.00 SPEND)
+                LOCAL COMPUTE POLICY
               </span>
             </div>
-            <div style={{ fontSize: '0.74rem', color: '#8b949e', marginTop: '1px' }}>
+            <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', marginTop: '1px' }}>
               Autonomous 4-Pillar Cross-Matrix Dispatcher • Tiered Governance Gates • Zero Real-Money Mock Law • Proactive Sentinel
             </div>
           </div>
@@ -559,12 +564,12 @@ const handleSetAutonomy = async (mode) => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: '#161b22',
+            background: 'var(--overview-raised)',
             padding: '3px 4px',
             borderRadius: '8px',
             border: '1px solid #30363d'
           }}>
-            <span style={{ fontSize: '0.7rem', color: '#8b949e', margin: '0 8px', fontWeight: 600 }}>GOVERNANCE:</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--overview-muted)', margin: '0 8px', fontWeight: 600 }}>GOVERNANCE:</span>
             {['SAFE', 'SEMI_AUTO', 'FULL_AUTO'].map((mode) => {
               const active = autonomyMode === mode;
               const color = mode === 'SAFE' ? '#3fb950' : (mode === 'SEMI_AUTO' ? '#d29922' : '#f85149');
@@ -575,7 +580,7 @@ const handleSetAutonomy = async (mode) => {
                   disabled={isUpdatingAutonomy}
                   style={{
                     background: active ? color : 'transparent',
-                    color: active ? '#ffffff' : '#8b949e',
+                    color: active ? '#ffffff' : 'var(--overview-muted)',
                     border: 'none',
                     borderRadius: '6px',
                     padding: '4px 10px',
@@ -599,7 +604,7 @@ const handleSetAutonomy = async (mode) => {
           </div>
 
           {/* Vibe Checkpoint & Rollback Controls */}
-          <button
+          <button className="overview-snapshot"
             onClick={handleCreateVibeCheckpoint}
             disabled={isCheckpointing}
             style={{
@@ -626,7 +631,7 @@ const handleSetAutonomy = async (mode) => {
             onClick={handleRollbackVibeCheckpoint}
             disabled={isCheckpointing}
             style={{
-              background: '#21262d',
+              background: 'var(--overview-divider)',
               color: '#e6edf3',
               border: '1px solid #30363d',
               borderRadius: '6px',
@@ -645,7 +650,7 @@ const handleSetAutonomy = async (mode) => {
           </button>
 
           {/* Emergency Halt Button */}
-          <button
+          <button className="overview-halt"
             onClick={handleEmergencyHalt}
             disabled={isHalting}
             style={{
@@ -671,9 +676,9 @@ const handleSetAutonomy = async (mode) => {
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             style={{
-              background: autoRefresh ? 'rgba(63, 185, 80, 0.15)' : '#161b22',
-              color: autoRefresh ? '#3fb950' : '#8b949e',
-              border: `1px solid ${autoRefresh ? 'rgba(63, 185, 80, 0.4)' : '#30363d'}`,
+              background: autoRefresh ? 'rgba(63, 185, 80, 0.15)' : 'var(--overview-raised)',
+              color: autoRefresh ? '#3fb950' : 'var(--overview-muted)',
+              border: `1px solid ${autoRefresh ? 'rgba(63, 185, 80, 0.4)' : 'var(--overview-border)'}`,
               borderRadius: '6px',
               padding: '6px 10px',
               fontSize: '0.72rem',
@@ -688,12 +693,12 @@ const handleSetAutonomy = async (mode) => {
       </div>
 
       {/* ── SENTINEL ALERT TICKER & DIRECTORIAL VOICE DIRECTING STRIP (v5.299.0) ── */}
-      <div style={{
+      <div className="overview-notices" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 18px',
-        backgroundColor: '#161b22',
+        backgroundColor: 'var(--overview-raised)',
         borderBottom: '1px solid #30363d',
         gap: '12px',
         fontSize: '0.76rem',
@@ -720,7 +725,7 @@ const handleSetAutonomy = async (mode) => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <span style={{
                 background: sentinelAlerts[0].severity === 'RECOMMENDATION' ? 'rgba(88, 166, 255, 0.2)' : 'rgba(248, 81, 73, 0.2)',
-                color: sentinelAlerts[0].severity === 'RECOMMENDATION' ? '#58a6ff' : '#f85149',
+                color: sentinelAlerts[0].severity === 'RECOMMENDATION' ? 'var(--overview-cyan)' : '#f85149',
                 padding: '1px 6px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
@@ -728,7 +733,7 @@ const handleSetAutonomy = async (mode) => {
               }}>
                 {sentinelAlerts[0].category}
               </span>
-              <span style={{ color: '#c9d1d9', fontWeight: 500 }}>
+              <span style={{ color: 'var(--overview-text)', fontWeight: 500 }}>
                 {sentinelAlerts[0].title}: {sentinelAlerts[0].message}
               </span>
               {sentinelAlerts[0]?.metadata?.file_hash && (
@@ -751,7 +756,7 @@ const handleSetAutonomy = async (mode) => {
               )}
             </div>
           ) : (
-            <span style={{ color: '#8b949e', fontStyle: 'italic' }}>
+            <span style={{ color: 'var(--overview-muted)', fontStyle: 'italic' }}>
               All intake folders, market velocity, and GPU thermals nominal.
             </span>
           )}
@@ -763,8 +768,8 @@ const handleSetAutonomy = async (mode) => {
             onClick={handleTriggerSentinelScan}
             disabled={isScanningSentinel}
             style={{
-              background: '#21262d',
-              color: '#58a6ff',
+              background: 'var(--overview-divider)',
+              color: 'var(--overview-cyan)',
               border: '1px solid #30363d',
               borderRadius: '5px',
               padding: '3px 8px',
@@ -782,7 +787,7 @@ const handleSetAutonomy = async (mode) => {
             onClick={toggleVoiceRecognition}
             style={{
               background: isListening ? '#f85149' : 'rgba(88, 166, 255, 0.15)',
-              color: isListening ? '#ffffff' : '#58a6ff',
+              color: isListening ? '#ffffff' : 'var(--overview-cyan)',
               border: `1px solid ${isListening ? '#f85149' : 'rgba(88, 166, 255, 0.4)'}`,
               borderRadius: '6px',
               padding: '3px 10px',
@@ -802,9 +807,9 @@ const handleSetAutonomy = async (mode) => {
           <button
             onClick={() => setVoiceAudioEnabled(!voiceAudioEnabled)}
             style={{
-              background: voiceAudioEnabled ? 'rgba(63, 185, 80, 0.15)' : '#21262d',
-              color: voiceAudioEnabled ? '#3fb950' : '#8b949e',
-              border: `1px solid ${voiceAudioEnabled ? 'rgba(63, 185, 80, 0.4)' : '#30363d'}`,
+              background: voiceAudioEnabled ? 'rgba(63, 185, 80, 0.15)' : 'var(--overview-divider)',
+              color: voiceAudioEnabled ? '#3fb950' : 'var(--overview-muted)',
+              border: `1px solid ${voiceAudioEnabled ? 'rgba(63, 185, 80, 0.4)' : 'var(--overview-border)'}`,
               borderRadius: '6px',
               padding: '3px 8px',
               fontSize: '0.7rem',
@@ -819,20 +824,20 @@ const handleSetAutonomy = async (mode) => {
           {/* Sovereign Local GPU Spend Lock Badge */}
           <span style={{
             background: 'rgba(56, 139, 253, 0.12)',
-            color: '#58a6ff',
+            color: 'var(--overview-cyan)',
             border: '1px solid rgba(56, 139, 253, 0.3)',
             borderRadius: '6px',
             padding: '2px 8px',
             fontSize: '0.68rem',
             fontWeight: 700
           }}>
-            RTX 4090: 100% LOCAL ($0.00 SPEND)
+            Local policy · verification pending
           </span>
         </div>
       </div>
 
       {/* ── HIGH-DENSITY 4-COLUMN RESPONSIVE COCKPIT HUD ── */}
-      <div style={{
+      <div className="overview-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(320px, 1.25fr) minmax(280px, 1fr) minmax(320px, 1.2fr) minmax(260px, 0.95fr)',
         gap: '12px',
@@ -842,18 +847,18 @@ const handleSetAutonomy = async (mode) => {
       }}>
 
         {/* ── COLUMN 1: SOVEREIGN COPILOT & ACTION TERMINAL ── */}
-        <div style={{
+        <div className="overview-card overview-copilot" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -861,15 +866,15 @@ const handleSetAutonomy = async (mode) => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>💬</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>Sovereign Copilot Terminal</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>Sovereign Copilot Terminal</span>
             </div>
             {/* Model Selector */}
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
               style={{
-                background: '#0d1117',
-                color: '#58a6ff',
+                background: 'var(--overview-surface)',
+                color: 'var(--overview-cyan)',
                 border: '1px solid #30363d',
                 borderRadius: '6px',
                 fontSize: '0.72rem',
@@ -886,12 +891,12 @@ const handleSetAutonomy = async (mode) => {
           </div>
 
           {/* Quick Command Presets */}
-          <div style={{
+          <div className="overview-presets" style={{
             display: 'flex',
             flexWrap: 'wrap',
             gap: '6px',
             padding: '8px 12px',
-            backgroundColor: '#12171f',
+            backgroundColor: 'var(--overview-surface)',
             borderBottom: '1px solid #21262d'
           }}>
             {PRESET_COMMANDS.map((cmd, idx) => (
@@ -901,7 +906,7 @@ const handleSetAutonomy = async (mode) => {
                 disabled={isSendingChat}
                 style={{
                   background: 'rgba(88, 166, 255, 0.08)',
-                  color: '#58a6ff',
+                  color: 'var(--overview-cyan)',
                   border: '1px solid rgba(88, 166, 255, 0.25)',
                   borderRadius: '5px',
                   padding: '4px 8px',
@@ -917,7 +922,7 @@ const handleSetAutonomy = async (mode) => {
           </div>
 
           {/* Chat Messages Log */}
-          <div style={{
+          <div className="overview-transcript" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -933,8 +938,8 @@ const handleSetAutonomy = async (mode) => {
                   style={{
                     alignSelf: isAssistant ? 'flex-start' : 'flex-end',
                     maxWidth: isAssistant ? '96%' : '85%',
-                    backgroundColor: isAssistant ? '#161b22' : '#1f6feb',
-                    color: isAssistant ? '#c9d1d9' : '#ffffff',
+                    backgroundColor: isAssistant ? 'var(--overview-raised)' : '#1f6feb',
+                    color: isAssistant ? 'var(--overview-text)' : '#ffffff',
                     padding: '10px 14px',
                     borderRadius: '8px',
                     border: isAssistant ? '1px solid #30363d' : 'none',
@@ -948,7 +953,7 @@ const handleSetAutonomy = async (mode) => {
                   {/* Render Tool-Call Badges */}
                   {msg.tool_calls && msg.tool_calls.length > 0 && (
                     <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <div style={{ fontSize: '0.68rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
                         Dispatched Tool Actions ({msg.tool_calls.length}):
                       </div>
                       {msg.tool_calls.map((tc, tcIdx) => {
@@ -959,7 +964,7 @@ const handleSetAutonomy = async (mode) => {
                           <div
                             key={tcIdx}
                             style={{
-                              background: '#0d1117',
+                              background: 'var(--overview-surface)',
                               border: `1px solid ${badgeColor}`,
                               borderRadius: '6px',
                               padding: '6px 10px',
@@ -967,7 +972,7 @@ const handleSetAutonomy = async (mode) => {
                             }}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
-                              <span style={{ fontWeight: 700, color: '#58a6ff' }}>
+                              <span style={{ fontWeight: 700, color: 'var(--overview-cyan)' }}>
                                 ⚙️ {tc.pillar}.{tc.action_name || tc.action}
                               </span>
                               <span style={{
@@ -982,7 +987,7 @@ const handleSetAutonomy = async (mode) => {
                               </span>
                             </div>
                             {Boolean(tc.result) && (
-                              <div style={{ fontSize: '0.7rem', color: '#8b949e', marginTop: '2px' }}>
+                              <div style={{ fontSize: '0.7rem', color: 'var(--overview-muted)', marginTop: '2px' }}>
                                 {typeof tc.result === 'object' && tc.result !== null && 'message' in tc.result && typeof tc.result.message === 'string' ? tc.result.message : JSON.stringify(tc.result)}
                               </div>
                             )}
@@ -998,9 +1003,9 @@ const handleSetAutonomy = async (mode) => {
           </div>
 
           {/* Terminal Input Bar */}
-          <div style={{
+          <div className="overview-inputbar" style={{
             padding: '10px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderTop: '1px solid #21262d',
             display: 'flex',
             gap: '8px'
@@ -1014,8 +1019,8 @@ const handleSetAutonomy = async (mode) => {
               disabled={isSendingChat}
               style={{
                 flex: 1,
-                background: '#0d1117',
-                color: '#c9d1d9',
+                background: 'var(--overview-surface)',
+                color: 'var(--overview-text)',
                 border: '1px solid #30363d',
                 borderRadius: '6px',
                 padding: '8px 12px',
@@ -1026,9 +1031,9 @@ const handleSetAutonomy = async (mode) => {
             <button
               onClick={toggleVoiceRecognition}
               style={{
-                background: isListening ? '#f85149' : '#21262d',
-                color: isListening ? '#ffffff' : '#58a6ff',
-                border: `1px solid ${isListening ? '#f85149' : '#30363d'}`,
+                background: isListening ? '#f85149' : 'var(--overview-divider)',
+                color: isListening ? '#ffffff' : 'var(--overview-cyan)',
+                border: `1px solid ${isListening ? '#f85149' : 'var(--overview-border)'}`,
                 borderRadius: '6px',
                 padding: '8px 12px',
                 fontSize: '0.85rem',
@@ -1058,18 +1063,18 @@ const handleSetAutonomy = async (mode) => {
         </div>
 
         {/* ── COLUMN 2: 4-PILLAR LIVE MATRIX STATUS ── */}
-        <div style={{
+        <div className="overview-card overview-services" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1077,13 +1082,13 @@ const handleSetAutonomy = async (mode) => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>🌐</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>4-Pillar Live Matrix</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>4-Pillar Live Matrix</span>
             </div>
             <span style={{ fontSize: '0.7rem', color: '#3fb950', fontWeight: 600 }}>Backend reports; verification pending</span>
           </div>
 
           {/* Cards List */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1093,7 +1098,7 @@ const handleSetAutonomy = async (mode) => {
           }}>
             {/* Pillar 1: Media Creator Studio */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1114,18 +1119,18 @@ const handleSetAutonomy = async (mode) => {
                   UNVERIFIED
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• NVENC CFR 30fps Gate: <span style={{ color: '#3fb950', fontWeight: 600 }}>UNVERIFIED</span></div>
-                <div>• Vertical 9:16 Reframer: <span style={{ color: '#c9d1d9' }}>Readiness unverified</span></div>
-                <div>• ComfyUI Port: <span style={{ color: '#58a6ff' }}>8188 (Primary) / 8189 (Screenplay)</span></div>
-                <div>• Local Checkpoints: <span style={{ color: '#c9d1d9' }}>Inventory unverified</span></div>
+                <div>• Vertical 9:16 Reframer: <span style={{ color: 'var(--overview-text)' }}>Readiness unverified</span></div>
+                <div>• ComfyUI Port: <span style={{ color: 'var(--overview-cyan)' }}>8188 (Primary) / 8189 (Screenplay)</span></div>
+                <div>• Local Checkpoints: <span style={{ color: 'var(--overview-text)' }}>Inventory unverified</span></div>
               </div>
             </div>
 
             {/* Pillar 2: Native Broadcast Studio */}
-            <div style={{ backgroundColor: '#161b22', borderRadius: '7px', border: '1px solid #30363d', padding: '12px' }}>
+            <div style={{ backgroundColor: 'var(--overview-raised)', borderRadius: '7px', border: '1px solid #30363d', padding: '12px' }}>
               <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#a371f7', marginBottom: '8px' }}>📡 Native Broadcast Studio</div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>Stream status unverified here.</div>
                 <div>Manage capture and output in the Windows app: Creative Media → Universal AV.</div>
                 <div>Audio routing unverified here.</div>
@@ -1134,7 +1139,7 @@ const handleSetAutonomy = async (mode) => {
 
             {/* Pillar 3: Crypto Swarm & Scalp Bot */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1155,17 +1160,17 @@ const handleSetAutonomy = async (mode) => {
                   {matrixStatus.pillars?.crypto_swarm?.trading_paused ? 'TRADING PAUSED (REPORTED)' : 'TRADING STATE UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Execution Engine: <span style={{ color: '#c9d1d9' }}>TWAP Drip Micro-Allocations</span></div>
-                <div>• Active TWAP Plans: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.twap_plans_count)}</span></div>
-                <div>• Drip Orders in Queue: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.drip_orders_count)}</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Execution Engine: <span style={{ color: 'var(--overview-text)' }}>TWAP Drip Micro-Allocations</span></div>
+                <div>• Active TWAP Plans: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.twap_plans_count)}</span></div>
+                <div>• Drip Orders in Queue: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{executiveMetric(matrixStatus.pillars?.crypto_swarm?.drip_orders_count)}</span></div>
                 <div>• Trailing Stop Guards: <span style={{ color: '#3fb950' }}>UNVERIFIED</span></div>
               </div>
             </div>
 
             {/* Pillar 4: Ollama Swarm & Reasoning */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1173,7 +1178,7 @@ const handleSetAutonomy = async (mode) => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '1.1rem' }}>🧠</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: '#58a6ff' }}>Ollama Swarm (reported)</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--overview-cyan)' }}>Ollama Swarm (reported)</span>
                 </div>
                 <span style={{
                   fontSize: '0.66rem',
@@ -1186,17 +1191,17 @@ const handleSetAutonomy = async (mode) => {
                   {matrixStatus.pillars?.ollama_swarm?.status || 'UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Port Matrix: <span style={{ color: '#58a6ff' }}>11434 (C: Drive) & 11435 (E: Drive)</span></div>
-                <div>• Loaded Models: <span style={{ color: '#c9d1d9' }}>Inventory unverified</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Port Matrix: <span style={{ color: 'var(--overview-cyan)' }}>11434 (C: Drive) & 11435 (E: Drive)</span></div>
+                <div>• Loaded Models: <span style={{ color: 'var(--overview-text)' }}>Inventory unverified</span></div>
                 <div>• Vector Memory: <span style={{ color: '#3fb950' }}>ChromaDB health unverified</span></div>
-                <div>• Context Window: <span style={{ color: '#c9d1d9' }}>Configuration unverified</span></div>
+                <div>• Context Window: <span style={{ color: 'var(--overview-text)' }}>Configuration unverified</span></div>
               </div>
             </div>
 
             {/* Pillar 5: Salad Compute & Distributed Telemetry Feed */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
@@ -1209,7 +1214,7 @@ const handleSetAutonomy = async (mode) => {
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 700,
-                  color: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? '#3fb950' : '#8b949e',
+                  color: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? '#3fb950' : 'var(--overview-muted)',
                   background: (matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'rgba(63, 185, 80, 0.15)' : 'rgba(139, 148, 158, 0.15)',
                   padding: '2px 6px',
                   borderRadius: '4px'
@@ -1217,11 +1222,11 @@ const handleSetAutonomy = async (mode) => {
                   {(matrixStatus.salad?.running || matrixStatus.pillars?.salad_engine?.running) ? 'PROCESS REPORTED' : 'UNVERIFIED'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• Workload State: <span style={{ color: '#58a6ff', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'UNVERIFIED'}</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• Workload State: <span style={{ color: 'var(--overview-cyan)', fontWeight: 600 }}>{matrixStatus.salad?.status || matrixStatus.pillars?.salad_engine?.status || 'UNVERIFIED'}</span></div>
                 <div>• Bandwidth Sharing: <span style={{ color: '#3fb950', fontWeight: 600 }}>{executiveMetric(matrixStatus.salad?.bandwidth_mbps ?? matrixStatus.pillars?.salad_engine?.bandwidth_mbps, ' Mbps')}</span></div>
-                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : '#c9d1d9' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Mining process reported' : 'Availability unverified'}</span></div>
-                <div>• Container Disk: <span style={{ color: '#c9d1d9' }}>E:\SaladData\ (Junction on C:\)</span></div>
+                <div>• GPU Chopping: <span style={{ color: (matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? '#3fb950' : 'var(--overview-text)' }}>{(matrixStatus.salad?.rigel_mining || matrixStatus.pillars?.salad_engine?.rigel_mining) ? 'Mining process reported' : 'Availability unverified'}</span></div>
+                <div>• Container Disk: <span style={{ color: 'var(--overview-text)' }}>E:\SaladData\ (Junction on C:\)</span></div>
               </div>
             </div>
 
@@ -1229,18 +1234,18 @@ const handleSetAutonomy = async (mode) => {
         </div>
 
         {/* ── COLUMN 3: ACTION QUEUE & GOVERNANCE LEDGER ── */}
-        <div style={{
+        <div className="overview-card overview-queue" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1248,7 +1253,7 @@ const handleSetAutonomy = async (mode) => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>🛡️</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>
                 Action Queue & Governance ({pendingActions.length})
               </span>
             </div>
@@ -1262,7 +1267,7 @@ const handleSetAutonomy = async (mode) => {
           </div>
 
           {/* Pending Approval List & History */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1271,7 +1276,7 @@ const handleSetAutonomy = async (mode) => {
             gap: '12px'
           }}>
             {/* Section 1: Pending Actions Awaiting Operator Approval */}
-            <div style={{ fontSize: '0.72rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase' }}>
               Pending Operator Confirmation:
             </div>
 
@@ -1279,10 +1284,10 @@ const handleSetAutonomy = async (mode) => {
               <div style={{
                 padding: '24px 16px',
                 textAlign: 'center',
-                backgroundColor: '#161b22',
+                backgroundColor: 'var(--overview-raised)',
                 borderRadius: '8px',
                 border: '1px dashed #30363d',
-                color: '#8b949e',
+                color: 'var(--overview-muted)',
                 fontSize: '0.78rem'
               }}>
                 <div>✓ No actions currently awaiting confirmation.</div>
@@ -1297,7 +1302,7 @@ const handleSetAutonomy = async (mode) => {
                   <div
                     key={action.action_id}
                     style={{
-                      backgroundColor: '#161b22',
+                      backgroundColor: 'var(--overview-raised)',
                       borderRadius: '8px',
                       border: `1px solid ${isHighRisk ? '#f85149' : '#d29922'}`,
                       padding: '12px',
@@ -1310,27 +1315,27 @@ const handleSetAutonomy = async (mode) => {
                       </span>
                       <span style={{
                         fontSize: '0.66rem',
-                        background: '#0d1117',
+                        background: 'var(--overview-surface)',
                         padding: '2px 6px',
                         borderRadius: '4px',
-                        color: '#8b949e'
+                        color: 'var(--overview-muted)'
                       }}>
                         {action.action_id}
                       </span>
                     </div>
 
-                    <div style={{ fontSize: '0.76rem', color: '#c9d1d9', marginBottom: '8px', fontWeight: 600 }}>
-                      Target: <span style={{ color: '#58a6ff' }}>{action.pillar}.{action.action_name}</span>
+                    <div style={{ fontSize: '0.76rem', color: 'var(--overview-text)', marginBottom: '8px', fontWeight: 600 }}>
+                      Target: <span style={{ color: 'var(--overview-cyan)' }}>{action.pillar}.{action.action_name}</span>
                     </div>
 
                     {/* Parameters Box */}
                     <div style={{
-                      backgroundColor: '#0d1117',
+                      backgroundColor: 'var(--overview-surface)',
                       padding: '8px',
                       borderRadius: '6px',
                       fontSize: '0.7rem',
                       fontFamily: 'monospace',
-                      color: '#8b949e',
+                      color: 'var(--overview-muted)',
                       marginBottom: '10px',
                       maxHeight: '80px',
                       overflowY: 'auto'
@@ -1348,7 +1353,7 @@ const handleSetAutonomy = async (mode) => {
                             disabled={isThisResolving}
                             style={{
                               flex: 1,
-                              background: isThisResolving ? '#21262d' : '#238636',
+                              background: isThisResolving ? 'var(--overview-divider)' : '#238636',
                               color: '#ffffff',
                               border: 'none',
                               borderRadius: '6px',
@@ -1365,7 +1370,7 @@ const handleSetAutonomy = async (mode) => {
                             onClick={() => action.action_id && handleResolveAction(action.action_id, 'REJECT')}
                             disabled={isThisResolving}
                             style={{
-                              background: isThisResolving ? '#21262d' : '#da3633',
+                              background: isThisResolving ? 'var(--overview-divider)' : '#da3633',
                               color: '#ffffff',
                               border: 'none',
                               borderRadius: '6px',
@@ -1387,7 +1392,7 @@ const handleSetAutonomy = async (mode) => {
             )}
 
             {/* Section 2: Execution Audit Ledger */}
-            <div style={{ fontSize: '0.72rem', color: '#8b949e', fontWeight: 700, textTransform: 'uppercase', marginTop: '12px' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--overview-muted)', fontWeight: 700, textTransform: 'uppercase', marginTop: '12px' }}>
               Recent Audit Log ({actionHistory.length}):
             </div>
 
@@ -1401,7 +1406,7 @@ const handleSetAutonomy = async (mode) => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      backgroundColor: '#161b22',
+                      backgroundColor: 'var(--overview-raised)',
                       padding: '6px 10px',
                       borderRadius: '6px',
                       fontSize: '0.72rem',
@@ -1409,8 +1414,8 @@ const handleSetAutonomy = async (mode) => {
                     }}
                   >
                     <div>
-                      <span style={{ fontWeight: 600, color: '#c9d1d9' }}>{hist.pillar}.{hist.action_name}</span>
-                      <span style={{ fontSize: '0.66rem', color: '#8b949e', marginLeft: '6px' }}>T{hist.tier}</span>
+                      <span style={{ fontWeight: 600, color: 'var(--overview-text)' }}>{hist.pillar}.{hist.action_name}</span>
+                      <span style={{ fontSize: '0.66rem', color: 'var(--overview-muted)', marginLeft: '6px' }}>T{hist.tier}</span>
                     </div>
                     <span style={{
                       color: isApproved ? '#3fb950' : '#f85149',
@@ -1427,18 +1432,18 @@ const handleSetAutonomy = async (mode) => {
         </div>
 
         {/* ── COLUMN 4: HARDWARE & VAULT TELEMETRY HUD ── */}
-        <div style={{
+        <div className="overview-card overview-hardware" style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0d1117',
+          backgroundColor: 'var(--overview-surface)',
           borderRadius: '8px',
           border: '1px solid #21262d',
           overflow: 'hidden'
         }}>
           {/* Header */}
-          <div style={{
+          <div className="overview-card-header" style={{
             padding: '10px 14px',
-            backgroundColor: '#161b22',
+            backgroundColor: 'var(--overview-raised)',
             borderBottom: '1px solid #21262d',
             display: 'flex',
             alignItems: 'center',
@@ -1446,13 +1451,13 @@ const handleSetAutonomy = async (mode) => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '1rem' }}>📊</span>
-              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: '#c9d1d9' }}>Hardware & Vault HUD</span>
+              <span style={{ fontWeight: 700, fontSize: '0.86rem', color: 'var(--overview-text)' }}>Hardware & Vault HUD</span>
             </div>
-            <span style={{ fontSize: '0.7rem', color: '#8b949e' }}>RTX 4090 • NVMe</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--overview-muted)' }}>RTX 4090 • NVMe</span>
           </div>
 
           {/* Gauges & Telemetry Panels */}
-          <div style={{
+          <div className="overview-card-body" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '12px',
@@ -1462,13 +1467,13 @@ const handleSetAutonomy = async (mode) => {
           }}>
             {/* RTX 4090 GPU Panel */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#58a6ff' }}>
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-cyan)' }}>
                   GPU (reported metrics)
                 </span>
                 <span style={{
@@ -1482,15 +1487,15 @@ const handleSetAutonomy = async (mode) => {
 
               {/* VRAM Meter */}
               <div style={{ marginBottom: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>VRAM Allocated:</span>
                   <span>{executiveMetric(matrixStatus.hardware?.vram_used_mb, ' MB')} / {executiveMetric(matrixStatus.hardware?.vram_total_mb, ' MB')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${(matrixStatus.hardware?.vram_total_mb ?? 0) > 0 ? Math.max(0, Math.min(100, Math.round(((matrixStatus.hardware?.vram_used_mb ?? 0) / (matrixStatus.hardware?.vram_total_mb || 1)) * 100))) : 0}%`,
                     height: '100%',
-                    backgroundColor: '#58a6ff',
+                    backgroundColor: 'var(--overview-cyan)',
                     transition: 'width 0.3s ease'
                   }} />
                 </div>
@@ -1498,11 +1503,11 @@ const handleSetAutonomy = async (mode) => {
 
               {/* GPU Load Meter */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>Core Utilization:</span>
                   <span>{executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${executiveMetric(matrixStatus.hardware?.gpu_util_pct, '%')}`,
                     height: '100%',
@@ -1515,22 +1520,22 @@ const handleSetAutonomy = async (mode) => {
 
             {/* Host System RAM & NVMe Disk */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
-              <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#c9d1d9', display: 'block', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-text)', display: 'block', marginBottom: '8px' }}>
                 System Memory & Storage
               </span>
 
               {/* RAM Meter */}
               <div style={{ marginBottom: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>DDR5 RAM:</span>
                   <span>{executiveMetric(matrixStatus.hardware?.ram_used_gb, ' GB')} / {executiveMetric(matrixStatus.hardware?.ram_total_gb, ' GB')} ({executiveMetric(matrixStatus.hardware?.ram_percent, '%')})</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${matrixStatus.hardware?.ram_percent || 0}%`,
                     height: '100%',
@@ -1542,11 +1547,11 @@ const handleSetAutonomy = async (mode) => {
 
               {/* NVMe Storage Meter */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#8b949e', marginBottom: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--overview-muted)', marginBottom: '3px' }}>
                   <span>Samsung 990 Pro NVMe:</span>
                   <span>{executiveMetric(matrixStatus.hardware?.disk_free_gb, ' GB Free')}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#0d1117', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--overview-surface)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${matrixStatus.hardware?.disk_percent || 0}%`,
                     height: '100%',
@@ -1559,22 +1564,22 @@ const handleSetAutonomy = async (mode) => {
 
             {/* Knowledge Vault Intelligence Counter */}
             <div style={{
-              backgroundColor: '#161b22',
+              backgroundColor: 'var(--overview-raised)',
               borderRadius: '7px',
               border: '1px solid #30363d',
               padding: '12px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '1.1rem' }}>🏛️</span>
-                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#c9d1d9' }}>
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--overview-text)' }}>
                   Stehouwer Knowledge Vault
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#8b949e', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>• SQLite Vault Records: <span style={{ color: '#58a6ff', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.sqlite_vault_records)}</span></div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--overview-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>• SQLite Vault Records: <span style={{ color: 'var(--overview-cyan)', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.sqlite_vault_records)}</span></div>
                 <div>• Media Memory Records: <span style={{ color: '#3fb950', fontWeight: 700 }}>{executiveMetric(matrixStatus.vault?.media_memory_records)}</span></div>
-                <div>• ChromaDB Vector Heartbeat: <span style={{ color: '#8b949e', fontWeight: 600 }}>UNVERIFIED</span></div>
-                <div>• Multi-Tenant Isolation: <span style={{ color: '#c9d1d9' }}>stehouwer_publishing</span></div>
+                <div>• ChromaDB Vector Heartbeat: <span style={{ color: 'var(--overview-muted)', fontWeight: 600 }}>UNVERIFIED</span></div>
+                <div>• Multi-Tenant Isolation: <span style={{ color: 'var(--overview-text)' }}>stehouwer_publishing</span></div>
               </div>
             </div>
           </div>

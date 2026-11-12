@@ -1,0 +1,14 @@
+{
+  "id": "01-coop-cabin",
+  "variant": "seans-dog",
+  "mode": "built-in imagegen edit",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b48-da8c-74e2-8006-83ab7dfff413/exec-16546f49-8f07-47c7-9fb3-75ce0aedb4ae.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/01-coop-cabin-seans-dog.png",
+  "references": [
+    "C:/Users/footb/.codex/generated_images/01a19b48-da8c-74e2-8006-83ab7dfff413/exec-f40d6a83-54a3-4b11-806e-1d441ece89ae.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG-20260530-WA0007.jpg"
+  ],
+  "prompt": "Edit image1 precisely, preserving its complete poster composition, all THREE human identities and faces, poses except the explicit anatomy fix below, all exact lettering, background, lighting, controllers, snail terrarium and props. Make TWO corrections only.\n1. Replace the generic golden dog at lower left with Sean's ACTUAL dog shown in images2 and3: same specific medium fluffy reddish/chocolate-brown and white dog, tan eyebrow and cheek points, broad white forehead blaze, white chest and neck ruff, freckled white muzzle, amber eyes, pinkish brown nose and folded ears. Image2 defines the dog's face and image3 its adult coat/body markings. Retain its approximate size, friendly happy presence, HR harness/badge and paw position by the incident report, adapting fur/paws faithfully. Rest the mirrored sunglasses on its head so the distinctive eyes/face remain recognizable. ONE dog only.\n2. Anna in the middle currently has an extra raised fist/forearm above her shoulder while two hands already hold the controller. REMOVE that extra raised arm/fist completely, restoring the small background region it occupied. Anna must have exactly TWO arms and TWO hands, BOTH naturally holding her controller. Preserve her recognizable face, glasses on head, burgundy sweater, amused expression and the other two people.\nEverything else remains as close as possible to image1, especially precise title and all joke text. No additional people, pets, new slogans, or layout redesign. Keep original portrait aspect ratio and polished detail.",
+  "quality": "Visually inspected: Sean's actual red-brown/white/tan dog with white blaze/freckled muzzle, amber eyes, pink-brown nose and HR harness; Anna's extra raised arm removed, exactly two hands holding controller; all three faces, scene and major wording preserved."
+}

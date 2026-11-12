@@ -221,6 +221,19 @@ class CodingGuestRunnerTests(unittest.TestCase):
                 self.assertFalse(r2['available'])
                 self.assertIn('licensing is unverified', r2['reason'])
 
+                # Test enrollment cannot make ordinary Windows coding available.
+                cfg_file.write_text(json.dumps({
+                    'vm_uuid': dedicated_uuid,
+                    'snapshot_uuid': snap_uuid,
+                    'licensing_verified': True,
+                    'test_only': True,
+                }), encoding='utf-8')
+                with patch.dict(os.environ, {'AI_BS_VBOX_TEST_ONLY_VERIFY': ''}, clear=False):
+                    test_only = coding_guest_runner.inspect_vbox_provider()
+                self.assertFalse(test_only['available'])
+                self.assertTrue(test_only['test_only'])
+                self.assertIn('fail closed', test_only['reason'])
+
                 # 3. Active NIC / clipboard / VRDE violates isolation preflight
                 cfg_file.write_text(json.dumps({
                     'vm_uuid': dedicated_uuid,

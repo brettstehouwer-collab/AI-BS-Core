@@ -1,0 +1,107 @@
+{
+  "title": "Every Version, Same Brotherhood",
+  "people": [
+    "Sean",
+    "Brett"
+  ],
+  "posters": [
+    {
+      "file": "01-realistic.png",
+      "style": "Realistic",
+      "title": "STILL HERE",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2467044
+    },
+    {
+      "file": "02-animation.png",
+      "style": "Animation style",
+      "title": "GO TEAM",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2867637
+    },
+    {
+      "file": "03-comical.png",
+      "style": "Comic",
+      "title": "DOWN TO FORTNITE",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 4033415
+    },
+    {
+      "file": "04-supportive.png",
+      "style": "Supportive",
+      "title": "YOU GOT THIS, BROTHER",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3562960
+    },
+    {
+      "file": "05-emotional.png",
+      "style": "Emotional",
+      "title": "YOU DON'T HAVE TO SAY MUCH",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3145114
+    },
+    {
+      "file": "06-frustrating.png",
+      "style": "Frustration and repair",
+      "title": "WE BOTH SWUNG AND MISSED",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3625154
+    },
+    {
+      "file": "07-dark-humor.png",
+      "style": "Dark humor",
+      "title": "EVERYTHING IS FINE. PROBABLY.",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3413756
+    },
+    {
+      "file": "08-underdogs.png",
+      "style": "Defiant brotherhood",
+      "title": "UNDERDAWGS",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 4182323
+    },
+    {
+      "file": "09-contemporary.png",
+      "style": "Contemporary portrait",
+      "title": "STILL US",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2375002
+    }
+  ],
+  "films": [
+    {
+      "file": "videos/01-all-the-versions.mp4",
+      "seconds": 42.75,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 36238993
+    },
+    {
+      "file": "videos/02-chaos-and-comedy.mp4",
+      "seconds": 22.75,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 22345683
+    },
+    {
+      "file": "videos/03-still-here.mp4",
+      "seconds": 27.5,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 19998142
+    }
+  ],
+  "generation": "Built-in imagegen; original photos remain unchanged.",
+  "video_method": "Camera-animated posters with original synthesized instrumental audio. Comedy includes the supplied Brett-only live-action coda, with its original audio muted.",
+  "gallery": "index.html"
+}

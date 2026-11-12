@@ -126,6 +126,14 @@ async def list_collections(owner: str = Depends(require_conversation_owner)):
 
 @router.post('/query')
 async def query_vector_memory(req: MemoryQuery, owner: str = Depends(require_conversation_owner)):
+    from core.owned_rag_sources import COLLECTION, retrieve_source_chunks
+    if req.collection == COLLECTION:
+        page = await _owned_call(retrieve_source_chunks, VAULT_DB_PATH, owner, req.query,
+                                 limit=req.top_k, with_scope=True)
+        results = page['results']
+        return {'status': 'success', 'query': req.query, 'collection': req.collection,
+                'count': len(results), **page, 'search_type': 'lexical_scan',
+                'preview_only': True, 'embeddings_generated': False}
     results = await _owned_call(search_records, VAULT_DB_PATH, owner, req.query, collection=req.collection, limit=req.top_k)
     return {'status': 'success', 'query': req.query, 'collection': req.collection,
             'count': len(results), 'results': results, 'search_type': 'lexical', 'preview_only': True}
@@ -145,6 +153,10 @@ class DirectMemoryPayload(BaseModel):
 @router.post('')
 async def create_memory_direct(payload: DirectMemoryPayload, owner: str = Depends(require_conversation_owner)):
     meta = payload.metadata or {}
+    if meta.get('kind') == 'bschat_source_v1':
+        from core.owned_rag_sources import ingest_source
+        return await _owned_call(ingest_source, VAULT_DB_PATH, owner, payload.content,
+            source_name=meta.get('source_name', 'pasted_source.txt'), source_sha256=meta.get('source_sha256'))
     record = await _owned_call(store_record, VAULT_DB_PATH, owner, meta.get('title', f'Memory_{int(time.time())}'),
         payload.content, collection=meta.get('collection', 'stehouwer_heuristics'), tags=meta.get('tags', ['telemetry_suite']))
     return {'status': 'success', 'message': 'Memory confirmed in the owner-scoped SQLite vault.',

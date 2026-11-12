@@ -20,7 +20,7 @@ import aiohttp
 from backend.trading.news_schema import NEWS_DB_PATH, NewsStore, NewsIntegrityError
 
 FEEDS = {
-    "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+    "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss",
     "CoinTelegraph": "https://cointelegraph.com/rss",
     "Decrypt": "https://decrypt.co/feed",
 }
@@ -249,12 +249,13 @@ class PublicLocalTransport:
 
 
 class NewsWorker:
-    def __init__(self, store, *, model, symbols, transport, clock=time.time):
+    def __init__(self, store, *, model, symbols, transport, clock=time.time, archive=None):
         model = local_model_name(model)
         symbols = frozenset(symbols)
         if not 1 <= len(symbols) <= 100 or any(not isinstance(s, str) or not re.fullmatch(r"[A-Z0-9]{2,12}", s) for s in symbols):
             raise NewsIntegrityError("explicit ticker allowlist required")
         self.store, self.model, self.symbols, self.transport, self.clock = store, model, symbols, transport, clock
+        self.archive = archive
         self.next_poll = {}
 
     async def _poll_source(self, source):
@@ -270,6 +271,8 @@ class NewsWorker:
         await asyncio.to_thread(self.store.feed_status, source, now=now, status="OK")
         self.next_poll[source] = now + 45
         for article in articles:
+            if self.archive is not None:
+                await asyncio.to_thread(self.archive.save, article, now=int(self.clock()))
             await asyncio.to_thread(self.store.register, article, now=int(self.clock()))
 
     async def poll_feeds(self):
@@ -318,7 +321,8 @@ async def main_async(args):
     # remote models, redirects or model-download endpoint.
     async with aiohttp.ClientSession(trust_env=False, cookie_jar=aiohttp.DummyCookieJar(),
             headers={"User-Agent": "AI-BS-Public-News-Telemetry/1"}) as session:
-        worker = NewsWorker(store, model=args.model, symbols=args.symbols.split(","), transport=PublicLocalTransport(session))
+        from backend.trading.news_archive import NewsArchive
+        worker = NewsWorker(store, model=args.model, symbols=args.symbols.split(","), transport=PublicLocalTransport(session), archive=NewsArchive())
         await worker.run()
 
 

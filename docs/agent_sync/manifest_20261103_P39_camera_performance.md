@@ -1,0 +1,8 @@
+# Camera clearance and measured baseline
+
+
+## P39 camera clearance and first valid performance baseline (2026-11-03T16:38:26.774951+00:00)
+
+P39 adds an allocation-free SDK camera-visibility helper and a bounded local instance copy: hologram omitted inside0.35m, smooth opacity to full appearance at0.9m, vertical body interval[-0.1,2]m. Actual1080p GPU checks prove near pixels equal the scene without the guide, middle fade visible and far pixels equal original; no scene/character-buffer replacement, saved history or Follow/Wait anchor changes. Two CPU tests pass, including214camera checks;20actual GPU/Win32 checks also verify unchanged HUD text is not republished and changed text reaches its control. RepairR07 passes; bypassR07 was interrupted with active=0/foreground=0 and is retained as failed. Profiling no longer forces focus. A user-assisted15s1080p nook baseline measured46.599FPS(mean21.460ms,p9533.416ms), below60; subsequent cached-HUD comparisons could not meet active/setup requirements and were stopped. No speedup/full-route FPS is claimed.
+
+Compatibility: additive SDK header; no scene-mesh caller, saved document/version, character payload, movement, quest or Adam memory wording change. Normal-distance pixels remain exact. Windows owns resize layout; cached text still updates real controls when content changes. Source-only candidate remains undeployed; CPU/GPU focused verification is not full SDK/release acceptance. Next: Build/install a new isolated SDK and Studio candidate with full regression coverage. Recheck focused performance from a user-started launcher, inspect frame costs/display pacing if below60, and verify full-route/human8–12minute pacing. Final likeness/captions/presentation acceptance and final backup remain pending.

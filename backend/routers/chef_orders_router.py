@@ -18,7 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
-from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Request, HTTPException, BackgroundTasks, Depends
+from security.financial_auth import require_financial_owner
 from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel, EmailStr
 
@@ -27,7 +28,6 @@ router = APIRouter(prefix="/api/v1/chef", tags=["The Simple Chef E-Commerce"])
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = BACKEND_DIR.parent
 DATA_DIR = BASE_DIR / "saved_data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DATA_DIR / "chef_orders.db"
 
 # --- Database Initialization ---
@@ -58,7 +58,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()
+# Explicit maintenance initialization only; imports never create financial state.
 
 # --- Credentials Loader ---
 def load_credentials():
@@ -126,6 +126,7 @@ class StatusUpdatePayload(BaseModel):
 
 # --- Asynchronous Notification Dispatchers ---
 def dispatch_notifications_task(order_data: Dict[str, Any]):
+    raise RuntimeError("Fulfillment held: trusted payment receipt and owner binding are required")
     """Sends merchant packing slips, customer receipts, Discord alerts, and Google Sheets sync."""
     creds = load_credentials()
     smtp_user = creds["IMAP_USER"]
@@ -376,176 +377,34 @@ def dispatch_notifications_task(order_data: Dict[str, Any]):
 
 
 # --- API Endpoints ---
+# Legacy rows are unowned and their PAID labels were client asserted. Preserve
+# them for review; never turn them into receipts, revenue, or fulfillment.
 @router.post("/order")
-async def place_chef_order(payload: OrderSubmissionPayload, background_tasks: BackgroundTasks):
-    """Processes online storefront order for The Simple Chef with card details."""
-    order_id = payload.order_id or f"SC-{int(time.time() * 1000) % 1000000:06d}"
-    created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    # Mask card for security
-    card_last4 = "----"
-    if payload.card_number:
-        clean_num = payload.card_number.replace(" ", "").replace("-", "")
-        if len(clean_num) >= 4:
-            card_last4 = clean_num[-4:]
-
-    items_dicts = [{"name": it.name, "price": it.price, "qty": it.qty} for it in payload.items]
-    items_json = json.dumps(items_dicts)
-
-    # Persist to SQLite
-    try:
-        conn = sqlite3.connect(str(DB_PATH))
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO chef_orders (
-                order_id, created_at, customer_name, email, phone,
-                shipping_address, items_json, subtotal, tax, shipping, total,
-                payment_method, payment_status, card_last4, notes, fulfillment_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            order_id, created_at, payload.customer_name, payload.email, payload.phone or "",
-            payload.shipping_address, items_json, payload.subtotal, payload.tax,
-            payload.shipping, payload.total, payload.payment_method, "PAID",
-            card_last4, payload.notes or "", "Pending"
-        ))
-        conn.commit()
-        conn.close()
-    except Exception as db_err:
-        raise HTTPException(status_code=500, detail=f"Database write error: {str(db_err)}")
-
-    # Schedule notifications in background
-    order_dict = {
-        "order_id": order_id,
-        "created_at": created_at,
-        "customer_name": payload.customer_name,
-        "email": payload.email,
-        "phone": payload.phone,
-        "shipping_address": payload.shipping_address,
-        "items": items_dicts,
-        "subtotal": payload.subtotal,
-        "tax": payload.tax,
-        "shipping": payload.shipping,
-        "total": payload.total,
-        "payment_method": payload.payment_method,
-        "card_last4": card_last4,
-        "notes": payload.notes
-    }
-    background_tasks.add_task(dispatch_notifications_task, order_dict)
-
-    return {
-        "status": "success",
-        "order_id": order_id,
-        "message": "Order successfully authorized and recorded! Packing notifications sent to Chef John Barr.",
-        "receipt": {
-            "order_id": order_id,
-            "date": created_at,
-            "customer": payload.customer_name,
-            "total": payload.total,
-            "card_last4": card_last4,
-            "shipping_to": payload.shipping_address
-        }
-    }
+async def place_chef_order(payload: Request, background_tasks: BackgroundTasks):
+    raise HTTPException(503, "Checkout unavailable: verified provider payment is not connected. No order or payment accepted.")
 
 
 @router.get("/orders")
-async def list_chef_orders(limit: int = 50, status: Optional[str] = None):
-    """Retrieves all orders for the AI-BS Client Hub dashboard."""
-    conn = sqlite3.connect(str(DB_PATH))
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    if status and status != "All":
-        cursor.execute("SELECT * FROM chef_orders WHERE fulfillment_status = ? ORDER BY id DESC LIMIT ?", (status, limit))
-    else:
-        cursor.execute("SELECT * FROM chef_orders ORDER BY id DESC LIMIT ?", (limit,))
-
-    rows = cursor.fetchall()
-    conn.close()
-
-    orders = []
-    for r in rows:
-        orders.append({
-            "id": r["id"],
-            "order_id": r["order_id"],
-            "created_at": r["created_at"],
-            "customer_name": r["customer_name"],
-            "email": r["email"],
-            "phone": r["phone"],
-            "shipping_address": r["shipping_address"],
-            "items": json.loads(r["items_json"]),
-            "subtotal": r["subtotal"],
-            "tax": r["tax"],
-            "shipping": r["shipping"],
-            "total": r["total"],
-            "payment_method": r["payment_method"],
-            "payment_status": r["payment_status"],
-            "card_last4": r["card_last4"],
-            "notes": r["notes"],
-            "fulfillment_status": r["fulfillment_status"]
-        })
-
-    return {"status": "success", "orders": orders, "count": len(orders)}
+async def list_chef_orders(owner=Depends(require_financial_owner)):
+    return {"status":"unavailable","orders":[],"count":None,"reason":"Legacy orders lack verified payment evidence and ownership; migration required."}
 
 
 @router.post("/order/{order_id}/status")
-async def update_order_status(order_id: str, payload: StatusUpdatePayload):
-    """Updates order fulfillment status (e.g. Shipped, Packed)."""
-    conn = sqlite3.connect(str(DB_PATH))
-    cursor = conn.cursor()
-    cursor.execute("""
-        UPDATE chef_orders
-        SET fulfillment_status = ?
-        WHERE order_id = ?
-    """, (payload.fulfillment_status, order_id))
-    affected = cursor.rowcount
-    conn.commit()
-    conn.close()
-
-    if affected == 0:
-        raise HTTPException(status_code=404, detail=f"Order {order_id} not found.")
-
-    return {"status": "success", "order_id": order_id, "new_status": payload.fulfillment_status}
+async def update_order_status(order_id: str, payload: StatusUpdatePayload, owner=Depends(require_financial_owner)):
+    raise HTTPException(409, "Fulfillment held: owner-bound verified receipt is required")
 
 
 @router.get("/stats")
-async def get_chef_stats():
-    """Returns total orders, gross revenue, and rub breakdown for The Simple Chef."""
-    conn = sqlite3.connect(str(DB_PATH))
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*), COALESCE(SUM(total), 0) FROM chef_orders")
-    total_orders, gross_revenue = cursor.fetchone()
-    conn.close()
-
-    return {
-        "status": "success",
-        "total_orders": total_orders,
-        "gross_revenue": round(gross_revenue, 2),
-        "currency": "USD"
-    }
+async def get_chef_stats(owner=Depends(require_financial_owner)):
+    return {"status":"unavailable","total_orders":None,"gross_revenue":None,"currency":"USD","reason":"Legacy payment assertions are unverified."}
 
 
 @router.get("/invoice")
 @router.get("/invoice/pdf")
-async def get_invoice_pdf():
-    """Serves the official commercial invoice PDF for The Simple Chef."""
-    pdf_path = Path("C:/AI-BS/TheSimpleChef_Invoice_TSC-2026-001.pdf")
-    if not pdf_path.exists():
-        raise HTTPException(status_code=404, detail="Invoice PDF not found.")
-    return FileResponse(
-        path=str(pdf_path),
-        filename="TheSimpleChef_Invoice_TSC-2026-001.pdf",
-        media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=TheSimpleChef_Invoice_TSC-2026-001.pdf"}
-    )
+async def get_invoice_pdf(owner=Depends(require_financial_owner)):
+    raise HTTPException(503, "Legacy invoice ownership is unverified; secure migration required")
 
 
 @router.get("/invoice/html")
-async def get_invoice_html():
-    """Serves the interactive web invoice HTML for The Simple Chef."""
-    html_path = Path("C:/AI-BS/TheSimpleChef_Invoice_TSC-2026-001.html")
-    if not html_path.exists():
-        raise HTTPException(status_code=404, detail="Invoice HTML not found.")
-    return FileResponse(
-        path=str(html_path),
-        media_type="text/html"
-    )
+async def get_invoice_html(owner=Depends(require_financial_owner)):
+    raise HTTPException(503, "Legacy invoice ownership is unverified; secure migration required")

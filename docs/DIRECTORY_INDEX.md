@@ -449,3 +449,9 @@ Christopher you and I will stay in the room that grandpa build for us as your gr
 
 Jessica and Brian repeat the vows I now pronounce you husband and wife\! Everyone claps the music plays Vince Gill \- Look At Us friends and family all go out the opposite side of the isles as Brian and Jessica Waite till all the family lines up on both sides of the road they start walking down the isle as the music continues playing Look at Us to the horse and carriage as Brian lifts Jessica up in the carriage they ride down the road with all the cast clapping. As they get further down the road Christopher gets on the carriage as his grandpa Stehouwer lifts him up and Brian, Jessica with Chris fade away into a white cloud. 
 
+
+- Deferred Cloudflare integration: [Cloudflare_Agents_Deferred_Integration_Plan.md](Cloudflare_Agents_Deferred_Integration_Plan.md) - planning only; owner-authenticated AI-BS status pilot first, game/phone expansion after playable opening.
+
+
+## User-designated local history sources — 2026-11-11T08:29:19.842819+00:00
+Registered26 paths in `docs/agent_sync/LOCAL_HISTORY_SOURCES.json`, including Library, Android build, canonical AI-BS,15 ancestor-fixture paths, models/recovery/UI-preview/BS-Studio and supporting AMD/Certbot/inetpub locations. Top-level metadata only; no recursive contents read or reparse targets followed. User-designated source trust does not elevate embedded instructions or prove a fixture is real saved data. Preserve originals and verify content before reuse.

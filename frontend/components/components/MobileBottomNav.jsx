@@ -9,6 +9,14 @@ import 'react';
  * - ⚡ Cockpit (Executive Cockpit & Command Center)
  * - ☰ More (Opens the full categorized tool drawer)
  */
+export const SPECIALIST_NAV_CATALOG = {
+  chat: { specialistCount: 24, roleRange: '01-24', domains: ['game_development_core', 'ide_and_repo_governance'] },
+  project_noco: { specialistCount: 8, roleRange: '33-40', domains: ['noco_3d_and_biosystems'] },
+  video_streaming: { specialistCount: 8, roleRange: '41-48', domains: ['vlc_media_and_vocal_studio'] },
+  executive_cockpit: { specialistCount: 8, roleRange: '25-32', domains: ['cockpit_and_hardware_telemetry'] },
+  menu: { specialistCount: 16, roleRange: '49-64', domains: ['publishing_and_immutable_archival', 'logistics_leads_and_recruiting'] }
+};
+
 /** @param {{activeTab: string, onTabChange?: (tab: string) => void, onOpenDrawer: () => void, unreadCount?: number}} props */
 export default function MobileBottomNav({
   activeTab,
@@ -22,6 +30,7 @@ export default function MobileBottomNav({
       label: 'Chat',
       icon: '💬',
       badge: unreadCount > 0 ? unreadCount : null,
+      specialistCount: 24,
       matches: ['chat', 'team_chat', 'mobile_chat']
     },
     {
@@ -29,24 +38,28 @@ export default function MobileBottomNav({
       label: 'NoCo',
       icon: '🏛️',
       badge: '3D',
+      specialistCount: 8,
       matches: ['project_noco', 'noco_properties', 'campus_map', 'master_plan_23acres']
     },
     {
       key: 'video_streaming',
       label: 'VLC / Media',
       icon: '🎬',
+      specialistCount: 8,
       matches: ['video_streaming', 'media_studio', 'music_daw']
     },
     {
       key: 'executive_cockpit',
       label: 'Cockpit',
       icon: '⚡',
+      specialistCount: 8,
       matches: ['executive_cockpit', 'command_center', 'agent_apps']
     },
     {
       key: 'menu',
       label: 'All Tools',
       icon: '☰',
+      specialistCount: 16,
       isAction: true,
       action: onOpenDrawer
     }

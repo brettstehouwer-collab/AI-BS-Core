@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { providerForModel, hydrateBSChatProvider } from '/src/utils/bsChatProvider.js';
 import { getApiBase } from '../config/api.js';
 import { db } from '../firebase.js';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -246,7 +247,18 @@ export const useAppStore = create(
 
   // ── Model / Generation State ────────────────────────────────────────────
   selectedModel: '',
-  setSelectedModel: (selectedModel) => set({ selectedModel }),
+  aiProvider: 'local',
+  aiProviderModels: {},
+  aiProviderSelectionRevision: 0,
+  setSelectedModel: (selectedModel) => set(state => ({ selectedModel,
+    aiProvider: providerForModel(selectedModel, state.aiProviderModels),
+    aiProviderSelectionRevision: state.aiProviderSelectionRevision + 1 })),
+  setAIProviderSelection: (provider, model) => set(state => ({ aiProvider: provider,
+    selectedModel: model || state.selectedModel,
+    aiProviderModels: { ...state.aiProviderModels,
+      [provider]: [...new Set([...(model ? [model] : []), ...(state.aiProviderModels[provider] || [])])] },
+    aiProviderSelectionRevision: state.aiProviderSelectionRevision + 1 })),
+  setAIProviderConfiguration: (configuration, expectedRevision = 0) => set(state => hydrateBSChatProvider(state, configuration, expectedRevision)),
   availableModels: [],
   setAvailableModels: (availableModels) => set({ availableModels }),
   comfyuiModels: [],

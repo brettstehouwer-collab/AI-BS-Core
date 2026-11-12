@@ -1,3 +1,11 @@
+# Current authority — November 10, 2026
+
+Read `C:\AI-BS\AGENTS.md`, the current ten-goal takeover plan, and the latest entries at the bottom of `docs/CODEX_HANDOFF.md` before acting. The older directive below is preserved as historical context. Its blanket zero-API/zero-server rules, single-workspace restriction, automatic deployment wording and claims of unrestricted authority are superseded by the user-approved current hybrid/local-first boundaries, scoped worktrees and explicit activation/deployment decisions. Existing separate deployment/cost rules also reflect later reconciliations. Platform/tool permissions and current user instructions govern actual actions.
+
+The canonical project is `C:\AI-BS`. Backend/gateway/frontend/local-model services, existing account ownership, original files, retained releases and failed evidence remain preserved. The documented port map does not prove that every listed service is installed, active or authorized to start. WSL and old mining/hosting/service files are recovery evidence, not startup instructions.
+
+---
+
 # Antigravity IDE Master Operational Directive & Workflow Architecture
 
 # Ecosystem: AI-BS (Autonomous Intelligence & Build System)

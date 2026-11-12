@@ -1,0 +1,221 @@
+{
+  "at": "2026-11-04T19:46:42.517597+00:00",
+  "status": "verified_slow_detailed_native_walkthrough",
+  "video": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\First_Boot_Slow_Detailed_Walkthrough.mp4",
+  "bytes": 101895457,
+  "sha256": "b4c0a9dde2240c27d06dc11277b891b225e51f293a5d989b5079fe5d08fd44fe",
+  "duration_seconds": 627.236,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "chapters": [
+    {
+      "id": 0,
+      "time_base": "1/1000",
+      "start": 0,
+      "start_time": "0.000000",
+      "end": 313550,
+      "end_time": "313.550000",
+      "tags": {
+        "title": "Repair route - boot nook to shelter and Pencil Room"
+      }
+    },
+    {
+      "id": 1,
+      "time_base": "1/1000",
+      "start": 313550,
+      "start_time": "313.550000",
+      "end": 627236,
+      "end_time": "627.236000",
+      "tags": {
+        "title": "Bypass route - relay build and service door"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "route": "repair",
+      "duration_seconds": 313.55,
+      "video": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\repair\\walkthrough.mp4",
+      "sha256": "fc3ce3ef18d9ee59b549180e0f9ddb156e18c37582f560ae74555ea83dbb9ce7",
+      "detail_stops": [
+        "nook-turn",
+        "west10",
+        "west",
+        "fault",
+        "main-front",
+        "hub",
+        "pencil-front",
+        "pencil-back"
+      ]
+    },
+    {
+      "route": "bypass",
+      "duration_seconds": 313.686,
+      "video": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\bypass\\walkthrough.mp4",
+      "sha256": "75db78a3efd0e2cb7f9504c398efd31a4f2c48c2e5863c13e8889519ca155e5d",
+      "detail_stops": [
+        "nook-turn",
+        "west10",
+        "west",
+        "fault",
+        "service-front",
+        "hub",
+        "pencil-front",
+        "pencil-back"
+      ]
+    }
+  ],
+  "coverage": {
+    "opening_read_panels": 7,
+    "locations": [
+      "Jenison boot nook and keepsakes",
+      "Diagnostic workshop and bypass notes",
+      "Fault isolation and main power repair",
+      "Relay bypass build and connection",
+      "Main door and service-door approaches",
+      "Shelter and claimed workbench",
+      "Two quiet seats and Caretaker area",
+      "Pencil Room"
+    ],
+    "visited_director_stops": [
+      "fault",
+      "hub",
+      "main-front",
+      "nook-turn",
+      "pencil-back",
+      "pencil-front",
+      "service-front",
+      "west",
+      "west10"
+    ],
+    "scope": "Both current authored opening routes. Distant hardware landmarks shown from reachable paths; no claim of playable interiors in unfinished world regions."
+  },
+  "model": "v31 integrated unfinished draft using user-selected v28face direction",
+  "audio": false,
+  "desktop_capture": false,
+  "installed_release_changed": false,
+  "existing_saves_used": false,
+  "human_pacing_acceptance": false,
+  "performance_benchmark": false,
+  "cloud_backup_verified": false,
+  "goal_complete": false,
+  "source_patch_paths": [
+    "durable_world.cpp",
+    "workshop_tour_runtime.inl"
+  ],
+  "director_build": "Separate SDK0172consumer; canonical source and installed107not modified",
+  "first_preparation_failure": "Input-marker precondition matched two runtimes. Retained E:/T96Doriginal copy; corrected narrower chapter-only marker built in E:/T96D2.",
+  "face_feedback": {
+    "source_question_id": "call_5386edf1d8a44dbb94bf55be6e1f3358",
+    "reply": "Keep this direction, still unfinished",
+    "meaning": "v28facial direction accepted for continued work; not final likeness approval"
+  },
+  "model_merge": {
+    "status": "passed_disjoint_v28_face_merge_into_v30_draft",
+    "source_sha256": "498effb8d851abb7890d0f9aa1d72932c54591ade89f74a510926db0a0a9c813",
+    "master_sha256": "ecbd0efeff80d07e52aef71f6044b825d10d17179584b89858af80a0742fddaf",
+    "face_vertices": 5317,
+    "maximum_face_delta_m": 0.00476831307189032,
+    "minimum_area_ratio": 0.8047481876824408,
+    "minimum_normal_dot": 0.9526030994165922,
+    "face_direction_user_reply": "Keep this direction, still unfinished",
+    "likeness_approved": false,
+    "neck_seam_resolved": false,
+    "installed_model_changed": false,
+    "topology_UV_colors_weights_binds_actions_images_exact": true,
+    "non_face_positions_exact_to_v30": true
+  },
+  "playable_review_package_status": "Not yet completed; user steered current work to detailed walkthrough recording. Existing107review entry retained.",
+  "art_backup_status": "Local only. Earlier90A personal-derived-art upload rejected by automatic review. No retry, indirect upload or cloud backup claim. Concrete96Aarchive prepared for explicit user approval.",
+  "next_step": "Present verified video, obtain archive-specific cloud permission for96A/derived art if desired, then resume separate playable review package and remaining art/human/caption/performance/final acceptance work.",
+  "repository_identity": {
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7"
+  },
+  "integrated_native_verification": {
+    "status": "passed_integrated_v31_native_views_four_clips",
+    "native": {
+      "status": "passed_actual_native_band_material_and_animation",
+      "vertices": 53243,
+      "indices": 236646,
+      "joints": 22,
+      "clips": 4,
+      "decoded_bytes": 17564956,
+      "content_gpu_bytes": 18284544,
+      "visible_pixel_difference": 287763,
+      "animated_pixel_difference": 69240,
+      "band_material_changed_pixels": 11852,
+      "debug_errors": 0,
+      "debug_warnings": 0,
+      "likeness_approved": false,
+      "installed_model_replaced": false
+    },
+    "clips": [
+      {
+        "name": "idle",
+        "duration_seconds": 3.2,
+        "frames": 97,
+        "captured_phases": 9,
+        "changed_poses": 6,
+        "maximum_changed_pixels": 34227,
+        "root_fixed": true,
+        "boundary_pose_verified": true,
+        "immutable_resources_stable": true,
+        "gpu_errors": 0,
+        "gpu_warnings": 0
+      },
+      {
+        "name": "walk",
+        "duration_seconds": 1,
+        "frames": 31,
+        "captured_phases": 9,
+        "changed_poses": 6,
+        "maximum_changed_pixels": 69333,
+        "root_fixed": true,
+        "boundary_pose_verified": true,
+        "immutable_resources_stable": true,
+        "gpu_errors": 0,
+        "gpu_warnings": 0
+      },
+      {
+        "name": "catchup",
+        "duration_seconds": 0.733333,
+        "frames": 23,
+        "captured_phases": 9,
+        "changed_poses": 6,
+        "maximum_changed_pixels": 71159,
+        "root_fixed": true,
+        "boundary_pose_verified": true,
+        "immutable_resources_stable": true,
+        "gpu_errors": 0,
+        "gpu_warnings": 0
+      },
+      {
+        "name": "guidance",
+        "duration_seconds": 2.4,
+        "frames": 73,
+        "captured_phases": 9,
+        "changed_poses": 7,
+        "maximum_changed_pixels": 23325,
+        "root_fixed": true,
+        "boundary_pose_verified": true,
+        "immutable_resources_stable": true,
+        "gpu_errors": 0,
+        "gpu_warnings": 0
+      }
+    ],
+    "likeness_approved": false,
+    "neck_seam_resolved": false
+  },
+  "recording_binary_sha256": "5ea13dc870f6dca0aa9ba243ada1550483eecb7c94b39e146694ec7e9b9908e4",
+  "local_archive": {
+    "archive": "E:\\AI_BS_Resources\\FirstBoot\\P96\\DetailedWalkthrough\\96A_Detailed_Walkthrough_And_Integrated_Draft.zip",
+    "bytes": 110775658,
+    "sha256": "97a5e91c74606d92ad86db769196a6dc2017e61e50fb2ad59325123843d57680",
+    "members": 57,
+    "cloud_upload_authorized": false,
+    "cloud_backup_verified": false
+  }
+}

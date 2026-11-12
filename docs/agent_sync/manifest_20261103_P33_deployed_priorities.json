@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "at": "2026-11-03T14:25:53.647440+00:00",
+  "goal_status": "active",
+  "goal_complete": false,
+  "previous_goal_turn": "Read-only proposal review; no goal implementation in that requested review. Earlier32package/backup work preserved and resumed.",
+  "classification": "progress: source+portable cloud restore verified,102preview deployed, user-approved priority plan recorded while all gates retained",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "Existing dirty/untracked tree retained; selected exact files/complete snapshots preserved. Private global Git/Master data excluded.",
+  "deployed": "5.329.102",
+  "SDK": "0.16.3",
+  "retention": "Studio100/101all2301files each exact; older97–99executable identities retained;448fileSDKexact;107canonicalCreator sources match staged102; no user save or original-reference workflow edit.",
+  "runtime": "126packageCPUtests+5owned packaged steps including3saved native windows and limited normal exit0; all Jobs joined",
+  "backup_source": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint32A-drive.json",
+  "backup_portable": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint32B-drive.json",
+  "priority_plan": "docs/game_engine/OPENING_FIRST_PRIORITY_PLAN.md",
+  "full_scope_preserved": true,
+  "original_milestones_and_gate_statuses_unchanged": true,
+  "next_step": "Opening-first priority approved: use tested102preview to deliver and measure both8–12minute Warm Beginning routes, preserving essential Adam guidance/save continuity. Expand toward existing20–30minute M5chapter after proof; retain every original checkpoint. Detailed likeness polish, extra Unreal/phone/monitor UI work follows playable proof.",
+  "remaining": "Human first-time pacing/whole-opening performance/fresh walkthrough,final Adam likeness,reviewed optional captions and final complete source/art closeout remain pending.",
+  "owned_jobs_sessions_live": 0,
+  "public_document_SHA256": {
+    "engine/milestone_queue.json": "9d7f0d9ebaef331754f683d62eccc6d5441b7106af2abd32a74c1123aea6ed75",
+    "engine/BUILD_ROADMAP.md": "b4d6c9728270b4218efa4bbb166295ef4e3d07d023fd9339faf1de969914161c",
+    "engine/WARM_BEGINNING.md": "b4012416c00132d23a6644c8b7bfce226302623e1d898848a9ef138d2963f04e",
+    "engine/BUILD_STATUS.md": "201c92f9c5b81fbab8c117654c51afc1f51a507dade0d897115437c09b7a3d3c",
+    "engine/out/build_progress.json": "0df34e81b713e5178be861aecf85b26fca3e7b146e997f039a035e088bd7c444",
+    "engine/out/warm_beginning/monitor_summary.json": "fce8369a1142b6e4d7ac78a9d8d1b91d8c938e0929d984c1738995bc41cd14de",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "d5f07b30c36e224372d59acf3015a61abec134e9b207b5fdea431876026831c5",
+    "docs/game_engine/OPENING_FIRST_PRIORITY_PLAN.md": "cdaee0c4adb0d887ff96057c30734fa17a862e197a46a32668b475c6e6bbcda0"
+  },
+  "space_free_bytes": {
+    "C": 60726140928,
+    "D": 87117844480,
+    "E": 146813599744
+  },
+  "backup33A": {
+    "status": "verified_authenticated_Drive_full_raw_restore",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\33A_Studio102_Handoff_Opening_Priorities.zip",
+    "bytes": 281181,
+    "sha256": "b8c574ad84014dcaa18d34c0d6e88ce74c39e8b96411f73d8b1289d4eb9bb77e",
+    "members": 26,
+    "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P33_deployed_priorities.json",
+    "deployed": "5.329.102",
+    "goal_complete": false,
+    "space_free_bytes": {
+      "C": 60726140928,
+      "D": 87117844480,
+      "E": 146813599744
+    },
+    "verified_at": "2026-11-03T14:29:51.803083+00:00",
+    "Drive_file_id": "1rniisuDQdP31zkfVnCveIMmsfHp-W4ia",
+    "Drive_url": "https://drive.google.com/file/d/1rniisuDQdP31zkfVnCveIMmsfHp-W4ia/view?usp=drivesdk",
+    "folder": {
+      "success": true,
+      "id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+      "url": "https://drive.google.com/drive/folders/1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+      "title": "33_Opening_First_Priorities_Studio102_Handoff",
+      "parent_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx"
+    },
+    "separate_plan": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf",
+      "title": "OPENING_FIRST_PRIORITY_PLAN.md",
+      "file_name": "OPENING_FIRST_PRIORITY_PLAN.md",
+      "mime_type": "text/markdown",
+      "url": "https://drive.google.com/file/d/15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf/view?usp=drivesdk",
+      "parent_id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf",
+        "title": "OPENING_FIRST_PRIORITY_PLAN.md",
+        "file_name": "OPENING_FIRST_PRIORITY_PLAN.md",
+        "mime_type": "text/markdown",
+        "url": "https://drive.google.com/file/d/15xoO-vcVE8ot24-iRhmTN_0Ky03Axtkf/view?usp=drivesdk",
+        "parent_id": "1_AMHMXsl4doO4PaQbeo1Jk56weKdgmFj"
+      }
+    },
+    "restore_sidecars": [
+      {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa",
+        "title": "RESTORE_32A_Source_Manifest.json",
+        "file_name": "RESTORE_32A_Source_Manifest.json",
+        "mime_type": "application/json",
+        "url": "https://drive.google.com/file/d/1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa/view?usp=drivesdk",
+        "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+        "structuredContent": {
+          "accepted_input": "file_uri",
+          "success": true,
+          "id": "1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa",
+          "title": "RESTORE_32A_Source_Manifest.json",
+          "file_name": "RESTORE_32A_Source_Manifest.json",
+          "mime_type": "application/json",
+          "url": "https://drive.google.com/file/d/1d7Y5bojMVX0zeuM_KKS7uIwNLzUt3eVa/view?usp=drivesdk",
+          "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j"
+        }
+      },
+      {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm",
+        "title": "RESTORE_32B_Portable_Manifest.json",
+        "file_name": "RESTORE_32B_Portable_Manifest.json",
+        "mime_type": "application/json",
+        "url": "https://drive.google.com/file/d/1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm/view?usp=drivesdk",
+        "parent_id": "1qCMgftkkVnyGpMt9G8GJNeCeC6UtH4x6",
+        "structuredContent": {
+          "accepted_input": "file_uri",
+          "success": true,
+          "id": "1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm",
+          "title": "RESTORE_32B_Portable_Manifest.json",
+          "file_name": "RESTORE_32B_Portable_Manifest.json",
+          "mime_type": "application/json",
+          "url": "https://drive.google.com/file/d/1TJ7_g2mlgQ9Y44Uo8aB3P3uqm40VKIAm/view?usp=drivesdk",
+          "parent_id": "1qCMgftkkVnyGpMt9G8GJNeCeC6UtH4x6"
+        }
+      },
+      {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0",
+        "title": "README_SOURCE.md",
+        "file_name": "README_SOURCE.md",
+        "mime_type": "text/markdown",
+        "url": "https://drive.google.com/file/d/1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0/view?usp=drivesdk",
+        "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j",
+        "structuredContent": {
+          "accepted_input": "file_uri",
+          "success": true,
+          "id": "1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0",
+          "title": "README_SOURCE.md",
+          "file_name": "README_SOURCE.md",
+          "mime_type": "text/markdown",
+          "url": "https://drive.google.com/file/d/1bFZfQb9w6-z3lL5AiSoF7pmKunjPqnn0/view?usp=drivesdk",
+          "parent_id": "1UmByA6mRIe_YuSCGsh8mvjg8Sfx3XB7j"
+        }
+      }
+    ],
+    "every_member_size_SHA256_CRC_and_exact_membership_verified": true
+  },
+  "space_free_bytes_closeout": {
+    "C": 60667469824,
+    "D": 87117250560,
+    "E": 146813599744
+  }
+}

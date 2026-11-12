@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\05_Authored_Lighting_And_Surface_GPU.zip",
+  "bytes": 12806100,
+  "sha256": "1aeaab1de8bb14bd4170c162d1afcee688c1409a9052b8025d2d2a0c0b5adeea",
+  "files": 2085,
+  "source_manifest_sha256": "7880f64ce7dc39c52c905c4469554e2eb9def92e4bb4551780e3565f890b3094",
+  "local_verification": "All ZIP CRCs, per-file lengths/SHA and current selected bytes match",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "free_bytes": {
+    "C": 90174513152,
+    "D": 183858573312,
+    "E": 146813599744
+  }
+}

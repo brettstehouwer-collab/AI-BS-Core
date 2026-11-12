@@ -1,0 +1,155 @@
+{
+  "title": "THREE MUSKETEERS — Same Idiots, Different Worlds",
+  "created_at": "2026-11-05T01:01:57.090Z",
+  "mode": "built-in image generation and identity-preserving edits",
+  "people": [
+    "Brett",
+    "Anna",
+    "Sean"
+  ],
+  "pets": [
+    {
+      "identity": "Sean’s dog",
+      "description": "Fluffy red-brown, white and tan dog, white forehead blaze and freckled white muzzle; HR harness."
+    },
+    {
+      "identity": "Tonto",
+      "description": "Short brown coat, broad face, amber eyes, folded ears, lightly graying muzzle and white chest; TONTO tag."
+    }
+  ],
+  "posters": [
+    {
+      "id": "01-coop-cabin",
+      "title": "CO-OP CHAOS",
+      "theme": "Cozy arcade cabin",
+      "format": "portrait 2:3",
+      "file": "01-coop-cabin-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3358414,
+      "final_receipt": "01-coop-cabin-both-pets.receipt.json",
+      "receipt_chain": [
+        "01-coop-cabin-both-pets.receipt.json",
+        "01-coop-cabin-seans-dog.receipt.json",
+        "01-coop-cabin.receipt.json"
+      ]
+    },
+    {
+      "id": "02-chaos-lab",
+      "title": "QUESTIONABLE RESEARCH",
+      "theme": "Neon laboratory and office",
+      "format": "landscape 16:9",
+      "file": "02-chaos-lab-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3263315,
+      "final_receipt": "02-chaos-lab-both-pets.receipt.json",
+      "receipt_chain": [
+        "02-chaos-lab-both-pets.receipt.json",
+        "02-chaos-lab-seans-dog.receipt.json",
+        "02-chaos-lab.receipt.json"
+      ]
+    },
+    {
+      "id": "03-tavern-quest",
+      "title": "THE QUEST CAN WAIT",
+      "theme": "Fantasy tavern and quest paperwork",
+      "format": "portrait 2:3",
+      "file": "03-tavern-quest-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3260948,
+      "final_receipt": "03-tavern-quest-both-pets.receipt.json",
+      "receipt_chain": [
+        "03-tavern-quest-both-pets.receipt.json",
+        "03-tavern-quest-seans-dog.receipt.json",
+        "03-tavern-quest.receipt.json"
+      ]
+    },
+    {
+      "id": "04-court-of-bad-ideas",
+      "title": "THE COURT OF BAD IDEAS",
+      "theme": "Mock courtroom and snail bureaucracy",
+      "format": "landscape 16:9",
+      "file": "04-court-of-bad-ideas-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3054169,
+      "final_receipt": "04-court-of-bad-ideas-both-pets.receipt.json",
+      "receipt_chain": [
+        "04-court-of-bad-ideas-both-pets.receipt.json",
+        "04-court-of-bad-ideas-seans-dog.receipt.json",
+        "04-court-of-bad-ideas.receipt.json"
+      ]
+    },
+    {
+      "id": "05-roadside-diner",
+      "title": "ONE MORE WRONG TURN",
+      "theme": "Road trip and midnight diner",
+      "format": "landscape 16:9",
+      "file": "05-roadside-diner-both-pets.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3119581,
+      "final_receipt": "05-roadside-diner-both-pets.receipt.json",
+      "receipt_chain": [
+        "05-roadside-diner-both-pets.receipt.json",
+        "05-roadside-diner-seans-dog.receipt.json",
+        "05-roadside-diner.receipt.json"
+      ]
+    },
+    {
+      "id": "06-orbital-breakroom",
+      "title": "THE BREAK ROOM EVENT HORIZON",
+      "theme": "Retro space lounge and cosmic coffee",
+      "format": "portrait 2:3",
+      "file": "06-orbital-breakroom-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3158755,
+      "final_receipt": "06-orbital-breakroom-both-pets.receipt.json",
+      "receipt_chain": [
+        "06-orbital-breakroom-both-pets.receipt.json",
+        "06-orbital-breakroom-seans-dog.receipt.json",
+        "06-orbital-breakroom.receipt.json"
+      ]
+    },
+    {
+      "id": "07-campsite-chaos",
+      "title": "FORECAST: POOR DECISIONS",
+      "theme": "Rainy camping and shared shelter",
+      "format": "portrait 2:3",
+      "file": "07-campsite-chaos-both-pets.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 3276006,
+      "final_receipt": "07-campsite-chaos-both-pets.receipt.json",
+      "receipt_chain": [
+        "07-campsite-chaos-both-pets.receipt.json",
+        "07-campsite-chaos-seans-dog.receipt.json",
+        "07-campsite-chaos.receipt.json"
+      ]
+    },
+    {
+      "id": "08-rooftop-afterglow",
+      "title": "SAME TEAM. NEW DAY.",
+      "theme": "Quiet dawn rooftop and optimism",
+      "format": "landscape 16:9",
+      "file": "08-rooftop-afterglow-both-pets.png",
+      "width": 1671,
+      "height": 941,
+      "bytes": 3367032,
+      "final_receipt": "08-rooftop-afterglow-both-pets.receipt.json",
+      "receipt_chain": [
+        "08-rooftop-afterglow-both-pets.receipt.json",
+        "08-rooftop-afterglow.receipt.json"
+      ]
+    }
+  ],
+  "notes": [
+    "Each final includes three adults and both distinct dogs.",
+    "Imagined comedy scenes, with real photo references for recognizable appearance.",
+    "Native generated pixel sizes; no later enlargement.",
+    "Earlier drafts and source photos are excluded from the final-only ZIP, preserved in their existing locations."
+  ]
+}

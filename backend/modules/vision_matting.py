@@ -17,10 +17,11 @@ from PIL import Image
 
 # Link CUDA 13 / cuDNN 9 runtime libraries from ComfyUI embedded environment
 CUDA_DLL_DIR = r"C:\AI-BS\ComfyUI\python_embeded\Lib\site-packages\torch\lib"
+_DLL_DIRECTORY_HANDLES = []
 if os.path.exists(CUDA_DLL_DIR):
     if hasattr(os, "add_dll_directory"):
         try:
-            os.add_dll_directory(CUDA_DLL_DIR)
+            _DLL_DIRECTORY_HANDLES.append(os.add_dll_directory(CUDA_DLL_DIR))
         except Exception:
             pass
     os.environ["PATH"] = CUDA_DLL_DIR + os.pathsep + os.environ.get("PATH", "")
@@ -40,6 +41,8 @@ logger.setLevel(logging.INFO)
 
 try:
     import onnxruntime as ort
+    if hasattr(ort, "preload_dlls") and os.path.isdir(CUDA_DLL_DIR):
+        ort.preload_dlls(directory=CUDA_DLL_DIR)
     from rembg import new_session, remove
 except ImportError as e:
     logger.error(f"Missing required dependencies for VisionMatting: {e}")
@@ -65,6 +68,7 @@ class LocalMattingEngine:
         self.session = None
         self.is_ready = False
         self._init_lock = threading.Lock()
+        self.error = None
         
         self._initialize_session()
 
@@ -75,16 +79,28 @@ class LocalMattingEngine:
 
         with self._init_lock:
             start_t = time.time()
+            if self.model_name not in {"birefnet-general", "u2net", "isnet-general-use"}:
+                self.error = "Unsupported local matting model"
+                return
+            candidates = [Path(REMBG_DIR) / "models" / self.model_name / f"{self.model_name}.onnx",
+                          Path(REMBG_DIR) / f"{self.model_name}.onnx"]
+            if not any(p.is_file() for p in candidates):
+                self.error = "Local weights unavailable; automatic model downloads are disabled"
+                logger.error(self.error)
+                return
+            options = ort.SessionOptions()
+            options.intra_op_num_threads = 2
+            options.inter_op_num_threads = 2
             try:
                 # Initialize session with explicit CUDA execution provider
-                self.session = new_session(self.model_name, providers=self.providers)
+                self.session = new_session(self.model_name, providers=self.providers, sess_opts=options)
                 
                 # Check active provider from inner ONNX runtime session if accessible
                 if hasattr(self.session, "inner_session"):
                     active_providers = self.session.inner_session.get_providers()
                     self.active_provider = active_providers[0] if active_providers else "UNKNOWN"
                 else:
-                    self.active_provider = "CUDAExecutionProvider" if "CUDAExecutionProvider" in ort.get_available_providers() else "CPUExecutionProvider"
+                    self.active_provider = "UNKNOWN"
                 
                 self.is_ready = True
                 elapsed = (time.time() - start_t) * 1000.0
@@ -92,13 +108,14 @@ class LocalMattingEngine:
             except Exception as e:
                 logger.warning(f"Failed to load '{self.model_name}' on CUDA ({e}). Attempting CPU fallback...")
                 try:
-                    self.session = new_session(self.model_name, providers=["CPUExecutionProvider"])
+                    self.session = new_session(self.model_name, providers=["CPUExecutionProvider"], sess_opts=options)
                     self.active_provider = "CPUExecutionProvider"
                     self.is_ready = True
                     logger.info(f"LocalMattingEngine loaded '{self.model_name}' on CPU fallback.")
                 except Exception as ex:
                     logger.error(f"Fatal error initializing LocalMattingEngine: {ex}")
                     self.is_ready = False
+                    self.error = str(ex)
 
     def extract_foreground(
         self,
@@ -171,6 +188,7 @@ class LocalMattingEngine:
             "active_provider": self.active_provider,
             "cuda_available": "CUDAExecutionProvider" in ort.get_available_providers() if ort else False,
             "weight_cache_dir": REMBG_DIR,
+            "error": self.error,
             "vram_dedicated_estimate_mb": 1200 if "CUDA" in self.active_provider else 0
         }
 

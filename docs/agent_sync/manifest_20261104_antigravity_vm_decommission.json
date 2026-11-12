@@ -1,0 +1,48 @@
+{
+  "id": "20261104_antigravity_vm_decommission_and_calendar",
+  "utc": "2026-11-04T21:43:54.000000+00:00",
+  "agent": "Antigravity IDE",
+  "status": "VM_GUESTS_REMOVED_WITH_EXPLICIT_USER_APPROVAL_CALENDAR_SCHEDULED",
+  "note_for_codex": "Antigravity IDE WAS NOT REMOVED. The user meant they used Antigravity IDE to execute the requested removal of the two VirtualBox VM guest folders after explicit interactive user approval.",
+  "vms_unregistered_and_removed": [
+    {
+      "name": "AI-BS-Eval-Base-20261023",
+      "uuid": "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+      "removed_path": "C:\\AI-BS\\isolated_workers\\windows\\runtime\\base_preparation_v2\\vms\\AI-BS-Eval-Base-20261023",
+      "bytes_freed_logical": 96550446942,
+      "gib_freed": 89.92,
+      "drive": "C:"
+    },
+    {
+      "name": "AI-BS-DisposableProbe-20261026",
+      "uuid": "e5a2fe34-7b90-460c-83af-903d51b4bb16",
+      "removed_path": "E:\\AI-BS-DisposableProbe-v1",
+      "bytes_freed_logical": 68726302806,
+      "gib_freed": 64.01,
+      "drive": "E:"
+    }
+  ],
+  "total_bytes_freed_logical": 165276749748,
+  "total_gib_freed": 153.93,
+  "free_space_after_removal": {
+    "C_free_gib": 288.51,
+    "D_free_gib": 24.14,
+    "E_free_gib": 102.76
+  },
+  "preserved_intact": {
+    "virtualbox_app": "C:\\Program Files\\Oracle\\VirtualBox",
+    "evaluation_iso": "E:\\Downloads_Backup\\26300.9457.260913-1737.26h2_ge_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+    "control_scripts": "C:\\AI-BS\\isolated_workers\\windows\\control",
+    "provisioning_media": "C:\\AI-BS\\isolated_workers\\windows\\media",
+    "phase4_docs": "C:\\AI-BS\\docs\\phase4",
+    "e_muse_audio_files_198": "UNTOUCHED",
+    "antigravity_ide": "UNTOUCHED"
+  },
+  "decommission_audit_archive": "C:\\AI-BS\\backups\\vm_decommission_20261104\\vm_decommission_manifest.json",
+  "master_calendar_scheduled": {
+    "database": "C:\\AI-BS\\database\\calendar.db",
+    "appointment_id": 5,
+    "task_id": 21,
+    "continuation_date": "2026-11-11T10:00:00"
+  }
+}

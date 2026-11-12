@@ -1,0 +1,19 @@
+{
+  "id": "05-roadside-diner-seans-dog",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-b5a3-7d12-9526-759110caf3ed/exec-93a729fa-ebe5-4cf9-9a6b-29a4b03cfacf.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/05-roadside-diner-seans-dog.png",
+  "prompt": "Precise identity-preserving image edit. Image1 is the finished diner poster and is the EDIT TARGET; image2 is Sean's actual dog and is ONLY the dog identity reference. Replace ONLY the single golden retriever in image1 with Sean's recognizable actual fluffy reddish-brown, white and tan herding dog from image2: preserve its specific amber eyes, broad white forehead blaze continuing down its freckled white muzzle, pinkish-brown nose, tan eyebrow/cheek patches, folded brown ears, fluffy white chest and reddish-brown coat. Give it a natural happy friendly expression. Remove the dog's sunglasses so its actual recognizable eyes and blaze are visible. Keep this one dog at the exact same right-hand booth position, similar scale and paws-on-clipboard pose, with the same black HR harness and clearly legible HR badge; fit the harness naturally over its white chest. Match the original poster's tactile photorealistic-surreal illustrated finish, neon diner lighting and colors; do not paste in an unlit photograph. There must remain exactly THREE human adults and ONE dog. Keep Brett-left, Anna-middle and Sean-right completely unchanged in face, identity, body, clothing, pose and expression. Preserve the entire composition, parked camper, diner, rain, pizza, maps, objects, snail terrarium and all lettering verbatim exactly as the finished poster. No other alterations, extra text, extra people, second dogs, changed signs or watermarks. This is an imaginative comedy artwork.",
+  "referenced_image_paths": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/05-roadside-diner.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (3)/IMG_20211118_210812.jpg"
+  ],
+  "transparent_background": false,
+  "edit_scope": "Dog identity only, following updated user reference; initial golden-dog rendering preserved.",
+  "qa": {
+    "status": "accepted",
+    "dog": "Recognizable reddish-brown/white/tan herding dog with broad white blaze, freckled white muzzle, amber eyes, pink-brown nose, folded ears and fluffy white chest; sunglasses removed so actual eyes are visible; HR harness and paws-on-clipboard pose retained.",
+    "preserved": "All three adult faces/positions/expressions and major text, diner layout, parked camper, maps, pizza, mugs, snails and connected jokes visually preserved.",
+    "limitations": "Tiny background map/receipt marks are decorative; four baby snails clearly discernible. Fictional comedy scene, not historical footage."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "review": "read_only_status_badge_scope",
+  "at": "2026-11-02T03:46:57.901626+00:00",
+  "canonical_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "widget_preimage_sha256": "5e6f173a78d65c39488d12289e9803ca665e3ab30989e3deb03247b489f2943c",
+  "patch_sha256": "a4250f256ade22eb839a90b2d137487a3ea338734e87837eb7dc80762555c9d4",
+  "dry_run": "git apply --check passed; no patch applied by game task",
+  "write_scope_free": [
+    "native_studio/widgets.py",
+    "ui_modernization/"
+  ],
+  "game_task_writes_these_paths": false,
+  "ui_modernization_currently_absent": true,
+  "permitted_handoff_scope": "Targeted StatusBadge opt-in + supporting ui_modernization paths; UI chat handles integration",
+  "prohibited_scope": "Do not merge/cherry-pick UI baseline fc8169c24c702b0b916792ac4f3f76e89adac8e1; no global stylesheet/DPI/DWM/renderer/service/recording/trading changes",
+  "test_evidence": "Read supplied14unit/485native/168web logs; not independently rerun by game task",
+  "active_game_scope": "engine/, native_studio/game_engine/, game monitor, ledger/checkpoints",
+  "coordination_update_at": "2026-11-02T03:51:47.416745+00:00",
+  "ui_chat_canonical_integration_manifest": "C:\\AI-BS-UI-Preview-Output\\canonical_component_integration.json",
+  "after_widget_sha256_verified": "c25c7265fce237850a20e384acfd5b479e504eca6347b0ca7273e63da2ed3097",
+  "ui_chat_reported_tests": {
+    "passed": 2,
+    "failed": 0,
+    "source_root": "C:/AI-BS",
+    "log": "canonical_badge_tests.log"
+  },
+  "game_task_applied_ui_patch": false
+}

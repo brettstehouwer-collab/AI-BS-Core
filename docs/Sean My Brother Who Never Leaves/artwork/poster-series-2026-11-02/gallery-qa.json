@@ -1,0 +1,174 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-11-02T09:03:11.714165+00:00",
+  "gallery": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\index.html",
+  "scope": "Local HTML gallery; original media unmodified",
+  "poster_count": 9,
+  "video_count": 3,
+  "relative_asset_checks": [
+    {
+      "relative_path": "01-realistic.png",
+      "exists": true,
+      "bytes": 2467044
+    },
+    {
+      "relative_path": "02-animation.png",
+      "exists": true,
+      "bytes": 2867637
+    },
+    {
+      "relative_path": "03-comical.png",
+      "exists": true,
+      "bytes": 4033415
+    },
+    {
+      "relative_path": "04-supportive.png",
+      "exists": true,
+      "bytes": 3562960
+    },
+    {
+      "relative_path": "05-emotional.png",
+      "exists": true,
+      "bytes": 3145114
+    },
+    {
+      "relative_path": "06-frustrating.png",
+      "exists": true,
+      "bytes": 3625154
+    },
+    {
+      "relative_path": "07-dark-humor.png",
+      "exists": true,
+      "bytes": 3413756
+    },
+    {
+      "relative_path": "08-underdogs.png",
+      "exists": true,
+      "bytes": 4182323
+    },
+    {
+      "relative_path": "09-contemporary.png",
+      "exists": true,
+      "bytes": 2375002
+    },
+    {
+      "relative_path": "videos/01-all-the-versions.mp4",
+      "exists": true,
+      "bytes": 36238993
+    },
+    {
+      "relative_path": "videos/02-chaos-and-comedy.mp4",
+      "exists": true,
+      "bytes": 22345683
+    },
+    {
+      "relative_path": "videos/03-still-here.mp4",
+      "exists": true,
+      "bytes": 19998142
+    }
+  ],
+  "poster_metadata": [
+    {
+      "src": "01-realistic.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "02-animation.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "03-comical.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "04-supportive.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "05-emotional.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "06-frustrating.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "07-dark-humor.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "08-underdogs.png",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "src": "09-contemporary.png",
+      "width": 1024,
+      "height": 1536
+    }
+  ],
+  "video_metadata": [
+    {
+      "src": "videos/01-all-the-versions.mp4",
+      "width": 1080,
+      "height": 1920,
+      "duration": 42.75,
+      "controls": true,
+      "playsinline": true,
+      "preload": "metadata",
+      "error": null
+    },
+    {
+      "src": "videos/02-chaos-and-comedy.mp4",
+      "width": 1080,
+      "height": 1920,
+      "duration": 22.75,
+      "controls": true,
+      "playsinline": true,
+      "preload": "metadata",
+      "error": null
+    },
+    {
+      "src": "videos/03-still-here.mp4",
+      "width": 1080,
+      "height": 1920,
+      "duration": 27.5,
+      "controls": true,
+      "playsinline": true,
+      "preload": "metadata",
+      "error": null
+    }
+  ],
+  "browser_checks": {
+    "browser": "Installed Google Chrome via Python Playwright, headless",
+    "desktop_viewport": "1440x1000",
+    "mobile_viewport": "375x812",
+    "horizontal_overflow": false,
+    "theme_filtering": "passed: comedy returns three posters; all resets nine",
+    "lightbox": "passed: open, right-arrow navigation, Escape close, focus restoration",
+    "fullscreen": "passed",
+    "video_playback": "all three advance playback; starting a video pauses the others",
+    "native_video_controls": true,
+    "external_network_requests": [],
+    "script_errors": []
+  },
+  "visual_review": {
+    "all_nine_posters_inspected": true,
+    "desktop_and_mobile_screenshots_inspected": true,
+    "layout": "Dark editorial page; clear heading and contrast, full poster aspect ratios, readable mobile layout",
+    "material_issues": [],
+    "minor_artwork_notes": [
+      "07 includes incidental paper-stack labels.",
+      "08 includes an incidental SCRIPT label.",
+      "Generated faces and fine details remain artistic interpretations."
+    ]
+  },
+  "film_description": "Camera-animated posters with original instrumentals; comedy cut also includes supplied Brett footage labeled BRETT / OFF SCRIPT."
+}

@@ -1,17 +1,40 @@
 /**
  * FountainAdapter.js
  * Converts raw Fountain or screenplay text into the Unified AST, and AST back to Fountain.
- * Fully conforms to Final Draft 13 element hierarchy and standard Hollywood layout rules.
+ * Provides an editable screenplay interpretation; export layout is qualified separately.
  */
 
 // Scene Heading starters
 const SCENE_HEADING_REGEX = /^(INT\.|EXT\.|INT\/EXT\.|I\/E\.|EST\.)/i;
 const TRANSITION_REGEX = /^(FADE IN:|FADE OUT\.|CUT TO:|DISSOLVE TO:|SMASH CUT TO:|MATCH CUT TO:|JUMP CUT TO:)$|( TO:)$|^>/;
 
+/** Original title header is kept separately from editable body paragraphs. @param {string} text */
+export function fountainTitleHeader(text = '') {
+  const normalized=text.replace(/\r\n?/g,'\n');
+  if (!/^(?:Title|Credit|Author|Authors|Source|Draft date|Contact|Copyright|Notes):/i.test(normalized)) return '';
+  const blank=/\n[^\S\n]*\n/.exec(normalized);
+  return blank ? normalized.slice(0,blank.index+blank[0].length) : '';
+}
+
 /** @param {string} fountainText @returns {import("/types/domain").ScreenplayBlock[]} */
 export function fountainToAST(fountainText) {
   if (!fountainText || typeof fountainText !== 'string') {
     return [{ id: crypto.randomUUID(), type: "Action", text: "" }];
+  }
+
+  // Keep title metadata outside the body. The saved source/header remains the
+  // canonical title data; editor serialization retains it in ScreenwritingTab.
+  const normalized = fountainText.replace(/\r\n?/g, '\n');
+  const header = fountainTitleHeader(normalized);
+  if (header) fountainText = normalized.slice(header.length);
+  const segments = fountainText.split(/^\s*={3,}\s*$/m);
+  if (segments.length > 1) {
+    return segments.flatMap((segment,index) => {
+      if (!segment.trim()) return [];
+      const blocks = fountainToAST(segment);
+      if (index && blocks[0]) blocks[0] = {...blocks[0],startsNewPage:true};
+      return blocks;
+    });
   }
 
   /** @type {import("/types/domain").ScreenplayBlock[]} */
@@ -160,6 +183,7 @@ export function astToFountain(ast) {
   for (let i = 0; i < ast.length; i++) {
     const block = ast[i];
     if (!block || !block.text) continue;
+    if (block.startsNewPage && text) text += '\n\n===\n\n';
 
     if (block.type === "Scene Heading") {
       text += (text ? "\n\n" : "") + block.text;

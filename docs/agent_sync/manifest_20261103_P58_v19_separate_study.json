@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-03T23:10:16.048838+00:00",
+  "checkpoint": "P58_v19_separate_study",
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source_master_sha256": "b39b30091ca0585453f9fba5f062e5a7ad08915bdded92eb98cb33452391193f",
+  "new_master_sha256": "0defc05843a923c048e241d073436460e79f691b18785542c51562e6f939c167",
+  "verified": [
+    "Matched CPU3view old/new renders",
+    "Actual SDK166 native head/body/animation/band readbacks",
+    "Source topology/UV/weights/protected geometry and exported skeleton/animation preservation",
+    "Separate Studio105 whole-chapter inspect admission",
+    "Current1052301file inventory exact"
+  ],
+  "failures_retained": [
+    "Missing external owned PNG in new export folder; same image copied before successful retry",
+    "Precreated empty native-viewer output; fresh-child retry passed"
+  ],
+  "incomplete": [
+    "Naturalistic likeness: hairline, skin/fabric and overall face proportions/personal approval",
+    "Current user gameplay performance and8\u201312minute pacing",
+    "Caption listening review",
+    "Final package acceptance and final backup"
+  ],
+  "next_step": "Back up separate v19 study and evidence, then refine hairline/skin/fabric and full-face proportions without replacing v18/current105. User may run current105 gameplay review when convenient; caption/pacing/performance/personal approval and final acceptance remain incomplete.",
+  "goal_complete": false
+}

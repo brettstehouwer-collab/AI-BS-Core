@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-04T20:21:24.455481+00:00",
+  "status": "passed_actual_monitor_reader_schema_compatibility",
+  "before": {
+    "status": "unreadable",
+    "goal_complete": false,
+    "error": "Unsupported Warm Beginning summary schema"
+  },
+  "after_status": "available",
+  "schema_version": 1,
+  "top_level_keys": [
+    "deployed",
+    "goal_complete",
+    "native_source",
+    "next_step",
+    "packaged_candidate",
+    "remaining",
+    "schema_version",
+    "updated_at"
+  ],
+  "summary_sha256": "66731e367dbe7f02741a886d9c0a89066962908ed0cff8f967dfa4f80d4c6c15",
+  "rich_preimage_retained": "E:\\AI_BS_Resources\\FirstBoot\\P97\\PrivateOpeningReview\\monitor-summary-preimage-with-unsupported-details.json",
+  "reader_source_modified": false,
+  "goal_complete": false,
+  "cause": "P90-P97extra top-level rich records violated the existing closed schema. Preserve rich details in separate artifacts; link only bounded evidence paths and supported summary fields."
+}

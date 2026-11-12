@@ -1,0 +1,52 @@
+{
+  "id": "m4_native_process_20261101",
+  "at": "2026-11-01T18:26:33.715761+00:00",
+  "goal_status": "active",
+  "drive_folder": "https://drive.google.com/drive/folders/1JfPMa5F0m7Qx8p3Rfp7SmX59XsyVG_vc",
+  "verification": {
+    "at": "2026-11-01T18:26:33.715761+00:00",
+    "status": "passed",
+    "configurations": {
+      "Debug": {
+        "engine_ctest": 41,
+        "installed_sdk_consumer": 1,
+        "native_owner_checks": 49,
+        "installed_owner_checks": 49,
+        "log": "engine/out/m4-process-full.Debug.log",
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File engine/scripts/verify.ps1 -Configuration Debug"
+      },
+      "Release": {
+        "engine_ctest": 41,
+        "installed_sdk_consumer": 1,
+        "native_owner_checks": 49,
+        "installed_owner_checks": 49,
+        "log": "engine/out/m4-process-full.Release.log",
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File engine/scripts/verify.ps1 -Configuration Release"
+      }
+    },
+    "python_qt_tests": 76,
+    "scope": "Generic native numeric creator owner; full M4 incomplete",
+    "installed_studio": "5.329.94 retained",
+    "website": "5.329.87 retained",
+    "next_step": "Managed Qt QProcess client with bounded requests, epoch-safe replies and explicit close/recovery, then project/outliner/inspector integration."
+  },
+  "decisions": [
+    "One explicit existing workspace per native owner; fixed world.aibs slot and no default player save",
+    "Binary-only stdout; validated complete commands enter existing CreatorHost APIs",
+    "Process and host epochs remain distinct; current-head checks follow persisted retry lookup where required",
+    "Private strong prepared handles bounded to8 and released on apply/history/save/explicit Release",
+    "Snapshot pages pin host/revision/checkpoint; capped at64 entities and500KiB data",
+    "Shutdown/EOF never implicitly save; connection failure means unknown operation outcome to reconcile",
+    "Play remains an isolated in-process World; no native Play child or authoring apply-back",
+    "Existing Core/checkpoint format1 unchanged; no new dependency"
+  ],
+  "remaining": [
+    "Managed Qt client and recovery",
+    "Creator project/outliner/inspector and native picking",
+    "Editable chapter definitions and game-specific dependency/migration previews",
+    "Native Play child lifecycle",
+    "20\u201330 minute personal authored chapter",
+    "Audio cues, assets/settings and RTX awakening"
+  ],
+  "next_step": "Managed Qt QProcess client with bounded requests, epoch-safe replies and explicit close/recovery, then project/outliner/inspector integration."
+}

@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-04T01:45:37.512521+00:00",
+  "status": "verified_69A_art_and_native_views_all206members",
+  "receipt": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\69A-drive.json",
+  "master": "D:\\AI-BS-Game-Resources\\P69\\Adam_v21_FaceContours\\adam-character-v21-face-contour-study.blend",
+  "master_sha256": "5ab19faa770a9c875ac117849c115691c97e1d4fc854e75f350a3648a1e22992",
+  "asset_id": "c353d5c1-7340-4ff1-957e-70ecad1d9398",
+  "gallery": "D:\\AI-BS-Game-Resources\\P69\\Adam_v21_FaceContours\\Review\\Adam_v21_Native_All_Sides.html",
+  "native_turnaround_views": 16,
+  "all_owned_jobs_joined": true,
+  "installed106_still_v20": true,
+  "likeness_approved": false,
+  "feedback_question_pending": true,
+  "next_step": "Incorporate any v21 face-contour feedback. Inspect the current face topology/UV/grooming limitations before choosing the next naturalistic refinement; keep studies separate, existing106/v20 and family originals unchanged. Current106user-started review ready; caption listening/human pacing/current performance/final likeness still pending.",
+  "goal_complete": false
+}

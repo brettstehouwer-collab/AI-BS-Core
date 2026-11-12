@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "authorized_utc": "2026-11-11T09:22:48.999646+00:00",
+  "authority": "User explicitly appended six additions to active goal",
+  "original_ten_goals_preserved": true,
+  "status": "ACTIVE_INCOMPLETE",
+  "additions": [
+    {
+      "id": "A1",
+      "title": "Maintained ecosystem architecture map",
+      "status": "INITIAL_MAP_AND_SOURCE_INDEX_CREATED",
+      "evidence": "docs/architecture/AI_BS_MASTER_ECOSYSTEM_ARCHITECTURE_2026-11-11.md",
+      "remaining": "Maintain at meaningful integration checkpoints; unresolved source/history remains explicit."
+    },
+    {
+      "id": "A2",
+      "title": "Sites/server ownership and health register",
+      "status": "INITIAL_REGISTER_PARTIAL_HEALTH_OWNERSHIP",
+      "evidence": "docs/architecture/SITES_SERVERS_REGISTER_2026-11-11.json",
+      "remaining": "Resolve configured-domain ownership/DNS/TLS/auth/health and port variants without automatic startup."
+    },
+    {
+      "id": "A3",
+      "title": "Legacy arbitrary-project build execution review",
+      "status": "REVIEWED_GAP_CONFIRMED_REMEDIATION_OPEN",
+      "evidence": "docs/architecture/LEGACY_BUILD_EXECUTION_REVIEW_2026-11-11.md",
+      "remaining": "Entrypoint matrix completed in reviewed readable scope; admission/remediation and actual worker isolation remain open."
+    },
+    {
+      "id": "A4",
+      "title": "Vault-key migration preserving encrypted data",
+      "status": "PLAN_WRITTEN_NOT_EXECUTED",
+      "evidence": "docs/architecture/VAULT_KEY_MIGRATION_PLAN_2026-11-11.md",
+      "remaining": "Source-only Fernet reader/writer inventory is recorded; inert format/canary/rollback checks and separate private preservation/migration remain open."
+    },
+    {
+      "id": "A5",
+      "title": "Explicit creative-channel completion checks",
+      "status": "CONTROLLED_RECOVERY_AND_REVIEWED_LOCAL_RUNTIME_PASS_REAL_OWNER_LOAD_CLOSE_PASS_RELEASE_OPEN",
+      "evidence": "docs/agent_sync/NATIVE_CREATIVE_REAL_OWNER_2026-11-11.json",
+      "remaining": "Original-manuscript edit/export acceptance, actual rich FDX real-account workflow, installed Studio parity and complete runtime dependency/release qualification. Earlier controlled backend-loss/recovery evidence remains in NATIVE_CREATIVE_RECOVERY_2026-11-11.json and rich GUI receipts."
+    },
+    {
+      "id": "A6",
+      "title": "Source/runtime/installed/hosted build matrix",
+      "status": "MATRIX_DEFINED_CROSS_LAYER_ACCEPTANCE_OPEN",
+      "evidence": "docs/architecture/AI_BS_MASTER_ECOSYSTEM_ARCHITECTURE_2026-11-11.md#11-build-test-and-release-matrix",
+      "remaining": "Resume original creative/browser acceptance: read the current real-owner creative, recovery and mounted-RAG receipts; reconcile retained handshake/PATH failures before a new bounded run. Verify authenticated BS-Chat source retrieval, writer edit/save, fresh reopen and export on an owned synthetic fixture without inference, then qualify authorized derived manuscript outputs while preserving originals. Installed parity, human pacing, signing/clean-machine/hosted/full release and Nsight injection remain separate open gates."
+    }
+  ],
+  "cross_cutting_review": "Syndication review52596e86: compare current source; truthful execution/protocol/downstream evidence and side-effect-free planning. No outbound action authorized."
+}

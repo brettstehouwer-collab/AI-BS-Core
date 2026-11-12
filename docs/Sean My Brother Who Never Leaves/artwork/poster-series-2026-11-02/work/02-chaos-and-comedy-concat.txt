@@ -1,0 +1,5 @@
+file 'C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/poster-series-2026-11-02/work/clips/02-animation-114-v2.mp4'
+file 'C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/poster-series-2026-11-02/work/clips/03-comical-114-v2.mp4'
+file 'C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/poster-series-2026-11-02/work/clips/07-dark-humor-114-v2.mp4'
+file 'C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/poster-series-2026-11-02/work/clips/06-frustrating-114-v2.mp4'
+file 'C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/poster-series-2026-11-02/work/clips/brett-off-script-90.mp4'

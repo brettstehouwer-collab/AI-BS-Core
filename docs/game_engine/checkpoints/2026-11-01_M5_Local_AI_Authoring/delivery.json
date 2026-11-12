@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_local_ai_authoring\\AI_BS_M5_Local_AI_Authoring_Source.zip",
+  "bytes": 14837738,
+  "files": 1446,
+  "sha256": "79b4c991776c91ec9edf649a96f38f952f5e848c2ffdef246973038d6d75a67b",
+  "crc": "passed",
+  "captured_byte_readback": "passed streaming SHA256 for every selected file",
+  "free_bytes": {
+    "C": 117549203456,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_remaining_quota": "not exposed"
+}

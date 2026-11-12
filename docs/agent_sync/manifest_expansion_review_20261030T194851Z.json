@@ -1,0 +1,49 @@
+{
+  "schema": "aibs.reference_assessment.v1",
+  "id": "expansion_review_20261030T194851Z",
+  "record": 190,
+  "created_utc": "2026-10-30T19:52:03.602338+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next repository operator",
+  "branch": "main",
+  "commit": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+  "source_manifest_sha256": "61acdb583b9c547212efc3d99c87e0a83f9590a34c387aac0ba966f6a33ccb79",
+  "changed_paths": [
+    "docs/AI_BS_EXPANSION_REVIEW_2026-10-30.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md"
+  ],
+  "patch_reference": "backups/expansion_review_20261030T194851Z/changes.patch",
+  "completed": [
+    "Archive inventory and selective thematic assessment",
+    "Current source integration mapping",
+    "Sanitized ranked proposal backlog",
+    "Append-only document preservation and22 source reference checks"
+  ],
+  "proposed": [
+    "Economics evidence/unavailable contract",
+    "Evaluated memory and durable workflow expansion",
+    "Remaining report backlog"
+  ],
+  "unverified": [
+    "Archive factual claims",
+    "Runtime/end-to-end acceptance of proposed features"
+  ],
+  "architecture_decision": "ADR-117",
+  "tests": {
+    "application": "not run; documentation-only",
+    "reference_checks": 22,
+    "preservation_checks": 10
+  },
+  "evidence_directory": "backups/expansion_review_20261030T194851Z",
+  "external_changes": [
+    "AGENTS.md changed during review; preserved; latest operator instructions apply"
+  ],
+  "next_step": "When requested, implement economics summary evidence/unavailable contract and focused offline checks.",
+  "private_source_imported": false,
+  "live_trading_enabled": false,
+  "deployment_performed": false,
+  "commit_created": false
+}

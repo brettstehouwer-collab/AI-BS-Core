@@ -1,0 +1,211 @@
+diff --git a/native_studio/app.py b/native_studio/app.py
+index 4d9ddb69..e974b726 100644
+--- a/native_studio/app.py
++++ b/native_studio/app.py
+@@ -89,6 +89,13 @@ if not getattr(sys, 'frozen', False):
+ from native_studio.runtime_policy import configure_frozen_dependencies
+ configure_frozen_dependencies()
+ 
++# Release acceptance intentionally bypasses MainWindow, daemon management,
++# samplers and the broad application-view import graph. It is opt-in only.
++if __name__ == '__main__' and any(flag in sys.argv for flag in
++        ('--game-build-smoke', '--creator-release-smoke')):
++    from native_studio.game_release_smoke import release_smoke_main
++    sys.exit(release_smoke_main(sys.argv[1:]))
++
+ from PyQt6.QtCore import Qt, QTimer
+ from PyQt6.QtGui import QColor, QFont, QPainter, QPixmap, QLinearGradient
+ from PyQt6.QtWidgets import (
+@@ -989,6 +996,9 @@ class MainWindow(QMainWindow):
+             view = NocoVisionNativeView(self.bus)
+         elif key in ("unified_crypto", "crypto_trader"):
+             view = CryptoSwarmNativeView(self.bus)
++        elif key == "game_build":
++            from native_studio.game_build_view import GameBuildNativeView
++            view = GameBuildNativeView(self.bus)
+         elif key == "gaming_lab":
+             view = GamingLabNativeView(self.bus)
+         elif key == "steam_gaming":
+@@ -1045,6 +1055,10 @@ class MainWindow(QMainWindow):
+         if getattr(self, '_sampler_close_pending', False):
+             event.ignore()
+             return
++        game_workspace = getattr(self, '_subviews_cache', {}).get('game_build')
++        if game_workspace is not None and not game_workspace.prepare_close(self.close):
++            event.ignore()
++            return
+         for part in (self.view_daw,):
+             try:
+                 part.shutdown()
+@@ -1085,6 +1099,15 @@ class MainWindow(QMainWindow):
+ 
+ 
+ def main() -> int:
++    if '--creator-release-smoke' in sys.argv:
++        from native_studio.game_release_smoke import release_smoke_main
++        return release_smoke_main(sys.argv[1:])
++    if "--game-build-smoke" in sys.argv:
++        from native_studio.game_release_smoke import run_game_release_smoke
++        index = sys.argv.index("--game-build-smoke")
++        if index + 1 >= len(sys.argv):
++            return 2
++        return run_game_release_smoke(Path(sys.argv[index + 1]))
+     if "--check-local-connection" in sys.argv:
+         from native_studio.local_connection import write_connection_diagnostic
+         return 0 if write_connection_diagnostic() else 2
+diff --git a/scripts/tests/__pycache__/test_native_build_baseline.cpython-312.pyc b/scripts/tests/__pycache__/test_native_build_baseline.cpython-312.pyc
+index fa7e21da512db45a7540f2d74403f8ed35fc70bb..9dccba8dd7c679a27b763ae9409519198e799e27 100644
+GIT binary patch
+delta 2068
+zcmb_cU2GIp6uxJ6_P5=(yWL&7Ev4JiUr9@W+CU`5qQn+LEkA-;&|$iBTW34_!^~j2
+zn=M7GS^@;hHMTVvel(E=Nlli-)<{~P)c8P4MR33eq7O!2st_X~MDOf&YkkI>?04>-
+zd(OG%e&5-h+i{Z1`POc?A-diaehfCahjI!!MgXB<Bp^Q$Kwu>BL&`FKCS?tNHf4=|
+zBee#}6f*nGkdC$ZEvYlB-%2ej*+N<VEI<sxW}JPQ*40<Ah}<*flfNBiCb*monevCm
+zO@>^|l7ki(xo32F1QX5`%<(LQE;H#AzcYPY9;`|`mLhg$D*Ij78GMRdu;ka)E{#a<
+zu`3g&ck}`hECWceVr#ID_EYHe7htbo>#jyfcG8Be!G=tm<SI<S0TN>NWeYh2$e$O>
+zt;y5e<hsk9{E4|}184GW`(q>2CkOI70UDFPxvl|hNRD}S7@&zf@=g<<+sf<)vdUdZ
+zrhPW6YFKEGM3=cqpUXpO)88Ak>U@x>DXTQoYagieAiV^30R5YK%Hgg`Kql^aba^2v
+z<LP4-W6zk}c}vO|2T+0`(+-z`W|3OQGDDvsafbEun-Yc$<$z+S#@rTnHMeq`cX4}h
+zM>{WzYOGF);y~PZNbRg$Ujv#2hXWBo40i<<)J-*Eq_~cL?$1!zhJemf0=@DoLi9C@
+zaS2ct<fRX1^*qwEET=HjfC490EDa8t$dEbTl1U*Y4v&4|i(H%ldQ5c(n@(UqO3BD3
+z;5`@yKqn5cC<a#yJy64FmgX=o#S~F#t1)RdQ4zz6%7+73Gw_P4vCr|6q_Lfc!U2tK
+z<3m_uM1f{8b@dvA75ze=Pu@(8X5H9@!?-spH^s$0SQa})ENtc#EQ#b=g}px->k-52
+z)^b8D%!kAPr-~sQkAyKN;3y6Yl(!fsDjY2!i2+fSVq731NjRWlp>CrT3GkBARJVA=
+zHhQD7g~BiBuOnz4foms>9v&&ZS~$`Cg)-GU*?V(M%iV&q^J_kCywLc`y79g1$JT#W
+z&@kbc@=SWByp!JP;EfIK4-Cld89n?^(P!#tNpmG!Y-TC`M?HNwQ|j%en??0}x_Sv9
+zr+scI#V-{opYom&gvMsp0_$Z<Shv3>3iQolC>oJfN<BmAmb*0L>%4Rb*D!K~=4#Nr
+zlwkQF^~FUpUQzTvlewK1R!S+P$egJPOcsCI{B`N|if<}rc6H2c?YIQv<}2pO;)jZb
+zMjdtaSHrNQ8Z>)K(u|TdHo2W1%Rvg7G0Mvdmh1JsRmQx)skoQU6P*x>J-pPdWlN%p
+zWnSVieYIxk#<8A=EGU|VS7@f%8m?jGO?p17${1@b9RW!*>y*7jIaBnXh>x!H^gXL$
+zMdhAg$l`mRl-U;AkaC2=5p>&<ead#sb|U+3uJcsvSZt*H+^W%4Gu2JAg-y4-t+U?N
+znO*)FZ|j_Q-(2qgLH2HL{_m+7-f~ts*E`yKi9LJxe#${HZzl}0KReyGoMp4lvX2^O
+zs{#|Qsp8Lz=c)p8D+6;*VbH8!Xg_8@9Xa1~)3Tb36@JOcF;Y_QCC7^*&`ur|{puW`
+ztx-x>QzJL(kPgTz7GZZXUc3+B<>dD(x&Zbkn|uNQpZu^i7vMCBu5gjB%0keYe0t@6
+zfNpZ8{N{o?Q4xbE`LkjZI7nk<Q_E4k?%O&H>Tq0#lR6CP@U9NSI*d{nL$W@3Dg9)9
+zuu|Zl8>N+eR#|E^8SDSZBeyG`aTIB0juRpQj+0yUz#u89x{>`p-D+%z7sK)g<Z)F&
+z(KvPJ|EG$+nKuBy52)=9%DIDVq_$dJ+W}BM(sFBg?d<Z}2T1=mztw=)?7{dAgZDP;
+UIMVXY_BXb__2N8r7N(l}2Q@=Cb^rhX
+
+delta 661
+zcmYk3PiPZC6vpT6ZZ@05Y?Ex$HlY==O-n+v1}qlQT0w;>#XrT1OqC_N)7ov)lue2n
+zR8%|(1?>~`qJo~J-WKsBdiPXC#YjCWc(Da99t39+BAvtUdo%BwZywBw{b5>v7mbDq
+zUy0ETcg(n__tCpR$OGaKN*r*cGEiu#MCFz$RN*R@0~M93(Dnpru+`J3##JeYDq$K1
+zA`zyt$QsWR%T3`{AdQ(oG7?DfJ=K})?!=o}12Py_j9!)LPOuRnWKC*aAT-`_3=XwV
+zwv)v>$<$zRHz$&;k?oFl&5VvuOf*Rx?KW{jOmho-9wQ~UU9^|=IpKvIAzp&dt+~5#
+zJv)GJ;3ZI8mS)r|dcLcf#FClxx1^_Gi2L`We*;kTSB+VKJ^r8W*8qF{S3T1*9KcZe
+zE&ehep=u@~&5*}Rj$LP$>v(Fo2S?2+OyV>1XJVGWomadf7jI19B0d?s1yjD6odG!M
+zUmuzSIPHHQb^y-!Q@JjH8paCUSj|`9oWGGj3veFyjeKk!ufQBWE*yjyek)8Io)>uw
+z0*eAm0(F5)0u6zy9M6e&T-1jIv<_mts2xGa%HSPq|BiGsXxmQpf^B=p@RRj^{2K2!
+zl}c%T(Yqn;{EujA<CUtjTxJvADsPCduf5>dlmXxiIq{X~_+wW+NddACkACjA*88pB
+NMC>*j5-t@7{sF^>mv8_8
+
+diff --git a/scripts/tests/__pycache__/test_native_local_connection.cpython-312.pyc b/scripts/tests/__pycache__/test_native_local_connection.cpython-312.pyc
+index c7da5ea9d86e2ad7e290f82a79de72a0bb151aca..689f5d0928f73b58d48d3d566c07f7f3b000b687 100644
+GIT binary patch
+delta 991
+zcmYk4Z%ms-9LJw~p6B{+&jH&Cs8|>&%oS-sGN7~t(MsWI(V<y4E1ktiXG#_+Pk|QJ
+zWidgwnQj&?i_8~uFZRNuXo7vSn2|6H;)9EQ9$R@9GLyv^_rk=?I3?*T?@$sim+yUk
+zclZ6>FL(FbP4@cdY}t1RnHbWFCw>~swlA0cKFP68=a*AaV4KX=e1?{%ZVeYYMY&NK
+z8ZP)kO2;WRJgP)u%EVM5JgvN$D43IYVOjz+7$zpzUYJWJ+E_f7us?~G_$*6vGt6k&
+zk}k{r%jY0=ChLq~)RbaV@EtbSoD={d+?4d9JwrQlj!)rCUlk6|xcC%5R*m;R@5bZq
+z1AGRgFXIRAR#8~kg8+eQu(GRncJ)=dgnP|KP>%ne=@w==r}MdJ`7;b-6L9-%Z?jYh
+z2<xN@QkGOsc$<^P6H+xH=@T-y%|~O?9dRAOL-^|K5-YISbM`^-K6?6wS8M1{8#-=>
+zmDf%vZ-k58BT6J%L}M5E`{=+&p-Z8~!%BVI>cQ3HtEMgFzuT7|ln0gIDJ>XQgJESP
+z{)k~-WPR*k4D&MZvm`pkp2WA$ww$M-hWx+$KaF`+w}txe!n`00N+75OhSk8Z5*jZK
+z#FWX@J)uGqEUI8x9R2k4wbNQ{r&`-tsO>5W&RY)66;NG)qU+=i$B1A8XsBO7{X2*m
+z0ABVFW_KuQ$g3i6=^^r{=aHwh!|xSEiy^Ci1^G)4$zcOA643;uc#>SpojR*n#jUY!
+z(FoUi41~Wv+$37L^-8Pg=GGl<u@!!E)IfN{QtvZ!8$C{+0e<T+5SEQlJZO~5s7tPb
+z;vv0kg`&MdFSkOm%P6<&iA{DxAJlIepl`o%6X}U<(+qu<Tp~3B!A9=hdqXUcv2E_U
+z;Rt<8R%*ogxi#=TUU)wa?AUbS3drNDA54O_|M=R4IB3bCiz}e1p1w2vo|27vdFf}$
+zKN8u7@iUP~OnQZ|jg##7@uiQ!54rS*UjVR$UFm0a)FCzDGie9165NKdx1@MPa^dB)
+z1$5(lI;ykNExowsvI^F76<1o=%0@cFQ+a}lg~~B}JoC10AABAB`4nEs906ARYo-qP
+zv2NZDhVaq()_oqj?<FdIczpf^Q-~nxOgxLfnx8X!0O(qDXf@4hP4i=hMvn&Z&_c~W
+DtTjNx
+
+delta 548
+zcmbQYmg)5pCce|Wyj%=GVB&r^E7N!*-@6hPW-BYh&Hqa>88u5+%dFtr$+{!^vW3@4
+z(+hzym%U>zn8#gANWG9&c%i85azgoq_=?LSm6Ioy6){##W+^XZs$$w)UT(xRIp0Qz
+zsV8RggFJD@1RyCk*+GPpk$3X$8e1k!?#V2*4osS?lf7#tS&LbL)=w^|UBmQ`VX|D^
+zgOCfn&fi%XJQ&@WJ}`i(U)OovF7Uejdd}+%l>1d|0Mu|$UfD&J`4E$hizMqII}RZG
+zu$q>OA@dPQRu?7CBXaCOkt3?CE_&=o3|U>QHm_(%U}ZeCnX@f`iSfwfsE&CY>WmBw
+znoLD1lR6JEo}7HRvzSq5vUPVK<EhEVx=I)gq3l!L#f*BJ?Rxeyaw`Be6fptqF4CCH
+z)+Yy4uG%-9@$BZked`z*FHX*xpv|TMQldF|?gR^MB_Q(_Ye8aBacYqjNSGO<lMO^%
+z1ra|$#3K-4GihQbn+`~c{p9?K7a0$1cATWoB&q@uVF3{mAVLO2_)Tt|lFY`&TFm%a
+zVDh^u8jMPl#iz<MdQCQ;s>|p<Id!T5w-ZR6Gl+1RykM#$S2U0bL=43%C%>NBqHD)!
+uIm6<*w9Z9ooi7YP&IczZ1{R)<s7uV^Gk9lk%;%lSJD2|gvv`p(P!9k${;R40
+
+diff --git a/scripts/tests/test_coding_guest_runner.py b/scripts/tests/test_coding_guest_runner.py
+index 637a9ab3..d86caabe 100644
+--- a/scripts/tests/test_coding_guest_runner.py
++++ b/scripts/tests/test_coding_guest_runner.py
+@@ -221,6 +221,19 @@ class CodingGuestRunnerTests(unittest.TestCase):
+                 self.assertFalse(r2['available'])
+                 self.assertIn('licensing is unverified', r2['reason'])
+ 
++                # Test enrollment cannot make ordinary Windows coding available.
++                cfg_file.write_text(json.dumps({
++                    'vm_uuid': dedicated_uuid,
++                    'snapshot_uuid': snap_uuid,
++                    'licensing_verified': True,
++                    'test_only': True,
++                }), encoding='utf-8')
++                with patch.dict(os.environ, {'AI_BS_VBOX_TEST_ONLY_VERIFY': ''}, clear=False):
++                    test_only = coding_guest_runner.inspect_vbox_provider()
++                self.assertFalse(test_only['available'])
++                self.assertTrue(test_only['test_only'])
++                self.assertIn('fail closed', test_only['reason'])
++
+                 # 3. Active NIC / clipboard / VRDE violates isolation preflight
+                 cfg_file.write_text(json.dumps({
+                     'vm_uuid': dedicated_uuid,
+diff --git a/scripts/tests/test_native_build_baseline.py b/scripts/tests/test_native_build_baseline.py
+index f0a894a9..e60d1db8 100644
+--- a/scripts/tests/test_native_build_baseline.py
++++ b/scripts/tests/test_native_build_baseline.py
+@@ -1,5 +1,6 @@
+ """Build admission fixtures only: never imports or launches the native app."""
+ import hashlib
++import ast
+ import importlib.util
+ import json
+ from pathlib import Path
+@@ -68,6 +69,14 @@ class VerifiedBaselineTests(unittest.TestCase):
+         self.assertEqual(baseline['signing'], 'NOT_SIGNED')
+         self.assertFalse(result['applicationExecuted'])
+ 
++    def test_pywin32_dynamic_timezone_dependency_is_explicitly_collected(self):
++        self.stage()
++        tree = ast.parse((self.output / 'AI_BS_WebParity.spec').read_text(encoding='utf-8'))
++        call = next(n for n in ast.walk(tree) if isinstance(n, ast.Call)
++                    and isinstance(n.func, ast.Name) and n.func.id == 'Analysis')
++        imports = ast.literal_eval(next(k.value for k in call.keywords if k.arg == 'hiddenimports'))
++        self.assertIn('win32timezone', imports)
++
+     def test_manifest_bytes_must_match_admitted_pin(self):
+         self.manifest.write_text(self.manifest.read_text() + '\n')
+         self.denied_before_writes()
+diff --git a/scripts/tests/test_native_local_connection.py b/scripts/tests/test_native_local_connection.py
+index 17f2befd..24a83956 100644
+--- a/scripts/tests/test_native_local_connection.py
++++ b/scripts/tests/test_native_local_connection.py
+@@ -176,7 +176,7 @@ class WindowsBoundaryTests(unittest.TestCase):
+     def test_listener_refuses_wildcard_ipv6_duplicate_and_unowned_ports(self):
+         import psutil
+         def entry(ip,pid=1122):return SimpleNamespace(status=psutil.CONN_LISTEN,laddr=SimpleNamespace(port=8080,ip=ip),pid=pid)
+-        for rows in [[entry('0.0.0.0')],[entry('::1')],[entry('127.0.0.1'),entry('127.0.0.1')],[entry('127.0.0.1',None)]]:
++        for rows in [[entry('0.0.0.0')],[entry('::')],[entry('127.0.0.1'),entry('127.0.0.1')],[entry('127.0.0.1',None)]]:
+             with patch.object(psutil,'net_connections',return_value=rows),patch.object(self.m,'_process_identity') as identity:
+                 with self.assertRaises(self.m.LocalConnectionError):self.m._listener_identity()
+                 identity.assert_not_called()
+@@ -188,6 +188,11 @@ class WindowsBoundaryTests(unittest.TestCase):
+         with patch.object(psutil,'net_connections',return_value=[row]),patch.object(self.m,'_process_identity',return_value=identity) as provider:
+             self.assertEqual(self.m._listener_identity(),identity);provider.assert_called_once_with(1122)
+         with patch.object(psutil,'net_connections',return_value=[]):self.assertIsNone(self.m._listener_identity())
++        ipv6=SimpleNamespace(status=psutil.CONN_LISTEN,laddr=SimpleNamespace(port=8080,ip='::1'),pid=9999)
++        with patch.object(psutil,'net_connections',return_value=[row,ipv6]),patch.object(self.m,'_process_identity',return_value=identity) as provider:
++            self.assertEqual(self.m._listener_identity(),identity);provider.assert_called_once_with(1122)
++        with patch.object(psutil,'net_connections',return_value=[ipv6]),patch.object(self.m,'_process_identity') as provider:
++            self.assertIsNone(self.m._listener_identity());provider.assert_not_called()
+ 
+     def test_actual_backend_lifespan_owns_and_cancels_connection_setup_without_fleet_start(self):
+         source=(Path(__file__).resolve().parents[2]/'backend/AI_BS_Backend.py').read_text(encoding='utf-8')

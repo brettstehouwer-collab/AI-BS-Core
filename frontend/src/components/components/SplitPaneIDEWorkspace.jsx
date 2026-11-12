@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { SYSTEM_VERSION } from './version';
 import "./ChatToolControlBar";
 import ChatTab from './ChatTab';
 import VisualScriptingTab from './VisualScriptingTab';
@@ -220,102 +219,25 @@ const handleShowInExplorer = async ( pathToReveal) => {
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#161b22',
+        backgroundColor: '#0d1117',
         border: '1px solid #30363d',
         borderRadius: '8px',
-        padding: '6px 8px',
-        overflow: 'hidden'
+        padding: 0,
+        overflow: 'hidden',
+        height: '100%',
+        minHeight: 0
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-          <h3 style={{ margin: 0, fontSize: '14px', color: '#58a6ff', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span>💬</span> AI-BS Autonomous Agentic IDE Chat
-            <span style={{
-              fontSize: '10px',
-              background: 'rgba(56, 189, 248, 0.15)',
-              color: '#38bdf8',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
-              padding: '2px 7px',
-              borderRadius: '999px',
-              fontWeight: 700
-            }}>
-              1M+ Offload RAG Window Active
-            </span>
-            <span style={{
-              fontSize: '10px',
-              background: 'rgba(16, 185, 129, 0.15)',
-              color: '#34d399',
-              border: '1px solid rgba(16, 185, 129, 0.35)',
-              padding: '2px 7px',
-              borderRadius: '999px',
-              fontWeight: 700
-            }}>
-              🩺 Stage 1 Auto-Heal (3x)
-            </span>
-            <span style={{
-              fontSize: '10px',
-              background: 'rgba(239, 68, 68, 0.15)',
-              color: '#fca5a5',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              padding: '2px 7px',
-              borderRadius: '999px',
-              fontWeight: 700
-            }}>
-              🕸️ Stage 2 AST Blast Graph (491 Nodes)
-            </span>
-            <span style={{
-              fontSize: '10px',
-              background: 'rgba(168, 85, 247, 0.15)',
-              color: '#c084fc',
-              border: '1px solid rgba(168, 85, 247, 0.35)',
-              padding: '2px 7px',
-              borderRadius: '999px',
-              fontWeight: 700
-            }}>
-              🧬 Stage 3 RTX 4090 QLoRA
-            </span>
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '11px', color: '#7ee787' }}>● {showRightPane ? 'Split-Pane IDE Active' : 'Single-Pane Active'} ({SYSTEM_VERSION})</span>
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent('aibs-toggle-wireless-cast'))}
-              style={{
-                background: 'linear-gradient(135deg, #0284c7, #2563eb)',
-                border: '1px solid #60a5fa',
-                color: '#fff',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 700
-              }}
-              title="Open 3-Way Wireless Screen Mirror & Display Cast Hub (PC➔Wireless Display, PC➔Phone, Phone➔PC)"
-            >
-              📡 Wireless Cast & Mirror
-            </button>
-            <button
-              onClick={() => {
-                setActiveRightTab('ide_editor');
-                setShowRightPane(!showRightPane);
-              }}
-              style={{
-                background: showRightPane ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: '#fff',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 600
-              }}
-            >
-              ↔ Toggle Split View ({showRightPane ? 'Hide IDE' : 'Open IDE Editor'})
-            </button>
-          </div>
-        </div>
-
-        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', backgroundColor: '#0d1117', borderRadius: '6px', border: '1px solid #30363d' }}>
-          {/* Primary Chat Interface Injected into Left Pane */}
-          <ChatTab isNested={true} wirelessCastOpenRequest={wirelessCastOpenRequest} />
+        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          {/* Primary Chat Interface Injected into Left Pane (Unified Header & Minimal Chrome) */}
+          <ChatTab
+            isNested={true}
+            wirelessCastOpenRequest={wirelessCastOpenRequest}
+            showRightPane={showRightPane}
+            onToggleSplitPane={() => {
+              setActiveRightTab('ide_editor');
+              setShowRightPane(!showRightPane);
+            }}
+          />
         </div>
       </div>
 

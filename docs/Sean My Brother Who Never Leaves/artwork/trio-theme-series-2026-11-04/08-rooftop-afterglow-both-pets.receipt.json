@@ -1,0 +1,24 @@
+{
+  "id": "08-rooftop-afterglow",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/08-rooftop-afterglow-both-pets.png",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b48-da8c-74e2-8006-83ab7dfff413/exec-381017ac-60be-4fc6-b9bf-8842a427f725.png",
+  "mode": "built-in imagegen",
+  "prompt": "Use case: compositing / identity-preserve.\nAsset type: finished THREE MUSKETEERS comedy poster.\nInput image 1 is the edit target and defines the exact three human identities, finished composition, theme, typography, expressions and existing dog. Images 2 and 3 are Tonto, the user's actual dog, at different ages: use image3 for current build and silver muzzle, image2 for head structure and white chest. Add Tonto as ONE SECOND dog in this poster. He is a muscular, stocky short-coated chocolate/russet brown dog with a broad square head, brown/liver nose, expressive amber-brown eyes, natural folded/rose ears, lightly silvered muzzle, and a white bib/chest patch. Faithfully preserve his real face and specific markings. Do not copy the flash-eye reflections, timestamp, room, furniture, or photo framing. His eyes must have natural warm catchlights. Give him a simple collar with a small readable \"TONTO\" tag.\nCRITICAL INVARIANTS: Retain the current existing fluffy red/chocolate-brown, white and tan HR dog with broad white blaze and freckled white muzzle. Tonto is a distinct SECOND dog, not a replacement or color variant of that dog. Exactly TWO dogs total and exactly THREE human adults (Brett left, Anna middle, Sean right). Preserve all three human faces, body shapes, poses, expressions, clothing and natural hands. Preserve all titles and every existing text label, spelling, legibility and sign placement. Preserve the coherent source lighting and medium, aspect ratio, framing and high native detail. The only change is adding recognizable Tonto and minimally adjusting small unlabelled props if necessary to fit him. No new people, animals or speech text. No hidden human faces, no pet-face accessories obscuring Tonto. Keep other jokes and terrarium intact.\nPlacement: Add Tonto resting comfortably on the right side of the couch/blanket in front of Sean, behind the foreground table, clearly separate from the existing sleeping fluffy HR dog on left. His broad head and white chest are visible above the table and to the right of the terrarium, with a gentle contented closed-mouth expression and relaxed ears. Match soft sunrise edge light and comfortable scale. Keep Sean's mug/hands, all three humans, notebook snail, the terrarium and every sign and controller clear. Use existing couch/blanket space only, allowing the smallest shifts of unlabelled table props if needed. Do not make him a tiny figurine or a floating head; a naturally connected body, shoulders and forepaws must read clearly.",
+  "referenced_image_paths": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/08-rooftop-afterglow.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "qa": {
+    "visually_inspected": true,
+    "humans": 3,
+    "dogs": 2,
+    "pet_identities": "Sean's fluffy red/white/tan dog retained; Tonto short brown coat, broad face, amber eyes, silver muzzle and white chest visible.",
+    "typography": "Major title and recurring text remain readable; TONTO tag readable.",
+    "composition": "Small prop spacing adjusted to add Tonto. All three human faces and natural hands retained.",
+    "native_dimensions": {
+      "width": 1671,
+      "height": 941
+    }
+  }
+}

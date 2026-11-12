@@ -1,0 +1,15 @@
+{
+  "id": "03-comical",
+  "mode": "built-in image_gen",
+  "source": "C:\\Users\\footb\\.codex\\generated_images\\01a19b4a-a521-7652-a521-e1e66a785cbd\\exec-17e8d2e2-2abb-4221-a316-b7c6e8a3893d.png",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\03-comical.png",
+  "prompt_source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\generation-prompts.json",
+  "prompt_selection": "common + posters[id=03-comical].brief",
+  "reference_count": 3,
+  "quality": {
+    "text": "Title, three speech balloons, UPDATING... progress display and THE TIMING WAS IMPECCABLE. caption are correct and legible",
+    "identity": "Consistent Sean left dark hair and stubble, Brett right fairer swept hair and clean-shaven face in all four panels",
+    "layout": "Four panels with clear gutters, distinct cobalt/rust halftone printing and comic timing",
+    "limitations": "Comic likenesses and tattoo detail remain stylized; only original3 references were used because new references arrived after generation began. No material layout/text failure observed."
+  }
+}

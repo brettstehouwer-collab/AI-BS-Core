@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-03T19:47:23.974834+00:00",
+  "classification": "progress",
+  "previous_goal_turn": "Progress: SDK0.16.5 gameplay profiler source and scoped contracts/native readbacks, verified45Abackup.",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source_sha256": {
+    "engine/examples/sdk_consumer/CMakeLists.txt": "f34ade7e62e63a1e62b1ba2dbfec0719ff7b4775fe4188867437a290dd52cece",
+    "engine/examples/sdk_consumer/gameplay_measurement.cpp": "532f034a6047bd1830af5743174bac989fb48835946742183976c5b615d38437",
+    "engine/SDK0165_QUALIFICATION.md": "ca17326b5a318eb8887028b23ffce52d7c0eacbc27810a55e585b92daa6fa1ca"
+  },
+  "source_patch": "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\source.patch",
+  "SDK_prefixes": [
+    "D:\\AI-BS-Game-Resources\\SDK\\0.16.5\\release",
+    "D:\\AI-BS-Game-Resources\\SDK\\0.16.5\\debug"
+  ],
+  "verification": "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\verification.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\46A_SDK0165_Qualification_And_Compatibility_Fix.zip",
+    "bytes": 515500,
+    "sha256": "54e50e6e936b1e9fee3829703c98fe79ac61f2d08cd2ddb4a964c1b05736daca",
+    "members": 195,
+    "local_zip_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T19:47:23.974834+00:00",
+    "archive_and_every_member_size_sha_crc_exact_set_verified": true,
+    "drive_file_id": "1qpX338DqBegLgfrkYgxq769M26FUOs6u",
+    "drive_folder_id": "180qjeSPdrYxmERVIhtUINY5k1znEfeda",
+    "scope": "Selected SDK0.16.5 public example source, version fix, full qualification evidence and owned lossless previews. No family originals, user saves, credentials, private Git/Master data or compiled binaries."
+  },
+  "all_owned_processes_joined": true,
+  "engine_tests_per_configuration": 126,
+  "engine_configurations": [
+    "Release",
+    "Debug"
+  ],
+  "installed_consumer_tests_per_configuration": [
+    8,
+    8
+  ],
+  "public_example_tests_old_new": [
+    2,
+    3
+  ],
+  "deployed_studio": "5.329.103",
+  "deployed_SDK": "0.16.4",
+  "retained_failed_attempts": [
+    "Actual initial public example CMake0.14 compatibility failure",
+    "Resume-helper cache folder typo before native process launch"
+  ],
+  "completed": [
+    "Full compilation and all126registered engine tests per Release/Debug configuration",
+    "Separate449-file SDK0.16.5prefixes with8independent installed-consumer tests each",
+    "Public example version fix proven on old0.16.4and new0.16.5 SDKs",
+    "All old/new SDK inventories exact and Studio executable/launchers/family reference hashes preserved",
+    "46Aauthenticated raw restore all195members verified"
+  ],
+  "remaining": [
+    "User-started actual gameplay sampler run through panels/saving/normal close",
+    "First-time8\u201312minute human pacing and qualitative feedback",
+    "Personal v16likeness review and refinement",
+    "Deferred optional-original-recording caption review",
+    "Final Studio package/restart/walkthrough/launcher acceptance and complete source/art backup"
+  ],
+  "next_step": "Prepare separate combined gameplay/pacing review launcher with qualified SDK0.16.5 and explicit experimental status, fresh retained save, no automatic launch or focus forcing. Keep existing stable103 review/launchers. User selected preparation for later play.",
+  "disk_free_gib": {
+    "C": 61.16,
+    "D": 59.55,
+    "E": 136.73
+  }
+}

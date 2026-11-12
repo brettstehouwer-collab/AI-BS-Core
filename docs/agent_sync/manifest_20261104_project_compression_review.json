@@ -1,0 +1,40 @@
+{
+  "id": "20261104_project_compression_review",
+  "timestamp_utc": "2026-11-04T19:31:17.896454+00:00",
+  "status": "VERIFIED_COMPRESSION_HISTORY_REVIEW_GIT_PENDING_FULL_CLOUD_BACKUP_INCOMPLETE",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_snapshot": {
+    "utc": "2026-11-04T19:30:48.702460+00:00",
+    "exit": 0,
+    "status_rows": 113377,
+    "raw_evidence_local_only": "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\working_tree_checkpoint_20261104_project_review.txt",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "concurrent_work_active": true
+  },
+  "compression_saved_allocated_bytes": 16887353099,
+  "compression_verified_files": 15036,
+  "separate_canary_diagnosed_bytes": 38047744,
+  "prior_logical_offload_removal_bytes": 112731378928,
+  "accounting_limit": "Logical removal/offload and allocated compression figures are different bases; no exact whole-drive delta claim.",
+  "changed_paths": [
+    "C:\\AI-BS\\docs\\CODEX_HANDOFF.md",
+    "C:\\AI-BS\\AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "docs/storage/AI_BS_PROJECT_CLEANUP_REVIEW_2026-11-04.txt"
+  ],
+  "application_source_changed_this_phase": [],
+  "verification": "All logged compression pairs and metadata independently reconciled; protected BMP original hashes all match.",
+  "evidence_sha256": {
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\PROJECT_CLEANUP_REVIEW.txt": "83c9f585b959d45c09568043d5415014cdbd77904d0ad8990d0187df3d15445c",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\independent_compression_review.json": "a8630c1b87fbea2d1b7ac4eef76e6a633ccbc807707112334f34baa51e3d6786",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\independent_bmp_compression_review.json": "6469ed4891453d9d271a87478e78a7e9d2127892b9b34a57d13712de2c4fd4de",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\independent_cleanup_accounting_pre_git.json": "9ab763f55380ed16c4f22d84ecf61698e9c5c35ae109cd83a580d6127a96af27",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\root_history_review_scope.json": "d58f2252075ed52b44b8d2b3c3dfd65c969d9be7e969fc846449f85f25863fac",
+    "E:\\AI_BS_Resources\\Storage_Recovery\\2026-11-04\\phase2_project_review\\working_tree_checkpoint_summary.json": "81406f73b5fca1a79f3ea3e89e7320ac008e6ce5058e3e979e4f55362ce5f47d"
+  },
+  "full_C_cloud_backup_complete": false,
+  "E_music_cloud_backup_complete": false,
+  "personal_art_upload_holds_preserved": true,
+  "next_step": "Finish strict Git object-preserving pack publication and independent retention audit; update final space/accounting report."
+}

@@ -3,11 +3,12 @@ from __future__ import annotations
 import json,math,time
 from PyQt6.QtCore import Qt,QTimer
 from PyQt6.QtWidgets import (QWidget,QLabel,QPushButton,QComboBox,QLineEdit,QPlainTextEdit,
-    QVBoxLayout,QHBoxLayout,QSplitter,QScrollArea,QTableWidget,QTableWidgetItem,QHeaderView,QMessageBox)
+    QVBoxLayout,QHBoxLayout,QGridLayout,QSplitter,QScrollArea,QTableWidget,QTableWidgetItem,QHeaderView,QMessageBox)
 from native_studio import __version__
 from native_studio.widgets import Card,MetricCard
 from native_studio.executive_service import ExecutiveService,MODES
 from native_studio.chat_recovery import ChatRecoveryController,ChatRecoveryStore
+from ui_modernization.generated.studio_overview import OVERVIEW_QSS
 
 
 def _label(text):
@@ -36,28 +37,61 @@ class ExecutiveCockpitFullView(QWidget):
         self.refresh()
 
     def _build_ui(self):
-        layout=QVBoxLayout(self);layout.setContentsMargins(12,10,12,12)
-        top=QHBoxLayout();top.addWidget(_label('Executive Cockpit'))
-        top.addWidget(_label('v'+__version__.removeprefix('v')))
-        self.service_status=_label('Opening executive service…');top.addWidget(self.service_status,1)
+        self.setObjectName('aibsStudioOverview')
+        self.setStyleSheet(OVERVIEW_QSS)
+        layout=QVBoxLayout(self);layout.setContentsMargins(0,0,0,0);layout.setSpacing(0)
+        self.overview_scroll=QScrollArea();self.overview_scroll.setWidgetResizable(True)
+        content=QWidget();content.setProperty('overviewSurface','content')
+        body=QVBoxLayout(content);body.setContentsMargins(24,24,24,24);body.setSpacing(16)
+        self.overview_scroll.setWidget(content);layout.addWidget(self.overview_scroll)
+        eyebrow=_label('STEHOUWER / EXECUTIVE WORKSPACE');eyebrow.setProperty('overviewRole','eyebrow');body.addWidget(eyebrow)
+        top=QHBoxLayout();title=_label('Studio overview');title.setProperty('overviewRole','title');top.addWidget(title,1)
+        version=_label('v'+__version__.removeprefix('v'));version.setProperty('overviewRole','muted');top.addWidget(version);body.addLayout(top)
+        self.service_status=_label('Opening executive service…');self.service_status.setProperty('overviewRole','muted');body.addWidget(self.service_status)
+        self.overview_actions=QGridLayout();self.overview_actions.setSpacing(8);body.addLayout(self.overview_actions)
         self.btn_safe=QPushButton('SAFE');self.btn_semi=QPushButton('SEMI_AUTO');self.btn_full=QPushButton('FULL_AUTO')
         for button,mode in [(self.btn_safe,'SAFE'),(self.btn_semi,'SEMI_AUTO'),(self.btn_full,'FULL_AUTO')]:
             button.setCheckable(True);button.setEnabled(False)
-            button.clicked.connect(lambda _checked,m=mode:self._set_autonomy(m));top.addWidget(button)
+            button.clicked.connect(lambda _checked,m=mode:self._set_autonomy(m))
         self.btn_rollback=QPushButton('Recovery not connected');self.btn_rollback.setEnabled(False)
         self.btn_rollback.setToolTip('A reviewed checkpoint recovery adapter is still required. No files will be changed.')
-        top.addWidget(self.btn_rollback)
-        self.btn_halt=QPushButton('Halt queued actions');self.btn_halt.clicked.connect(self._on_halt);top.addWidget(self.btn_halt)
-        layout.addLayout(top)
-        strip=QHBoxLayout();self.sentinel_status=_label('Sentinel state not observed.');strip.addWidget(self.sentinel_status,1)
-        self.refresh_btn=QPushButton('Refresh observed state');self.refresh_btn.clicked.connect(self.refresh);strip.addWidget(self.refresh_btn)
-        self.voice_btn=QPushButton('Voice not connected');self.voice_btn.setEnabled(False);strip.addWidget(self.voice_btn)
-        layout.addLayout(strip)
-        columns=QSplitter(Qt.Orientation.Horizontal);columns.setChildrenCollapsible(False)
-        columns.addWidget(self._copilot());columns.addWidget(self._matrix());columns.addWidget(self._queue());columns.addWidget(self._hardware_panel())
-        columns.setSizes([380,340,360,320]);layout.addWidget(columns,1)
+        self.btn_halt=QPushButton('Halt queued actions');self.btn_halt.clicked.connect(self._on_halt);self.btn_halt.setProperty('overviewRole','halt')
+        self._overview_action_buttons=[self.btn_safe,self.btn_semi,self.btn_full,self.btn_rollback,self.btn_halt]
+        strip=QGridLayout();self.sentinel_status=_label('Sentinel state not observed.');strip.addWidget(self.sentinel_status,0,0,1,2)
+        self.refresh_btn=QPushButton('Refresh observed state');self.refresh_btn.clicked.connect(self.refresh);strip.addWidget(self.refresh_btn,1,0)
+        self.voice_btn=QPushButton('Voice not connected');self.voice_btn.setEnabled(False);strip.addWidget(self.voice_btn,1,1)
+        body.addLayout(strip)
+        self.overview_grid=QGridLayout();self.overview_grid.setSpacing(16);body.addLayout(self.overview_grid)
+        self._overview_panels=[self._copilot(),self._matrix(),self._queue(),self._hardware_panel()]
+        for panel in self._overview_panels:panel.setMinimumHeight(540)
+        self._overview_columns=0;self._overview_action_columns=0
+        self.send_btn.setProperty('overviewRole','primary')
+        for metric in (self.metric_gpu,self.metric_cpu,self.metric_ram,self.metric_vault,self.metric_spend):
+            metric.val_lbl.setStyleSheet('');metric.val_lbl.setProperty('overviewRole','metric')
+            metric.sub_lbl.setStyleSheet('');metric.sub_lbl.setProperty('overviewRole','muted');metric.sub_lbl.setWordWrap(True)
         self.recovery_status=_label('Opening private executive recovery…');self.recovery_retry=QPushButton('Retry private recovery')
-        footer=QHBoxLayout();footer.addWidget(self.recovery_status,1);footer.addWidget(self.recovery_retry);layout.addLayout(footer)
+        self.recovery_status.setProperty('overviewRole','muted')
+        footer=QHBoxLayout();footer.addWidget(self.recovery_status,1);footer.addWidget(self.recovery_retry);body.addLayout(footer)
+        QTimer.singleShot(0,self._reflow_overview)
+
+    def _reflow_overview(self):
+        if self._closed:return
+        width=self.overview_scroll.viewport().width()
+        columns=2 if width>=1050 else 1
+        if columns!=self._overview_columns:
+            self._overview_columns=columns
+            while self.overview_grid.count():self.overview_grid.takeAt(0)
+            for index,panel in enumerate(self._overview_panels):self.overview_grid.addWidget(panel,index//columns,index%columns)
+            self.overview_grid.setColumnStretch(0,1);self.overview_grid.setColumnStretch(1,1 if columns==2 else 0)
+        action_columns=5 if width>=1150 else 3 if width>=850 else 2
+        if action_columns!=self._overview_action_columns:
+            self._overview_action_columns=action_columns
+            while self.overview_actions.count():self.overview_actions.takeAt(0)
+            for index,button in enumerate(self._overview_action_buttons):self.overview_actions.addWidget(button,index//action_columns,index%action_columns)
+
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        if hasattr(self,'overview_scroll') and not self._closed:QTimer.singleShot(0,self._reflow_overview)
 
     def _copilot(self):
         panel=Card('Executive copilot');lay=panel.layout_box
@@ -65,6 +99,7 @@ class ExecutiveCockpitFullView(QWidget):
         presets=QHBoxLayout()
         for text,callback in [('Observed health',self._show_observed),('Render request',lambda:self.input_edit.setText('Render a vertical 9:16 short'))]:
             button=QPushButton(text);button.clicked.connect(callback);presets.addWidget(button)
+            if text=='Render request':button.setProperty('overviewRole','secondary')
         lay.addLayout(presets)
         self.chat_display=QPlainTextEdit();self.chat_display.setObjectName('Console');self.chat_display.setReadOnly(True)
         self.chat_display.setPlainText('Executive requests are handled by the local AI-BS service.\nNo action has been submitted by opening this view.\n')

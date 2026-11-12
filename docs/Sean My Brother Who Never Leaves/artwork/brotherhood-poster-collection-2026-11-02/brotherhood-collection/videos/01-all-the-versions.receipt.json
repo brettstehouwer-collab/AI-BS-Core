@@ -1,0 +1,77 @@
+{
+  "id": "01-all-the-versions",
+  "title": "All the versions",
+  "output": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\videos\\01-all-the-versions.mp4",
+  "duration_seconds": 42.75,
+  "resolution": [
+    1080,
+    1920
+  ],
+  "fps": 24,
+  "video_codec": "h264",
+  "pixel_format": "yuv420p",
+  "audio_codec": "aac",
+  "audio_channels": 2,
+  "audio_sample_rate": 48000,
+  "bytes": 36238993,
+  "poster_order": [
+    "01-realistic",
+    "02-animation",
+    "03-comical",
+    "04-supportive",
+    "05-emotional",
+    "06-frustrating",
+    "07-dark-humor",
+    "08-underdogs",
+    "09-contemporary"
+  ],
+  "full_decode": "passed",
+  "live_action_stinger": null,
+  "camera_motion_pixel_delta": 8.36789608001709,
+  "decoded_qa_frames": [
+    {
+      "timestamp": 1.5,
+      "path": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\work\\qa\\01-all-the-versions-1.png"
+    },
+    {
+      "timestamp": 21.375,
+      "path": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\work\\qa\\01-all-the-versions-2.png"
+    },
+    {
+      "timestamp": 41.25,
+      "path": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\work\\qa\\01-all-the-versions-3.png"
+    }
+  ],
+  "visual_qa": "Passed: visually inspected three actual decoded frames from this final MP4, covering early, middle and late scenes. Full poster borders, titles and footers remain visible; distinct faces and category captions are clear. Full stream decode passed; in-chapter decoded frame differences verify actual camera motion.",
+  "audio": {
+    "composition": "Original locally synthesized instrumental; no external samples or voices",
+    "style": "warm",
+    "bpm": 88,
+    "source": "C:\\AI-BS\\docs\\Sean My Brother Who Never Leaves\\artwork\\poster-series-2026-11-02\\videos\\01-all-the-versions-original-score.wav",
+    "decoded_audio_qa": {
+      "sample_count": 4099200,
+      "peak_dbfs": -7.46,
+      "rms_dbfs": -20.0,
+      "finite": true,
+      "non_silent": true,
+      "no_sample_clipping": true
+    }
+  },
+  "source_policy": "Original PNGs unmodified. Artistic friendship illustrations, not historical event footage.",
+  "render": {
+    "camera_zoom_range": [
+      1.0,
+      1.012
+    ],
+    "transition": ".25s fade-out / .25s fade-in through dark",
+    "encoder": "libx264, CRF18, fast, yuv420p; AAC192k; faststart",
+    "max_concurrent_encoders": 2
+  },
+  "faststart_verified": true,
+  "mp4_top_level_atoms": [
+    "ftyp",
+    "moov",
+    "free",
+    "mdat"
+  ]
+}

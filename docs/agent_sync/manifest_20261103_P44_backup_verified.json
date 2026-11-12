@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-03T18:58:48.288367+00:00",
+  "classification": "progress",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source_sha256": {
+    "engine\\tools\\review_opening.py": "be3fb776697ef09238bd0cfee770cd8a508c91f9453732e1d6d2938d7b88211b",
+    "engine\\tests\\test_review_opening.py": "f128ffb37c6fc575f70292e8353bacb0a18a8c035eaed714a374a21c52c5c7b1",
+    "engine\\OPENING_REVIEW.md": "f299cf68e6566a7836d10825a42941198cbe2dd0721caca038e910db724b73e3"
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P44\\ManualOpeningReview\\verification.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\44A_Manual_Opening_Review_Kit.zip",
+    "bytes": 9624,
+    "sha256": "5324d57e8aba829d949abd8fb05fed63093ec31029ac7697d4f4339b02b3dcff",
+    "members": 13,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T18:58:48.288367+00:00",
+    "every_member_sha_size_crc_and_exact_set": true,
+    "drive_file_id": "1bw1ybD44u84JDNrwQEJ1nYqIMHPHYudZ",
+    "drive_folder_id": "1FJlc5W6SC6_jkIXeO0k51x-NNrkN2_Z2",
+    "scope": "Manual review source, test evidence and starter. No user save or family reference. No game window launched.",
+    "restore_diagnostic": "First exact-set comparison failed because three Windows manifest keys used backslashes while ZIP stores forward slashes. CRC, count and archive hash matched. Corrected verifier normalizes separators with an injectivity check; archive and source bytes unchanged."
+  },
+  "starter": "D:\\AI-BS-Game-Resources\\P44\\ManualOpeningReview\\Play_First_Boot_Review.cmd",
+  "user_choice": "Prepare it; I will play later",
+  "next_step": "Retain prepared review for user. Implement bounded real gameplay frame-time collection that includes panels and normal saving without weakening existing stationary diagnostics. Final likeness feedback remains pending.",
+  "remaining": [
+    "Actual human opening pacing and feedback",
+    "Moving gameplay/full-opening performance",
+    "Final approved Adam likeness",
+    "Deferred caption listening review",
+    "Final packaged acceptance/walkthrough/source-art backup"
+  ],
+  "disk_free_gib": {
+    "C": 61.91,
+    "D": 69.68,
+    "E": 136.73
+  }
+}

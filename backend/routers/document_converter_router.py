@@ -146,9 +146,10 @@ async def import_word_document(file: UploadFile = File(...)):
         content_bytes = await file.read()
         file_stream = io.BytesIO(content_bytes)
         doc = docx.Document(file_stream)
+        from core.document_text import iter_docx_paragraphs
 
         extracted_lines = []
-        for p in doc.paragraphs:
+        for p in iter_docx_paragraphs(doc):
             text = p.text
             if not text.strip():
                 extracted_lines.append("")

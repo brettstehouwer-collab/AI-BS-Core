@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-04T22:43:28.397417+00:00",
+  "status": "passed_published_sdk_runtime_and_verified_backup",
+  "sdk_version": "0.17.3",
+  "profiles": {
+    "Release": {
+      "files": 449,
+      "external_consumer_tests": 9
+    },
+    "Debug": {
+      "files": 449,
+      "external_consumer_tests": 9
+    }
+  },
+  "runtime_files": 18,
+  "backup_receipt": "E:\\AI_BS_Resources\\FirstBoot\\P106\\SDK0173Publication\\106A-drive.json",
+  "backup_bytes": 103536830,
+  "backup_sha256": "70deb0f3d14a9ac856b0d840ff8b464071de06575372ae2d06535b640600ee0f",
+  "protected_executable_hashes": {
+    "5.329.107": "a9ed1cb52bc1296e70e94373a8172932a9bd2d54cbbd12e32374f96f9fa70b2a",
+    "5.329.108": "3097cca71854fd84d643e4d5dbf04b6629d689936ed4be5f6722c90c46a35ffe"
+  },
+  "free_GiB": {
+    "C": 287.57,
+    "D": 24.02,
+    "E": 90.34
+  },
+  "goal_complete": false,
+  "next_step": "Prepare and build a separate Studio 109 candidate from the qualified 0.17.3 runtime and Adam v33. Reuse the closed six-role v33 surface-r02 opening bundle, preserve 107 and failed 108, and freeze exact package source. Verify actual packaged repair/bypass routes including the shelter-table return, reading/companion controls, normal save/reload/restart, inventory and backup before launcher updates. Final likeness, checked captions, human 8-12-minute pacing and current 1080p60 gameplay measurements remain open.",
+  "launchers_or_real_saves_or_originals_modified": false,
+  "previous_goal_turn_classification": "progress_source_qualification_SDK_publication_and_verified_Drive_backups",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P106\\SDK0173Publication\\private-git-status.txt",
+  "private_worktree_sha256": "2c5828e465f82387db0cd037915eba522e668e0f6952c8483f5d22faac7d0481",
+  "private_git_uploaded": false
+}

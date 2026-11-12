@@ -1,0 +1,16 @@
+{
+  "status": "verified_authenticated_source_evidence_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\39B_Camera_HUD_Source_And_Verification_Only.zip",
+  "bytes": 5529656,
+  "sha256": "07a47799fbe20e807535cbc4c93c847ae547197e36a343cd886434e372f8a316",
+  "members": 152,
+  "binary_restore_verified": false,
+  "goal_complete": false,
+  "at": "2026-11-03T16:43:34.130047+00:00",
+  "file_id": "13LGeM1E0emRRFv53fpfKEeywzGA1IIPZ",
+  "folder_id": "1eACHbHeNssUKvNPbbuDtzigtNeX93VRN",
+  "url": "https://drive.google.com/file/d/13LGeM1E0emRRFv53fpfKEeywzGA1IIPZ/view?usp=drivesdk",
+  "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+  "binary_backup": "39A upload retained but provider refused raw download as possible malware/spam; no current binary restore claim or bypass. Local executable retained.",
+  "release_acceptance": false
+}

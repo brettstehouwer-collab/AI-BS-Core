@@ -1,0 +1,27 @@
+{
+  "id": "07-campsite-chaos-both-pets",
+  "tool": "built-in image_gen",
+  "source": "C:/Users/footb/.codex/generated_images/01a19b4a-b5a3-7d12-9526-759110caf3ed/exec-1643abd2-39fc-43ab-92ef-b05c316cf1db.png",
+  "output": "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/07-campsite-chaos-both-pets.png",
+  "prompt": "Edit image1, the finished tall2:3 campsite poster. Images2 and3 show the SAME second real dog TONTO: a close facial view and current whole-body view. ADD TONTO as a SECOND clearly separate foreground pet relaxing inside the dry comfortable tent. He is a short-haired muscular chocolate/russet-brown dog with his own recognizable broad square face, brown nose, amber eyes, naturally folded/rose ears, gently graying muzzle and white chest patch. Use image2 for precise face and image3 for current build and mature muzzle. Give him a friendly calm alert expression and natural canine anatomy, a simple collar tag reading TONTO is welcome. Do not copy source camera stamps, reflected eye-flash, bedroom background or source human limbs. Make him a separate naturally scaled presence on an adjacent camping mat in the lower foreground, visibly distinct from the existing dog, head/chest and front paws clear; fit within the overall composition without hiding any human face or major readable sign. Keep all three adults Brett-left, Anna-middle and Sean-right completely unchanged: identical faces, clothing, poses, hand positions, chair/marshmallow/blanket interactions and expressions. CRITICAL: PRESERVE Sean's existing fluffy red-brown/white/tan dog on the LEFT foreground EXACTLY AS IT IS, including white blaze, freckles, amber eyes, pink-brown nose, coat texture, HR harness, paws and relaxed pose. Do NOT replace that dog with Tonto or merge them; do not add a second fluffy dog. Final exact count THREE adults plus TWO different dogs: existing fluffy HR dog AND short-haired TONTO. Preserve current portrait framing, the tent, rain outside, warm lanterns, camping gear, map, snails and tiny envelopes, and ALL current title/catchphrase/prop typography verbatim and legible. Maintain THREE MUSKETEERS, FORECAST: POOR DECISIONS, ADULT SUPERVISION: OUT OF COVERAGE, NOT MY DEPARTMENT, SNAIL MAIL: STILL PENDING, BAD IDEA JUICE, EMOTIONAL SUPPORT MEMES, ESCALATED TO THE DOG, SAME IDIOTS. DIFFERENT WEATHER. Same high-detail tactile photorealistic-surreal illustrated finish and coherent warm/cool camping lighting. New text only optional TONTO tag. No extra people, extra pets, duplicate heads, hidden existing pet, watermark or unrelated alterations. These are imaginative comedy scenes.",
+  "referenced_image_paths": [
+    "C:/AI-BS/docs/Sean My Brother Who Never Leaves/artwork/trio-theme-series-2026-11-04/07-campsite-chaos-seans-dog.png",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20210329_223535.jpg",
+    "C:/Users/footb/Downloads/Photos-1-001 (4)/20261020_111212.jpg"
+  ],
+  "transparent_background": false,
+  "edit_scope": "Added Tonto as second separate dog; prior single-pet and original golden versions preserved.",
+  "qa": {
+    "status": "accepted",
+    "pets": "Exactly two distinct dogs. Sean's fluffy red-brown/white HR dog remains at left foreground with recognizable face, white blaze, freckled muzzle and same harness/paw pose. Separate Tonto at right foreground has short chocolate/russet coat, broad square face, brown nose, amber eyes, folded ears, graying muzzle, white chest patch and TONTO tag; comfortable on own adjacent mat.",
+    "humans": "Exactly three recognizable adults: Brett-left, Anna-middle, Sean-right. Faces, poses, clothing, hand positions, expressions and chair/marshmallow/blanket interactions visually preserved.",
+    "typography": "Title, subtitle, bottom caption and all requested major/prop text accurate, legible and unobscured.",
+    "composition": "Original tent, gentle rain, warm lantern light, gear and recurring snail-paperwork humor retained; objects below pets rearrange slightly to make room naturally.",
+    "limitations": "Some small lower-foreground props/terrarium move to accommodate second pet; no pixel-identical preservation claim. Imagined comedy artwork, not a verified historical event."
+  },
+  "dimensions": [
+    1024,
+    1536
+  ],
+  "bytes": 3276006
+}

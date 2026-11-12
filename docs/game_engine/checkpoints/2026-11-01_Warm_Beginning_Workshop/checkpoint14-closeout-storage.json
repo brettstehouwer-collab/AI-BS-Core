@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-02T10:43:03.737419+00:00",
+  "disks": {
+    "C:": {
+      "free_bytes": 79488692224,
+      "total_bytes": 1796861837312
+    },
+    "D:": {
+      "free_bytes": 158705287168,
+      "total_bytes": 510770802688
+    },
+    "E:": {
+      "free_bytes": 146813599744,
+      "total_bytes": 899427594240
+    }
+  },
+  "drive_cloud_quota": "unavailable through connector",
+  "new_archive_cache_on": "D:",
+  "deletions_performed": false
+}

@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-04T03:34:53.715669+00:00",
+  "status": "FAILED_NORMAL_MATRIX_DIAGNOSTIC_AND_BACKUP_VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_status_local": "D:\\AI-BS-Game-Resources\\P77\\Normal106CompanionInput\\local-worktree-status.txt",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\77A_Normal106_Input_Diagnostics.zip",
+    "bytes": 169255,
+    "sha256": "0de204d65922d2ce8fd4972dcc95cee0b0aa783d9575044c7fea4fb0e9cdbee4",
+    "members": 31,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T03:34:28.817969+00:00",
+    "drive_folder_id": "1KkCmn0_a7Bmr8deTNXbBI4byP5kQ36eJ",
+    "drive_file_id": "1oqN2xNJ6c7kdf3-BHoaGFfP61PG_BGkX",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "changed_paths": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "a2fd3d0b67a57d38b6bbe8dc3f58be20a5d45fa81aee6774ccc65ad30501f90c",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "86bee110a49b766a67bc9c71c97e8defe32fab718fe8531fc2f7a97256993fe3",
+    "C:\\AI-BS\\docs\\game_engine\\NORMAL106_COMPANION_INPUT_DIAGNOSTIC.md": "c8a8b4e83e90f743dda84b30a6d260037164c30ae96d482cb276f61d1b5f8fc9"
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P77\\Normal106CompanionInput\\verification.json",
+  "scope": "Normal player-world Wait actually saved; complete control sequence failed. Corrected reader tested offline only. No third native run.",
+  "next_step": "P77 normal-input matrix stopped after two failures. Narrow saved Wait and offline big-endian reader correction verified; review corrected recipe before fresh-slot native testing. Full Follow/Recall/F9/restart, opening edge cases, likeness, checked captions, human pacing/performance and final acceptance/backup remain required.",
+  "runtime_or_SDK_changed": false,
+  "goal_complete": false
+}

@@ -1,0 +1,129 @@
+{
+  "archive_sha256_local": "c266ade6e8235b2a33e54113bbc1c8183cd576b6f9e1ea4fb6aff616795ce0e6",
+  "verified_cloud_metadata": [
+    {
+      "id": "1wnZJM7WPletjFuAWLdtCLVvHdmVYpf2u",
+      "title": "AI_BS_M4_Chapter_Content_Source.zip",
+      "mime_type": null,
+      "size": "6072076",
+      "url": "https://drive.google.com/file/d/1wnZJM7WPletjFuAWLdtCLVvHdmVYpf2u/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1wnZJM7WPletjFuAWLdtCLVvHdmVYpf2u/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1MUfzMYOaOC7uGFFIRYJvhZPvv8jZ4XHI",
+      "title": "README.md",
+      "mime_type": null,
+      "size": "1930",
+      "url": "https://drive.google.com/file/d/1MUfzMYOaOC7uGFFIRYJvhZPvv8jZ4XHI/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1MUfzMYOaOC7uGFFIRYJvhZPvv8jZ4XHI/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1_YwqGw7Pu7vZN-Ez6CqtLQ1OQbs8Hfp8",
+      "title": "source_manifest.json",
+      "mime_type": null,
+      "size": "93217",
+      "url": "https://drive.google.com/file/d/1_YwqGw7Pu7vZN-Ez6CqtLQ1OQbs8Hfp8/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1_YwqGw7Pu7vZN-Ez6CqtLQ1OQbs8Hfp8/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1tU1CrSoi7TH69VqSzri2yh02B4NzRPWo",
+      "title": "delivery.json",
+      "mime_type": null,
+      "size": "422",
+      "url": "https://drive.google.com/file/d/1tU1CrSoi7TH69VqSzri2yh02B4NzRPWo/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1tU1CrSoi7TH69VqSzri2yh02B4NzRPWo/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1ao3dWZjbSLHAu6FbXyUcwQxN1chURant",
+      "title": "first_boot_content_verification.json",
+      "mime_type": null,
+      "size": "3089",
+      "url": "https://drive.google.com/file/d/1ao3dWZjbSLHAu6FbXyUcwQxN1chURant/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1ao3dWZjbSLHAu6FbXyUcwQxN1chURant/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1sCly9HhHLl2KMlwrIjxX7j7-9QWaUGGa",
+      "title": "FIRST_BOOT_CONTENT.md",
+      "mime_type": null,
+      "size": "5986",
+      "url": "https://drive.google.com/file/d/1sCly9HhHLl2KMlwrIjxX7j7-9QWaUGGa/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1sCly9HhHLl2KMlwrIjxX7j7-9QWaUGGa/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1xGVVYzYY_mzbr6EkhJsQTj6QXtLdFTSg"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  ],
+  "limitations": "Local CRC/exact readback/hash passed; cloud size/parent verified only. Remote cryptographic identity and remaining quota are not exposed.",
+  "post_capture_annotations": [
+    "CURRENT_STATE.md and milestone queue delivery pointers/transport-status wording follow archive capture."
+  ]
+}
