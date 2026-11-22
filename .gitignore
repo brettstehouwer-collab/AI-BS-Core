@@ -369,6 +369,27 @@ Echoes_Within*
 *Bad Side*
 *Benny*
 
+# --- Source-code exceptions (2026-11-22) ---------------------------------
+# The privacy wildcards above (*crypto*, *Screenplay*, *Book*, *NDA*, *Medical*,
+# *wallet*, *ledger*, *Film*, *Contract*, *accounting*, *drip*, lib/ ...) were
+# also hiding real application source, so fresh clones could not build.
+# Re-include code files inside the code folders only; data files stay ignored,
+# and the more specific rules further below still win.
+!/backend/modules/crypto_swarm/
+!/frontend/lib/
+!/backend/**/*.py
+!/native_studio/**/*.py
+!/engine/**/*.cpp
+!/engine/**/*.hpp
+!/engine/**/*.h
+!/engine/**/*.inl
+!/engine/**/*.py
+!/frontend/**/*.js
+!/frontend/**/*.jsx
+!/frontend/**/*.ts
+!/frontend/**/*.tsx
+!/frontend/**/*.css
+
 # Legacy Archives & Storage Dumps
 _archive_v1/
 Archive_Legacy/
