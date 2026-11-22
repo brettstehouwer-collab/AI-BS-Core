@@ -1,0 +1,42 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "local_admin",
+  "payload": {
+    "execution_id": "875e9dd3a10c49ecb8eb216c77420c0d",
+    "request_id": "16ad932d62c6406fb14cacc6291fd064",
+    "plan_id": "e2c384128d4741719d1dcb358a959f72",
+    "proposal_id": "7ce39ac07c5f45fca52c2d5af8dd9f16",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "c90b958df05f128f2db563cae438376f2b4571365ab7679479bfd4cba942ef24",
+  "files": [
+    {
+      "relative_path": "native_app.py",
+      "role": "editable",
+      "length": 73,
+      "sha256": "5e2322eabfe8ee0b149e5527b78a89a7ba47b46666f8b3571be6d7062ac2fd54"
+    },
+    {
+      "relative_path": "test_native_app.py",
+      "role": "verification",
+      "length": 310,
+      "sha256": "b63dc6e81da6501833b06f60ad78c2f053e6ac169c4b454d41c42d1769ee9251"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "python_unittest",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_native_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/native_app.py\n+++ b/native_app.py\n@@ -1,2 +1,2 @@\n def clamp(value, lower, upper):\n-    return value\n+    return max(lower, min(value, upper))\n",
+  "created_at_utc": "2026-11-14T23:30:36.281072+00:00",
+  "entry_sha256": "17e50e7c2621cf1e0614e61e2d55fe79ab2470f123edd967821888322c2a9717"
+}

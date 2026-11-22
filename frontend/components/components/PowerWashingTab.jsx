@@ -1,44 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import './PowerWashingTab.css';
 
-export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', onNavigateTab }) {
+/** @param {{"backendUrl"?: string, "onNavigateTab": () => void}} props */
+export default function PowerWashingTab({ backendUrl = 'http://localhost:8080' }) {
   // Navigation Sub-tab within Power Washing Suite
   const [activeSubTab, setActiveSubTab] = useState('estimator'); // 'estimator' | 'gis' | 'route' | 'weather' | 'fleet' | 'crm'
 
   // Telemetry & General State
-  const [telemetry, setTelemetry] = useState(null);
-  const [clients, setClients] = useState([]);
-  const [jobs, setJobs] = useState([]);
-  const [fleetUnits, setFleetUnits] = useState([]);
-  const [weatherData, setWeatherData] = useState(null);
+  const [telemetry, setTelemetry] = useState(/** @type {{"active_jobs_count": number, "total_revenue_booked": number, "total_sq_ft_washed": number, "active_fleet_units": string} | null} */ (null));
+  const [clients, setClients] = useState(/** @type {Array<{"id": string, "name": string, "company": string, "client_type": string, "phone": string, "address": string, "city": string, "zip_code": string, "water_spigot_access": string, "notes": string}>} */ ([]));
+  const [jobs, setJobs] = useState(/** @type {Array<{id: number, status: string, client_name: string, address: string, city: string, service_type: string, quote_amount: number}>} */ ([]));
+  const [fleetUnits, setFleetUnits] = useState(/** @type {Array<{"id": string, "unit_number": number, "company_name": string, "vehicle_type": string, "wash_tier": string, "price_per_wash": number, "last_wash_date": string, "next_due_date": string, "status": string}>} */ ([]));
+  const [weatherData, setWeatherData] = useState(/** @type {{"badge_color": string, "spray_dispatch_status": string, "safety_notice": string, "current_temperature_f": number, "wind_speed_mph": number, "precipitation_chance_pct": string, "seasonal_campaigns": Array<{"status": string, "season": string, "months": string, "offer": string, "target_leads": string}>} | null} */ (null));
 
   // 1. Tool 1: Surface & Chemical Ratio Estimator State
   const [substrate, setSubstrate] = useState('vinyl');
   const [contamination, setContamination] = useState('black_algae');
   const [severity, setSeverity] = useState('moderate');
-  const [squareFootage, setSquareFootage] = useState(2200);
-  const [storyCount, setStoryCount] = useState(2);
-  const [calcResult, setCalcResult] = useState(null);
+  const [squareFootage, setSquareFootage] = useState(/** @type {number | string} */ (2200));
+  const [storyCount, setStoryCount] = useState(/** @type {number | string} */ (2));
+  const [calcResult, setCalcResult] = useState(/** @type {{"recommended_recipe": {"target_sh_percentage": string, "max_safe_psi": string, "recommended_nozzle_tip": string, "dwell_time_minutes": string, "batch_50_gal_mix": {"raw_12_5_sh_gallons": string, "water_gallons": string, "surfactant_oz": string}, "degreaser_required": string, "oxalic_acid_brightener_required": string}, "pricing_proposal": {"total_quote_price": number, "estimated_duration_hours": number}} | null} */ (null));
   const [isCalculating, setIsCalculating] = useState(false);
 
   // 2. Tool 2: GIS Quoting Engine State
   const [gisAddress, setGisAddress] = useState('4450 44th St SE, Grand Rapids, MI 49512');
-  const [buildingSqft, setBuildingSqft] = useState(2600);
+  const [buildingSqft, setBuildingSqft] = useState(/** @type {number | string} */ (2600));
   const [roofPitch, setRoofPitch] = useState('6/12');
-  const [drivewaySqft, setDrivewaySqft] = useState(900);
+  const [drivewaySqft, setDrivewaySqft] = useState(/** @type {number | string} */ (900));
   const [includeRoof, setIncludeRoof] = useState(true);
   const [includeSiding, setIncludeSiding] = useState(true);
   const [includeDriveway, setIncludeDriveway] = useState(true);
-  const [nearbyJobsCount, setNearbyJobsCount] = useState(2);
-  const [gisQuoteResult, setGisQuoteResult] = useState(null);
+  const [nearbyJobsCount, setNearbyJobsCount] = useState(/** @type {number | string} */ (2));
+  const [gisQuoteResult, setGisQuoteResult] = useState(/** @type {{"generated_at": string, "itemized_services": Array<{"service": string, "area_sqft": string, "rate_per_sqft": number, "amount": number}>, "subtotal": number, "route_density_discount_pct": number, "discount_reason": string, "discount_amount": number, "final_total_quote": number, "proposal_dispatch_sms": string} | null} */ (null));
 
   // 3. Tool 3: Route & Water Payload (GVWR) State
-  const [waterTankGal, setWaterTankGal] = useState(275);
-  const [shChemicalGal, setShChemicalGal] = useState(45);
-  const [routePayloadResult, setRoutePayloadResult] = useState(null);
+  const [waterTankGal, setWaterTankGal] = useState(/** @type {number | string} */ (275));
+  const [shChemicalGal, setShChemicalGal] = useState(/** @type {number | string} */ (45));
+  const [routePayloadResult, setRoutePayloadResult] = useState(/** @type {{"is_gvwr_compliant": boolean, "gvwr_status_badge": string, "total_gross_vehicle_weight_lbs": number, "legal_gvwr_limit_lbs": number, "remaining_payload_capacity_lbs": number, "recommended_west_mi_fill_stations": Array<{"id": string, "name": string, "city": string, "zip": string, "flow_rate_gpm": number, "type": string}>} | null} */ (null));
 
   // 4. Tool 5: Fleet Wash Verification State
-  const [selectedFleetUnit, setSelectedFleetUnit] = useState(null);
+  const [selectedFleetUnit, setSelectedFleetUnit] = useState(/** @type {{"id": string, "unit_number": number, "company_name": string, "wash_tier": string} | null} */ (null));
   const [showLogModal, setShowLogModal] = useState(false);
   const [techName, setTechName] = useState('Prestige Crew Lead #1');
   const [gpsLocation, setGpsLocation] = useState('42.9634° N, 85.6681° W (Grand Rapids, MI)');
@@ -140,8 +141,8 @@ export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', 
           substrate_type: substrate,
           contamination_type: contamination,
           contamination_severity: severity,
-          square_footage: parseFloat(squareFootage) || 1500,
-          story_count: parseInt(storyCount) || 1
+          square_footage: parseFloat(String(squareFootage)) || 1500,
+          story_count: parseInt(String(storyCount)) || 1
         })
       });
       if (res.ok) {
@@ -162,13 +163,13 @@ export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           address: gisAddress,
-          building_sqft: parseFloat(buildingSqft) || 2400,
+          building_sqft: parseFloat(String(buildingSqft)) || 2400,
           roof_pitch: roofPitch,
-          driveway_sqft: parseFloat(drivewaySqft) || 900,
+          driveway_sqft: parseFloat(String(drivewaySqft)) || 900,
           include_roof: includeRoof,
           include_siding: includeSiding,
           include_driveway: includeDriveway,
-          nearby_jobs_in_zip: parseInt(nearbyJobsCount) || 1
+          nearby_jobs_in_zip: parseInt(String(nearbyJobsCount)) || 1
         })
       });
       if (res.ok) {
@@ -191,8 +192,8 @@ export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', 
             '4450 44th St SE, Grand Rapids',
             '1200 Waverly Rd, Holland'
           ],
-          water_tank_fill_gal: parseFloat(waterTankGal) || 275,
-          sh_chemical_gal: parseFloat(shChemicalGal) || 45,
+          water_tank_fill_gal: parseFloat(String(waterTankGal)) || 275,
+          sh_chemical_gal: parseFloat(String(shChemicalGal)) || 45,
           jobs_estimated_gallons: [80.0, 140.0, 90.0]
         })
       });
@@ -267,7 +268,8 @@ export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', 
   };
 
   // Update Job Status
-  const handleUpdateJobStatus = async (jobId, newStatus) => {
+  /** @param {number} jobId @param {string} newStatus */
+const handleUpdateJobStatus = async ( jobId,  newStatus) => {
     try {
       const res = await fetch(`${backendUrl}/api/powerwash/jobs/${jobId}/status`, {
         method: 'PUT',
@@ -1078,7 +1080,8 @@ export default function PowerWashingTab({ backendUrl = 'http://localhost:8080', 
             <div className="pw-kanban-board">
               {['lead', 'estimate_sent', 'scheduled', 'in_progress', 'completed', 'paid'].map((col) => {
                 const colJobs = jobs.filter((j) => j.status === col);
-                const colTitles = {
+                /** @type {Record<string, string>} */
+const colTitles = {
                   lead: '💡 Leads / Inquiries',
                   estimate_sent: '📨 Estimates Sent',
                   scheduled: '📅 Scheduled',

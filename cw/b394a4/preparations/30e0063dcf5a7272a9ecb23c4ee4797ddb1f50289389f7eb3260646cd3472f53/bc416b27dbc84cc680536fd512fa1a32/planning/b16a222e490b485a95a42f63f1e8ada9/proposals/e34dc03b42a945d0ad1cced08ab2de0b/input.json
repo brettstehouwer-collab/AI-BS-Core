@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "bc416b27dbc84cc680536fd512fa1a32",
+  "plan_id": "b16a222e490b485a95a42f63f1e8ada9",
+  "snapshot_sha256": "1c918e1646c90558403883fb5f089159ada1cce5dad97ce4fec61bfc7738b69a",
+  "review_digest": "a8820daa464bc5fae4e27684cf12c20d732d6f339dbd03d6721cc4b58dabc7be",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "e34dc03b42a945d0ad1cced08ab2de0b",
+  "reviewed_plan_sha256": "5dadf2149b7024372f5228de72ab87be3fe682730f0cce4024f75a786ce93177",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43708,
+    "created": 1794664880.930138
+  },
+  "created_at_utc": "2026-11-14T14:01:21.824434+00:00",
+  "entry_sha256": "977226f9b72c7e792d94681192c06b533c2f8549b9d486a86e349ef3dfd1eb61"
+}

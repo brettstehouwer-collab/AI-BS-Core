@@ -1,0 +1,14 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_native_viewport\\AI_BS_M4_Native_Viewport_Source.zip",
+  "bytes": 5339186,
+  "files": 470,
+  "sha256": "cbaac38930a77d6416f4521fa029690b38264dd051039f7a3d0a658e14f18185",
+  "crc": "passed",
+  "captured_byte_readback": "passed",
+  "free_bytes": {
+    "C": 124103512064,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

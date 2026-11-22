@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "drive_file_id": "1EJq8WcRLxN2fEzt0k4-9SQSc9SQbYfhQ",
+  "drive_url": "https://drive.google.com/file/d/1EJq8WcRLxN2fEzt0k4-9SQSc9SQbYfhQ/view?usp=drivesdk",
+  "bytes": 6301,
+  "local_sha256": "d8478336b488dadd09787beb159c496c72fc3daa090150870c9f214ac6ed842c",
+  "scope": "Index metadata readback; sealed archive full-byte roundtrip independently verified"
+}

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const TheatricalProjector = () => {
-    const [currentImage, setCurrentImage] = useState(null);
+    const [currentImage] = useState(/** @type {string | null} */ (null));
 
     useEffect(() => {
         // In a full implementation, this connects to a WebSocket that broadcasts

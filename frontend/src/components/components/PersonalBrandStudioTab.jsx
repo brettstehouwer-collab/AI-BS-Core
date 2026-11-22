@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { 
-  Share2, Sparkles, Copy, Check, ExternalLink, Hash, AlertTriangle, 
-  CheckCircle2, Layers, RefreshCw, MessageSquare, Zap, ShieldCheck, Flame,
-  FileCode, Database, Terminal, Cpu, BookOpen, Film
-} from 'lucide-react';
+import { useState } from "react";
+import "react-markdown";
+import "remark-gfm";
+import { Share2, Copy, Check, ExternalLink, Hash, CheckCircle2, Layers, RefreshCw, MessageSquare, Zap, Flame, FileCode, Database, Cpu, BookOpen, Film } from "lucide-react";
 import { getApiBase } from '../config/api';
 
-const PersonalBrandStudioTab = ({ backendUrl, selectedModel = 'stehouwer_llm' }) => {
-  const apiBase = backendUrl || getApiBase() || 'http://127.0.0.1:8080';
+/** @param {{"backendUrl": string, "selectedModel"?: string}} props */
+const PersonalBrandStudioTab = ({ backendUrl }) => {
+  (backendUrl || getApiBase() || 'http://127.0.0.1:8080');
 
   // Input State
   const [inputText, setInputText] = useState('');
   const [customUrl, setCustomUrl] = useState('');
-  const [platform, setPlatform] = useState('facebook'); // 'facebook' | 'instagram' | 'linkedin' | 'x'
+  const [platform] = useState('facebook'); // 'facebook' | 'instagram' | 'linkedin' | 'x'
   
   // Format Selection: 'auto' | 'long' | 'short' | 'fire'
   const [formatMode, setFormatMode] = useState('auto');
@@ -23,12 +20,13 @@ const PersonalBrandStudioTab = ({ backendUrl, selectedModel = 'stehouwer_llm' })
   // Processing & Results State
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
-  const [resultData, setResultData] = useState(null);
+  const [resultData, setResultData] = useState(/** @type {{"posts": {"long_form": string, "short_form": string, "fire_writing": string}, "fire_writing": {"social_post": string, "raw_source_payload": string}, "hashtag_boxes": {"box1": {"tag_string": string, "title": string, "audience": string}, "box2": {"tag_string": string, "title": string, "audience": string}}, "topic": string, "comment_drop": string} | null} */ (null));
 
   // Clipboard Feedback State
-  const [copiedKey, setCopiedKey] = useState(null);
+  const [copiedKey, setCopiedKey] = useState(/** @type {string | null} */ (null));
 
-  const handleCopy = (text, key) => {
+  /** @param {string} text @param {string} key */
+const handleCopy = ( text,  key) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
@@ -115,7 +113,7 @@ const PersonalBrandStudioTab = ({ backendUrl, selectedModel = 'stehouwer_llm' })
         setActiveOutputTab(inputText.length < 220 ? 'short' : 'long');
       }
     } else {
-      setError(lastError ? `Connection failed: ${lastError.message}. Ensure the backend daemon is running.` : 'Could not connect to Social Optimizer Engine.');
+      setError(lastError ? `Connection failed: ${lastError instanceof Error ? lastError.message : String(lastError)}. Ensure the backend daemon is running.` : 'Could not connect to Social Optimizer Engine.');
     }
     setIsGenerating(false);
   };

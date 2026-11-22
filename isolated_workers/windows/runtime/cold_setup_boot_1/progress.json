@@ -1,0 +1,11 @@
+﻿{
+    "State":  "PREPARING",
+    "Detail":  "VBoxManage showvminfo 6c5a53da-ab80-4ecb-8be6-4059266f736e --machinereadable",
+    "VMName":  "AI-BS-Eval-Base-20261023",
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Step":  1,
+    "PID":  165324,
+    "TimestampUTC":  "2026-10-23T22:02:53.8019694Z",
+    "StartedGuest":  false,
+    "AcceptedWindowsTerms":  false
+}

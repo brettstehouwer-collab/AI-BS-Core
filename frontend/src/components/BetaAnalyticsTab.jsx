@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{timestamp: number, sensor_type: string, frequency_band: string, channel: number, signal_pct: number, ssid_name: string, bssid_mac: string, radio_type: string, beacon_hash: string}} AirRecord */
+/** @typedef {{timestamp: number, ip_address: string, page_path: string, severity: string, event_type: string, details: unknown}} PublishingEvent */
+/** @typedef {{id: string | number, timestamp: number, method?: string, protocol?: string, record_type?: string, origin_domain?: string, endpoint?: string, path?: string, src_endpoint?: string, status_code?: number, flow_id?: string, payload_sha256?: string, payload_sha256_in?: string, payload_sha256_out?: string, frame_payload_sha256?: string, asgi_duration_ms?: number, duration_ms?: number, bytes_in?: number, bytes_out?: number, body_bytes_in?: number, body_bytes_out?: number, captured_frame_bytes?: number, captured_overhead_bytes?: number, frame_bytes?: number, header_bytes?: number, payload_bytes?: number, transport_payload_bytes?: number, is_stehouwer_publishing?: boolean}} WireRecord */
+/** @typedef {{block_index: number, domain: string, event: string, detail: string, full_hash: string, hash: string, prev_hash: string, id?: string, timestamp: number, timestamp_iso?: string}} AuditBlock */
+import { useState, useEffect, useRef } from 'react';
+import BrandCampaignManager from './BrandCampaignManager.jsx';
 import { loadAnalyticsSnapshot, emptyTrafficData, emptyApiData } from '/src/utils/analyticsData.js';
 import { getApiBase } from '../config/api';
 import EcosystemPortMonitorWidget from './EcosystemPortMonitorWidget';
@@ -26,6 +31,7 @@ const JULIE_EMAILS = [
   'julie@stehouwer-publishing.com'
 ];
 
+/** @param {{backendUrl?: string, currentUser?: import("firebase/auth").User | null}} props */
 export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   // Determine if running locally or on local home network (LAN)
   const isLocalDev = typeof window !== 'undefined' && (
@@ -46,58 +52,25 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   // Allowed operators: Julie, Brett, LocalDev, footballstar0325
   const isAuthorizedOperator = isLocalDev || isJulie || AUTHORIZED_EMAILS.includes(userEmail);
 
-  // Check persistent authorization or session unlock (Julie is ALWAYS unlocked with zero password prompt)
-  const [isUnlocked, setIsUnlocked] = useState(() => {
-    if (isJulie) return true;
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('aibs_beta_analytics_unlocked') === 'true';
-    }
-    return false;
-  });
-
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-
-  const handlePasswordUnlock = (e) => {
-    e?.preventDefault();
-    setPasswordError('');
-    if (!enteredPassword.trim()) {
-      setPasswordError('Please enter the telemetry suite security password.');
-      return;
-    }
-
-    if (enteredPassword.trim() === 'jssdbdAS2631') {
-      setIsUnlocked(true);
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('aibs_beta_analytics_unlocked', 'true');
-      }
-    } else {
-      setPasswordError('Invalid security password. Access denied.');
-    }
-  };
-
-  const handleLockVault = () => {
-    setIsUnlocked(false);
-    setEnteredPassword('');
-    setPasswordError('');
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('aibs_beta_analytics_unlocked');
-    }
-  };
+  // Password prompt removed 2026-11-22: it was client-side only; backend auth is the real gate.
+  const isUnlocked = true;
 
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
   const [activeSubView, setActiveSubView] = useState('user_sessions'); // 'user_sessions' | 'ecosystem_ports' | 'site_traffic' | 'wire_packets' | 'air_sensors' | 'api_compute' | 'cdz_audit'
-  const [selectedSite, setSelectedSite] = useState('stehouwer_publishing'); // 'stehouwer_publishing' | 'thesimplechef'
-  const [siteCounts, setSiteCounts] = useState({ stehouwer_publishing: 0, thesimplechef: 0 });
+  const [selectedSite, setSelectedSite] = useState('stehouwer_publishing'); // 'stehouwer_publishing' | 'thesimplechef' | 'stehouwer_productions'
+  const [siteCounts, setSiteCounts] = useState({ stehouwer_publishing: 0, thesimplechef: 0, stehouwer_productions: 0 });
 
   // 1. Site Traffic Telemetry State (16-Layer Suite)
   const [trafficData, setTrafficData] = useState(emptyTrafficData);
 
   // 2. Wire Packet Hashes & ASGI Gateway State
-  const [wireRecordType, setWireRecordType] = useState('ALL');
-  const [correlationModalData, setCorrelationModalData] = useState(null);
-  const [isLoadingCorrelation, setIsLoadingCorrelation] = useState(false);
+  const [wireRecordType] = useState('ALL');
+  const [correlationModalData, setCorrelationModalData] = useState(/** @type {{flow_id: string, l7_transaction?: WireRecord, wire_frames?: {inbound_sha256?: string, outbound_sha256?: string}} | null} */ (null));
+  const [, setIsLoadingCorrelation] = useState(false);
   const [wireSummary, setWireSummary] = useState({
+    wire_frames: /** @type {{total_count?: number, wire_bandwidth_kb?: number, payload_bandwidth_kb?: number, captured_overhead_bytes?: number, active_flows_count?: number, tcp_flags_distribution?: Record<string, number>} | undefined} */ (undefined),
+    transactions: /** @type {{total_count?: number, bandwidth_in_kb?: number, bandwidth_out_kb?: number, asgi_duration?: {avg_ms?: number, p95_ms?: number}} | undefined} */ (undefined),
+    flows: /** @type {{active_count?: number, tcp_active?: number, udp_active?: number, idle_timeout_seconds?: number} | undefined} */ (undefined),
     total_requests: 0,
     total_bytes_in: 0,
     total_bytes_out: 0,
@@ -113,48 +86,53 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       bytes_out: 0,
       bandwidth_in_kb: 0,
       bandwidth_out_kb: 0,
-      recent_packet_hashes: []
+      recent_packet_hashes: /** @type {{method: string, path: string, status_code: number, hash_in?: string, hash_out?: string}[]} */ ([])
     }
   });
-  const [wireTraffic, setWireTraffic] = useState([]);
+  const [wireTraffic, setWireTraffic] = useState(/** @type {WireRecord[]} */ ([]));
   const [wireFilterStehouwer, setWireFilterStehouwer] = useState(false);
   const [wireFilterHasHash, setWireFilterHasHash] = useState(false);
   const [wireSearchDomain, setWireSearchDomain] = useState('');
   const [wireLimit, setWireLimit] = useState(50);
-  const [captureInterfaces, setCaptureInterfaces] = useState([]);
-  const [selectedInterface, setSelectedInterface] = useState('');
-  const [bpfFilterInput, setBpfFilterInput] = useState('tcp or udp');
+  const [, setCaptureInterfaces] = useState([]);
+  const [, setSelectedInterface] = useState('');
+  const [, setBpfFilterInput] = useState('tcp or udp');
   const [wireFilterEngine, setWireFilterEngine] = useState('ALL');
-  const [engineFeedback, setEngineFeedback] = useState(null);
-  const [isSwitchingEngine, setIsSwitchingEngine] = useState(false);
+  useState(/** @type {{type: string, text: string} | null} */ (null));
+  useState(false);
 
   // 3. Over-The-Air Wave Hardware Sensors State
   const [airSummary, setAirSummary] = useState({
     total_records: 0,
     unique_beacon_hashes: 0,
     avg_signal_pct: 0,
-    band_distribution: {},
-    sensor_distribution: {},
+    band_distribution: /** @type {Record<string, number>} */ ({}),
+    sensor_distribution: /** @type {Record<string, number>} */ ({}),
     recent_hashes: []
   });
-  const [airRecords, setAirRecords] = useState([]);
+  const [airRecords, setAirRecords] = useState(/** @type {AirRecord[]} */ ([]));
   const [isScanningAir, setIsScanningAir] = useState(false);
   const [airFilterType, setAirFilterType] = useState('ALL'); // 'ALL' | 'WIFI_RF' | 'BLUETOOTH_BLE'
   const [airFilterBand, setAirFilterBand] = useState('ALL'); // 'ALL' | '2.4GHz_ISM' | '5GHz_UNII' | '6GHz_WIFI6E'
   const [airSearchHash, setAirSearchHash] = useState('');
-  const [airLimit, setAirLimit] = useState(50);
-  const [airScanAlert, setAirScanAlert] = useState(null);
+  const [airLimit] = useState(50);
+  const [airScanAlert, setAirScanAlert] = useState(/** @type {string | null} */ (null));
 
   // 4. API Compute & Security State
   const [apiData, setApiData] = useState(emptyApiData);
-  const [pubSecurityEvents, setPubSecurityEvents] = useState([]);
-  const [analyticsError, setAnalyticsError] = useState(null);
-  const privateRequest = useRef(null);
+  const [pubSecurityEvents, setPubSecurityEvents] = useState(/** @type {PublishingEvent[]} */ ([]));
+  const [analyticsError, setAnalyticsError] = useState(/** @type {string | null} */ (null));
+  const privateRequest = useRef(/** @type {AbortController | null} */ (null));
   const privateGeneration = useRef(0);
+  const privateOwner = useRef('');
+  const analyticsOwnerKey = JSON.stringify([currentUser?.uid, currentUser?.email, currentUser?.emailVerified, apiHost, isAuthorizedOperator, isUnlocked]);
+  const trafficScopeKey = JSON.stringify([analyticsOwnerKey, selectedSite]);
+  const [loadedTrafficScope, setLoadedTrafficScope] = useState('');
 
   const clearPrivateAnalytics = () => {
     setTrafficData(emptyTrafficData());
-    setSiteCounts({ stehouwer_publishing: 0, thesimplechef: 0 });
+    setLoadedTrafficScope('');
+    setSiteCounts({ stehouwer_publishing: 0, thesimplechef: 0, stehouwer_productions: 0 });
     setApiData(emptyApiData());
     setPubSecurityEvents([]);
     setLastRefreshed(null);
@@ -169,15 +147,21 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       const snapshot = await loadAnalyticsSnapshot(apiHost, selectedSite, { signal: controller.signal });
       if (controller.signal.aborted || generation !== privateGeneration.current) return;
       setTrafficData(snapshot.trafficData);
-      setSiteCounts(snapshot.siteCounts);
-      setApiData(snapshot.apiData);
-      setPubSecurityEvents(snapshot.pubSecurityEvents);
+      setLoadedTrafficScope(trafficScopeKey);
+      setSiteCounts(previous => ({ ...previous, ...snapshot.siteCounts }));
+      if (snapshot.apiData) setApiData(snapshot.apiData);
+      if (snapshot.pubSecurityEvents) setPubSecurityEvents(snapshot.pubSecurityEvents);
       setAnalyticsError(null);
       setLastRefreshed(new Date().toLocaleTimeString());
     } catch (error) {
       if (controller.signal.aborted || generation !== privateGeneration.current) return;
-      clearPrivateAnalytics();
-      setAnalyticsError(error.message || 'Web analytics could not refresh.');
+      if ([401, 403].includes(error?.status)) clearPrivateAnalytics();
+      else {
+        setTrafficData(emptyTrafficData());
+        setLoadedTrafficScope('');
+        setLastRefreshed(null);
+      }
+      setAnalyticsError(errorMessage(error) || 'Web analytics could not refresh.');
     } finally {
       if (privateRequest.current === controller) privateRequest.current = null;
     }
@@ -191,25 +175,26 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     genesis_hash: '0000000000000000',
     is_valid: true,
     tampered_at: null,
-    domain_breakdown: {},
-    event_breakdown: {},
+    domain_breakdown: /** @type {Record<string, number>} */ ({}),
+    event_breakdown: /** @type {Record<string, number>} */ ({}),
     recent_blocks: [],
-    watcher: {}
+    watcher: /** @type {{running?: boolean, total_scans?: number}} */ ({})
   });
-  const [cdzBlocks, setCdzBlocks] = useState([]);
+  const [cdzBlocks, setCdzBlocks] = useState(/** @type {AuditBlock[]} */ ([]));
   const [cdzTotal, setCdzTotal] = useState(0);
   const [cdzFilterDomain, setCdzFilterDomain] = useState('ALL');
   const [cdzFilterEvent, setCdzFilterEvent] = useState('ALL');
   const [cdzSearch, setCdzSearch] = useState('');
-  const [cdzLimit, setCdzLimit] = useState(50);
+  const [cdzLimit] = useState(50);
   const [isScanningCdz, setIsScanningCdz] = useState(false);
-  const [cdzScanAlert, setCdzScanAlert] = useState(null);
+  const [cdzScanAlert, setCdzScanAlert] = useState(/** @type {string | null} */ (null));
 
   const [isLoading, setIsLoading] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState(null);
-  const [copiedHash, setCopiedHash] = useState(null);
+  const [lastRefreshed, setLastRefreshed] = useState(/** @type {string | null} */ (null));
+  const [copiedHash, setCopiedHash] = useState(/** @type {string | null} */ (null));
 
-  const copyToClipboard = (text, label) => {
+  /** @param {string | undefined} text @param {string} label */
+const copyToClipboard = (text, label) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopiedHash(label);
@@ -254,13 +239,14 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         setCdzScanAlert('Failed to trigger CDZ scan.');
       }
     } catch (e) {
-      setCdzScanAlert(`Error triggering CDZ scan: ${e.message}`);
+      setCdzScanAlert(`Error triggering CDZ scan: ${errorMessage(e)}`);
     } finally {
       setIsScanningCdz(false);
     }
   };
 
-  const handleFetchCorrelation = async (flowId, txId) => {
+  /** @param {string | undefined} flowId @param {string | number | undefined} txId */
+const handleFetchCorrelation = async (flowId, txId) => {
     setIsLoadingCorrelation(true);
     try {
       let u = `${apiHost}/api/network-telemetry/correlation?`;
@@ -320,44 +306,9 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     }
   };
 
-  const handleApplyInterface = async () => {
-    try {
-      const res = await fetch(`${apiHost}/api/network-telemetry/set-interface`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ interface_name: selectedInterface, bpf_filter: bpfFilterInput })
-      });
-      if (res.ok) {
-        fetchInterfaces();
-      }
-    } catch (e) {
-      console.warn('Failed to apply interface config:', e);
-    }
-  };
+  
 
-  const handleSwitchEngine = async (targetEngine) => {
-    setIsSwitchingEngine(true);
-    setEngineFeedback(null);
-    try {
-      const res = await fetch(`${apiHost}/api/network-telemetry/engine/switch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engine: targetEngine })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setEngineFeedback({ type: 'success', text: `Engine successfully switched to: ${targetEngine} (Active: ${data.active_engine})` });
-        await fetchWireTelemetry();
-      } else {
-        setEngineFeedback({ type: 'error', text: `Failed to switch engine: ${data.detail || data.message || 'Unknown error'}` });
-      }
-    } catch (e) {
-      setEngineFeedback({ type: 'error', text: `Engine switch error: ${e.message}` });
-    } finally {
-      setIsSwitchingEngine(false);
-      setTimeout(() => setEngineFeedback(null), 5000);
-    }
-  };
+  
 
   const fetchAirTelemetry = async () => {
     try {
@@ -396,7 +347,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         await fetchAirTelemetry();
       }
     } catch (e) {
-      setAirScanAlert(`Air scan error: ${e.message}`);
+      setAirScanAlert(`Air scan error: ${errorMessage(e)}`);
     } finally {
       setIsScanningAir(false);
     }
@@ -433,12 +384,20 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     // transports that finish after AbortController cancellation.
     privateRequest.current?.abort();
     privateGeneration.current += 1;
-    clearPrivateAnalytics();
+    if (privateOwner.current !== analyticsOwnerKey) {
+      privateOwner.current = analyticsOwnerKey;
+      clearPrivateAnalytics();
+    } else {
+      setTrafficData(emptyTrafficData());
+      setLoadedTrafficScope('');
+      setLastRefreshed(null);
+    }
     setAnalyticsError(null);
     if (!isAuthorizedOperator || !isUnlocked || !currentUser?.uid || !currentUser?.emailVerified) {
       setAnalyticsError('Sign in with an authorized administrator account to load private analytics.');
       return;
     }
+    if (activeSubView === 'brand_campaigns') return;
     refreshAll();
     if (activeSubView === 'wire_packets') {
       fetchInterfaces();
@@ -455,6 +414,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
   }, [currentUser?.uid, currentUser?.email, currentUser?.emailVerified, apiHost, isAuthorizedOperator, isUnlocked, activeSubView, selectedSite, wireFilterStehouwer, wireFilterHasHash, wireSearchDomain, wireLimit, wireFilterEngine, airFilterType, airFilterBand, airSearchHash, airLimit]);
 
   const isChef = selectedSite === 'thesimplechef';
+  const isProductions = selectedSite === 'stehouwer_productions';
 
   // Security Barrier 1: Email / LocalDev Identity Enforcement
   if (!isAuthorizedOperator) {
@@ -505,83 +465,6 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
     );
   }
 
-  // Security Barrier 2: Password Challenge
-  if (!isUnlocked) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '75vh',
-        padding: '32px 16px',
-        background: '#090d16',
-        fontFamily: 'Inter, system-ui, sans-serif'
-      }}>
-        <div style={{
-          background: '#0d1117',
-          border: '1px solid rgba(56, 189, 248, 0.35)',
-          borderRadius: '16px',
-          padding: '40px 32px',
-          maxWidth: '520px',
-          width: '100%',
-          textAlign: 'center',
-          boxShadow: '0 20px 45px rgba(0,0,0,0.7)',
-          animation: 'fadeIn 0.3s ease-in-out'
-        }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔐</div>
-          <h2 style={{ color: '#38bdf8', fontSize: '24px', fontWeight: '800', margin: '0 0 12px 0' }}>
-            Telemetry Suite — Password Required
-          </h2>
-          <p style={{ color: '#8b949e', fontSize: '14px', lineHeight: '1.6', margin: '0 0 24px 0' }}>
-            Identity Verified: <span style={{ color: '#38bdf8', fontWeight: '700' }}>{isLocalDev ? 'LocalDev' : userEmail}</span>. Enter the master security password to unlock live telemetry.
-          </p>
-          <form onSubmit={handlePasswordUnlock} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="password"
-                placeholder="Enter Vault Password"
-                value={enteredPassword}
-                onChange={(e) => setEnteredPassword(e.target.value)}
-                autoFocus
-                style={{
-                  flex: 1,
-                  background: '#161b22',
-                  border: '1px solid #30363d',
-                  borderRadius: '8px',
-                  padding: '12px 16px',
-                  color: '#fff',
-                  fontSize: '14px',
-                  outline: 'none'
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  background: 'linear-gradient(135deg, #1f6feb 0%, #38bdf8 100%)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '12px 20px',
-                  fontWeight: '700',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                Unlock Suite 🔓
-              </button>
-            </div>
-            {passwordError && (
-              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '8px', padding: '10px 14px', fontSize: '13px', color: '#f87171', textAlign: 'left' }}>
-                ⚠️ {passwordError}
-              </div>
-            )}
-          </form>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={{ padding: '24px', color: '#e6edf3', height: '100%', overflowY: 'auto', background: '#090d16', fontFamily: 'Inter, system-ui, sans-serif' }}>
       
@@ -599,17 +482,21 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
               border: isChef ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(56, 189, 248, 0.4)',
               fontWeight: '700'
             }}>
-              {isChef ? '👨‍🍳 The Simple Chef Module' : '📚 Stehouwer Publishing Module'}
+              {isProductions ? 'Stehouwer Productions Module' : isChef ? '👨‍🍳 The Simple Chef Module' : '📚 Stehouwer Publishing Module'}
             </span>
           </div>
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#8b949e' }}>
-            Real-time dwell times, scroll depths, Geo-IP, hardware specs, Web Vitals, wire packet hashes & over-the-air RF wave sensors
+            {isProductions ? 'Website events, referral sources and campaign labels' : 'Real-time dwell times, scroll depths, Geo-IP, hardware specs, Web Vitals, wire packet hashes & over-the-air RF wave sensors'}
           </p>
         </div>
 
         {/* Site Switcher Toggle & Refresh Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#161b22', padding: '3px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <button
+              onClick={() => { setSelectedSite('stehouwer_productions'); setActiveSubView('site_traffic'); }}
+              style={{ padding: '5px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: isProductions ? '#1f6feb' : 'transparent', color: '#fff' }}
+            >Stehouwer Productions ({siteCounts.stehouwer_productions})</button>
             <button
               onClick={() => { setSelectedSite('stehouwer_publishing'); setActiveSubView('site_traffic'); }}
               style={{
@@ -674,36 +561,19 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
           >
             {isLoading ? '⏳ Refreshing...' : '🔄 Live Sync'}
           </button>
-          <button
-            onClick={handleLockVault}
-            title="Lock Suite (Requires password to re-enter)"
-            style={{
-              background: '#21262d',
-              color: '#f85149',
-              border: '1px solid rgba(248, 81, 73, 0.4)',
-              borderRadius: '6px',
-              padding: '6px 12px',
-              fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            🔒 Lock Suite
-          </button>
         </div>
       </div>
 
       {analyticsError && (
         <div role="alert" style={{ padding: '12px', marginBottom: '18px', color: '#fca5a5', background: '#29161a', border: '1px solid #85404a', borderRadius: '8px' }}>
-          {analyticsError} Previous web traffic and security results have been cleared.
+          {analyticsError} Current results are unavailable; retained counts are not a fresh result.
         </div>
       )}
 
+      {activeSubView === 'brand_campaigns' && <BrandCampaignManager currentUser={currentUser} />}
       {/* Navigation Sub-Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        <button onClick={() => setActiveSubView('brand_campaigns')} style={{ padding: '8px 16px', borderRadius: '6px', color: '#fff', background: activeSubView === 'brand_campaigns' ? '#1f6feb' : '#161b22', border: '1px solid #30363d', cursor: 'pointer' }}>Email &amp; SMS Campaigns</button>
         <button
           onClick={() => setActiveSubView('user_sessions')}
           style={{
@@ -754,6 +624,11 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
         >
           🌐 Stehouwer-Publishing.com Web Traffic ({siteCounts.stehouwer_publishing} Hits)
         </button>
+
+        <button
+          onClick={() => { setActiveSubView('site_traffic'); setSelectedSite('stehouwer_productions'); }}
+          style={{ padding: '8px 16px', borderRadius: '6px', background: activeSubView === 'site_traffic' && isProductions ? '#1f6feb' : '#161b22', color: '#fff', border: '1px solid #30363d', cursor: 'pointer' }}
+        >StehouwerProductions.com Web Traffic ({siteCounts.stehouwer_productions} Events)</button>
 
         <button
           onClick={() => { setActiveSubView('site_traffic'); setSelectedSite('thesimplechef'); }}
@@ -847,7 +722,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
       )}
 
       {/* VIEW 1: WEBSITE TRAFFIC ANALYTICS (16-LAYER DEEP TELEMETRY SUITE) */}
-      {activeSubView === 'site_traffic' && !analyticsError && (
+      {activeSubView === 'site_traffic' && !analyticsError && loadedTrafficScope === trafficScopeKey && (
         <div>
           {/* Active Site Scope Banner */}
           <div style={{
@@ -866,10 +741,10 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
               <span style={{ fontSize: '20px' }}>{isChef ? '👨‍🍳' : '🌐'}</span>
               <div>
                 <div style={{ fontSize: '14px', fontWeight: '800', color: isChef ? '#f59e0b' : '#38bdf8' }}>
-                  {isChef ? 'TheSimpleChef.com (John Barr)' : 'Stehouwer-Publishing.com'} — 16-Layer Deep Web Telemetry
+                  {isProductions ? 'StehouwerProductions.com — Visitor Analytics' : `${isChef ? 'TheSimpleChef.com (John Barr)' : 'Stehouwer-Publishing.com'} — 16-Layer Deep Web Telemetry`}
                 </div>
                 <div style={{ fontSize: '11px', color: '#8b949e' }}>
-                  {isChef ? 'Smokehouse BBQ Storefront • Venmo/Credit/Cash Checkout Telemetry • ChromaDB Partition: thesimplechef_analytics_bin' : 'Publishing Platform • HLS Ingest Telemetry • CDZ Cryptographic Hash Ledger'}
+                  {isProductions ? 'Events, referral origins, campaign labels and page engagement; no form contents collected' : isChef ? 'Smokehouse BBQ Storefront • Venmo/Credit/Cash Checkout Telemetry • ChromaDB Partition: thesimplechef_analytics_bin' : 'Publishing Platform • HLS Ingest Telemetry • CDZ Cryptographic Hash Ledger'}
                 </div>
               </div>
             </div>
@@ -881,18 +756,21 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
             </div>
           </div>
 
+          {isProductions && <p role="note" style={{ color: '#a8b3c2', fontSize: '13px', lineHeight: 1.6 }}>Source: AWS cloud analytics. Collection continues while this PC is off; opening this local dashboard still requires the PC. Counts include pageviews and engagement events. Sessions are browser sessions, not verified people. Dwell and scroll summarize event samples. Hardware, network, location, media and client diagnostics are unavailable for this site.</p>}
+          {isProductions && trafficData.metadata?.partial_metadata && <p role="note" style={{ color: '#a8b3c2', fontSize: '13px' }}>Top pages, referrals and campaign lists contain partial metadata and may not cover every recorded event.</p>}
           {/* 16-Layer KPI Summary Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>Total Pageviews</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Recorded events' : 'Total Pageviews'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: isChef ? '#f59e0b' : '#38bdf8', marginTop: '4px' }}>
                 {trafficData.total_pageviews}
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Total web visits</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Pageviews and engagement events' : 'Total web visits'}</div>
+              {isProductions && Number.isFinite(trafficData.actual_pageviews) && <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{trafficData.actual_pageviews} pageviews</div>}
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>Unique Visitors</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Browser sessions' : 'Unique Visitors'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#4ade80', marginTop: '4px' }}>
                 {trafficData.unique_visitors}
               </div>
@@ -900,11 +778,11 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
-              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>⏱️ Avg Dwell Time</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>{isProductions ? 'Avg reported dwell' : '⏱️ Avg Dwell Time'}</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#f59e0b', marginTop: '4px' }}>
                 {trafficData.avg_dwell_time_sec}s
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Active reading/viewing time</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Average of positive event samples' : 'Active reading/viewing time'}</div>
             </div>
 
             <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
@@ -912,40 +790,40 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#a855f7', marginTop: '4px' }}>
                 {trafficData.scroll_completion_rate}%
               </div>
-              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Hit 75%+ scroll milestone</div>
+              <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{isProductions ? 'Events reporting 75%+ scroll' : 'Hit 75%+ scroll milestone'}</div>
             </div>
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>⚡ Web Vitals (LCP)</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
                 {trafficData.web_vitals?.lcp_ms || 320}ms
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>CLS: {trafficData.web_vitals?.cls_score || 0.005}</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>📶 Edge Latency (TTFB)</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#38bdf8', marginTop: '4px' }}>
                 {trafficData.network_metrics?.avg_ttfb_ms || 35}ms
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>RTT: {trafficData.network_metrics?.avg_rtt_ms || 18}ms | {trafficData.network_metrics?.avg_downlink_mbps || 25} Mbps</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>📡 HLS Stream Ready</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
                 {trafficData.media_readiness?.hls_supported_pct || 100}%
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>{trafficData.media_readiness?.live_stream_hits || 0} media stream hits</div>
-            </div>
+            </div>)}
 
-            <div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '16px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <div style={{ fontSize: '11px', color: '#8b949e', textTransform: 'uppercase', fontWeight: '700' }}>🤖 Human Ratio</div>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#ec4899', marginTop: '4px' }}>
                 {trafficData.human_traffic_pct}%
               </div>
               <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>Verified human sessions</div>
-            </div>
+            </div>)}
           </div>
 
           {/* Breakdown Grid 1: Pages & Referrers */}
@@ -956,7 +834,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Page Path</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Total Hits</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Events' : 'Total Hits'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -980,7 +858,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Referrer</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Visitors</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Events' : 'Visitors'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1001,7 +879,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
 
           {/* Breakdown Grid 2: Edge Network & Campaign Attribution */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
-            <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
+            {!isProductions && (<div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#38bdf8' }}>📶 Network Connection & Throughput</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                 <thead>
@@ -1023,7 +901,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                   )}
                 </tbody>
               </table>
-            </div>
+            </div>)}
 
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f59e0b' }}>🎯 Campaign & Marketing Attribution</h3>
@@ -1031,7 +909,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e', textAlign: 'left' }}>
                     <th style={{ padding: '8px' }}>Source / Campaign</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>Attributed Hits</th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>{isProductions ? 'Attributed events' : 'Attributed Hits'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1043,7 +921,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                       </tr>
                     ))
                   ) : (
-                    <tr><td colSpan={2} style={{ padding: '16px', color: '#8b949e', textAlign: 'center' }}>Direct / organic visitors active.</td></tr>
+                    <tr><td colSpan={2} style={{ padding: '16px', color: '#8b949e', textAlign: 'center' }}>{isProductions ? 'No campaign attribution recorded.' : 'Direct / organic visitors active.'}</td></tr>
                   )}
                 </tbody>
               </table>
@@ -1051,7 +929,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
           </div>
 
           {/* Breakdown Grid 3: Geo-IP Location Distribution & Hardware */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+{!isProductions && (          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f0f6fc' }}>🌍 Geo-IP Location Distribution</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
@@ -1101,10 +979,10 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>)}
 
           {/* Recent Client Errors */}
-          {trafficData.recent_errors && trafficData.recent_errors.length > 0 && (
+          {!isProductions && trafficData.recent_errors && trafficData.recent_errors.length > 0 && (
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid rgba(239, 68, 68, 0.4)', marginBottom: '24px' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#ef4444' }}>⚠️ Live Client-Side Diagnostics & Error Catcher</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
@@ -1133,7 +1011,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
           )}
 
           {/* Form Field Abandonment Leads */}
-          {trafficData.form_abandonment_leads && trafficData.form_abandonment_leads.length > 0 && (
+          {!isProductions && trafficData.form_abandonment_leads && trafficData.form_abandonment_leads.length > 0 && (
             <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid rgba(245, 158, 11, 0.4)', marginBottom: '24px' }}>
               <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f59e0b' }}>🎯 Form Field Abandonment Leads</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
@@ -1164,29 +1042,29 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
           {/* Live 16-Layer Visitor Event Stream Table */}
           <div style={{ background: '#161b22', padding: '20px', borderRadius: '10px', border: '1px solid #30363d', marginBottom: '24px' }}>
             <h3 style={{ margin: '0 0 14px 0', fontSize: '15px', color: '#f0f6fc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>🔴 Live 16-Layer Visitor Event Telemetry Stream ({trafficData.live_events.length} Events)</span>
+              <span>{isProductions ? 'Recent website events' : '🔴 Live 16-Layer Visitor Event Telemetry Stream'} ({trafficData.live_events.length} Events)</span>
               <span style={{ fontSize: '11px', color: '#8b949e' }}>Scope: {selectedSite}</span>
             </h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #30363d', color: '#8b949e' }}>
-                    <th style={{ padding: '8px' }}>Time</th>
+                    <th style={{ padding: '8px' }}>{isProductions ? 'Time (UTC)' : 'Time'}</th>
                     <th style={{ padding: '8px' }}>Session ID</th>
-                    <th style={{ padding: '8px' }}>Location</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>Location</th>}
                     <th style={{ padding: '8px' }}>Page Path</th>
                     <th style={{ padding: '8px' }}>Event</th>
-                    <th style={{ padding: '8px' }}>Network</th>
-                    <th style={{ padding: '8px' }}>TTFB</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>Network</th>}
+                    {!isProductions && <th style={{ padding: '8px' }}>TTFB</th>}
                     <th style={{ padding: '8px' }}>Dwell</th>
                     <th style={{ padding: '8px' }}>Scroll</th>
-                    <th style={{ padding: '8px' }}>GPU Renderer</th>
+                    {!isProductions && <th style={{ padding: '8px' }}>GPU Renderer</th>}
                   </tr>
                 </thead>
                 <tbody>
                   {trafficData.live_events.length === 0 ? (
                     <tr>
-                      <td colSpan={10} style={{ padding: '20px', textAlign: 'center', color: '#8b949e' }}>
+                      <td colSpan={isProductions ? 6 : 10} style={{ padding: '20px', textAlign: 'center', color: '#8b949e' }}>
                         No live website traffic recorded yet for {selectedSite}.
                       </td>
                     </tr>
@@ -1195,7 +1073,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                       <tr key={e.id} style={{ borderBottom: '1px solid #21262d' }}>
                         <td style={{ padding: '8px', color: '#8b949e', fontFamily: 'monospace' }}>{e.formatted_time}</td>
                         <td style={{ padding: '8px', fontFamily: 'monospace', color: '#38bdf8', fontSize: '11px' }}>{e.session_id}</td>
-                        <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '600' }}>🇺🇸 {e.city}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '600' }}>🇺🇸 {e.city}</td>}
                         <td style={{ padding: '8px', color: '#4ade80', fontWeight: '600' }}>{e.page_path}</td>
                         <td style={{ padding: '8px' }}>
                           <span style={{
@@ -1209,11 +1087,11 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {e.event_type.toUpperCase()}
                           </span>
                         </td>
-                        <td style={{ padding: '8px', color: '#38bdf8', fontWeight: 'bold' }}>{e.network_type ? e.network_type.toUpperCase() : '4G'}</td>
-                        <td style={{ padding: '8px', color: '#10b981', fontFamily: 'monospace' }}>{e.ttfb_ms ? `${e.ttfb_ms}ms` : '—'}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#38bdf8', fontWeight: 'bold' }}>{e.network_type ? e.network_type.toUpperCase() : '4G'}</td>}
+                        {!isProductions && <td style={{ padding: '8px', color: '#10b981', fontFamily: 'monospace' }}>{e.ttfb_ms ? `${e.ttfb_ms}ms` : '—'}</td>}
                         <td style={{ padding: '8px', color: '#f59e0b', fontWeight: '700' }}>{e.dwell_time_sec || 0}s</td>
                         <td style={{ padding: '8px', color: '#a855f7', fontWeight: '700' }}>{e.scroll_depth_pct || 0}%</td>
-                        <td style={{ padding: '8px', color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>{e.gpu_renderer || 'WebGL'}</td>
+                        {!isProductions && <td style={{ padding: '8px', color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>{e.gpu_renderer || 'WebGL'}</td>}
                       </tr>
                     ))
                   )}
@@ -1223,7 +1101,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
           </div>
 
           {/* Decoupled L7 Application Metrics */}
-          <div style={{ marginBottom: '20px' }}>
+{!isProductions && (          <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <span style={{ fontSize: '12px', fontWeight: '800', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 🌐 Layer 7 Application Telemetry (ASGI Middleware)
@@ -1267,10 +1145,10 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div>)}
 
           {/* Stehouwer-Publishing.com Dedicated Packet Sub-Ledger Highlight */}
-          {wireSummary.stehouwer_publishing?.recent_packet_hashes?.length > 0 && (
+          {!isProductions && wireSummary.stehouwer_publishing?.recent_packet_hashes?.length > 0 && (
             <div style={{ background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '10px', padding: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <h3 style={{ margin: 0, fontSize: '14px', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1542,7 +1420,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {isFrame ? (
                               <span style={{ color: '#8b949e', fontSize: '11px', fontFamily: 'monospace' }}>— (Wire)</span>
                             ) : (
-                              <span style={{ fontWeight: '700', color: t.status_code < 300 ? '#4ade80' : t.status_code < 400 ? '#38bdf8' : '#ef4444' }}>
+                              <span style={{ fontWeight: '700', color: (t.status_code || 0) < 300 ? '#4ade80' : (t.status_code || 0) < 400 ? '#38bdf8' : '#ef4444' }}>
                                 {t.status_code}
                               </span>
                             )}
@@ -1561,7 +1439,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {isFrame ? (
                               (t.frame_payload_sha256 || t.payload_sha256) ? (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#a855f7' }}>
-                                  <span>FRM: {(t.frame_payload_sha256 || t.payload_sha256).slice(0, 12)}...</span>
+                                  <span>FRM: {(t.frame_payload_sha256 || t.payload_sha256 || '').slice(0, 12)}...</span>
                                   <button
                                     onClick={() => copyToClipboard(t.frame_payload_sha256 || t.payload_sha256, `row_frm_${idx}`)}
                                     style={{ background: 'none', border: 'none', color: '#8b949e', cursor: 'pointer', fontSize: '10px' }}
@@ -1602,7 +1480,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                           <td style={{ padding: '8px', textAlign: 'center' }}>
                             {t.flow_id ? (
                               <button
-                                onClick={() => handleFetchCorrelation(isFrame ? t.flow_id : null, isFrame ? null : t.id)}
+                                onClick={() => handleFetchCorrelation(isFrame ? t.flow_id || undefined : undefined, isFrame ? undefined : t.id)}
                                 style={{ background: '#21262d', color: '#38bdf8', border: '1px solid #30363d', borderRadius: '4px', padding: '3px 8px', fontSize: '10px', cursor: 'pointer', fontWeight: '600' }}
                               >
                                 🔗 Flow
@@ -1892,7 +1770,7 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
                             {pev.severity}
                           </span>
                         </td>
-                        <td style={{ padding: '8px', color: '#e2e8f0', fontFamily: 'monospace' }}>{pev.details}</td>
+                        <td style={{ padding: '8px', color: '#e2e8f0', fontFamily: 'monospace' }}>{typeof pev.details === 'string' ? pev.details : JSON.stringify(pev.details)}</td>
                       </tr>
                     ))
                   )}
@@ -2150,4 +2028,10 @@ export default function BetaAnalyticsTab({ backendUrl, currentUser }) {
 
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

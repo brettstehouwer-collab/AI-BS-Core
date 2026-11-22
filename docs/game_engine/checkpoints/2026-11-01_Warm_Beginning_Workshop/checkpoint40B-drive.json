@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-03T17:25:38.210047+00:00",
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\40B_Debug_Release_Regression_Final_Evidence.zip",
+  "bytes": 61618,
+  "sha256": "1e04ab1531d7572e9c55384d2f98b207aa99cda3b2a39b24dbbe3baeb4526727",
+  "members": 34,
+  "drive_folder_id": "1y5taD3PtKLfBi9wUPltELJlroP52F3B9",
+  "scope": "Final regression supplement to authenticated40A incremental source checkpoint, not a portable release",
+  "goal_complete": false,
+  "drive_file_id": "17p-FrHRkZ7dm4RSky0M8H3hhG67CoFBm",
+  "drive_url": "https://drive.google.com/file/d/17p-FrHRkZ7dm4RSky0M8H3hhG67CoFBm/view?usp=drivesdk",
+  "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\1e04ab1531d7572e9c55384d2f98b207aa99cda3b2a39b24dbbe3baeb4526727.zip",
+  "binary_cloud_restore_verified": false
+}

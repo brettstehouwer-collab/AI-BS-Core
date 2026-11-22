@@ -96,15 +96,11 @@ async def authenticate_and_authorize(
     """Helper to authenticate Bearer token, inspect security shield, and enforce rate limits."""
     ip = SecurityShield.extract_client_ip(request)
 
-    # 1. Bearer Token Format Check & Internal Dashboard Fallback
+    # Explicit credentials only; privileged development fallbacks are retired.
     if not authorization or not authorization.startswith("Bearer "):
-        authorization = "Bearer sk_aibs_dev_master_key_2026"
-
+        raise HTTPException(status_code=401, detail="Valid commercial Bearer key required")
     raw_key = authorization[7:].strip()
     key_info = verify_api_key(raw_key, client_ip=ip)
-
-    if not key_info:
-        key_info = verify_api_key("sk_aibs_dev_master_key_2026", client_ip=ip)
 
     if not key_info:
         raise HTTPException(
@@ -857,79 +853,12 @@ class TierUpgradeSchema(BaseModel):
 
 @gateway_router.post("/auth/request-passkey")
 async def request_passkey(payload: PasskeyRequestSchema):
-    """
-    Public self-service endpoint for instant developer passkey generation.
-    """
-    from commercial_gateway.api_key_manager import create_api_key
-
-    tier = payload.tier.lower()
-    if tier not in ["sandbox", "starter", "pro", "enterprise"]:
-        tier = "starter"
-
-    created = create_api_key(
-        client_name=payload.client_name, tier=tier, expires_in_days=365
-    )
-
-    raw_key = created["raw_key"]
-
-    curl_sample = f'curl -X POST https://stehouwer-publishing.com/v1/audio/generations \\\n  -H "Authorization: Bearer {raw_key}" \\\n  -H "Content-Type: application/json" \\\n  -d \'{{"prompt": "Synthwave guitar solo", "genre": "synthwave", "duration_sec": 0, "tempo_bpm": 110}}\''
-
-    return {
-        "status": "success",
-        "message": f"Passkey generated successfully for '{payload.client_name}' ({tier.upper()} Tier).",
-        "passkey": raw_key,
-        "tier": tier,
-        "expires_at": created["expires_at"],
-        "quickstart_curl": curl_sample,
-    }
+    raise HTTPException(410, "Public commercial key issuance is retired; verified entitlements are required")
 
 
 @gateway_router.post("/auth/upgrade-tier")
 async def upgrade_passkey_tier(payload: TierUpgradeSchema):
-    """
-    Upgrades an existing passkey tier in the commercial usage database.
-    """
-    import sqlite3
-    from commercial_gateway.api_key_manager import USAGE_DB_PATH, _hash_key, TIER_SPECS
-
-    new_tier = payload.new_tier.lower()
-    if new_tier not in TIER_SPECS:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "message": f"Invalid tier. Must be one of: {list(TIER_SPECS.keys())}"
-                }
-            },
-        )
-
-    key_hash = _hash_key(payload.key)
-    conn = sqlite3.connect(USAGE_DB_PATH)
-    try:
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA synchronous=NORMAL;")
-    except Exception:
-        pass
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE api_keys SET tier = ? WHERE key_hash = ?", (new_tier, key_hash)
-    )
-    updated = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-
-    if not updated:
-        raise HTTPException(
-            status_code=404,
-            detail={"error": {"message": "Passkey not found in registry."}},
-        )
-
-    return {
-        "status": "success",
-        "message": f"Passkey upgraded to {new_tier.upper()} Tier.",
-        "new_tier": new_tier,
-        "specs": TIER_SPECS[new_tier],
-    }
+    raise HTTPException(410, "Direct tier upgrades are retired; reconciled entitlements are required")
 
 
 # --- Growth & Lead Generation Endpoints ---

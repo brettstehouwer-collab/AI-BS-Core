@@ -1,0 +1,80 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "f4193e4375544345a3c4dd853404c013",
+  "plan_id": "444518f502fe49e6a630d40b8f422171",
+  "snapshot_sha256": "fb83405554fd1b7f0cacea01493c89982311c37171601887332efd98b2cf5234",
+  "review_digest": "cf02ba080fc3ac787454b8226028fe7511798d9b87b98b1d99555e083471ffcc",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "excerpt": "# selected immutable test fixture; never executed\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "src/App.jsx",
+        "role": "editable",
+        "sha256": "7d6571bf1b9756186d93f0f105e6ae88746da743b70020b4d9139eb1bf712bb4",
+        "excerpt": "export default function App() { const value = 1; return <span>{value}</span>; }\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "package.json",
+        "role": "dependency",
+        "sha256": "0d0ab98503da8f39fbef4ba5d6321a4dc0c39307cd2c5abfa97f05e42d6d2914",
+        "excerpt": "{\"scripts\":{\"test\":\"do-not-execute\"}}",
+        "excerpt_complete": true
+      },
+      {
+        "path": "package-lock.json",
+        "role": "dependency",
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265",
+        "excerpt": "{\"lockfileVersion\":3}",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      },
+      {
+        "check_id": "frontend",
+        "argv": [
+          "npm",
+          "run",
+          "test"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py",
+      "src/App.jsx"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "58d6330220b462799d0223a3d69b7a007f626f63b41b531d1b68d9e3b55fdeee",
+  "worker": {
+    "pid": 40304,
+    "created": 1794782619.3812244
+  },
+  "created_at_utc": "2026-11-15T22:43:46.827190+00:00",
+  "entry_sha256": "f2adebc79f2fb340201b00bb001e76c693a764d6699cf68ba4704ea02f7ae5f2"
+}

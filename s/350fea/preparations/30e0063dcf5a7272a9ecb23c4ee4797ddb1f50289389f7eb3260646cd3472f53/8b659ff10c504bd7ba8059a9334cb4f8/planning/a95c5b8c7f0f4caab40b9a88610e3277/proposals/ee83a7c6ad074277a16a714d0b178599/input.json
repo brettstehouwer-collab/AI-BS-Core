@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "8b659ff10c504bd7ba8059a9334cb4f8",
+  "plan_id": "a95c5b8c7f0f4caab40b9a88610e3277",
+  "snapshot_sha256": "21ca4f9ebb2867eb4f8d238a1ab4d22274283c4195dc686bc3e7540d47ab4957",
+  "review_digest": "f3509973b91456deb30daef4ed1e1afd09b17417ecd2285e5cce0e27c2daf956",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "ee83a7c6ad074277a16a714d0b178599",
+  "reviewed_plan_sha256": "b8b7795ffc37892e6cd0871f72484e15dbaa19e103d27268fc138eb246a3965f",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 35052,
+    "created": 1794664412.676453
+  },
+  "created_at_utc": "2026-11-14T13:53:37.448016+00:00",
+  "entry_sha256": "1bab8ef76d0ee8582941538702a8cc07aa940947063fe6c3b600f8f91b91fba6"
+}

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import StehouwerCMSTab from './StehouwerCMSTab';
 import UniversalCreationSuite from './UniversalCreationSuite';
 
-export default function UnifiedCreationHub(props) {
+/** @param {import('react').ComponentProps<typeof UniversalCreationSuite> & import('react').ComponentProps<typeof StehouwerCMSTab>} props */
+export default function UnifiedCreationHub( props) {
   const [activeSubTab, setActiveSubTab] = useState('creation');
 
   const tabs = [

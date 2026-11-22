@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-03T01:24:54.556332+00:00",
+  "user_reply_reference": "request_user_input_async/call_a4ca74e27bf740a9b30bac4c41ab54f3",
+  "exact_user_reply": "Approve27A and future verified project checkpoints",
+  "displayed_option": "Approve 27A and future verified project checkpoints",
+  "destination_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "destination_folder_url": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "scope": "27A and future verified project checkpoints in the existing Workshop folder",
+  "excluded": [
+    "original family photos and videos",
+    "credentials",
+    "private Git status and Master-ledger data"
+  ],
+  "authorization_persists": true,
+  "do_not_reask_within_this_scope": true
+}

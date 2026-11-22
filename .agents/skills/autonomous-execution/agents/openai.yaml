@@ -1,0 +1,4 @@
+interface:
+  display_name: "Autonomous Execution"
+  short_description: "Autonomous execution & tooling protocol"
+  default_prompt: "Apply autonomous execution and tooling protocol with pre-approved execution and zero meta-narration."

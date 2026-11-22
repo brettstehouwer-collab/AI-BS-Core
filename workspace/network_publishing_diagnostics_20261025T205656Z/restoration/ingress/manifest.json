@@ -1,0 +1,145 @@
+{
+  "actor": "/root/publishing_origin",
+  "utc": "2026-10-25T21:23:47.307639+00:00",
+  "status": "staged_only",
+  "live_files_changed": false,
+  "processes_changed": false,
+  "credentials_files_opened": false,
+  "credential_references_preserved": true,
+  "core_boot_only_pin_changed": true,
+  "user_unrelated_rules_unchanged": true,
+  "files": {
+    "user": {
+      "live_path": "C:\\Users\\footb\\.cloudflared\\config.yml",
+      "before_file": "user.before.yml",
+      "candidate_file": "user.candidate.yml",
+      "before_sha256": "305cd3471bd06bac31b7614defc0b851ebb5f40cc16af9b8077fa87241d39a68",
+      "candidate_sha256": "c93822c6b211ca39fe12553692188b1c160f78ab93f23cea24cc0c6842f57b3c",
+      "before_bytes": 1216,
+      "candidate_bytes": 1204
+    },
+    "scoped": {
+      "live_path": "C:\\AI-BS\\saved_data\\core_runtime\\api-tunnel-scoped.yml",
+      "before_file": "scoped.before.yml",
+      "candidate_file": "scoped.candidate.yml",
+      "before_sha256": "edac3b13da88af2de58e9706f17d4fdded96ce1d20282d896b77b60c9a58824e",
+      "candidate_sha256": "30bc88a23551fe7eb55e83c33c39b3b5b6b83c15944f0189ba05984856dc0b36",
+      "before_bytes": 413,
+      "candidate_bytes": 561
+    },
+    "boot": {
+      "live_path": "C:\\AI-BS\\scripts\\core_boot.py",
+      "before_file": "boot.before.py",
+      "candidate_file": "boot.candidate.py",
+      "before_sha256": "c8ddaeb76b7379e8d20c84a540c4c9894e77ff7e5cd767f2739bb54c24040b24",
+      "candidate_sha256": "9ccbed9820d7afdb2f62ad930d32c002170bf0fc7e7c50cd540eb7c7a0f8fc65",
+      "before_bytes": 9315,
+      "candidate_bytes": 9315
+    }
+  },
+  "route_assertions": [
+    {
+      "config": "scoped",
+      "host": "api.brettstehouwer.live",
+      "path": "/sse",
+      "expected": "http_status:404",
+      "passed": true
+    },
+    {
+      "config": "user",
+      "host": "api.brettstehouwer.live",
+      "path": "/sse",
+      "expected": "http_status:404",
+      "passed": true
+    },
+    {
+      "config": "scoped",
+      "host": "api.brettstehouwer.live",
+      "path": "/messages",
+      "expected": "http_status:404",
+      "passed": true
+    },
+    {
+      "config": "user",
+      "host": "api.brettstehouwer.live",
+      "path": "/messages",
+      "expected": "http_status:404",
+      "passed": true
+    },
+    {
+      "config": "scoped",
+      "host": "api.brettstehouwer.live",
+      "path": "/health",
+      "expected": "http://127.0.0.1:8000",
+      "passed": true
+    },
+    {
+      "config": "user",
+      "host": "api.brettstehouwer.live",
+      "path": "/health",
+      "expected": "http://127.0.0.1:8000",
+      "passed": true
+    },
+    {
+      "config": "scoped",
+      "host": "stehouwer-publishing.com",
+      "path": "/",
+      "expected": "http://127.0.0.1:80",
+      "passed": true
+    },
+    {
+      "config": "user",
+      "host": "stehouwer-publishing.com",
+      "path": "/",
+      "expected": "http://127.0.0.1:80",
+      "passed": true
+    },
+    {
+      "config": "scoped",
+      "host": "www.stehouwer-publishing.com",
+      "path": "/",
+      "expected": "http://127.0.0.1:80",
+      "passed": true
+    },
+    {
+      "config": "user",
+      "host": "www.stehouwer-publishing.com",
+      "path": "/",
+      "expected": "http://127.0.0.1:80",
+      "passed": true
+    }
+  ],
+  "processes": {
+    "16512": {
+      "created": 1792907224.949339,
+      "executable": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "AI-BS\\footb",
+      "argv_sha256": "61c2b7edc325acd2913fc855882b09337075cf53268437b00db1ae8416648a00",
+      "token_parameter_present": false,
+      "raw_arguments_not_retained": true
+    },
+    "34912": {
+      "created": 1792907269.7080383,
+      "executable": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "AI-BS\\footb",
+      "argv_sha256": "ba3897f39520c40bd1b4831c3b7f13fa92a472c2fadedac5bb1c144827217ac2",
+      "token_parameter_present": false,
+      "raw_arguments_not_retained": true
+    },
+    "6252": {
+      "created": 1792907174.92084,
+      "executable": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+      "owner": "NT AUTHORITY\\SYSTEM",
+      "argv_sha256": "62f1d59b44c1f4cdddd7a17bc391083fd353b121b75fd700742753f5eb0d60c6",
+      "token_parameter_present": false,
+      "raw_arguments_not_retained": true
+    }
+  },
+  "system_service_must_remain_untouched": true,
+  "disk": {
+    "free_bytes": 43249197056,
+    "total_bytes": 1796861837312,
+    "free_percent": 2.41,
+    "small_output_only": true
+  }
+}

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, UploadFile, File, Form, Request, HTTPException, Depends
 from fastapi.responses import JSONResponse, StreamingResponse, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, StrictInt, Field, ConfigDict
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 from datetime import datetime
@@ -18,6 +18,7 @@ import subprocess
 import asyncio
 from urllib.parse import quote, urlencode
 from security.screenwriting_access import require_screenwriting_access
+from routers.conversation_router import require_conversation_owner
 from security.document_access import issue_media_ticket
 import edge_tts
 
@@ -30,7 +31,50 @@ from core.ai_adapter import (
     reserve_adaptation
 )
 
-router = APIRouter(tags=["Screenwriting & Adaptation"], dependencies=[Depends(require_screenwriting_access)])
+# Set only by the trusted reviewed-candidate controller; no HTTP configuration.
+_NATIVE_CREATIVE_ADAPTER = None
+_NATIVE_CREATIVE_CONTROLLER = None
+
+async def _native_creative_owner(request: Request):
+    operations = {('GET','/api/screenwriting/read'):'read',
+        ('POST','/api/screenwriting/write'):'save',
+        ('GET','/api/screenwriting/export/fdx'):'export_fdx',
+        ('GET','/api/screenwriting/export/pdf'):'export_pdf'}
+    operation=operations.get((request.method,request.url.path))
+    leases=request.headers.getlist('x-ai-bs-creative-lease')
+    if _NATIVE_CREATIVE_ADAPTER is None or operation is None or len(leases)!=1 or not leases[0]:
+        raise HTTPException(403,'Native project authorization was refused.')
+    try:
+        payload=await request.json() if request.method=='POST' else request.query_params
+        project=payload.get('project_name')
+        if not isinstance(project,str) or not project:raise ValueError()
+        scope=await asyncio.to_thread(_NATIVE_CREATIVE_ADAPTER.resolve,request.scope,leases[0],project=project,operation=operation)
+        return scope.owner
+    except (ValueError,TypeError,AttributeError,PermissionError):
+        raise HTTPException(403,'Native project authorization was refused.') from None
+
+async def _screenwriting_owner_scope(request: Request):
+    """Bind verified identity for source projects; existing access policy prevails."""
+    from security.firebase_auth import get_admin_principal
+    from core.personal_memory_scope import bind_memory_principal, reset_memory_principal
+    key = request.headers.get('x-admin-key', '') or request.headers.get('x-api-key', '')
+    if 'x-ai-bs-creative-lease' in request.headers:
+        owner = await _native_creative_owner(request)
+    else:
+        owner = await asyncio.to_thread(get_admin_principal, key, request.headers.get('authorization', ''))
+    if owner is None:
+        # Existing file-scoped audio tickets still work for legacy projects.
+        # They confer no access to an owner-fenced PDF source project.
+        yield None
+        return
+    token = bind_memory_principal(owner)
+    try:
+        yield owner
+    finally:
+        reset_memory_principal(token)
+
+
+router = APIRouter(tags=["Screenwriting & Adaptation"], dependencies=[Depends(require_screenwriting_access), Depends(_screenwriting_owner_scope)])
 
 SCREENPLAY_ROOT = Path("C:/AI-BS/screenplay_projects")
 SCREENPLAY_ROOT.mkdir(parents=True, exist_ok=True)
@@ -128,6 +172,18 @@ def _project_directory(project_name: str) -> Path:
     if (directory.is_symlink() or getattr(directory, 'is_junction', lambda: False)()
             or directory.resolve().parent != SCREENPLAY_ROOT.resolve()):
         raise HTTPException(status_code=400, detail="Project must stay inside the project store.")
+    fence_path = directory / 'source_pdf.json'
+    if fence_path.exists() or fence_path.is_symlink():
+        from core.chat_pdf_sources import PDFSourceError, require_project_owner
+        try:
+            require_project_owner(directory)
+        except PDFSourceError as error:
+            raise HTTPException(error.status, detail=str(error)) from None
+    fdx_fence = directory / 'source_fdx.json'
+    if fdx_fence.exists() or fdx_fence.is_symlink():
+        from core.fdx_source_documents import fence, FDXSourceError
+        try: fence(directory)
+        except FDXSourceError as error: raise HTTPException(error.status,detail=str(error)) from None
     return directory
 
 
@@ -181,6 +237,11 @@ def _write_project_metadata(directory: Path, metadata: dict):
 
 def _screenplay_snapshot(directory: Path) -> dict:
     """Read content and its exact disk revision together under the caller's store lock."""
+    from core.fdx_source_documents import read_project, FDXSourceError
+    try:
+        rich = read_project(directory)
+        if rich is not None:return rich
+    except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
     canonical = directory / "screenplay.fountain"
     if canonical.is_symlink() or canonical.resolve().parent != directory.resolve():
         raise HTTPException(status_code=400, detail="Screenplay must stay inside its project.")
@@ -209,13 +270,39 @@ def _screenplay_snapshot(directory: Path) -> dict:
             "screenplay_exists": True, "source": "screenplay"}
 
 
-def _require_screenplay_revision(directory: Path, expected_revision: Optional[str]):
+def _workflow_call(directory: Path, method: str, *arguments):
+    from core.fdx_source_documents import fence, FDXSourceError
+    try: rich=fence(directory)
+    except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+    if rich and rich.get('mode')!='working_copy':
+        if method=='status':return {'initialized':False,'workflow_revision':0,'active_branch':'main','pending_operation':None,'active_sprint':None}
+        raise HTTPException(409,'Rich FDX branch/sprint operations are not qualified. Preserve a separate plain working copy for those workflows.')
+    from core.screenplay_workflows import WorkflowStore, WorkflowError
+    store = WorkflowStore(directory, lambda: _screenplay_snapshot(directory),
+                          lambda raw: _atomic_project_text(directory, "screenplay.fountain", raw),
+                          _PROJECT_STORE_LOCK)
+    try:
+        return getattr(store, method)(*arguments)
+    except WorkflowError as error:
+        raise HTTPException(status_code=error.status, detail=str(error)) from error
+
+
+def _workflow_project(project_name: Optional[str]) -> Path:
+    if not isinstance(project_name, str) or not project_name.strip():
+        raise HTTPException(status_code=400, detail="Writing workflows require an explicit project_name.")
+    return _existing_project_directory(project_name)
+
+
+def _require_screenplay_revision(directory: Path, expected_revision: Optional[str],
+                                 expected_workflow_revision: Optional[int] = None):
     """Reject blind or stale saves before any project files or Git state are changed."""
     if expected_revision is None or not expected_revision.strip():
         raise HTTPException(status_code=428, detail="Saving requires expected_revision from the loaded screenplay. Keep your draft and reload the project revision.")
     if expected_revision != _screenplay_snapshot(directory)["revision"]:
         raise HTTPException(status_code=409, detail="This screenplay changed since it was loaded. Your draft has not been saved; keep a copy and reload before reconciling the changes.")
     _require_idle_adaptation(directory)
+    if _workflow_call(directory, 'status')['initialized']:
+        _workflow_call(directory, 'check_revision', expected_revision, expected_workflow_revision)
 
 
 def _require_idle_adaptation(directory: Path):
@@ -467,13 +554,30 @@ class CreateProjectPayload(BaseModel):
 @router.get("/api/screenwriting/projects")
 def list_projects():
     global _current_project
-    projects = [d.name for d in SCREENPLAY_ROOT.iterdir() if d.is_dir()]
+    projects, unavailable = [], 0
+    for directory in SCREENPLAY_ROOT.iterdir():
+        if not directory.is_dir():
+            continue
+        try:
+            _project_directory(directory.name)
+        except HTTPException as error:
+            if error.status_code in (403, 409):
+                unavailable += 1
+                continue
+            raise
+        projects.append(directory.name)
     if not projects:
-        projects = ["Default Project"]
-        (SCREENPLAY_ROOT / "Default Project").mkdir(parents=True, exist_ok=True)
+        try:
+            _project_directory('Default Project')
+        except HTTPException as error:
+            if error.status_code in (403, 409):
+                return {'projects':[], 'current':None, 'unavailable_projects':unavailable}
+            raise
+        projects = ['Default Project']
+        (SCREENPLAY_ROOT / 'Default Project').mkdir(parents=True, exist_ok=True)
     if _current_project not in projects:
         _current_project = projects[0]
-    return {"projects": projects, "current": _current_project}
+    return {'projects':projects, 'current':_current_project, 'unavailable_projects':unavailable}
 
 
 @router.post("/api/screenwriting/projects/create")
@@ -620,6 +724,18 @@ def _archive_entry(archive_id: str) -> Path:
     entry = archive_root / archive_id
     if entry.resolve().parent != archive_root.resolve() or (entry / "project").resolve().parent != entry.resolve():
         raise HTTPException(status_code=400, detail="Invalid archive path.")
+    fence_path = entry / 'project' / 'source_pdf.json'
+    if fence_path.exists() or fence_path.is_symlink():
+        from core.chat_pdf_sources import PDFSourceError, require_project_owner
+        try:
+            require_project_owner(entry / 'project')
+        except PDFSourceError as error:
+            raise HTTPException(error.status, detail=str(error)) from None
+    fdx_fence = entry / 'project' / 'source_fdx.json'
+    if fdx_fence.exists() or fdx_fence.is_symlink():
+        from core.fdx_source_documents import fence, FDXSourceError
+        try:fence(entry/'project')
+        except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
     return entry
 
 
@@ -634,8 +750,8 @@ def delete_project(payload: SwitchProjectPayload):
             raise HTTPException(status_code=400, detail="Cannot archive Default Project.")
         if not project_dir.is_dir():
             raise HTTPException(status_code=404, detail="Project does not exist.")
-        if ADAPTATION_TASKS.get(project_dir.name, {}).get("status") == "processing":
-            raise HTTPException(status_code=409, detail="Finish or cancel the active adaptation before archiving.")
+        _require_idle_adaptation(project_dir)
+        _workflow_call(project_dir, 'assert_ready')
         archive_id = uuid.uuid4().hex
         entry = _archive_entry(archive_id)
         entry.mkdir(parents=True, exist_ok=False)
@@ -704,13 +820,163 @@ class WriteScreenplayPayload(BaseModel):
     content: str
     project_name: Optional[str] = None
     expected_revision: Optional[str] = None
+    expected_workflow_revision: Optional[StrictInt] = None
+    preserve_unchanged_bytes: bool = True
+    fdx_document: Optional[dict] = None
 
+
+def _issue_native_creative_grant(context, invocation, candidate_sha256, *, project_name,
+                                 expected_revision, expected_source_sha256, grants):
+    """Server-only bridge preflight; not an HTTP endpoint or a process launcher.
+
+    The owned candidate controller must supply context/invocation/hash. Existing
+    project fences execute under their normal verified-owner context and lock.
+    Callers must send the returned secret only to that owned process's stdin.
+    """
+    from security.firebase_auth import VerifiedFirebaseContext
+    from security.native_creative_handoff import CreativeScope, HandoffDenied
+    from core.personal_memory_scope import bind_memory_principal, reset_memory_principal
+    from security.native_creative_source import require_native_creative_source
+    if not isinstance(context, VerifiedFirebaseContext):
+        raise HandoffDenied()
+    token = bind_memory_principal(context.principal)
+    try:
+        with _PROJECT_STORE_LOCK:
+            directory = _existing_project_directory(project_name)
+            fence = require_native_creative_source(directory)
+            if fence.get('source_sha256') != expected_source_sha256:
+                raise HandoffDenied()
+            snapshot = _screenplay_snapshot(directory)
+            if snapshot['revision'] != expected_revision:
+                raise HTTPException(409, 'The screenplay changed before native handoff. Keep the current draft.')
+            scope = CreativeScope(context.principal, directory.name, snapshot['revision'],
+                                  fence['source_sha256'], candidate_sha256)
+            return grants.issue_verified(scope, invocation, context)
+    finally:
+        reset_memory_principal(token)
+
+
+@router.post('/api/screenwriting/native/launch', status_code=202)
+async def launch_native_creative(request: Request):
+    """Fresh Firebase browser admission to a fixed, trusted owned controller.
+
+    Disabled by default; this endpoint never selects/configures a candidate.
+    202 means only starting, not redemption/GUI readiness. The controller wraps
+    preflight conflicts (including 409) into a sanitized failure, so this boundary
+    reports an unconfirmed launch as 503, not an invented conflict diagnosis.
+    Keep the current draft and refresh its snapshot before considering a retry.
+    """
+    from security.firebase_auth import VerifiedFirebaseContext, verified_firebase_context
+    import math
+    import re
+    import time
+    denied = 'Fresh Firebase authorization is required for native launch.'
+    authorizations = request.headers.getlist('authorization')
+    if len(authorizations) != 1:
+        raise HTTPException(403, denied)
+    scheme, separator, bearer = authorizations[0].partition(' ')
+    if (scheme.lower() != 'bearer' or not separator or not bearer
+            or bearer != bearer.strip() or len(bearer) > 16384
+            or any(character.isspace() or ord(character) < 32 for character in bearer)):
+        raise HTTPException(403, denied)
+    try:
+        # Never substitute local_admin, a local service key or the router's
+        # cached owner binding for this independent fresh SDK-derived context.
+        context = await asyncio.to_thread(verified_firebase_context, bearer)
+        if (type(context) is not VerifiedFirebaseContext
+                or type(context.principal) is not str
+                or not re.fullmatch(r'firebase:[^:\s]{1,128}:[^\s]{1,256}', context.principal)
+                or type(context.valid_until_monotonic) not in (int, float)
+                or not math.isfinite(context.valid_until_monotonic)
+                or context.valid_until_monotonic <= time.monotonic()):
+            raise ValueError()
+    except Exception:
+        raise HTTPException(403, denied) from None
+    controller = _NATIVE_CREATIVE_CONTROLLER
+    if (controller is None or _NATIVE_CREATIVE_ADAPTER is None
+            or getattr(controller, 'adapter', None) is not _NATIVE_CREATIVE_ADAPTER):
+        raise HTTPException(503, 'Native creative launch is not configured.')
+    body = bytearray()
+    async for chunk in request.stream():
+        if len(chunk) > 4096 - len(body):
+            raise HTTPException(413, 'Native launch input exceeds the allowed size.')
+        body.extend(chunk)
+    try:
+        def unique(pairs):
+            value = {}
+            for key, item in pairs:
+                if key in value:
+                    raise ValueError()
+                value[key] = item
+            return value
+        def no_constant(value):
+            raise ValueError()
+        payload = json.loads(bytes(body).decode('utf-8'), object_pairs_hook=unique,
+            parse_constant=no_constant)
+        if (type(payload) is not dict
+                or set(payload) != {'project_name', 'expected_revision', 'expected_source_sha256'}):
+            raise ValueError()
+        project, revision, source = (payload[key] for key in
+            ('project_name', 'expected_revision', 'expected_source_sha256'))
+        if (type(project) is not str or not 1 <= len(project) <= 256
+                or project != project.strip() or project in {'.', '..'}
+                or project.endswith(('.', ' ')) or any(c in project for c in '<>:"/\\|?*')
+                or any(ord(c) < 32 for c in project)
+                or project.split('.')[0].upper() in {'CON', 'PRN', 'AUX', 'NUL',
+                    *(f'COM{i}' for i in range(1, 10)), *(f'LPT{i}' for i in range(1, 10))}
+                or type(revision) is not str or not 1 <= len(revision) <= 256
+                or any(ord(c) < 32 for c in revision)
+                or type(source) is not str or not re.fullmatch(r'[a-f0-9]{64}', source)):
+            raise ValueError()
+    except (ValueError, TypeError, UnicodeError, RecursionError):
+        raise HTTPException(422, 'Native launch requires an exact project snapshot.') from None
+    try:
+        await asyncio.to_thread(controller.launch, context, project=project,
+            revision=revision, source_sha256=source)
+    except Exception:
+        raise HTTPException(503, 'Native creative launch was not confirmed. Keep the current draft.') from None
+    return JSONResponse(dict(status='starting', project=project), status_code=202,
+        headers={'Cache-Control': 'no-store', 'Pragma': 'no-cache'})
+
+
+@router.post('/api/screenwriting/native/redeem')
+async def redeem_native_creative(request: Request):
+    """Direct trusted native transport only; controller configuration is required."""
+    if _NATIVE_CREATIVE_ADAPTER is None:
+        raise HTTPException(403,'Native project authorization was refused.')
+    try:
+        body=bytearray()
+        async for chunk in request.stream():
+            if len(chunk)>4096-len(body):raise ValueError()
+            body.extend(chunk)
+        def unique(pairs):
+            result={}
+            for key,value in pairs:
+                if key in result:raise ValueError()
+                result[key]=value
+            return result
+        payload=json.loads(bytes(body).decode('utf-8'),object_pairs_hook=unique)
+        import re
+        if (type(payload) is not dict or set(payload)!={'grant'}
+                or not isinstance(payload['grant'],str)
+                or not re.fullmatch(r'nch_g_[A-Za-z0-9_-]{43}',payload['grant'])):
+            raise ValueError()
+        result=await asyncio.to_thread(_NATIVE_CREATIVE_ADAPTER.redeem,request.scope,payload['grant'])
+        return JSONResponse(result,headers={'Cache-Control':'no-store','Pragma':'no-cache'})
+    except (ValueError,TypeError,PermissionError,RecursionError):
+        raise HTTPException(403,'Native project authorization was refused.') from None
 
 @router.get("/api/screenwriting/read")
 def read_screenplay(project_name: Optional[str] = None):
     with _PROJECT_STORE_LOCK:
         directory = _existing_project_directory(project_name or _current_project)
-        return {"project": directory.name, **_screenplay_snapshot(directory)}
+        snapshot = _screenplay_snapshot(directory)
+        from core.chat_pdf_sources import PDFSourceError, source_project_view
+        try:
+            source_view = source_project_view(directory, snapshot['revision'])
+        except PDFSourceError as error:
+            raise HTTPException(error.status, detail=str(error)) from None
+        return {'project':directory.name, **snapshot, **_workflow_call(directory, 'status'), **source_view}
 
 
 @router.post("/api/screenwriting/write")
@@ -725,11 +991,30 @@ def _write_screenplay(payload: WriteScreenplayPayload):
     directory = _project_directory(payload.project_name)
     if not directory.is_dir():
         raise HTTPException(status_code=404, detail="Project does not exist.")
-    _require_screenplay_revision(directory, payload.expected_revision)
+    workflow_revision = getattr(payload, 'expected_workflow_revision', None)
+    _require_screenplay_revision(directory, payload.expected_revision, workflow_revision)
+    current = _screenplay_snapshot(directory)
+    workflow = _workflow_call(directory, 'status')
+    if current.get('source')=='rich_fdx':
+        from core.fdx_source_documents import write_project, FDXSourceError
+        try: result=write_project(directory,payload.content,payload.expected_revision,getattr(payload,'fdx_document',None))
+        except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+        return {'status':'success','project':directory.name,**_screenplay_snapshot(directory),**result,**workflow}
+    normalize = lambda text: text.replace('\r\n', '\n').replace('\r', '\n')
+    if (payload.preserve_unchanged_bytes and current['screenplay_exists']
+            and normalize(payload.content) == normalize(current['content'])):
+        # Browser/Qt editors normalize newlines. An otherwise unchanged save
+        # must not rewrite original bytes, mtime or the CAS revision.
+        return {'status': 'success', 'project': directory.name,
+                'revision': current['revision'], 'unchanged': True, **workflow}
     # Binary UTF-8 output avoids translating CRLF into CRCRLF on Windows.
-    _atomic_project_text(directory, "screenplay.fountain", payload.content.encode("utf-8"))
+    if workflow['initialized']:
+        workflow = _workflow_call(directory, 'write', payload.content.encode('utf-8'),
+                                  payload.expected_revision, workflow_revision)
+    else:
+        _atomic_project_text(directory, "screenplay.fountain", payload.content.encode("utf-8"))
     return {"status": "success", "project": directory.name,
-            "revision": _screenplay_snapshot(directory)["revision"]}
+            "revision": _screenplay_snapshot(directory)["revision"], **workflow}
 
 
 @router.post("/api/screenwriting/parse")
@@ -746,42 +1031,103 @@ def parse_screenplay(payload: WriteScreenplayPayload):
 
 
 @router.get("/api/screenwriting/branches")
-def list_branches():
-    return {"branches": ["main"]}
+def list_branches(project_name: Optional[str] = None):
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(project_name)
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **_workflow_call(directory, 'status')}
 
 
-class BranchCreatePayload(BaseModel):
+class WorkflowMutationPayload(BaseModel):
+    project_name: Optional[str] = None
+    expected_revision: Optional[str] = None
+    expected_workflow_revision: Optional[StrictInt] = None
+
+
+class BranchCreatePayload(WorkflowMutationPayload):
     branch_name: str
 
 
 @router.post("/api/screenwriting/branch/create")
 def create_branch(payload: BranchCreatePayload):
-    return {"status": "success"}
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(getattr(payload, 'project_name', None))
+        _require_idle_adaptation(directory)
+        state = _workflow_call(directory, 'create_branch', payload.branch_name,
+                               getattr(payload, 'expected_revision', None),
+                               getattr(payload, 'expected_workflow_revision', None))
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **state}
+
+
+class BranchSwitchPayload(BranchCreatePayload):
+    pass
+
+
+@router.post("/api/screenwriting/branch/switch")
+def switch_branch(payload: BranchSwitchPayload):
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(getattr(payload, 'project_name', None))
+        _require_idle_adaptation(directory)
+        state = _workflow_call(directory, 'switch_branch', payload.branch_name,
+                               getattr(payload, 'expected_revision', None),
+                               getattr(payload, 'expected_workflow_revision', None))
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **state}
+
+
+class WorkflowRecoveryPayload(BaseModel):
+    project_name: str
+    operation_id: str
+    action: str
+
+
+@router.post("/api/screenwriting/workflow/recover")
+def recover_workflow(payload: WorkflowRecoveryPayload):
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(payload.project_name)
+        _require_idle_adaptation(directory)
+        state = _workflow_call(directory, 'recover', payload.operation_id, payload.action)
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **state}
 
 
 @router.get("/api/screenwriting/sprints")
-def list_sprints():
-    return {"sprints": []}
+def list_sprints(project_name: Optional[str] = None):
+    return list_branches(project_name)
 
 
-class SprintStartPayload(BaseModel):
+class SprintStartPayload(WorkflowMutationPayload):
     name: str
-    target_pages: int
+    target_pages: StrictInt
 
 
 @router.post("/api/screenwriting/sprint/start")
 def start_sprint(payload: SprintStartPayload):
-    sprint = {"id": str(uuid.uuid4()), "name": payload.name, "target_pages": payload.target_pages}
-    return {"status": "success", "sprint": sprint}
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(getattr(payload, 'project_name', None))
+        _require_idle_adaptation(directory)
+        state = _workflow_call(directory, 'start_sprint', payload.name, payload.target_pages,
+                               getattr(payload, 'expected_revision', None),
+                               getattr(payload, 'expected_workflow_revision', None))
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **state}
 
 
-class SprintEndPayload(BaseModel):
+class SprintEndPayload(WorkflowMutationPayload):
     sprint_id: str
 
 
 @router.post("/api/screenwriting/sprint/end")
 def end_sprint(payload: SprintEndPayload):
-    return {"status": "success"}
+    with _PROJECT_STORE_LOCK:
+        directory = _workflow_project(getattr(payload, 'project_name', None))
+        _require_idle_adaptation(directory)
+        state = _workflow_call(directory, 'end_sprint', payload.sprint_id,
+                               getattr(payload, 'expected_revision', None),
+                               getattr(payload, 'expected_workflow_revision', None))
+        return {"status": "success", "project": directory.name,
+                **_screenplay_snapshot(directory), **state}
 
 
 # ==============================================================================
@@ -925,6 +1271,71 @@ def save_scene_video(payload: SceneVideoPayload):
         return {"status": "success", "project": directory.name}
 
 
+class ImportPdfSourcePayload(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    project_name: str = Field(min_length=1, max_length=120)
+    source_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    source_sha256: str = Field(pattern=r'^[a-f0-9]{64}$')
+    request_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+
+
+@router.post('/api/screenwriting/projects/import-pdf-source')
+def import_pdf_source_project(payload: ImportPdfSourcePayload, owner: str = Depends(require_conversation_owner)):
+    from core.chat_pdf_sources import PDFSourceError, import_project
+    global _current_project
+    try:
+        with _PROJECT_STORE_LOCK:
+            directory = _project_directory(payload.project_name)
+            result = import_project(directory, owner, payload.source_id, payload.source_sha256, payload.request_id)
+            _current_project = directory.name
+            return result
+    except PDFSourceError as error:
+        raise HTTPException(error.status, detail={'message':str(error), 'project':payload.project_name,
+            'source_id':payload.source_id, 'source_sha256':payload.source_sha256}) from None
+    except (OSError, ValueError):
+        raise HTTPException(503, detail={'message':'PDF import could not be confirmed. Retained source and prepared files were preserved.',
+            'project':payload.project_name, 'source_id':payload.source_id, 'source_sha256':payload.source_sha256}) from None
+
+
+@router.post('/api/screenwriting/projects/import-fdx-source')
+async def import_fdx_source_project(project_name: str = Form(...), file: UploadFile = File(...),
+        request_id: str = Form(...), source_sha256: str = Form(...), owner: str = Depends(require_conversation_owner)):
+    from core.fdx_source_documents import MAX_BYTES, FDXSourceError, import_project
+    raw=await file.read(MAX_BYTES+1)
+    if len(raw)>MAX_BYTES:raise HTTPException(413,'FDX exceeds the16MiB source limit. Original file was retained.')
+    if source_sha256!=hashlib.sha256(raw).hexdigest():raise HTTPException(409,'Original FDX SHA-256 did not match; no project was published.')
+    def prepare():
+        global _current_project
+        with _PROJECT_STORE_LOCK:
+            directory=_project_directory(project_name)
+            result=import_project(directory,raw,owner,request_id)
+            _current_project=directory.name
+            return {'status':'success','project':directory.name,'current':directory.name,**result,
+                    'source':{'format':'fdx','sha256':source_sha256,'bytes':len(raw)},**_workflow_call(directory,'status')}
+    try:return await asyncio.to_thread(prepare)
+    except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+    except OSError:raise HTTPException(503,'FDX import was not confirmed. Original and prepared recovery files were retained.') from None
+
+
+class FDXWorkingCopyPayload(BaseModel):
+    project_name: str
+    new_project_name: str
+    content: str
+    expected_revision: str
+    request_id: str
+
+
+@router.post('/api/screenwriting/projects/fdx-working-copy')
+def create_fdx_working_copy(payload: FDXWorkingCopyPayload, owner: str = Depends(require_conversation_owner)):
+    from core.fdx_source_documents import create_working_copy, FDXSourceError
+    with _PROJECT_STORE_LOCK:
+        directory=_existing_project_directory(payload.project_name);destination=_project_directory(payload.new_project_name)
+        try:result=create_working_copy(directory,destination,payload.content,payload.expected_revision,owner,payload.request_id)
+        except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+        except OSError:raise HTTPException(503,'Working-copy publication was not confirmed; prepared files were retained.') from None
+        return {'status':'success',**result}
+
+
 class ImportProjectPayload(BaseModel):
     project_name: str
     content: str
@@ -932,23 +1343,52 @@ class ImportProjectPayload(BaseModel):
 
 @router.post("/api/screenwriting/projects/import")
 def do_import_project(payload: ImportProjectPayload):
-    from core.matrix_docs import ScreenplayProject
+    from core.adaptation_store import _derived_outputs, _git_checkpoint
     with _PROJECT_STORE_LOCK:
         directory = _project_directory(payload.project_name)
         if directory.exists():
             raise HTTPException(status_code=409, detail="A project with that name already exists. Choose a new import name.")
-        # Build a complete project off-store before publishing it as one directory rename.
-        # Only these newly created staging files are removed if preparation fails.
-        with tempfile.TemporaryDirectory(prefix=".screenplay-import-", dir=SCREENPLAY_ROOT.parent) as staging:
-            staged_directory = Path(staging) / directory.name
-            project = ScreenplayProject(staged_directory)
-            if not project.write_screenplay(payload.content):
-                raise HTTPException(status_code=500, detail="Import could not be saved; no project was published.")
+        # Failed preparation stays outside the project catalog for explicit recovery.
+        retained_root = SCREENPLAY_ROOT.parent / 'saved_data' / 'screenplay_import_recovery'
+        staging = retained_root / uuid.uuid4().hex
+        staged_directory = staging / directory.name
+        try:
+            for component in (retained_root, retained_root.parent, SCREENPLAY_ROOT.parent):
+                if (component.is_symlink() or getattr(component, 'is_junction', lambda: False)()
+                        or (component.exists() and not component.is_dir())):
+                    raise HTTPException(status_code=409, detail='Import recovery storage must be an unlinked directory. Existing files were preserved.')
+            retained_root.mkdir(parents=True, exist_ok=True)
+            staging.mkdir()
+            staged_directory.mkdir()
+            raw = payload.content.encode('utf-8')
+            _atomic_project_text(staged_directory, 'screenplay.fountain', raw)
+            _write_project_metadata(staged_directory, {
+                'title': directory.name, 'author': 'Unknown',
+                'created': datetime.now().isoformat(), 'current_branch': 'main',
+                'characters': [], 'beat_videos': {}})
+            outputs, _ = _derived_outputs(staged_directory, raw)
+            for filename, value in outputs.items():
+                _atomic_project_text(staged_directory, filename, value)
+            git_status = 'saved'
             try:
-                os.rename(staged_directory, directory)
-            except FileExistsError:
-                raise HTTPException(status_code=409, detail="A project with that name already exists. Choose a new import name.")
-        return {"status": "success", "project": directory.name}
+                _git_checkpoint(staged_directory, staging.name, list(outputs), 'Import screenplay')
+            except (OSError, RuntimeError, subprocess.SubprocessError, HTTPException):
+                # File persistence and optional Git history have separate acknowledgments.
+                git_status = 'failed'
+            os.rename(staged_directory, directory)
+        except FileExistsError:
+            raise HTTPException(status_code=409, detail="A project with that name already exists. Prepared import retained for recovery.") from None
+        except HTTPException:
+            raise
+        except Exception:
+            raise HTTPException(status_code=503, detail="Import preparation could not finish. Original files and any prepared import retained for recovery.") from None
+        # Only the now-empty container is removed; failed or partial files are never purged.
+        try:
+            staging.rmdir()
+        except OSError:
+            pass
+        return {"status": "success", "project": directory.name, "git_status": git_status,
+                "warning": None if git_status == 'saved' else "Screenplay imported; Git history could not be recorded."}
 
 
 # ==============================================================================
@@ -997,6 +1437,10 @@ def _screenplay_export_source(project_name: str):
     directory = _project_directory(project_name)
     if not directory.is_dir():
         raise HTTPException(404, "Project does not exist.")
+    from core.fdx_source_documents import read_project, FDXSourceError
+    try:rich=read_project(directory)
+    except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+    if rich is not None:return directory.name,rich['content'],{'title':directory.name,**rich['metadata']}
     source = directory / "screenplay.fountain"
     if not source.is_file():
         source = directory / "adaptation_output.fountain"
@@ -1014,27 +1458,117 @@ def _screenplay_export_source(project_name: str):
 
 
 @router.get("/api/screenwriting/export/fdx")
-def export_fdx(project_name: str):
+def export_fdx(project_name: str, layout: Optional[str] = None, expected_revision: Optional[str] = None):
     from urllib.parse import quote
-    name, content, metadata = _screenplay_export_source(project_name)
+    from core.chat_pdf_sources import PDFSourceError, source_export
+    exposed = 'X-AI-BS-Layout, X-AI-BS-Profile, X-AI-BS-Renderer, X-AI-BS-FDX-Renderer, X-AI-BS-Artifact-SHA256'
+    if layout not in (None, 'source', 'original', 'professional', 'reflow'):
+        raise HTTPException(422, 'Choose archival source, professional, or explicit legacy reflow export.')
+    with _PROJECT_STORE_LOCK:
+        name, content, metadata = _screenplay_export_source(project_name)
+        directory = _project_directory(name)
+        from core.fdx_source_documents import fence as fdx_fence, export_project, FDXSourceError
+        try:
+            rich=fdx_fence(directory)
+            if rich and rich.get('mode')!='working_copy':
+                if layout in (None,'source','original'):
+                    raw=export_project(directory,expected_revision,original=layout=='original')
+                    suffix='.original-import' if layout=='original' else '.rich-preserved'
+                    return Response(content=raw,media_type='application/xml',headers={
+                        'Content-Disposition':"attachment; filename*=UTF-8''"+quote(name+suffix+'.fdx',safe=''),
+                        'X-AI-BS-Layout':'original' if layout=='original' else 'rich-preserved',
+                        'X-AI-BS-Profile':'fdx-preservation-v1','X-AI-BS-Renderer':'fdx-dom-patch-v1',
+                        'X-AI-BS-Artifact-SHA256':hashlib.sha256(raw).hexdigest(),'Cache-Control':'no-store',
+                        'Access-Control-Expose-Headers':exposed})
+                if layout!='reflow':raise FDXSourceError('Professional conversion of rich FDX is not qualified. Choose rich FDX preservation or an explicit plain reflow copy.',422)
+                if expected_revision!=_screenplay_snapshot(directory)['revision']:raise FDXSourceError('Reload the current rich revision before explicit reflow.')
+            elif layout=='original':raise FDXSourceError('This project has no retained rich FDX original.',422)
+        except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+        try:
+            preserved = source_export(directory, _screenplay_snapshot(directory)['revision'], 'fdx', layout,
+                                      expected_revision=expected_revision, return_receipt=True)
+        except PDFSourceError as error:
+            raise HTTPException(error.status, detail={'message':str(error), 'project':name}) from None
+        if preserved is not None:
+            filename = name + ('.professional-us-spec-courier12-v1' if layout == 'professional' else '') + '.fdx'
+            return Response(content=preserved['content'], media_type='application/xml', headers={
+                'Content-Disposition':"attachment; filename*=UTF-8''" + quote(filename, safe=''),
+                'X-AI-BS-Layout':preserved['layout'], 'Cache-Control':'no-store',
+                'X-AI-BS-Profile':preserved['profile_id'], 'X-AI-BS-Renderer':preserved['renderer_id'],
+                'X-AI-BS-FDX-Renderer':preserved['renderer_id'],
+                'X-AI-BS-Artifact-SHA256':preserved['output_sha256'], 'Access-Control-Expose-Headers':exposed})
     from core.matrix_docs import FountainParser
     parser = FountainParser(content)
     parser.parse()
     fdx = parser.to_fdx(metadata.get('title', name), metadata.get('author', 'Unknown'))
-    return Response(content=fdx, media_type="application/xml",
-                    headers={"Content-Disposition": "attachment; filename*=UTF-8''" + quote(name + '.fdx', safe='')})
+    return Response(content=fdx, media_type='application/xml', headers={
+        'Content-Disposition':"attachment; filename*=UTF-8''" + quote(name + '.fdx', safe=''),
+        'X-AI-BS-Layout':'reflow', 'Cache-Control':'no-store',
+        'X-AI-BS-Profile':'legacy-fountain-reflow-v1', 'X-AI-BS-Renderer':'matrix_docs.FountainParser.to_fdx',
+        'X-AI-BS-Artifact-SHA256':hashlib.sha256(fdx.encode('utf-8') if isinstance(fdx,str) else fdx).hexdigest(),
+        'Access-Control-Expose-Headers':exposed})
 
 
 @router.get("/api/screenwriting/export/pdf")
-def export_pdf(project_name: str, watermark: str = None):
+def export_pdf(project_name: str, watermark: str = None, layout: Optional[str] = None,
+               expected_revision: Optional[str] = None):
     from urllib.parse import quote
-    name, content, metadata = _screenplay_export_source(project_name)
+    from core.chat_pdf_sources import PDFSourceError, source_export
+    exposed = 'X-AI-BS-Layout, X-AI-BS-Profile, X-AI-BS-Renderer, X-AI-BS-Artifact-SHA256, X-AI-BS-PDF-Page-Count'
+    if layout not in (None, 'source', 'professional', 'typed-professional', 'reflow'):
+        raise HTTPException(422, 'Choose archival source, professional, or explicit legacy reflow export.')
+    with _PROJECT_STORE_LOCK:
+        name, content, metadata = _screenplay_export_source(project_name)
+        directory = _project_directory(name)
+        from core.fdx_source_documents import fence as fdx_fence, FDXSourceError
+        try:rich=fdx_fence(directory)
+        except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+        if rich and rich.get('mode')!='working_copy':
+            if layout=='typed-professional':
+                if watermark is not None:
+                    raise HTTPException(422,'Watermarks are not supported by the typed professional profile.')
+                from core.fdx_source_documents import export_project
+                from core.fdx_professional_pdf import render_typed_fdx_pdf, TypedFdxPdfError, PROFILE_ID, RENDERER_ID
+                try:
+                    source=export_project(directory,expected_revision)
+                    raw=render_typed_fdx_pdf(source)
+                except FDXSourceError as error:raise HTTPException(error.status,detail=str(error)) from None
+                except TypedFdxPdfError as error:raise HTTPException(422,detail=str(error)) from None
+                import fitz
+                with fitz.open(stream=raw,filetype='pdf') as document:page_count=len(document)
+                return Response(content=raw,media_type='application/pdf',headers={
+                    'Content-Disposition':"attachment; filename*=UTF-8''"+quote(name+'.typed-professional.pdf',safe=''),
+                    'X-AI-BS-Layout':'typed-professional','X-AI-BS-Profile':PROFILE_ID,
+                    'X-AI-BS-Renderer':RENDERER_ID,'X-AI-BS-Artifact-SHA256':hashlib.sha256(raw).hexdigest(),
+                    'X-AI-BS-PDF-Page-Count':str(page_count),
+                    'Cache-Control':'no-store','Access-Control-Expose-Headers':exposed})
+            if layout!='reflow':raise HTTPException(422,'Rich FDX PDF fidelity is not qualified. Explicit legacy reflow is a separate lossy projection; the original FDX remains retained.')
+            if expected_revision!=_screenplay_snapshot(directory)['revision']:raise HTTPException(409,'Reload the current rich revision before explicit reflow.')
+        elif layout=='typed-professional':
+            raise HTTPException(422,'Typed professional PDF requires a retained rich FDX project.')
+        try:
+            preserved = source_export(directory, _screenplay_snapshot(directory)['revision'], 'pdf', layout,
+                                      watermark=watermark, expected_revision=expected_revision, return_receipt=True)
+        except PDFSourceError as error:
+            raise HTTPException(error.status, detail={'message':str(error), 'project':name}) from None
+        if preserved is not None:
+            filename = name + ('.professional-us-spec-courier12-v1' if layout == 'professional' else '') + '.pdf'
+            headers = {'Content-Disposition':"attachment; filename*=UTF-8''" + quote(filename, safe=''),
+                'X-AI-BS-Layout':preserved['layout'], 'Cache-Control':'no-store',
+                'X-AI-BS-Profile':preserved['profile_id'], 'X-AI-BS-Renderer':preserved['renderer_id'],
+                'X-AI-BS-Artifact-SHA256':preserved['output_sha256'], 'Access-Control-Expose-Headers':exposed}
+            if preserved.get('pdf_page_count') is not None:
+                headers['X-AI-BS-PDF-Page-Count'] = str(preserved['pdf_page_count'])
+            return Response(content=preserved['content'], media_type='application/pdf', headers=headers)
     from core.matrix_docs import FountainParser
     parser = FountainParser(content)
     parser.parse()
     pdf_bytes = parser.to_pdf(metadata.get('title', name), metadata.get('author', 'Unknown'), watermark=watermark)
-    return Response(content=pdf_bytes, media_type="application/pdf",
-                    headers={"Content-Disposition": "attachment; filename*=UTF-8''" + quote(name + '.pdf', safe='')})
+    return Response(content=pdf_bytes, media_type='application/pdf', headers={
+        'Content-Disposition':"attachment; filename*=UTF-8''" + quote(name + '.pdf', safe=''),
+        'X-AI-BS-Layout':'reflow', 'Cache-Control':'no-store',
+        'X-AI-BS-Profile':'legacy-fountain-reflow-v1', 'X-AI-BS-Renderer':'matrix_docs.FountainParser.to_pdf',
+        'X-AI-BS-Artifact-SHA256':hashlib.sha256(pdf_bytes).hexdigest(), 'Access-Control-Expose-Headers':exposed})
 
 
 @router.post("/api/screenwriting/production_breakdown")
@@ -1583,24 +2117,34 @@ def stream_project_audio(project_name: str):
 
 @router.post("/api/screenwriting/projects/{project_name}/audio/transcribe")
 def start_audio_transcription(project_name: str, background_tasks: BackgroundTasks):
+    from core.personal_memory_scope import current_memory_principal
+    owner=current_memory_principal()
+    if not owner:raise HTTPException(403,'Sign in before starting project transcription.')
+    _existing_project_directory(project_name)
     _project_audio_file(project_name)
     from core.audio_transcriber import run_transcription_sync
-    background_tasks.add_task(run_transcription_sync, project_name, "base")
+    background_tasks.add_task(run_transcription_sync, project_name, "base", owner=owner)
     return {"status": "started", "message": f"Transcription started for '{project_name}'"}
 
 
 @router.get("/api/screenwriting/projects/{project_name}/audio/transcribe/status")
 def get_audio_transcription_status(project_name: str):
-    _project_directory(project_name)
-    from core.audio_transcriber import AUDIO_TRANSCRIBE_TASKS
-    return AUDIO_TRANSCRIBE_TASKS.get(project_name, {"status": "idle"})
+    from core.personal_memory_scope import current_memory_principal
+    owner=current_memory_principal()
+    if not owner:raise HTTPException(403,'Sign in before reading project transcription status.')
+    _existing_project_directory(project_name)
+    from core.audio_transcriber import get_transcription_status
+    return get_transcription_status(project_name,owner=owner)
 
 
 @router.get("/api/screenwriting/projects/{project_name}/audio/transcript")
 def get_project_audio_transcript(project_name: str):
-    _project_directory(project_name)
+    from core.personal_memory_scope import current_memory_principal
+    owner=current_memory_principal()
+    if not owner:raise HTTPException(403,'Sign in before reading project transcription.')
+    _existing_project_directory(project_name)
     from core.audio_transcriber import get_project_transcription
-    return get_project_transcription(project_name)
+    return get_project_transcription(project_name,owner=owner)
 
 # ==============================================================================
 # STUDIO QUALITY TTS (EDGE-TTS)

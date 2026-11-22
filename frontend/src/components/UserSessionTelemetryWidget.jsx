@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { getApiBase } from '../config/api';
 import { db } from '../firebase';
 import { collection, onSnapshot, getDocs } from 'firebase/firestore';
@@ -98,6 +98,7 @@ const BASE_KNOWN_MEMBERS = [
  * - Gracefully handles missing/invalid avatars by displaying user initials or standard fallback
  * - Never overflows, bursts parent flex container, or overlaps surrounding UI
  */
+/** @param {{"avatar": string, "name"?: string, "size"?: number, "showBadge"?: boolean, "isOnline"?: boolean, "borderColor"?: string}} props */
 function UserAvatar({ avatar, name = '', size = 42, showBadge = false, isOnline = false, borderColor = 'rgba(56, 189, 248, 0.3)' }) {
   const [imgError, setImgError] = useState(false);
 
@@ -109,7 +110,8 @@ function UserAvatar({ avatar, name = '', size = 42, showBadge = false, isOnline 
   );
 
   // Compute initials as fallback
-  const getInitials = (n) => {
+  /** @param {string} n */
+const getInitials = ( n) => {
     if (!n) return '👤';
     const parts = n.trim().split(/\s+/);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
@@ -183,15 +185,19 @@ function UserAvatar({ avatar, name = '', size = 42, showBadge = false, isOnline 
 }
 
 // Option Icon helper: Prevents raw URLs from showing inside <option> tags
-const getOptionIcon = (avatar) => {
+/** @param {string} avatar */
+const getOptionIcon = ( avatar) => {
   if (!avatar || typeof avatar !== 'string') return '👤';
   if (avatar.startsWith('http') || avatar.length > 4) return '👤';
   return avatar;
 };
 
+/** @param {{"backendUrl": string}} props */
 export default function UserSessionTelemetryWidget({ backendUrl }) {
   const apiHost = backendUrl || getApiBase() || '';
-  const [telemetry, setTelemetry] = useState({
+  /** @typedef {{session_id?: string, user_email: string, user_name: string, user_avatar: string, user_role: string, color?: string, is_online: number, status: string, started_at: number | null, last_heartbeat: number | null, ended_at: number | null, duration_seconds: number, current_tab: string, activity_label: string, client_platform?: string, seconds_ago?: number | null, live_duration_seconds?: number, seconds_since_heartbeat?: number}} SessionRow */
+/** @typedef {{total_active_now: number, total_sessions_recorded: number, total_registered_users?: number, total_dwell_time_seconds: number, live_users: SessionRow[], last_seen_users: SessionRow[], recent_sessions: SessionRow[], user_aggregates: Array<{user_email: string, user_name: string, user_avatar: string, session_count: number, total_seconds: number | null}>}} SessionSummary */
+  const [telemetry, setTelemetry] = useState(/** @type {SessionSummary} */ ({
     total_active_now: 0,
     total_sessions_recorded: 0,
     total_dwell_time_seconds: 0,
@@ -199,16 +205,16 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
     last_seen_users: [],
     recent_sessions: [],
     user_aggregates: []
-  });
-  const [firestoreUsers, setFirestoreUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lastRefreshed, setLastRefreshed] = useState(null);
+  }));
+  const [firestoreUsers, setFirestoreUsers] = useState(/** @type {Array<{"uid"?: string, "user_email"?: string, "lastSeen"?: unknown, "email": string, "displayName": string, "photoURL": string, "role": string, "color": string, "isOnline": boolean}>} */ ([]));
+  const [, setIsLoading] = useState(true);
+  const [lastRefreshed, setLastRefreshed] = useState(/** @type {Date | null} */ (null));
   const [searchFilter, setSearchFilter] = useState('');
   const [selectedUserFilter, setSelectedUserFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL'); // ALL, ACTIVE, CLOSED
   const [isAutoRefresh, setIsAutoRefresh] = useState(true);
   const [isSyncingFirebase, setIsSyncingFirebase] = useState(false);
-  const [firebaseSyncStatus, setFirebaseSyncStatus] = useState(null);
+  const [firebaseSyncStatus, setFirebaseSyncStatus] = useState(/** @type {string | null} */ (null));
 
   // 1. Fetch Backend SQLite Telemetry Summary
   const fetchSessionTelemetry = async () => {
@@ -235,7 +241,8 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
   }, [apiHost, isAutoRefresh]);
 
   // 2. Real-time Firebase Firestore Users Listener & Dynamic Sync
-  const syncUsersWithBackend = async (usersList) => {
+  /** @param {typeof firestoreUsers} usersList */
+const syncUsersWithBackend = async ( usersList) => {
     if (!usersList || usersList.length === 0) return;
     try {
       setIsSyncingFirebase(true);
@@ -261,6 +268,7 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
     try {
       const usersRef = collection(db, 'users');
       const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        /** @type {typeof firestoreUsers} */
         const extracted = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
@@ -301,7 +309,8 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
     try {
       setIsSyncingFirebase(true);
       const snapshot = await getDocs(collection(db, 'users'));
-      const extracted = [];
+      /** @type {typeof firestoreUsers} */
+        const extracted = [];
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         if (data && (data.email || data.user_email)) {
@@ -330,7 +339,8 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
   };
 
   // Helper Formatters
-  const formatDuration = (seconds) => {
+  /** @param {number | undefined} seconds */
+const formatDuration = ( seconds) => {
     if (!seconds || seconds <= 0) return '0s';
     const s = Math.round(seconds);
     const hrs = Math.floor(s / 3600);
@@ -341,7 +351,8 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
     return `${secs}s`;
   };
 
-  const formatTimestamp = (epochMs) => {
+  /** @param {number | null | undefined} epochMs */
+const formatTimestamp = ( epochMs) => {
     if (!epochMs) return '—';
     const d = new Date(epochMs);
     if (isNaN(d.getTime())) return '—';
@@ -352,7 +363,8 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
     );
   };
 
-  const formatRelativeTime = (secondsAgo) => {
+  /** @param {number | null | undefined} secondsAgo */
+const formatRelativeTime = ( secondsAgo) => {
     if (secondsAgo === null || secondsAgo === undefined) return 'Never';
     if (secondsAgo < 10) return 'Just now';
     if (secondsAgo < 60) return `${Math.round(secondsAgo)}s ago`;
@@ -1280,7 +1292,7 @@ export default function UserSessionTelemetryWidget({ backendUrl }) {
             <tbody>
               {filteredSessions.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ padding: '36px', textAlign: 'center', color: '#94a3b8' }}>
+                  <td colSpan={7} style={{ padding: '36px', textAlign: 'center', color: '#94a3b8' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🔍</div>
                     <div style={{ fontWeight: '600', color: '#cbd5e1' }}>No sessions match the selected filters.</div>
                     <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>

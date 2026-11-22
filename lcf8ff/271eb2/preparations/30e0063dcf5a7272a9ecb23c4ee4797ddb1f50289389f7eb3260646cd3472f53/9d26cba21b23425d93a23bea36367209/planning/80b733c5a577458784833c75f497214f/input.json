@@ -1,0 +1,57 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "9d26cba21b23425d93a23bea36367209",
+  "plan_id": "80b733c5a577458784833c75f497214f",
+  "snapshot_sha256": "16a2a9aef1f62cc84210dc02a08b041d3bcf3965ab2cc35e6c2082a33bd2c1b5",
+  "review_digest": "bb667307976edfc2ad8319421e9026ae7c2070277f63c915a4246420db0ba882",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56",
+        "excerpt": "import unittest, runpy\r\nclass Check(unittest.TestCase):\r\n def test_value(self):\r\n  self.assertEqual(runpy.run_path(\"src/app.py\")[\"value\"], 42)\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "c15ace0aadd86834516a49fbf9f4f8b08dbd0245e23333a4f77e813b4e295be8",
+  "worker": {
+    "pid": 42892,
+    "created": 1794665417.4568596
+  },
+  "created_at_utc": "2026-11-14T14:10:19.048524+00:00",
+  "entry_sha256": "bfc9cc20d1a50ab5d986e52f28d4a539a4d108e82afe1c496c8785a32d4d3cfa"
+}

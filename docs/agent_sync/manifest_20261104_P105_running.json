@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-04T22:33:28.938560+00:00",
+  "status": "qualification_running_not_accepted",
+  "exec_session_id": 32557,
+  "source_root": "E:/S173",
+  "build_root": "E:/B173",
+  "evidence_root": "E:/R173",
+  "temporary_root": "E:/T173",
+  "frozen_input_count": 561,
+  "configuration": "P105: full Release and Debug builds and all 128 registered tests per profile passed. Frozen engine/test/assets and pinned canonical Python files remain unchanged. Relocated SDK consumer checks are the next gate; SDK publication and fresh Studio candidate remain pending. Installed 107 and held 108 are unchanged.",
+  "next_action": "Poll existing exec session32557 or inspect its retained owned process/gate reports. Do not restart from a timeout alone. P105_qualify.py continues Release/Debug builds/tests and records source-verification or qualification-failure. Installed consumers/publication remain subsequent gates.",
+  "scope": "C++/CMake/tests/assets physically copied. Some Python integration tests explicitly import C:/AI-BS: canonical client dependency files are pinned before/after, not claimed isolated.",
+  "cloud_checkpoint": "104A remains latest verified checkpoint;105complete qualification archive pending",
+  "goal_complete": false,
+  "consumer_helper": "C:/Users/footb/.codex/visualizations/2026/11/01/01a19491-7a5c-71e0-a6ba-0dc4a3f58f44/P105_consumers.py",
+  "release_registered_tests": 128,
+  "qualification_complete": false
+}

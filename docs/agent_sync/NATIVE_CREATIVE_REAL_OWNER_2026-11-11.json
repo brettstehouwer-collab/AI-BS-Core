@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "status": "VERIFIED_EXISTING_OWNER_BROWSER_NATIVE_LOAD_AND_NORMAL_CLOSE",
+  "verified_utc": "2026-11-11T11:18:03.538748+00:00",
+  "source_scope": "Existing Firebase-owned 86-page PDF project; private name, owner, content excluded",
+  "browser_evidence": "Existing signed-in writing workspace; normal Save & open native action; launch requested. Existing source loaded from host in native accessibility status. No tokens extracted or ownership reassigned.",
+  "native_close": {
+    "schema": 1,
+    "pid": 37444,
+    "created": 1794395475.3317575,
+    "retained_handle": true,
+    "wait_result": 0,
+    "exit_code": 0,
+    "normal_exit_zero": true
+  },
+  "original_preservation": {
+    "existing_files_checked": 1272,
+    "missing": 0,
+    "changed": 0,
+    "reparse_paths": 0,
+    "total_bytes": 20014387,
+    "scope": "Original prestart project inventory; existing bytes only, not whole-project or new-file coverage"
+  },
+  "earlier_monitor": "UNCONFIRMED TimeoutError retained; deadline elapsed while editor remained open. Later fresh exact-process handle confirmed live identity and normal exit0. No relaunch or forced termination.",
+  "not_qualified": [
+    "Real-original edit/export readback",
+    "Full rich FDX real-account workflow",
+    "Installed Studio parity",
+    "Full Python/Qt DLL release attestation"
+  ],
+  "private_data_uploaded": false,
+  "cloud_status": "LOCAL_ONLY_LATER_THAN_110736Z_ARCHIVE",
+  "next": "Mounted synthetic owner-isolated attachment/index/retrieval/restart acceptance; retain remaining original-document export and installed/release gates."
+}

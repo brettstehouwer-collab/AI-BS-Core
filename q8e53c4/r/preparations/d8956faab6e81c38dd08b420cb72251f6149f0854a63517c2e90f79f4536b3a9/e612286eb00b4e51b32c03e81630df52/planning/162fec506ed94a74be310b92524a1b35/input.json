@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "request_id": "e612286eb00b4e51b32c03e81630df52",
+  "plan_id": "162fec506ed94a74be310b92524a1b35",
+  "snapshot_sha256": "5994319ce5997ac6fad1edac30aa5c4624eeffe8bf10d39db45daf830f512c5e",
+  "review_digest": "2318c03a49c504ce3c3f8d35fea0badf582bdb9b7ea0fc0c57c85543cc92eeca",
+  "model_payload": {
+    "objective": "Implement clamp(value, lower, upper) in app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the function signature and existing tests.",
+    "source_files": [
+      {
+        "path": "app.py",
+        "role": "editable",
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556",
+        "excerpt": "def clamp(value, lower, upper):\n    return value\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "test_app.py",
+        "role": "verification",
+        "sha256": "965a9f7b9d3d826245ecd2d02f1d9175c1be86d1969cef31189580ed83c38b3c",
+        "excerpt": "import unittest\nfrom app import clamp\n\nclass ClampTests(unittest.TestCase):\n    def test_cases(self):\n        for args, expected in [((-2,0,10),0),((12,0,10),10),((5,0,10),5),((0,0,10),0),((10,0,10),10),((-5,-4,-1),-4)]:\n            with self.subTest(args=args): self.assertEqual(clamp(*args),expected)\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "9fe1a7d35d30993f4373826fd52a413b16b8cddaa73cdcfcc360c0abba81bcac",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:21:53.228579+00:00",
+  "entry_sha256": "a8d3e0b23070c8609853d3124a876470edae67cb583e45099f60cb7383dc0fd2"
+}

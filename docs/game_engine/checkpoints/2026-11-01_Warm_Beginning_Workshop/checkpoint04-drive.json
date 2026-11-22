@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-02T03:43:56.431077+00:00",
+  "drive_file_id": "1PDOKcAIJRguR2_7mHPIwCeGPS_orp3Gg",
+  "drive_url": "https://drive.google.com/file/d/1PDOKcAIJRguR2_7mHPIwCeGPS_orp3Gg/view?usp=drivesdk",
+  "bytes": 4268670,
+  "sha256": "1b5fa6299e909f3b2c2a63357edfb09195cada7da2ac06561eebae3aafbe716c",
+  "files": 1006,
+  "cached_path": "D:/AI-BS-Game-Resources/cache/1b5fa6299e909f3b2c2a63357edfb09195cada7da2ac06561eebae3aafbe716c.zip",
+  "remote_full_byte_verification": "passed authenticated retrieval with exact length/SHA",
+  "source_scope": "Complete selected source/master/synthetic proof; CPU18+SDK1+creator23 eachconfig. New application GPU proof pending during Fortnite. Not full goal completion.",
+  "memoir_unchanged_sha256": "b375b07d263931b90a6af836be7d798123fdae01e6c0b40016fe843dd6f06138",
+  "post_seal_annotations": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json",
+    "docs/game_engine/resource_catalog.json"
+  ],
+  "goal_status": "active; checkpoints3\u20138 incomplete"
+}

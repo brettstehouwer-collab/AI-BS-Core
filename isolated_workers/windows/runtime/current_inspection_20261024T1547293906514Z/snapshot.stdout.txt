@@ -1,0 +1,7 @@
+SnapshotName="Snapshot 1"
+SnapshotUUID="5dd088ca-9939-4c13-b285-8eb7b54d8f1c"
+SnapshotName-1="AIBS_Installer_77pct_BlackScreen_20261023"
+SnapshotUUID-1="73cdeb79-50d5-418b-810c-e38840094ea4"
+CurrentSnapshotName="AIBS_Installer_77pct_BlackScreen_20261023"
+CurrentSnapshotUUID="73cdeb79-50d5-418b-810c-e38840094ea4"
+CurrentSnapshotNode="SnapshotName-1"

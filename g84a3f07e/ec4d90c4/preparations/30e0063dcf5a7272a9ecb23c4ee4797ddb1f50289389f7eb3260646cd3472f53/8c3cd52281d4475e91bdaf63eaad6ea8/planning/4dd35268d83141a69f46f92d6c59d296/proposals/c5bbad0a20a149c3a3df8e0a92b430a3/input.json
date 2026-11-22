@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "8c3cd52281d4475e91bdaf63eaad6ea8",
+  "plan_id": "4dd35268d83141a69f46f92d6c59d296",
+  "snapshot_sha256": "c976883eff65216ff5a29b826a65bc2f4d0c20abbc93a7a10964915f64e2694a",
+  "review_digest": "85c1e0a39fbf7ca37b6cc940cb12174a021a05891f3dd1dbf1c5e92b88e6d448",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "c5bbad0a20a149c3a3df8e0a92b430a3",
+  "reviewed_plan_sha256": "d8adab7f8d4a47d6196726d74cfbf59c79fe74a7a129021a0455717c30e52aaa",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33764,
+    "created": 1794666055.1427324
+  },
+  "created_at_utc": "2026-11-14T14:21:00.901397+00:00",
+  "entry_sha256": "b8c898246f983fd08744d57c164b6993111e4ee41337a049252c35d37fad7996"
+}

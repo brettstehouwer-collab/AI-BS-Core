@@ -1,0 +1,15 @@
+{
+  "utc": "2026-11-01T22:20:24.559254+00:00",
+  "state": "USER_REQUESTED_RESTART_PAUSE",
+  "source_checkpoint": "C:/AI-BS/backups/checkpoint_20261101_chapter_play/AI_BS_M4_Chapter_Play_Source.zip",
+  "drive_folder": "https://drive.google.com/drive/folders/1-SWGVq7Bgdr11bFM2Ch8EDy5f_Er19sB",
+  "verified_source_files": 1409,
+  "source_sha256": "adab653b8d5eb897f840cf8b610faade535b58447d4f499ec0e6d613837c3739",
+  "verification": "136 Python/Qt; original M4 sourcegates verified; source/installed native Play44/heldStop10/exportGPU56/update300 each Debug/Release",
+  "current_milestone": "M5",
+  "next_step": "Connect live AI-BS generation to pinned proposal jobs with cancellation and explicit Preview/Apply, then package the creator and finish the personal20\u201330minute First Boot alpha/RTX awakening.",
+  "resume_instruction": "After user resumes, read this file, current ledger/BUILD_STATUS/milestone_queue and reconcile worktree before continuing. Do not rerun completed work or reset the dirty repository.",
+  "source_and_drive_delivery_verified": true,
+  "temporary_cleanup_performed": false,
+  "pc_restart_performed": false
+}

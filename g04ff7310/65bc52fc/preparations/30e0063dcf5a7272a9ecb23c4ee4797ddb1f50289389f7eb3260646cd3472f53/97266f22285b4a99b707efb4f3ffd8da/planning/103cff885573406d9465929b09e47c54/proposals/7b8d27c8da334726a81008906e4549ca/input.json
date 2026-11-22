@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "97266f22285b4a99b707efb4f3ffd8da",
+  "plan_id": "103cff885573406d9465929b09e47c54",
+  "snapshot_sha256": "2be71c25c646f6618717b674b7987135c0a04c151f7da718a27ce0b4e9463270",
+  "review_digest": "c866c83a64b802d110b74ef9024b7140ba7517dde44a210e35f49704507fcd38",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "7b8d27c8da334726a81008906e4549ca",
+  "reviewed_plan_sha256": "b47d37ba5fb6f2ae1b0b1ce074150c6365662f159061ea18511a1edf65674d00",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:55:54.722212+00:00",
+  "entry_sha256": "0e8f796eb8b6dfb8edc0c49c8d8eec2ce0aa636ec0db860dc17652a175fcb95a"
+}

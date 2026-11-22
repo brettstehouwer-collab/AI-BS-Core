@@ -1,0 +1,46 @@
+{
+    // Preserve all open files across sessions — no more clicking each .py manually
+    "files.hotExit": "onExitAndWindowClose",
+    "window.restoreWindows": "all",
+    "editor.autoSave": "afterDelay",
+    "editor.autoSaveDelay": 1000,
+    "git.ignoreLimitWarning": true,
+    "files.autoSave": "onWindowChange",
+    "breadcrumbs.symbolSortOrder": "type",
+    "scm.defaultViewSortKey": "status",
+    "scm.repositories.sortOrder": "name",
+    "editor.snippetSuggestions": "top",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.windowsEnableConpty": true,
+    "go.goroot": "C:\\Program Files\\Go",
+    "go.gopath": "C:\\Users\\footb\\go",
+    "go.alternateTools": {
+        "go": "C:\\Program Files\\Go\\bin\\go.exe"
+    },
+    "files.watcherExclude": {
+        "**/backups/**": true,
+        "**/models/**": true,
+        "**/.ollama/**": true,
+        "**/AI-BS-Models/**": true,
+        "**/recordings/**": true,
+        "**/saved_data/**": true,
+        "**/node_modules/**": true,
+        "**/.venv/**": true,
+        "**/__pycache__/**": true,
+        "**/DerivedDataCache/**": true,
+        "**/Intermediate/**": true
+},
+    "search.exclude": {
+        "**/backups/**": true,
+        "**/models/**": true,
+        "**/.ollama/**": true,
+        "**/AI-BS-Models/**": true,
+        "**/recordings/**": true,
+        "**/saved_data/**": true,
+        "**/node_modules/**": true,
+        "**/.venv/**": true,
+        "**/__pycache__/**": true,
+        "**/DerivedDataCache/**": true,
+        "**/Intermediate/**": true
+}
+}

@@ -1,0 +1,6 @@
+{
+  "balanced": {"vram_fraction": 0.80, "max_active": 1, "max_temperature_c": 85, "reserve_mib": 512, "keep_alive_s": 300},
+  "realtime": {"vram_fraction": 0.55, "max_active": 1, "max_temperature_c": 82, "reserve_mib": 768, "keep_alive_s": 120},
+  "ai_compute": {"vram_fraction": 0.92, "max_active": 1, "max_temperature_c": 85, "reserve_mib": 512, "keep_alive_s": 300},
+  "experimental": {"vram_fraction": 0.85, "max_active": 1, "max_temperature_c": 82, "reserve_mib": 768, "keep_alive_s": 120, "available": false}
+}

@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { conversationMemoryFor, conversationBackendMatches } from '../utils/conversationMemory.js';
 
+/** @param {import("zustand").StoreApi<import("/types/domain").AppStore>} store @param {string} backendUrl @param {() => void} [onContextChange] */
 export function useConversationMemory(store, backendUrl, onContextChange) {
   const manager = conversationMemoryFor(store);
   const actor = useSyncExternalStore(store.subscribe, manager.getActorSnapshot);
@@ -12,18 +13,21 @@ export function useConversationMemory(store, backendUrl, onContextChange) {
   const status = useSyncExternalStore(manager.subscribe, manager.getStatus);
   const binding = manager.getBinding();
   const viewReady = status.viewReady && manager.isCurrent(binding) && conversationBackendMatches(status.backendUrl, backendUrl);
+  /** @type {Record<string, string>} */
   const labels = { connecting: 'Checking chat memory', ready: 'Chat memory ready', pending: 'Chat save pending',
     saving: 'Saving chat', saved: 'Chat saved locally and to SQLite', error: 'Chat save needs attention',
     conflict: 'Chat conflict retained', unassigned: 'Existing chat needs ownership confirmation' };
   return { ...status, viewReady, statusLabel: labels[status.phase] || 'Chat memory unavailable',
-    setMessages: updater => manager.change(binding, 'messages', updater),
-    setDraft: updater => manager.change(binding, 'draft', updater),
-    isCurrent: () => manager.isCurrent(binding), beforeClear: options => manager.beforeClear(binding, options),
-    retry: () => manager.retry(), flushLocal: () => manager.flushLocal(), recover: id => manager.recover(id),
+    setMessages: /** @param {import("/types/domain").Update<import("/types/domain").ChatMessage[]>} updater */ updater => manager.change(binding, 'messages', updater),
+    setDraft: /** @param {import("/types/domain").Update<string>} updater */ updater => manager.change(binding, 'draft', updater),
+    isCurrent: () => manager.isCurrent(binding), beforeClear: /** @param {Parameters<ReturnType<typeof conversationMemoryFor>["beforeClear"]>[1]} options */ options => manager.beforeClear(binding, options),
+    retry: () => manager.retry(), flushLocal: () => manager.flushLocal(), recover: /** @param {string} id */ id => manager.recover(id),
     adoptExisting: () => manager.adoptExisting(), saveSeparateCopy: () => manager.saveSeparateCopy() };
 }
 
+/** @param {{memory: ReturnType<typeof useConversationMemory>}} props */
 export function ConversationMemoryStatus({ memory }) {
+  /** @param {() => unknown} action */
   const run = action => { Promise.resolve().then(action).catch(() => {}); };
   return <div role="status" aria-live="polite" style={{ padding: '6px 10px', fontSize: 12, flexShrink: 0, background: '#111827', color: '#cbd5e1' }}>
     <span>{memory.statusLabel}</span>

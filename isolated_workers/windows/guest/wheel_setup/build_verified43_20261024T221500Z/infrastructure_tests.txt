@@ -1,0 +1,44 @@
+PASS exact offline guest admitted
+PASS null rejected
+PASS wrong UUID
+PASS malformed UUID
+PASS host model
+PASS unknown manufacturer
+PASS Oracle VirtualBox
+PASS host worker SID
+PASS host operator SID
+PASS missing SID
+PASS x86 rejected
+PASS non-medium rejected
+PASS enabled NIC rejected
+PASS unobserved NICs rejected
+PASS actual stdout stderr exit
+PASS combined bytes bounded
+PASS actual monotonic deadline
+PASS cancel before start
+PASS newline args rejected
+PASS relative executable rejected
+PASS exclusive intent retained
+PASS real exclusive lease
+PASS released lease still prohibits replay
+PASS corrupt intent prohibits replay
+PASS actual size hash pin
+PASS held media forbids writes
+PASS wrong size rejected
+PASS wrong hash rejected
+PASS reparse attribute rejected
+PASS actual filesystem junction rejected
+PASS actual ordinary path accepted
+PASS strict fixed manifest accepted
+PASS manifest label rejected
+PASS manifest path rejected
+PASS manifest wheel hash rejected
+PASS manifest arbitrary command rejected
+PASS manifest duplicate key rejected
+PASS exact runtime response accepted
+PASS other Python version refused
+PASS other Python prefix refused
+PASS runtime uncertainty refused
+PASS fixed no-network pip arguments
+PASS pip preflight contains os.devnull and no configuration dump
+RESULT 43 trusted infrastructure checks passed; no pip, Python, Node, installer, or project runtime executed.

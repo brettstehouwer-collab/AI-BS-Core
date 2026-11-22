@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "885bec6b63f6470a9081e8f7ded8520a",
+  "plan_id": "26592013b577466698c45cd48937371f",
+  "snapshot_sha256": "5b6938c31450c890b150d807723f60d630939beb1344e8e35232676e9c052da0",
+  "review_digest": "f0d7060d25f3870e6d79d608dde3daf4271d8374f5390a52cf12cdc8056c2a78",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "28777b0b59b74bcfb7f77826086916dc",
+  "reviewed_plan_sha256": "c94e30b4edf42ce4d2adf9d0ca4e26d597b22384c1eabb393c0bcfa784a03422",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43708,
+    "created": 1794664880.930138
+  },
+  "created_at_utc": "2026-11-14T14:01:23.820919+00:00",
+  "entry_sha256": "f54f36588c2ead1921a9fbefa44d75df180ae723fae36c04ab45f57a4febddf3"
+}

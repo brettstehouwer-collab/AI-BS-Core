@@ -1,0 +1,115 @@
+{
+  "at": "2026-11-01T18:59:29.081408+00:00",
+  "goal_status": "active",
+  "incremental_base": "docs/game_engine/checkpoints/2026-11-01_M4_Native_Creator_Process/source_manifest.json",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "verification": {
+    "schema_version": 1,
+    "at": "2026-11-01T18:59:29.081408+00:00",
+    "status": "passed",
+    "qt_client_tests": 11,
+    "python_qt_regression_tests": 87,
+    "backend_executable": "C:\\AI-BS\\engine\\install\\release\\bin\\aibs_creator_host.exe",
+    "backend_sha256": "bbdbde1fc199a5dda1196c4f479d0c786afedab0b3f8c866e6984640488c5638",
+    "cpp_source_changed": false,
+    "scope": "Managed Qt connection only; no visual editor integration yet",
+    "evidence": "engine/out/creator-client-regression.log",
+    "next_step": "Explicit project metadata and creator browser/outliner/inspector integrated into AI-BS game-build workspace; native viewport/content/native Play still required."
+  },
+  "files": [
+    {
+      "path": "native_studio/game_engine/creator_client.py",
+      "bytes": 18091,
+      "sha256": "f1b9bfb58829e4e3e84652272c76cb90dd4c7e804b48c0a51b50f7541c37ac09"
+    },
+    {
+      "path": "engine/tests/test_creator_client.py",
+      "bytes": 11170,
+      "sha256": "8e2d300da50ee8cffb299d1b8a29ef634310ca155bbf5003473f4f73aac0646f"
+    },
+    {
+      "path": "engine/CREATOR_CLIENT.md",
+      "bytes": 4957,
+      "sha256": "8bd95a4277cd81f2966ff73366a5c657ec52fc8344684d2cdbad1296c31d6876"
+    },
+    {
+      "path": "engine/out/creator-client-verification.json",
+      "bytes": 688,
+      "sha256": "8932cc8e1daf35af03cd68a3a808468bd46a6d8dfdf8bc8af094c076693a14fc"
+    },
+    {
+      "path": "engine/milestone_queue.json",
+      "bytes": 26864,
+      "sha256": "769c9abdc7ff648e231fd355a935cbcdfcfbbd7a707872a861dbb4160b1936be"
+    },
+    {
+      "path": "engine/BUILD_STATUS.md",
+      "bytes": 62112,
+      "sha256": "24c526e85b47ff807c869b3dea82394826b0e72ad85113a031eee87647fd90d5"
+    },
+    {
+      "path": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "bytes": 133035,
+      "sha256": "f489994bd0226a25127359164f11a1b0504575a502dd291197e8f613ae080761"
+    },
+    {
+      "path": "docs/game_engine/m4_creator_implementation_notes.md",
+      "bytes": 17591,
+      "sha256": "fa6d4fe4b0df188f38bda6c126d9cceb2ed16efa73b1266edbc1912b7c243bf1"
+    },
+    {
+      "path": "engine/out/creator-client-ack-red.log",
+      "bytes": 1330,
+      "sha256": "5000ebef811fc941875d0f62c55cc37ab73b0bf1e908d662c24f8311bb9ac074"
+    },
+    {
+      "path": "engine/out/creator-client-green.log",
+      "bytes": 111,
+      "sha256": "016a62bfc9d4e88f04024c2c4f09071927ead01187e24d6f8fd68a756664229b"
+    },
+    {
+      "path": "engine/out/creator-client-large-red.log",
+      "bytes": 1369,
+      "sha256": "1aff0053478b9f71eb5f2422e1b6d1e402300198d30a0ec4574069d538aa68bf"
+    },
+    {
+      "path": "engine/out/creator-client-red.log",
+      "bytes": 1044,
+      "sha256": "dab2fac383d46f5c2a39503218503d394715b03bb2c2e38bee4d57f020dc0878"
+    },
+    {
+      "path": "engine/out/creator-client-regression.log",
+      "bytes": 191,
+      "sha256": "6a71daf7988aed19c5b37c42c3971302b7d09b6dfb15e37b9562698dc8fad7d6"
+    },
+    {
+      "path": "engine/out/creator-client-restart-red.log",
+      "bytes": 767,
+      "sha256": "fb085d27011e20225db4c7088d77ef641614d1c93913b5ce768c8be508eef578"
+    },
+    {
+      "path": "engine/out/creator-client-thread-red.log",
+      "bytes": 630,
+      "sha256": "936528648d42f42184414964f63de4122ba373891eeb10a23391790c407529ec"
+    },
+    {
+      "path": "engine/out/creator-client-uint64-red.log",
+      "bytes": 1584,
+      "sha256": "1ffb82c019fede90667fa4359e0b4dd218fd284d6414f5b714253d7a8dcb5fe2"
+    },
+    {
+      "path": "engine/CREATOR_PROTOCOL.md",
+      "bytes": 8957,
+      "sha256": "44228d4111247c0c1c0732fe77857e2ce78840ee95801218541d698f83f7ad31"
+    }
+  ],
+  "cpp_baseline_files_verified_unchanged": 82,
+  "backup": {
+    "file_id": "1bSIoYgNJzWeuC5xLf76wLaHL_dlwdHw_",
+    "bytes": 106615,
+    "sha256": "ad68381f3cc8dcc250081c923d48e8a64950eed970934652f4cd31eb99f0d538",
+    "crc_and_captured_file_readback": "passed",
+    "cloud_size_and_parent": "passed"
+  }
+}

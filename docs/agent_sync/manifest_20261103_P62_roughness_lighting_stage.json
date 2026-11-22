@@ -1,0 +1,51 @@
+{
+  "at": "2026-11-03T23:58:22.664169+00:00",
+  "status": "passed_source0170_roughness_GPU_stage_not_full_SDK_qualification",
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source": {
+    "engine/CMakeLists.txt": {
+      "bytes": 62870,
+      "sha256": "7d9ce8658a8f422ad6f3f635a22c94c35a3d7717a3d256b20c73646f7596ad92"
+    },
+    "engine/include/aibs/character_assets.hpp": {
+      "bytes": 1660,
+      "sha256": "2266095d47b333c4d768f37ab0c7ad1ac50b329468889f43a011401d6cd64c12"
+    },
+    "engine/include/aibs/character_codec.hpp": {
+      "bytes": 628,
+      "sha256": "ef4c487fbcb6b7b38d0e9c299c9f6493d7771c48d6b5f81a505f66f767e7d81d"
+    },
+    "engine/src/character_assets.cpp": {
+      "bytes": 5263,
+      "sha256": "59b39807eed9414d62fe94cc284aaf182a019a9af3b40d370bb0ca9e652ae659"
+    },
+    "engine/src/character_codec.cpp": {
+      "bytes": 16443,
+      "sha256": "d4a696207cf82577f10da230d38eedf828d0caa76a5f6ca93a67aaa410604ca9"
+    },
+    "engine/tests/character_surface_codec_tests.cpp": {
+      "bytes": 3262,
+      "sha256": "d6bd79c8034652f0c32b36a1794c4998ca3975746945b88e19a304ac2e56527b"
+    },
+    "engine/src/render_character.inl": {
+      "bytes": 24583,
+      "sha256": "fb717299fab97e2c7db2f1baac6159d09cda5a20cf3f1f45230f86bcbe396a87"
+    },
+    "engine/src/render_dx12.cpp": {
+      "bytes": 54264,
+      "sha256": "12ed801c0af349237b4390a54755de575e41b4870c9d444ce55aebf32d7c76c5"
+    },
+    "engine/shaders/character.hlsl": {
+      "bytes": 5610,
+      "sha256": "063d76c60218f9cd4997258c111b39b8730d44ab8e5ff19ab10d5aaa1f24bfbb"
+    },
+    "engine/tests/character_material_gpu_tests.cpp": {
+      "bytes": 22655,
+      "sha256": "451d61db8f638262b39be2ac627a89fc55fd584d625469d04665eb9b1e71fe91"
+    }
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P62\\CharacterRoughnessShading\\verification.json",
+  "next_step": "Add test-first bounded glTFroughness-factor admission, cook a separate character surface variant and verify native appearance. Then broaden source/nativeSDKconsumer regressions before any install/package. Existing105/0166and all saves/references remain retained; personal likeness/captions/human pacing/performance still incomplete.",
+  "goal_complete": false
+}

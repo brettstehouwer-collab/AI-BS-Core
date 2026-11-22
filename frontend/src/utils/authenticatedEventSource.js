@@ -1,7 +1,9 @@
 // Fetch uses the application's admin-token interceptor; native EventSource cannot add that header.
+/** @param {string} url */
 export function createAuthenticatedEventSource(url) {
   const controller = new AbortController();
   let closed = false;
+  /** @type {{onmessage: ((event: {data: string}) => void) | null; onerror: ((error: unknown) => void) | null; close: () => void}} */
   const source = {
     onmessage: null, onerror: null,
     close() { closed = true; controller.abort(); },
@@ -31,7 +33,7 @@ export function createAuthenticatedEventSource(url) {
         if (done) break;
       }
     } catch (error) {
-      if (!closed && error.name !== 'AbortError') source.onerror?.(error);
+      if (!closed && !(error instanceof Error && error.name === 'AbortError')) source.onerror?.(error);
     } finally {
       if (reader) await reader.cancel().catch(() => {});
     }

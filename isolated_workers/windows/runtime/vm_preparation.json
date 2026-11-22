@@ -1,0 +1,11 @@
+﻿{
+    "State":  "FAILED_REVIEW_REQUIRED",
+    "Detail":  "VBoxManage step 1 failed with exit code . See retained stdout/stderr.",
+    "VMName":  "AI-BS-Eval-Base-20261023",
+    "VMUUID":  null,
+    "Step":  1,
+    "PID":  325668,
+    "TimestampUTC":  "2026-10-23T20:55:54.5527252Z",
+    "StartedGuest":  false,
+    "AcceptedWindowsTerms":  false
+}

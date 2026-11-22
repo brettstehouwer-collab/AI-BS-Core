@@ -27,6 +27,16 @@ class AutonomousProgramBuilder:
     """
 
     @staticmethod
+    def _execution_unavailable() -> Dict[str, Any]:
+        """Legacy callers have no task-bound execution admission contract."""
+        return {
+            "status": "unavailable", "code": "legacy_execution_not_admitted",
+            "executed": False, "exit_code": None, "stdout": "",
+            "stderr": "Arbitrary legacy build/run execution is not admitted. Use Coding mode with an accepted isolated worker or explicit per-task Trusted local checks.",
+            "message": "Source-only scaffolding remains available with execute_build=false and run_immediately=false. Fixed AI-BS maintenance uses its existing dedicated lane.",
+        }
+
+    @staticmethod
     def ensure_dir():
         os.makedirs(PROGRAMS_DIR, exist_ok=True)
 
@@ -197,6 +207,8 @@ class AutonomousProgramBuilder:
         Builds a complete multi-file software program and executes build steps.
         files: [{"path": "main.py", "content": "..."}, ...]
         """
+        if execute_build or run_immediately:
+            return cls._execution_unavailable()
         display_name = project_name
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         if not clean_name:
@@ -478,6 +490,10 @@ class AutonomousProgramBuilder:
     def run_existing_program(cls, project_name: str, entrypoint: Optional[str] = None, powershell_command: Optional[str] = None,
                              strict_quality_gate: bool = False) -> Dict[str, Any]:
         """Runs an existing built program and captures output via Python or PowerShell."""
+        return cls._execution_unavailable()
+
+        # Retained legacy implementation is unreachable without a reviewed
+        # task-bound adapter; a caller-supplied confirmation is not admission.
         clean_name = "".join(c for c in project_name if c.isalnum() or c in ("-", "_")).lower()
         project_dir = os.path.join(PROGRAMS_DIR, clean_name)
         if not os.path.exists(project_dir):
@@ -622,6 +638,14 @@ class AutonomousProgramBuilder:
     def build_project(cls, project_name_or_dir: str, build_command: Optional[str] = None, timeout_seconds: int = 300,
                       strict_quality_gate: bool = False) -> Dict[str, Any]:
         """Executes a build in a project directory, auto-detecting build tools if build_command is omitted."""
+        from core.project_maintenance import dispatch
+        maintenance = dispatch(project_name_or_dir, build_command)
+        if maintenance is not None:
+            return maintenance
+        return cls._execution_unavailable()
+
+        # Preserve historical implementation until a task-bound worker adapter
+        # replaces it. No path, manifest or command is inspected on this lane.
         target_dir = cls.resolve_project_dir(project_name_or_dir)
         if not target_dir:
             return {

@@ -1,0 +1,11 @@
+﻿{
+    "Arguments":  [
+                      "startvm",
+                      "--type=gui",
+                      "6c5a53da-ab80-4ecb-8be6-4059266f736e"
+                  ],
+    "PID":  361788,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:53:01.0712391Z"
+}

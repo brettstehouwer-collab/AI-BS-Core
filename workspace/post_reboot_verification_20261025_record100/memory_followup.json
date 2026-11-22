@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-10-25T22:26:21.8464576Z",
+  "committed_bytes": 36673126400,
+  "commit_limit_bytes": 132386414592,
+  "commit_percent": 27.701578377979676,
+  "codex": [
+    {
+      "pid": 22512,
+      "private_bytes": 13692928,
+      "working_set_bytes": 70819840,
+      "created_utc": "2026-10-25T22:14:03.2799639Z"
+    },
+    {
+      "pid": 30896,
+      "private_bytes": 8911937536,
+      "working_set_bytes": 7992037376,
+      "created_utc": "2026-10-25T22:13:50.4026599Z"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "status": "VERIFIED_BOUNDED_AWS_API_USE",
+  "checked_utc": "2026-11-14T22:51:13.344661+00:00",
+  "profile": "stehouwer-productions",
+  "region": "us-east-2",
+  "guidance": "HIGH",
+  "plan": "FREE_ACTIVE",
+  "remaining_credits_reported_usd": 120,
+  "plan_expires": "2027-05-14",
+  "budget": {
+    "name": "AI-BS-monthly-usage-monitor",
+    "monthly_threshold_usd": 5,
+    "health": "HEALTHY",
+    "monitoring_only": true,
+    "hard_spending_cap": false,
+    "email_alerts_configured": false,
+    "automatic_actions": false,
+    "credit_and_refund_offsets_excluded": true
+  },
+  "earned_budget_activity": {
+    "status": "COMPLETED",
+    "reward_usd": 20
+  },
+  "live_model_calls": 2,
+  "model": "amazon.nova-lite-v1:0",
+  "total_test_tokens": 210,
+  "verified_live": [
+    "API authentication and response",
+    "Named project and region",
+    "Public-text generation through optional helper",
+    "Budget readback and credit activity completion"
+  ],
+  "offline_smoke_checks": 15,
+  "source_patch": "work/aws-api-readiness-20261114/helper.patch",
+  "public_draft": "work/aws-api-readiness-20261114/promotional-draft.txt",
+  "draft_review": "Human-edited model output removes promotional superlatives and unsupported shared production claim; original model output preserved separately.",
+  "default_ai_bs_provider": "local unchanged",
+  "backend_or_service_restarts": false,
+  "private_histories_or_contacts_uploaded": false,
+  "published_or_sent": false,
+  "paid_plan_upgrade": false,
+  "billed_model_cost_usd": null,
+  "limitations": [
+    "Budget is monitoring only, not a spending cap; no email alerts configured.",
+    "CLI helper is optional and manual, not integrated into running AI-BS provider UI.",
+    "Model response quality is not established by connectivity tests.",
+    "Billing and credit balance may update later.",
+    "Current website analytics collection still depends on existing local AI-BS backend."
+  ],
+  "sources": [
+    "https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html",
+    "https://aws.amazon.com/aws-cost-management/aws-budgets/pricing/",
+    "https://docs.aws.amazon.com/us_en/awsaccountbilling/latest/aboutv2/free-tier-plans.html"
+  ]
+}

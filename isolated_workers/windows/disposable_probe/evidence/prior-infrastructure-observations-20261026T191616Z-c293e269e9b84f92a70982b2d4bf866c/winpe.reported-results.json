@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "classification": "RETROSPECTIVE_TRANSCRIPTION_OF_PREVIOUSLY_OBSERVED_TRUSTED_INFRASTRUCTURE_TOOL_RESULTS",
+  "suite": "WinPE",
+  "reported_passed": 20,
+  "reported_failed": 0,
+  "original_execution_utc": null,
+  "original_stdout_retained_in_this_file": false,
+  "verification": "PREVIOUS_TOOL_OUTPUT_OBSERVATION_ONLY_NOT_A_NEW_EXECUTION",
+  "transcribed_utc": "2026-10-26T19:16:16.3879943Z",
+  "source_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Inspect-WorkerWinPE.ps1",
+  "current_source_sha256": "c57d67f3d8a4f7fc44153dd342b6dd6fd088cdfaa5c679e395d9583d84a7a69c",
+  "test_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Test-WinPEInspectorInfrastructure.ps1",
+  "current_test_sha256": "7c20364ec3843e3364c2b0b85f2418d75fe1b792ac9c81e397f81488a5f52561",
+  "vm_operations": 0,
+  "guest_input": 0,
+  "candidate_execution": false,
+  "rerun_performed_to_create_this_record": false
+}

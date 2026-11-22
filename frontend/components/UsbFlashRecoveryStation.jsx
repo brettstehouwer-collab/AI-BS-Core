@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
+/** @param {{"backendUrl": string}} props */
 export default function UsbFlashRecoveryStation({ backendUrl }) {
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState(/** @type {Array<{"disk_number": number, "friendly_name": string, "state_category": string, "recommended_action": string, "drive_letter": string, "size_gb": number, "vid_pid": number, "operational_status": string, "partition_style": string, "controller_signature": {"controller": string, "mode": string, "tool": string}}>} */ ([]));
   const [loading, setLoading] = useState(false);
-  const [selectedDisk, setSelectedDisk] = useState(null);
-  const [probeResult, setProbeResult] = useState(null);
+  const [selectedDisk, setSelectedDisk] = useState(/** @type {number | null} */ (null));
+  const [probeResult, setProbeResult] = useState(/** @type {{"hardware_vendor"?: string, "hardware_product"?: string, "hardware_revision"?: string, "sector_zero_readable"?: boolean, "lba_status"?: string, "is_bootrom_mode"?: boolean, "scsi_pass_through_supported"?: boolean, "scsi_pass_through_error"?: string, "diagnosis_summary"?: string, "error"?: string} | null} */ (null));
   const [probing, setProbing] = useState(false);
   const [rebuilding, setRebuilding] = useState(false);
-  const [rebuildStatus, setRebuildStatus] = useState(null);
+  const [rebuildStatus, setRebuildStatus] = useState(/** @type {{"success": boolean, "message": string} | null} */ (null));
   const [targetFs, setTargetFs] = useState('FAT32');
   const [volumeLabel, setVolumeLabel] = useState('AI_BS_USB');
   const [confirmDestructive, setConfirmDestructive] = useState(false);
@@ -42,7 +43,8 @@ export default function UsbFlashRecoveryStation({ backendUrl }) {
     scanDevices();
   }, []);
 
-  const handleProbe = async (diskNum) => {
+  /** @param {number} diskNum */
+const handleProbe = async ( diskNum) => {
     setProbing(true);
     setProbeResult(null);
     try {
@@ -67,7 +69,8 @@ export default function UsbFlashRecoveryStation({ backendUrl }) {
     }
   };
 
-  const handleRebuild = async (diskNum) => {
+  /** @param {number} diskNum */
+const handleRebuild = async ( diskNum) => {
     if (!confirmDestructive) {
       alert("Safety Lock: You must check 'Confirm Total Wipe' before rebuilding the partition table.");
       return;

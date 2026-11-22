@@ -1,0 +1,64 @@
+{
+    "State":  "RECOVERY_SAVED_REVIEW_REQUIRED",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "PID":  73220,
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "StartedUTC":  "2026-10-24T16:10:12.5627338Z",
+    "Commands":  [
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "TimedOut":  false
+                     },
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "screenshotpng",
+                                           "C:\\AI-BS\\isolated_workers\\windows\\runtime\\headless_recovery_observation_1\\screen_current.png"
+                                       ],
+                         "TimedOut":  false
+                     },
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "TimedOut":  false
+                     },
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "controlvm",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "savestate"
+                                       ],
+                         "TimedOut":  false
+                     },
+                     {
+                         "ExitCode":  0,
+                         "Arguments":  [
+                                           "showvminfo",
+                                           "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                                           "--machinereadable"
+                                       ],
+                         "TimedOut":  false
+                     }
+                 ],
+    "BootRequested":  false,
+    "ContainmentAccepted":  false,
+    "GuestCommandsEnabled":  false,
+    "PasswordStored":  false,
+    "RecoveryDisk":  "cddcb90b-9ea3-42d2-90a5-49de79b7dc0e",
+    "SafetySnapshot":  "afda1952-6c48-4086-9590-897c21323990",
+    "PreservedDisk":  "59e3fed5-5878-4524-8a70-9b0dc7a5067b",
+    "ScreenshotCaptured":  true,
+    "FinishedUTC":  "2026-10-24T16:10:21.2595401Z"
+}

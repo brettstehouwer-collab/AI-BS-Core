@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "archive": "C:/AI-BS/backups/checkpoint_20261101_pause_after_M3_Studio94/AI_BS_PAUSED_Studio94_M4_Host_RED_Source_v2.zip",
+  "bytes": 2346274,
+  "archive_sha256": "c874787744b100c04b6d21f73e63035a941a83e5257b9a1c2b3a49e9ed7c6635",
+  "complete_selected_source_files": 272,
+  "zip_members": 273,
+  "manifest_checksum": "1fec3c9754d9b0707553dfb245766148d3938d9dfa3cb7df64808901cd242ce3",
+  "zip_crc": "passed",
+  "captured_source_byte_readback": "passed",
+  "credential_marker_scan": {
+    "files": 272,
+    "hits": 0
+  },
+  "all_agents_stopped": true,
+  "no_live_builds": true,
+  "creator_test_sha256": "aecdc85c71dde34833f4e9a749427b435ac115221d9d1167d04dab455f9fe4c4",
+  "previous_local_zip": "Retained locally but not uploaded; v2 narrows diff to actual game/version scope."
+}

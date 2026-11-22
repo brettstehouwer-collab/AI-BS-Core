@@ -1,0 +1,16 @@
+{
+  "state": "FAILED",
+  "input_sha256": "46410c82c19c9214ca79ec9919ea0c0b98d14aa24f25e504f2aeb932bc225665",
+  "proposal": null,
+  "error_code": "invalid_model_output",
+  "finished_at_utc": "2026-11-14T14:20:52.857786+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "e1328cbd746526a306079334684a659e803190b6a1f28eb1d46dac2e21f0c9ec",
+  "response_bytes": 85,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [],
+    "questions": []
+  },
+  "entry_sha256": "e907e9f9987d3a133925bef909302778c69bd9a7f71fb0fc8b5390c673422dea"
+}

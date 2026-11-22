@@ -1,0 +1,346 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-02T18:48:45.430875+00:00",
+  "cache_root": "D:/AI-BS-Game-Resources/cache",
+  "policy": {
+    "offload": "Generated inactive resources only after authenticated download and full SHA verification",
+    "keep_local": [
+      "active source",
+      "active assets",
+      "installed Blender",
+      "retained SDKs and releases",
+      "original family references"
+    ],
+    "download_url": "Obtain fresh reference from Google Drive fetch; never persist signed URLs",
+    "runtime": "Resolve before import/staging; never stream directly from Drive during gameplay",
+    "drive_quota": "Unavailable through current connector"
+  },
+  "resources": [
+    {
+      "id": "workshop-capacitor-checkpoint-01",
+      "drive_file_id": "1z-RaK1bQZHhWvLYJWA92vtoauchc5JvN",
+      "drive_url": "https://drive.google.com/file/d/1z-RaK1bQZHhWvLYJWA92vtoauchc5JvN/view",
+      "bytes": 1229790,
+      "sha256": "4cf13a755b91c06fd9c833b2331982c66085ce4841b0658f86bd1ceeeda11873",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\4cf13a755b91c06fd9c833b2331982c66085ce4841b0658f86bd1ceeeda11873.zip",
+      "previous_local_path": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\01_Workshop_Capacitor_Source_And_Evidence.zip",
+      "remote_full_byte_verification": "passed",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-textured-packs-guide-03",
+      "drive_file_id": "1RNWwZ1ix69obn1dTJwUN_C18-4f_mhNm",
+      "drive_url": "https://drive.google.com/file/d/1RNWwZ1ix69obn1dTJwUN_C18-4f_mhNm/view?usp=drivesdk",
+      "bytes": 3217592,
+      "sha256": "68ccc401ed4c4a381c59c7c0282db650265cefaa0deb7ee55dafa53da0436f96",
+      "cached_path": "D:/AI-BS-Game-Resources/cache/68ccc401ed4c4a381c59c7c0282db650265cefaa0deb7ee55dafa53da0436f96.zip",
+      "remote_full_byte_verification": "passed authenticated retrieval; full length/SHA matched",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-surface-placement-v3-cpu-04",
+      "drive_file_id": "1PDOKcAIJRguR2_7mHPIwCeGPS_orp3Gg",
+      "drive_url": "https://drive.google.com/file/d/1PDOKcAIJRguR2_7mHPIwCeGPS_orp3Gg/view?usp=drivesdk",
+      "bytes": 4268670,
+      "sha256": "1b5fa6299e909f3b2c2a63357edfb09195cada7da2ac06561eebae3aafbe716c",
+      "cached_path": "D:/AI-BS-Game-Resources/cache/1b5fa6299e909f3b2c2a63357edfb09195cada7da2ac06561eebae3aafbe716c.zip",
+      "remote_full_byte_verification": "passed authenticated retrieval with exact length/SHA",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-authored-lighting-surface-gpu-05",
+      "drive_file_id": "18txL1q9Ngo97dwB3ZivwZmHFKsmksFEB",
+      "drive_url": "https://drive.google.com/file/d/18txL1q9Ngo97dwB3ZivwZmHFKsmksFEB/view?usp=drivesdk",
+      "bytes": 12806100,
+      "sha256": "1aeaab1de8bb14bd4170c162d1afcee688c1409a9052b8025d2d2a0c0b5adeea",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\1aeaab1de8bb14bd4170c162d1afcee688c1409a9052b8025d2d2a0c0b5adeea.zip",
+      "remote_full_byte_verification": "passed authenticated full retrieval length/SHA; ZIP CRC/source manifest bytes matched",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-companion-runtime-character-cpu-06",
+      "drive_file_id": "1PkBtg7vPcwFgPVPGBJFAT0gHUx3W2WxE",
+      "drive_url": "https://drive.google.com/file/d/1PkBtg7vPcwFgPVPGBJFAT0gHUx3W2WxE/view?usp=drivesdk",
+      "bytes": 16927043,
+      "sha256": "d3e0434f2e909b7390f605246558ab9a920aea5af2ea1be021cdff356223b6f2",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\d3e0434f2e909b7390f605246558ab9a920aea5af2ea1be021cdff356223b6f2.zip",
+      "remote_full_byte_verification": "passed authenticated full retrieval length/SHA and ZIP CRC/manifest checksum",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "web-ui-overview-deployment-07",
+      "drive_file_id": "1CjazcHVmevR7AdEvktmkOGL_4AQtA75L",
+      "drive_url": "https://drive.google.com/file/d/1CjazcHVmevR7AdEvktmkOGL_4AQtA75L/view?usp=drivesdk",
+      "bytes": 13786782,
+      "sha256": "c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a.zip",
+      "remote_full_byte_verification": "passed authenticated retrieval SHA, ZIP CRC and manifest checksum",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-indexed-character-articulated-guide-08",
+      "drive_file_id": "1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY",
+      "drive_url": "https://drive.google.com/file/d/1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY/view?usp=drivesdk",
+      "bytes": 6581867,
+      "sha256": "1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000",
+      "cached_path": "D:/AI-BS-Game-Resources/cache/1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000.zip",
+      "remote_full_byte_verification": "passed authenticated full retrieval length/SHA and ZIP CRC/source manifest checksum",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-character-pipeline-09",
+      "drive_file_id": "1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL",
+      "drive_url": "https://drive.google.com/file/d/1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL/view?usp=drivesdk",
+      "bytes": 15196792,
+      "sha256": "d105a48346651285a78b3c71715a6db1e11cfb45a5602d28c16d33f725e2ce03",
+      "source_manifest_sha256": "82c81d3f36a13f2f4633ea8e7bd6f75d73ef51884b74e36fcc8702afb19be186",
+      "local_path": "D:\\AI-BS-Game-Resources\\Backups\\09_Bounded_Character_Pipeline_And_Creator.zip",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\d105a48346651285a78b3c71715a6db1e11cfb45a5602d28c16d33f725e2ce03.zip",
+      "verified": true,
+      "scope": "Incremental09 complete selected native engine/creator source, SDK examples, pinned cgltf source/license, generated character fixtures, project-owned art masters including capacitor.blend, the game-only architecture addendum, current release metadata and explicitly selected verification evidence. Original family references, credentials and environment files, the cross-project master/business ledgers and private preimages, external dependency/build trees, and retired binary releases are excluded. Checkpoint08, Studio97 and SDK0.10 remain retained. This checkpoint proves only the bounded character pipeline and creator scope recorded by the parent verification report; Adam likeness, optional memory audio and the completed8â€“12minute opening are not inferred.",
+      "deployment_backup": {
+        "drive_file_id": "15pf3W2CDNeoIxji5UeMTEYzjx88b3The",
+        "drive_url": "https://drive.google.com/file/d/15pf3W2CDNeoIxji5UeMTEYzjx88b3The/view?usp=drivesdk",
+        "bytes": 39914,
+        "sha256": "d166759b9a3b7060baec8b8eb6d7ff0f2280db23e76cc2d056780196e842ad75",
+        "remote_full_byte_roundtrip": true
+      }
+    },
+    {
+      "id": "warm-beginning-memory-audio-character-studies-14",
+      "drive_file_id": "1HBH2CW74UWc7O8OsorQIznm4erIAPrmC",
+      "drive_url": "https://drive.google.com/file/d/1HBH2CW74UWc7O8OsorQIznm4erIAPrmC/view?usp=drivesdk",
+      "bytes": 112550990,
+      "sha256": "22a80eec6b57d78e89b7b667e5bf8710211f679a8f49b36f83bc35cd031c669c",
+      "parts": [
+        {
+          "name": "14_Native_Memory_Audio_And_Character_Studies.zip.part01of02",
+          "bytes": 56623104,
+          "sha256": "ac90c43f0e2b542a702be0ee369c2bde79529085ae57dcab908460020d964439",
+          "drive_file_id": "1JfaaEeDc0KEBg2DIyz7IACvzaAEmeQSb",
+          "drive_url": "https://drive.google.com/file/d/1JfaaEeDc0KEBg2DIyz7IACvzaAEmeQSb/view?usp=drivesdk",
+          "authenticated_full_download_verified": true
+        },
+        {
+          "name": "14_Native_Memory_Audio_And_Character_Studies.zip.part02of02",
+          "bytes": 55927886,
+          "sha256": "cbf2b722682cbd83515a76f047d33970a111ace3c8938827c1438118e5bb76c3",
+          "drive_file_id": "1E2M61Jd8s46O8gbBVkXxhtI-PKkcKBo7",
+          "drive_url": "https://drive.google.com/file/d/1E2M61Jd8s46O8gbBVkXxhtI-PKkcKBo7/view?usp=drivesdk",
+          "authenticated_full_download_verified": true
+        }
+      ],
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\22a80eec6b57d78e89b7b667e5bf8710211f679a8f49b36f83bc35cd031c669c.zip",
+      "remote_full_byte_verification": "passed authenticated part downloads, exact reassembly, all CRC/member hashes",
+      "storage_tier": "drive_parts_with_verified_D_cache"
+    },
+    {
+      "id": "studio98-launcher-repair-14B",
+      "drive_file_id": "1THGxQxxQgftWrQUuKsB0yyzZ1FkVzHUx",
+      "drive_url": "https://drive.google.com/file/d/1THGxQxxQgftWrQUuKsB0yyzZ1FkVzHUx/view?usp=drivesdk",
+      "bytes": 227406,
+      "sha256": "cbabbe68d92a280b062e7af367d307dd46196a20516e125968ca34192b8f8e3a",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\cbabbe68d92a280b062e7af367d307dd46196a20516e125968ca34192b8f8e3a.zip",
+      "remote_full_byte_verification": "passed authenticated full download, CRC and every member hash",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-native-opening-creator-16",
+      "drive_file_id": "1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC",
+      "drive_url": "https://drive.google.com/file/d/1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC/view?usp=drivesdk",
+      "bytes": 19554076,
+      "sha256": "7771e446ab750b7862135647ac7427b98415938f64d52b8bc3c23753a74bc199",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\7771e446ab750b7862135647ac7427b98415938f64d52b8bc3c23753a74bc199.zip",
+      "remote_full_byte_verification": "passed authenticated full download, CRC, embedded manifest and all829member SHA/length checks",
+      "storage_tier": "drive_with_verified_D_cache",
+      "base_restore_manifest": "https://drive.google.com/file/d/1HBH2CW74UWc7O8OsorQIznm4erIAPrmC/view?usp=drivesdk"
+    },
+    {
+      "id": "warm-beginning-16a-source-records",
+      "drive_file_id": "1e3wxktYASVLoty3Z0-2-sgifjEU60Pcf",
+      "drive_url": "https://drive.google.com/file/d/1e3wxktYASVLoty3Z0-2-sgifjEU60Pcf/view?usp=drivesdk",
+      "bytes": 180857,
+      "sha256": "3343572ec3a5f51684dbc3c2dcc77ecad31d7c2346b01d86f5ec3aa0e27722d3",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\3343572ec3a5f51684dbc3c2dcc77ecad31d7c2346b01d86f5ec3aa0e27722d3.zip",
+      "remote_full_byte_verification": "passed authenticated full download, ZIP CRC and every manifest member hash/length",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "warm-beginning-16b-source-records",
+      "drive_file_id": "1JR0jHc9oyZKKYq_R725XZJyrbdFjTKm0",
+      "drive_url": "https://drive.google.com/file/d/1JR0jHc9oyZKKYq_R725XZJyrbdFjTKm0/view?usp=drivesdk",
+      "bytes": 15402947,
+      "sha256": "c534f48f6b0419d2ffc2629c9f2bd16eab70e46dc53dde37c203d34f2ec27992",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\c534f48f6b0419d2ffc2629c9f2bd16eab70e46dc53dde37c203d34f2ec27992.zip",
+      "remote_full_byte_verification": "passed authenticated full download, ZIP CRC and every manifest member hash/length",
+      "storage_tier": "drive_with_verified_D_cache"
+    },
+    {
+      "id": "adam-v07-native-acceptance-17",
+      "drive_file_id": "1ViNVqnLWHNk34tTPI11V9y1jE4WQvnRi",
+      "drive_url": "https://drive.google.com/file/d/1ViNVqnLWHNk34tTPI11V9y1jE4WQvnRi/view",
+      "bytes": 4174213,
+      "sha256": "fa93ac7e2389aa80c635cb930947ae753cc94ea630fd34c197c8df290194a54e",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\fa93ac7e2389aa80c635cb930947ae753cc94ea630fd34c197c8df290194a54e.zip",
+      "remote_full_byte_verification": "passed authenticated complete retrieval, CRC and every selected member size/SHA",
+      "storage_tier": "drive_with_verified_D_cache",
+      "private_family_media": false,
+      "default_bound": false
+    },
+    {
+      "id": "opening-sdk014-integrated-source-18A",
+      "drive_file_id": "1oflE7f9Ackk1Drc8cpRMcPVgRoaXD-OS",
+      "drive_url": "https://drive.google.com/file/d/1oflE7f9Ackk1Drc8cpRMcPVgRoaXD-OS/view",
+      "bytes": 652908,
+      "sha256": "c04f3e5c35aabe9f2543fa49163aa86e7c94c51e047a38d117d1a6f7117797c9",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\c04f3e5c35aabe9f2543fa49163aa86e7c94c51e047a38d117d1a6f7117797c9.zip",
+      "remote_full_byte_verification": "passed authenticated complete retrieval, CRC and every selected member size/SHA",
+      "storage_tier": "drive_with_verified_D_cache",
+      "private_family_media": false,
+      "default_bound": false
+    },
+    {
+      "id": "private-original-audio-preparation-19B",
+      "drive_file_id": "17rny8FYXSPw_0aXq70BorcHc5NRs8efx",
+      "drive_url": "https://drive.google.com/file/d/17rny8FYXSPw_0aXq70BorcHc5NRs8efx/view",
+      "bytes": 28241836,
+      "sha256": "e70c12b1ff79e829fc3acb61f157960f5131c0c2ade32fe1f9f6952ee31668d7",
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\e70c12b1ff79e829fc3acb61f157960f5131c0c2ade32fe1f9f6952ee31668d7.zip",
+      "remote_full_byte_verification": "passed authenticated complete retrieval, CRC and every selected member size/SHA",
+      "storage_tier": "drive_with_verified_D_cache",
+      "private_family_media": true,
+      "default_bound": false
+    },
+    {
+      "id": "studio99-v08-checkpoint20A",
+      "drive_file_id": "1fhu43sT5xyvVv2xN77UZECSuMRnclgzF",
+      "bytes": 11212188,
+      "sha256": "c46706235676176b404dfdb4de4fc2ac5a47db8cec614b40123d3a93980d08b7",
+      "remote_full_byte_verification": "passed",
+      "drive_url": "https://drive.google.com/file/d/1fhu43sT5xyvVv2xN77UZECSuMRnclgzF/view"
+    },
+    {
+      "id": "v09-stations-checkpoint21A",
+      "drive_file_ids": [
+        "198YKeULHoK9g3hfLYvuvUtlxaV5nqF4r",
+        "1mXNQIT0PntS4baD1cPb8OQazN8wE4HNx"
+      ],
+      "bytes": 51796616,
+      "sha256": "4899389c7a1cd6295b61554b207a86ef0f05497549825896310c65f9ac4f8d3a",
+      "restore_manifest_drive_id": "1cZgJm7HBEfVWOdGeTzSuhakNpK3BXLQG",
+      "remote_full_byte_verification": "passed",
+      "restore_manifest_drive_url": "https://drive.google.com/file/d/1cZgJm7HBEfVWOdGeTzSuhakNpK3BXLQG/view",
+      "drive_urls": [
+        "https://drive.google.com/file/d/198YKeULHoK9g3hfLYvuvUtlxaV5nqF4r/view",
+        "https://drive.google.com/file/d/1mXNQIT0PntS4baD1cPb8OQazN8wE4HNx/view"
+      ]
+    },
+    {
+      "id": "current-v09-native-walkthrough",
+      "drive_file_id": "1c4vzFbZu6sYLe0UVz0rs27VLFeIirl-k",
+      "bytes": 4199396,
+      "sha256": "7126d6b3b1063762275bf9ca61a7c58428e6a0f3438202081433bee52ac9c08f",
+      "remote_full_byte_verification": "passed",
+      "duration_seconds": 71.676,
+      "audio_streams": 0,
+      "human_pacing_measured": false,
+      "drive_url": "https://drive.google.com/file/d/1c4vzFbZu6sYLe0UVz0rs27VLFeIirl-k/view"
+    },
+    {
+      "id": "monitor-caption-source-checkpoint21B",
+      "drive_file_id": "1Cw2KNgr8KzzhzPmcybppfUGXeKFBmy-V",
+      "drive_url": "https://drive.google.com/file/d/1Cw2KNgr8KzzhzPmcybppfUGXeKFBmy-V/view",
+      "bytes": 1186388,
+      "sha256": "ee006f0f67003d66cb4a54fc02ed718db6eaa259a6d973564cf8fd518ff9a3ec",
+      "embedded_manifest_sha256": "04bb787f1d4871a0c8f57762bf30897f6632a99834e34dea8427d30d6aebabdf",
+      "selected_files": 840,
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\ee006f0f67003d66cb4a54fc02ed718db6eaa259a6d973564cf8fd518ff9a3ec.zip",
+      "remote_full_byte_verification": "passed authenticated full download and independent exact-manifest/every-member CRC,length,SHA readback",
+      "storage_tier": "drive_with_verified_D_cache",
+      "status": "verified_authenticated_roundtrip",
+      "verification_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint21B-drive.json",
+      "scope": "Monitor/source and privately synthetic-tested reviewed-caption cooker; actual original captions unreviewed and C++ unpromoted.",
+      "goal_complete": false
+    },
+    {
+      "id": "current-native-walkthrough-chapter-checkpoint22A",
+      "drive_file_id": "185O4FqQn8LCNx_Ng8pevtlYx7b7paVPw",
+      "drive_url": "https://drive.google.com/file/d/185O4FqQn8LCNx_Ng8pevtlYx7b7paVPw/view",
+      "bytes": 16433200,
+      "sha256": "dce10845dfac471fe5141f4f7f1f1dbd0cafedbf107c4d83220fcc03304d3709",
+      "embedded_manifest_sha256": "a20753dadf51af8847324b573b518f029ac5d027eae8cfcfeda8a07c5958153d",
+      "selected_files": 125,
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\dce10845dfac471fe5141f4f7f1f1dbd0cafedbf107c4d83220fcc03304d3709.zip",
+      "remote_full_byte_verification": "passed authenticated full download and independent exact-manifest/every-member CRC,length,SHA readback",
+      "storage_tier": "drive_with_verified_D_cache",
+      "status": "verified_authenticated_roundtrip",
+      "verification_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint22A-drive.json",
+      "scope": "Complete36-file private current chapter, owned current/historical dependencies, saved authoring journal/current typed tour, verified71.676-second silent video and passive diagnostic source; no gameplaySQLite or rawfamily media.",
+      "goal_complete": false
+    },
+    {
+      "id": "separate-unreal-detailed-review-23A",
+      "storage_tier": "drive_parts_with_verified_D_reassembled_cache",
+      "status": "verified_authenticated_roundtrip",
+      "project_path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Project\\BS_Unreal_Demo.uproject",
+      "verification_path": "D:\\AI-BS-Game-Resources\\P23_Unreal_Detailed_Review\\Evidence\\detailed-review-final-verification.json",
+      "verification_sha256": "637082edb023a06445241f66ba1773d7a467e39ae2c2c4b9a036c0ec267ebbf6",
+      "archive_status": "verified_authenticated_roundtrip",
+      "no_drive_id_assigned_before_upload": true,
+      "likeness_approved": false,
+      "goal_complete": false,
+      "drive_file_ids": [
+        "1W-Ab-udcuju6XJOpEjdJ0xIngBCjle7_",
+        "1rGKRjUlwFeqftURMnVkUaZDn-6qnbV2e",
+        "1QdSlhPGHgvDOlzRSb24wexANhOEv9Pq7"
+      ],
+      "drive_urls": [
+        "https://drive.google.com/file/d/1W-Ab-udcuju6XJOpEjdJ0xIngBCjle7_/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1rGKRjUlwFeqftURMnVkUaZDn-6qnbV2e/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1QdSlhPGHgvDOlzRSb24wexANhOEv9Pq7/view?usp=drivesdk"
+      ],
+      "parts": [
+        {
+          "index": 1,
+          "name": "23A_Separate_Unreal_Detailed_Review.zip.part01of03",
+          "drive_file_id": "1W-Ab-udcuju6XJOpEjdJ0xIngBCjle7_",
+          "drive_url": "https://drive.google.com/file/d/1W-Ab-udcuju6XJOpEjdJ0xIngBCjle7_/view?usp=drivesdk",
+          "bytes": 24000000,
+          "sha256": "0ef2e00dbbd0460a40c136081c8747f99ae25cb799a72aa6b0e1aae634720f65",
+          "authenticated_download_cache": "D:\\AI-BS-Game-Resources\\cache\\0ef2e00dbbd0460a40c136081c8747f99ae25cb799a72aa6b0e1aae634720f65.zip",
+          "local_full_size_sha_passed": true
+        },
+        {
+          "index": 2,
+          "name": "23A_Separate_Unreal_Detailed_Review.zip.part02of03",
+          "drive_file_id": "1rGKRjUlwFeqftURMnVkUaZDn-6qnbV2e",
+          "drive_url": "https://drive.google.com/file/d/1rGKRjUlwFeqftURMnVkUaZDn-6qnbV2e/view?usp=drivesdk",
+          "bytes": 24000000,
+          "sha256": "591f47aca47f43ed2f970bdec852b3b2b61e0f4225cf5865fc81ef10325f8775",
+          "authenticated_download_cache": "D:\\AI-BS-Game-Resources\\cache\\591f47aca47f43ed2f970bdec852b3b2b61e0f4225cf5865fc81ef10325f8775.zip",
+          "local_full_size_sha_passed": true
+        },
+        {
+          "index": 3,
+          "name": "23A_Separate_Unreal_Detailed_Review.zip.part03of03",
+          "drive_file_id": "1QdSlhPGHgvDOlzRSb24wexANhOEv9Pq7",
+          "drive_url": "https://drive.google.com/file/d/1QdSlhPGHgvDOlzRSb24wexANhOEv9Pq7/view?usp=drivesdk",
+          "bytes": 19748576,
+          "sha256": "bf347bebf8eac7331e5220417842af0a815c33d20e6cc612efc806121efab835",
+          "authenticated_download_cache": "D:\\AI-BS-Game-Resources\\cache\\bf347bebf8eac7331e5220417842af0a815c33d20e6cc612efc806121efab835.zip",
+          "local_full_size_sha_passed": true
+        }
+      ],
+      "bytes": 67748576,
+      "sha256": "16ab305f44597cdf39c2731b796ab4d4956b53271466e10c2a66074051d480b3",
+      "embedded_manifest_sha256": "8a6257a383297dde6c82483f4e35d9bca39fd240af0f512783cb61278da3a8ab",
+      "selected_files": 566,
+      "cached_path": "D:\\AI-BS-Game-Resources\\cache\\16ab305f44597cdf39c2731b796ab4d4956b53271466e10c2a66074051d480b3.zip",
+      "verification_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint23A-drive.json",
+      "remote_full_byte_verification": "passed authenticated full download of three parts, whole reassembly SHA, exact manifest and every member CRC/size/SHA",
+      "editor_map_check_errors": 0,
+      "editor_material_usage_warnings": 19,
+      "standalone_packaging_validation_pending": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-03T23:11:58.824446+00:00",
+  "status": "verified_separate_v19_art_native_and_backup_goal_active",
+  "handoff": "docs/agent_sync/manifest_20261103_P58_v19_separate_study.json",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\58A_Adam_v19_Separate_Face_Study_And_Native_Evidence.zip",
+    "bytes": 19009916,
+    "sha256": "97d9a279bd721c3a805fdda9c12e73460ba5719a47980b8740c0d0f2e68711da",
+    "members": 144,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "drive_file_id": "1mnYlqdGWaXJ_-QW1gKw1dt-uIyy_qW_i",
+    "drive_folder_id": "1pHYP-i-G0gKsm74csGYkg5Y-DekzXRuZ",
+    "at": "2026-11-03T23:11:58.824446+00:00",
+    "verification": "Metadata readback and raw download: SHA256, CRC, exact member set, embedded manifest and every member SHA256/length verified"
+  },
+  "new_master_still_exact": true,
+  "parent_v18_still_exact": true,
+  "installed105_unchanged": true,
+  "next_step": "Continue substantial naturalistic hairline/skin/fabric/full-face refinement in a new study, retaining current105/v18 and this v19. Current user gameplay review is ready but not run; personal likeness, captions, pacing/performance and final acceptance remain incomplete.",
+  "storage_free_GiB": {
+    "C:/": 58.39,
+    "D:/": 51.64,
+    "E:/": 136.73
+  },
+  "goal_complete": false
+}

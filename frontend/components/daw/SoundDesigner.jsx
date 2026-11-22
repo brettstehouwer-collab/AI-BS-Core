@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { theme } from '../../styles/theme';
+import { Time } from 'tone';
 import { useDawStore } from './dawStore';
 import { Sliders, Activity, X } from 'lucide-react';
 
+/** @param {{channel?: import("/types/daw").DawChannel | null; onClose: () => void}} props */
 const SoundDesigner = ({ channel, onClose }) => {
   const setChannelEQ = useDawStore(state => state.setChannelEQ);
   const setChannelEnvelope = useDawStore(state => state.setChannelEnvelope);
@@ -20,29 +22,31 @@ const SoundDesigner = ({ channel, onClose }) => {
         high: channel.eq.high.value
       });
     }
-    if (channel && channel.synth && channel.synth.envelope) {
+    if (channel && channel.synth && "envelope" in channel.synth && "envelope" in channel.synth && channel.synth.envelope) {
       setEnv({
-        attack: channel.synth.envelope.attack || 0.01,
-        decay: channel.synth.envelope.decay || 0.1,
+        attack: Time(channel.synth.envelope.attack).toSeconds() || 0.01,
+        decay: Time(channel.synth.envelope.decay).toSeconds() || 0.1,
         sustain: channel.synth.envelope.sustain || 0.5,
-        release: channel.synth.envelope.release || 0.5
+        release: Time(channel.synth.envelope.release).toSeconds() || 0.5
       });
     }
   }, [channel]);
 
+  /** @param {keyof typeof eq} band @param {number} val */
   const handleEqChange = (band, val) => {
     setEq(prev => ({ ...prev, [band]: val }));
-    setChannelEQ(channel.id, band, val);
+    channel && setChannelEQ(channel.id, band, val);
   };
 
+  /** @param {keyof typeof env} param @param {number} val */
   const handleEnvChange = (param, val) => {
     setEnv(prev => ({ ...prev, [param]: val }));
-    setChannelEnvelope(channel.id, param, val);
+    channel && setChannelEnvelope(channel.id, param, val);
   };
 
   if (!channel) return null;
 
-  const hasEnvelope = !!(channel.synth && channel.synth.envelope);
+  const hasEnvelope = !!(channel.synth && "envelope" in channel.synth && channel.synth.envelope);
 
   return (
     <div style={{
@@ -87,7 +91,7 @@ const SoundDesigner = ({ channel, onClose }) => {
             <Activity size={12} /> PARAMETRIC EQ3
           </h4>
           <div style={{ display: 'flex', justifyContent: 'space-around', height: '80px' }}>
-            {['low', 'mid', 'high'].map(band => (
+            {(/** @type {const} */ (['low', 'mid', 'high'])).map(band => (
               <div key={band} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                 <input
                   type="range"
@@ -97,7 +101,9 @@ const SoundDesigner = ({ channel, onClose }) => {
                   value={eq[band]}
                   onChange={(e) => handleEqChange(band, Number(e.target.value))}
                   style={{
-                    appearance: 'slider-vertical',
+                    appearance: 'auto',
+                      writingMode: 'vertical-lr',
+                      direction: 'rtl',
                     width: '4px',
                     height: '60px',
                     accentColor: theme.colors.accent,
@@ -117,12 +123,12 @@ const SoundDesigner = ({ channel, onClose }) => {
               <Sliders size={12} /> ADSR ENVELOPE
             </h4>
             <div style={{ display: 'flex', justifyContent: 'space-around', height: '80px' }}>
-              {[
+              {(/** @type {{key: keyof typeof env; min: number; max: number; label: string}[]} */ ([
                 { key: 'attack', min: 0.001, max: 2, label: 'ATT' },
                 { key: 'decay', min: 0.01, max: 2, label: 'DEC' },
                 { key: 'sustain', min: 0, max: 1, label: 'SUS' },
                 { key: 'release', min: 0.01, max: 4, label: 'REL' }
-              ].map(param => (
+              ])).map(param => (
                 <div key={param.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                   <input
                     type="range"
@@ -132,7 +138,9 @@ const SoundDesigner = ({ channel, onClose }) => {
                     value={env[param.key]}
                     onChange={(e) => handleEnvChange(param.key, Number(e.target.value))}
                     style={{
-                      appearance: 'slider-vertical',
+                      appearance: 'auto',
+                      writingMode: 'vertical-lr',
+                      direction: 'rtl',
                       width: '4px',
                       height: '60px',
                       accentColor: channel.color || theme.colors.secondary,

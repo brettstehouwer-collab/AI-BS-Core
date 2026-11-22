@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "audit_id": "CORE_ENVIRONMENT_AUDIT_2026-11-14",
+  "updated_at_utc": "2026-11-14T07:25:49.180897-05:00",
+  "status": "healthy_controlled_loopback_core",
+  "initial_state": "All four core ports stopped; nginx loopback port 80 present",
+  "preflight": {
+    "python": "3.12.14",
+    "recovery_executable": "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+    "dependencies": {
+      "uvicorn": true,
+      "fastapi": true,
+      "dotenv": true,
+      "win32cred": true,
+      "pywintypes": true,
+      "firebase_admin": true,
+      "chromadb": true,
+      "psutil": true,
+      "httpx": true
+    },
+    "credential_targets": {
+      "admin": {
+        "present": true,
+        "nonempty_blob": true
+      },
+      "firebase_admin": {
+        "present": true,
+        "nonempty_blob": true
+      },
+      "firebase_authorization": {
+        "present": true,
+        "nonempty_blob": true
+      }
+    },
+    "firebase_allowlist_entries": 1
+  },
+  "native_optional_dependency": {
+    "PySide6": false,
+    "effect": "Not required by these four web-core processes; separate native packaging qualification"
+  },
+  "restored_services": {
+    "backend": {
+      "pid": 25024,
+      "image": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "attempts": 1,
+      "ready": true,
+      "log_tail": {
+        "available": true,
+        "traceback": false,
+        "startup_complete": true,
+        "exception_types": []
+      },
+      "process": "python.exe",
+      "windows_owner_matches": true,
+      "launch_ancestry_matches": true,
+      "loopback_only": true,
+      "activation_flags_false": {
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true,
+        "RECDEBUT_REPLY_FORWARDING_ENABLED": true
+      },
+      "non_api_extra_flags_absent": []
+    },
+    "gateway": {
+      "pid": 28188,
+      "image": "C:\\AI-BS\\go-core\\aibs_engine.exe",
+      "attempts": 1,
+      "ready": true,
+      "log_tail": {
+        "available": true,
+        "traceback": false,
+        "startup_complete": false,
+        "exception_types": []
+      },
+      "process": "aibs_engine.exe",
+      "windows_owner_matches": true,
+      "launch_ancestry_matches": true,
+      "loopback_only": true,
+      "activation_flags_false": {
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true,
+        "RECDEBUT_REPLY_FORWARDING_ENABLED": true
+      },
+      "non_api_extra_flags_absent": []
+    },
+    "frontend": {
+      "pid": 30292,
+      "image": "C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\bbc9141fe9f920ac\\bin\\node.exe",
+      "attempts": 1,
+      "ready": true,
+      "log_tail": {
+        "available": true,
+        "traceback": false,
+        "startup_complete": false,
+        "exception_types": []
+      },
+      "process": "node.exe",
+      "windows_owner_matches": true,
+      "launch_ancestry_matches": true,
+      "loopback_only": true,
+      "activation_flags_false": {
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED": false,
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true,
+        "RECDEBUT_REPLY_FORWARDING_ENABLED": false
+      },
+      "non_api_extra_flags_absent": [
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED",
+        "RECDEBUT_REPLY_FORWARDING_ENABLED"
+      ]
+    },
+    "ollama": {
+      "pid": 12360,
+      "image": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+      "attempts": 1,
+      "ready": true,
+      "log_tail": {
+        "available": true,
+        "traceback": false,
+        "startup_complete": false,
+        "exception_types": []
+      },
+      "process": "ollama.exe",
+      "windows_owner_matches": true,
+      "launch_ancestry_matches": true,
+      "loopback_only": true,
+      "activation_flags_false": {
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED": false,
+        "AI_BS_RECDEBUT_OUTBOUND_ENABLED": true,
+        "AI_BS_RECDEBUT_INBOUND_POLLING_ENABLED": true,
+        "AI_BS_DISCORD_NOTIFICATIONS_ENABLED": true,
+        "AI_BS_BACKEND_MANAGE_DAEMONS": true,
+        "AI_BS_BACKEND_BACKGROUND_ENABLED": true,
+        "AI_BS_ALLOW_DESTRUCTIVE_ACTIONS": true,
+        "RECDEBUT_REPLY_FORWARDING_ENABLED": false
+      },
+      "non_api_extra_flags_absent": [
+        "AI_BS_DASHBOARD_NOTIFICATIONS_ENABLED",
+        "RECDEBUT_REPLY_FORWARDING_ENABLED"
+      ]
+    }
+  },
+  "provider_authentication": {
+    "8080": {
+      "anonymous": 403,
+      "invalid": 403,
+      "existing_key": 200
+    },
+    "8000": {
+      "anonymous": 403,
+      "invalid": 403,
+      "existing_key": 200
+    }
+  },
+  "ollama_read_only": {
+    "tags_status": 200,
+    "ps_status": 200,
+    "available_model_count": 30,
+    "loaded_model_count": 0,
+    "inference_requested": false
+  },
+  "preservation": {
+    "private_local_receipt": "C:\\AI-BS\\backups\\core_environment_restore_20261114_v01\\restore-receipt.json",
+    "ten_sqlite_online_backups": 10,
+    "quick_check": "10/10 ok",
+    "logical_hashes_unchanged": true,
+    "source_config_provider_hashes_unchanged": true,
+    "existing_credentials_unchanged": true,
+    "drive_upload_or_restore_verification": false
+  },
+  "scope": {
+    "inference_calls": 0,
+    "business_activated": false,
+    "paused_fe_workstream_activated": false,
+    "provider_switched": false,
+    "firebase_deployment": false,
+    "nginx_or_tunnel_modified": false,
+    "existing_listener_killed": false
+  },
+  "limits": [
+    "Health endpoints and authentication boundaries qualified; no model answers or end-to-end user workflow",
+    "Previous core logs remain retained; old tracebacks do not establish current failures",
+    "Full repository/data integrity and external account connectivity are outside this bounded check"
+  ],
+  "observed_tools": {
+    "recovery_python": "C:\\AI-BS\\runtime\\recovery-20261110\\Scripts\\python.exe",
+    "recovery_python_version": "3.12.14",
+    "path_python": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "node": "C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\bbc9141fe9f920ac\\bin\\node.exe",
+    "node_version": "24.22.1",
+    "git": "C:\\Program Files\\Git\\cmd\\git.exe",
+    "git_version": "2.56.0.windows.4"
+  },
+  "preserved_existing_proxy": {
+    "process": "nginx",
+    "loopback_port": 80,
+    "observed_before_pids": [
+      18940,
+      19104,
+      19280
+    ],
+    "configuration_changed": false,
+    "process_restarted": false
+  },
+  "historical_log_review": {
+    "directory": "C:\\AI-BS\\saved_data\\core_runtime",
+    "files_reviewed": 6,
+    "tail_line_limit": 70,
+    "old_traceback_logs": [
+      "reset_backend_20261111T105939Z.local.log",
+      "reset_backend_20261111T104558Z.local.log"
+    ],
+    "latest_reviewed_backend": "reset_backend_20261111T201526Z.local.log",
+    "latest_reviewed_backend_startup_complete": true,
+    "latest_reviewed_backend_traceback": false,
+    "raw_log_or_sensitive_values_copied": false,
+    "meaning": "Historical retained diagnostics; current service receipts record new health and authentication checks"
+  }
+}

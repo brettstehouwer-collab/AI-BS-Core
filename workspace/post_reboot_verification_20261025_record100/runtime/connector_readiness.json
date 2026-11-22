@@ -1,0 +1,26 @@
+{
+  "actor": "/root/postboot_runtime",
+  "observed_utc": "2026-10-25T22:25:01.311513+00:00",
+  "scope": "owned loopback /ready and aggregate HA gauge only; no raw metrics retained",
+  "connectors": [
+    {
+      "kind": "publishing_user_config",
+      "pid": 14092,
+      "created_epoch": 1792966388.068972,
+      "ready_http": 200,
+      "metrics_http": 200,
+      "ha_connections": 4.0,
+      "healthy": true
+    },
+    {
+      "kind": "scoped_api_config",
+      "pid": 36028,
+      "created_epoch": 1792966433.4477189,
+      "ready_http": 200,
+      "metrics_http": 200,
+      "ha_connections": 4.0,
+      "healthy": true
+    }
+  ],
+  "all_healthy": true
+}

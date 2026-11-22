@@ -1,0 +1,69 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "ed406c99f4af4f4e852eabba058c1ebf",
+  "plan_id": "c5687676c66541b9b909d79c20f6941c",
+  "snapshot_sha256": "f7d19ca5893831e197ffb8dee04460bb3894ef677acc7085fc11aa083af32591",
+  "review_digest": "aa8585052d92e99bd86d31514bfcf333dac9081287a5a26d7b65c48d943527d0",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "d7f718880bc84c8ea636edcc1f673d12",
+  "reviewed_plan_sha256": "4e3bb50fa30ec50ea4212e6f36ee7d8bf2dd67d14bee530f56c8256dad6bda7c",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "b700d64c56a137085c92ddef7839108ce44a8121bc84a3070068ab6868e57935",
+        "content": "import unittest\r\nclass Check(unittest.TestCase):\r\n def test_failure(self):\r\n  self.fail(\"synthetic failure\")\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content": "",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "0392a8cdc64aa0a842e55fffedc54d1e79ac216628ed93c9ea8609468515c012",
+  "worker": {
+    "pid": 12784,
+    "created": 1794782635.3494687
+  },
+  "created_at_utc": "2026-11-15T22:44:00.879202+00:00",
+  "entry_sha256": "01c19fad0a0c4e8c1125782221d9ef79dbbd3dc3046581818cd1b6172322f54b"
+}

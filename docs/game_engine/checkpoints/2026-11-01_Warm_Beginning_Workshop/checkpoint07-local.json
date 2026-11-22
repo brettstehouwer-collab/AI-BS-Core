@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\07_Web_UI_Overview_Deployment.zip",
+  "bytes": 13786782,
+  "sha256": "c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a",
+  "files": 2300,
+  "source_manifest_sha256": "7b65fa92c499f20557243dd6f3efbcc5c7ac5cc42872ad1bda7446666c9a40dd",
+  "scope": "Selected complete UI/frontend code, native UI masters, compiled application JS/CSS, configuration and actual deployment evidence. Unchanged bulk public media is not duplicated; full1144-file cloud manifest is included and full candidate remains onD. Native source checkpoint06 remains separate and exact. No environment files, credential stores or original family media. Not completion of the native opening.",
+  "local_verification": "All ZIP CRC/per-file bytes/SHA/current selected bytes matched",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031"
+}

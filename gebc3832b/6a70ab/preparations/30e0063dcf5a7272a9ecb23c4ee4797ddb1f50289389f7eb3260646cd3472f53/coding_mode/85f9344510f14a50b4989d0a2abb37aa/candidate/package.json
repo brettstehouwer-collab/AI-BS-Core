@@ -1,0 +1,1 @@
+{"scripts": {"check": "node --test tests/app.test.cjs", "precheck": "node -e \"process.exit(23)\"", "postcheck": "node -e \"process.exit(24)\""}}

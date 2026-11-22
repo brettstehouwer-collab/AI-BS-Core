@@ -1,6 +1,7 @@
-import React from 'react';
+import 'react';
 import { USER_TIERS, TAB_PERMISSIONS } from './accessControl';
 
+/** @param {{tabKey:string,tabLabel?:string,activeTier?:{name?:string}|null,onNavigateToPricing:()=>void}} props */
 export default function FeatureGateLockedCard({
   tabKey,
   tabLabel = 'Feature Locked',

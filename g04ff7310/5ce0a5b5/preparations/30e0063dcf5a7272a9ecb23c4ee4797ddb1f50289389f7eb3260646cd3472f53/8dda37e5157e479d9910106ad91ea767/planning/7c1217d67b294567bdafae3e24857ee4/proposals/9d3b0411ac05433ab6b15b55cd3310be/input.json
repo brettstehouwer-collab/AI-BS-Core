@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "8dda37e5157e479d9910106ad91ea767",
+  "plan_id": "7c1217d67b294567bdafae3e24857ee4",
+  "snapshot_sha256": "8b9381f56aca591a3e6828dab9d59d4ccadf829f461e1d73e9f1dd39b3323ee5",
+  "review_digest": "d2dedaacc07066d4043acb21c78908973b3e43693e671b4f57a29680b992cb74",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "9d3b0411ac05433ab6b15b55cd3310be",
+  "reviewed_plan_sha256": "620b4748c8c6476b34c3cb49c892475bcc648f3e1b60e666637a7e6fedea3893",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "34c1c057b9a15c17e225e71939b719c489009af44a9133744c964da1d4baf347",
+        "content": "\ufeffvalue = 1\r\nother = 2\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "92110865e9647d0e58f1224419faa31007961ec6dd13b70d3f4ce7fda25fc8df",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:55:55.476054+00:00",
+  "entry_sha256": "88c00ee64ad8c44ffa79d4285110e44060b10f476174f6f292466f663a33e265"
+}

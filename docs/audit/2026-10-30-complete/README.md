@@ -1,0 +1,132 @@
+# Record210 — v5.329.86
+
+VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE. Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON. Toolbar preview controls synchronized; core unchanged. 356 guarded tests pass; trading disabled/audio silent. docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md
+
+
+
+### Final credential-default cleanup and verification
+
+Two pre-existing hardcoded Twitch/Facebook stream-key defaults in the standalone broadcast component were replaced with empty strings. Exact AST reconstruction verifies only those two literal substitutions; saved settings and handlers are unchanged. The count-only RED found 2 credential-family literals; final broader JavaScript bundle passed 35 tests (contracts198 + truth204 + debranding209), TypeScript exit 0. The narrower 33-case bundle is included, not an extra run. Native 352/28 groups and the installed 85 package are unchanged. No credential rotation, historical exposure conclusion or clean-Git-history claim. Original source, private preimages and raw patches stay C-only and are never uploaded.
+
+
+### Final user constraint and read-only state
+
+No more screen/cursor control or GUI retries are authorized. Root stopped all computer-use input; remaining work is backend/frontend code, offline tests and read-only checks. At 20:50:17 UTC the same controller 36868/encoder 31084 remained active in NO_VERIFIED_GAME holding, advanced to 36009 frames/media 1200.3 seconds, preview last observed OFF. The later read-only sample is not a completed ON toggle. Port 8007 listeners 0, OBS processes 0, all four crypto/ledger hashes unchanged. No game, source-apply or start/stop command was sent.
+# Record209 final acceptance — v5.329.85
+
+VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED. Last observed Program preview OFF; ON attempts held for concurrent user input. GUI correctly held blank without game; independent HTTP decoder 200 holding frames passed. Actual 85 live-game GUI rendering/final ON unverified. No game or broadcast restart. Details: docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md.
+
+# Current Record209 — v5.329.85
+
+VERIFIED_V85_INSTALLED_GUI_HELD_HTTP_DECODE_352_OFFLINE_FINAL_TOGGLE_UNVERIFIED. 352 guarded native tests and 32 JS checks pass; TypeScript exits 0. Delayed native preview is read-only/silent, current native/web external-engine placeholders retired. 84 failure and 85 corrective restore retained separately; continuity not uninterrupted. Actual acceptance: "v5.329.85 installed (2256 files; SHA-256 26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c). GUI correctly held blank without a game. Independent HTTP probe decoded 200 black holding frames in 7.25 seconds, no audio output. 352 native tests/28 groups, 32 JS checks and TypeScript exit 0. Controller 36868/encoder 31084 remained holding. Final preview ON/after-toggle and 85 live-game GUI rendering remain UNVERIFIED. User intentionally closed games; no game or broadcast restart for final acceptance.". Encrypted recovery remains blocked by E-key custody. Details: docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md.
+
+# Current checkpoint — Record208 / actual Windows v5.329.83 game capture
+
+2026-10-31T19:49:24.767265+00:00. Actual native83 GUI launched and one Start created4540→21188→52852→43860. Fresh owned Auto Fortnite/publicHLS verified at19:47:27–31: frames1250→1341, sequences15→16, exact segment21/CPU genuine game picture; silent AAC192000samples zero, no mic change. No OBS/4455 or8007. Earlier stale/stopped proof and unknown caller preserved, not live success. Source unchanged;304 cases prior historical, no rerun. No all-RTMP/full-GUI/all-game claim. Trading disabled; same Drive folder; root close/upload receipts follow. Report WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md. Older checkpoints below are historical.
+
+---
+
+# Current checkpoint — Record207 / v5.329.83 installed
+
+2026-10-31T19:36:05.697658+00:00. V83 installed: all 2,256 hashes / 552,588,185 bytes and four shortcuts verified; EXE 5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52. Frozen connection diagnostic exits0 quietly/ready and installed PYZ control reads physical .aibs-private IPC with owner/DACL checks. Full GUI and separate cross-host launch remain unverified. Current coordinator42344/encoder10552 advances in Auto HOLDING, no game open, game_frame_verified=false; earlier automatic Fortnite/publicHLS proof on46560/44780 retained historically. Final304 tests/20groups PASS0operational denials,23 build fixtures/TS/16versions pass (overlaps not summed). Trading DISABLED, silent audio/no microphone, four protected pins match. V82 install/MSIX failure and test STOP incidents retained. HIGH OPEN source ACL/E key custody; encrypted source/binary cloud backup blocked. Source commit/final sanitized report upload are root closing receipts; same Drive folder only. Report NATIVE_BROADCAST_INTEGRATION_v5.329.83.md. Older checkpoints below are historical.
+
+---
+
+# Current checkpoint — Record207 / corrective v5.329.83 pending
+
+V82 Stage3 installed with2,256 exact hashes/four shortcuts, then frozen connection diagnostic FAILED/timedout25s due MSIX physical-profile IPC redirection. All v82 history retained. Correctivev83 physical profile/quiet diagnostics only is pending final build/tests/install acceptance; same Record207 despite native_profile208_work folder name. Actual automatic game/public HLS remains verified; live trading disabled and audio silent/no mic. Current report NATIVE_BROADCAST_INTEGRATION_v5.329.83.md. Older checkpoints below are historical.
+
+---
+
+# Record207 acceptance update — 2026-10-31T19:16:14Z
+
+Actual Automatic game acquisition VERIFIED for user-reopened Fortnite on unchanged controller46560 / encoder44780, without new source request/restart. Silent audio/no microphone; trading DISABLED. Prior holding evidence preserved. Stage3 build/final PE/PYZ/install/activation pending after Stage2 preset-label clipping was caught before installation. See NATIVE_BROADCAST_INTEGRATION_v5.329.82.md. Older checkpoint entries below are historical.
+
+---
+
+# Current checkpoint — Record207 / v5.329.82
+
+2026-10-31T19:15:33.197891+00:00. Full-system audit IN_PROGRESS; 298 guarded cases PASS with no operational denials, 23 build/signing fixtures plus TypeScript/version checks PASS. Native Stage2 build succeeded; final PE/PYZ/install/activation acceptance is pending root receipt. Coordinator46560 / encoder44780 advances in Automatic game holding with no game open; earlier manual Fortnite window WGC verified. Generic Xbox registration omission repaired; actual open-game Auto reacquisition unverified. Silent audio, no microphone; live trading DISABLED and four protected pins match. Legacy dispatch actually HELD COORDINATOR_ACTIVE. Test STOP incident and restoration failures/success retained; no uninterrupted-stream claim. HIGH OPEN repository ACL and E/key custody; C history/preimages retained, encrypted source/binary cloud backup blocked. Same Drive folder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k. Full report: docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.md. Older checkpoints below are historical.
+
+---
+
+# Current checkpoint — Record205 / v5.329.81
+
+Facebook LIVE Fortnite USER_CONFIRMED_SCREENSHOT (~29fps,5.6–5.8Mbps); user reports no lag. Working stream LEFT RUNNING. TradingDISABLED.255guardedoffline cases PASS. HIGHOPEN E storage read/write anomaly; audit-close E writes stopped (live encoder untouched), verified source/history/evidence fallback on C. Root commit/cloud close pending separately, sameDrivefolder1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k. Fullreport:docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md. Record206 relay next; older checkpoints below are historical.
+
+---
+
+# Current checkpoint — Record204 / v5.329.80
+
+Firebase and Windowsv80updated;157caseofflinecohort andstandardcampaignchecksPASS. TradingDISABLED;desktopcontrolPAUSED;existingv79windowsnotclosed. Fullreport: docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md. Chroma recovery/fullGUI/realguest/platformingest remain unverified. SameDrivefolder `1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k`; closingcloudreceipt records actualverifiedarchives. Earliercheckpointbelowishistorical.
+
+---
+
+# Latest routing release — v5.329.79 / Record203
+
+2026-10-31T16:18:12.099046+00:00. Windows installed and Firebase web/mobile published79. ComfyUIstatus questions use a non-generating health check; existingv78windows protected by shared backend. Seven livefunctional cases pass; commercialalias AUTH_HELD. Canonical191Python/75clients/TS/version checks pass. Native202desktopaudit remainsPARTIAL afteruserstoppedComputerUse;647buttons classified, not allworkflowscertified. See MEDIA_ROUTING_RELEASE_v5.329.79.md and .json. Tradingdisabled/8007absent; allDriveuploads establishedsinglefolder. Earlier records below are historical.
+
+---
+
+# Current audit checkpoint — v5.329.78 / Record200
+
+2026-10-31T07:47:42Z. Verification PARTIAL: 1604 accepted cases pass;11 unsafe integration files held. StrictTypeScript/version checks/build pass.
+Native Chroma damage is diagnosed and preserved;2,338identity/vector associations need authoritative recovery. No repaired data promoted.
+Review hold restored; paginated runtime catalog observes2,300records/943duplicate registrations with admission and snapshot checks.
+See INVESTIGATION_AND_VERIFICATION_v5.329.78.md and VERIFICATION_v5.329.78.json for full limits and incidents.
+Live trading disabled;8007absent. Source/buildv78; Firebase last verifiedv77. Earlier records below are historical.
+
+---
+
+# Current Hosting checkpoint — v5.329.77 / Record199
+
+Firebase deployment is VERIFIED at https://ai-bs-dashboard.web.app (2026-10-31T06:19:50Z).
+All143new compiled files,version.json and12preserved public samples match staged SHA256 bytes on preview/live.154Python/75client tests,strictTypeScript0/version checks pass.
+Live trading disabled;8007absent; four protected crypto/monetary hashes unchanged. No backend/provider activation.
+Rollbackv76: https://ai-bs-dashboard--audit-pre-v77-yab6nfsi.web.app (7day preview retention). All Drive uploads remain in the established single campaign folder.
+See DEPLOYMENT_v5.329.77.md and coverage.json. Full audit remains IN_PROGRESS; native Chroma/provider rotation/remaining control acceptance is open.
+
+---
+
+## Historical Record198 findings snapshot (publication status superseded above)
+
+# AI-BS audit findings — Record198 / ADR-123
+
+Source **v5.329.77**, 2026-10-31T05:41:25Z. Campaign **IN PROGRESS**. Both requested FTS repairs and the strict frontend typecheck are verified. Live trading stays disabled.
+
+## Critical / high risks
+
+* **Repaired: both Chroma FTS indexes.** `database/ChromaDB_local/chroma.sqlite3` and `chroma_db/chroma.sqlite3` pass full SQLite and FTS integrity after a storage-native exclusive transaction rebuild. Preserved126 and72,549document rows, all15non-FTS tables in each store, full document rowid/text mapping and167vector files. Each store passes12indexedLIKE comparisons against its content scan. Immutable originals remain under `C:/AI-BS/backups/chroma_fts_transaction_20261031T043703Z/`; before and repaired recovery archives are cloud-restore verified. Only derived FTS index data changed.
+* **Open: root native vector traversal.** Two disposable complete clones exited1 after32/34collections. Repeated operation stopped; no Chroma service activation. The FTS repair does not establish native/vector service readiness.
+* **Removed source credentials; provider revocation unverified.** Broadcast stream-key seeds, browser SMTP fallback and six server SMTP fallbacks were retired. Default stream destinations disabled; existing saved credentials/drafts preserved. If those keys were valid, rotate them at the providers. Prior published v76 assets may still contain old defaults. Values are absent from this report; exact historical source/diffs stay encrypted. Source removal is not revocation. An earlier diagnostic displayed preexisting source literals; do not infer there was no exposure merely because the new report omits them.
+* **Contained background/outbound effects.** Mining/learning starts and video scheduling/invites held before dispatch. SMTP single-recipient dry_run now returns an explicit preview before credentials/database/tracking/transport; batch semantics retained. Offline forbidden-effect fixtures verify the controls. Crypto8007 remains stopped; hard execution holds and both monetary ledgers retain their prior hashes.
+
+## Medium / low risks and repairs
+
+Strict TypeScript diagnostics fell from9,584 across326baseline files to **zero**. Project-owned compiler7.0.2, React18 types/runtime deduplication, specific JSDoc/DTO/DOM/state contracts and mirrored source fixes retain strict/checkJs settings. No blanket suppression, graph exclusion or compiler weakening was used. Types describe boundaries; persisted generic hydration and remote DTO annotations do not supply universal runtime validation.
+
+Concrete fixes include negative PCM encoding, MIDI recording parameter order, safe missing solo IDs, VST acknowledgement state, FDX title/cast parity, screenwriting force-restart click handling, functional state setters, exact receipt cents, escaped model-produced SEO HTML and unavailable IDE handlers. Drafts, saved profiles, layouts and legacy source history are retained. SHM accepts validated ring counters; unsupported GPU/timing/events remain unavailable, actual zero remains zero, failed reads clear stale data. AEO/Comfy/vector views no longer fabricate measured or queued success. Session telemetry requires a supplied profile and uses authenticated keepalive; independent server owner-binding acceptance remains open.
+
+## Verified evidence
+
+The reviewed batch passed **154Python tests,75client tests, TypeScript and all16version paths** (exit0). Additional agent fixtures have individual logs; overlapping counts are not added. The isolated production build passed5,678modules and143output files. Large chunks and mixed Firebase static/dynamic import warnings remain. No provider/workload/database provisioning was performed by the client fixtures.
+
+The first combined batch correctly failed on stale fixture extraction and package formatting. Fixtures now include the real error helper and stop before React mount; all previous assertions retained. Release metadata was synchronized. The first build used the wrong working directory; rerunning from frontend resolved its relative entry. These corrected diagnostic failures remain in evidence.
+
+Fresh loopback8080 loaded the SMTP fixes under seven false background/outreach flags, disabled payments and DRY_RUN/HOLD_DISPATCH. All14read-only HTTP/gateway/WebSocket probes matched expected allow/deny/held responses; no dispatch was invoked. Gateway8000/Vite5173 were retained. No trades, payments, mail, mining, training, recording, provider activation or paid OpenAI calls were made by verification. Existing `.env` was not read, modified, printed or committed; user-supplied OpenAI setup remains untouched.
+
+## Remediation code, history and recovery
+
+Applied source includes typed frontend contracts and mirrored components; `backend/routers/rec_debut_router.py` retires defaults and short-circuits dry-run delivery. `scripts/Run-AIBSAuditBatch.ps1` runs four explicit allowlisted checks with argument arrays, temporary holds, per-job logs and an aggregate failure exit. Run from PowerShell:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\AI-BS\scripts\Run-AIBSAuditBatch.ps1
+```
+
+This executes reviewed audit jobs. Skills are instruction sets, and invoking every available capability indiscriminately is outside this runner's scope. `-ListOnly` displays its plan without execution.
+
+All uploads stay directly in [AI-BS Complete Audit2026-10-30](https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k). Recovery uses authenticated AES256GCM and a local DPAPI-protected key outside repository/cloud. The earlier SQL-focused local Chroma backup omitted its four vector files; a complete five-file local before package is now remotely restored and verified. Root vectors remain in the earlier runtime archive. Repaired cloud delta is twoSQLite files only and requires the matching complete-store preimages; it is not a full vector-store archive.
+
+Prior atomic file-promotion attempts failed only on fixtures and were stopped. The adopted transaction method passed fresh-clone reproduction before canonical repair. No original store was replaced or deleted. Nine historical ledgers append Record198/ADR-123 without changing their existing prefix bytes. Scoped manifests/patches and encrypted before/after recovery identify actual sources in the large preexisting dirty workspace.
+
+Firebase remains published atv5.329.76;v5.329.77is a verified source/build candidate. The prior exposed CLI credential was retired; future CLI deployment requires fresh Firebase sign-in. No deployment is claimed for this record. Remaining full-system work includes root native vector readiness, bounded route/duplicate ownership tracing, deep-link/IPC/navigation issues, server session owner binding, provider rotation and browser acceptance. Every button/provider is not certified.

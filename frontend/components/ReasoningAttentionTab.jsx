@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { getApiBase } from '../config/api';
 
+/** @param {{"backendUrl": string}} props */
 export default function ReasoningAttentionTab({ backendUrl }) {
   const apiHost = backendUrl || getApiBase() || `${backendUrl}`;
 
@@ -11,13 +12,13 @@ export default function ReasoningAttentionTab({ backendUrl }) {
   const [isBidirectional, setIsBidirectional] = useState(true);
 
   // Response States
-  const [tokensData, setTokensData] = useState([]);
-  const [attentionData, setAttentionData] = useState(null);
-  const [graphData, setGraphData] = useState(null);
+  const [tokensData, setTokensData] = useState(/** @type {Array<{"id": string, "token": string, "position_embedding_norm": string}>} */ ([]));
+  const [attentionData, setAttentionData] = useState(/** @type {{"mode": string, "tokens": Array<string>, "attention_matrix": number[][]} | null} */ (null));
+  const [graphData, setGraphData] = useState(/** @type {{"node_count": number, "nodes": Array<{"id": string, "label": string}>, "edge_count": number, "edges": Array<{"source": string, "relation": string, "target": string}>} | null} */ (null));
   
   // Self Solve State
   const [solvePrompt, setSolvePrompt] = useState("Optimize RTX 4090 autograd CUDA batch memory allocation");
-  const [solveData, setSolveData] = useState(null);
+  const [solveData, setSolveData] = useState(/** @type {{"final_quality_score": number, "total_iterations": number, "iteration_history": Array<{"iteration": string, "quality_score": number, "detected_issues": Array<string>, "refined_draft": string}>, "final_solution": string} | null} */ (null));
   const [isSolving, setIsSolving] = useState(false);
 
   const fetchTokenization = async () => {
@@ -225,7 +226,8 @@ export default function ReasoningAttentionTab({ backendUrl }) {
                 {attentionData.tokens.map((tokQ, rowIdx) => (
                   <tr key={rowIdx}>
                     <td style={{ padding: '8px', color: '#38bdf8', fontWeight: '700', textAlign: 'left' }}>{tokQ}</td>
-                    {attentionData.attention_matrix[rowIdx].map((weight, colIdx) => {
+                    {attentionData.attention_matrix[rowIdx].map(
+( weight,  colIdx) => {
                       const alpha = Math.min(1.0, weight * 3.5);
                       return (
                         <td

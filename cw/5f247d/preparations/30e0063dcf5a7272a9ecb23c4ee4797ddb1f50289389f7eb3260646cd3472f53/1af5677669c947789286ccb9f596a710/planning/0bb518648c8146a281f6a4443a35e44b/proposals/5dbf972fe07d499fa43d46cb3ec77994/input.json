@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "1af5677669c947789286ccb9f596a710",
+  "plan_id": "0bb518648c8146a281f6a4443a35e44b",
+  "snapshot_sha256": "b71e9a45d1b918c9666e5fb01a1ec31076cf80469782655aac370cbcc3ec99f7",
+  "review_digest": "6ad278d6422f3a0e3338cf3462b929a0972e6c04d92910b5eb913399f0f33c30",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "5dbf972fe07d499fa43d46cb3ec77994",
+  "reviewed_plan_sha256": "32282d17acdee5e3d67eb8a31e62b1f51779af725ea9964e2f8d6eb8e0faabb5",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43708,
+    "created": 1794664880.930138
+  },
+  "created_at_utc": "2026-11-14T14:01:26.627969+00:00",
+  "entry_sha256": "1af1c3a27529378e3ee847990f427cced6a0e61dd1db675ab22bc032bdc1ad28"
+}

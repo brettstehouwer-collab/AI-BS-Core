@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  db:
+    image: supabase/postgres:15.1.0.147
+    container_name: supabase-db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your-super-secret-and-long-postgres-password}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - ./volumes/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./volumes/db/data:/var/lib/postgresql/data
+
+  gotrue:
+    image: supabase/gotrue:v2.132.3
+    container_name: supabase-auth
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "9999:9999"
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-your-super-secret-and-long-postgres-password}@db:5432/postgres?sslmode=disable
+      GOTRUE_SITE_URL: ${SITE_URL:-http://localhost:5173}
+      GOTRUE_PASSWORD_HASH_ALGORITHM: scrypt
+      GOTRUE_JWT_SECRET: ${JWT_SECRET:-super-secret-jwt-token-with-at-least-32-characters-long}
+
+  postgrest:
+    image: postgrest/postgrest:v12.0.1
+    container_name: supabase-rest
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: postgres://postgres:${POSTGRES_PASSWORD:-your-super-secret-and-long-postgres-password}@db:5432/postgres?sslmode=disable
+      PGRST_DB_SCHEMA: public,auth
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET:-super-secret-jwt-token-with-at-least-32-characters-long}
+
+  storage:
+    image: supabase/storage-api:v0.43.0
+    container_name: supabase-storage
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      ANON_KEY: ${ANON_KEY:-anon-key-placeholder}
+      SERVICE_KEY: ${SERVICE_KEY:-service-key-placeholder}
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-your-super-secret-and-long-postgres-password}@db:5432/postgres?sslmode=disable
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+    volumes:
+      - ./volumes/storage:/var/lib/storage
+
+  kong:
+    image: kong:2.8.1
+    container_name: supabase-kong
+    depends_on:
+      - db
+      - gotrue
+      - postgrest
+    ports:
+      - "8008:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+    volumes:
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.yml

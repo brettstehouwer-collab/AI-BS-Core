@@ -1,0 +1,481 @@
+{
+  "handoff_id": "warm-character-20261102",
+  "timestamp_utc": "2026-11-02T05:48:57.288286+00:00",
+  "outgoing_agent": "OpenAI Codex /root",
+  "receiving_agent": "Next authorized AI-BS continuation",
+  "status": "VERIFIED_SELECTED_SOURCE_CHECKPOINT",
+  "repository": {
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "working_tree": "Dirty/untracked state retained; exact git-status snapshot in checkpoint08 ZIP; no staging/reset/commit"
+  },
+  "source_snapshot": {
+    "archive_drive_url": "https://drive.google.com/file/d/1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY/view?usp=drivesdk",
+    "archive_sha256": "1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000",
+    "source_manifest_sha256": "40c3cb4428cc91bd0abed74729ea058eb589cd7138575885cd272b41879a919e",
+    "runtime_source_sha256": "1973b9531e7687715b3f3f7e11ce4bb1157850fdf143895df692cf6b07fb1bca",
+    "scope": "Incremental08 dedicated indexed GPU character renderer and temporary articulated native guide; GLB/likeness/audio and full opening unfinished"
+  },
+  "selected_source_changes_since_checkpoint06": [
+    {
+      "path": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "status": "modified",
+      "before_sha256": "c9294f6ae9e1009b8df594d191c49749da41340dbed48ce1c197a7de0a1e7f2a",
+      "after_sha256": "dc3bbe7826ca85b27c0b41dda8cbea40607c74399a80c80bd6d8c5c2981aec3a",
+      "after_bytes": 192231,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/PROJECT_INDEX.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "ed63f550a6c35d9d5038dc6cf79a6292410fd759f52151c4e036841622723f23",
+      "after_bytes": 10379,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/adam_core_and_first_boot.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "1906dd5cbeeba9410ec554db4891f0babfca111d292cd82e0a8eb9e5bfed1c05",
+      "after_bytes": 20232,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/adam_first_boot_contracts.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e20adba0cb363feaab5b9f04a870b2cbd1aad52a1bc05b5193c37c9c129d5722",
+      "after_bytes": 27348,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/authoring_and_world_building.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "55ff99df709a091ee0d373aa7047425500e6449682c54e5732704bc8ab791dc2",
+      "after_bytes": 26219,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/component_contracts.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a2b14624831a12d77994209efa093e87df4495e8b29579beccca4c048b768e4b",
+      "after_bytes": 27620,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/drive_destination.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3e36f13e4d08afe067acfb484ba89780d6124a90da2f397fc4d51e4dd6d194d7",
+      "after_bytes": 9584,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/echos_within_story_and_worlds.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "610a575f92e3e457db322cd967e18387714a42ab48ba4f57810e1050752978fe",
+      "after_bytes": 7179,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/first_boot_alpha_content_plan.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "349b90a41144fef5982e66ca98e1a10ac0e651eebf2a5c1ae6e965d11b92672e",
+      "after_bytes": 8307,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/first_boot_memory_sources.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "61e2a895e4b763fa343ed6d1a7f3073102ff5cdfb05ae4671cdee401f93529bf",
+      "after_bytes": 3978,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/generative_narrative_contract.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c62633a0552b53a502b2e35c9e6e726368fae46ff1267a13832c30b8d453c14d",
+      "after_bytes": 25508,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/graphics_fidelity_roadmap.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "fb49c84f9c46f8f5d58f8fdb9d30d812a7fb0dcb044afb468bcc56f9d74583e1",
+      "after_bytes": 26878,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/implementation_plan.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a394e368469e1d447fa6599a6a24f13a572b10202e29df6deb145c76f24fff98",
+      "after_bytes": 32989,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/jenison_first_hour_story_blueprint.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "84f699b3503956660166c9a356153eb888d6eba7759d9721cb368d331b8fa9c9",
+      "after_bytes": 19991,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/m3_acceptance_audit.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "dd4c370b4b3efaaf8bc82d2405525d1d4f6660711f3d8bfe709d8bbb3c92c2ae",
+      "after_bytes": 12133,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/m4_acceptance_audit.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c9588a60776c544d9846a6e8906683bef7034e7c28517314188c7e692f8463d7",
+      "after_bytes": 6289,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/m4_creator_implementation_notes.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "b499d9f23e9a4b084bdb5924bb1185e10afaba65a879aa225c35fc814e791683",
+      "after_bytes": 17680,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/motherboard_world_and_progression.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c9dab2d140ffeb5976a63077705d538ed12f7a2b3cb5cf316e0378a5a8def4d8",
+      "after_bytes": 11703,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/open_world_streaming_contract.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2b58ec4dfaf7af39c0e4d11c19313234caeff07d42b2593e221f36c1ab3a5e4e",
+      "after_bytes": 21871,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/planning_decisions.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "028b1cde3a4a3e4cc71c4343fb7383821894f3778ba750f70444ae01973175d3",
+      "after_bytes": 12382,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/resource_catalog.json",
+      "status": "modified",
+      "before_sha256": "9f74dec5406648f53ed97391544d3b883af1e05f31196a402589ab03d7f628fb",
+      "after_sha256": "a2c9d0ab81d6f6278233a015558994cffeb0b300ea5df3dbd8501fa30a6fac6b",
+      "after_bytes": 4641,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/sdk_registry.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "4858e5bf5f155d1b04e036e0c32b16ab0fe66c5923cf04488b4fe25e2d116395",
+      "after_bytes": 29813,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/sheltered_hub_and_pencil_room.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c24e180c77fe73fa2fd05c6e4384869e69a394e2735889adc09a3112498b1aac",
+      "after_bytes": 13828,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/spec.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "b9ab86518350bc114db126eeb9c38f786e9cf1b0298950ec1d86054185ff93fe",
+      "after_bytes": 32458,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/vehicle_physics_and_diagnostics.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "54fc6912ce5c361f29f9b7e8be9b1eeec4b12189bd71a2b0aa7665c003657070",
+      "after_bytes": 10405,
+      "text_patch": true
+    },
+    {
+      "path": "engine/.gitignore",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "26b857c155f6a59d4ecc9184b80d3aca7d3fe91b1c27ab29788c969ba8fc6eb7",
+      "after_bytes": 23,
+      "text_patch": true
+    },
+    {
+      "path": "engine/BUILD_STATUS.md",
+      "status": "modified",
+      "before_sha256": "6fa92d5f82ae2128a03cf6f0a3a52e8e3ad675b47ad1c3549d9c552654ee1d67",
+      "after_sha256": "e4c5bb5da3cdece669632a3d94b9551fa92e002db1c689a5f79dd7af7b48eba5",
+      "after_bytes": 99593,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_RENDERER.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "18e2f18f9e9e41f5e4a8bbe7d6c9c9bd1b285f1f8645c49998c012599cf46ac4",
+      "after_bytes": 9573,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_SCENE.md",
+      "status": "modified",
+      "before_sha256": "c6190c00bf52e8dbb326f33e95f355d2299707c5c61f649bb9b0c8854e6b0adf",
+      "after_sha256": "55eef02e1569b981fb955b0e126848523d1f9d70a13167755507d221376dc654",
+      "after_bytes": 6856,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "status": "modified",
+      "before_sha256": "78d55b7c859886a1c98d46b40136630bda7d8c53886d1312e3ed0f43905fb34f",
+      "after_sha256": "93a8478152e2dda1f33bdb48779f5ade1d277ff41de58b925175f642ccde2067",
+      "after_bytes": 39660,
+      "text_patch": true
+    },
+    {
+      "path": "engine/COMPANION_RUNTIME.md",
+      "status": "modified",
+      "before_sha256": "59a10a452b7e77981a96f517a05175a1b039adc8e6f60f33758bb4646a2810ad",
+      "after_sha256": "81ee211df171f838c9ab5a3103b9966b842bc71948a4daade795cc5c5cfe8f2b",
+      "after_bytes": 4635,
+      "text_patch": true
+    },
+    {
+      "path": "engine/GUIDE_CONTROLLER.md",
+      "status": "modified",
+      "before_sha256": "fe9cfc301f21d040fe382340b273aa59123e70d18a0c41ca7ec6ec927a455c22",
+      "after_sha256": "65a813f568c4c67c25bb1bcb7a2e5029b88c3905c0203d4d9d2a8d224ffbc5c1",
+      "after_bytes": 4760,
+      "text_patch": true
+    },
+    {
+      "path": "engine/GUIDE_PRESENTATION.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3dff1204736fc1c35f4e116d0b61ffcd4762e43b0aa08ba5322788f1c95f3699",
+      "after_bytes": 5284,
+      "text_patch": true
+    },
+    {
+      "path": "engine/WARM_BEGINNING.md",
+      "status": "modified",
+      "before_sha256": "d26e8ea381c2571642994298c35311e40e09bf5076e38a23d5e73f8eac533345",
+      "after_sha256": "4522c95a3ed781817e43db632427d5b1f1a0236fd809a661db32d61f5581d755",
+      "after_bytes": 7387,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/durable_world.cpp",
+      "status": "modified",
+      "before_sha256": "534712513ad17a007d4954be9ff04a4029eee76c5d2a415eed37b86a5d87bf9f",
+      "after_sha256": "736b868f48b7060257a68ec1220f04b7b65b8a1f0f963326ab27fab4d503f80e",
+      "after_bytes": 115101,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/CMakeLists.txt",
+      "status": "modified",
+      "before_sha256": "19fd7a053f7d4ec1f138fbc342afff96165b0e03614aa0c47a085923a5ecc7de",
+      "after_sha256": "824e71ff6294c6bc6c51f265af25f050c3d03b206dab6bdf865040781df65d53",
+      "after_bytes": 982,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/guide_gpu.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "b2624465d2f8f4f06a285a351d0160ecb43de0ae83324dd1829b2d8448665ab5",
+      "after_bytes": 6975,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/main.cpp",
+      "status": "modified",
+      "before_sha256": "1fbe2654fa4044ea93394f85b2836d76ab1a3884c8ba1e351a702b3d01148d15",
+      "after_sha256": "3d2c517450f91a5ff742c7c0d24217e944b3e218ca1ff99b0e5697df2c879785",
+      "after_bytes": 22923,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/guide_presentation.hpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "bf8574adb83c2ab4945bd7d1c78b4c4e50ecde365b4a8e254d7141e61dacda5b",
+      "after_bytes": 1387,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/render.hpp",
+      "status": "modified",
+      "before_sha256": "58ab4e425792226b8e19f7b188606a95f2fcea2350762c9df319d0ecbf61742d",
+      "after_sha256": "1039b687c2cb39ae0e99fd923cd0291577c6d6ca327e60ab0315a4a37813751c",
+      "after_bytes": 3827,
+      "text_patch": true
+    },
+    {
+      "path": "engine/milestone_queue.json",
+      "status": "modified",
+      "before_sha256": "6539497e6674d6cb88a97d70541b4f57ecffa60d837abbb96810be3ccefbef4f",
+      "after_sha256": "38f15464f7c2104f34343622876b9e94c56e1565c0129ae0b606580d901569d2",
+      "after_bytes": 41392,
+      "text_patch": true
+    },
+    {
+      "path": "engine/shaders/character.hlsl",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8a578ac6a93aee1037e72cd71618486ef1412d4746b96d0f6f8999a97a7f0764",
+      "after_bytes": 2755,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/guide_presentation.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7d7d26c8c144aba7b7f8b98a1ea754ea050f9652ecaeb76ee4732e4a19b79053",
+      "after_bytes": 9153,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_character.inl",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7535c7a731f582dfd95d84eb9d43120e6e5191094d6b98061a4bb479491f2e32",
+      "after_bytes": 16369,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_dx12.cpp",
+      "status": "modified",
+      "before_sha256": "fd786975f02aab0f8432bf6ffc2e772b39a225d81cfd531f6a857a5062b98be3",
+      "after_sha256": "8f71fc2ca8f976ac7c410cf7ee6f19e2cb2d141dc1a4b662e35d1b5dad2c28e7",
+      "after_bytes": 39180,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_gpu_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "d0bf1dbe3fb06ee9916d5ec7e1a87ab3ca3a4b29e6f70af0ac82ec000da94652",
+      "after_bytes": 28251,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/guide_presentation_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "f1f667ee9b50d6a9708265d1d27cf38326f573a1d9cf1274ad8ef61f0b48e032",
+      "after_bytes": 8757,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/verify_companion_native.py",
+      "status": "modified",
+      "before_sha256": "afa68c92371c7e68a6315966cd7d78f58607adddc2e5c067613cb2642b1012b4",
+      "after_sha256": "aefa40f28302877090d0e274371f25221947567e293ce8090b2fe1b4e00dcd0d",
+      "after_bytes": 7026,
+      "text_patch": true
+    },
+    {
+      "path": "pyproject.toml",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3efe8f0a2049e82941ab9d38016b529b60bd3e9dd9debff67da9c19c319f763e",
+      "after_bytes": 3414,
+      "text_patch": true
+    },
+    {
+      "path": "requirements.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "94811dbcbaaa2752a3fe0fdc8d249d2487d811dd4ca62724dfe08fedd4580026",
+      "after_bytes": 3110,
+      "text_patch": true
+    },
+    {
+      "path": "uv.lock",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7c3ea4b93011bfc2b26de56458387bbe880735cae1ae7caeac7e221322aac3e6",
+      "after_bytes": 316539,
+      "text_patch": true
+    }
+  ],
+  "patch": "docs/agent_sync/checkpoint08_source_changes.patch",
+  "patch_sha256": "2bf8fc2c8595237b3759bc0416625117284d2dc0eb4a212810dc653ea1d793ad",
+  "completed_and_verified": {
+    "registered_native_tests_each_configuration": 83,
+    "installed_sdk_consumers_each_configuration": 2,
+    "actual_creator_checks_each_configuration": 23,
+    "actual_native_companion_checks_each_configuration": 74,
+    "indexed_gpu_checks_each_configuration": 210,
+    "cpu_skin_oracle_pixels_each_configuration": 143775,
+    "gpu_errors_warnings_each_configuration": [
+      0,
+      0
+    ],
+    "guide_cpu_checks_each_configuration": 2956,
+    "ordinary_cpu_samples_zero_allocations": 1000
+  },
+  "test_commands_and_actual_results": [
+    {
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File C:/AI-BS/engine/out/warm_beginning/verify_checkpoint08.ps1",
+      "exit_code": 0,
+      "evidence": "engine/out/warm_beginning/checkpoint08-final.log"
+    },
+    {
+      "command": "python -m cmake --build engine/out/windows-msvc --config Release|Debug --target aibs_character_gpu_tests; ctest -C Release|Debug -R ^native_indexed_character$ --output-on-failure",
+      "exit_code": 0,
+      "scope": "Additional test-only point/shadow receiver and old setter cases after full matrix",
+      "evidence": "engine/out/warm_beginning/character-gpu-extended-test.Release.log and .Debug.log"
+    }
+  ],
+  "architectural_decisions": [
+    "Dedicated indexed VB/IB and fixed frame-fenced pose storage preserve SceneMesh callers/static scene",
+    "Nearest-surface depth-tested sRGB alpha composition is deliberately not general OIT",
+    "Only explicit Follow/Wait/Recall intent/anchor enters history; animation and trail remain ephemeral",
+    "Source SDK0.11 is tested separately from retained Studio97/SDK0.10",
+    "No family reference files used by temporary articulated blockout"
+  ],
+  "incomplete_and_known_limits": [
+    "Temporary blockout has no Adam likeness; fourth authored gesture clip available but native guidance trigger remains later content integration",
+    "No GLB/character pack codec or original audio playback/caption approval yet",
+    "No claim for full8\u201312minute opening,1080p60 reference performance, frozen launcher, final walkthrough or packaged acceptance",
+    "Nearest-surface hologram pass is not a general order-independent transparency system; no device-loss/timeout fault injection"
+  ],
+  "next_executable_task": "Add bounded pinned cgltf GLB character import/cooked packs and dependency handling, then Blender podium-inspired likeness/animations, optional original audio and detailed opening acceptance",
+  "next_task_contract": "docs/agent_sync/character_import_next.md",
+  "backup_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint08-drive.json",
+  "post_seal_annotation_contract": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json",
+    "docs/game_engine/resource_catalog.json"
+  ],
+  "goal_status": "active; not full opening completion"
+}

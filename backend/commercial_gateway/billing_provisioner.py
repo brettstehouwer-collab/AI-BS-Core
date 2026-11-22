@@ -1,308 +1,224 @@
-import os
-import sys
-import time
-import json
-import hmac
+"""Verified payment admission. Receipt recording never issues commercial keys.
+
+Snapshot webhook configuration is explicit and has no sandbox credential defaults.
+See https://docs.stripe.com/webhooks and
+https://developer.paypal.com/api/rest/webhooks/rest/ .
+"""
+import asyncio
 import hashlib
+import hmac
+import json
+import os
+import re
 import sqlite3
-import logging
-from typing import Dict, Any, Optional
-from fastapi import APIRouter, Request, Header, HTTPException, status
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+import time
+from urllib.parse import urlparse
 
-BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if BACKEND_DIR not in sys.path:
-    sys.path.insert(0, BACKEND_DIR)
+import aiohttp
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel, ConfigDict
+from core.payment_receipts import PaymentConflict, get_receipt_store, minor, usd_minor
+from security.financial_auth import require_financial_owner
 
-# Auto-load .env configuration file if present
-env_file = os.path.join(BACKEND_DIR, ".env")
-if os.path.exists(env_file):
-    with open(env_file, "r", encoding="utf-8") as ef:
-        for line in ef:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                os.environ[k.strip()] = v.strip()
-
-from commercial_gateway.api_key_manager import create_api_key, USAGE_DB_PATH, TIER_SPECS
-from commercial_gateway.security_shield import SecurityShield
-
-logger = logging.getLogger("BillingProvisioner")
-logger.setLevel(logging.INFO)
-
-billing_provisioner_router = APIRouter(
-    prefix="/api/v1/billing", tags=["Commercial Billing & Payouts"]
-)
-
-PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID", "sandbox_paypal_client_id_2026")
-PAYPAL_WEBHOOK_ID = os.environ.get(
-    "PAYPAL_WEBHOOK_ID", "sandbox_paypal_webhook_id_2026"
-)
-STRIPE_WEBHOOK_SECRET = os.environ.get(
-    "STRIPE_WEBHOOK_SECRET", "whsec_sandbox_test_2026"
-)
+billing_provisioner_router=APIRouter(prefix='/api/v1/billing',tags=['Commercial Billing & Payouts'])
+CATALOG={'day_pass':499,'pass_1day':499,'pass_3day':1199,'pass_5day':1799,'pass_7day':2299,'pass_12day':3499,'pass_15day':3999,'pass_30day':6999}
+MAX_BODY=262144
 
 
-class CheckoutSimulationPayload(BaseModel):
-    client_name: str
-    email: str
-    payment_provider: str = "paypal"  # 'paypal' or 'stripe'
-    tier: str = "pro"  # 'starter', 'pro', 'enterprise'
-    amount_paid: float = 29.99
+def config(provider):
+    mode=os.environ.get('AIBS_PAYMENT_MODE','disabled')
+    account=os.environ.get('STRIPE_ACCOUNT_ID' if provider=='stripe' else 'PAYPAL_MERCHANT_ID','')
+    if mode not in ('test','live') or not account:
+        raise HTTPException(503,'Payment verification is not configured')
+    return mode,account
 
 
-@billing_provisioner_router.post("/simulate-checkout")
-async def simulate_checkout(payload: CheckoutSimulationPayload, request: Request):
-    """
-    Developer Sandbox Key Provisioner.
-    Provisions a local sandbox key for development. Under Zero-Mock policy, synthetic payments
-    are strictly prohibited from being inserted into production billing ledgers.
-    """
-    ip = SecurityShield.extract_client_ip(request)
-    tier = payload.tier.lower()
-    if tier not in TIER_SPECS:
-        tier = "pro"
-
-    # Provision new cryptographic key for developer testing
-    key_info = create_api_key(
-        tier=tier, client_name=f"Developer Sandbox ({payload.client_name} - {payload.email})"
-    )
-
-    logger.info(
-        f"🔑 [DEVELOPER SANDBOX KEY] Sandbox API Key issued for {payload.email} ({tier}). Zero-Mock policy enforced: No synthetic financial records written."
-    )
-
-    return {
-        "status": "success",
-        "message": f"Developer Sandbox API Key provisioned for {tier} tier (Zero-Mock compliant).",
-        "payout_received_to": "None (Developer Sandbox)",
-        "api_key_details": {
-            "raw_key": key_info["raw_key"],
-            "tier": tier,
-            "client_name": key_info["client_name"],
-            "daily_quota": TIER_SPECS[tier]["max_requests_per_day"],
-            "expires_at": key_info["expires_at"],
-        },
-    }
+async def raw_body(request):
+    chunks=[]; length=0
+    async for chunk in request.stream():
+        length+=len(chunk)
+        if length>MAX_BODY:
+            raise HTTPException(413,'Payment event too large')
+        chunks.append(chunk)
+    return b''.join(chunks)
 
 
-@billing_provisioner_router.post("/paypal-webhook")
-async def paypal_webhook(request: Request):
-    """
-    PayPal Webhook Listener.
-    Processes live PayPal Checkout events (PAYMENT.CAPTURE.COMPLETED) and provisions live API keys.
-    Records verified live transactions into billing_transactions under strict Zero-Mock policy.
-    """
-    ip = SecurityShield.extract_client_ip(request)
+def parse_event(raw):
+    def unique_pairs(pairs):
+        result={}
+        for k,v in pairs:
+            if k in result: raise ValueError('Duplicate JSON key')
+            result[k]=v
+        return result
+    result=json.loads(raw,object_pairs_hook=unique_pairs,
+                      parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite JSON')))
+    if not isinstance(result,dict): raise ValueError('Invalid event')
+    return result
+
+
+def verify_stripe(raw,signature):
+    secret=os.environ.get('STRIPE_WEBHOOK_SECRET','')
+    if not secret.startswith('whsec_') or len(secret)<20 or 'sandbox_test_2026' in secret:
+        raise HTTPException(503,'Stripe signing secret is not configured')
+    parts=[part.strip().split('=',1) for part in signature.split(',')]
+    stamps=[p[1] for p in parts if len(p)==2 and p[0]=='t']
+    signatures=[p[1] for p in parts if len(p)==2 and p[0]=='v1']
+    if len(stamps)!=1 or not re.fullmatch(r'\d{1,12}',stamps[0]): raise ValueError('Invalid signature')
+    if abs(time.time()-int(stamps[0]))>300: raise ValueError('Expired signature')
+    expected=hmac.new(secret.encode(),stamps[0].encode()+b'.'+raw,hashlib.sha256).hexdigest()
+    if not any(hmac.compare_digest(expected,s) for s in signatures): raise ValueError('Invalid signature')
+
+
+async def verify_paypal(payload,headers,mode):
+    client_id=os.environ.get('PAYPAL_CLIENT_ID',''); secret=os.environ.get('PAYPAL_CLIENT_SECRET','')
+    webhook_id=os.environ.get('PAYPAL_WEBHOOK_ID','')
+    if not all((client_id,secret,webhook_id)) or any('sandbox_' in v for v in (client_id,webhook_id)):
+        raise HTTPException(503,'PayPal verification credentials are not configured')
+    names={'auth_algo':'paypal-auth-algo','cert_url':'paypal-cert-url','transmission_id':'paypal-transmission-id',
+           'transmission_sig':'paypal-transmission-sig','transmission_time':'paypal-transmission-time'}
+    data={k:headers.get(v,'') for k,v in names.items()}
+    if not all(data.values()) or any(len(v)>4096 for v in data.values()): raise ValueError('Missing verification headers')
+    host='api-m.paypal.com' if mode=='live' else 'api-m.sandbox.paypal.com'
+    cert=urlparse(data['cert_url'])
+    allowed={'api.paypal.com','api-m.paypal.com'} if mode=='live' else {'api.sandbox.paypal.com','api-m.sandbox.paypal.com'}
+    if cert.scheme!='https' or cert.hostname not in allowed or cert.port not in (None,443) or cert.username or cert.password or not cert.path.startswith('/v1/notifications/certs/') or cert.query or cert.fragment:
+        raise ValueError('Invalid PayPal certificate URL')
+    data.update(webhook_id=webhook_id,webhook_event=payload)
+    # Fixed provider host; no certificate fetch or client-controlled redirect.
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=8),trust_env=False) as session:
+        async with session.post('https://'+host+'/v1/oauth2/token',auth=aiohttp.BasicAuth(client_id,secret),
+                                data={'grant_type':'client_credentials'},allow_redirects=False) as response:
+            if response.status!=200: raise HTTPException(503,'PayPal verification unavailable')
+            token=(await response.json()).get('access_token')
+            if not isinstance(token,str) or not token: raise HTTPException(503,'PayPal verification unavailable')
+        async with session.post('https://'+host+'/v1/notifications/verify-webhook-signature',
+            headers={'Authorization':'Bearer '+token},json=data,allow_redirects=False) as response:
+            if response.status!=200: raise HTTPException(503,'PayPal verification unavailable')
+            if (await response.json()).get('verification_status')!='SUCCESS': raise ValueError('Invalid signature')
+
+
+async def persist(facts):
     try:
-        body_bytes = await request.body()
-        payload = json.loads(body_bytes.decode("utf-8"))
-
-        event_type = payload.get("event_type", "")
-        resource = payload.get("resource", {})
-
-        if event_type in ["PAYMENT.CAPTURE.COMPLETED", "CHECKOUT.ORDER.APPROVED"]:
-            payer_email = resource.get("payer", {}).get(
-                "email_address", "client@paypal.com"
-            )
-            custom_id = resource.get("custom_id", "pro")  # tier passes in custom_id
-            tier = custom_id if custom_id in TIER_SPECS else "pro"
-            amount_val = float(resource.get("amount", {}).get("value", "29.99"))
-
-            key_info = create_api_key(
-                tier=tier, client_name=f"PayPal Payer ({payer_email})"
-            )
-
-            # Record verified live transaction into SQLite ledger
-            try:
-                conn = sqlite3.connect(USAGE_DB_PATH, timeout=20.0)
-                try:
-                    conn.execute("PRAGMA journal_mode=WAL;")
-                    conn.execute("PRAGMA synchronous=NORMAL;")
-                except Exception:
-                    pass
-                cursor = conn.cursor()
-                cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS billing_transactions (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        timestamp REAL,
-                        client_name TEXT,
-                        email TEXT,
-                        provider TEXT,
-                        tier TEXT,
-                        amount_paid REAL,
-                        key_prefix TEXT,
-                        status TEXT
-                    )
-                """)
-                cursor.execute(
-                    "INSERT INTO billing_transactions (timestamp, client_name, email, provider, tier, amount_paid, key_prefix, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        time.time(),
-                        f"PayPal Payer ({payer_email})",
-                        payer_email,
-                        "paypal",
-                        tier,
-                        amount_val,
-                        key_info["key_prefix"],
-                        "verified_live_payment",
-                    ),
-                )
-                conn.commit()
-                conn.close()
-            except Exception as dbe:
-                logger.error(f"Failed to record verified PayPal transaction: {dbe}")
-
-            logger.info(
-                f"🎉 [PAYPAL PAYOUT SUCCESS] Verified live payment ${amount_val:.2f} from {payer_email}. Key: {key_info['key_prefix']}..."
-            )
-
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "status": "handled",
-                    "event_type": event_type,
-                    "key_issued": key_info["key_prefix"],
-                },
-            )
-
-        return JSONResponse(
-            status_code=200, content={"status": "ignored", "event_type": event_type}
-        )
-    except Exception as e:
-        logger.error(f"PayPal Webhook Error: {e}")
-        return JSONResponse(status_code=400, content={"error": str(e)})
+        result=await asyncio.to_thread(get_receipt_store().ingest,**facts)
+    except (sqlite3.Error,OSError):
+        raise HTTPException(503,'Receipt storage unavailable; retry event delivery') from None
+    if result['status']=='conflict': raise HTTPException(409,'Conflicting payment evidence is held for review')
+    return result
 
 
-@billing_provisioner_router.post("/stripe-webhook")
-async def stripe_webhook(
-    request: Request, stripe_signature: Optional[str] = Header(None)
-):
-    """
-    Stripe Webhook Listener.
-    Processes live Stripe Checkout Session events (checkout.session.completed).
-    Records verified live transactions into billing_transactions under strict Zero-Mock policy.
-    """
+@billing_provisioner_router.post('/simulate-checkout',status_code=410)
+async def simulate_checkout():
+    raise HTTPException(410,'Payment simulation cannot grant commercial access; use isolated offline fixtures')
+
+
+@billing_provisioner_router.post('/stripe-webhook')
+async def stripe_webhook(request:Request):
+    mode,account=config('stripe'); raw=await raw_body(request)
     try:
-        body_bytes = await request.body()
-        payload = json.loads(body_bytes.decode("utf-8"))
+        verify_stripe(raw,request.headers.get('stripe-signature',''))
+        payload=parse_event(raw)
+        if type(payload.get('livemode')) is not bool or payload['livemode']!=(mode=='live'):
+            raise ValueError('Payment mode mismatch')
+        if payload.get('account',account)!=account: raise ValueError('Provider account mismatch')
+        event=payload['type']; obj=payload['data']['object']
+        base=dict(provider='stripe',account=account,mode=mode,event_id=payload['id'],digest=hashlib.sha256(raw).hexdigest(),fee_minor=None,net_minor=None)
+        if event in ('checkout.session.completed','checkout.session.async_payment_succeeded'):
+            if obj.get('payment_status')!='paid' or obj.get('mode')!='payment':
+                return {'status':'ignored_unsettled','fulfillment':'held_pending_reconciliation'}
+            if obj.get('currency')!='usd': raise ValueError('Unsupported currency')
+            facts=dict(base,kind='capture',payment_id=obj['payment_intent'],reference=obj['id'],
+                       intent_id=obj.get('metadata',{}).get('intent_id',''),currency='USD',gross_minor=minor(obj['amount_total']))
+        elif event in ('charge.refunded','charge.dispute.created','charge.dispute.closed'):
+            # Reversals never clear automatically, including out-of-order delivery.
+            if obj.get('currency')!='usd': raise ValueError('Unsupported currency')
+            payment_id=obj.get('payment_intent')
+            if not payment_id:
+                raise HTTPException(503,'Reversal requires provider payment lookup before acknowledgement')
+            amount=obj.get('amount_refunded') if event=='charge.refunded' else obj.get('amount')
+            facts=dict(base,kind='reversal',payment_id=payment_id,reference='',intent_id='',currency='USD',gross_minor=minor(amount))
+        else:
+            return {'status':'ignored','fulfillment':'held_pending_reconciliation'}
+        return await persist(facts)
+    except (ValueError,TypeError,KeyError,AttributeError,OverflowError):
+        raise HTTPException(400,'Invalid or unverified payment event') from None
 
-        event_type = payload.get("type", "")
-        if event_type == "checkout.session.completed":
-            session = payload.get("data", {}).get("object", {})
-            customer_email = session.get("customer_details", {}).get(
-                "email", "client@stripe.com"
-            )
-            tier = session.get("metadata", {}).get("tier", "pro")
-            amount_cents = session.get("amount_total")
-            amount_usd = float(amount_cents) / 100.0 if amount_cents else float(TIER_SPECS.get(tier, {}).get("monthly_price", 29.99))
 
-            key_info = create_api_key(
-                tier=tier, client_name=f"Stripe Customer ({customer_email})"
-            )
-
-            # Record verified live transaction into SQLite ledger
-            try:
-                conn = sqlite3.connect(USAGE_DB_PATH, timeout=20.0)
-                try:
-                    conn.execute("PRAGMA journal_mode=WAL;")
-                    conn.execute("PRAGMA synchronous=NORMAL;")
-                except Exception:
-                    pass
-                cursor = conn.cursor()
-                cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS billing_transactions (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        timestamp REAL,
-                        client_name TEXT,
-                        email TEXT,
-                        provider TEXT,
-                        tier TEXT,
-                        amount_paid REAL,
-                        key_prefix TEXT,
-                        status TEXT
-                    )
-                """)
-                cursor.execute(
-                    "INSERT INTO billing_transactions (timestamp, client_name, email, provider, tier, amount_paid, key_prefix, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        time.time(),
-                        f"Stripe Customer ({customer_email})",
-                        customer_email,
-                        "stripe",
-                        tier,
-                        amount_usd,
-                        key_info["key_prefix"],
-                        "verified_live_payment",
-                    ),
-                )
-                conn.commit()
-                conn.close()
-            except Exception as dbe:
-                logger.error(f"Failed to record verified Stripe transaction: {dbe}")
-
-            logger.info(
-                f"🎉 [STRIPE PAYOUT SUCCESS] Verified live payment ${amount_usd:.2f} from {customer_email}. Key: {key_info['key_prefix']}..."
-            )
-
-            return JSONResponse(
-                status_code=200,
-                content={"status": "handled", "key_issued": key_info["key_prefix"]},
-            )
-
-        return JSONResponse(status_code=200, content={"status": "ignored"})
-    except Exception as e:
-        logger.error(f"Stripe Webhook Error: {e}")
-        return JSONResponse(status_code=400, content={"error": str(e)})
+@billing_provisioner_router.post('/paypal-webhook')
+async def paypal_webhook(request:Request):
+    mode,account=config('paypal'); raw=await raw_body(request)
+    try:
+        payload=parse_event(raw)
+        await verify_paypal(payload,request.headers,mode)
+        event=payload['event_type']; obj=payload['resource']
+        base=dict(provider='paypal',account=account,mode=mode,event_id=payload['id'],digest=hashlib.sha256(raw).hexdigest())
+        if event=='PAYMENT.CAPTURE.COMPLETED' and obj.get('status')=='COMPLETED':
+            if obj.get('payee',{}).get('merchant_id')!=account or obj.get('amount',{}).get('currency_code')!='USD': raise ValueError('Merchant or currency mismatch')
+            gross=usd_minor(obj['amount']['value']); breakdown=obj.get('seller_receivable_breakdown',{})
+            fee=net=None
+            if breakdown:
+                for key in ('gross_amount','paypal_fee','net_amount'):
+                    if breakdown[key]['currency_code']!='USD': raise ValueError('Fee currency mismatch')
+                if usd_minor(breakdown['gross_amount']['value'])!=gross: raise ValueError('Gross mismatch')
+                fee=usd_minor(breakdown['paypal_fee']['value']); net=usd_minor(breakdown['net_amount']['value'])
+            facts=dict(base,kind='capture',payment_id=obj['id'],reference=obj['supplementary_data']['related_ids']['order_id'],
+                intent_id=obj.get('custom_id',''),currency='USD',gross_minor=gross,fee_minor=fee,net_minor=net)
+        elif event in ('PAYMENT.CAPTURE.REFUNDED','PAYMENT.CAPTURE.REVERSED'):
+            capture=obj.get('supplementary_data',{}).get('related_ids',{}).get('capture_id')
+            if not capture: raise HTTPException(503,'Reversal requires provider capture lookup before acknowledgement')
+            if obj['amount']['currency_code']!='USD': raise ValueError('Currency mismatch')
+            facts=dict(base,kind='reversal',payment_id=capture,reference='',intent_id='',currency='USD',gross_minor=usd_minor(obj['amount']['value']))
+        else: return {'status':'ignored_unsettled','fulfillment':'held_pending_reconciliation'}
+        return await persist(facts)
+    except (aiohttp.ClientError,asyncio.TimeoutError):
+        raise HTTPException(503,'PayPal verification unavailable; retry delivery') from None
+    except (ValueError,TypeError,KeyError,AttributeError,OverflowError):
+        raise HTTPException(400,'Invalid or unverified payment event') from None
 
 
 class StripeSessionPayload(BaseModel):
-    tier_id: str
-    amount_usd: float
-    client_name: str
+    model_config=ConfigDict(extra='forbid')
+    tier_id:str
+    client_name:str=''
+    # Retained for old clients only as a price assertion, never as pricing authority.
+    amount_usd:str | None=None
 
 
-@billing_provisioner_router.post("/create-stripe-session")
-async def create_stripe_session(payload: StripeSessionPayload):
-    import aiohttp
-    import urllib.parse
-
-    stripe_key = os.environ.get("STRIPE_API_KEY", "")
-    if not stripe_key:
-        raise HTTPException(status_code=500, detail="Stripe API Key not configured")
-
-    amount_cents = int(payload.amount_usd * 100)
-
-    # Stripe uses x-www-form-urlencoded
-    data = {
-        "success_url": "https://ai-bs-dashboard.web.app/?checkout=success",
-        "cancel_url": "https://ai-bs-dashboard.web.app/?checkout=cancelled",
-        "mode": "payment",
-        "line_items[0][price_data][currency]": "usd",
-        "line_items[0][price_data][product_data][name]": f"AI-BS {payload.tier_id.replace('_', ' ').title()}",
-        "line_items[0][price_data][unit_amount]": str(amount_cents),
-        "line_items[0][quantity]": "1",
-        "metadata[tier]": payload.tier_id,
-        "metadata[client_name]": payload.client_name,
-    }
-
-    encoded_data = urllib.parse.urlencode(data)
-
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            "https://api.stripe.com/v1/checkout/sessions",
-            headers={
-                "Authorization": f"Bearer {stripe_key}",
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            data=encoded_data,
-        ) as resp:
-            resp_data = await resp.json()
-            if resp.status == 200:
-                return {"url": resp_data.get("url"), "session_id": resp_data.get("id")}
-            else:
-                logger.error(f"Stripe API Error: {resp_data}")
-                raise HTTPException(
-                    status_code=400, detail="Failed to create Stripe session"
-                )
+@billing_provisioner_router.post('/create-stripe-session')
+async def create_stripe_session(payload:StripeSessionPayload,request:Request,owner=Depends(require_financial_owner)):
+    mode,account=config('stripe'); key=os.environ.get('STRIPE_API_KEY','')
+    if not key.startswith('sk_live_' if mode=='live' else 'sk_test_'):
+        raise HTTPException(503,'Stripe checkout credentials are not configured for this mode')
+    price=CATALOG.get(payload.tier_id)
+    if price is None: raise HTTPException(422,'Unsupported catalog tier')
+    try:
+        if payload.amount_usd is not None and usd_minor(payload.amount_usd)!=price: raise ValueError('Price mismatch')
+        request_key=request.headers.get('idempotency-key','')
+        store=get_receipt_store()
+        intent=await asyncio.to_thread(store.prepare_intent,owner,payload.tier_id,price,'stripe',account,mode,request_key)
+    except PaymentConflict: raise HTTPException(409,'Checkout request conflicts with its durable intent') from None
+    except ValueError: raise HTTPException(422,'Use a server catalog price and stable Idempotency-Key') from None
+    except (sqlite3.Error,OSError): raise HTTPException(503,'Checkout intent storage unavailable') from None
+    if intent['reference']:
+        return {'session_id':intent['reference'],'status':'existing_checkout_requires_lookup','fulfillment':'held_pending_reconciliation'}
+    # Local intent durability exceeds the provider's idempotency retention. Never
+    # dispatch another create for an old ambiguous outcome.
+    if time.time()-intent['created_at'] > 23*60*60:
+        raise HTTPException(409,'Unresolved checkout requires provider reconciliation; no new session created')
+    data={'success_url':'https://ai-bs-dashboard.web.app/?checkout=pending_verification',
+          'cancel_url':'https://ai-bs-dashboard.web.app/?checkout=cancelled','mode':'payment',
+          'line_items[0][price_data][currency]':'usd','line_items[0][price_data][product_data][name]':'AI-BS '+payload.tier_id,
+          'line_items[0][price_data][unit_amount]':str(price),'line_items[0][quantity]':'1','metadata[intent_id]':intent['id']}
+    # No automatic POST retry: callers may retry the SAME durable idempotency key.
+    try:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=8),trust_env=False) as session:
+            async with session.post('https://api.stripe.com/v1/checkout/sessions',data=data,
+                headers={'Authorization':'Bearer '+key,'Idempotency-Key':intent['id']},allow_redirects=False) as resp:
+                if resp.status!=200: raise HTTPException(503,'Checkout not confirmed; retry with the same Idempotency-Key')
+                result=await resp.json(); ref=result['id']; url=result['url']
+                if not isinstance(ref,str) or not ref.startswith('cs_') or urlparse(url).scheme!='https' or urlparse(url).hostname!='checkout.stripe.com':
+                    raise ValueError('Invalid checkout response')
+        await asyncio.to_thread(store.bind_reference,intent['id'],ref)
+    except PaymentConflict: raise HTTPException(409,'Conflicting checkout reference is held') from None
+    except (aiohttp.ClientError,asyncio.TimeoutError,sqlite3.Error,OSError,ValueError,KeyError,TypeError):
+        raise HTTPException(503,'Checkout outcome unknown; retain and retry the same Idempotency-Key') from None
+    return {'url':url,'session_id':ref,'status':'pending_payment','fulfillment':'held_pending_reconciliation'}

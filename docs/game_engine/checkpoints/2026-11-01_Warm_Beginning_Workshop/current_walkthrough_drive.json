@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "verified_authenticated_roundtrip",
+  "verified_at": "2026-11-02T17:00:33.076Z",
+  "drive_file": {
+    "id": "1c4vzFbZu6sYLe0UVz0rs27VLFeIirl-k",
+    "url": "https://drive.google.com/file/d/1c4vzFbZu6sYLe0UVz0rs27VLFeIirl-k/view?usp=drivesdk",
+    "name": "2026-11-02_First_Boot_Current_v09_Stations_Native_Walkthrough_Silent_72s.mp4",
+    "parent_id": "1y4wWVICuQBCtg8OmJoSOW0dlxg5apiRH"
+  },
+  "bytes": 4199396,
+  "sha256": "7126d6b3b1063762275bf9ca61a7c58428e6a0f3438202081433bee52ac9c08f",
+  "source_path": "D:/AI-BS-Game-Resources/P22/walkthrough-encoder8-50eeef52/state/First_Boot_Current_Native_Walkthrough.mp4",
+  "duration_seconds": 71.676,
+  "decoded_frames": 2145,
+  "width": 1920,
+  "height": 1080,
+  "audio_streams": 0,
+  "human_pacing_measured": false,
+  "goal_complete": false,
+  "destination_identity": "03 Walkthrough Videos / Progress Photos and Videos / 2026-11-01_Warm_Beginning_Workshop / Checkpoints / 04 Progress and Decisions / BS game",
+  "automatic_review": "Initial upload rejected for unestablished nested-folder identity. Fresh metadata verified every ancestor to the user-designated BS game root; the same upload then succeeded. No sharing changes."
+}

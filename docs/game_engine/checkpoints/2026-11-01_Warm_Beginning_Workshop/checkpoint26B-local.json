@@ -1,0 +1,79 @@
+{
+  "ZIP_members_including_manifest": 2310,
+  "all_CRC_member_size_SHA_fresh_process_verified": true,
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\26B_Studio100_Creator_Preview_Portable.zip",
+  "archive_bytes": 239240839,
+  "archive_sha256": "56b0739c7e01ea21727770fdb629abfcf33789f7f888a4728aee86c5e8606cbe",
+  "cloud_uploaded": false,
+  "current_package_complete_before_after_identical": true,
+  "disk_free_bytes": {
+    "C:/": 73688195072,
+    "D:/": 111411613696,
+    "E:/": 146813599744
+  },
+  "embedded_manifest_sha256": "c28992ac9c02a28b92b4911ce5c89631bae1872f1699ff0ccfafa000dc3e0fcd",
+  "goal_complete": false,
+  "independent_parts_stream_recombination_verified": true,
+  "package_bytes": 588003290,
+  "package_files": 2301,
+  "portable_parts": [
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part01of10",
+      "sha256": "670a9618d8a64e1ec25d59e555e1ce3c551a1845b2aeff6a61a731b492bb487d"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part02of10",
+      "sha256": "111c93b58a7591bfcd5e19891748c62f13d2263109b34ddfba413d4800c2c1a2"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part03of10",
+      "sha256": "7bd664abb38e789ce0b66ca629b722dd0e919a1e2f3256331b8b9ac2fa1e1946"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part04of10",
+      "sha256": "d823203315d4e243c43f6b139d4b032ce70687760b604422e34326a698d56b34"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part05of10",
+      "sha256": "d3d787d27b16fe7db6bb7c6771cc0f441c31164780afb1199338f5604ade5f57"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part06of10",
+      "sha256": "f62d55c4988b51d326a20d06831cd4d4e69ca7709ce7e0360df372f49c6cd3f9"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part07of10",
+      "sha256": "1be44f869f6e20e0c95c86ffcdf0d2f6a49f124c4938e71fa6bfe0a1c40cda2b"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part08of10",
+      "sha256": "dc755a780921d7adf09eb2649c7b67591f28704af02d7d9ae24598878fef9314"
+    },
+    {
+      "bytes": 25165824,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part09of10",
+      "sha256": "904c326e3b7a8ccb5b989dd365c52f679beb7aeb81b83d327892193610519621"
+    },
+    {
+      "bytes": 12748423,
+      "name": "26B_Studio100_Creator_Preview_Portable.zip.part10of10",
+      "sha256": "1e9299edc83fa2e662007d5630d6fb18b0fc640d0802493214228d3661f42d66"
+    }
+  ],
+  "restore_manifest": {
+    "path": "D:\\AI-BS-Game-Resources\\Backups\\26B_Studio100_Creator_Preview_Portable.zip.restore.json",
+    "sha256": "09a89934bfa05bc9225727251df1e04a8643eb31a58c5455418d5132f10dda14"
+  },
+  "schema": 1,
+  "selected_files": 2309,
+  "static_inventory_paths_and_sizes_matched": true,
+  "status": "verified_local_only_not_cloud_backed"
+}

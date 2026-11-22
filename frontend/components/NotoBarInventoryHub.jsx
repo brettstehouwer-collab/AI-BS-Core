@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Wine, ShieldCheck, AlertTriangle, CheckCircle, RefreshCw, 
-  Search, Download, PlusCircle, Send, MapPin, Sparkles, 
-  Award, FileText, Layers, Clock, DollarSign, Filter, Trash2, 
-  Check, ArrowRight, Bell, Zap, Volume2, ShieldAlert
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { CheckCircle, RefreshCw, Search, Download, PlusCircle, MapPin, Award, Layers, DollarSign, Bell, Zap, ShieldAlert } from "lucide-react";
 import './NotoBarInventoryHub.css';
 import SYSTEM_VERSION from './version';
 
+/** @param {{"backendUrl": string}} props */
 export default function NotoBarInventoryHub({ backendUrl }) {
   const baseUrl = backendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://127.0.0.1:8080' : '');
 
@@ -21,7 +17,7 @@ export default function NotoBarInventoryHub({ backendUrl }) {
   const [activeLocation, setActiveLocation] = useState('GR');
 
   // ─── 1. Multi-Bar Stock & Location Matrix State ───
-  const [selectedZoneFilter, setSelectedZoneFilter] = useState('ALL');
+  const [] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +52,7 @@ export default function NotoBarInventoryHub({ backendUrl }) {
   ]);
   const [newDispatchBar, setNewDispatchBar] = useState('Upstairs Main Bar');
   const [newDispatchItem, setNewDispatchItem] = useState("Tito's Vodka");
-  const [newDispatchQty, setNewDispatchQty] = useState(2);
+  const [newDispatchQty] = useState(2);
 
   // ─── 3. Bar SOS Emergency Calls State ───
   const [sosCalls, setSosCalls] = useState([
@@ -70,12 +66,12 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     { id: '86-902', item: 'Casamigos Añejo Tequila', station: 'Upstairs & Downstairs Bars', reason: 'Depleted during high-volume rush', altSuggestion: 'Don Julio 1942 or Patron Reposado', time: '6:30 PM' }
   ]);
   const [new86Item, setNew86Item] = useState('');
-  const [new86Station, setNew86Station] = useState('Main Bar / POS');
+  const [new86Station] = useState('Main Bar / POS');
   const [new86Reason, setNew86Reason] = useState('');
   const [new86Alt, setNew86Alt] = useState('');
 
   // ─── 5. Banquet Pre-Event Par Prep Manifest State ───
-  const [banquetEvents, setBanquetEvents] = useState([
+  const [banquetEvents] = useState([
     {
       id: 'BEO-8841',
       eventName: 'Stehouwer Wedding Gala',
@@ -93,15 +89,15 @@ export default function NotoBarInventoryHub({ backendUrl }) {
   ]);
 
   // ─── 6. Pour Cost & MLCC Shrink Variance State ───
-  const [shrinkLogs, setShrinkLogs] = useState([
+  const [] = useState([
     { id: 'VAR-01', date: 'Tonight • Aug 19', bottle: 'Grey Goose Vodka', posCount: '33 Drinks ($495)', actualUsed: '2.1 Bottles (~35.7 Drinks)', variance: '-2.7 Drinks (-$40.50)', reason: 'Minor Over-Pouring during 7:30 PM surge', status: 'FLAGGED' },
     { id: 'VAR-02', date: 'Tonight • Aug 19', bottle: '2018 Gaja Barbaresco', posCount: '4 Bottles ($1,240)', actualUsed: '4.0 Bottles', variance: '0.0 (Perfect Match)', reason: 'Decanted in Vault for Table 14', status: 'CLEARED' }
   ]);
-  const [breakageItem, setBreakageItem] = useState('');
-  const [breakageReason, setBreakageReason] = useState('');
+  const [] = useState('');
+  const [] = useState('');
 
   // ─── 7. Michigan MLCC Distributor Purchase Order State ───
-  const [distributorOrders, setDistributorOrders] = useState([
+  const [distributorOrders] = useState([
     { distributor: 'RNDC (Republic National Distributing)', items: ["Casamigos Blanco (5 Cases)", "Don Julio 1942 (1 Case)"], estCost: 2840.00 },
     { distributor: 'Southern Glazer\'s Wine & Spirits', items: ["Tito's Vodka (8 Cases)", "Woodford Reserve (3 Cases)"], estCost: 3120.00 },
     { distributor: 'Great Lakes Wine & Spirits', items: ["Sassicaia 2016 (2 Cases)", "Biondi-Santi 2015 (1 Case)"], estCost: 4680.00 },
@@ -116,7 +112,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
       if (res.ok) {
         const data = await res.json();
         if (data.items && data.items.length > 0) {
-          setInventoryItems(data.items.map(item => ({
+          setInventoryItems(data.items.map( /** @param {{id: string, location: string, name: string, category: string, par_level: number, upstairs: string, downstairs: string, banquet_a: string, banquet_b: string, patio: string, cellar_bin: string, storeroom: string, distributor: string, status: string}} item */
+item => ({
             id: item.id,
             location: item.location,
             name: item.name,
@@ -154,7 +151,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
       if (dispRes.ok) {
         const d = await dispRes.json();
         if (d.queue && d.queue.length > 0) {
-          setDispatchQueue(d.queue.map(q => ({
+          setDispatchQueue(d.queue.map( /** @param {{id: string, target_bar: string, item: string, source_loc: string, time: string, requested_by: string, status: string}} q */
+q => ({
             id: q.id,
             targetBar: q.target_bar,
             item: q.item,
@@ -168,7 +166,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
       if (sosRes.ok) {
         const s = await sosRes.json();
         if (s.calls && s.calls.length > 0) {
-          setSosCalls(s.calls.map(c => ({
+          setSosCalls(s.calls.map( /** @param {{id: string, bar: string, type: string, urgency: string, time: string}} c */
+c => ({
             id: c.id,
             bar: c.bar,
             type: c.type,
@@ -180,7 +179,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
       if (eightySixRes.ok) {
         const e = await eightySixRes.json();
         if (e.items && e.items.length > 0) {
-          setEightySixBoard(e.items.map(b => ({
+          setEightySixBoard(e.items.map( /** @param {{id: string, item: string, station: string, reason: string, alt_suggestion: string, time: string}} b */
+b => ({
             id: b.id,
             item: b.item,
             station: b.station,
@@ -201,9 +201,11 @@ export default function NotoBarInventoryHub({ backendUrl }) {
   }, [activeLocation, baseUrl]);
 
   // Handlers
-  const handleLogGrab = async (itemId, zone) => {
+  /** @param {string} itemId @param {'upstairs'|'downstairs'|'banquetA'|'banquetB'|'patio'|'storeroom'} zone */
+const handleLogGrab = async ( itemId,  zone) => {
     let updatedVal = '0';
-    setInventoryItems(prev => prev.map(item => {
+    setInventoryItems(prev => prev.map( 
+item => {
       if (item.id === itemId) {
         const currentQty = parseInt(item[zone]) || 0;
         const nextQty = Math.max(0, currentQty - 1);
@@ -218,7 +220,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
 
     // Sync to SQLite in background
     try {
-      const fieldMap = {
+      /** @type {Record<string, string>} */
+const fieldMap = {
         upstairs: 'upstairs',
         downstairs: 'downstairs',
         banquetA: 'banquet_a',
@@ -273,8 +276,10 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     }
   };
 
-  const handleProgressDispatch = async (id, newStatus) => {
-    setDispatchQueue(prev => prev.map(item => item.id === id ? { ...item, status: newStatus } : item));
+  /** @param {string} id @param {string} newStatus */
+const handleProgressDispatch = async ( id,  newStatus) => {
+    setDispatchQueue(prev => prev.map( 
+item => item.id === id ? { ...item, status: newStatus } : item));
     try {
       await fetch(`${baseUrl}/api/notos/dispatch/status`, {
         method: 'POST',
@@ -286,7 +291,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     }
   };
 
-  const handleTriggerSOS = async (type) => {
+  /** @param {string} type */
+const handleTriggerSOS = async ( type) => {
     const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const tempId = `SOS-${Date.now()}`;
     const newSOS = {
@@ -314,7 +320,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     }
   };
 
-  const handleClearSOS = async (id) => {
+  /** @param {string} id */
+const handleClearSOS = async ( id) => {
     setSosCalls(prev => prev.filter(s => s.id !== id));
     try {
       await fetch(`${baseUrl}/api/notos/sos/${id}`, { method: 'DELETE' });
@@ -361,8 +368,10 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     }
   };
 
-  const handleResolve86 = async (id) => {
-    setEightySixBoard(prev => prev.filter(item => item.id !== id));
+  /** @param {string} id */
+const handleResolve86 = async ( id) => {
+    setEightySixBoard(prev => prev.filter( 
+item => item.id !== id));
     try {
       await fetch(`${baseUrl}/api/notos/86/${id}`, { method: 'DELETE' });
     } catch (e) {
@@ -377,7 +386,7 @@ export default function NotoBarInventoryHub({ backendUrl }) {
       location: activeLocation,
       name: newItemName.trim(),
       category: newItemCategory,
-      parLevel: parseInt(newItemPar) || 6,
+      parLevel: parseInt(String(newItemPar)) || 6,
       upstairs: '1',
       downstairs: '1',
       banquetA: '0',
@@ -417,7 +426,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
     }
   };
 
-  const filteredInventory = inventoryItems.filter(item => {
+  const filteredInventory = inventoryItems.filter( 
+item => {
     const matchesSearch = 
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -645,7 +655,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredInventory.map(item => (
+                  {filteredInventory.map( 
+item => (
                     <tr key={item.id} style={{ borderBottom: '1px solid rgba(159, 18, 57, 0.2)', backgroundColor: item.status === 'CRITICAL' ? 'rgba(225, 29, 72, 0.08)' : item.status === 'LOW' ? 'rgba(245, 158, 11, 0.05)' : 'transparent' }}>
                       <td style={{ padding: '14px 18px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -657,27 +668,27 @@ export default function NotoBarInventoryHub({ backendUrl }) {
                         </span>
                       </td>
                       <td style={{ padding: '14px 12px' }}>
-                        <span className={`stock-pill ${item.upstairs === '0' || item.upstairs === 0 ? 'out' : parseInt(item.upstairs) <= 1 ? 'low' : 'full'}`}>
-                          {item.upstairs} {(item.upstairs === '0' || item.upstairs === 0) ? '(OUT)' : ''}
+                        <span className={`stock-pill ${item.upstairs === '0' || item.upstairs === '0' ? 'out' : parseInt(item.upstairs) <= 1 ? 'low' : 'full'}`}>
+                          {item.upstairs} {(item.upstairs === '0' || item.upstairs === '0') ? '(OUT)' : ''}
                         </span>
                       </td>
                       <td style={{ padding: '14px 12px' }}>
-                        <span className={`stock-pill ${item.downstairs === '0' || item.downstairs === 0 ? 'out' : parseInt(item.downstairs) <= 1 ? 'low' : 'full'}`}>
+                        <span className={`stock-pill ${item.downstairs === '0' || item.downstairs === '0' ? 'out' : parseInt(item.downstairs) <= 1 ? 'low' : 'full'}`}>
                           {item.downstairs}
                         </span>
                       </td>
                       <td style={{ padding: '14px 12px' }}>
-                        <span className={`stock-pill ${item.banquetA === '0' || item.banquetA === 0 ? 'out' : parseInt(item.banquetA) <= 1 ? 'low' : 'full'}`}>
+                        <span className={`stock-pill ${item.banquetA === '0' || item.banquetA === '0' ? 'out' : parseInt(item.banquetA) <= 1 ? 'low' : 'full'}`}>
                           {item.banquetA}
                         </span>
                       </td>
                       <td style={{ padding: '14px 12px' }}>
-                        <span className={`stock-pill ${item.banquetB === '0' || item.banquetB === 0 ? 'out' : parseInt(item.banquetB) <= 1 ? 'low' : 'full'}`}>
+                        <span className={`stock-pill ${item.banquetB === '0' || item.banquetB === '0' ? 'out' : parseInt(item.banquetB) <= 1 ? 'low' : 'full'}`}>
                           {item.banquetB}
                         </span>
                       </td>
                       <td style={{ padding: '14px 12px' }}>
-                        <span className={`stock-pill ${item.patio === '0' || item.patio === 0 ? 'out' : 'full'}`}>
+                        <span className={`stock-pill ${item.patio === '0' || item.patio === '0' ? 'out' : 'full'}`}>
                           {item.patio}
                         </span>
                       </td>
@@ -759,7 +770,7 @@ export default function NotoBarInventoryHub({ backendUrl }) {
                   <input
                     type="number"
                     value={newItemPar}
-                    onChange={e => setNewItemPar(e.target.value)}
+                    onChange={e => setNewItemPar(Number(e.target.value))}
                     style={{ width: '100%', backgroundColor: '#120205', border: '1px solid rgba(159,18,57,0.6)', padding: '10px', borderRadius: '8px', color: '#fff', fontSize: '0.85rem' }}
                   />
                 </div>
@@ -840,7 +851,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
 
             {/* Queue List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {dispatchQueue.map(item => (
+              {dispatchQueue.map( 
+item => (
                 <div key={item.id} style={{ backgroundColor: 'rgba(20, 4, 8, 0.95)', border: '1px solid rgba(159, 18, 57, 0.5)', borderLeft: `6px solid ${item.status === 'PENDING' ? '#e11d48' : item.status === 'EN_ROUTE' ? '#f59e0b' : '#10b981'}`, borderRadius: '14px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
@@ -1054,7 +1066,8 @@ export default function NotoBarInventoryHub({ backendUrl }) {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {eightySixBoard.map(item => (
+              {eightySixBoard.map( 
+item => (
                 <div key={item.id} style={{ backgroundColor: 'rgba(225, 29, 72, 0.12)', border: '1px solid rgba(225, 29, 72, 0.5)', borderRadius: '12px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

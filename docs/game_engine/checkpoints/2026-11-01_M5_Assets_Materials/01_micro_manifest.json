@@ -1,0 +1,210 @@
+{
+  "utc": "2026-11-01T23:47:04.347636+00:00",
+  "scope": "Incremental native import/CPU/GPU checkpoint; not final delivery",
+  "base_checkpoint": "https://drive.google.com/drive/folders/1x0ellJ3c3TsbzWjPOql2yTA67lXb5ewj",
+  "base_archive_sha256": "e2593f376a379a77034f38181a4fa8ebc602bbd8f3c12066d5869aa5be0b6d0a",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "files": [
+    {
+      "path": "docs/game_engine/environment_asset_plan.md",
+      "bytes": 8925,
+      "sha256": "4a84aa0b80dc30f1314419887e365ca0865a9309c150dcf1e7c333f2418f101a"
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "bytes": 24852,
+      "sha256": "98486011a1810153fde6c9adf0ae08896c2d3a0e81ca9862d8d3ec1b9fc5ad0b"
+    },
+    {
+      "path": "engine/apps/asset_cooker.cpp",
+      "bytes": 13491,
+      "sha256": "3a0d43b433187f8124aedab5440302f5b4b20ba257e91cb548e09ca67e3ae791"
+    },
+    {
+      "path": "engine/apps/asset_showcase.cpp",
+      "bytes": 8071,
+      "sha256": "d35ea701b896b7d57d515ae61c4d7afc5b76b1dc04acb0160d1a91b97c675c79"
+    },
+    {
+      "path": "engine/apps/motherboard_sandbox.cpp",
+      "bytes": 8259,
+      "sha256": "41e03dd4529ace9e7d3d1ea2c0a961edf367387a96343b728a5da495fd76134e"
+    },
+    {
+      "path": "engine/assets/source/motherboard-LICENSE.txt",
+      "bytes": 1537,
+      "sha256": "6c7bd02c00f744fe0f0629c350170b0b9822f4bce5bb737068a13b28c951c444"
+    },
+    {
+      "path": "engine/assets/source/motherboard.aibmat",
+      "bytes": 212,
+      "sha256": "d2dc9291e9f93112fba70ab63461b8b2e85448967fbf153fbfcb8c7413c0afb0"
+    },
+    {
+      "path": "engine/assets/source/motherboard.obj",
+      "bytes": 374799,
+      "sha256": "28f4965b84ea7c5294af218190baa06132b26cd6726d92943476952f459d2839"
+    },
+    {
+      "path": "engine/cmake/NativeCapabilities.json.in",
+      "bytes": 292,
+      "sha256": "60d04d1a92501b4bbae20ef542f4fd93da8563b6c0537c4220dc076c8fba067e"
+    },
+    {
+      "path": "engine/examples/sdk_consumer/CMakeLists.txt",
+      "bytes": 359,
+      "sha256": "bea941ef86cc0e767395495c99f0f0de937dab8bc48a4d8611104c64fd1b0c8f"
+    },
+    {
+      "path": "engine/examples/sdk_consumer/main.cpp",
+      "bytes": 12563,
+      "sha256": "542a3d5ff5a3704f21014086dc1bc5ad55931a11e872cbc7bf851dbc4d145c61"
+    },
+    {
+      "path": "engine/include/aibs/asset_scene.hpp",
+      "bytes": 1445,
+      "sha256": "96e9db46ad9837dfcc5c72b6e7e41dd1bb36ec16398025a9a2fffb7279aab33b"
+    },
+    {
+      "path": "engine/include/aibs/assets.hpp",
+      "bytes": 1761,
+      "sha256": "90b33a7fea076012faa610247b6415ac454decdac8ca577f1888361b6eab30cb"
+    },
+    {
+      "path": "engine/out/asset-pipeline-5xur065l/native.json",
+      "bytes": 515,
+      "sha256": "9774a156019273912fe67c7507ddbcaf0ff441d44183f99405ecf9d0183a8898"
+    },
+    {
+      "path": "engine/out/asset-pipeline-5xur065l/verification.json",
+      "bytes": 1460,
+      "sha256": "94f5356d3451276d43b6f35ed0e1137b8211647175df294f8da97c0cadc3937e"
+    },
+    {
+      "path": "engine/out/asset_cooker_verification.Release.v2.json",
+      "bytes": 4522,
+      "sha256": "54f11a4cc83814b88feecf96de0f0c6b4bde0f96574b91ffad67194c10e92bf0"
+    },
+    {
+      "path": "engine/out/assets-monitor-green.log",
+      "bytes": 103,
+      "sha256": "b829ac6de712b640abb40e39f8f0acf9fd9980d6fca6a218a5cd347e185c24e2"
+    },
+    {
+      "path": "engine/out/assets-monitor-red.log",
+      "bytes": 785,
+      "sha256": "212ec5f170fa61804d249d001c925b459ff4513e71a21067b913df8ea53493cc"
+    },
+    {
+      "path": "engine/out/assets-native-first.png",
+      "bytes": 41076,
+      "sha256": "00566e255366c946aad08d283993e4d31124723477ea31b8459740614e1cc064"
+    },
+    {
+      "path": "engine/out/assets-resume-verification.json",
+      "bytes": 9796,
+      "sha256": "9db7807d301c4e3dde773ab8af3e1da088fbd7bf964532cd44f6a6e43184b7f6"
+    },
+    {
+      "path": "engine/out/assets-sign-red.log",
+      "bytes": 51,
+      "sha256": "f3015580cfc6adfb71c8c497a02195ee58c19e0b8fd1d6415398b5971103c6c8"
+    },
+    {
+      "path": "engine/out/assets-workspace-red-v2.log",
+      "bytes": 672,
+      "sha256": "90282cfd95c4b1167aa51196ed943bcf69181690fb67a3d7256ee4165021a11d"
+    },
+    {
+      "path": "engine/out/assets09-full-tests.Release.log",
+      "bytes": 6439,
+      "sha256": "ffb4de870f6c8c30545d926e7538792be3e9df38e857dcb98c4c1a411d5ba429"
+    },
+    {
+      "path": "engine/src/asset_scene.cpp",
+      "bytes": 9993,
+      "sha256": "8f6068d112ba4dc39392b899f66769a5ec4d6b73decd1d11e8d0eeeccdd602ab"
+    },
+    {
+      "path": "engine/src/assets.cpp",
+      "bytes": 22009,
+      "sha256": "72277b396640c36a874601730fc781d19ff9886b0369f9bfd4bf07b97bb31904"
+    },
+    {
+      "path": "engine/tests/asset_scene_tests.cpp",
+      "bytes": 16964,
+      "sha256": "efd895127d7d3fa4f99d6cc5d845f132ddb580abff1a5345ac25ccfbf32a5c71"
+    },
+    {
+      "path": "engine/tests/asset_tests.cpp",
+      "bytes": 8486,
+      "sha256": "ad5ff1454d5b6bd990047085c69d13616c28480389ca6b936b1de952d119fbde"
+    },
+    {
+      "path": "engine/tests/test_asset_view.py",
+      "bytes": 12203,
+      "sha256": "37f9e17be2e075601a25ab00834232ca48fa6de21dc2963b15c500af3ca4a371"
+    },
+    {
+      "path": "engine/tests/test_build_monitor.py",
+      "bytes": 54319,
+      "sha256": "51fb336a13316d729814e46bfea1c12077a6f49cc3d0d1070302630ef264f1a2"
+    },
+    {
+      "path": "engine/tests/test_native_build_view.py",
+      "bytes": 49001,
+      "sha256": "6da275271fd69028958712a7691d8113356f9721c9fb8342c3f11d55700a4023"
+    },
+    {
+      "path": "engine/tests/verify_asset_cooker.py",
+      "bytes": 15504,
+      "sha256": "ce082b0d947cb0c09e2cb2d34981026d6c7018a6e56355bfa0c23a6430cee6ec"
+    },
+    {
+      "path": "engine/tests/verify_asset_pipeline.py",
+      "bytes": 4893,
+      "sha256": "b6551d9c720a960df0fda55883cb140fe77bde75daba48253548517a463e51d5"
+    },
+    {
+      "path": "engine/tools/make_motherboard_asset.py",
+      "bytes": 9673,
+      "sha256": "ec56b9f39a4c413aec3ccc515e49edd70bee08260b65585bfc1212c8ac826df6"
+    },
+    {
+      "path": "native_studio/game_build_monitor.py",
+      "bytes": 33990,
+      "sha256": "c18d42a7056c6652a6c23b37797b0dfe57484a2431d667b2effd96c8a0f2d407"
+    },
+    {
+      "path": "native_studio/game_build_view.py",
+      "bytes": 37830,
+      "sha256": "a1c4bb7c37c9c7bfb8d8753d335ce9fc12e0a097886ac3a6800849212249f829"
+    },
+    {
+      "path": "native_studio/game_engine/asset_view.py",
+      "bytes": 20682,
+      "sha256": "ae004074d470353cd66912d74b57c25cc2d0a78b6972c95aea4f399837b6c010"
+    }
+  ],
+  "verification": {
+    "Release_native_tests": "55/55 passed",
+    "native_cooker_checks": 58,
+    "fixture_triangles": 4788,
+    "fixture_materials": 8,
+    "GPU_debug_errors": 0
+  },
+  "pending": [
+    "Debug55 matrix",
+    "fresh installedSDK0.9 consumers",
+    "finalUI/frozen96package",
+    "launcherpromotion",
+    "finalcumulativecheckpoint"
+  ],
+  "installed_Studio": "5.329.95 preserved",
+  "free_bytes": {
+    "C": 114893541376,
+    "D": 184193118208,
+    "E": 146813599744
+  }
+}

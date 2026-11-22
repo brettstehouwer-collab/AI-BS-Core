@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"8b2bc31a-3ec4-4f8f-bd4a-2ed1d69c8264",
+  "name":"Motherboard cooling reference",
+  "source":{"sha256":"28f4965b84ea7c5294af218190baa06132b26cd6726d92943476952f459d2839","bytes":374799},
+  "materials":{"sha256":"d2dc9291e9f93112fba70ab63461b8b2e85448967fbf153fbfcb8c7413c0afb0","bytes":212},
+  "license":{"sha256":"6c7bd02c00f744fe0f0629c350170b0b9822f4bce5bb737068a13b28c951c444","bytes":1537},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"86a1546cb93afd51f0c2a70158af0408636917f477b01312073fde75722c2b62.aibmesh","sha256":"86a1546cb93afd51f0c2a70158af0408636917f477b01312073fde75722c2b62","bytes":421760}
+}

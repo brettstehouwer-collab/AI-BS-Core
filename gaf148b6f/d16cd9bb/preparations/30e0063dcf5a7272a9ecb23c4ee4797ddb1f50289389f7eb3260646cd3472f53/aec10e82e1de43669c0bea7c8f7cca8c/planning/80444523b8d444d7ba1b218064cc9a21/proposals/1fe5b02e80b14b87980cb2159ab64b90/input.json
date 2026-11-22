@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "aec10e82e1de43669c0bea7c8f7cca8c",
+  "plan_id": "80444523b8d444d7ba1b218064cc9a21",
+  "snapshot_sha256": "11b201f25991f1bc39a2c73903d3b68bb2911c4e7a6df64e8b1dc2772830a863",
+  "review_digest": "d9fbd324d8e2830a5d7a567fd40bb66f45bd1e857c270fc9da3be1d0fb311556",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "1fe5b02e80b14b87980cb2159ab64b90",
+  "reviewed_plan_sha256": "348e8e28660bbc3383381262782760d69660f2816197dc80e29634c589a2b53f",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "e143e5f6659bcb8a0a4d4122c60359c1d100a5e4d2a5bd7b8c3f8afa4efe76b7",
+        "content": "value = 1",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "05b93eb585df5fa29f7c8edcf48f4d116aaee317703a821791774b6e1779a55f",
+  "worker": {
+    "pid": 40304,
+    "created": 1794782619.3812244
+  },
+  "created_at_utc": "2026-11-15T22:43:45.796610+00:00",
+  "entry_sha256": "835c0f8fd291ad0eb1571758475a5c5f4734fabfea88f8b58eb09d77fd4bafaa"
+}

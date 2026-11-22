@@ -1,0 +1,13 @@
+UUID:           3f632eb6-4348-4aaa-a21d-12b9fdb0f99a
+Parent UUID:    base
+State:          created
+Type:           normal (base)
+Location:       C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vms\AI-BS-Eval-Base-20261023\system.vdi
+Storage format: VDI
+Format variant: dynamic default
+Capacity:       65536 MBytes
+Size on disk:   2 MBytes
+Encryption:     disabled
+Property:       AllocationBlockSize=1048576
+In use by VMs:  AI-BS-Eval-Base-20261023 (UUID: 6c5a53da-ab80-4ecb-8be6-4059266f736e) [Snapshot 1 (UUID: 5dd088ca-9939-4c13-b285-8eb7b54d8f1c)]
+Child UUIDs:    a33ecdc9-9aa5-46d4-b99e-5cd44ef2f721

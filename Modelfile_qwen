@@ -1,0 +1,2 @@
+FROM "C:\AI-BS\ComfyUI\custom_nodes\Qwen2.5-32B-Instruct-abliterated.Q5_K_M.gguf"
+SYSTEM "You are Stehouwer Qwen, an expert reasoning AI assistant. Provide concise, expert answers."

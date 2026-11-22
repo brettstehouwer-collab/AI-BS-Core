@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "started_at": "2026-11-02T01:06:30.401534+00:00",
+  "scope": "Independent local streaming CRC/SHA256/length/exact-membership/current-selected-byte/aggregate/Git reconciliation of3838 payload files plus the separate root embedded source_manifest.json; no extraction, source edits, tests, native app, GPU, model or build execution",
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_persistent_placement\\AI_BS_Persistent_Placement_Source.zip",
+  "expected_archive_bytes": 36316275,
+  "expected_archive_sha256": "73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d",
+  "delivery": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_M5_Persistent_Asset_Placement\\delivery.json",
+  "manifest": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_M5_Persistent_Asset_Placement\\source_manifest.json",
+  "checks": [
+    {
+      "name": "Archive exact byte length and SHA256 match task and delivery",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Manifest has3838 unique canonical relative payload entries in deterministic order",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Canonical manifest aggregate and selected raw bytes match declaration and delivery",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "ZIP membership is exactly3838 declared payloads plus one root embedded manifest",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Embedded manifest CRC and exact bytes match the local source manifest",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "All3839 members passed streamed CRC and all3838 payload lengths/SHA256 match manifest",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "All3838 current selected files exactly match archive/manifest with no exclusions",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Archive and current selected canonical aggregates both equal manifest aggregate",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Current Git branch and commit match sealed source identity",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "This independent receipt is outside selected payload membership",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Seal preserves actual95Qwen versus96/97HTTP-fixture evidence distinction",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Sealed independent97 acceptance remains passed with40 checks and exact current bytes",
+      "status": "VERIFIED"
+    },
+    {
+      "name": "Archive stayed stable during full independent streaming read",
+      "status": "VERIFIED"
+    }
+  ],
+  "failures": [],
+  "receipt_outside_seal": true,
+  "limits": [
+    "Only the3838 manifest-selected payload files are reconciled; unrelated working-tree files are outside scope.",
+    "The3839th ZIP member is the root embedded source_manifest.json. It is checked for CRC and exact equality with the local manifest, and is not recursively included in its own payload aggregate.",
+    "This new independent receipt and the post-seal delivery/Drive metadata are outside the sealed ZIP. No post-seal source annotation exclusion was required during this verification.",
+    "Local source/evidence integrity is verified; no cloud remote byte hash, account quota, application rerun, signing or new model inference is claimed.",
+    "Original memoir/photos, real player saves and separate Unreal inputs were not enumerated outside the explicit selected manifest; no whole-originals preservation claim is inferred."
+  ],
+  "archive_bytes": 36316275,
+  "archive_sha256": "73266e93c91e75a7e756b1a326759efcfd09de3c63084ca528547b7a9c95af5d",
+  "delivery_sha256": "aa5cc416bdb59b40f26e9c41d9f82a83501294d2262ea9ef784f9498f74bb8af",
+  "manifest_file_sha256": "5acf768a8253de46ad756fea62dce4646fa4437b6cb7a35c8089c8b580fc37b8",
+  "declared_manifest_aggregate_sha256": "7bdb271c859c22b3618e32f25f3998a13365cf2f48b659a5631b9f111c51a885",
+  "manifest_aggregate_algorithm": "SHA256(UTF8(json.dumps(files, sort_keys=True))) in recorded file-list order",
+  "manifest_aggregate_sha256": "7bdb271c859c22b3618e32f25f3998a13365cf2f48b659a5631b9f111c51a885",
+  "selected_files": 3838,
+  "raw_selected_bytes": 1056888716,
+  "archive_members": 3839,
+  "crc_verified_members": 3839,
+  "archive_sha256_and_length_verified": 3838,
+  "current_selected_sha256_and_length_verified": 3838,
+  "archive_observed_aggregate_sha256": "7bdb271c859c22b3618e32f25f3998a13365cf2f48b659a5631b9f111c51a885",
+  "current_selected_observed_aggregate_sha256": "7bdb271c859c22b3618e32f25f3998a13365cf2f48b659a5631b9f111c51a885",
+  "embedded_manifest_exact_local_bytes": true,
+  "branch": "codex/audit-v532976-20261031",
+  "expected_branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "expected_commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "model_evidence_scope": {
+    "95": {
+      "evidence": "backups/native_game95_20261101_creator/frozen_live.json",
+      "selected_model": "qwen2.5-coder:latest",
+      "actual_model_inference": true,
+      "provider_origin": "explicit_installed_local_ollama_model"
+    },
+    "96": {
+      "evidence": "backups/native_game96_20261101_assets/frozen_creator.json",
+      "selected_model": "release-http-fixture:latest",
+      "actual_model_inference": false,
+      "provider_origin": "deterministic_loopback_http_fixture"
+    },
+    "97": {
+      "evidence": "backups/native_game97_20261101_placement/frozen_creator.json",
+      "selected_model": "release-http-fixture:latest",
+      "actual_model_inference": false,
+      "provider_origin": "deterministic_loopback_http_fixture"
+    }
+  },
+  "completed_at": "2026-11-02T01:06:41.200585+00:00"
+}

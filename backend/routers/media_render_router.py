@@ -5,13 +5,17 @@ Prefixes: /api/v1/render and /api/v1/media
 
 import os
 import json
-from fastapi import APIRouter, HTTPException, Query, Path, UploadFile, File
+from fastapi import APIRouter, HTTPException, Query, Path, UploadFile, File, Request
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 from core.media_render_engine import MediaRenderEngine
 from core.vram_resource_arbiter import vram_arbiter
+from security.host_control_access import AdminHostControlRoute
+from security.contained_file_access import write_bounded_upload, validate_upload_filename, resolve_media_path, open_verified_media, stream_media_response
 
-router = APIRouter(prefix="/api/v1/media", tags=["Autonomous Media Studio"])
+MEDIA_UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_data", "media_uploads"))
+MEDIA_ROOTS = [MEDIA_UPLOAD_DIR, os.path.abspath(os.path.join(MEDIA_UPLOAD_DIR, "..", "media_renders"))]
+router = APIRouter(prefix="/api/v1/media", tags=["Autonomous Media Studio"], route_class=AdminHostControlRoute)
 
 
 # =========================================================================
@@ -19,80 +23,52 @@ router = APIRouter(prefix="/api/v1/media", tags=["Autonomous Media Studio"])
 # =========================================================================
 @router.post("/upload")
 async def upload_media_file(file: UploadFile = File(...)):
-    """Uploads a local photo, video, or audio file to saved_data/media_uploads for editing and rendering."""
-    try:
-        upload_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "saved_data", "media_uploads"))
-        os.makedirs(upload_dir, exist_ok=True)
-        safe_name = os.path.basename(file.filename or f"upload_{os.urandom(4).hex()}.bin")
-        out_path = os.path.join(upload_dir, safe_name)
-        content = await file.read()
-        with open(out_path, "wb") as f:
-            f.write(content)
-        
-        content_type = file.content_type or ""
-        media_type = "video" if ("video" in content_type or safe_name.lower().endswith(('.mp4', '.mov', '.webm', '.mkv', '.avi'))) else (
-            "image" if ("image" in content_type or safe_name.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'))) else "audio"
-        )
-        return {
-            "status": "success",
-            "filename": safe_name,
-            "filepath": out_path,
-            "size_bytes": len(content),
-            "media_type": media_type,
-            "message": f"Successfully uploaded {safe_name} ({len(content)} bytes)"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    """Store a bounded, new upload after router administrator admission."""
+    safe_name = validate_upload_filename(file.filename)
+    out_path, size = await write_bounded_upload(file, MEDIA_UPLOAD_DIR, safe_name)
+    suffix = out_path.suffix.lower()
+    media_type = "video" if suffix in {".mp4", ".mov", ".webm", ".mkv", ".avi"} else (
+        "image" if suffix in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".bmp", ".tif", ".tiff", ".svg"} else "audio")
+    return {"status": "success", "filename": safe_name, "filepath": str(out_path),
+            "size_bytes": size, "media_type": media_type, "message": "Media upload saved."}
 
 
 @router.get("/stream")
-async def stream_media_file(path: str = Query(..., description="Absolute local filesystem path to media file")):
-    """Streams a local video or audio file directly to the frontend without copying."""
-    from fastapi.responses import FileResponse
-    clean_path = path.strip('"\'')
-    if not os.path.exists(clean_path):
-        raise HTTPException(status_code=404, detail=f"Media file not found at '{clean_path}'")
-    content_type = "video/mp4" if clean_path.lower().endswith(".mp4") else None
-    return FileResponse(clean_path, media_type=content_type)
+async def stream_media_file(request: Request, path: str = Query(..., description="Managed application media path")):
+    return stream_media_response(path, MEDIA_ROOTS, request)
 
 
 @router.get("/inspect")
-async def inspect_media_file(path: str = Query(..., description="Absolute local filesystem path")):
-    """Inspects a local media file extracting dimensions, duration, and stream URL."""
+async def inspect_media_file(path: str = Query(..., description="Managed application media path")):
+    import math
     import subprocess
-    clean_path = path.strip('"\'')
-    if not os.path.exists(clean_path):
-        raise HTTPException(status_code=404, detail=f"File not found: {clean_path}")
-    stat = os.stat(clean_path)
-    duration = 0.0
-    width = 0
-    height = 0
-    is_video = clean_path.lower().endswith((".mp4", ".mov", ".webm", ".mkv", ".avi"))
-    is_image = clean_path.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"))
-    if is_video:
-        try:
-            cmd = f'ffprobe -v error -select_streams v:0 -show_entries stream=width,height,duration -show_entries format=duration -of json "{clean_path}"'
-            proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=5)
-            if proc.returncode == 0 and proc.stdout:
-                data = json.loads(proc.stdout)
-                streams = data.get("streams", [])
-                if streams:
-                    width = int(streams[0].get("width", 0))
-                    height = int(streams[0].get("height", 0))
-                    duration = float(streams[0].get("duration") or data.get("format", {}).get("duration", 0.0))
-        except Exception:
-            pass
-    return {
-        "status": "success",
-        "filename": os.path.basename(clean_path),
-        "filepath": clean_path,
-        "size_bytes": stat.st_size,
-        "media_type": "video" if is_video else ("image" if is_image else "other"),
-        "width": width,
-        "height": height,
-        "duration": duration,
-        "stream_url": f"/api/v1/media/stream?path={clean_path}"
-    }
+    from urllib.parse import quote
+    with open_verified_media(path, MEDIA_ROOTS) as (clean_path, source):
+        is_video = clean_path.suffix.lower() in {".mp4", ".mov", ".webm", ".mkv", ".avi"}
+        is_image = clean_path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"}
+        duration = width = height = None
+        probe_status = "unavailable"
+        if is_video:
+            try:
+                proc = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0",
+                    "-show_entries", "stream=width,height,duration", "-show_entries", "format=duration",
+                    "-of", "json", "pipe:0"], stdin=source, shell=False, capture_output=True, text=True, timeout=5)
+                if proc.returncode == 0:
+                    data = json.loads(proc.stdout)
+                    streams = data.get("streams", [])
+                    if streams:
+                        stream = streams[0]
+                        width = int(stream.get("width", 0)) or None
+                        height = int(stream.get("height", 0)) or None
+                        value = float(stream.get("duration") or data.get("format", {}).get("duration", 0))
+                        duration = value if math.isfinite(value) and value > 0 else None
+                        probe_status = "available" if width and height and duration is not None else "unavailable"
+            except (OSError, subprocess.SubprocessError, ValueError, TypeError, KeyError, AttributeError):
+                duration = width = height = None
+        return {"status": "success", "filename": clean_path.name, "filepath": str(clean_path),
+                "size_bytes": os.fstat(source.fileno()).st_size, "media_type": "video" if is_video else ("image" if is_image else "audio"),
+                "width": width, "height": height, "duration": duration, "probe_status": probe_status,
+                "stream_url": "/api/v1/media/stream?path=" + quote(str(clean_path), safe="")}
 
 
 # =========================================================================
@@ -183,24 +159,11 @@ class CanvasOverlayRequest(BaseModel):
 # =========================================================================
 @router.post("/pipeline/execute")
 async def execute_media_pipeline(req: PipelineExecuteRequest):
-    try:
-        return MediaRenderEngine.execute_media_pipeline_recipe(req.recipe, job_id=req.job_id)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    raise HTTPException(status_code=503, detail="Media pipeline dispatch is held pending verified domain execution and durable completion receipts.")
 
 @router.post("/pipeline/resume/{job_id}")
 async def resume_media_pipeline(job_id: str = Path(..., description="Job identifier to resume")):
-    chk = vram_arbiter.get_last_successful_checkpoint(job_id)
-    if not chk:
-        raise HTTPException(status_code=404, detail=f"No completed checkpoints found for job '{job_id}'")
-    return {
-        "status": "success",
-        "job_id": job_id,
-        "resumed_from_domain": chk.get("domain_id"),
-        "last_successful_stage": chk.get("stage_name"),
-        "checkpoint": chk,
-        "message": f"Resumed job '{job_id}' from Domain {chk.get('domain_id')} ({chk.get('stage_name')})"
-    }
+    raise HTTPException(status_code=503, detail="Pipeline resumption is held pending verified checkpoint provenance and durable dispatch recovery.")
 
 @router.get("/vram/telemetry")
 async def get_vram_telemetry_endpoint():
@@ -212,10 +175,7 @@ async def flush_vram_endpoint():
 
 @router.get("/checkpoints/{job_id}")
 async def get_job_checkpoint(job_id: str):
-    chk = vram_arbiter.get_last_successful_checkpoint(job_id)
-    if not chk:
-        raise HTTPException(status_code=404, detail="Checkpoint not found")
-    return chk
+    raise HTTPException(status_code=503, detail="Legacy pipeline checkpoints require reconciliation before they can establish execution progress.")
 
 @router.post("/vision/scene-detect")
 async def detect_scenes_endpoint(req: SceneDetectRequest):

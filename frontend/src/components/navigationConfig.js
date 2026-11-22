@@ -90,6 +90,7 @@ export const masterHubs = [
       { key: 'project_noco', label: 'Project NoCo Living Stage', icon: '🏛️', description: 'Autonomous Acoustic-Agricultural Enclave & Studio' },
       { key: 'unified_crypto', label: 'Crypto Swarm & Mining', icon: '⚡', description: 'Clore/Vast Node Telemetry & Fast-Scalping Bot' },
       { key: 'gaming_lab', label: 'Gaming & Process Memory Lab', icon: '🎮', description: 'Win32 Runtime Memory Manipulation & Trainer Suite' },
+      { key: 'bs_game', label: 'BS Game · First Boot', icon: '🛠️', description: 'Custom PC engine progress, Adam continuity & playable motherboard concept' },
       { key: 'steam_gaming', label: 'Steam Gaming Hub', icon: '🚀', description: 'Native Game Library, One-Click Launcher & Hardware RTX 4090 Game Mode Governor' },
       { key: 'bible_hub', label: 'Sovereign Bible Hub', icon: '📖', description: 'Dual KJV & NIV Canonical New Testament Reader' },
       { key: 'lost_property', label: 'Lost Property Vault', icon: '🔍', description: 'Guest Claim Logging & Asset Recovery Tracking' }

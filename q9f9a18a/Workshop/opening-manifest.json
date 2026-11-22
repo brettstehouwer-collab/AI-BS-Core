@@ -1,0 +1,34 @@
+{
+  "opening_workshop":true,
+  "version":1,
+  "definition_id":"d695a9b4-db6d-4471-9ad8-c24dad007732",
+  "world_id":"89198d3b-96d6-4dff-bd98-9a4eafae5aa7",
+  "fingerprint":"7f81c5c0631b06cf7b49dd9c491178357e3b1dd3b6a0d87e5d5ff6a52fde580b",
+  "required_capability":"chapter-workshop-commissioning-v1",
+  "required_capabilities":["chapter-authored-inspections-v1","chapter-initial-view-v1","chapter-workshop-commissioning-v1"],
+  "tour_bindings_file":"opening-tour.aibtour",
+  "pacing_target_minutes":[8,12],
+  "pacing_measured":false,
+  "timer_gates":false,
+  "guidance_is_authored":true,
+  "family_source_files_copied":false,
+  "audio_played":false,
+  "recording_bound":false,
+  "stops":[
+    {"id":"0ffb0409-af11-4f32-997c-d4496253e5b5","title":"Room for someone else","source":"Echos Within, XML paragraphs 946-947, inform protection and making room. The Caretaker and lamp quest are fictional gameplay; no family member is represented by this NPC.","action":"read"},
+    {"id":"8e02bc38-6281-4f7a-a49f-25031b053ded","title":"Bypass build notes","source":"Authored engine instructions for the existing Build, repair, connect-bypass and door-latch mechanics. The restoration theme is informed by Echos Within, XML paragraph 1145.","action":"read"},
+    {"id":"b0721510-c127-4c88-88c2-c7e9d550b142","title":"Pencil and blank page","source":"Echos Within, XML paragraph 332, Adam My Brother Always. Pencil Room is a game adaptation named in the project, not a literal location in the memoir.","action":"read"},
+    {"id":"bed312da-9f6e-4660-a4a0-9b0bd2f1c915","title":"Two quiet seats","source":"Echos Within, XML paragraphs 270 and 1165: reflective imagining. Two seats and this optional quiet panel are authored adaptations. No historical dialogue is asserted.","action":"seat"},
+    {"id":"c2cf0b39-e9e8-4b8f-bfbf-31c40d81bdef","title":"Red truck keepsake","source":"Echos Within, XML paragraph 69, Never Felt More Pain. The red toy-truck memory is sourced; this keepsake and future vehicle connection are game adaptations.","action":"read"},
+    {"id":"ea79bbc7-613a-4798-94fb-7088dd2c8eba","title":"Supply diagnostic diagram","source":"Mechanical design adaptation. Echos Within, XML paragraph 1145, informs making something useful from damage; this electrical diagnostic is not a memoir event.","action":"read"},
+    {"id":"f26e6d28-ef9a-4798-b937-3c29a5e122b4","title":"Controller and turning","source":"Echos Within, XML paragraph 682, Always Family Guy. Controller placement and gameplay guidance are authored adaptations, not a quotation from Adam.","action":"read"}
+  ],
+  "dependencies":[
+    {"kind":0,"asset_id":"89e133bc-979e-4ed0-9dba-ae69fce559b2","asset_sha256":"d5bb701004e301964a5b746e7e599e59adba7ae05d222bcdc78df4bbdd2a61bd","pack_sha256":"296762540ac2043ea5372f8740eaf693df54ffc038eabad56a45eed4f6f36f6b"},
+    {"kind":1,"asset_id":"539b6312-a9f6-4a92-a096-77f1b6c5045b","asset_sha256":"dcc8fe2f1c3c99938baff7a17dbe11838bfcb59d383984bf40d7d947af5d03de","pack_sha256":"795a51987d282a0cc8f538c5e72a300210de012da7fe1ca6ead863911eed2165"},
+    {"kind":0,"asset_id":"eb94e6e1-36b9-4466-90ef-82ba371811d0","asset_sha256":"2a877bab9419b6cc44614ea39e1d2b1469379debfa796d0a4378c7ebafcdeeeb","pack_sha256":"d2d7384246f2721f795473e4e60e510b1e871c02b53332d5cf2e2df14e2c19f1"},
+    {"kind":0,"asset_id":"4b079cd2-8ace-4e17-a35b-a45eb8f3d1c2","asset_sha256":"c4dfcb03624113a73092a1cd6ff02cad3c4df9fc3d63d81a243fade865564243","pack_sha256":"dcee6ac797df49f2dcca15a59365ae8b6f8a69cc49c85e1e0d4926f8f8a4e907"},
+    {"kind":0,"asset_id":"f0739fd8-f772-470b-a0f2-58f348de43c3","asset_sha256":"b9a7569aa52897b55819afc84d4d7383e14ecfed1565fefb462d5d8924a774cd","pack_sha256":"ef68691bf5bffb0ee1182f70513c149aaf57a7b9fa57f8c19fdb2d7a9e414731"},
+    {"kind":0,"asset_id":"0c103c9c-6a88-42f1-bbb8-87919fa79b5b","asset_sha256":"29f1f3317961848edafd9b11697254cfc4cacfeef429eebecc496bfe3643d256","pack_sha256":"f95b2c82dba3e06d617e5e7cf981e8c5a65eb3e64baccf29627eff7498d6ebda"}
+  ]
+}

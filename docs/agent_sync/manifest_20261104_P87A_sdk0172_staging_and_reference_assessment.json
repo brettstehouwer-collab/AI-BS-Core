@@ -1,0 +1,47 @@
+{
+  "id": "20261104_P87A_sdk0172_staging_and_reference_assessment",
+  "at": "2026-11-04T18:30:38.867218+00:00",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "checkpoint": {
+    "at": "2026-11-04T18:30:02.645449+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\87A_SDK0172_Qualification_And_Reference_Assessment.zip",
+    "bytes": 1671524,
+    "sha256": "222562fd49fc34c02062ad19de027bf28a8b3ec097d30b23f293ea2cfb9a8327",
+    "members": 591,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1C7OD-D40_ZmHJa5ji0Z0zbynxI1xzpoc",
+    "drive_file_id": "1bJVlCCt9Ps18tRXzofIC71IgVIkzUAJ-",
+    "drive_restore_verified": true
+  },
+  "source_qualification": "E:\\AI_BS_Resources\\FirstBoot\\P87\\SDK0172Qualification\\source-verification.json",
+  "consumer_qualification": "E:\\AI_BS_Resources\\FirstBoot\\P87\\SDK0172Qualification\\consumer-verification.json",
+  "verified": [
+    "Release128registered source entries pass",
+    "Debug128registered source entries pass",
+    "Nine staged independent consumers/config pass",
+    "All433source inputs frozen throughout qualification",
+    "CanonicalSDK0171both449fileprofiles exact; Studio107all2301files unchanged",
+    "20qualification ownedjobs joined; initialfixture-path failure retained/resolved",
+    "87ArawDrive restore591members exact"
+  ],
+  "source_changes": [
+    "engine/CMakeLists.txt version0.17.2",
+    "engine/apps/durable_world.cpp diagnostic route/fall/rebuild probes",
+    "engine/apps/workshop_tour_runtime.inl diagnostic expected0or1outcomes"
+  ],
+  "canonical0172_published": false,
+  "launcher_changed": false,
+  "P88": {
+    "reference": "User chose dark-jacket store photograph as next main face-shape reference; age unspecified",
+    "assessment": "E:\\AI_BS_Resources\\FirstBoot\\P88\\AdamReferenceFitAssessment\\reference-fit-assessment.json",
+    "local_only": "478point feasibility/proportions stored in E:/AI_BS_Resources/PrivateFamilyReferences/Adam/P88-landmark-assessment; excluded from cloud checkpoint",
+    "model_changed": false,
+    "live_Blender_connection": "Unavailable; verified backgroundBlender5.2.3LTS read-only model inspection succeeded",
+    "video_scan": "20sparse samples detect noface,not proof about allframes; originalvideo unchanged"
+  },
+  "next_step": "Publish0172canonical SDKprefixes from the exact staged profiles on a roomy resource drive, qualify relocated consumers and source discovery without overwriting0171. Then prepare separate head-only likeness fitting study from user-selected store reference, preserving neck/rightband/clothing/rig/animation and original references. Human/caption/performance/final-package gates remain open.",
+  "user_question": "Asked whether refreshed Unreal demo would look better. Answer is a qualified visual-rendering expectation; no request to replace custom engine and no Unreal project modified.",
+  "goal_complete": false
+}

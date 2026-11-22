@@ -1,19 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Activity,
-  AlertTriangle,
-  CheckCircle2,
-  Clock3,
-  FileText,
-  Folder,
-  Play,
-  RefreshCcw,
-  ShieldCheck,
-  StopCircle,
-  TerminalSquare,
-  XCircle,
-} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Activity, AlertTriangle, CheckCircle2, FileText, Play, RefreshCcw, ShieldCheck, StopCircle, TerminalSquare, XCircle } from 'lucide-react';
 
+/** @type {Record<string, Record<string, string | string[]>>} */
 const ACTION_TEMPLATES = {
   list_directory: { path: 'C:\\AI-BS' },
   read_file: { path: 'C:\\AI-BS\\frontend\\package.json' },
@@ -24,10 +12,12 @@ const ACTION_TEMPLATES = {
 
 const ACTION_OPTIONS = Object.keys(ACTION_TEMPLATES);
 
+/** @param {string} status */
 function formatStatus(status) {
   return (status || 'unknown').replace(/_/g, ' ').toUpperCase();
 }
 
+/** @param {string} status */
 function getStatusTone(status) {
   switch (status) {
     case 'queued':
@@ -48,8 +38,9 @@ function getStatusTone(status) {
 
 const defaultBackendUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://127.0.0.1:8080' : '';
 
+/** @param {{backendUrl?: string}} props */
 export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
-  const isElectron = typeof window !== 'undefined' && !!window.aibsAutomation;
+  const automation = typeof window !== 'undefined' ? window.aibsAutomation : undefined;
   const currentUserEmail = (() => {
     try {
       const cached = JSON.parse(localStorage.getItem('aibs_cached_user') || '{}');
@@ -58,7 +49,7 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       return '';
     }
   })();
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(/** @type {import("/types/aibs").AutomationJob[]} */ ([]));
   const [action, setAction] = useState('list_directory');
   const [cwd, setCwd] = useState('C:\\AI-BS');
   const [timeout, setTimeout] = useState(30);
@@ -66,7 +57,7 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
   const [error, setError] = useState('');
   const [running, setRunning] = useState(false);
   const [draft, setDraft] = useState(JSON.stringify(ACTION_TEMPLATES.list_directory, null, 2));
-  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [selectedJobId, setSelectedJobId] = useState(/** @type {string | null} */ (null));
 
   const activeJobIds = useMemo(() => jobs.filter(job => ['queued', 'running'].includes(job.status)).map(job => job.id), [jobs]);
 
@@ -84,8 +75,8 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       };
 
       let response;
-      if (isElectron) {
-        response = await window.aibsAutomation.runJob(payload);
+      if (automation) {
+        response = await automation.runJob(payload);
       } else {
         response = await requestJson('/api/v1/jobs', {
           method: 'POST',
@@ -99,11 +90,12 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       setRunning(false);
     } catch (err) {
       setRunning(false);
-      setError(err.message || 'Smoke test failed.');
+      setError(errorMessage(err) || 'Smoke test failed.');
     }
   }
 
-  async function requestJson(path, options = {}) {
+  /** @param {string} path @param {RequestInit} [options] */
+async function requestJson(path, options = {}) {
     const headers = {
       ...(options.headers || {}),
       ...(currentUserEmail ? { 'x-local-user-email': currentUserEmail } : {}),
@@ -124,8 +116,8 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
   async function listJobs() {
     try {
       let payload;
-      if (isElectron) {
-        payload = await window.aibsAutomation.listJobs();
+      if (automation) {
+        payload = await automation.listJobs();
       } else {
         payload = await requestJson('/api/v1/jobs');
       }
@@ -136,7 +128,7 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       }
       return nextJobs;
     } catch (err) {
-      setError(err.message || 'Failed to load automation jobs.');
+      setError(errorMessage(err) || 'Failed to load automation jobs.');
       return [];
     }
   }
@@ -155,7 +147,8 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
 
   const selectedJob = jobs.find(job => job.id === selectedJobId) || jobs[0] || null;
 
-  function updateActionTemplate(nextAction) {
+  /** @param {string} nextAction */
+function updateActionTemplate(nextAction) {
     setAction(nextAction);
     setDraft(JSON.stringify(ACTION_TEMPLATES[nextAction] || {}, null, 2));
   }
@@ -175,8 +168,8 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       };
 
       let response;
-      if (isElectron) {
-        response = await window.aibsAutomation.runJob(body);
+      if (automation) {
+        response = await automation.runJob(body);
       } else {
         response = await requestJson('/api/v1/jobs', {
           method: 'POST',
@@ -189,20 +182,21 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       setRunning(false);
     } catch (err) {
       setRunning(false);
-      setError(err.message || 'Unable to create automation job.');
+      setError(errorMessage(err) || 'Unable to create automation job.');
     }
   }
 
-  async function handleCancel(jobId) {
+  /** @param {string} jobId */
+async function handleCancel(jobId) {
     try {
-      if (isElectron) {
-        await window.aibsAutomation.cancelJob(jobId);
+      if (automation) {
+        await automation.cancelJob(jobId);
       } else {
         await requestJson(`/api/v1/jobs/${jobId}/cancel`, { method: 'POST' });
       }
       await listJobs();
     } catch (err) {
-      setError(err.message || 'Cancel request failed.');
+      setError(errorMessage(err) || 'Cancel request failed.');
     }
   }
 
@@ -451,4 +445,10 @@ export default function AutomationConsole({ backendUrl = defaultBackendUrl }) {
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

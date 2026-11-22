@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "request_id": "e612286eb00b4e51b32c03e81630df52",
+  "plan_id": "162fec506ed94a74be310b92524a1b35",
+  "snapshot_sha256": "5994319ce5997ac6fad1edac30aa5c4624eeffe8bf10d39db45daf830f512c5e",
+  "review_digest": "2318c03a49c504ce3c3f8d35fea0badf582bdb9b7ea0fc0c57c85543cc92eeca",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "8564c763b14b48b986eabf792c33ff22",
+  "reviewed_plan_sha256": "71f20c535c802bef35646b4cb3c70a9205c917841f3de87f882a6c545aec5bc9",
+  "model_payload": {
+    "objective": "Implement clamp(value, lower, upper) in app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the function signature and existing tests.",
+    "reviewed_plan": {
+      "summary": "Implement the clamp function in app.py to return the value clamped between the lower and upper bounds.",
+      "steps": [
+        {
+          "path": "app.py",
+          "change": "def clamp(value, lower, upper):\n    return max(lower, min(value, upper))"
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "app.py",
+        "role": "editable",
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556",
+        "content": "def clamp(value, lower, upper):\n    return value\n",
+        "source_complete": true
+      },
+      {
+        "path": "test_app.py",
+        "role": "verification",
+        "sha256": "965a9f7b9d3d826245ecd2d02f1d9175c1be86d1969cef31189580ed83c38b3c",
+        "content": "import unittest\nfrom app import clamp\n\nclass ClampTests(unittest.TestCase):\n    def test_cases(self):\n        for args, expected in [((-2,0,10),0),((12,0,10),10),((5,0,10),5),((0,0,10),0),((10,0,10),10),((-5,-4,-1),-4)]:\n            with self.subTest(args=args): self.assertEqual(clamp(*args),expected)\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "2d0200d453a3039bde99bb91ca4843cbcbb618019d1baf2ff95975278f4870cb",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:22:48.030695+00:00",
+  "entry_sha256": "c619e4343c2b52013f6d170217410f4c90b365281359da123e4d8a4a4d649b1a"
+}

@@ -1,0 +1,35 @@
+{
+  "1": {
+    "inputs": {
+      "model_name": "wansong_audio_generator.safetensors"
+    },
+    "class_type": "WanSongModelLoader"
+  },
+  "2": {
+    "inputs": {
+      "prompt": "cinematic orchestral score, emotional strings, cinematic brass, 120 bpm",
+      "duration_seconds": 30,
+      "bpm": 120,
+      "genre": "Orchestral Film Score"
+    },
+    "class_type": "WanSongPromptEncoder"
+  },
+  "3": {
+    "inputs": {
+      "model": ["1", 0],
+      "conditioning": ["2", 0],
+      "steps": 25,
+      "cfg": 5.0,
+      "seed": 1337
+    },
+    "class_type": "WanSongAudioSampler"
+  },
+  "4": {
+    "inputs": {
+      "audio": ["3", 0],
+      "filename_prefix": "WanSong_Score",
+      "format": "wav"
+    },
+    "class_type": "SaveAudio"
+  }
+}

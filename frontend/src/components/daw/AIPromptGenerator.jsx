@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Sparkles, Loader, Bot, MessageSquare } from 'lucide-react';
-import { theme } from '../../styles/theme';
+import { useState } from "react";
+import { Sparkles, Loader, Bot } from "lucide-react";
+import "../../styles/theme";
 import { useDawStore } from './dawStore';
 
 const AIPromptGenerator = () => {
@@ -16,6 +16,7 @@ const AIPromptGenerator = () => {
   const addAssistantMessage = useDawStore(state => state.addAssistantMessage);
   const toggleAssistantDrawer = useDawStore(state => state.toggleAssistantDrawer);
 
+  /** @param {import("react").FormEvent} e */
   const handleGenerate = async (e) => {
     e.preventDefault();
     if (!prompt.trim() || isGenerating) return;
@@ -80,7 +81,7 @@ const AIPromptGenerator = () => {
     <div style={{
       padding: '8px 12px',
       background: 'rgba(20, 24, 30, 0.6)',
-      borderBottom: `1px solid ${theme.colors.border}`,
+      borderBottom: `1px solid ${'#30363d'}`,
       display: 'flex',
       alignItems: 'center',
       gap: '10px'

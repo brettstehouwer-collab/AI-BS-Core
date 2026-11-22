@@ -1,0 +1,9 @@
+e45f1b5075619bd3ae7f4bbb506c0ea021eb6732 2026-10-28 06:21:45 -0400 fix(isolation): enforce strict windows_vm fail-closed boundary and non-promoting guest verification (Record 173, ADR-109)
+0bdca059f5dcfc250f9da8927d7ca46d473387df 2026-10-28 05:12:54 -0400 feat(coding): connect isolated VM guest runner (wsl2_isolated + vbox_windows) under ADR-108 (Record 172)
+9a01412aaa8ebe427122f8c0f679ff2ff079b43c 2026-10-28 04:33:05 -0400 docs(agent-sync): commit manifest for unconditional fail-closed and coding file hashes
+9b2f2cdf4ec1adf6e94a05c4ff120acac2f2767c 2026-10-28 04:32:46 -0400 fix(coding): seal VM fail-closed unconditionally and track coding files in sync gateway
+8ec2522e0922d2bd0167f7b67fca2dc599fc33a6 2026-10-28 04:28:02 -0400 fix(coding): strictly enforce fail-closed on windows_vm and document host-only canary status
+c9c8ccb89fa9237326e57b14ffd0469aae83dcca 2026-10-28 04:24:17 -0400 docs(codex): synchronize Record 171 execution pipeline authorization and ADR-107
+35d5e4ff961782b5c6a7838b55da1d74410f34a4 2026-10-28 03:30:03 -0400 Establish AI-BS-UADP-1.0 protocol, sync gateway, and Record 169-170 handoff
+23219c563ec9f8ceda5856ebbe3f37516de2dee0 2026-10-28 02:34:04 -0400 Add IDX configuration for cloud workspace
+71b593b3b05cd54c83900692e0a5214c25b1fbbc 2026-10-24 20:42:12 -0400 Auto-saved workspace before shutdown

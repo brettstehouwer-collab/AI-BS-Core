@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+/** @typedef {{port:number,service?:string,process_name?:string,runtime?:string,status?:string,pid?:number|string,cpu_pct?:number,mem_mb?:number,threads?:number,type?:string,category?:string,health_endpoint?:string,subsystem?:string}} PortRecord */
+import { useState, useEffect, useRef } from 'react';
 import { getApiBase } from '../config/api';
 
+/** @param {{backendUrl?: string, isCompact?: boolean}} props */
 export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = false }) {
   const apiHost = backendUrl || getApiBase() || 'http://localhost:8080';
-  const [telemetry, setTelemetry] = useState(null);
+  const [telemetry, setTelemetry] = useState(/** @type {{scan_latency_ms?:number,summary?:Record<string,number>,core_matrix?:PortRecord[],dynamic_ports?:PortRecord[],wsl_ports?:PortRecord[]}|null} */ (null));
   const [isConnected, setIsConnected] = useState(false);
   const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL' | 'CORE' | 'WSL' | 'DYNAMIC'
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPort, setSelectedPort] = useState(null);
+  const [selectedPort, setSelectedPort] = useState(/** @type {PortRecord|null} */ (null));
   const [testModalOpen, setTestModalOpen] = useState(false);
   const [testEndpoint, setTestEndpoint] = useState('/api/health');
   const [testMethod, setTestMethod] = useState('GET');
   const [testPayload, setTestPayload] = useState('{}');
   const [isExecutingTest, setIsExecutingTest] = useState(false);
-  const [testResult, setTestResult] = useState(null);
+  const [testResult, setTestResult] = useState(/** @type {{status:string,message?:string,http_status?:number,execution_time_ms?:number,response?:unknown}|null} */ (null));
   const [isDiscovering, setIsDiscovering] = useState(false);
-  const [discoveryResult, setDiscoveryResult] = useState(null);
-  const wsRef = useRef(null);
+  const [discoveryResult, setDiscoveryResult] = useState(/** @type {{scanned_ports_count?:number,status?:string,message?:string,discovered_services?:Record<string,{port:number,service_title:string,protocol:string,tools_count:number,tools:{method:string,endpoint:string}[]}>}|null} */ (null));
+  const wsRef = useRef(/** @type {WebSocket|null} */ (null));
 
   // WebSocket / Polling Stream
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
         try {
           parsedPayload = JSON.parse(testPayload);
         } catch (err) {
-          setTestResult({ status: 'error', message: `Invalid JSON payload: ${err.message}` });
+          setTestResult({ status: 'error', message: `Invalid JSON payload: ${errorMessage(err)}` });
           setIsExecutingTest(false);
           return;
         }
@@ -115,14 +117,14 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
       const data = await res.json();
       setTestResult(data);
     } catch (err) {
-      setTestResult({ status: 'error', message: err.message });
+      setTestResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsExecutingTest(false);
     }
   };
 
   // Discover OpenAPI / Tool signatures on Port
-  const handleDiscoverPortTools = async (portNum) => {
+  const handleDiscoverPortTools = async (/** @type {number} */ portNum) => {
     setIsDiscovering(true);
     setDiscoveryResult(null);
     try {
@@ -134,7 +136,7 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
       const data = await res.json();
       setDiscoveryResult(data);
     } catch (err) {
-      setDiscoveryResult({ status: 'error', message: err.message });
+      setDiscoveryResult({ status: 'error', message: errorMessage(err) });
     } finally {
       setIsDiscovering(false);
     }
@@ -146,6 +148,7 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
   const wslPorts = telemetry?.wsl_ports || [];
 
   // Filter Ports
+  /** @type {PortRecord[]} */
   let displayPorts = [];
   if (activeFilter === 'ALL') {
     displayPorts = [
@@ -342,7 +345,7 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
                 </div>
                 <div className="text-slate-400">Available Tool Endpoints: <strong className="text-emerald-400">{srv.tools_count}</strong></div>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {(srv.tools || []).slice(0, 4).map((t, tIdx) => (
+                  {(srv.tools || []).slice(0, 4).map(/** @param {{"method": string, "endpoint": string}} t @param {number} tIdx */ (t, tIdx) => (
                     <span key={tIdx} className="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded font-mono text-[10px]">
                       {t.method} {t.endpoint}
                     </span>
@@ -524,4 +527,10 @@ export default function EcosystemPortMonitorWidget({ backendUrl, isCompact = fal
       )}
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

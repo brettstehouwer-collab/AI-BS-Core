@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "name": "SQLite",
+  "version": "3.54.1",
+  "source_url": "https://sqlite.org/2026/sqlite-amalgamation-3540100.zip",
+  "archive_sha256": "0a9c8e34352dad46006aa82836d5383bff9dc6bc9ce5a60553c05aa30e6ad1f9",
+  "archive_sha3_256": "92281c86e2957f9b9305890f9ac04204caa7b677cc868dc326d942689df28e30",
+  "archive_bytes": 2990966,
+  "checksum_source": "https://sqlite.org/download.html",
+  "verified_on": "2026-11-01",
+  "license": "Public Domain",
+  "license_source": "https://sqlite.org/copyright.html",
+  "documentation": "https://sqlite.org/docs.html",
+  "durability_documentation": [
+    "https://sqlite.org/wal.html",
+    "https://sqlite.org/pragma.html#pragma_synchronous"
+  ],
+  "build_profile": {
+    "linkage": "static",
+    "sqlite_dll_required": false,
+    "compile_definitions": [
+      "SQLITE_THREADSAFE=1",
+      "SQLITE_DQS=0",
+      "SQLITE_OMIT_LOAD_EXTENSION"
+    ],
+    "runtime_journal_mode": "WAL",
+    "runtime_synchronous": "FULL"
+  }
+}

@@ -121,7 +121,7 @@ async def get_health(request: Request, client_id: str = Depends(get_tenant)):
             pass
 
     return {
-        "status": "HEALTHY",
+        "status": "HEALTHY" if telemetry.get("status") == "READY" else "UNAVAILABLE",
         "client_id": client_id,
         "engine": "LocalMattingEngine",
         "active_provider": telemetry.get("active_provider"),
@@ -165,7 +165,7 @@ async def process_matte(req: MattingRequest, request: Request, client_id: str = 
             return {
                 "status": "SUCCESS",
                 "client_id": client_id,
-                "engine": "Direct-CUDA",
+                "engine": "Direct-CUDA" if "CUDA" in engine.active_provider else "Direct-CPU",
                 "active_provider": engine.active_provider,
                 "latency_ms": round(elapsed_ms, 2),
                 "output_path": out_file,

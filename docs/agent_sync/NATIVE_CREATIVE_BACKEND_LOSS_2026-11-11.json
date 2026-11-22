@@ -1,0 +1,16 @@
+{
+  "status": "CONTROLLED_ACTUAL_BACKEND_LOSS_PASS",
+  "recorded_utc": "2026-11-11T10:09:21.600976+00:00",
+  "receipt": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-backend-loss-20261111T100845187607Z\\result.json",
+  "receipt_sha256": "219388d80fff796046dd59adb0586c061c86ee2bc983f895057698d186455a58",
+  "backend_termination": "Exact owned fixture handle only; after acknowledged GUI unsaved-ready",
+  "gui_exit_code": 0,
+  "gui_termination": false,
+  "complete_private_draft_preserved": true,
+  "previous_recovery_preserved": true,
+  "save_attempts": 1,
+  "http_calls": 0,
+  "synthetic_project_hashes_unchanged": true,
+  "scope": "Synthetic stores and actual offscreen editor; no production activation or original manuscripts",
+  "cloud_status": "LOCAL_INCREMENT_NOT_IN_100300Z_CHECKPOINT"
+}

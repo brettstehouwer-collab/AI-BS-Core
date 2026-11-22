@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T22:17:09.382562+00:00",
+  "goal_status": "PAUSED",
+  "source_version": "5.329.145",
+  "status": "SOURCE_PACKAGE_AND_ACTUAL_STEHOUWER_SERVICE_VERIFIED_UI_AND_SHORTCUT_PROMOTION_PENDING",
+  "actual_primary": {
+    "status": "PASS_ACTUAL_PRIMARY_COMPLETION",
+    "elapsed_seconds": 72.062,
+    "native_error_class": null,
+    "new_synthetic_request": true,
+    "prior_user_messages_replayed": false,
+    "history_sent": false,
+    "web_search": false,
+    "provider_configuration_changed": false,
+    "reply_matches_marker": true,
+    "wire_bytes": 5807,
+    "wire_sha256": "35aa95bf89522c16f3905d47f67f9dae90d8d45f545cae70f8b5467199c50301",
+    "metadata_frames": 2,
+    "primary_status": "completed",
+    "generation_verified": true,
+    "completion_verified": true,
+    "model": "stehouwer_llm",
+    "actual_model": "stehouwer_llm",
+    "context_budget": {
+      "input_utf8_bytes": 5007,
+      "framing_reserve": 512,
+      "requested_output_tokens": 1024,
+      "admitted_context": 8192,
+      "basis": "conservative_utf8_bytes_not_tokenizer_count"
+    },
+    "error_code": null,
+    "steps": [
+      {
+        "name": "context_selection",
+        "status": "planned",
+        "context_selection": {
+          "schema": "aibs.chat_context_selection.v1",
+          "policy": "whole_optional_blocks_v1",
+          "num_ctx": 8192,
+          "output_tokens": 1024,
+          "framing_reserve": 512,
+          "maximum_input_utf8_bytes": 6656,
+          "mandatory_input_utf8_bytes": 5007,
+          "prompt_utf8_bytes": 196,
+          "prompt_sha256": "4499cc535b4a8f6ad864011c13a9ad9a2116bf81b33e3e3c2200a2f54fe5c1fc",
+          "mandatory_system_utf8_bytes": 2662,
+          "mandatory_source_utf8_bytes": 1960,
+          "mandatory_suffix_utf8_bytes": 187,
+          "mandatory_source_sha256": "683476391f6f89bdcfd4641915a0d1326815727a6423de9d4c71aae62279bd03",
+          "authored_input_preserved": true,
+          "mandatory_source_preserved": true,
+          "optional_blocks": [
+            {
+              "label": "requested_ledger_reference",
+              "utf8_bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "status": "empty"
+            },
+            {
+              "label": "personal_memory_references",
+              "utf8_bytes": 2304,
+              "sha256": "f36318f3c98acb5bea90fc112042782eb1e71624e59efc7542c160a812527ebf",
+              "status": "omitted_whole",
+              "reason": "joint_context_budget"
+            },
+            {
+              "label": "owned_memory_references",
+              "utf8_bytes": 3744,
+              "sha256": "bae0818aae50c2d96dae1b581b4ba87d0d2b73983fece30a75ba49303daf9868",
+              "status": "omitted_whole",
+              "reason": "joint_context_budget"
+            },
+            {
+              "label": "codebase_references",
+              "utf8_bytes": 2489,
+              "sha256": "44009ca3fab5c0372ff9f2f67239121cb3b2261aa620274ac487fc0b4fe97d6d",
+              "status": "omitted_whole",
+              "reason": "joint_context_budget"
+            },
+            {
+              "label": "legacy_persona_background",
+              "utf8_bytes": 3094,
+              "sha256": "7eda47643341b85f6b3b76c7d23547e15ddfb4f1c8f9aba4e8faddb8f0ee42b1",
+              "status": "omitted_whole",
+              "reason": "joint_context_budget"
+            }
+          ],
+          "omitted_labels": [
+            "personal_memory_references",
+            "owned_memory_references",
+            "codebase_references",
+            "legacy_persona_background"
+          ],
+          "status": "planned",
+          "admitted_input_utf8_bytes": 5007
+        }
+      },
+      {
+        "name": "primary",
+        "status": "completed",
+        "context_selection": null
+      }
+    ]
+  },
+  "static_package": {
+    "path": "C:\\AI-BS\\native_studio\\releases\\v5.329.145\\AI_BS_Studio",
+    "executable_sha256": "3ab0ff1afff8f58e0da9038d1b6f6373f458497c9b5608e47cbc1f944519a7b5"
+  },
+  "tests": {
+    "native_connection": 31,
+    "native_chat": 15,
+    "context_and_local_inference": 31,
+    "total_focused_checks": 77
+  },
+  "repository": {
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "dirty_work_preserved": true
+  },
+  "launcher_paths": [
+    "Launch-AI-BS-BS-Chat.cmd",
+    "Launch-AI-BS-Game-Development.cmd",
+    "Launch-AI-BS-Work-Controls.cmd"
+  ],
+  "handoff_paths": [
+    "docs/architecture/NATIVE_CHAT_REPAIR_2026-11-11.md"
+  ],
+  "backend_pid": 45184,
+  "ollama_model_directory": "C:/AI-BS/models/ollama",
+  "original_model_count": 30,
+  "ollama_network_exposure_unchanged": true,
+  "registry_changed": false,
+  "model_files_changed": false,
+  "source_changes": [
+    "native_studio/local_connection.py",
+    "native_studio/chat_service.py",
+    "native_studio/bs_chat_ide_full.py",
+    "native_studio/app.py",
+    "backend/core/chat_context_budget.py",
+    "backend/core/sovereign_reasoning/dispatcher.py",
+    "scripts/tests/test_native_local_connection.py",
+    "scripts/tests/test_native_shared_chat.py",
+    "scripts/tests/test_chat_context_budget.py"
+  ],
+  "known_limits": [
+    "Physical Escape stopped desktop automation; final145normal-window observation and desktop shortcut promotion are unverified.",
+    "Existing Administrator Game Development and Work Controls shortcuts still target144; original footb107 shortcuts are preserved.",
+    "CUA launch picker twice opened registered107 instead of requested145; do not repeat that approach. Exact pinned executable required.",
+    "The agent-created hidden145test process46784 was stopped with no user edits/chat sent; two extra107windows may remain, alongside original107.",
+    "Standard maintenance worker failed before changes because basePython lackshttpx. Historical recovery launcher was reused with all guards; exact old loaded-generation rollback unavailable.",
+    "One peer proof rejection was not reproduced in ten byte-free probes. Handshake polling and bounded publisher startup wait are tested; other failure modes remain fail-closed.",
+    "A combined Qt fixture chain exited1 without traceback; individual recovery14/lifetime9/executive6 and final nativechat15 checks passed.",
+    "Earlier context-budget, provider404, startup-publication and probe-path failures are retained; no all-provider or all-model qualification."
+  ],
+  "firebase_status": "Existing verified static5.329.144; no new Firebase deployment for this native/backend repair.",
+  "private_data_preservation": "Two guarded backend activations each preserved ten consistent SQLite backups and checked logical equality, key/allowlist/provider config/authentication/disabled activation flags. Original saves/assets/manuscripts not modified.",
+  "drive_status": "145 source/runtime/handoff upload and downloaded-byte verification pending; latest prior verified144 remains separate.",
+  "next_step": "Finish145source/runtime/handoff Drive checkpoint. On a later explicitly authorized desktop session, observe pinned145 --bs-chat startup and preserve draft recovery, then promote Administrator shortcuts. Do not resume long-term goal automatically."
+}

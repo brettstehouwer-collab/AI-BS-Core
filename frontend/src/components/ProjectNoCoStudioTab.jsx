@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useAppStore } from './useAppStore';
+import { useState } from "react";
+import "./useAppStore";
 import TheatricalStageSwitch from './TheatricalStageSwitch.jsx';
 import TheatricalMicClient from './TheatricalMicClient.jsx';
 import NocoSpatialCampusMap from './NocoSpatialCampusMap.jsx';
@@ -18,11 +18,11 @@ const ProjectNoCoStudioTab = () => {
       const params = new URLSearchParams(window.location.search);
       const sub = params.get('subtab');
       if (sub === 'properties' || params.get('tab') === 'noco_properties') return 'properties_tracker';
-      if (['campus_map', 'master_plan_23acres', 'spatial_radial', 'support_facilities'].includes(sub)) return 'campus_master_plan';
-      if (['theatrical_console', 'acoustic_engineering', 'stage_prompter', 'neon_lounge'].includes(sub)) return 'stage_acoustics';
-      if (['microgrid_bess', 'microgrid_infrastructure', 'operational_scenarios', 'bioenergy_rd', 'biofuel_electrical'].includes(sub)) return 'energy_microgrid';
-      if (['cea_iot_hud', 'cea_farming', 'hydro_recycling', 'ag_sensors'].includes(sub)) return 'cea_agriculture';
-      if (['agritourism_crm', 'governance', 'pillars', 'calculators'].includes(sub)) return 'governance_financials';
+      if (['campus_map', 'master_plan_23acres', 'spatial_radial', 'support_facilities'].includes(sub || '')) return 'campus_master_plan';
+      if (['theatrical_console', 'acoustic_engineering', 'stage_prompter', 'neon_lounge'].includes(sub || '')) return 'stage_acoustics';
+      if (['microgrid_bess', 'microgrid_infrastructure', 'operational_scenarios', 'bioenergy_rd', 'biofuel_electrical'].includes(sub || '')) return 'energy_microgrid';
+      if (['cea_iot_hud', 'cea_farming', 'hydro_recycling', 'ag_sensors'].includes(sub || '')) return 'cea_agriculture';
+      if (['agritourism_crm', 'governance', 'pillars', 'calculators'].includes(sub || '')) return 'governance_financials';
     } catch (e) {}
     return 'properties_tracker';
   });
@@ -34,38 +34,38 @@ const ProjectNoCoStudioTab = () => {
   const [ceaViewMode, setCeaViewMode] = useState('all');
   const [govViewMode, setGovViewMode] = useState('all');
 
-  const [selectedZone, setSelectedZone] = useState('zone0');
+  const [] = useState('zone0');
   const [activeRenderView, setActiveRenderView] = useState('view01');
   const [activeStructureCategory, setActiveStructureCategory] = useState('all');
 
   // Acoustic Engineering State
   const [glazingTiltAngle, setGlazingTiltAngle] = useState(6.0); // 5-7 deg recommended
   const [subwooferArrayMode, setSubwooferArrayMode] = useState('cardioid'); // 'cardioid' or 'end_fire'
-  const [hpaPressure, setHpaPressure] = useState(80);
-  const [hpaIsolatorOffset, setHpaIsolatorOffset] = useState(15);
+  const [hpaPressure] = useState(80);
+  const [hpaIsolatorOffset] = useState(15);
   const [smartGlassOpacity, setSmartGlassOpacity] = useState(85);
   const [subStageTemp, setSubStageTemp] = useState(18.5);
 
   // Bio-Energy Audit & Reconciliation State
-  const [targetEnergyDemand, setTargetEnergyDemand] = useState(224.3);
-  const [mfcGen, setMfcGen] = useState(12.8);
-  const [biogasGen, setBiogasGen] = useState(32.5);
-  const [bpecGen, setBpecGen] = useState(4.2);
-  const [piezoGen, setPiezoGen] = useState(2.98);
+  const [] = useState(224.3);
+  const [mfcGen] = useState(12.8);
+  const [biogasGen] = useState(32.5);
+  const [bpecGen] = useState(4.2);
+  const [piezoGen] = useState(2.98);
 
   // Shane's Electrical & Biofuel State
   const [desiredRuntimeHours, setDesiredRuntimeHours] = useState(12);
   const [numLedStageLights, setNumLedStageLights] = useState(64);
-  const [wattsPerLedLight, setWattsPerLedLight] = useState(45);
+  const [wattsPerLedLight] = useState(45);
   const [isolationTransformerActive, setIsolationTransformerActive] = useState(true);
-  const [acDcRegulatorMode, setAcDcRegulatorMode] = useState('AC'); // 'AC' or 'DC'
-  const [changeoverDelayTimerSec, setChangeoverDelayTimerSec] = useState(3.5);
+  const [acDcRegulatorMode] = useState('AC'); // 'AC' or 'DC'
+  const [changeoverDelayTimerSec] = useState(3.5);
   const [autoRelayBreakerTripped, setAutoRelayBreakerTripped] = useState(false);
-  const [lipoColdStartActive, setLipoColdStartActive] = useState(false);
-  const [lipoChargeMode, setLipoChargeMode] = useState('BalancedCharge');
+  const [] = useState(false);
+  const [] = useState('BalancedCharge');
 
   // Hydroponic Waste & Koi Pond Re-Bonding State
-  const [hydroponicEcStatus, setHydroponicEcStatus] = useState(1.4); // mS/cm
+  const [hydroponicEcStatus] = useState(1.4); // mS/cm
   const [koiPondFishWasteDosage, setKoiPondFishWasteDosage] = useState(85); // %
   const [electrodeDisinfectionActive, setElectrodeDisinfectionActive] = useState(true);
   const [selectedSecondaryCrop, setSelectedSecondaryCrop] = useState('Tomatoes');
@@ -74,9 +74,9 @@ const ProjectNoCoStudioTab = () => {
   const [landAcquisitionAcres, setLandAcquisitionAcres] = useState(23); // 23-acre master plan
   const [costPerAcre, setCostPerAcre] = useState(18500);
   const [buildingSqFtCost, setBuildingSqFtCost] = useState(145); // $/sq ft
-  const [elecRateKwh, setElecRateKwh] = useState(0.16); // $/kWh
-  const [solarSystemCost, setSolarSystemCost] = useState(185000); // 150 kW system
-  const [geothermalSystemCost, setGeothermalSystemCost] = useState(95000);
+  const [elecRateKwh] = useState(0.16); // $/kWh
+  const [solarSystemCost] = useState(185000); // 150 kW system
+  const [geothermalSystemCost] = useState(95000);
 
   // CEA Crop Yield & Fiber Calculators State
   const [nftPricePerHead, setNftPricePerHead] = useState(3.50);
@@ -85,16 +85,16 @@ const ProjectNoCoStudioTab = () => {
 
   // Operational Load Profile Scenarios State
   const [selectedScenario, setSelectedScenario] = useState('performance');
-  const [performanceCountMonthly, setPerformanceCountMonthly] = useState(8);
-  const [rehearsalCountMonthly, setRehearsalCountMonthly] = useState(16);
-  const [maintenanceCountMonthly, setMaintenanceCountMonthly] = useState(6);
+  const [performanceCountMonthly] = useState(8);
+  const [rehearsalCountMonthly] = useState(16);
+  const [maintenanceCountMonthly] = useState(6);
 
   // Ag Sensor Network Telemetry State
-  const [sensorTemp, setSensorTemp] = useState(21.4); // °C
-  const [sensorHumidity, setSensorHumidity] = useState(68); // %
-  const [sensorSoilMoisture, setSensorSoilMoisture] = useState(82); // %
-  const [sensorPh, setSensorPh] = useState(6.2);
-  const [poultryCount, setPoultryCount] = useState(30);
+  const [sensorTemp] = useState(21.4); // °C
+  const [sensorHumidity] = useState(68); // %
+  const [sensorSoilMoisture] = useState(82); // %
+  const [sensorPh] = useState(6.2);
+  const [poultryCount] = useState(30);
 
   // Calculated CapEx & Payback Values
   const totalLandCost = landAcquisitionAcres * costPerAcre;
@@ -160,7 +160,8 @@ const ProjectNoCoStudioTab = () => {
   const avgDailyKwh = (monthlyTotalKwh / 30.0).toFixed(1);
 
   // Phase III Render Views Data
-  const renderViews = {
+  /** @type {Record<string, {"title": string, "time": string, "imgSrc": string, "details": string, "badge": string}>} */
+const renderViews = {
     view01: {
       title: 'VIEW 01 / 06: Aerial Overview — Full 23-Acre Campus',
       time: 'Golden Hour / Late Afternoon',
@@ -279,7 +280,8 @@ const ProjectNoCoStudioTab = () => {
   ];
 
   // Reusable sub-navigation bar renderer
-  const renderSubNavBar = (items, activeValue, onSelect, accentColor = '#00FFFF') => (
+  /** @param {Array<{"id": string, "label": string}>} items @param {string} activeValue @param {(arg0: string) => void} onSelect */
+const renderSubNavBar = ( items,  activeValue,  onSelect, accentColor = '#00FFFF') => (
     <div style={{
       display: 'flex',
       gap: '8px',
@@ -294,7 +296,8 @@ const ProjectNoCoStudioTab = () => {
       <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '4px' }}>
         Module Filter:
       </span>
-      {items.map(item => {
+      {items.map( 
+item => {
         const isActive = activeValue === item.id;
         return (
           <button
@@ -686,7 +689,8 @@ const ProjectNoCoStudioTab = () => {
                     </thead>
                     <tbody>
                       {structureMatrix
-                        .filter(item => activeStructureCategory === 'all' || item.category === activeStructureCategory)
+                        .filter( 
+item => activeStructureCategory === 'all' || item.category === activeStructureCategory)
                         .map((row, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.02)' : 'transparent' }}>
                             <td style={{ padding: '10px', color: theme.accentCyan, fontWeight: 600 }}>{row.category}</td>
@@ -1278,7 +1282,7 @@ const ProjectNoCoStudioTab = () => {
                     id="koi-dosage-slider"
                     aria-label="Koi Pond Fish Waste Bio-Dosage Percentage"
                     type="range" min="10" max="100" value={koiPondFishWasteDosage}
-                    onChange={(e) => setKoiPondFishWasteDosage(e.target.value)}
+                    onChange={(e) => setKoiPondFishWasteDosage(Number(e.target.value))}
                     style={{ width: '100%', margin: '8px 0' }}
                   />
                 </div>

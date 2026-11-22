@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "release_id": "web-v109-20261104-210648",
+  "version": "v5.329.109",
+  "scope": "web-only",
+  "built_at": "2026-11-05T02:37:19.822Z",
+  "native_updated": false,
+  "game_sdk_published": false,
+  "live_trading_enabled": false,
+  "source_files": 3715,
+  "files": 1137,
+  "public_files": 990,
+  "public_bytes": 910895380,
+  "excluded_bytes": 1387741493,
+  "candidate": "C:\\AI-BS\\backups\\firebase_web-v109-20261104-210648\\candidate-qualified"
+}

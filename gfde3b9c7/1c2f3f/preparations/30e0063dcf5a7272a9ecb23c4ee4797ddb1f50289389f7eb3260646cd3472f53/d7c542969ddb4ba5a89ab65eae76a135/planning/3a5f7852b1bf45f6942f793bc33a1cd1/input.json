@@ -1,0 +1,57 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "d7c542969ddb4ba5a89ab65eae76a135",
+  "plan_id": "3a5f7852b1bf45f6942f793bc33a1cd1",
+  "snapshot_sha256": "d12bb5f64ecf28771ad67e77b93e5fe2d2c5200e77050620683914927c17a7ad",
+  "review_digest": "c52694d6ffef39dbcc8a22dbddf8b4971ca7c3ff6d12df517d14b242fb014ccd",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "466ba5c70927632f895ca9304b50499d68bef80006e360a0534899d8408470de",
+        "excerpt": "import unittest,time,subprocess,sys,pathlib\r\nclass Check(unittest.TestCase):\r\n def test_slow(self):\r\n  child=subprocess.Popen([sys.executable,\"-c\",\"import time; time.sleep(30)\"])\r\n  pathlib.Path(\"owned-child.pid\").write_text(str(child.pid))\r\n  time.sleep(8)\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "46edeae658f45f429a686cdb0c9fe48d1ac13db33f0e21d877ed36e59ad71541",
+  "worker": {
+    "pid": 12784,
+    "created": 1794782635.3494687
+  },
+  "created_at_utc": "2026-11-15T22:43:59.250303+00:00",
+  "entry_sha256": "45c463590c3c4871ab135f48d57994a740501dd62c56b893fe9d9bd1b7d663bd"
+}

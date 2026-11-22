@@ -1,0 +1,276 @@
+{
+  "handoff_id": "creation_network_audit_20261030T214149Z",
+  "created_utc": "2026-10-30T21:50:31.696775+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Pending independent receiver",
+  "status": "AUDIT_COMPLETE; TWO_CRITICAL_SOURCE_FINDINGS_OPEN; NO_RUNTIME_FIX",
+  "git": {
+    "commit": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "branch": "main"
+  },
+  "version": "v5.329.73",
+  "source_manifest_checksum": "56a7859e6e88f0767f5ceb1460e3028eaf519b838dc04ef67a51b76286282227",
+  "checksum_definition": "SHA256 compact sorted JSON path-to-after_sha256 map; manifest itself excluded",
+  "files": {
+    "backend/AI_BS_Backend.py": {
+      "before_sha256": "8c521b678afdc8868dbe2f43ac0b0f6bcffb938c104d6b5a2d0140d8f06a7ce6",
+      "after_sha256": "8c521b678afdc8868dbe2f43ac0b0f6bcffb938c104d6b5a2d0140d8f06a7ce6",
+      "changed": false
+    },
+    "backend/commercial_gateway/gpu_network_router.py": {
+      "before_sha256": "e30061e4a7db91a4ec4e8591e4b9f580ac979e11cebfcee52b38af1b681c66ca",
+      "after_sha256": "e30061e4a7db91a4ec4e8591e4b9f580ac979e11cebfcee52b38af1b681c66ca",
+      "changed": false
+    },
+    "backend/modules/network_telemetry.py": {
+      "before_sha256": "1359c87a18959daef5fd44606d37bfed97d35ef60444442ba26c90ab740323c0",
+      "after_sha256": "1359c87a18959daef5fd44606d37bfed97d35ef60444442ba26c90ab740323c0",
+      "changed": false
+    },
+    "backend/routers/network_telemetry_router.py": {
+      "before_sha256": "0a75752ba069c67a54c552d58fb1e2cae89f3410bb9c937505f25f42be27ef50",
+      "after_sha256": "0a75752ba069c67a54c552d58fb1e2cae89f3410bb9c937505f25f42be27ef50",
+      "changed": false
+    },
+    "backend/compute_orchestrator_agent.py": {
+      "before_sha256": "c28acdcb68a2027824fcaf36d0535817b8c21d2e91dbc31194915892ba9dea88",
+      "after_sha256": "c28acdcb68a2027824fcaf36d0535817b8c21d2e91dbc31194915892ba9dea88",
+      "changed": false
+    },
+    "backend/bullshit_orchestrator.py": {
+      "before_sha256": "ba7937e2f3cf9053aebf5005b9677e0dc2a5b2f4ef33e6670a746adfd8fac258",
+      "after_sha256": "ba7937e2f3cf9053aebf5005b9677e0dc2a5b2f4ef33e6670a746adfd8fac258",
+      "changed": false
+    },
+    "frontend/components/UniversalCreationSuite.jsx": {
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "changed": false
+    },
+    "frontend/components/UnifiedCryptoHub.jsx": {
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false
+    },
+    "frontend/components/GpuNetworkTab.jsx": {
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "changed": false
+    },
+    "frontend/src/components/UniversalCreationSuite.jsx": {
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "changed": false
+    },
+    "frontend/src/components/UnifiedCryptoHub.jsx": {
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false
+    },
+    "frontend/src/components/GpuNetworkTab.jsx": {
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "changed": false
+    },
+    "frontend/components/components/UniversalCreationSuite.jsx": {
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "changed": false
+    },
+    "frontend/components/components/UnifiedCryptoHub.jsx": {
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false
+    },
+    "frontend/components/components/GpuNetworkTab.jsx": {
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "changed": false
+    },
+    "frontend/src/components/components/UniversalCreationSuite.jsx": {
+      "before_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "after_sha256": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+      "changed": false
+    },
+    "frontend/src/components/components/UnifiedCryptoHub.jsx": {
+      "before_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "after_sha256": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+      "changed": false
+    },
+    "frontend/src/components/components/GpuNetworkTab.jsx": {
+      "before_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "after_sha256": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+      "changed": false
+    },
+    "docs/CODEX_JOURNAL.md": {
+      "before_sha256": "2578f4e635fe2cd6257db941da99a09e3ed7e16b10def55c89393fb9b05476b2",
+      "after_sha256": "39c366dfa3983bcc2b9607202fa00675a740c24a4eb8a1cd811dd712d213791a",
+      "changed": true
+    },
+    "docs/CODEX_HANDOFF.md": {
+      "before_sha256": "32fe346d3dbfaebb224fb4c3f5f7b78e23079ad4ea9346b224357294fb179d51",
+      "after_sha256": "06985e47c6adf81d038a2278181c8d8ffac377f0cc90895be75dab569f9a9e7c",
+      "changed": true
+    },
+    "docs/CODEX_DECISIONS.md": {
+      "before_sha256": "6d7611de4dc66a4ce11af61494f69cfd7d63d0c109f5c2ae71c3b9d7afa9d884",
+      "after_sha256": "1cf227716cbc36699f4d51e66dbb7a638ba1f35ea5c56bf59bb574aa4bfc96a3",
+      "changed": true
+    },
+    "docs/CODEX_TASKS.md": {
+      "before_sha256": "2289aed610cacb89071d5cdc8a5879b8e1a58c7a0e64ca040e89045446a25bcb",
+      "after_sha256": "35f19c44093c1dd33fd686819e7dd5adaef7b9a194daa5e029e881b88eba0caf",
+      "changed": true
+    },
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": {
+      "before_sha256": "0b0c0f54b7d8270303421f21f256191bbd0579d1fa19581c42819b39e2fcd1dc",
+      "after_sha256": "5d02db15cbb83f90d8bef26d89c663efcf7903303c78937beaa6128b6503678b",
+      "changed": true
+    },
+    "MASTER_TASKS_CHRONOLOGY.md": {
+      "before_sha256": "c55dfd3a39600e4665eff07c62ade002c2e25065dd5363dc2d1e15999826b7b7",
+      "after_sha256": "f6958c131f08b337c01e88f377a3aabdefa1b236061540fce0c8c12c1ddbb1ea",
+      "changed": true
+    },
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md": {
+      "before_sha256": "ae1d3ab105d38ac814470e141a7aab1b5f64d0f3df6997e4d1a11f2415e82330",
+      "after_sha256": "47e7a0b5872f27c54f7f597063e647d17aac0a35d4146300f6468e90a190caef",
+      "changed": true
+    },
+    "MASTER_HISTORICAL_INDEX.md": {
+      "before_sha256": "990043da483a954c5660981df54ab17fc057fd25dc5fe69e32013ea8a433ae6a",
+      "after_sha256": "c1c6eb3f71d4ff59ab2ae950debf0120499667e2da894d4fe4d041959c5225e0",
+      "changed": true
+    },
+    "NotebookLM_Records/artifact_history.md": {
+      "before_sha256": "a2b7e0bd7b0b5855e24bf498c8f344909a061528f133e1d3d29fe69dbc943cd3",
+      "after_sha256": "e90648969efaa1a5d2ba7445f0149cfb5e0bfeee38c5fb9e12209d5b3fcccc6e",
+      "changed": true
+    },
+    "docs/NETWORK_WORKSPACE_AUDIT_2026-10-30.md": {
+      "before_sha256": null,
+      "after_sha256": "d8425eb04b93b03ea91a0679bc35dcc2c5a022bc658c4cf4122ef4269bca9ca9",
+      "changed": true
+    }
+  },
+  "changed_paths": [
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_HISTORICAL_INDEX.md",
+    "NotebookLM_Records/artifact_history.md",
+    "docs/NETWORK_WORKSPACE_AUDIT_2026-10-30.md"
+  ],
+  "patch": "C:\\AI-BS\\backups\\creation_network_audit_20261030T214149Z\\documentation.diff",
+  "report": "docs/NETWORK_WORKSPACE_AUDIT_2026-10-30.md",
+  "evidence_directory": "C:\\AI-BS\\backups\\creation_network_audit_20261030T214149Z",
+  "observations_and_probe": {
+    "status": "SECURITY_EXPECTATIONS_FAILED; AUDIT_PROBE_COMPLETED",
+    "header_redaction_synthetic_probe": {
+      "authorization_redacted": true,
+      "x_admin_key_redacted": false,
+      "x_local_token_redacted": false,
+      "actual_credentials_used": false,
+      "application_module_imported": false
+    },
+    "global_sensitive_prefix_coverage": {
+      "/v1/network/redeem-payout": false,
+      "/v1/network/submit-job": false,
+      "/api/network-telemetry/traffic": false,
+      "/api/network-telemetry/capture-mode": false
+    },
+    "prefix_coverage_note": "Does not alone prove runtime access; router and mounted dependencies reviewed separately. No handlers or external endpoints were invoked.",
+    "python_ast_parsed": [
+      "backend/AI_BS_Backend.py",
+      "backend/commercial_gateway/gpu_network_router.py",
+      "backend/modules/network_telemetry.py",
+      "backend/routers/network_telemetry_router.py",
+      "backend/compute_orchestrator_agent.py",
+      "backend/bullshit_orchestrator.py"
+    ],
+    "mirrors": {
+      "UniversalCreationSuite.jsx": {
+        "paths": {
+          "frontend/components/UniversalCreationSuite.jsx": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+          "frontend/src/components/UniversalCreationSuite.jsx": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+          "frontend/components/components/UniversalCreationSuite.jsx": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7",
+          "frontend/src/components/components/UniversalCreationSuite.jsx": "a242198b648382c1b1def118c618b519d6e46a14cf3e3e9223fcc969a06c5be7"
+        },
+        "identical": true
+      },
+      "UnifiedCryptoHub.jsx": {
+        "paths": {
+          "frontend/components/UnifiedCryptoHub.jsx": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+          "frontend/src/components/UnifiedCryptoHub.jsx": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+          "frontend/components/components/UnifiedCryptoHub.jsx": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08",
+          "frontend/src/components/components/UnifiedCryptoHub.jsx": "312227cdfb877a8b9f8cf2bb87212bcef702e33fb4123c8e9ab4132a83275c08"
+        },
+        "identical": true
+      },
+      "GpuNetworkTab.jsx": {
+        "paths": {
+          "frontend/components/GpuNetworkTab.jsx": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+          "frontend/src/components/GpuNetworkTab.jsx": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+          "frontend/components/components/GpuNetworkTab.jsx": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48",
+          "frontend/src/components/components/GpuNetworkTab.jsx": "0605ab69cc468d02db6c1ee39c550f5be33084aff4bbf91640a5a4a079412f48"
+        },
+        "identical": true
+      }
+    },
+    "crypto_protected_hashes": {
+      "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+      "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+      "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+      "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
+    },
+    "ui_observations": {
+      "supplied_route": "unified_creation/network",
+      "observed": "Creation Suite password gate",
+      "actual_network_route": "unified_crypto/network",
+      "gpu_network_api_requests_blocked_before_navigation": true,
+      "blocked_reason": "inspector",
+      "api_base_observed": "http://127.0.0.1:8000",
+      "available_and_total_usd_displayed": "12.93",
+      "earning_rate_displayed": "0.55/hr",
+      "computing_status_displayed": "IDLE & COMPUTING ($/hr Active)",
+      "treasury_displayed": "Connecting to Polygon Web3 Node...",
+      "renter_controls_observed": true,
+      "payout_or_job_submitted": false,
+      "temporary_audit_tab_closed": true
+    },
+    "tests_not_run": "No application test suite or application import; scoped synthetic sanitizer probe and source checks only."
+  },
+  "completed": [
+    "supplied route browser inspection",
+    "actual GPU panel browser inspection with Network APIs blocked",
+    "source access-control/financial/queue review",
+    "synthetic header redaction probe",
+    "source and mirror preservation checks",
+    "append-only history record"
+  ],
+  "known_failures": [
+    "missing network financial/telemetry access boundary",
+    "internal credential headers not redacted",
+    "synthetic financial/UI metrics",
+    "no durable network payout recovery",
+    "idle-only toggle is not worker enforcement",
+    "wrong supplied subtab"
+  ],
+  "architectural_decision": "Audit only; no approved architecture or runtime control changed. Existing crypto hold is separate from the unresolved network payout path.",
+  "tests": "No application suite/import; six AST parses and extracted sanitizer with synthetic sentinels only. Security expectations FAILED as documented.",
+  "not_performed": [
+    "private financial/exchange request",
+    "job submission/execution",
+    "traffic record retrieval",
+    "capture/fan control",
+    "source/environment/credential change",
+    "service restart",
+    "deployment",
+    "Git stage/commit/push"
+  ],
+  "next_step": "Contain payout/job dispatch and protect/redact telemetry; use isolated fixtures to prove denial before provider/ledger/capture/process side effects; then truthful metrics/idle enforcement."
+}

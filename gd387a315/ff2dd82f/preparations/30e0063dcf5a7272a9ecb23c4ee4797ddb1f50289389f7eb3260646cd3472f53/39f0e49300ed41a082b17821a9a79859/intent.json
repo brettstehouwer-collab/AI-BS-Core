@@ -1,0 +1,124 @@
+{
+  "kind": "project_preparation",
+  "request_id": "39f0e49300ed41a082b17821a9a79859",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "39f0e49300ed41a082b17821a9a79859",
+    "repository_id": "ai-bs",
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification"
+      },
+      {
+        "relative_path": "src/App.jsx",
+        "role": "editable"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "tests.test_app"
+        ]
+      },
+      {
+        "check_id": "frontend",
+        "profile": "npm_script",
+        "targets": [
+          "test"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "8c7a94786b2a84959d9296a0d593cb6e157b72f72c714883f283415b58c28de8",
+  "repository_policy_sha256": "5f11af2298a0b20fa639c2abcb9cbb67c213e5bb1982c5f21f6db9e5a6128844",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "fbc655e0a087c3bf5bba102f0e59719ae2a5ecec",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification",
+        "length": 50,
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8"
+      },
+      {
+        "relative_path": "src/App.jsx",
+        "role": "editable",
+        "length": 80,
+        "sha256": "7d6571bf1b9756186d93f0f105e6ae88746da743b70020b4d9139eb1bf712bb4"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency",
+        "length": 37,
+        "sha256": "0d0ab98503da8f39fbef4ba5d6321a4dc0c39307cd2c5abfa97f05e42d6d2914"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency",
+        "length": 21,
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265"
+      }
+    ],
+    "byte_count": 198,
+    "captured_at_utc": "2026-11-15T04:58:05.809003+00:00",
+    "snapshot_sha256": "6bb3885f8814272765e35634cdff640b7afd0bca961543785d844448c3548d00"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ]
+    },
+    {
+      "check_id": "frontend",
+      "argv": [
+        "npm",
+        "run",
+        "test"
+      ]
+    }
+  ],
+  "review_digest": "fdb4208d4abb84b79d295a873149075b584364a8f25acb8caf0eb66021667e89",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:05.809003+00:00",
+  "entry_sha256": "6d15e878c1f16231f8a98e95f1a26834ee80d4ae864fd5253f0c3d8dcf82f46b"
+}

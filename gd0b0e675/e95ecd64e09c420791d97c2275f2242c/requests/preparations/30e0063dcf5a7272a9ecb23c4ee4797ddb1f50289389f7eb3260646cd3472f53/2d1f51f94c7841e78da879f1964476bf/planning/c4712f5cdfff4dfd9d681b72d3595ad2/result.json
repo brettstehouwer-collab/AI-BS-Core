@@ -1,0 +1,24 @@
+{
+  "state": "FAILED",
+  "input_sha256": "f457bf14cb7ad3c9582bd77560481969b054869d0f6d9f75fb86aa6d1af40f45",
+  "proposal": null,
+  "error_code": "invalid_model_output",
+  "finished_at_utc": "2026-11-15T21:55:51.250652+00:00",
+  "elapsed_seconds": 0.015,
+  "response_sha256": "aec0e9f624c621f94b98ba618f9c43fa299c4e4f4bb03c5424b21253c2781d69",
+  "response_bytes": 194,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": [],
+    "tool_call": {
+      "name": "execute"
+    }
+  },
+  "entry_sha256": "4d284d3fc3ac572a0c3bd790aee2074bdb621555c2c0345675ee5d4ec6cc08cb"
+}

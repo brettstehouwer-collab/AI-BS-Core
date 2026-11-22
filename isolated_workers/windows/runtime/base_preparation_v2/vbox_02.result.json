@@ -1,0 +1,15 @@
+﻿{
+    "Arguments":  [
+                      "createvm",
+                      "--name=AI-BS-Eval-Base-20261023",
+                      "--platform-architecture=x86",
+                      "--basefolder=C:\\AI-BS\\isolated_workers\\windows\\runtime\\base_preparation_v2\\vms",
+                      "--ostype=Windows11_64",
+                      "--uuid=6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                      "--register"
+                  ],
+    "PID":  208312,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T21:07:29.8631939Z"
+}

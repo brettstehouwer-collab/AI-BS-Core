@@ -1,0 +1,495 @@
+{
+  "status": "IN_PROGRESS",
+  "client_date": "2026-10-30",
+  "source_version": "v5.329.83",
+  "repository": {
+    "checkpoint_parent": "ce1fa4430a069fa5420fa766b8d7687d89025809",
+    "branch": "codex/audit-v532976-20261031",
+    "note": "Record200 source/handoff commits named in their separate manifest."
+  },
+  "source_inventory": {
+    "backend_python_sources_parsed": 791,
+    "backend_route_declarations": 1690,
+    "source_mounts": 146,
+    "web_candidate_sources": 709,
+    "web_control_sites": 4696,
+    "web_handler_attributes": 5369,
+    "web_api_ipc_references": 1304,
+    "native_source_files": 95,
+    "native_control_constructors": 824,
+    "native_signal_connections": 786,
+    "native_registered_subtabs": 53
+  },
+  "whole_computer_metadata": {
+    "status": "DISCOVERY_COMPLETE_CONTENT_REVIEW_PENDING",
+    "started_utc": "2026-10-31T01:33:21Z",
+    "elapsed_seconds": 79,
+    "counts": {
+      "directories": 273448,
+      "excluded_trees": 24424,
+      "files": 1296660,
+      "other": 585869,
+      "document_or_dataset": 98865,
+      "archive": 10770,
+      "asset_or_model": 89965,
+      "source": 511191,
+      "project_candidates": 65647,
+      "access_errors": 1
+    },
+    "drives": {
+      "C:": {
+        "status": "ENUMERATED_WITH_EXCLUSIONS",
+        "files": 1009514
+      },
+      "D:": {
+        "status": "ENUMERATED_WITH_EXCLUSIONS",
+        "files": 143694
+      },
+      "E:": {
+        "status": "ENUMERATED_WITH_EXCLUSIONS",
+        "files": 143452
+      }
+    },
+    "content_reads": 0,
+    "programs_launched": 0,
+    "scope": "metadata discovery; relationship and usefulness require content review",
+    "no_follow_reparse_points": true,
+    "cloud_placeholders_hydrated": false
+  },
+  "verified_tests": {
+    "status": "PARTIAL_VERIFICATION",
+    "accepted": {
+      "python_files": 88,
+      "python_testcases": 1378,
+      "python_skips": 0,
+      "node_files": 22,
+      "node_testcases": 226,
+      "node_skips": 0,
+      "guard_denials": 0
+    },
+    "accepted_total": 1604,
+    "held": {
+      "files": 11,
+      "attempted_cases_not_counted_as_accepted": 114,
+      "not_all_declared_cases_reached": true
+    },
+    "baseline": {
+      "path": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\evidence\\verification200\\membership_baseline\\batch_20261031T074306Z_53e5a271",
+      "python_tests": 191,
+      "client_tests": 75,
+      "all_four_jobs_exit_zero": true,
+      "double_counted": false
+    },
+    "overlap_not_added": true
+  },
+  "build": {
+    "version": "v5.329.78",
+    "modules": 5678,
+    "files": 143,
+    "status": "VERIFIED",
+    "published": false
+  },
+  "typecheck": {
+    "status": "VERIFIED",
+    "baseline_diagnostics": 9584,
+    "final_diagnostics": 0,
+    "baseline_files": 326,
+    "compiler": "project-owned TypeScript7.0.2",
+    "strict_and_checkJs_retained": true,
+    "blanket_suppressions_added": false,
+    "react": "React18 matching root runtime types; Vite deduplicates react/react-dom"
+  },
+  "runtime_registration": {
+    "status": "VERIFIED_PAGINATION",
+    "utc": "2026-10-31T07:28:28Z",
+    "snapshot": "50069f81b6209b47f2d76c983838089f063b905cbf434f56fd1b7e6f8c71b5a6",
+    "pages": [
+      {
+        "offset": 0,
+        "rows": 1000,
+        "duplicates": 179,
+        "pagination": {
+          "offset": 0,
+          "limit": 1000,
+          "returned": 1000,
+          "next_offset": 1000,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": false
+        }
+      },
+      {
+        "offset": 1000,
+        "rows": 1000,
+        "duplicates": 663,
+        "pagination": {
+          "offset": 1000,
+          "limit": 1000,
+          "returned": 1000,
+          "next_offset": 2000,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": false
+        }
+      },
+      {
+        "offset": 2000,
+        "rows": 300,
+        "duplicates": 101,
+        "pagination": {
+          "offset": 2000,
+          "limit": 1000,
+          "returned": 300,
+          "next_offset": null,
+          "total_routes": 2300,
+          "traversal_truncated": false,
+          "truncation_reasons": {
+            "depth": false,
+            "cycle": false,
+            "visits": false
+          },
+          "visits": 2517,
+          "complete": true
+        }
+      }
+    ],
+    "catalog_rows_observed": 2300,
+    "duplicate_registration_records_observed": 943,
+    "full_observed_catalog_traversal_complete": true,
+    "admission": {
+      "anonymous_invalid_query": 403,
+      "admin_invalid_query": 422,
+      "admin_stale_snapshot": 409
+    },
+    "private_no_store": true,
+    "dispatch_invoked": false,
+    "registered_handlers_invoked": false,
+    "credential_values_logged": false,
+    "limits": "Catalog metadata only; no proof of per-handler ownership/provider functionality. Global10000visit/depth8 bounds retained."
+  },
+  "live_trading": "DISABLED: immutable execution holds retained; daemon8007 absent",
+  "external_dispatch": "HELD: seven false backend background/outreach flags, payment disabled, DRY_RUN/HOLD_DISPATCH",
+  "monetary_ledger_changes": false,
+  "next_passes": [
+    "Diagnose root native Chroma failure on disposable complete clones without retries of the same failed operation.",
+    "Continue bounded route/duplicate-owner and deep-link/IPC audit; server session owner binding.",
+    "Provider credential rotation/readiness and browser acceptance remain separate, with dispatch held."
+  ],
+  "coverage_limit": "Static sites and metadata are inventories, not proof every action or provider works.",
+  "updated_utc": "2026-10-31T16:18:12.099046+00:00",
+  "online_policy": "ALLOWED_BY_USER; unit tests remain isolated",
+  "sqlite_integrity": {
+    "repaired_fts_stores": [
+      {
+        "path": "C:\\AI-BS\\database\\ChromaDB_local",
+        "documents_preserved": 126,
+        "nonfts_tables_unchanged": 15,
+        "vector_files_unchanged": 4,
+        "integrity": "ok",
+        "fts_integrity": "ok",
+        "indexed_like_checks": 12,
+        "original_backup": "C:\\AI-BS\\backups\\chroma_fts_transaction_20261031T043703Z\\database_ChromaDB_local\\chroma.sqlite3.original"
+      },
+      {
+        "path": "C:\\AI-BS\\chroma_db",
+        "documents_preserved": 72549,
+        "nonfts_tables_unchanged": 15,
+        "vector_files_unchanged": 163,
+        "integrity": "ok",
+        "fts_integrity": "ok",
+        "indexed_like_checks": 12,
+        "original_backup": "C:\\AI-BS\\backups\\chroma_fts_transaction_20261031T043703Z\\chroma_db\\chroma.sqlite3.original"
+      }
+    ],
+    "native_vector_traversal": {
+      "status": "CORRUPTION_DIAGNOSED_RECOVERY_OPEN",
+      "source_files_unchanged": 169,
+      "bad_segment": "2e1c203a-a4ae-42c8-995e-7703aea48a4d",
+      "native_exception": "0xC0000005",
+      "duplicate_active_labels": 1169,
+      "upper_link_offset": 18524,
+      "upper_link_bytes": 7340,
+      "required_level_multiple": 68,
+      "missing_identity_vectors": 1169,
+      "ambiguous_identity_vectors": 1169,
+      "queue_has_authoritative_replacements": false,
+      "data_repair_promoted": false,
+      "diagnostic_clones_promoted": false,
+      "native_health_claimed": false
+    }
+  },
+  "hosting": {
+    "record": 199,
+    "source_version": "v5.329.77",
+    "status": "VERIFIED_DEPLOYED",
+    "updated_utc": "2026-10-31T06:19:50Z",
+    "project": "ai-bs-dashboard",
+    "site": "ai-bs-dashboard",
+    "production_url": "https://ai-bs-dashboard.web.app",
+    "preview_url": "https://ai-bs-dashboard--audit-v77-ne4cs5ue.web.app",
+    "rollback_url": "https://ai-bs-dashboard--audit-pre-v77-yab6nfsi.web.app",
+    "rollback_version": "v5.329.76",
+    "preview_hosting_version": "b2f5e1cf834b5030",
+    "promotion": "hosting:clone ai-bs-dashboard:audit-v77 ai-bs-dashboard:live",
+    "source_commit": "518dc77032dd3dcb63306ac28353c5c88b38ce90",
+    "source_metadata_parent": "5fc1a510e5143b93d2aad45378a0ce6596c705d0",
+    "branch": "codex/audit-v532976-20261031",
+    "stage_files": 1127,
+    "stage_bytes": 921343788,
+    "preserved_public_artifacts": 983,
+    "new_compiled_files": 143,
+    "version_metadata_files": 1,
+    "preview_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true
+    },
+    "production_verification": {
+      "new_compiled_files": 143,
+      "version_metadata": true,
+      "preserved_public_samples": 12,
+      "all_sha256_match": true,
+      "static_requests": 157
+    },
+    "offline_preflight": {
+      "python_tests": 154,
+      "client_tests": 75,
+      "typescript_diagnostics": 0,
+      "version_paths": 16,
+      "all_passed": true
+    },
+    "safety": {
+      "live_trading": "DISABLED",
+      "port8007": "ABSENT",
+      "protected_crypto_ledger_hashes": 4,
+      "all_unchanged": true,
+      "application_source_paths_unchanged": 1230,
+      "backend_daemons_activated": false,
+      "payments_or_outreach_activated": false,
+      "database_changes": false
+    },
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "credentials_in_records": false,
+    "keys_uploaded": false,
+    "cli_note": "npx launcher hung before startup; verified cached official Firebase CLI15.34.2 used. Project-list access confirmed despite one Windows shutdown assertion. Hosting rollback, preview upload and promotion exited0. No login:list --json or auth token store dump used.",
+    "limits": [
+      "Hosting only; no Cloud Functions/Firestore/backend deployment. Existing backend dispatch holds remain.",
+      "Static-byte/header checks did not execute appJavaScript, provider/device workflows, or every UI action.",
+      "Root native Chroma32/34collection failure, provider credential rotation and remaining route/IPC/server identity audit stay open.",
+      "983preserved public artifacts hash-checked locally;12sampled remotely, not all983downloaded.",
+      "Prior version retained in audit-pre-v77 preview channel with7day expiry; not permanent backup."
+    ]
+  },
+  "protected_hashes": {
+    "backend/core/crypto_execution_safety.py": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+    "backend/core/crypto_execution_controls.py": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+    "Crypto-Swarm/drip_ledger.json": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+    "backend/crypto_ledger.json": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd"
+  },
+  "cloud_folder": {
+    "id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "organization": "single upload folder"
+  },
+  "credential_retirement": {
+    "reason": "CLI login-status diagnostic exposed credential fields in tool output",
+    "documentation": "https://developers.google.com/identity/protocols/oauth2/web-server#tokenrevoke",
+    "credential_values_logged": false,
+    "future_cli_sign_in_required": true,
+    "hosting_deployment_before_retirement": "v5.329.76 remote bytes verified",
+    "credential_fingerprint": "6f84ea24b382c8c5",
+    "revocation_http_status": 200,
+    "google_revocation_accepted": true,
+    "status": "REVOKED_AND_LOCAL_SESSION_CLEARED",
+    "local_session_cleared": true,
+    "unrelated_configuration_preserved": true,
+    "propagation": "Provider may take time to apply revocation; no instant global invalidation claim.",
+    "utc": "2026-10-31T03:54:24Z"
+  },
+  "loaded_runtime": {
+    "probes": 14,
+    "all_expected": true,
+    "dispatch_invocations": 0,
+    "registry_pagination_verified": true
+  },
+  "inherited_record197_repository_metadata": {
+    "checkpoint_parent_sha": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "branch": "main"
+  },
+  "previous_record198_hosting": {
+    "published_version": "v5.329.76",
+    "source_candidate": "v5.329.77",
+    "published_this_record": false,
+    "reason": "Prior CLI credential exposure was retired. Fresh Firebase sign-in required for any future CLI deployment; OpenAI API key does not authenticate Firebase."
+  },
+  "last_operational_record": 203,
+  "verification_limits": [
+    "Ten new empty C-root UUID fixture directories were created by native Win32 calls bypassing Python audit hooks; verified task-owned and removed nonrecursively. No existing data removal observed; no OS-wide ACL attestation.",
+    "One failed FE Express fixture may have read the exact local-service credential profile via native Windows APIs. No value was printed or network sent; corrected accepted fixture uses explicit inert credentials.",
+    "Git path length and sqlite3.Row comparison instrumentation defects corrected only in E: harnesses. Historical false negatives and intentional corruption fixtures retained.",
+    "Python effect screening is not an operating-system sandbox. Eleven unsafe integration files remain held."
+  ],
+  "full_system_audit_status": "PARTIAL",
+  "routing203": {
+    "client_node": 64,
+    "client_native_related": 10,
+    "endpoint_adapters": 8,
+    "new_backend_policy": 16,
+    "existing_safe_backend_media_cases": 2,
+    "actual_policy_endpoint_composition": 9,
+    "canonical_python": 191,
+    "canonical_clients": 75,
+    "canonical_four_jobs_exit_zero": true,
+    "strict_typescript": true,
+    "versions": true,
+    "native202_focused_cases": 45,
+    "overlapping_cohorts_not_added": true
+  },
+  "routing203_runtime": {
+    "passed": 7,
+    "auth_held": 1,
+    "desktop_control": false
+  },
+  "native202": {
+    "status": "PARTIAL_DESKTOP_AUDIT_USER_STOPPED_COMPUTER_USE",
+    "master_hubs": 4,
+    "canonical_subtabs": 53,
+    "fixture_view_constructors_passed": 53,
+    "runtime_button_instances": 647,
+    "pure_local_clicks_passed": 73,
+    "workflow_buttons_held": 481,
+    "disabled_buttons": 16,
+    "qt_internal_buttons": 38,
+    "valid_menu_hosts": 5,
+    "stateful_check_radio_inputs": 20,
+    "unbound_mixer_toggles_open": 8,
+    "dead_meeting_controls_open": 6,
+    "nested_tabs_selected": 10,
+    "qt_callback_errors": 0,
+    "construction_is_not_full_workflow_acceptance": true,
+    "computer_use_paused_on_user_request": true,
+    "no_computer_use_for_routing203": true
+  },
+  "current_native_version": "v5.329.83",
+  "current_firebase_version": "v5.329.81",
+  "native_signing": "UNSIGNED",
+  "full_gui_acceptance": false,
+  "record204": {
+    "report": "docs/audit/2026-10-30-complete/GEMINI_BROADCAST_AUDIT_v5.329.80.md",
+    "status": "VERIFIED_REPAIRS_AND_RELEASE_FULL_SYSTEM_AUDIT_IN_PROGRESS",
+    "source_paths": 43,
+    "trading": "DISABLED",
+    "desktop_control": "PAUSED"
+  },
+  "record205": {
+    "report": "docs/audit/2026-10-30-complete/BROADCAST_RECOVERY_RELEASE_v5.329.81.md",
+    "status": "FACEBOOK_USER_CONFIRMED_C_LOCAL_CLOSE_PREPARED_ROOT_COMMIT_CLOUD_PENDING",
+    "facebook": "USER_CONFIRMED_SCREENSHOT",
+    "broadcast": "LEFT_RUNNING",
+    "trading": "DISABLED",
+    "tests": 255,
+    "E_storage": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED"
+  },
+  "record207": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+    "status": "VERIFIED_V83_INSTALLED_FROZEN_DIAGNOSTIC_COMPILED_PHYSICAL_IPC_CURRENT_NO_GAME_HOLD",
+    "audit_status": "IN_PROGRESS",
+    "tests": 304,
+    "operational_guard_denials": 0,
+    "native_installation": "VERIFIED_2256_EXACT_HASHES_4_SHORTCUTS",
+    "runtime_capture": "CURRENT42344_10552_AUTO_HOLDING_NO_GAME_PRIOR_AUTO_GAME_HLS_PROOF_RETAINED",
+    "trading": "DISABLED",
+    "audio": "GENERATED_SILENCE_NO_MIC",
+    "incident": "LEGACY_STOP_ACCOUNTED_RESTORED",
+    "encrypted_cloud_recovery": "BLOCKED_E_KEY_UNREADABLE",
+    "public_hls": "VERIFIED_INDEPENDENT_EXACT_BYTES_AND_GAME_FRAME",
+    "automatic_proof_cloud": "VERIFIED_FOUR_FILES_SAME_FOLDER_METADATA_AND_RAW_DOWNLOAD_SHA",
+    "test_groups": 20,
+    "source_version_checks": "PASS_16_MIRRORS_5.329.83",
+    "frozen_diagnostic": "VERIFIED_QUIET_READY_PHYSICAL_PROFILE",
+    "compiled_control_read": "VERIFIED_PHYSICAL_IPC_OWNER_DACL_ADVANCING",
+    "prior_public_hls": "VERIFIED_46560_44780_2026_10_31T191830Z",
+    "current_game_frame_verified": false
+  },
+  "native_candidate_version": "v5.329.86",
+  "native_functional_acceptance": "VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE",
+  "record208": {
+    "report": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+    "status": "ACTUAL_NATIVE_GUI_START_AND_FRESH_FORTNITE_PUBLIC_HLS_VERIFIED",
+    "source_unchanged": true,
+    "actual_native_gui_started": true,
+    "actual_start_clicks": 1,
+    "controller_pid": 52852,
+    "encoder_pid": 43860,
+    "public_hls": "FRESH_ADVANCING_EXACT_BYTES_AND_ACTUAL_GAME_VERIFIED",
+    "audio": "GENERATED_SILENCE_NO_MIC_CHANGE",
+    "trading": "DISABLED",
+    "initial_stale_output": "FAILED_RETAINED_CALLER_UNKNOWN",
+    "prior304_tests": "HISTORICAL_NOT_RERUN",
+    "full_gui_acceptance": false,
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "per_output_fixed_errors": "NONE_OBSERVED_CURRENT_ENCODER43860",
+    "rtmp_dashboard_acceptance": "UNVERIFIED_ALL_TARGETS",
+    "source_pins": "71_MATCH_AND4_CRYPTO_HASHES_UNCHANGED",
+    "app_left_open": true,
+    "focus_returned_to_game": true
+  },
+  "record209": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_PROGRAM_PREVIEW_AND_OBS_RETIREMENT_v5.329.85_RECORD209.md",
+    "status": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+    "tests": 352,
+    "test_groups": 28,
+    "guard_denials": 0,
+    "javascript_tests": 35,
+    "typescript_exit": 0,
+    "native_version": "5.329.85",
+    "version_mirrors": 16,
+    "actual_release": "v5.329.85 installed (2256 files; SHA-256 26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c). GUI correctly held blank without a game. Independent HTTP probe decoded 200 black holding frames in 7.25 seconds, no audio output. 352 native tests/28 groups, 32 JS checks and TypeScript exit 0. Controller 36868/encoder 31084 remained holding. Final preview ON/after-toggle and 85 live-game GUI rendering remain UNVERIFIED. User intentionally closed games; no game or broadcast restart for final acceptance.",
+    "prior84_failure": "STATUS_WRITE_UNAVAILABLE_NO_ROOT_STOP_CORRECTIVE85_RESTORE_SEPARATE",
+    "continuity": "NOT_UNINTERRUPTED",
+    "preview": "READ_ONLY_DELAYED_FIXED_LOOPBACK_HTTP_EXISTING_HLS_NO_SECOND_CAPTURE",
+    "audio": "SILENT_NO_MIC_OR_AUDIO_CONFIGURATION_CHANGE",
+    "trading": "DISABLED",
+    "firebase_deployed": false,
+    "hosting_parity": "NOT_CLAIMED",
+    "encrypted_recovery": "BLOCKED_E_KEY_UNREADABLE",
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "preview_last_observed": "OFF",
+    "final_ON": "UNCONFIRMED_CONCURRENT_INPUT_HOLD",
+    "user_source_drafts_applied": false,
+    "no_more_screen_cursor_control": true,
+    "last_readonly_utc": "2026-10-31T20:50:17.913779+00:00",
+    "last_frames": 36009,
+    "last_media_seconds": 1200.3,
+    "completed_ON_toggle": false,
+    "credential_defaults_removed": 2,
+    "credential_rotation": false,
+    "old_git_history_clean_claim": false
+  },
+  "record210": {
+    "report": "docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md",
+    "status": "VERIFIED_V86_INSTALLED_LIVE_GAME_PREVIEW_CONTROLS_AND_SAME_PIPELINE",
+    "version": "5.329.86",
+    "tests": 356,
+    "groups": 29,
+    "guard_denials": 0,
+    "core_source_unchanged": true,
+    "installed_GUI": "Actual Fortnite image visible; toolbar OFF synchronized both controls, checkbox ON restored both and the picture; left ON",
+    "trading": "DISABLED",
+    "audio": "GENERATED_SILENCE",
+    "cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "encrypted_recovery": "BLOCKED_PRIOR_E_KEY_CUSTODY"
+  }
+}

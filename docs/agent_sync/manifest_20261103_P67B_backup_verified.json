@@ -1,0 +1,167 @@
+{
+  "at": "2026-11-04T01:08:14.933345+00:00",
+  "status": "verified_Studio106_deployed_and_67A_67B_cloud_restores",
+  "executable": "C:/AI-BS/native_studio/releases/v5.329.106/AI_BS_Studio/AI_BS_Studio.exe",
+  "all_owned_jobs_joined": true,
+  "active_execution_sessions": [],
+  "backups": {
+    "66A": "docs/game_engine/checkpoints/66A-drive.json",
+    "67A": "docs/game_engine/checkpoints/67A-drive.json",
+    "67B": "docs/game_engine/checkpoints/67B-drive.json"
+  },
+  "qualified_evidence_scope": "P64:128registered engine checks/config, including Python harnesses and Qt cases. C++SDK bytes unchanged; P66relocated SDK9/config and discovery35, P67packaging134plus actual frozen/runtime/routes/video checked separately.",
+  "next_step": "Prepare a106/SDK0170 user-started fresh-save play-and-measure review while preserving earlier105/0166review tools. Continue remaining personal likeness/refinement and checked captions; do not mark full goal complete without human pacing/gameplay evidence and final acceptance.",
+  "monitor_snapshot": {
+    "schema_version": 1,
+    "updated_at": "2026-11-04T01:08:14.933345+00:00",
+    "goal_complete": false,
+    "native_source": {
+      "sdk_version": "0.17.0",
+      "status": "in_progress",
+      "summary": "Canonical0170SDK/18file runtime published with9relocated consumers/config and35source discovery/fallback checks. Full128engine/config baseline C++bytes unchanged; affected Python packaging134checks pass. Deployed106 uses same runtime. Final opening/likeness/human/caption acceptance remains incomplete.",
+      "evidence_paths": [
+        "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\cli-verification.json",
+        "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\native-smoke-verification.json",
+        "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\process-closeout.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\sdk-verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\cpu-release-verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\cpu-debug-verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\hidden-native-release-verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\hidden-native-debug-verification.json",
+        "D:\\AI-BS-Game-Resources\\P46\\SDK0165Qualification\\visible-native-debug-verification.json",
+        "D:\\AI-BS-Game-Resources\\P47\\CombinedOpeningReview\\verification.json",
+        "D:\\AI-BS-Game-Resources\\P47\\CombinedOpeningReview\\user-run-triage.json",
+        "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\complete-release-verification.json",
+        "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\full-native-verification.json",
+        "D:\\AI-BS-Game-Resources\\P54\\OpeningReadingPresentation\\packaged-current-routes-verification.json",
+        "D:\\AI-BS-Game-Resources\\P55\\SDK0166Qualification\\verification.json",
+        "D:\\AI-BS-Game-Resources\\P55\\SDK0166Qualification\\sdk-verification.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\55A-drive.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\56A-drive.json",
+        "D:\\AI-BS-Game-Resources\\P61\\CharacterSurfaceFoundation\\red-verification.json",
+        "D:\\AI-BS-Game-Resources\\P61\\CharacterSurfaceFoundation\\independent-release-checks.json",
+        "D:\\AI-BS-Game-Resources\\P61\\CharacterSurfaceFoundation\\live-build-checkpoint.json",
+        "D:\\AI-BS-Game-Resources\\P62\\CharacterRoughnessShading\\verification.json",
+        "D:\\AI-BS-Game-Resources\\P63\\CharacterSurfaceImport\\verification.json",
+        "D:/AI-BS-Game-Resources/P64/SDK0170Qualification/source-progress.json",
+        "C:/AI-BS/docs/game_engine/checkpoints/63A-drive.json",
+        "D:\\AI-BS-Game-Resources\\P64\\SDK0170Qualification\\verification.json",
+        "D:\\AI-BS-Game-Resources\\P65\\Opening0170SurfaceStage\\verification.json",
+        "C:/AI-BS/docs/game_engine/checkpoints/64A-drive.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\65A-drive.json",
+        "D:\\AI-BS-Game-Resources\\P66\\SDK0170Publication\\verification.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\66A-drive.json"
+      ]
+    },
+    "packaged_candidate": {
+      "studio_version": "5.329.106",
+      "status": "passed",
+      "summary": "Studio106/SDK0170surface study preview: 134package/entry+35discovery tests, actual frozen savedplay/Creator/Hub/limitedstartup/poststatic, both bundled routes/restarts and fresh1080pvideo pass. Not deployed; human pacing/performance, captions and likeness still pending.",
+      "evidence_paths": [
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\package-preflight.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\candidate-static-closeout.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\runtime-verification.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\packaged-current-routes-verification.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\repair-software-verification.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\verification.json"
+      ]
+    },
+    "deployed": {
+      "studio_version": "5.329.106",
+      "status": "passed",
+      "summary": "Studio106/SDK0170 engineering preview deployed to5existing launchers after verified67Abackup, current full package/protected inventories and fresh shortcut readback. Frozen creator/savedplay/routes/restarts/video pass. New openings usev20surface study; existing worlds retain owned assets. Final face/captions/human pacing/performance incomplete.",
+      "evidence_paths": [
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\deployed-verification.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\launcher-deployment.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\launcher-fresh-readback.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\67A-drive.json",
+        "D:\\AI-BS-Game-Resources\\P67\\Studio106Preparation\\verification.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\67B-drive.json"
+      ]
+    },
+    "remaining": [
+      {
+        "id": "likeness",
+        "title": "Adam naturalistic likeness and animation",
+        "status": "in_progress",
+        "detail": "P60isolated mesh-swap fixture proves ordered group/weight/save-reopen fix, then separate v20short-fringe cap build passes.13nonhair GLB primitives byte-exact to v19;22joints/528animation-accessor comparisons retained. Actual166GPU animation/band and private105chapter admission pass;224frames/688352cap-clearance samples pass.16head/body all-side CPU previews prepared. Installed105retains v18. Personal likeness/hair feedback and skin/fabric realism remain incomplete."
+      },
+      {
+        "id": "checked_captions",
+        "title": "Original recording and checked captions",
+        "status": "needs_review",
+        "detail": "The importer is now canonical: Release/Debug each140unit checks,3/3CTest and137extended process checks; both installed446-file SDK0.14 trees remain unchanged. Actual family captions are unreviewed and listening review is deferred; no original recording was bound or marked checked."
+      },
+      {
+        "id": "human_pacing",
+        "title": "8-12 minute first-time opening",
+        "status": "pending",
+        "detail": "Combined review prepared and tested at D:/AI-BS-Game-Resources/P47/CombinedOpeningReview/Play_And_Measure_First_Boot.cmd; explicit Enter, fresh retained save,9new+8legacy helper tests, actualCMD inspection and hidden native admission pass. User identified the prior launcher as Run_20Second_Opening_Check.cmd, which is stationary FPS only. No chapter playthrough or new combined measurement verified. Human pacing remains pending; render time never becomes active-time acceptance."
+      },
+      {
+        "id": "final_package",
+        "title": "Final package, launchers and verified backup",
+        "status": "in_progress",
+        "detail": "106engineering preview now packaged and deployed; frozen smokes, both bundled routes/restarts, source/art backups and fresh software video verified. Complete-goal acceptance still requires remaining likeness/captions/human pacing/current gameplay measurements and final audit/backup."
+      },
+      {
+        "id": "unreal_review",
+        "title": "Separate detailed Unreal review",
+        "status": "completed",
+        "detail": "Separate detailed Unreal review remains unchanged:578 actors and19 materials versus340 actors in the original blockout. All138 sealed source/asset files still match. Furnished spaces and playable repair/bypass mechanics exist, but Adamv09 likeness is unfinished; native v02/v12 updates are not integrated. Its state resets between Play sessions. No new video was recorded; the old recording script targets the older map."
+      },
+      {
+        "id": "verified_backups",
+        "title": "Verified historical and pending current checkpoints",
+        "status": "in_progress",
+        "detail": "66Apublication/discovery96members,67Asource/qualification/video396members and67Bdeployment20members all raw-downloaded and every member/manifest verified. Original family media, real saves, credentials/privateGit/Masterledger and compiled executables excluded. Final complete-goal backup remains pending."
+      },
+      {
+        "id": "opening_workshop",
+        "title": "Diagnostic opening and detailed native spaces",
+        "status": "in_progress",
+        "detail": "Current frozen106/SDK0170passes both complete repair/bypass workshop routes with7inspection panels, correct supply lighting, physical Adam Follow, shelter/workbench/Pencil progression and normal restart. Fresh1080p88.185s software video fully decoded. Personal likeness/presentation and first-time pacing/current gameplay performance remain unfinished."
+      },
+      {
+        "id": "persistent_saved_game",
+        "title": "Launch and resume the saved chapter",
+        "status": "in_progress",
+        "detail": "Current frozen106saved-play baseline passes45checks across3native windows. Both bundled player-world repair/bypass tours earn outcomes and normal fresh-process resumes preserve exact logical SQLite history, scope/timeline and remembered Adam HUD. New test slots only; actual first-time human play review remains pending."
+      },
+      {
+        "id": "warm_opening_entry",
+        "title": "Current opening entry in source UI",
+        "status": "completed",
+        "detail": "Studio103now includes the explicit Open Warm Beginning entry and uses SDK0.16.4bundled resources. Existingworkspace/repeated-entry/legacy/failure handling passed source tests against103resources, with source bytes pinned to frozen package; the actual frozen curated factory and saved-play client pass baseline runtime. Existinglaunchers updated without save/project replacement."
+      },
+      {
+        "id": "current_workshop_walkthrough",
+        "title": "Current Workshop walkthrough candidate",
+        "status": "completed",
+        "detail": "Fresh frozen106/SDK0170surface-study repair walkthrough:88.185seconds1080p, actual owned-window/HUD capture, full decode and3frame checks. Local fileP67/First_Boot_Studio106_Surface_Study_Walkthrough.mp4; uploaded to67Drive folder and included byte-exact in verified67A. Engineering replay, not human pacing or60FPS proof."
+      },
+      {
+        "id": "camera_clearance",
+        "title": "Close-camera hologram clearance",
+        "status": "completed",
+        "detail": "P39 adds an allocation-free SDK camera-visibility helper and a bounded local instance copy: hologram omitted inside0.35m, smooth opacity to full appearance at0.9m, vertical body interval[-0.1,2]m. Actual1080p GPU checks prove near pixels equal the scene without the guide, middle fade visible and far pixels equal original; no scene/character-buffer replacement, saved history or Follow/Wait anchor changes. Two CPU tests pass, including214camera checks;20actual GPU/Win32 checks also verify unchanged HUD text is not republished and changed text reaches its control. RepairR07 passes; bypassR07 was interrupted with active=0/foreground=0 and is retained as failed. Profiling no longer forces focus. A user-assisted15s1080p nook baseline measured46.599FPS(mean21.460ms,p9533.416ms), below60; subsequent cached-HUD comparisons could not meet active/setup requirements and were stopped. No speedup/full-route FPS is claimed."
+      },
+      {
+        "id": "current_performance",
+        "title": "Current native frame budget",
+        "status": "needs_review",
+        "detail": "Current user-run collector now executes the actual Studio105 bundled SDK0166 player with its v18 assets. Runtime bytes also match the qualified SDK; full closed asset manifest is pinned.21offline tests and actual CMD inspection passed without launching a game. Separate new worlds record version/source/session metadata. Historical stationary103 report and legacy helpers retained. No new full-gameplay performance or human pacing result yet."
+      },
+      {
+        "id": "reading_presentation",
+        "title": "Readable native memory panels and optional source disclosure",
+        "status": "completed",
+        "detail": "Larger DPI-aware reader2 story text, dark panel, exact optional source view, pause/key/reload/save semantics qualified in SDK0166 Release/Debug and deployed in Studio105. Both bundled routes and normal reopens pass. Final chapter/human acceptance remains separate."
+      }
+    ],
+    "next_step": "Prepare a106/SDK0170 user-started fresh-save play-and-measure review while preserving earlier105/0166review tools. Continue remaining personal likeness/refinement and checked captions; do not mark full goal complete without human pacing/gameplay evidence and final acceptance."
+  },
+  "monitor_sha256": "c7a77345870497b42e8e827d6383f387ac27db85795e0299ed6d29120b8e56c0",
+  "goal_complete": false
+}

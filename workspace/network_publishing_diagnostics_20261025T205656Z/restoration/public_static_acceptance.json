@@ -1,0 +1,25 @@
+{
+  "actor": "/root",
+  "utc": "2026-10-25T21:38:39.558641+00:00",
+  "phase": "public_static_acceptance",
+  "all_pass": true,
+  "edge_transformation": "One existing Cloudflare Insights script injection plus inter-tag whitespace; not authored site analytics",
+  "cf_script_not_executed_by_raw_probes": true,
+  "body_file_sanitized": "public_observed_entry.html now excludes injected external analytics script; originalresponseSHA retained",
+  "checks": [
+    {
+      "host": "stehouwer-publishing.com",
+      "status": 200,
+      "observed_hash": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "same_observed_entry": true,
+      "normalized_origin_entry_match": true
+    },
+    {
+      "host": "www.stehouwer-publishing.com",
+      "status": 200,
+      "observed_hash": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "same_observed_entry": true,
+      "normalized_origin_entry_match": true
+    }
+  ]
+}

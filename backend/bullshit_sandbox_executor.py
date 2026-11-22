@@ -1,87 +1,40 @@
-import os
-import sys
-import subprocess
-import time
+"""Legacy response adapter; generated source never runs on the host.
+
+The historical seven-pass name remains for compatibility. A passing result means
+syntax plus one isolated guest execution succeeded, not seven independent proofs.
+Existing VM provider controls remain authoritative.
+"""
+from __future__ import annotations
+
 import ast
-import shutil
+import os
+import shutil  # retained for callers inspecting legacy dependency availability
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SANDBOX_DIR = os.path.join(BASE_DIR, "sandbox_scratch")
+SANDBOX_DIR = os.path.join(BASE_DIR, 'sandbox_scratch')  # historical identity only
 
 
 def seven_pass_validation(code_content: str) -> dict:
-    """
-    Executes the REOP 7-Pass Validation Loop in the sandbox.
-    Returns a dict with status and telemetry.
-    """
-    if not os.path.exists(SANDBOX_DIR):
-        os.makedirs(SANDBOX_DIR, exist_ok=True)
-
-    test_file_path = os.path.join(SANDBOX_DIR, "test_execution.py")
-
-    # Pass 1: Syntax (AST Parse)
     try:
         ast.parse(code_content)
-    except SyntaxError as e:
-        return {"status": "FAIL", "reason": f"Syntax Error: {e}", "state": "C"}
-
-    # Write to sandbox
-    with open(test_file_path, "w", encoding="utf-8") as f:
-        f.write(code_content)
-
-    # Pass 2-7: Execution, Deadlock, Memory Bounds
-    start_time = time.time()
+    except (SyntaxError, TypeError, ValueError) as exc:
+        return {'status': 'FAIL', 'reason': f'Syntax Error: {exc}', 'state': 'C',
+                'isolation_verified': False, 'patch_applied': False}
     try:
-        if shutil.which("docker"):
-            cmd = [
-                "docker",
-                "compose",
-                "-f",
-                os.path.join(BASE_DIR, "docker-compose.sandbox.yml"),
-                "run",
-                "--rm",
-                "executor_sandbox",
-                "python",
-                "/sandbox/scratch/test_execution.py",
-            ]
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15.0)
-        else:
-            result = subprocess.run(
-                [sys.executable, test_file_path],
-                capture_output=True,
-                text=True,
-                timeout=15.0,
-            )
-    except Exception:
-        result = subprocess.run(
-            [sys.executable, test_file_path],
-            capture_output=True,
-            text=True,
-            timeout=15.0,
+        try:
+            from backend.core.ide_orchestrator.sandbox_runner import SubprocessSandboxRunner
+        except ModuleNotFoundError:
+            from core.ide_orchestrator.sandbox_runner import SubprocessSandboxRunner
+        checked = SubprocessSandboxRunner(default_timeout_sec=15.0).execute_in_sandbox(
+            original_file_path='candidate.py', modified_code=code_content,
         )
-
-    execution_time = time.time() - start_time
-
-    # Pass 4: OOM / Memory Limits
-    if result.returncode == 137:
-        return {
-            "status": "FAIL",
-            "reason": "OOM Killer Terminated Process: Memory limit exceeded.",
-            "state": "C",
-        }
-
-    if result.returncode != 0:
-        return {
-            "status": "FAIL",
-            "reason": f"Runtime Error (Exit Code {result.returncode}):\n{result.stderr}",
-            "state": "C",
-        }
-
-    # Telemetry Extraction
-    telemetry = {
-        "status": "PASS",
-        "execution_time_sec": round(execution_time, 4),
-        "output": result.stdout,
-        "state": "A" if execution_time > 2.0 else "B",
-    }
-    return telemetry
+    except Exception as exc:
+        return {'status': 'FAIL', 'reason': f'Isolated validation unavailable: {exc}', 'state': 'C',
+                'isolation_verified': False, 'patch_applied': False}
+    if checked.status != 'PASSED' or checked.isolation_verified is not True:
+        return {'status': 'FAIL', 'reason': checked.stderr or checked.status, 'state': 'C',
+                'isolation_verified': checked.isolation_verified, 'patch_applied': False}
+    return {'status': 'PASS', 'execution_time_sec': checked.execution_time_sec,
+            'output': checked.stdout, 'state': 'A' if checked.execution_time_sec > 2.0 else 'B',
+            'isolation_verified': True, 'patch_applied': False,
+            'verification_scope': 'syntax_and_one_guest_execution'}

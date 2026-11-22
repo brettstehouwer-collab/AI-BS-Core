@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "archive": {
+    "accepted_input": "file_uri",
+    "success": true,
+    "id": "1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY",
+    "title": "08_Indexed_Character_And_Articulated_Guide.zip",
+    "file_name": "08_Indexed_Character_And_Articulated_Guide.zip",
+    "mime_type": "application/zip",
+    "url": "https://drive.google.com/file/d/1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY/view?usp=drivesdk",
+    "parent_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+    "structuredContent": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY",
+      "title": "08_Indexed_Character_And_Articulated_Guide.zip",
+      "file_name": "08_Indexed_Character_And_Articulated_Guide.zip",
+      "mime_type": "application/zip",
+      "url": "https://drive.google.com/file/d/1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY/view?usp=drivesdk",
+      "parent_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx"
+    }
+  },
+  "archive_full_byte_roundtrip": "verified length/SHA/ZIP CRC/source manifest checksum",
+  "mirrors_and_receipts": [
+    {
+      "path": "C:/AI-BS/docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "file_id": "1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4",
+      "drive_url": "https://drive.google.com/file/d/1qEIFW7MKFMmF_at999Ozj5TP1YE5FZl4/view?usp=drivesdk",
+      "bytes": 192975,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/BUILD_STATUS.md",
+      "file_id": "1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK",
+      "drive_url": "https://drive.google.com/file/d/1ghuAx18GJEg0u-gF-NmusHPnaVHdeILK/view?usp=drivesdk",
+      "bytes": 100337,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/milestone_queue.json",
+      "file_id": "1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl",
+      "drive_url": "https://drive.google.com/file/d/1w6FXe5oW6To3yW-tzTvJA5wdJFyVD-Nl/view?usp=drivesdk",
+      "bytes": 41635,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/resource_catalog.json",
+      "file_id": "1f2MqXYg3A7TV3k5MzMHvZjL3-g0M54hp",
+      "drive_url": "https://drive.google.com/file/d/1f2MqXYg3A7TV3k5MzMHvZjL3-g0M54hp/view?usp=drivesdk",
+      "bytes": 5308,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/engine/WARM_BEGINNING.md",
+      "file_id": "1TyjoeKi2Qm9-ueDK4iDEOuCcbzTAWx_n",
+      "drive_url": "https://drive.google.com/file/d/1TyjoeKi2Qm9-ueDK4iDEOuCcbzTAWx_n/view?usp=drivesdk",
+      "bytes": 7387,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint08-local.json",
+      "file_id": "1yB6f6GB2gmneFUfWqWicQkwMZE25jiAz",
+      "drive_url": "https://drive.google.com/file/d/1yB6f6GB2gmneFUfWqWicQkwMZE25jiAz/view?usp=drivesdk",
+      "bytes": 1881,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint08-drive.json",
+      "file_id": "1AA6-kB0WE8JxR0gAC7YuHFNTQA7X90EB",
+      "drive_url": "https://drive.google.com/file/d/1AA6-kB0WE8JxR0gAC7YuHFNTQA7X90EB/view?usp=drivesdk",
+      "bytes": 2440,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/agent_sync/manifest_warm_character_20261102.json",
+      "file_id": "1fDhr3MXFvKCKQ9qahVFcu6ou6QDYViYN",
+      "drive_url": "https://drive.google.com/file/d/1fDhr3MXFvKCKQ9qahVFcu6ou6QDYViYN/view?usp=drivesdk",
+      "bytes": 19902,
+      "metadata_size_match": true
+    },
+    {
+      "path": "C:/AI-BS/docs/agent_sync/warm_character_20261102.md",
+      "file_id": "1Z2Xiqo4WtrsouE7x0bGsY3DqkmAsJEmr",
+      "drive_url": "https://drive.google.com/file/d/1Z2Xiqo4WtrsouE7x0bGsY3DqkmAsJEmr/view?usp=drivesdk",
+      "bytes": 1569,
+      "metadata_size_match": true
+    }
+  ],
+  "scope": "Post-seal Drive index; mirror readback verifies metadata lengths. Full byte/hash proof applies to the sealed archive."
+}

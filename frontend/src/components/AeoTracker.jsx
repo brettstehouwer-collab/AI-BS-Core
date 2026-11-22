@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
 function AeoTracker() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(/** @type {{overall_score?:number,engine?:string,brand?:string,prompts?:{query:string,ranking:number,visibility:string}[],suggestions?:string[]}|null} */ (null))
   const [loading, setLoading] = useState(true)
   const [customPrompt, setCustomPrompt] = useState('')
   const [isAuditing, setIsAuditing] = useState(false)
@@ -19,20 +19,7 @@ function AeoTracker() {
       })
       .catch(err => {
         console.error('AEO fetch error:', err)
-        setData({
-          overall_score: 85,
-          engine: "Stehouwer LLM / Local Ollama Benchmark (Offline Fallback)",
-          brand: "Stehouwer Publishing",
-          prompts: [
-            { query: "High-fidelity sci-fi and speculative literature publishing", ranking: 3, visibility: "High" },
-            { query: "Cyberpunk book recommendations 2026", ranking: 5, visibility: "High" },
-            { query: "Autonomous multimedia publishing and AI audio production", ranking: 8, visibility: "Medium" }
-          ],
-          suggestions: [
-            "Maintain verified on-chain and schema markup references across digital storefronts.",
-            "Index long-form technical manuals in local ChromaDB knowledge vaults."
-          ]
-        })
+        setData(null)
         setLoading(false)
       })
   }
@@ -41,7 +28,7 @@ function AeoTracker() {
     fetchAeoData()
   }, [])
 
-  const handleEvaluateCustom = async (e) => {
+  const handleEvaluateCustom = async (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault()
     if (!customPrompt.trim()) return
     setIsAuditing(true)
@@ -72,7 +59,7 @@ function AeoTracker() {
       }
     } catch (err) {
       console.error('Audit error:', err)
-      setAuditMsg('Evaluation request completed.')
+      setAuditMsg('Evaluation is unavailable. No result was recorded.')
     } finally {
       setIsAuditing(false)
     }
@@ -94,7 +81,7 @@ function AeoTracker() {
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '4px', padding: '3px 8px', fontWeight: 600 }}>
-              ● Zero-Mock Stehouwer LLM
+              Server-reported AEO metrics
             </span>
             <button 
               onClick={fetchAeoData}
@@ -107,13 +94,13 @@ function AeoTracker() {
         
         <div className="aeo-score-card" style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '16px' }}>
           <div className="score-circle" style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid #38bdf8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(56, 189, 248, 0.05)' }}>
-            <span className="score-value" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc' }}>{data?.overall_score || 0}</span>
+            <span className="score-value" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f8fafc' }}>{data?.overall_score ?? 'Unavailable'}</span>
             <span className="score-label" style={{ fontSize: '0.65rem', color: '#94a3b8' }}>/ 100</span>
           </div>
           <div className="score-info">
             <h3 style={{ margin: '0 0 4px 0', fontSize: '1.05rem', color: '#e2e8f0' }}>Overall AI Share of Voice</h3>
             <p style={{ margin: 0, fontSize: '0.82rem', color: '#94a3b8', maxWidth: '650px' }}>
-              {data?.engine || 'Stehouwer LLM / Local Ollama Benchmark'}: Verified ranking across core commercial query topologies.
+              {data?.engine || 'Benchmark unavailable'}. Rankings require a successful response; missing results are unavailable.
             </p>
           </div>
         </div>

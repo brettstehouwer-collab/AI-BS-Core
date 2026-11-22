@@ -1,0 +1,13 @@
+SQLite 3.54.1
+Official source: https://sqlite.org/2026/sqlite-amalgamation-3540100.zip
+Copyright information: https://sqlite.org/copyright.html
+
+The SQLite deliverable library and its documentation are dedicated to the
+public domain by their authors. The authors permit copying, modification,
+publication, compilation, sale, use, and distribution for any purpose.
+SQLite does not require a license. This notice records the upstream status;
+it does not replace the public-domain dedication in the original source.
+
+AI-BS compiles the official sqlite3.c amalgamation as a static library and
+does not distribute SQLite's optional command shell or autoconf scripts.
+The upstream sqlite3.c source retains its original public-domain dedication.

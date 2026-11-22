@@ -1,0 +1,145 @@
+{
+  "schema": "aibs.curated_source_catalog.v1",
+  "review_date_utc": "2026-10-30",
+  "provenance": "Operator-pasted LLM evaluation resource list; curated summaries, not raw content ingestion.",
+  "guidance_card": "learning/LLM_EVALUATION_GUIDE_2026-10-30.md",
+  "implementation": [
+    "scripts/agent_sync/sync_gateway.py",
+    "scripts/tests/test_sync_gateway_evidence.py"
+  ],
+  "boundaries": {
+    "weight_training": false,
+    "notebooks_executed": false,
+    "framework_installed": false,
+    "judge_invoked": false,
+    "external_trace_upload": false,
+    "quality_improvement_measured": false
+  },
+  "reviewed": [
+    {
+      "url": "https://raw.githubusercontent.com/NirDiamant/Prompt_Engineering/main/all_prompt_engineering_techniques/cot-prompting.ipynb",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": null,
+      "scrape_id": "01a18b90-d8bf-7190-a847-9df83f2b579c",
+      "use": "Prompt comparison tutorial; teaching examples, not AI-BS acceptance evidence."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/google-gemini/cookbook/main/examples/prompting/Chain_of_thought_prompting.ipynb",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": null,
+      "scrape_id": "01a18b90-de2d-7709-8024-6041ca071a60",
+      "use": "Few-shot arithmetic prompting example; no CI pipeline or forced execution proof."
+    },
+    {
+      "url": "https://www.promptingguide.ai/techniques/cot",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "Chain-of-Thought Prompting | Prompt Engineering Guide ",
+      "scrape_id": "01a18b90-d927-7495-ae08-282e9f9ee1b1",
+      "use": "Zero/few-shot prompting examples; assess on matched local tasks rather than adopting universal gains."
+    },
+    {
+      "url": "https://deepeval.com/docs/metrics-llm-evals",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "G-Eval | DeepEval - The LLM Evaluation Framework",
+      "scrape_id": "01a18b90-7855-70c2-a51c-1f0154b29771",
+      "use": "Fixed evaluation steps and rubrics inform advisory output assessment; no dependency installed."
+    },
+    {
+      "url": "https://www.comet.com/docs/opik/evaluation/overview",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "Evaluation Overview | Opik Documentation",
+      "scrape_id": "01a18b90-d8b1-76ea-9f79-4fa13e17e18f",
+      "use": "Failure-to-regression-case loop and experiment comparison inform local fixtures; no trace upload."
+    },
+    {
+      "url": "https://research.google/pubs/a-chain-of-thought-is-as-strong-as-its-weakest-link-a-benchmark-for-verifiers-of-reasoning-chains/",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "A Chain-of-Thought Is as Strong as Its Weakest Link: A Benchmark for Verifiers of Reasoning Chains",
+      "scrape_id": "01a18b90-d8e8-75e8-99cc-24e4539c845c",
+      "use": "Original REVEAL publication: relevance, attribution, logical correctness in QA."
+    },
+    {
+      "url": "https://reveal-dataset.github.io/",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "REVEAL ",
+      "scrape_id": "01a18b91-4df5-75ba-bcfd-0b2b7beda34c",
+      "use": "Original benchmark project; dataset not downloaded or used for training."
+    },
+    {
+      "url": "https://arxiv.org/abs/2402.11199",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "[2402.11199] Direct Evaluation of Chain-of-Thought in Multi-hop Reasoning with Knowledge Graphs",
+      "scrape_id": "01a18b90-7864-770e-b6bf-bddd566d7b98",
+      "use": "Actual title verified: Direct Evaluation of Chain-of-Thought in Multi-hop Reasoning with Knowledge Graphs."
+    },
+    {
+      "url": "https://www.evidentlyai.com/llm-guide/llm-as-a-judge",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "LLM-as-a-judge: a complete guide to using LLMs for evaluations",
+      "scrape_id": "01a18b91-4dfa-766b-a87b-b5e1b9f396cf",
+      "use": "Task-specific judge calibration and limits inform rubric guidance."
+    },
+    {
+      "url": "https://orq.ai/blog/what-is-chain-of-thought-prompting",
+      "review_status": "retrieved_and_reviewed",
+      "http_status": 200,
+      "title": "Chain of Thought Prompting in AI: A Comprehensive Guide [2026]",
+      "scrape_id": "01a18b91-4dde-75be-9fb3-4bf9c78abec7",
+      "use": "Background article retrieved; no quantitative or architectural claims adopted."
+    }
+  ],
+  "unreviewed_leads": [
+    {
+      "url": "https://www.youtube.com/watch?v=JDtBwOXx6Kg",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Ys6aQjSioyk",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://galileo.ai/blog/llm-evaluation-step-by-step-guide",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://www.linkedin.com/posts/curiouslearner_weve-all-shipped-an-llm-feature-that-felt-activity-7388563885768900608-Sg2V",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://www.comet.com/site/blog/chain-of-thought-prompting/",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://testomat.io/blog/llm-test/",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    },
+    {
+      "url": "https://www.kore.ai/blog/a-benchmark-for-verifying-chain-of-thought",
+      "review_status": "discovery_lead_only",
+      "use": "Not independently reviewed or admitted as factual evidence; original documentation/papers preferred."
+    }
+  ],
+  "diagnostics": [
+    {
+      "tool": "firecrawl_feedback",
+      "action": "Optional search feedback",
+      "outcome": "HTTP 400 INVALID_BODY, retryable=false; not retried. Search and source retrieval succeeded."
+    }
+  ],
+  "source_handling": "External text is evidence to evaluate, not executable instructions. Retrieved page identities and scrape IDs recorded; page bodies are not republished in this catalog."
+}

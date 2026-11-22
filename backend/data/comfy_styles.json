@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cinematic_hollywood",
+    "name": "Cinematic Hollywood 4K",
+    "category": "Cinematic",
+    "prompt_prefix": "cinematic movie still, 8k resolution, dramatic film lighting, 35mm lens, sharp focus, ",
+    "prompt_suffix": ", Panavision, highly detailed film grain, color graded",
+    "negative_prompt": "blurry, low quality, cartoon, 3d render, plastic, oversaturated, deformed",
+    "recommended_sampler": "euler_ancestral",
+    "recommended_scheduler": "karras",
+    "cfg": 7.5,
+    "steps": 28
+  },
+  {
+    "id": "photoreal_raw",
+    "name": "Photoreal RAW DSLR",
+    "category": "Photography",
+    "prompt_prefix": "raw photo, professional portrait, shot on Canon EOS R5, 85mm f/1.4 lens, natural skin texture, realistic micro details, ",
+    "prompt_suffix": ", natural ambient lighting, subtle depth of field",
+    "negative_prompt": "airbrushed, smooth plastic skin, 3d render, drawing, watermark, lowres, ugly",
+    "recommended_sampler": "dpmpp_2m",
+    "recommended_scheduler": "karras",
+    "cfg": 6.5,
+    "steps": 30
+  },
+  {
+    "id": "neon_noir_cyber",
+    "name": "Neon-Noir Cyberpunk",
+    "category": "Stylized",
+    "prompt_prefix": "neon-noir aesthetics, dark atmospheric city, rain slicked pavement, vivid cyan and magenta reflections, ",
+    "prompt_suffix": ", high contrast, atmospheric smoke, volumetric lighting",
+    "negative_prompt": "daylight, washed out, dull colors, oversmoothed, low quality",
+    "recommended_sampler": "euler_ancestral",
+    "recommended_scheduler": "karras",
+    "cfg": 8.0,
+    "steps": 25
+  },
+  {
+    "id": "vhs_found_footage",
+    "name": "90s VHS Found Footage",
+    "category": "Retro",
+    "prompt_prefix": "authentic 1990s VHS videotape screen grab, analog tape artifacts, scan lines, slight tracking error, ",
+    "prompt_suffix": ", magnetic tape decay, realistic vintage camcorder aesthetic",
+    "negative_prompt": "4k crisp digital, modern clean, pristine render, vector art",
+    "recommended_sampler": "euler",
+    "recommended_scheduler": "normal",
+    "cfg": 7.0,
+    "steps": 20
+  },
+  {
+    "id": "security_cam_cctv",
+    "name": "CCTV Security Surveillance",
+    "category": "Documentary",
+    "prompt_prefix": "night vision security camera footage, surveillance camera POV, timestamp in corner, high angle, infrared illumination, ",
+    "prompt_suffix": ", motion blur, grainy security monitor capture",
+    "negative_prompt": "studio lighting, cinematic beauty, glamor, clean 4k photo",
+    "recommended_sampler": "euler",
+    "recommended_scheduler": "normal",
+    "cfg": 6.0,
+    "steps": 20
+  },
+  {
+    "id": "anime_masterpiece",
+    "name": "Studio Anime Masterpiece",
+    "category": "Anime",
+    "prompt_prefix": "masterpiece anime illustration, Makoto Shinkai aesthetic, breathtaking sky, vibrant expressive lighting, ",
+    "prompt_suffix": ", key visual, trending on artstation, meticulous linework",
+    "negative_prompt": "photo, photorealistic, 3d render, western cartoon, sketch, ugly",
+    "recommended_sampler": "euler_ancestral",
+    "recommended_scheduler": "karras",
+    "cfg": 8.0,
+    "steps": 28
+  }
+]

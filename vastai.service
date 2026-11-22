@@ -1,0 +1,19 @@
+[Unit]
+Description=Vast.ai Host Daemon
+Wants=docker.service
+After=docker.service
+
+[Service]
+ExecStart=/var/lib/vastai_kaalia/latest/launch_kaalia.sh
+Restart=always
+User=vastai_kaalia
+Group=docker
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/wsl/lib"
+Environment="LD_LIBRARY_PATH=/usr/lib/wsl/lib"
+LimitCORE=2147483648
+CPUWeight=10000
+IOWeight=10000
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target

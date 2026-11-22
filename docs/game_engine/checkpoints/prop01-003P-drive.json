@@ -1,0 +1,24 @@
+{
+  "checkpoint": "PROP01-003P",
+  "status": "native_acceptance_and_cloud_verified",
+  "timestamp": "2026-11-05T23:53:00Z",
+  "parent_folder_url": "https://drive.google.com/drive/folders/1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "checkpoint_folder_url": "https://drive.google.com/drive/folders/1k-H6GZQZIo-JSwduAFOe6jK-3R35rmDl",
+  "archives": [
+    {
+      "name": "Prop01_003P_Native_Acceptance_Checkpoint.zip",
+      "drive_id": "1UydDX0X-vvSVJ-bC5gBtqq3boO29MK9h",
+      "folder_id": "1k-H6GZQZIo-JSwduAFOe6jK-3R35rmDl",
+      "bytes": 7761765,
+      "sha256": "e6b426ddd0ac17bfe548d70221b6fc6d79bfd4b822e0c5ec6049cca1a8e312d1",
+      "members": 67,
+      "verified": true
+    }
+  ],
+  "restore_verification": {
+    "status": "PASSED",
+    "byte_parity": "100%",
+    "sha256_parity": "100%",
+    "zip_crc32_test": "PASSED_0_ERRORS"
+  }
+}

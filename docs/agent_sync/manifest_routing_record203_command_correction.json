@@ -1,0 +1,21 @@
+{
+  "record": 203,
+  "utc": "2026-10-31T16:33:14.929239+00:00",
+  "status": "DOCUMENTATION_COMMAND_REFERENCE_CORRECTED",
+  "prior_handoff": "docs/agent_sync/manifest_routing_record203_20261031T162134Z.json",
+  "prior_label": "Ebootstrap/final_combined_regressions203.py",
+  "actual_runner": "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\bootstrap\\final_combined_tests203.py",
+  "actual_runner_sha256": "ef8fbbb387240fbe059a7805f528f709568447869b999a03fffe9effb64213d8",
+  "actual_command": [
+    "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "E:\\AI_BS_Resources\\AI-BS-Audit\\2026-10-30-complete\\bootstrap\\final_combined_tests203.py"
+  ],
+  "verification_receipt": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/routing203/final_combined_tests203.json",
+  "actual_cases": 79,
+  "historical_handoff_retained": true,
+  "source_or_binary_changed": false,
+  "description": "The earlier shorthand named the final test runner incorrectly. Its referenced actualreceipt, recorded cases and archived runner are correct. This document supplies the exact executable command."
+}

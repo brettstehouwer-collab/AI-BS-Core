@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-03T23:19:18.585019+00:00",
+  "status": "failed_art_build_two_attempts_retained_no_candidate_published",
+  "first_failure": {
+    "operation": "Deform old cap to a short fringe",
+    "minimum_triangle_area_ratio": 0.07205770767782256,
+    "required_minimum": 0.25,
+    "compressed_triangles": 6,
+    "all_compressed_are_cap": true
+  },
+  "second_failure": {
+    "operation": "Rebuild only cap and restore original per-vertex weights",
+    "exception": "IndexError: bpy_prop_collection[index]: index15 out of range, size0",
+    "location": "P59_build_retopology.py:66",
+    "cause_observed": "After ob.data=new, the target vertex-group collection is empty; restoring old indexed weights cannot work without first recreating the original ordered definitions."
+  },
+  "no_new_blend_saved": true,
+  "v19_and_v18_hashes_exact": true,
+  "installed105_2301files_exact": true,
+  "all_owned_processes_joined": true,
+  "same_build_not_repeated_after_second_failure": true,
+  "next_step": "Run a small isolated Blender fixture for mesh reassignment: preserve ordered group names/indices, assign replacement mesh, recreate definitions, restore weights, save/reopen and compare exact names/indices/weights. Only after that proves the root fix, resume the separate full hair-cap build. Retain both failed attempts and all existing art.",
+  "goal_complete": false,
+  "git_head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "source_master": "D:\\AI-BS-Game-Resources\\P58\\Adam_v19\\adam-character-v19-eye-brow-profile-study.blend",
+  "source_master_sha256": "0defc05843a923c048e241d073436460e79f691b18785542c51562e6f939c167"
+}

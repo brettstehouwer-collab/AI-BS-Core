@@ -1,0 +1,65 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "7a5ef7ff66af4977b81f4ed727341eb7",
+  "plan_id": "4bfa66cb638245f29aa209dfca65df9b",
+  "snapshot_sha256": "9b9fa07ece878c56827ff38bfe14058f1250be6505cdd9615d71440cf7533920",
+  "review_digest": "69408a96dac15209655469922afa3d8a41d78e6ec7132826da154c97ad5d2bc0",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56",
+        "excerpt": "import unittest, runpy\r\nclass Check(unittest.TestCase):\r\n def test_value(self):\r\n  self.assertEqual(runpy.run_path(\"src/app.py\")[\"value\"], 42)\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      },
+      {
+        "path": "src/other.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py",
+      "src/other.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "aacdfed268c53966827d8f1b423ff3ff4e023764c971fb764701decc64e1a3da",
+  "worker": {
+    "pid": 34804,
+    "created": 1794771336.628209
+  },
+  "created_at_utc": "2026-11-15T19:35:46.291205+00:00",
+  "entry_sha256": "54befd85114232b651976d14c856037ab908f69cfbd09e0f6a812c2f819235e8"
+}

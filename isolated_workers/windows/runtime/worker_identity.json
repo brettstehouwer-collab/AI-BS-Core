@@ -1,0 +1,13 @@
+﻿{
+    "Account":  "AI-BS\\aibs_vm_worker",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "PID":  315592,
+    "CreationTimeUTC":  "2026-10-23T20:51:07.8394904Z",
+    "Administrator":  false,
+    "IntegritySIDs":  [
+                          "S-1-16-8192"
+                      ],
+    "Passed":  true,
+    "TimestampUTC":  "2026-10-23T20:51:08.1392934Z",
+    "Scope":  "Identity probe only; no guest or task execution"
+}

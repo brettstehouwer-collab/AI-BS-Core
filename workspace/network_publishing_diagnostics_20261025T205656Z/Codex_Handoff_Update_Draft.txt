@@ -1,0 +1,18 @@
+DRAFT ONLY — not appended to live handoff or architectural ledger
+Baseline25Oct2026,20:57-21:06UTC/16:57-17:06EDT.
+Read-onlydiagnosis complete: hyphenatedroot/www Cloudflare404emptyresponse; nonhyphenatedroot/www NXDOMAIN(system+Google).
+No80originlistener/noNGINXprocess. Same-local-tunnel userconnectors have divergenthostname/APIrules; scopedAPIomits publishing/ends404. Specificedge-responseattribution andSYSTEMremoteconfigUNKNOWN; logs stale/empty.
+UsernewphysicalpathONT->eeroMax7->PCsupersedes historicalICSdiagram. Ethernet2observed2.5Gbps,192.168.4.35/22via192.168.4.1; separateEthernet1Gbps/static192.168.10.50/24/noGW.
+OneNETGEARpoweredonduringtask;21:06passiverefreshunchangedPCstate; model/roleUNKNOWN. No householdnetworkrepair justified.
+52-rowassetmanifest flags privateledger/invoice/tracking/indexingresources;3samplePDFreferencesmissing. Wholecandidate dist notapproved.
+C:free declined145.56GB(8.1percent)->99.55GB(5.54percent); helperlaterreported43.18GB(2.4percent)at21:16:58UTC. CauseUNKNOWN; tinyoutputsonly; no cleanup/processkill.
+Operator subsequentlyauthorizedfixingstehouwer-publishing.com andidentifiedlocalhost5173/?tab=betaaswebtrafficmonitor. Restoration is now separatelyauthorized, preservingprivateassets/workingAPI. Executionevidencebelongsinrestoration/. Thisdraftdoesnotclaimwebsitefixed.
+Next: reviewedpublic-onlyloopbackorigin plussafeingressconvergence/core_bootadmission; protectAPI/sse,/messages404policy; no householdchanges. Do notopenbetaunreviewed because widgetsmaymutate/capture/scan.
+
+
+RESTORATION ADDENDUM (subsequent explicit operatorauthorization)
+RESTORATION COMPLETE — 2026-10-25T21:41:10.858939+00:00
+Public root and www both200; functional homepage boots at390/1440 with JS/CSS loaded. Reviewed19-file static origin is loopback-only and logon-task managed. Original dist unchanged; private/tracking files excluded and8publicnegativepaths404. Paired ingress/config admission consistent; API/core/SYSTEM peers preserved. No household or nonhyphenatedDNSchange.
+Known limits: mobile135px overflow; missing background and3samplePDFs; legacy unsafe form-value analytics omitted; existingCloudflareInsights blocked during smoke; one handoffhealthassertion failed with unknownspecificresponse, currentAPIhealthy. No zero-outage/full-API/reboot acceptanceclaim.
+Next peroperator: verifyCodexPID33936/memorycommit/pagefile/disk snapshot before othermajorwork. No Codex/pagefile changeauthorized yet.
+Detailed evidence: restoration/restoration_receipt.json. Live handoff/architecturalledger remain unmodified by this task.

@@ -1,0 +1,38 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "d488fc2519f5aa8c119416fe44080904fe45db1d48eaed15d1f7a08cd064f037",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "b9550ab7732f34988d1597c80f2d8af73381800e51633d98c5e567426d971283",
+        "proposed_sha256": "0af7e39ae2f41ccbfc9d86dfb05373f953f77df15bd92739812cbd03efe9a77f",
+        "content": "# retained prefix\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\nvalue = 42\r\n# keep final tail\r\n",
+        "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -124,5 +124,5 @@\n # long but bounded unchanged context\r\n # long but bounded unchanged context\r\n # long but bounded unchanged context\r\n-value = 1\r\n+value = 42\r\n # keep final tail\r\n"
+      }
+    ],
+    "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -124,5 +124,5 @@\n # long but bounded unchanged context\r\n # long but bounded unchanged context\r\n # long but bounded unchanged context\r\n-value = 1\r\n+value = 42\r\n # keep final tail\r\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "b9550ab7732f34988d1597c80f2d8af73381800e51633d98c5e567426d971283",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.015,
+  "finished_at_utc": "2026-11-14T14:20:58.587702+00:00",
+  "response_sha256": "8cb63e439a3c62679e52caecbe668e7f901848a0e703896cd6f8eb571c5a9ed6",
+  "response_bytes": 232,
+  "entry_sha256": "17f6c4e9e620b83c030da163d77edcd4398c80ad62d9c1d3febf65fcf754496a"
+}

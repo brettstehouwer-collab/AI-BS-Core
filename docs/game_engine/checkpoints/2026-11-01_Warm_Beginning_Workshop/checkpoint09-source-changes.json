@@ -1,0 +1,1487 @@
+{
+  "schema_version": 1,
+  "previous_archive": "D:\\AI-BS-Game-Resources\\Backups\\08_Indexed_Character_And_Articulated_Guide.zip",
+  "previous_sha256": "1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000",
+  "scope": "Complete current selected source compared with checkpoint08; added_to_selected_snapshot does not imply a newly created repository file; binary masters remain complete",
+  "changes": [
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "948096e7f53980284edbde5043132dbb9cd436ae810f0ecd12e63b2e4b91b92c",
+      "after_bytes": 222035,
+      "text_patch": true
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "06da87c9fcc61e9c6e36e03d7fa2a4e78b1278086311fd96769a8c3c1d670847",
+      "after_bytes": 3011,
+      "text_patch": true
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+      "status": "modified",
+      "before_sha256": "dc3bbe7826ca85b27c0b41dda8cbea40607c74399a80c80bd6d8c5c2981aec3a",
+      "after_sha256": "e8076dafa905f7243f2cefdf78082ae6f43c357b659e26a273a8bd83e3d5a4b6",
+      "after_bytes": 195883,
+      "text_patch": true
+    },
+    {
+      "path": "docs/game_engine/resource_catalog.json",
+      "status": "modified",
+      "before_sha256": "a2c9d0ab81d6f6278233a015558994cffeb0b300ea5df3dbd8501fa30a6fac6b",
+      "after_sha256": "b1d45e790eb4def031c8ed755a1e9187fc4157188a4e284c03affb6668281aad",
+      "after_bytes": 5308,
+      "text_patch": true
+    },
+    {
+      "path": "engine/BUILD_STATUS.md",
+      "status": "modified",
+      "before_sha256": "e4c5bb5da3cdece669632a3d94b9551fa92e002db1c689a5f79dd7af7b48eba5",
+      "after_sha256": "e37a1514e53806cb8e32d7684eb9551c3b452c9eeda04105461ff6109f381692",
+      "after_bytes": 103245,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_ASSETS.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2e1bef1f6e87f4ce82e9238c8b5bd455d58ddf7c0caaab941dd936aa7725d7b7",
+      "after_bytes": 6915,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_COOKER.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "651743ef298f7a39f89a775556a2e88f1282c2d633e7f431f6b620ee29e560bb",
+      "after_bytes": 6105,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_IMPORT.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7269e6b6c7aac01484f41295fc0c1bce3fe4a39356fa929f17cd150491cb9d03",
+      "after_bytes": 10100,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CHARACTER_RENDERER.md",
+      "status": "modified",
+      "before_sha256": "18e2f18f9e9e41f5e4a8bbe7d6c9c9bd1b285f1f8645c49998c012599cf46ac4",
+      "after_sha256": "0e2ae3529c7993f504e9e5564b8f39c4490109648ca9d5a44604a7596c7aca99",
+      "after_bytes": 13901,
+      "text_patch": true
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "status": "modified",
+      "before_sha256": "93a8478152e2dda1f33bdb48779f5ade1d277ff41de58b925175f642ccde2067",
+      "after_sha256": "6d939ed82f4c373aea5fffd274fc6c61188f12139794a0909de6f782ddcc0a98",
+      "after_bytes": 43142,
+      "text_patch": true
+    },
+    {
+      "path": "engine/WARM_BEGINNING.md",
+      "status": "modified",
+      "before_sha256": "4522c95a3ed781817e43db632427d5b1f1a0236fd809a661db32d61f5581d755",
+      "after_sha256": "29cf131116f11dcefd847ae8ef503a08054e2f24bc9971598a7aaa0b14092dfe",
+      "after_bytes": 7752,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/asset_cooker.cpp",
+      "status": "modified",
+      "before_sha256": "d02d1517ba457cbaab0b8d4a2df12516a53c52e101f0505c76e0a56b2ce77977",
+      "after_sha256": "a18d63fd3c5a07bf515e03653643144354880cb985a4d6f097f69b7db590a312",
+      "after_bytes": 29088,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/character_cooker.inl",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "cdae8e3a2a3e86299103b9868c310f09212de84aed79552064e84b96d3d05e4f",
+      "after_bytes": 9921,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/content_host.cpp",
+      "status": "modified",
+      "before_sha256": "fafc4479638d9fe15f9305a8a801bf63f26b39020460596603e8158792231142",
+      "after_sha256": "7fb9c788ee6a9018e8606d74f41864c96a3fd4428b7e722e20e5fba4da88a47b",
+      "after_bytes": 17463,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/creator_viewport.cpp",
+      "status": "modified",
+      "before_sha256": "d8ef3ea72ffcd89b7c844e7d679248ed5de1611751e6915c912e4b8ea82ef62f",
+      "after_sha256": "d30aadd4f365d7f2a4ccc4ac19e2a6510707cb6a4fed434deb3219bc26285443",
+      "after_bytes": 13589,
+      "text_patch": true
+    },
+    {
+      "path": "engine/apps/durable_world.cpp",
+      "status": "modified",
+      "before_sha256": "736b868f48b7060257a68ec1220f04b7b65b8a1f0f963326ab27fab4d503f80e",
+      "after_sha256": "545a00c64b3bd2f9fa0f2de8fa549061fe0feb755641b0ef5c10d28e472d77e0",
+      "after_bytes": 115679,
+      "text_patch": true
+    },
+    {
+      "path": "engine/cmake/CgltfDependency.cmake",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "98746cd973d603b9e9729ee09a00d570e06ce389b96d2143736407d883460357",
+      "after_bytes": 691,
+      "text_patch": true
+    },
+    {
+      "path": "engine/cmake/NativeCapabilities.json.in",
+      "status": "modified",
+      "before_sha256": "f10b3e12b3ddc0f1c4b544af8535712ba7af320c664c9f28fc427e8c469a873e",
+      "after_sha256": "7abada782c20ba80d93d6121289c5c8739219d34543872767fb9de8cd2c5a111",
+      "after_bytes": 551,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/CMakeLists.txt",
+      "status": "modified",
+      "before_sha256": "824e71ff6294c6bc6c51f265af25f050c3d03b206dab6bdf865040781df65d53",
+      "after_sha256": "cd4f6417646f64e325e920ff3bc0469031a66e1c0b80dab674d7a3b5cb82bece",
+      "after_bytes": 1090,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/guide_gpu.cpp",
+      "status": "modified",
+      "before_sha256": "b2624465d2f8f4f06a285a351d0160ecb43de0ae83324dd1829b2d8448665ab5",
+      "after_sha256": "75cf64a8cba3f641e06c924c8be5f3b77e759422b6247f80a8444e3c7a756822",
+      "after_bytes": 10615,
+      "text_patch": true
+    },
+    {
+      "path": "engine/examples/sdk_consumer/main.cpp",
+      "status": "modified",
+      "before_sha256": "3d2c517450f91a5ff742c7c0d24217e944b3e218ca1ff99b0e5697df2c879785",
+      "after_sha256": "906c4fc577b01e01135d76a1a8aa6ab4fa62c386436077474f4c73c79393b93b",
+      "after_bytes": 29272,
+      "text_patch": true
+    },
+    {
+      "path": "engine/games/content_authoring.cpp",
+      "status": "modified",
+      "before_sha256": "ab6002038e925be7f50b7685c1c92a922d459c7f01565b421b349c8e16288cc8",
+      "after_sha256": "179f7dbfde12fd48de3afe48fca493143d9d5098f137475ae3e4b60e6372fcb5",
+      "after_bytes": 42025,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/asset_store.hpp",
+      "status": "modified",
+      "before_sha256": "fb0958af55760950a83119eb55042fbf56dbb90dee0104f1523338249870fe48",
+      "after_sha256": "cbaf139d15819b5136a66ba96d00a60e4f4bb0d4b7ece58bc85661babb03614c",
+      "after_bytes": 4745,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/character_assets.hpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "89c98e595a7ebd426aafe2b33838db610794ee9ece8859d46357251b38c9d63f",
+      "after_bytes": 1485,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/character_codec.hpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e3255ca29931e24cef53465472e34c423a47e0d687be5b00f18c79b053ecd4d7",
+      "after_bytes": 472,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/character_import.hpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "fd293e62d645fc740463bf9e3d588d8836a949716b1c706e80c2c2df0010cb77",
+      "after_bytes": 1588,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/content_dependencies.hpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "ec8da61c5819da2f673a5cc2c7216253537cb80bf2e87a8a8cc5701ac74e592c",
+      "after_bytes": 1241,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/placed_assets.hpp",
+      "status": "modified",
+      "before_sha256": "b80bef838870ee9939f387ae407ab4b58882846f8ef2eb1e2461534d28f66284",
+      "after_sha256": "0ac0649bb59e1b103b2b30c84d3a5c3b50620c56b5b8ed75f2dd98fd741cb250",
+      "after_bytes": 1010,
+      "text_patch": true
+    },
+    {
+      "path": "engine/include/aibs/render.hpp",
+      "status": "modified",
+      "before_sha256": "1039b687c2cb39ae0e99fd923cd0291577c6d6ca327e60ab0315a4a37813751c",
+      "after_sha256": "79acb56a00648496c39d6c75c115f77b3930f60ebe17b61a1148d0703f0507bf",
+      "after_bytes": 4322,
+      "text_patch": true
+    },
+    {
+      "path": "engine/milestone_queue.json",
+      "status": "modified",
+      "before_sha256": "38f15464f7c2104f34343622876b9e94c56e1565c0129ae0b606580d901569d2",
+      "after_sha256": "d5e9140430c9911abe639083696c15c192489ff31503fd7f12053006443ea594",
+      "after_bytes": 42932,
+      "text_patch": true
+    },
+    {
+      "path": "engine/shaders/character.hlsl",
+      "status": "modified",
+      "before_sha256": "8a578ac6a93aee1037e72cd71618486ef1412d4746b96d0f6f8999a97a7f0764",
+      "after_sha256": "d935b87a4a913457752720a538f1489785c6c2b1a6504bfb54ba310c317cc0c0",
+      "after_bytes": 3345,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/asset_store.cpp",
+      "status": "modified",
+      "before_sha256": "882bcf959237c8598e81d00c3fc5ee81370da4a9355cbb17ecbaa03a954cd025",
+      "after_sha256": "736a7de9cf5728cf8f524b89a92495523ffca0f7393de443ac0e14b9daedaa44",
+      "after_bytes": 22922,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/character_assets.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "9667a717abd17b82721adcac45938c93cccdddf9e81bf3bf84c11edce04380e5",
+      "after_bytes": 4904,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/character_codec.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "26e1906c7e84ebaac81775b0717c6610873dbb60e12d07670b232c0bb6861b9b",
+      "after_bytes": 15888,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/character_import.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "1d2a57b6f5de6a9ad20c64faa23d366f963d3ef2b1d7803a4581d23bcf1b8595",
+      "after_bytes": 48163,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/content_dependencies.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a8b3864502828604b37e71d1051f73e4bd7aa19fb8966048a6b3039561198385",
+      "after_bytes": 3568,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/placed_assets.cpp",
+      "status": "modified",
+      "before_sha256": "353168fef199510748ef021f98cabe508706b0b50e8e0437ad98eb1f3a38b412",
+      "after_sha256": "b7abbc552f6ce52c43dac6f5a8d3259885038801a24af9413d2321f9e2539898",
+      "after_bytes": 7944,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_character.inl",
+      "status": "modified",
+      "before_sha256": "7535c7a731f582dfd95d84eb9d43120e6e5191094d6b98061a4bb479491f2e32",
+      "after_sha256": "eb9fd21f610a90f6de20c32c000df82e03199f5e535ec29b19f7da6f98336186",
+      "after_bytes": 24474,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_dx12.cpp",
+      "status": "modified",
+      "before_sha256": "8f71fc2ca8f976ac7c410cf7ee6f19e2cb2d141dc1a4b662e35d1b5dad2c28e7",
+      "after_sha256": "0588d147ea75183d1075faf40313fe06cf424ee4da2f42a9007b021726242e13",
+      "after_bytes": 41761,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_lighting.inl",
+      "status": "modified",
+      "before_sha256": "bb119e5fce1f47cf7dc8e077d9fbd1e70a1722c969a7d4904ebdc0aa05ddb60c",
+      "after_sha256": "cd2948e5898f74864b7191094030c045c0dee71fa2646552b0ee442a8c621147",
+      "after_bytes": 10297,
+      "text_patch": true
+    },
+    {
+      "path": "engine/src/render_textures.inl",
+      "status": "modified",
+      "before_sha256": "18e96739dcd56d0ee4c5b8cb7a08e39a734de55116ec2e18a252f6c38b987ccb",
+      "after_sha256": "ab328c71c84199907643ee7a531195cf3fc75e6ca46bfbcb469bd1432b9eb002",
+      "after_bytes": 11788,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_assets_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8097197effa753c90f9e316a67572bf1b2d5ade225a5730cd03defec74d38048",
+      "after_bytes": 6750,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_codec_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "106fbfd852cf70f52b3b3ead4523ab3c682560647e2d1b859c64b1dbe257f507",
+      "after_bytes": 7395,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_import_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "bbd59ccec678ede89d40732255462019b1a57be6f2c430f01023dcb00e4eb43b",
+      "after_bytes": 13234,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_material_gpu_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6baf552a2c51ccc875a7f17614a440c91921943eea4ae367c7d91a8027cec5c9",
+      "after_bytes": 19897,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/character_store_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7ece1abe674f655fb5a96bf5770c2147f3b8f0ed05a9c3edb07392c3b03e22d3",
+      "after_bytes": 15459,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/companion_native_fixture.cpp",
+      "status": "modified",
+      "before_sha256": "cbd89daf52313a916700877dc41580418bc5a0377c81425ca50106b4a6b36948",
+      "after_sha256": "2f7b7f07a981c48b8996869d1fed21ece35376e8c86b91c71a6c45d11a2cbb65",
+      "after_bytes": 4680,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/content_dependency_tests.cpp",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "cffc2eea781d3a7345e7b3656d68bda507bc6d2f8f7702d8aed3f2647d554d2d",
+      "after_bytes": 3529,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/README.md",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "eff277d97e38d6139ba522ec9ebd0739296377da1b14fcfa025de71eec644e6f",
+      "after_bytes": 264,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/antipodal-loop.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7e102088104e845a43350aa66bba8408ec5cdc7ef842cac2f5cf7e6399bf292b",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/asymmetric.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "fb72680443de6fd4344b979a70aac1434b383dc605b1b7f4aa338fc575116517",
+      "after_bytes": 9300,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-accessor-count.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "284a427a33b0dc48bde0db98567130ce0dffb198c86ed8a6f10fa775cd944dea",
+      "after_bytes": 1288,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-accessor-offset.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "1e4632fc7fae74b689cdef367adc877b27755312823b1a57fce1ed24a0eeed74",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-accessor-range.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "5bbfd298e324b631987a785a723ed9633897319b1200e2b35b24ac0360603e61",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-accessor-stride.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "75544554e24ac32d11a76296a7c1df663919e3d045d88774fd6f17d55f472158",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-animation-frame-bound.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "5afbcc0bc5568feb3682f2f4fb3dc9fe57f1194e76441972f803e5ac4c18dc95",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-animation-stride.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "11719b55a2f7459aec6312f8f1f2a2c60d1983f4254172c057a44aa51ea3122a",
+      "after_bytes": 1656,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-bad-weights.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "031b534fc0a1cf03922486ab99b068cc5d268cef42238e46f23e38bcc6353437",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-bin-padding.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8fdede077a4f69f5c9154315e7c8b04c6c0137df987b5f55664c95a34881e44f",
+      "after_bytes": 1284,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-blend.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c7f52605649277878736adf87c7d278f242dccd48dbb7ace2e0afedf740e3ff4",
+      "after_bytes": 1300,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-component.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "26447ffbf43275589a7d2c3fd33a6ee7f8cd115fff119b2634dc2f8038a641f8",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-cubic-animation.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "4152a8f75a16b528cea666c64175351878dbebff8df5a00cd79534e2700df533",
+      "after_bytes": 1668,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-cycle.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2c6c4ed4f60b0da2593c46d06612be8c83154bcf11739bbcfbd0251b6d76fb26",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-duplicate-channel.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2a0e7ac40e4488f74aa34984db90af266167ea155a788b4dd18f750be518b0da",
+      "after_bytes": 1692,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-image-stride.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "c964c4a953e50a9b972b603c8f2947953f675a700fa84e2ebd4379ede4a3f172",
+      "after_bytes": 2352,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-incoherent-bind.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "ba576e0cafe8f1614c29715a9f86816024512b47105077682110eeeeff569709",
+      "after_bytes": 9300,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-index-stride.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fafc7998f53959edc6e7c5b57afc58fabbccfb97ba91d789a8601ec445fc7a",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-index.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e02762017652ac423c3f98b74fd60e2f3593484ab2c26f3f6e97f4fba035179a",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-inverse-bind-stride.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "d164f2aa080d97a1ef8943f300a726ddde6c851fa1a6864a51d5263f7972310e",
+      "after_bytes": 9316,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-long-cycle.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "09eecad17dbe69ba15eace195968d40a20f80f0dea77f7fb9f87fbba7d3e4d8c",
+      "after_bytes": 1312,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-matrix-and-trs.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2520af05720eb810ac8520a8f111255e3afa299b3e9ee36046cbcba03786acb2",
+      "after_bytes": 1376,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-multiple-meshes.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0e3651a49be9fb515a20746e3c197d10ac558f2e0e3e578a9e08467ef8cfb547",
+      "after_bytes": 1304,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-multiple-parents.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3b9d828f6025bdb8273e782918955a1b1cfc681ce27e17fd6bd17a3459761059",
+      "after_bytes": 1316,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-nan-position.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0be44efef281a3701522c0b324f2723f63e91cf0962ed8773b12458d975f3b0d",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-non-png-image.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "98cfc7bf5bbbdb69de0704bd6a8a2877916b671b69be02da8fa493aab65987f3",
+      "after_bytes": 2340,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-nonincreasing-time.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "ba55dc120e8b6f581bebbe9cd7acef4c0a990e8d5eb756711f35197c80d79ad1",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-pbr.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "077e69cd97dae3c38480695ec4b5bf6e161a0c7d4a870516aace7944fd153b4a",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-position-bound-mismatch.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "155aa06d05bbdd5a287426a1f99b2bb4fbd742600e394a85b10b304e1215caad",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-position-bound-missing.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8d317a3fe92af568cb8d79ee457243f05805eb1dd1584df89765924b716b5cca",
+      "after_bytes": 1260,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-quaternion.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "17b7811769f1b630c0691066d1acf7c6e18c4a6674f8d149d306bdaee03e23df",
+      "after_bytes": 1300,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-reflected-joint.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "893390138513f77b306946a9f0549b553e81bd0c9a937e73c687511d99800604",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-required-extension.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "45d1b4473468c14d5489a0e72ca7cf1528b1c84c89840615fd7e793a3eceeac0",
+      "after_bytes": 1316,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-root-motion.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "1655578fab3b53388a31e6bf77ffb53666e7d95f3a760656282578c45097404c",
+      "after_bytes": 1636,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-sampler.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8e3e17315ba4061bfa1181d15d38c741c5e3ea22efb7cb85d9553783df4593c7",
+      "after_bytes": 2336,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-second-influences.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6cc4867e6d94e5b779a84eff219f5dd1b73c8d4113afed9631660d7e4520795d",
+      "after_bytes": 1292,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-shared-vertex-view.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "760a2200898cc57a4c1ed8801c10da5af0c953d3f152183205b84cb7c9b1e117",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-sheared-joint.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6273f17ae4d4ce0467076f0d7ea5b38da3ddf0a6823ab4a87aaa246096776b0f",
+      "after_bytes": 1324,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-singular-joint.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "b6cd1c7100132358d34bda10aabccfffae685665c25c644e30dade55df3a905f",
+      "after_bytes": 1296,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-sparse.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "d204e0bd667e03b5265e8ccb7b7027277e9e2d724ca8c9310f3f98bba23d5cc4",
+      "after_bytes": 1376,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-step-animation.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "49ad9439529aaeafca479fb2b7c7c6b65bab2702a1204edbd4c9492b25bd4147",
+      "after_bytes": 1664,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-texture-transform.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "824169f435b28ec8006f6a041e9d7b0af4c60da9a9bb420e865295e4de3f6dc7",
+      "after_bytes": 2396,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-zero-duration.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "367393b4d94d37cbe62dee5033c91bde4850efbd64e670e9e36fb5cd254c784a",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/bad-zero-weights.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "906b25b81b08d6ad67dc0c8143ba9873d1e950266381385d6c951c0d83f896b0",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/basic.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "640fa729e217dc8d262b3e3e47ba52b5698e59bc0defd617c044c5be8c7b8300",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/buffer.bin",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6ef53ee76f956b84e5ceb779187de51faaf5cd978ca1c6e862cd370699edf512",
+      "after_bytes": 216,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/external.gltf",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7a92d181f97ff081052f8f5f4cf03203b252b94cd10ea54cad2d27ce114dd1f9",
+      "after_bytes": 1054,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/frame-boundary.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e5c4d89fcffa6e642e2b5a640662925bc9801fba81b4074f8ebf913049341687",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/ignored-mesh-transform.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "5a640f7b631d09deb10e69ef4bf4ea421dcd1a34f5138c0fe03fbd0f438dfcd4",
+      "after_bytes": 9304,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/interleaved.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "1823e71cb68c93bae7e2914d358feb400e4970c72afad7cabe636f2edfd424fd",
+      "after_bytes": 1456,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/late-key.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8e1924f3eb2212ac0be9dde8efe259da4232489470e86b944ded116260e422af",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/one-sided.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7a841a9e1ba07192ea7ed7117dc7cb26a6d35b17d9cc7e7f5848330b8cae6fa2",
+      "after_bytes": 1280,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/quantized-weights.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "683fced3260dcd6f7ff7c24fe83aa8051b4c588705848386817afbee3dfeaa43",
+      "after_bytes": 1424,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/reflected-bind-shape.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "93719ddb20f024156619a35dbc0be8e1f835ce152c3e56c7b4a885c7522d2d53",
+      "after_bytes": 1476,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/small-loop-seam.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "295cee44b1791d557130d60c2c017034a73dc543886bde930078bd47b62b8cfc",
+      "after_bytes": 1640,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/source-oracle.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "d4c706856d06e98ce3bd520697153104d5e66d86b122c024df9a0c4dd2f664af",
+      "after_bytes": 1972,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/fixtures/character_import/textured-seams.glb",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "eb3125022f100d621cd58765bfb271b74e3a4bde60283fb1f28811c6351e52f9",
+      "after_bytes": 2336,
+      "text_patch": false,
+      "binary_complete_in_archive": true
+    },
+    {
+      "path": "engine/tests/fixtures/generate_character_import.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3f6125502ae9fff05867a963763a7ec6cd35ae4eb5633352aa2dcc5501c50c7a",
+      "after_bytes": 16471,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/test_character_asset_receipts.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0729d4e402b2128b03c50c2e3ef5843d2045c6cc9f5e3ad46599a1208dacfaca",
+      "after_bytes": 1476,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/test_character_creator_integration.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "b5f2bde2de37acc92b2fab5f94394f2ec880edeb9cb96054a08095fa631d99d4",
+      "after_bytes": 14932,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/test_content_dependency_transport.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "f1ca963eb08a7ab3de0ec6696832631e834ab74ad7397fdf5cc94cb2fa89bd1a",
+      "after_bytes": 22125,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/test_native_build_view.py",
+      "status": "modified",
+      "before_sha256": "8aaa17eb02676082d4dcee53c902c21d21511ccecbd9634fa47a1cd1df84a9c6",
+      "after_sha256": "9f27b1240523afff185c9f1ed7304aaf1ffd5b6940bfef6f2ddbfb1831f00f88",
+      "after_bytes": 51837,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/verify_chapter_viewport.py",
+      "status": "modified",
+      "before_sha256": "34543fa2479b5713d4f1517dc70effa9d2f722836db6610f4adadcca8e51d3cb",
+      "after_sha256": "725752db3bd5a8f80691a5356d99619c59cce096514b855c225600f1fb1d0c84",
+      "after_bytes": 8300,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/verify_character_cooker.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "dfb3c4223e703972789563106456751938d6e35d3f087a1e64584d5706ff631f",
+      "after_bytes": 18899,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/verify_character_native.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "85a5b328452709fd4508b627241741b6505d05212dfc5eda171cefeb01f560e1",
+      "after_bytes": 4166,
+      "text_patch": true
+    },
+    {
+      "path": "engine/tests/verify_companion_native.py",
+      "status": "modified",
+      "before_sha256": "aefa40f28302877090d0e274371f25221947567e293ce8090b2fe1b4e00dcd0d",
+      "after_sha256": "f3f7b596088a382eaef402b8830d983098358c5aa710647616b6d1b74fc13c25",
+      "after_bytes": 7353,
+      "text_patch": true
+    },
+    {
+      "path": "engine/third_party/Jolt-LICENSE.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "800abe35d64ad9defd636ff1ee8c961e06f0ebca3ef8d10083e8aa0e8ef86ac3",
+      "after_bytes": 1052,
+      "text_patch": true
+    },
+    {
+      "path": "engine/third_party/SQLite-NOTICE.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0a17810e3cd70c6d3e7dd1956e307f14a189c5aa64440afdc9728109ef1f23e3",
+      "after_bytes": 739,
+      "text_patch": true
+    },
+    {
+      "path": "engine/third_party/cgltf/LICENSE.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "511eb24881df750c82d27a722d78e172d5c1ef0f76144eca00e134638d3ff0fe",
+      "after_bytes": 1186,
+      "text_patch": true
+    },
+    {
+      "path": "engine/third_party/cgltf/PIN.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "50a10e62b6f00c7de26083f28ae7dd1df1b81236cdd99aee93f3e530fe4e1165",
+      "after_bytes": 297,
+      "text_patch": true
+    },
+    {
+      "path": "engine/third_party/cgltf/cgltf.h",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e378a21c084bf1f288bb799de827bb26906efb024255f1ecf1705ea13f11c6ec",
+      "after_bytes": 202865,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/components/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0d885694ee65dba982ddd0d3934ba2835df7ca472cab32a5a7d4c3dd2ffb711e",
+      "after_bytes": 778993,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/package.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "8996631ad9ecb81f06f77f036358002f252a63863f07b9675f33df465b803caa",
+      "after_bytes": 3582,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/public/version.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6ee83b192c53dda6d78f1de2f99dcb928b13edfe46976cc0cd9456d1e4559021",
+      "after_bytes": 194,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/src/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "frontend/version.js",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e7fc800b37eb421e7c58f7ba897823473e58872bf703d09f17a6a11aa436fcfb",
+      "after_bytes": 354,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_build_monitor.py",
+      "status": "modified",
+      "before_sha256": "02e90a6deb636e0a42ca39371e3aec0469e7783c9cc953d517a5271251c86e42",
+      "after_sha256": "04c64f2ae47d418ee71e78cadb81f606c05ac17296f64c3f42672186fbbb268d",
+      "after_bytes": 39840,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_build_view.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "83905c504278ba1d63a1dd3889390042a63b88d274e609607c5443b46ea5c4af",
+      "after_bytes": 39722,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/asset_view.py",
+      "status": "modified",
+      "before_sha256": "20c2bf70751410e86368f04d53564e111f449cc20313f98a74a8b818a267dcfd",
+      "after_sha256": "2f2e98c1d0c1f4b9a8fe97111b60cd4159ee78ef7b2f57f85bb5452b54a69f48",
+      "after_bytes": 24645,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/content_commands.py",
+      "status": "modified",
+      "before_sha256": "d9e3afe314f82ad9151c2189863197990a136b3d85c26f5e0130fb78c8aa0042",
+      "after_sha256": "790a01951ee48f648e278bdca81813eeaa863d6eb8d1a2b33d9d2260ce71b22b",
+      "after_bytes": 19080,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/content_jobs.py",
+      "status": "modified",
+      "before_sha256": "24d7bf6dc81dd972633599d8a9bce8b4dcc240dd3116efc996275badccd14845",
+      "after_sha256": "e97e58f53f95d0138414fd065f6e402a6c3244384cf8163fa9968b35da61a9a9",
+      "after_bytes": 4738,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/content_preview.py",
+      "status": "modified",
+      "before_sha256": "ce495e5e0f201bc34d368444dd91c2b883f7f4756aba88c660d496b3c50a1f35",
+      "after_sha256": "209ef98359d400f6294586fb6983f1b0e152d3278a9da6a17f63dc308225ba30",
+      "after_bytes": 13607,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/content_proposals.py",
+      "status": "modified",
+      "before_sha256": "d0dfaf21a5a5afbd66e30a058f41a0738c43a4f1d49cb58b32adc8b15e6dd090",
+      "after_sha256": "f794a89016b31488210d9385a06e9fd5d0af176bb936b8c62bbb26f2a4ed0549",
+      "after_bytes": 5107,
+      "text_patch": true
+    },
+    {
+      "path": "native_studio/game_engine/content_view.py",
+      "status": "modified",
+      "before_sha256": "1eb27f800a093f11861275ff6d5e0bac3bc68711560404839b65052b3b7850fc",
+      "after_sha256": "0c91c567bcbbde11a318063e2cd18036beb0efcb47d0221a50d248673741c1c3",
+      "after_bytes": 64038,
+      "text_patch": true
+    },
+    {
+      "path": "package-lock.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "5d1dae71d7ca1c29583f561e3cc054d42fa01e1f69b0e7d320893b46517c9058",
+      "after_bytes": 199,
+      "text_patch": true
+    },
+    {
+      "path": "package.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "46e50d050d255bb877fbbdc5a27ae3c401218fa33a131637b2846e9bf9bd255f",
+      "after_bytes": 429,
+      "text_patch": true
+    },
+    {
+      "path": "release.json",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "14cc59631387e37697826fab341096559a8798d8b8e33e73b85cbf45958ff20f",
+      "after_bytes": 193,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/build_native_game_release.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "85712fc90692c92bb2d68ea82b518f00031dec90a415d4637389116e20105514",
+      "after_bytes": 19794,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/release-version.cjs",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "ea8f695190e65f8ba2def743d1377f64467aa7e55f81db821d4d64b30469aa06",
+      "after_bytes": 11693,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_baseline64.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "13bf75dd4dd146cb0db03df8476b5108ee1ec059e9e25ee20e3ac9447d43fc53",
+      "after_bytes": 947,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_coordinator207.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3fc521cf537a9060e5020a2f6fbd11f53ba6b951b4acea6633e078424562c514",
+      "after_bytes": 26791,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_preview205.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "cd9abaaa0c855ad527c9ead724624c56eda5ad99ef14dfc4098b36ce9d0cd42b",
+      "after_bytes": 5088,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_retirement209.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "6222d06d13d5631a7b1d3b6b4140b03a308ff4d7afefa81ae89ba311d2ac682e",
+      "after_bytes": 2664,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_setup205.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a70ea1974bec76802cf99965ec0fbc495866bfd8b7916f26717a2692db94dae2",
+      "after_bytes": 7130,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_truth204.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "23508d23d30127229020b3802b80537e2019ace2cf2e7db87c7d164b6314ad58",
+      "after_bytes": 11884,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_broadcast_validation205.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "4d4239d31137c5df29580189557a96a518d868d109acabe7b744f6d1a346dc5f",
+      "after_bytes": 6509,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_build_baseline.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "61d72134acf009d8d40686516886631d4eeeafb6d64a095b9232ac2424c20ede",
+      "after_bytes": 5428,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_chat_recovery.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "712b00a1184fa941f82021bb4b971e3af5368fe69dd950efd7f5a48c08550383",
+      "after_bytes": 8883,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_connection_diagnostics.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "bac924953a25d5cc496122203a01c602b8060e3cb927ecbf8ad11b3f849a8b2b",
+      "after_bytes": 1821,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_creator_verification.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "2e7ddec7be0eff6cdfa2a83721ee4905c775a365755c94af8a50302a0387ba7c",
+      "after_bytes": 25441,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_crypto_truth.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "e59fd4773cb5209d8ccc000477ac21edaa92d86e5ecf88dbd3f5985e61b17490",
+      "after_bytes": 9117,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_executive_recovery.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "f5932dbe7b375488ff30d47c0c383f5d412bd43e76e51793701988d39a18b635",
+      "after_bytes": 1523,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_executive_service.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "29f2aa214b8243e5d0ae7c2a01b1b3d8827b30a61e713e6b2ced3e186761ab10",
+      "after_bytes": 6114,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_executive_view.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "48bd8550d1026450930fcf8512dc9d0cdea3e0734e761fe99c3a23d8444f9d7a",
+      "after_bytes": 9236,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_fe_express.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "27ed0adf63dc35faae895390614a91ba0d2ea33c64f8ab8b824b873842f197f5",
+      "after_bytes": 11377,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_frozen_dependencies.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "3a3053dac9e2c7f91bad92a107b3b30518e8df9763acc978a7195cc4143aeed0",
+      "after_bytes": 2213,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_game_release.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "5defd2c9f488a924fbbd824bbe30f40481b2df870927bd34692fa9cac5e925c7",
+      "after_bytes": 25038,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_local_connection.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "331583a0deb250d399ccbb7f0f6bb8f402957439907220d3c7ecd324408e3072",
+      "after_bytes": 13739,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_media_client.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "811953042653aeeb344ccc557d05b21c48a8100147e2f1a25ad26fd27b06c6f4",
+      "after_bytes": 3685,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_media_view.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "34724824e732abf33cdca388e4c4a37d3c87d55031c279e432b8803043bcf83a",
+      "after_bytes": 4408,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_navigation_widgets.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a9d985c358a02a92a4aa81fe4a4def715dd1331c0dee08c013c91973ef9cdd9a",
+      "after_bytes": 3542,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_release_signing.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7176ebdf995c216037e6188d09ea6100eda7d2cfc588bee70bc7cd5915796cb6",
+      "after_bytes": 8502,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_service_intent_payload.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "a3c396d7effd844f7d8b12445ceda3d9b887e1e22001771d56793e6213e442aa",
+      "after_bytes": 1819,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_shared_chat.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0ad67cae3228f88c710b3007699f537de39f1db5292bbb56527d669fc99ee9e0",
+      "after_bytes": 6676,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_startup_imports.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "346a20e6a7b94f95a12a674cc7564df23cebd1b679e060150811a44518ef1f55",
+      "after_bytes": 1516,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_system_health_truth.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "eee6c8700a65de3554ac0f6ee1d896b4ae24547eda36bd22536a4a0d9e1b62b7",
+      "after_bytes": 8019,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_telemetry_shutdown.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "840a899b6144fbd2cdc924960e7ee5416574a700b8aa3a2362aa17cf1314b7b5",
+      "after_bytes": 6810,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_telemetry_truth.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "0fc8fa8eeed12e5f3411b3ee5ab7e0a175011f190135b218f8539b7d38458be0",
+      "after_bytes": 3144,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_wav_export.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "4fa72cf1448fcb3588c79d8b1bf335e86371f0daada032e6ea4b220f81fba833",
+      "after_bytes": 11711,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_window_capture205.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "93b308e2528fee5a89813877a373d195248cf853f49f4f676903d7a0271c12f2",
+      "after_bytes": 8534,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_native_window_shutdown.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "fe7fd97bff2e51ca6e68c20ea5afd46961d8ddf118173763bd008e021b97862a",
+      "after_bytes": 3808,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/tests/test_placement_release_smoke.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "637e2fdefd2f57487f36eb3ef29c648eb89f8d9c0e4d38225e5166166be9a4b1",
+      "after_bytes": 9361,
+      "text_patch": true
+    },
+    {
+      "path": "scripts/verify_native_creator_release.py",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "aac8b3ebf5a64fd854bb5aa4279daf23b0baf39c0a514a6602b46b3f7070745e",
+      "after_bytes": 34939,
+      "text_patch": true
+    },
+    {
+      "path": "version.txt",
+      "status": "added_to_selected_snapshot",
+      "before_sha256": null,
+      "after_sha256": "7dfc54db7835f146230ddbead43df92108324ecc9dd5a6ca7f5a6993774a5988",
+      "after_bytes": 10,
+      "text_patch": true
+    }
+  ]
+}

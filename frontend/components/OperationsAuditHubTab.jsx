@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { useAppStore } from './useAppStore';
 
 const OperationsAuditHubTab = () => {
@@ -7,25 +7,25 @@ const OperationsAuditHubTab = () => {
   // Navigation Sub-tab State
   const [activeSubTab, setActiveSubTab] = useState('tasks'); // 'tasks' | 'media' | 'saves' | 'admin' | 'errors'
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [refreshInterval, setRefreshInterval] = useState(10); // seconds
-  const [lastRefreshed, setLastRefreshed] = useState(new Date());
+  const [refreshInterval] = useState(10); // seconds
+  const [, setLastRefreshed] = useState(new Date());
   const [loading, setLoading] = useState(false);
-  const [actionFeedback, setActionFeedback] = useState(null);
+  const [actionFeedback, setActionFeedback] = useState(/** @type {string | null} */ (null));
 
   // Data States
-  const [processData, setProcessData] = useState(null);
-  const [mediaData, setMediaData] = useState(null);
-  const [savesData, setSavesData] = useState(null);
-  const [adminData, setAdminData] = useState(null);
-  const [errorData, setErrorData] = useState(null);
+  const [processData, setProcessData] = useState(/** @type {{"processes": Array<{"name": string, "role": string, "pid": number, "cmd": string, "memory_mb": number, "status": string}>, "host_hardware": {"ram_percent": number, "used_ram_gb": number, "total_ram_gb": number, "logical_cores": number}, "total_active_processes": number, "ports": Array<{"is_open": boolean, "port": string, "status": string, "name": string}>} | null} */ (null));
+  const [mediaData, setMediaData] = useState(/** @type {{"total_generated_media": number, "comfyui": {"online": boolean, "queue_remaining": string}, "streaming_ingest": {"rtmp_1935": string, "hls_8089": string}, "recent_outputs": Array<{"media_url": string, "ext": string, "filename": string, "size_kb": number, "mtime": number}>} | null} */ (null));
+  const [savesData, setSavesData] = useState(/** @type {{"total_modified_last_24h": number, "system_saves": Array<{"source": string, "type": string, "details": string, "mtime": number}>, "recent_modified_files": Array<{"relative_path": string, "size_bytes": number, "mtime": number}>} | null} */ (null));
+  const [adminData, setAdminData] = useState(/** @type {{"total_admin_records": number, "total_tables_monitored": number, "tables": Array<{"table": string, "database": string, "count": number}>} | null} */ (null));
+  const [errorData, setErrorData] = useState(/** @type {{"error_feed": Array<{"log_file": string, "line": string}>, "total_recent_errors_extracted": number, "total_log_files": number, "daemons": Array<{"logfile": string, "error_count_in_tail": number, "size_kb": number, "status": string}>} | null} */ (null));
 
   // UI Interactive States
   const [processSearch, setProcessSearch] = useState('');
   const [selectedLogFile, setSelectedLogFile] = useState('crypto_trader_bot.log');
   const [logTailContent, setLogTailContent] = useState('');
   const [logTailLoading, setLogTailLoading] = useState(false);
-  const [selectedMediaModal, setSelectedMediaModal] = useState(null);
-  const [selectedAdminTable, setSelectedAdminTable] = useState(null);
+  const [selectedMediaModal, setSelectedMediaModal] = useState(/** @type {{"filename": string, "ext": string, "size_kb": number, "media_url": string} | null} */ (null));
+  const [selectedAdminTable, setSelectedAdminTable] = useState(/** @type {{"table": string, "database": string, "sample_records"?: Array<Record<string, unknown>>, "count"?: number} | null} */ (null));
   const [errorFilter, setErrorFilter] = useState('');
 
   // Fetch all live telemetry
@@ -51,7 +51,8 @@ const OperationsAuditHubTab = () => {
       }
       if (eRes) {
         setErrorData(eRes);
-        if (eRes.daemons && eRes.daemons.length > 0 && (!selectedLogFile || !eRes.daemons.some(d => d.logfile === selectedLogFile))) {
+        if (eRes.daemons && eRes.daemons.length > 0 && (!selectedLogFile || !eRes.daemons.some( /** @param {{logfile: string}} d */
+d => d.logfile === selectedLogFile))) {
           setSelectedLogFile(eRes.daemons[0].logfile);
         }
       }
@@ -64,7 +65,8 @@ const OperationsAuditHubTab = () => {
   };
 
   // Fetch Log Tail
-  const fetchLogTail = async (filename) => {
+  /** @param {string} filename */
+const fetchLogTail = async ( filename) => {
     if (!filename) return;
     setLogTailLoading(true);
     try {
@@ -76,7 +78,7 @@ const OperationsAuditHubTab = () => {
         setLogTailContent(`Failed to load ${filename} (${res.status})`);
       }
     } catch (e) {
-      setLogTailContent(`Error fetching log: ${e.message}`);
+      setLogTailContent(`Error fetching log: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setLogTailLoading(false);
     }
@@ -90,13 +92,17 @@ const OperationsAuditHubTab = () => {
   // Fetch active subtab data immediately upon tab switch
   useEffect(() => {
     if (activeSubTab === 'tasks') {
-      fetch(`${BACKEND_URL}/api/operations/processes`).then(r => r.ok ? r.json() : null).then(d => d && setProcessData(d));
+      fetch(`${BACKEND_URL}/api/operations/processes`).then(r => r.ok ? r.json() : null).then( /** @param {typeof processData} d */
+d => d && setProcessData(d));
     } else if (activeSubTab === 'media') {
-      fetch(`${BACKEND_URL}/api/operations/media-workloads`).then(r => r.ok ? r.json() : null).then(d => d && setMediaData(d));
+      fetch(`${BACKEND_URL}/api/operations/media-workloads`).then(r => r.ok ? r.json() : null).then( /** @param {typeof mediaData} d */
+d => d && setMediaData(d));
     } else if (activeSubTab === 'saves') {
-      fetch(`${BACKEND_URL}/api/operations/saves-and-work`).then(r => r.ok ? r.json() : null).then(d => d && setSavesData(d));
+      fetch(`${BACKEND_URL}/api/operations/saves-and-work`).then(r => r.ok ? r.json() : null).then( /** @param {typeof savesData} d */
+d => d && setSavesData(d));
     } else if (activeSubTab === 'admin') {
-      fetch(`${BACKEND_URL}/api/operations/admin-submissions`).then(r => r.ok ? r.json() : null).then(d => {
+      fetch(`${BACKEND_URL}/api/operations/admin-submissions`).then(r => r.ok ? r.json() : null).then( /** @param {typeof adminData} d */
+d => {
         if (d) {
           setAdminData(d);
           if (!selectedAdminTable && d.tables && d.tables.length > 0) {
@@ -105,7 +111,8 @@ const OperationsAuditHubTab = () => {
         }
       });
     } else if (activeSubTab === 'errors') {
-      fetch(`${BACKEND_URL}/api/operations/error-diagnostics`).then(r => r.ok ? r.json() : null).then(d => d && setErrorData(d));
+      fetch(`${BACKEND_URL}/api/operations/error-diagnostics`).then(r => r.ok ? r.json() : null).then( /** @param {typeof errorData} d */
+d => d && setErrorData(d));
     }
   }, [activeSubTab, BACKEND_URL]);
 
@@ -115,17 +122,22 @@ const OperationsAuditHubTab = () => {
       if (document.hidden) return; // Pause polling when browser tab is inactive
 
       // Always refresh system processes & port status
-      fetch(`${BACKEND_URL}/api/operations/processes`).then(r => r.ok ? r.json() : null).then(d => d && setProcessData(d));
+      fetch(`${BACKEND_URL}/api/operations/processes`).then(r => r.ok ? r.json() : null).then( /** @param {typeof processData} d */
+d => d && setProcessData(d));
 
       // Refresh data specific to active subtab
       if (activeSubTab === 'media') {
-        fetch(`${BACKEND_URL}/api/operations/media-workloads`).then(r => r.ok ? r.json() : null).then(d => d && setMediaData(d));
+        fetch(`${BACKEND_URL}/api/operations/media-workloads`).then(r => r.ok ? r.json() : null).then( /** @param {typeof mediaData} d */
+d => d && setMediaData(d));
       } else if (activeSubTab === 'saves') {
-        fetch(`${BACKEND_URL}/api/operations/saves-and-work`).then(r => r.ok ? r.json() : null).then(d => d && setSavesData(d));
+        fetch(`${BACKEND_URL}/api/operations/saves-and-work`).then(r => r.ok ? r.json() : null).then( /** @param {typeof savesData} d */
+d => d && setSavesData(d));
       } else if (activeSubTab === 'admin') {
-        fetch(`${BACKEND_URL}/api/operations/admin-submissions`).then(r => r.ok ? r.json() : null).then(d => d && setAdminData(d));
+        fetch(`${BACKEND_URL}/api/operations/admin-submissions`).then(r => r.ok ? r.json() : null).then( /** @param {typeof adminData} d */
+d => d && setAdminData(d));
       } else if (activeSubTab === 'errors') {
-        fetch(`${BACKEND_URL}/api/operations/error-diagnostics`).then(r => r.ok ? r.json() : null).then(d => d && setErrorData(d));
+        fetch(`${BACKEND_URL}/api/operations/error-diagnostics`).then(r => r.ok ? r.json() : null).then( /** @param {typeof errorData} d */
+d => d && setErrorData(d));
       }
       setLastRefreshed(new Date());
     }, refreshInterval * 1000);
@@ -139,7 +151,8 @@ const OperationsAuditHubTab = () => {
   }, [activeSubTab, selectedLogFile]);
 
   // Handle Process Kill / Terminate
-  const handleProcessAction = async (pid, action) => {
+  /** @param {number} pid @param {string} action */
+const handleProcessAction = async ( pid,  action) => {
     if (!window.confirm(`Are you sure you want to ${action.toUpperCase()} process PID ${pid}?`)) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/operations/process-action`, {
@@ -156,7 +169,7 @@ const OperationsAuditHubTab = () => {
         alert(`Action failed: ${data.detail || 'Unknown error'}`);
       }
     } catch (e) {
-      alert(`Network error: ${e.message}`);
+      alert(`Network error: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 
@@ -185,7 +198,8 @@ const OperationsAuditHubTab = () => {
   }, [errorData, errorFilter]);
 
   // Helper for formatting bytes / sizes
-  const formatBytes = (bytes) => {
+  /** @param {number} bytes */
+const formatBytes = ( bytes) => {
     if (!bytes) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -694,7 +708,7 @@ const OperationsAuditHubTab = () => {
                             loading="lazy"
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             onError={e => {
-                              e.target.style.display = 'none';
+                              e.currentTarget.style.display = 'none';
                             }}
                           />
                         )}
@@ -881,7 +895,7 @@ const OperationsAuditHubTab = () => {
                   </span>
                 </div>
 
-                {selectedAdminTable.sample_records?.length > 0 ? (
+                {selectedAdminTable.sample_records && selectedAdminTable.sample_records.length > 0 ? (
                   <div style={{ overflowX: 'auto', maxHeight: '480px' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
                       <thead>
@@ -894,7 +908,7 @@ const OperationsAuditHubTab = () => {
                       <tbody>
                         {selectedAdminTable.sample_records.map((row, rIdx) => (
                           <tr key={rIdx} style={{ borderBottom: '1px solid #1e293b' }}>
-                            {Object.entries(row).map(([k, val], cIdx) => (
+                            {Object.entries(row).map(([_k, val], cIdx) => (
                               <td key={cIdx} style={{ padding: '10px 14px', color: '#cbd5e1', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {String(val)}
                               </td>
@@ -942,7 +956,8 @@ const OperationsAuditHubTab = () => {
                   <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Click to view raw tail</span>
                 </div>
                 <div style={{ overflowY: 'auto', maxHeight: '550px' }}>
-                  {errorData?.daemons?.map((d, idx) => {
+                  {errorData?.daemons?.map(/** @param {{"logfile": string, "error_count_in_tail": number, "size_kb": number, "status": string}} d */
+( d, idx) => {
                     const isSelected = selectedLogFile === d.logfile;
                     const hasErrors = d.error_count_in_tail > 0;
                     return (

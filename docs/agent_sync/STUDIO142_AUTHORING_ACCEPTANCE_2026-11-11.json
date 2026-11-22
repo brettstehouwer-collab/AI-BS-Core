@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T14:54:00.740842+00:00",
+  "status": "PASS_FROZEN_AUTHORING_VIEWPORT_AND_SAVED_LIFECYCLE_RELEASE_OPEN",
+  "version": "5.329.142",
+  "summary": "Held unsigned Studio142: static427files/216053240bytes passed; actual frozen default-bundle authoring Preview/Apply/Undo/Redo/Save and separate-process reopen preserved all116typedrows. Four real native viewport checks passed with zero debug errors/warnings; moving the hero changed410479pixels, baseline/saved/reopened BMPs identical. Both native owners and all four viewport processes exited0; AI/network attempts0; no viewport temporary residue. Frozen hub and default saved chapter lifecycle also passed. Original12projectfiles unchanged; installed107 unchanged.",
+  "next_step": "Qualify held142 normal MainWindow startup/close and isolated installed-layout/default-entry current chapter selection/fresh resume, preserving107 and current shortcuts. Continue actual-account creative/browser gates, human pacing, signing/hosted/fullrelease and Nsight injection separately. No manual gameplay requests or new inference.",
+  "postflight": {
+    "status": "PASS_GPU_EDIT_RESTORE_AND_TEMP_CLEANUP",
+    "moved_pixels": 410479,
+    "initial_saved_reopened_bmp_exact": true,
+    "all_four_viewports_debug_errors": 0,
+    "all_four_viewports_debug_warnings": 0,
+    "owned_viewport_temp_residue": 0,
+    "original_source_unchanged": true,
+    "manual_input": false,
+    "network_provider_attempts": 0
+  },
+  "source_changes": [
+    "native_studio/game_engine/creator_viewport.py",
+    "native_studio/game_engine/content_preview.py",
+    "native_studio/packaged_authoring_acceptance.py",
+    "native_studio/app.py",
+    "engine/tests/test_viewport_workspace.py"
+  ],
+  "mechanism": "Create stdlib-owned viewport temporary directories using extended Windows parent spelling; cleanup/finalizer retained.",
+  "regression_tests": {
+    "tests": 2,
+    "passed": 2,
+    "seconds": 0.009,
+    "scope": "Long nested asset cleanup and finished callback close signal"
+  },
+  "failed141": {
+    "exit_code": 3221226505,
+    "retained": true,
+    "original_source_unchanged": true,
+    "cause_scope": "Actual141 callback traceback absent. Independent long-path stdlib cleanup reproduction failed WinError145; extended-parent cleanup passed. Fresh142 actual run passed after targeted repair."
+  },
+  "checks": {
+    "static": "C:\\AI-BS\\backups\\studio142_package_20261111_v01\\static-verification.json",
+    "author": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged142-authoring-author-v01.json",
+    "reopen": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged142-authoring-reopen-v01.json",
+    "saved_chapter": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged142-chapter-v01.json",
+    "hub": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\packaged142-hub-v01.json"
+  },
+  "limitations": [
+    "No installed107/default shortcut replacement",
+    "Normal MainWindow was qualified140, not rerun142 yet",
+    "Controlled AI-disabled authoring/internal viewport selection, not ordinary human gameplay or provider answers",
+    "No full SDK publication, signing, clean-machine/hosted/fullrelease qualification"
+  ],
+  "backup": {
+    "local": {
+      "path": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Studio142_20261111T145400Z.zip",
+      "bytes": 125691869,
+      "sha256": "45c2a698eff343ceddd41477d4c161351ca70b4b1707cc00e157ddd992aa9ae4",
+      "members": 513,
+      "all_member_hashes_verified": true,
+      "filesystem_restore_executed": false,
+      "scope": "Complete new142distribution + owned141failure/142authoring/saved fixtures; isolated profiles retained separately"
+    },
+    "drive": {
+      "status": "VERIFIED_PRIVATE_SCOPED",
+      "receipt": "C:\\AI-BS\\backups\\studio142_checkpoint_20261111T145400Z\\drive_verified.json",
+      "archive_id": "1CBMPk37hK8xAl_uvD-2o34F9PHYxA33m",
+      "members": 69,
+      "complete_selected_files": 31,
+      "requires_previous_base": true
+    },
+    "whole_project_or_private_save_backup": false
+  },
+  "independent_review": "No blocker or overclaim found; next relocate identical142 bundle outside checkout and qualify from unrelated cwd/fresh profile. Exact142 MainWindow remains separate."
+}

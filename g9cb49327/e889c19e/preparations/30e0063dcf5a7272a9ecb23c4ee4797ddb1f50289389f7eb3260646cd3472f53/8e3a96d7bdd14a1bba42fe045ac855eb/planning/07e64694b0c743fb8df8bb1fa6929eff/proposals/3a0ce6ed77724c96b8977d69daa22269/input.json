@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "8e3a96d7bdd14a1bba42fe045ac855eb",
+  "plan_id": "07e64694b0c743fb8df8bb1fa6929eff",
+  "snapshot_sha256": "07c54cca0c456d36d6192531fd31d1a9cca05aef37a26ad378a5e0a6020e7379",
+  "review_digest": "cf60aa3035aab8cb1751e8a44b01c228905506294e0117e7593b03cac3416043",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "3a0ce6ed77724c96b8977d69daa22269",
+  "reviewed_plan_sha256": "0bd7a3ddefb03a92c115ed934a75f70030061805129469fa33832b76cf537a03",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "b9550ab7732f34988d1597c80f2d8af73381800e51633d98c5e567426d971283",
+        "content": "# retained prefix\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\n# long but bounded unchanged context\r\nvalue = 1\r\n# keep final tail\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "6dea6537a1f866e1128a3e5fc6cacd1858b467e8331c8203db1cad9adeb32859",
+  "worker": {
+    "pid": 34044,
+    "created": 1794771319.110771
+  },
+  "created_at_utc": "2026-11-15T19:35:22.608943+00:00",
+  "entry_sha256": "d92dade6193f3f1615a9fc2baf4672dd679668a16c128e93637cdb88854baf9e"
+}

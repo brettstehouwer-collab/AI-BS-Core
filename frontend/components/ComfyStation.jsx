@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import useComfyWorkspace from './useComfyWorkspace';
 import './ComfyStation.css';
 
@@ -11,6 +11,7 @@ import './ComfyStation.css';
  * - diffusion_pytorch_model.safetensors
  * - 4x-UltraSharp.pth
  */
+/** @type {Record<string,Record<string,{class_type:string,inputs:Record<string,string|number|boolean|(string|number)[]>}>>} */
 export const SOVEREIGN_PRESETS = {
   'SDXL 4K Master Cine': {
     "1": { "class_type": "CheckpointLoaderSimple", "inputs": { "ckpt_name": "sd_xl_base_1.0.safetensors" } },
@@ -83,10 +84,10 @@ export const ComfyStation = () => {
   const [activeTab, setActiveTab] = useState('canvas'); // 'canvas' | 'gallery' | 'dag_editor'
   const [endpointInput, setEndpointInput] = useState(baseUrl);
   const [isQueueing, setIsQueueing] = useState(false);
-  const [lastQueueError, setLastQueueError] = useState(null);
+  const [lastQueueError, setLastQueueError] = useState(/** @type {string|null} */ (null));
 
   // Synchronize custom DAG editor on preset change
-  const handlePresetChange = (name) => {
+  const handlePresetChange = (/** @type {string} */ name) => {
     setSelectedPreset(name);
     if (SOVEREIGN_PRESETS[name]) {
       setCustomDAG(JSON.stringify(SOVEREIGN_PRESETS[name], null, 2));
@@ -129,11 +130,11 @@ export const ComfyStation = () => {
       try {
         dagToRun = JSON.parse(customDAG);
       } catch (jsonErr) {
-        throw new Error(`DAG JSON Syntax Error: ${jsonErr.message}`);
+        throw new Error(`DAG JSON Syntax Error: ${errorMessage(jsonErr)}`);
       }
       await queueWorkflow(dagToRun);
     } catch (err) {
-      setLastQueueError(err.message || 'Execution failed');
+      setLastQueueError(errorMessage(err) || 'Execution failed');
     } finally {
       setIsQueueing(false);
     }
@@ -324,7 +325,7 @@ export const ComfyStation = () => {
               <div className="comfy-detail-row">
                 <span className="comfy-detail-label">Outputs:</span>
                 <span className="comfy-detail-value">
-                  {activeNodeDetail.output?.length > 0 ? activeNodeDetail.output.join(', ') : 'None'}
+                  {(activeNodeDetail.output?.length ?? 0) > 0 ? activeNodeDetail.output?.join(', ') : 'None'}
                 </span>
               </div>
 
@@ -336,7 +337,7 @@ export const ComfyStation = () => {
                       <li key={name}>
                         <span className="comfy-input-key">{name}</span>:
                         <span className="comfy-input-type">
-                          {Array.isArray(config?.[0]) ? ` [${config[0].join(' | ')}]` : ` ${config?.[0]}`}
+                          {Array.isArray(config) && Array.isArray(config[0]) ? ` [${config[0].join(' | ')}]` : ` ${Array.isArray(config) ? String(config[0] ?? '') : 'Unavailable'}`}
                         </span>
                       </li>
                     ))}
@@ -352,7 +353,7 @@ export const ComfyStation = () => {
                       <li key={name}>
                         <span className="comfy-input-key">{name}</span>:
                         <span className="comfy-input-type">
-                          {Array.isArray(config?.[0]) ? ` [${config[0].join(' | ')}]` : ` ${config?.[0]}`}
+                          {Array.isArray(config) && Array.isArray(config[0]) ? ` [${config[0].join(' | ')}]` : ` ${Array.isArray(config) ? String(config[0] ?? '') : 'Unavailable'}`}
                         </span>
                       </li>
                     ))}
@@ -444,3 +445,9 @@ export const ComfyStation = () => {
 };
 
 export default ComfyStation;
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

@@ -1,0 +1,21 @@
+# Native Windows build dependency set, resolved from verified Python 3.12.10 environment.
+# Install into a fresh venv with system-site-packages disabled; never use the AI-BS runtime.
+altgraph==0.17.5
+cffi==2.0.0
+numpy==2.5.1
+packaging==26.2
+pedalboard==0.9.24
+pefile==2024.8.26
+pip==25.0.1
+pycparser==3.0
+pyinstaller==6.21.0
+pyinstaller-hooks-contrib==2026.6
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6-sip==13.13.0
+pywin32-ctypes==0.2.3
+scipy==1.18.0
+setuptools==78.1.0
+sounddevice==0.5.6
+soundfile==0.14.0
+typing-extensions==4.16.0

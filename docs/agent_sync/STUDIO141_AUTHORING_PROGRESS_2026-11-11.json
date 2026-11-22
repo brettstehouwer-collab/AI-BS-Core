@@ -1,0 +1,12 @@
+{
+  "status": "STATIC_PASS_AUTHORING_RUN_FAILED_CAUSE_UNPROVEN",
+  "utc": "2026-11-11T14:46:04.821019+00:00",
+  "version": "5.329.141",
+  "static": "C:\\AI-BS\\backups\\studio141_package_20261111_v01\\static-verification.json",
+  "diagnostic": "C:\\AI-BS\\backups\\studio141_package_20261111_v01\\failed-authoring-diagnosis-v01.json",
+  "previous_qualified_candidate": "5.329.140",
+  "installed": "5.329.107",
+  "next": "Diagnose initial frozen authoring exit0xC0000409 before retry. Preserve old141 package/fixture and exact original12files. Add durable primary/Qt-callback exception diagnostics without weakening acceptance.",
+  "original_source_unchanged": true,
+  "all_ten_plus_six_complete": false
+}

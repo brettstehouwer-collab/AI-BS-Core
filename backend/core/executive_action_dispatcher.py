@@ -925,7 +925,7 @@ class ExecutiveActionDispatcher:
                 except Exception:
                     pass
 
-            is_paused = getattr(self, "_trading_paused", False)
+            is_paused = True  # Source dispatch is held pending reconciliation.
             return {
                 "status": "success",
                 "daemon_port": 8007,
@@ -934,71 +934,20 @@ class ExecutiveActionDispatcher:
                 "trading_paused": is_paused,
                 "twap_plans_count": twap_count,
                 "drip_orders_count": order_count,
-                "message": f"Crypto Swarm online on Port 8007 ({'PAUSED' if is_paused else 'ACTIVE'}, {twap_count} TWAP plans, {order_count} drip orders)."
+                "message": f"Source dispatch held; runtime unverified ({twap_count} TWAP plans, {order_count} recorded drip rows)."
             }
 
-        elif action_name == "place_limit_order":
-            if getattr(self, "_trading_paused", False):
-                raise ValueError("Trading is currently HALTED / PAUSED. Cannot place orders until circuit breaker is reset.")
-
-            symbol = params.get("symbol", "CRO/USD")
-            side = params.get("side", "BUY").upper()
-            amt = float(params.get("amount", 0.0))
-            price = float(params.get("price", 0.0))
-            order_id = f"ord_{int(time.time())}_{uuid.uuid4().hex[:4]}"
-
-            # Record into trade queue if DB exists
-            if CRYPTO_QUEUE_DB.exists():
-                try:
-                    conn = sqlite3.connect(str(CRYPTO_QUEUE_DB), timeout=5.0)
-                    conn.execute("""
-                        INSERT INTO drip_orders (plan_id, timestamp, asset, side, amount, price, slippage_pct, status, tx_hash)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, (f"plan_{order_id}", time.time(), symbol, side, amt, price, 0.1, "EXECUTED", f"0x{uuid.uuid4().hex}"))
-                    conn.commit()
-                    conn.close()
-                except Exception as e:
-                    logger.warning(f"Note writing to trade_queue.db: {e}")
-
-            return {
-                "status": "success",
-                "order_id": order_id,
-                "symbol": symbol,
-                "side": side,
-                "amount": amt,
-                "price": price,
-                "total_usd": round(amt * price, 4),
-                "daemon_port": 8007,
-                "message": f"Dispatched {side} order for {amt} {symbol} at ${price} (Total: ${round(amt * price, 2)})."
-            }
-
-        elif action_name == "set_trailing_stop":
-            symbol = params.get("symbol", "CRO/USD")
-            stop_pct = float(params.get("stop_pct", 2.5))
-            return {
-                "status": "success",
-                "symbol": symbol,
-                "stop_pct": stop_pct,
-                "guard_id": f"stop_{int(time.time())}",
-                "message": f"Armed trailing stop of {stop_pct}% for {symbol} on Port 8007."
-            }
+        elif action_name in ("place_limit_order", "set_trailing_stop", "resume_trading"):
+            from core.crypto_execution_safety import execution_status
+            return {"status": "blocked", **execution_status(),
+                    "action_name": action_name, "message": "No exchange order or stop was created."}
 
         elif action_name == "emergency_pause_trading":
+            from core.crypto_execution_safety import halt_trading
+            state = halt_trading()
             self._trading_paused = True
-            return {
-                "status": "success",
-                "trading_paused": True,
-                "reason": params.get("reason", "Operator emergency halt"),
-                "message": "Crypto Swarm active trading halted on Port 8007."
-            }
-
-        elif action_name == "resume_trading":
-            self._trading_paused = False
-            return {
-                "status": "success",
-                "trading_paused": False,
-                "message": "Crypto Swarm active trading resumed on Port 8007."
-            }
+            return {"status": "success", "trading_paused": True, **state,
+                    "message": "Source dispatch held. Existing processes/binaries are not controlled by this action."}
 
         return {"status": "unsupported_crypto_action", "action_name": action_name}
 

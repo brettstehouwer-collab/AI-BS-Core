@@ -1,0 +1,37 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "99117546aed43c49c67dfc68a7e93cfcfe0b0fba718d3aac4e2b01f3875347cb",
+  "state": "VERIFIED",
+  "checks": [
+    {
+      "check_id": "node",
+      "returncode": 0,
+      "error": null,
+      "execution_time_ms": 93,
+      "stdout": "\u2714 candidate (0.5787ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 55.1754\n",
+      "stderr": "",
+      "preview_truncated": false,
+      "log_file": "check_logs\\node.json",
+      "log_sha256": "f98574b7721fe34ec74dcad8003304b639fef159694d9cf10d7716a51c501cd6"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.js",
+      "kind": "syntax",
+      "status": "passed",
+      "parser_sha256": "914c11c83f502189db0479fa0452db4baf86cdb1b75555e5ed7ff77cd118ce8e"
+    }
+  ],
+  "started_at": 1794782856.3013847,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794782856.4574935,
+  "runtime_seal": "121fd9e55f18aaba97143c58fbf467bd4f4fcedcf0c0449d349b65cd8b0b2542",
+  "entry_sha256": "a5083277c6ae12b5d233cf53dabc5ac7aee37f392358124983f448ce4c6ba7b0"
+}

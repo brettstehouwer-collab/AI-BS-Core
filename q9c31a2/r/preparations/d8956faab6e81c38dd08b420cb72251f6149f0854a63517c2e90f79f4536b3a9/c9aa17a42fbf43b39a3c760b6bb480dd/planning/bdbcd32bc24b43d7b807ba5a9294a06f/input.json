@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "request_id": "c9aa17a42fbf43b39a3c760b6bb480dd",
+  "plan_id": "bdbcd32bc24b43d7b807ba5a9294a06f",
+  "snapshot_sha256": "79b8e0ca87a4729a50b6c85411adffe1ed329199799834ca26d44850197bfd71",
+  "review_digest": "2f4b72a9f64aa429183dd64a4e179776042e7e38ed3525e19283745fa62727f2",
+  "model_payload": {
+    "objective": "Synthetic browser acceptance: change native_app value from 1 to 42",
+    "source_files": [
+      {
+        "path": "native_app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "test_native_app.py",
+        "role": "verification",
+        "sha256": "619e0d3458c24a2059863dc0d980243b13fb37c03091ece0f3e4b67dada1d0cf",
+        "excerpt": "import unittest\nfrom native_app import value\n\nclass NativeValueTests(unittest.TestCase):\n    def test_value(self):\n        self.assertEqual(value, 42)\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_native_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "native_app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "8c0faefd1019c2c3f3c7b60719300607038e41bd9a8bc03591dc5f9f4007b539",
+  "worker": {
+    "pid": 21120,
+    "created": 1794696568.530988
+  },
+  "created_at_utc": "2026-11-14T22:57:59.756699+00:00",
+  "entry_sha256": "375500abc48a858e76a75b9270f75758c3c104feaa9d4b11b35ddab8959c7ec6"
+}

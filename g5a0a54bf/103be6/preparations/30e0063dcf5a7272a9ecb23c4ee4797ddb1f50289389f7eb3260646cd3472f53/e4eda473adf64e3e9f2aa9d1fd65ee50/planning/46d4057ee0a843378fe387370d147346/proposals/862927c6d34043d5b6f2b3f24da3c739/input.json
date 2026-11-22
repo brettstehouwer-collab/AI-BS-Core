@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "e4eda473adf64e3e9f2aa9d1fd65ee50",
+  "plan_id": "46d4057ee0a843378fe387370d147346",
+  "snapshot_sha256": "b55ab9e9b248ec07503e90815d6515326dc807bb75c2384efdfdec0fac96b35d",
+  "review_digest": "435c7a396a2b0ccae4691da93bd22ce08e2ad61d4e5c3bc2e0230b7087efe5f6",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "862927c6d34043d5b6f2b3f24da3c739",
+  "reviewed_plan_sha256": "0029c455a46ead2cf484c904c11d121970161dfe7f9f538dacfa538733b36553",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 56884,
+    "created": 1794718688.082398
+  },
+  "created_at_utc": "2026-11-15T04:58:09.436360+00:00",
+  "entry_sha256": "6927e9bbdc8e668a00793e0e134547119d2348e54b0c104d566ecaa6eaf804b0"
+}

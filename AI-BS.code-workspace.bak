@@ -1,0 +1,109 @@
+{
+	"folders": [
+		{
+			"name": "AI-BS Ecosystem (Root)",
+			"path": "."
+		},
+		{
+			"name": "Frontend (React Command Center)",
+			"path": "frontend"
+		},
+		{
+			"name": "Backend (FastAPI & Cognitive Core)",
+			"path": "backend"
+		},
+		{
+			"name": "Go Core & Native Daemons",
+			"path": "go-core"
+		},
+		{
+			"name": "BTD6 Trainer (Electron & React)",
+			"path": "trainer_frontend"
+		},
+		{
+			"name": "Mobile Studio (React Native Expo)",
+			"path": "mobile-app"
+		},
+		{
+			"name": "Game Trainer Memory Lab",
+			"path": "game_trainer"
+		},
+		{
+			"name": "Screenplay Projects & 3D Pipeline",
+			"path": "screenplay_projects"
+		},
+		{
+			"name": "System Architecture Manuals",
+			"path": "docs"
+		},
+		{
+			"name": "Stehouwer Publishing Server",
+			"path": "C:\\StehouwerPublishing.com"
+		},
+		{
+			"name": "Prestige Mobile Wash App",
+			"path": "PrestigeMobileWash"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/node_modules": true,
+			"**/pyppeteer_env": true,
+			"**/__pycache__": true,
+			"**/*.pyc": true,
+			"**/.vercel": true,
+			"**/.firebase": true,
+			"**/.ollama": true,
+			"**/VRAM_Tensor_Swap": true,
+			"**/Context_Memory_Swap": true,
+			"**/temp_unzip": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true,
+			"**/kaalia.log": true
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/pyppeteer_env": true,
+			"**/dist": true,
+			"**/build": true,
+			"**/release-build": true,
+			"**/win-unpacked": true,
+			"**/.ollama": true,
+			"**/VRAM_Tensor_Swap": true,
+			"**/Context_Memory_Swap": true,
+			"**/temp_unzip": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true,
+			"**/kaalia.log": true,
+			"**/*.sqlite3": true,
+			"**/*.db": true,
+			"**/*.tar.gz": true,
+			"**/*.zip": true,
+			"**/*.exe": true
+		},
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/**": true,
+			"**/.ollama/**": true,
+			"**/VRAM_Tensor_Swap/**": true,
+			"**/Context_Memory_Swap/**": true,
+			"**/temp_unzip/**": true,
+			"**/dist/**": true,
+			"**/build/**": true,
+			"**/win-unpacked/**": true,
+			"**/release-build/**": true,
+			"**/*.jsonl": true,
+			"**/symbol_graph.json": true,
+			"**/py_health_audit.json": true
+		},
+		"terminal.integrated.cwd": "C:\\AI-BS",
+		"terminal.integrated.defaultProfile.windows": "PowerShell",
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}

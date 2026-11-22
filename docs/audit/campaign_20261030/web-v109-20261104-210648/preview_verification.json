@@ -1,0 +1,173 @@
+{
+  "status": "passed",
+  "origin": "https://ai-bs-dashboard--web-v109-20261104-210648-rr96n1ch.web.app",
+  "version": "v5.329.109",
+  "release_id": "web-v109-20261104-210648",
+  "verified_at": "2026-11-05T02:42:06.787067+00:00",
+  "files": [
+    {
+      "path": "assets/bs-game-native-preview.png",
+      "status": 200,
+      "sha256": "b20d6ee7edeee137d9d096e1ed81a64b9e683b708d6b3b4840f4b5ecc8de3652",
+      "bytes": 32241,
+      "content_type": "image/png"
+    },
+    {
+      "path": "bs-game/index.html",
+      "status": 200,
+      "sha256": "469241b4e13e91a43db31e238655404467f67a683698d1e87e239312ad3d5fb2",
+      "bytes": 33576,
+      "content_type": "text/html"
+    },
+    {
+      "path": "bs-game/vendor/three-r128.min.js",
+      "status": 200,
+      "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+      "bytes": 603445,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "css/ExecutiveCockpitTab.BmmORqWr.css",
+      "status": 200,
+      "sha256": "ac3c8fc3bcaad71872d3ea9ab710fb98b08b2ff63f731f452206473d900c4dba",
+      "bytes": 5651,
+      "content_type": "text/css"
+    },
+    {
+      "path": "css/ScreenwritingTab.BygOmaJ2.css",
+      "status": 200,
+      "sha256": "513cc80100ed3adaaa0091d775503d030cb03c9720b98edde334c6eefdedd5f5",
+      "bytes": 31315,
+      "content_type": "text/css"
+    },
+    {
+      "path": "css/main.za8UzT5A.css",
+      "status": 200,
+      "sha256": "3989290ca5b0e611580b757ae822dfd30c5f4c9258441f18837fc5c0e284fe0b",
+      "bytes": 77132,
+      "content_type": "text/css"
+    },
+    {
+      "path": "css/vendor.DULRuONn.css",
+      "status": 200,
+      "sha256": "4ff88c6f6299d6ac70598650eb8fb0c3c5d097b957d4fafc2c649b2d7119b4af",
+      "bytes": 3750,
+      "content_type": "text/css"
+    },
+    {
+      "path": "css/writer.FSu0jXfB.css",
+      "status": 200,
+      "sha256": "a7a75c82435779428efc4833087bdde09491bc6b62c62f1b6f2303045070c54e",
+      "bytes": 5364,
+      "content_type": "text/css"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "adae6fa0f5713a9934fce5a7842694fcded5f3c785b9fe05756d85d7bfc4dac0",
+      "bytes": 2881,
+      "content_type": "text/html"
+    },
+    {
+      "path": "js/ExecutiveCockpitTab.CyFUt9qS.js",
+      "status": 200,
+      "sha256": "8484fbc23cb09a388bb9fed58103ab3a11bfbee10cb04d889b2a8068ce5b0a7c",
+      "bytes": 39569,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "js/ScreenwritingTab.6xyF4hgx.js",
+      "status": 200,
+      "sha256": "d6fff3f79b2d38324c75732b5ef9ac682973adc88b3dcef7af128f4738a14b50",
+      "bytes": 269351,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "js/main.CUw-8oxI.js",
+      "status": 200,
+      "sha256": "a221bf6c8e3141792f1b66f3ebcc43f4d15ae49684b77160e4f64c792f4ef054",
+      "bytes": 329811,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "js/vendor.wLS_oeq3.js",
+      "status": 200,
+      "sha256": "4b8b856e1b20026ea45ae95d8628f7422ff8dffe6ca59cb55c3325870cd81813",
+      "bytes": 1493286,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "js/writer.j51cT_UF.js",
+      "status": 200,
+      "sha256": "54fd24e1793d7267b76a25cb68dba02b5b98f737bf80e02b56d3c1b7633efdae",
+      "bytes": 2653,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "sha256": "607c480a18dc313dc33ac459644966686ac84a2fda8a813cb594443c34b149b7",
+      "bytes": 555,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "version.json",
+      "status": 200,
+      "sha256": "860935788e1519d32f0682839ef41230032353928940f114fdf733d62eb1793a",
+      "bytes": 196,
+      "content_type": "application/json"
+    },
+    {
+      "path": "web-release.json",
+      "status": 200,
+      "sha256": "cc1441b61f742acfe4d8f971ef9dcb245332f7e94ee0aa329262feaa4a9500c2",
+      "bytes": 229,
+      "content_type": "application/json"
+    },
+    {
+      "path": "writer.html",
+      "status": 200,
+      "sha256": "1b33e765f72937a9598140c8493ba96f3fe5e85d28c865e56891821f61bc97c2",
+      "bytes": 1340,
+      "content_type": "text/html"
+    }
+  ],
+  "protected": [
+    {
+      "path": "NoCo_Executive_Due_Diligence_Dossier_2026.pdf",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "downloads/AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "downloads/ledger.html",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "downloads/omni_archive.html",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "downloads/STEHOUWER_OMNI_CHRONOLOGICAL_MASTER_ARCHIVE.md",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "updates/aibs_update_payload.zip",
+      "status": 200,
+      "safe": true
+    },
+    {
+      "path": "October_7_All_Stems_Ultra_HQ.zip",
+      "status": 200,
+      "safe": true
+    }
+  ],
+  "scope": "HTTP content integrity and compiled UI checks; no authenticated workflow acceptance claimed"
+}

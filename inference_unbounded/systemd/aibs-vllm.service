@@ -1,0 +1,18 @@
+[Unit]
+Description=AI-BS vLLM LMCache Inference Daemon
+After=network.target local-fs.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/mnt/c/AI-BS/inference_unbounded
+Environment="NVME_MOUNT=/var/lib/ai_bs_kv"
+Environment="VLLM_PORT=8009"
+Environment="CUDA_VISIBLE_DEVICES=0"
+ExecStart=/bin/bash /mnt/c/AI-BS/inference_unbounded/start_vllm_daemon.sh
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

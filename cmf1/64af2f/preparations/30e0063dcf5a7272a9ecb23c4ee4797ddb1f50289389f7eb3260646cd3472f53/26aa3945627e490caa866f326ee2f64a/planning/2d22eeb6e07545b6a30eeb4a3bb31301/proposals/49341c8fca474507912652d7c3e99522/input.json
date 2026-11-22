@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "26aa3945627e490caa866f326ee2f64a",
+  "plan_id": "2d22eeb6e07545b6a30eeb4a3bb31301",
+  "snapshot_sha256": "23f153ba887a65fe7a587d384d44a739fa5a4eaff623311ea2aab17690f54b78",
+  "review_digest": "911b8ebfc78a2ad1b40ade113a083d82b4efe5b78fef4764ddca5df20a735b4f",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "49341c8fca474507912652d7c3e99522",
+  "reviewed_plan_sha256": "fc614ae4ea78988c29e80142d247246d5da7e8b98d7293c802a93f87a754d62d",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 31832,
+    "created": 1794664490.3250988
+  },
+  "created_at_utc": "2026-11-14T13:54:53.101506+00:00",
+  "entry_sha256": "0e0937a6e5a8e88035d1fe685c32443fb9d696ec9f38cc380fda356aa95f4ce4"
+}

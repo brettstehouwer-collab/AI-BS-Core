@@ -1,0 +1,12 @@
+{
+    "plan_id": "plan_12345",
+    "timestamp": 1785557907.1336386,
+    "planData": {},
+    "approved_steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+    ]
+}

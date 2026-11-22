@@ -1,0 +1,378 @@
+--- original/app_native.py
++++ October7_VocalStudio_DAW/source/app_native.py
+@@ -23,6 +23,7 @@
+ from typing import Tuple, Optional, Dict, List
+ from pathlib import Path
+ import threading
++import uuid
+ 
+ import numpy as np
+ import sounddevice as sd
+@@ -149,6 +150,128 @@
+         self.write_ptr = 0
+         self.read_ptr = 0
+         self.buffer.fill(0)
++
++
++class RecordingCapture:
++    """Bounded callback queue drained to a recoverable WAV by a non-audio thread."""
++    def __init__(self, ring, sample_rate: int, takes_dir: Path, filename: str):
++        self.ring = ring
++        self.sample_rate = sample_rate
++        token = f"{Path(filename).stem}_{uuid.uuid4().hex}"
++        self.final_path = takes_dir / f"{token}.wav"
++        self.temp_path = takes_dir / f"{token}.incomplete.wav"
++        self.error = None
++        self.dropped_frames = 0
++        self.samples_written = 0
++        self.pending_audio = None
++        self.accepting = False
++        self._write_lock = threading.Lock()
++        self._ready = threading.Event()
++        self._stop = threading.Event()
++        self._thread = threading.Thread(target=self._writer, name="October7 take writer", daemon=True)
++
++    def start(self) -> bool:
++        self._thread.start()
++        if not self._ready.wait(3.0):
++            self.error = "Recording file did not open within three seconds."
++            self._stop.set()
++        return self.accepting and self.error is None
++
++    def write(self, frames: np.ndarray) -> int:
++        # Stop can wait for an in-flight callback; the callback never waits for Stop.
++        if not self._write_lock.acquire(blocking=False):
++            return 0
++        try:
++            if not self.accepting:
++                return 0
++            accepted = self.ring.write(frames)
++            if accepted != len(frames):
++                self.dropped_frames += len(frames) - accepted
++                self.error = f"Recording queue overflow: {self.dropped_frames} frames lost; take is incomplete."
++                self.accepting = False
++                self._stop.set()
++            return accepted
++        finally:
++            self._write_lock.release()
++
++    def _writer(self):
++        try:
++            self.temp_path.parent.mkdir(parents=True, exist_ok=True)
++            with sf.SoundFile(str(self.temp_path), mode="x", samplerate=self.sample_rate,
++                              channels=1, subtype="FLOAT", format="WAV") as wav:
++                self.accepting = not self._stop.is_set()
++                self._ready.set()
++                last_flush = 0
++                while True:
++                    available = self.ring.read_available()
++                    if available:
++                        chunk = np.empty((min(available, 8192), 1), dtype=np.float32)
++                        self.ring.read(chunk, len(chunk))
++                        self.pending_audio = chunk
++                        wav.write(chunk)
++                        self.samples_written += len(chunk)
++                        self.pending_audio = None
++                        if self.samples_written - last_flush >= self.sample_rate:
++                            wav.flush()
++                            last_flush = self.samples_written
++                    elif self._stop.is_set():
++                        break
++                    else:
++                        self._stop.wait(0.005)
++                wav.flush()
++        except Exception as exc:
++            self.error = f"Recording write failed: {exc}. Recovery file: {self.temp_path}"
++        finally:
++            self.accepting = False
++            self._stop.set()
++            self._ready.set()
++
++    def finish(self, timeout: float = 5.0) -> Optional[str]:
++        with self._write_lock:
++            self.accepting = False
++            self._stop.set()
++        self._thread.join(timeout=timeout)
++        if self._thread.is_alive():
++            self.error = f"Recording writer is still finishing. Recovery file: {self.temp_path}"
++            return None
++        if self.error:
++            return None
++        if self.samples_written == 0:
++            self.error = f"No input samples were recorded. Recovery file: {self.temp_path}"
++            return None
++        try:
++            # UUID names and Windows rename prevent replacing another completed take.
++            self.temp_path.rename(self.final_path)
++        except Exception as exc:
++            self.error = f"Take finalization failed: {exc}. Recovery file: {self.temp_path}"
++            return None
++        return str(self.final_path)
++
++
++def mix_tracks_block(tracks: dict, start: int, frames: int) -> np.ndarray:
++    """One pan/solo/mute law for live playback and offline master rendering."""
++    mix = np.zeros((frames, 2), dtype=np.float32)
++    snapshot = tuple(dict(track) for track in tuple(tracks.values()))
++    solo_active = any(track.get("solo", False) for track in snapshot)
++    for track in snapshot:
++        audio = track.get("audio")
++        if audio is None or track.get("mute", False) or (solo_active and not track.get("solo", False)):
++            continue
++        end = min(start + frames, len(audio))
++        if start >= end:
++            continue
++        chunk = audio[start:end] * track.get("gain", 1.0)
++        pan = max(-1.0, min(1.0, track.get("pan", 0.0)))
++        left = math.cos((pan + 1.0) * math.pi / 4.0)
++        right = math.sin((pan + 1.0) * math.pi / 4.0)
++        if chunk.ndim == 1 or chunk.shape[1] == 1:
++            mono = chunk if chunk.ndim == 1 else chunk[:, 0]
++            mix[:len(chunk), 0] += mono * left
++            mix[:len(chunk), 1] += mono * right
++        else:
++            mix[:len(chunk), 0] += chunk[:, 0] * left
++            mix[:len(chunk), 1] += chunk[:, 1] * right
++    return mix
+ 
+ 
+ # =============================================================================
+@@ -386,6 +509,10 @@
+         ring_frames = sample_rate * 10
+         self.record_ring = SPSCRingBuffer(ring_frames, channels=1)
+         self.playback_ring = SPSCRingBuffer(ring_frames, channels=2)
++        self._take_capture = None
++        self.record_error = None
++        self.last_recovery_path = None
++        self._playback_eof = False
+ 
+         self.dsp_chain = RealtimeVocalDSPChain(sample_rate=sample_rate)
+         self.vst3_manager = VST3HostManager(sample_rate=sample_rate)
+@@ -428,13 +555,20 @@
+ 
+         # 3. Write into Recording SPSC Ring Buffer
+         if self.is_recording:
+-            self.record_ring.write(vocal_stereo[:, 0:1])
++            capture = self._take_capture
++            if capture is not None:
++                capture.write(vocal_stereo[:, 0:1])
++                if capture.error:
++                    self.record_error = capture.error
++                    self.is_recording = False
+ 
+         # 4. Read from Playback Ring Buffer
+         scratch_out = np.zeros((frames, 2), dtype=np.float32)
+         if self.is_playing:
+-            self.playback_ring.read(scratch_out, frames)
+-            self.play_pos_samples += frames
++            consumed = self.playback_ring.read(scratch_out, frames)
++            self.play_pos_samples += consumed
++            if self._playback_eof and self.playback_ring.read_available() == 0:
++                self.is_playing = False
+ 
+         # 5. Zero-Latency Monitor Cue
+         scratch_out += vocal_stereo
+@@ -450,7 +584,7 @@
+                     pos = self.feeder_pos_samples
+ 
+                     max_len = 0
+-                    for name, tdata in self.tracks.items():
++                    for tdata in tuple(self.tracks.values()):
+                         if tdata["audio"] is not None:
+                             max_len = max(max_len, len(tdata["audio"]))
+ 
+@@ -459,33 +593,12 @@
+                             self.feeder_pos_samples = 0
+                             pos = 0
+                         else:
+-                            self.is_playing = False
++                            self._playback_eof = True
+                             time.sleep(0.01)
+                             continue
+-
+-                    for name, tdata in self.tracks.items():
+-                        if tdata["audio"] is None or tdata["mute"]:
+-                            continue
+-                        track_arr = tdata["audio"]
+-                        gain = tdata["gain"]
+-                        pan = tdata.get("pan", 0.0)
+-                        total_len = len(track_arr)
+-
+-                        if pos < total_len:
+-                            end = min(pos + feed_frames, total_len)
+-                            chunk = track_arr[pos:end] * gain
+-                            chunk_len = len(chunk)
+-
+-                            # Pan Law: Equal Power
+-                            left_gain = math.cos((pan + 1.0) * math.pi / 4.0)
+-                            right_gain = math.sin((pan + 1.0) * math.pi / 4.0)
+-
+-                            if track_arr.ndim == 1:
+-                                mix_chunk[:chunk_len, 0] += chunk * left_gain
+-                                mix_chunk[:chunk_len, 1] += chunk * right_gain
+-                            else:
+-                                mix_chunk[:chunk_len, 0] += chunk[:, 0] * left_gain
+-                                mix_chunk[:chunk_len, 1] += chunk[:, 1] * right_gain
++                    if max_len > 0:
++                        feed_frames = min(feed_frames, max_len - pos)
++                    mix_chunk = mix_tracks_block(self.tracks, pos, feed_frames)
+ 
+                     if self.metronome_enabled:
+                         beat_samples = max(1, int(self.sample_rate * 60.0 / 80.0))
+@@ -571,6 +684,9 @@
+         self.is_running = False
+ 
+     def stop(self):
++        if self._take_capture is not None:
++            self.is_recording = False
++            self.save_recorded_take("interrupted_take.wav")
+         self.stop_stream()
+         self._feeder_running = False
+ 
+@@ -587,16 +703,37 @@
+         except Exception as e:
+             print(f"[Engine] Load error {file_path}: {e}")
+ 
++    def begin_recording(self) -> bool:
++        if self._take_capture is not None:
++            self.record_error = "Finish or recover the previous take before recording again."
++            return False
++        self.record_ring.clear()
++        self.record_error = None
++        capture = RecordingCapture(self.record_ring, self.sample_rate, BASE_DIR / "takes",
++                                   f"take_{time.strftime('%Y%m%d_%H%M%S')}.wav")
++        self._take_capture = capture
++        if not capture.start():
++            self.record_error = capture.error or "Recording file could not be opened."
++            self.last_recovery_path = str(capture.temp_path)
++            return False
++        self.is_recording = True
++        return True
++
+     def save_recorded_take(self, filename: str) -> Optional[str]:
+-        avail = self.record_ring.read_available()
+-        if avail > 0:
+-            rec_data = np.zeros((avail, 1), dtype=np.float32)
+-            self.record_ring.read(rec_data, avail)
+-            out_path = BASE_DIR / "takes" / filename
+-            out_path.parent.mkdir(parents=True, exist_ok=True)
+-            sf.write(str(out_path), rec_data, self.sample_rate)
+-            return str(out_path)
+-        return None
++        # filename remains accepted for existing callers; the unique path is reserved at Start.
++        self.is_recording = False
++        capture = self._take_capture
++        if capture is None:
++            return None
++        result = capture.finish()
++        self.record_error = capture.error
++        if result:
++            self._take_capture = None
++            self.last_recovery_path = None
++        else:
++            # Retain the capture, unread ring and pending chunk on any write/finalize failure.
++            self.last_recovery_path = str(capture.temp_path)
++        return result
+ 
+ 
+ # =============================================================================
+@@ -1395,13 +1532,16 @@
+         return prog
+ 
+     def toggle_rec(self):
+-        self.engine.is_recording = not self.engine.is_recording
+-        if self.engine.is_recording:
++        if self.engine._take_capture is None:
++            if not self.engine.begin_recording():
++                QMessageBox.warning(self, "Recording unavailable", self.engine.record_error or "Recording could not start.")
++                return
+             self.btn_rec.setText("■ Stop Recording")
+             self.btn_rec.setStyleSheet("background: #ef4444; color: white; font-weight: bold; border-radius: 4px;")
+             if not self.engine.is_playing:
+                 self.toggle_play()
+         else:
++            self.engine.is_recording = False
+             self.btn_rec.setText("● Record Track")
+             self.btn_rec.setStyleSheet("background: #7f1d1d; color: #fca5a5; font-size: 11px; font-weight: bold; border-radius: 4px; border: 1px solid #ef4444;")
+             ts = time.strftime("%Y%m%d_%H%M%S")
+@@ -1409,21 +1549,27 @@
+             if saved_file:
+                 self.engine.load_track_file("Lead Vocal", saved_file)
+                 QMessageBox.information(self, "Vocal Take Saved", f"Take saved to disk and loaded into Lead Vocal:\n{Path(saved_file).name}\n\nPress PLAY to hear playback!")
++            elif self.engine.record_error:
++                self.btn_rec.setText("⚠ Recording incomplete")
++                QMessageBox.warning(self, "Take incomplete — retained for recovery", self.engine.record_error)
+ 
+     def toggle_play(self):
+-        self.engine.is_playing = not self.engine.is_playing
+-        if self.engine.is_playing:
++        if not self.engine.is_playing:
+             self.engine.feeder_pos_samples = self.engine.play_pos_samples
++            self.engine._playback_eof = False
+             self.engine.playback_ring.clear()
++            self.engine.is_playing = True
+             self.btn_play.setText("❚❚ Pause")
+             self.btn_play.setStyleSheet("background: #10b981; color: white; font-weight: bold; border-radius: 4px;")
+         else:
++            self.engine.is_playing = False
+             self.btn_play.setText("▶ Play All Tracks")
+             self.btn_play.setStyleSheet("background: #1e3a8a; color: #93c5fd; font-size: 11px; font-weight: bold; border-radius: 4px; border: 1px solid #3b82f6;")
+ 
+     def _seek_to_time(self, sec: float):
+         self.engine.play_pos_samples = int(sec * self.engine.sample_rate)
+         self.engine.feeder_pos_samples = self.engine.play_pos_samples
++        self.engine._playback_eof = False
+         self.engine.playback_ring.clear()
+ 
+     def _timeline_slider_moved(self, val):
+@@ -1433,6 +1579,8 @@
+ 
+     def update_telemetry(self):
+         self.pitch_waveform_view.update()
++        if self.engine.record_error and self.engine._take_capture is not None:
++            self.btn_rec.setText("⚠ Recording incomplete")
+ 
+         # Update Detected Note
+         f0 = self.engine.dsp_chain.current_f0
+@@ -1572,9 +1720,12 @@
+             for t_name, t_data in self.engine.tracks.items():
+                 if t_data.get("audio") is not None:
+                     out_path = Path(dest_dir) / f"{t_name.replace(' ', '_').replace('(', '').replace(')', '')}_stem.wav"
+-                    if HAS_SOUNDFILE:
++                    try:
+                         sf.write(str(out_path), t_data["audio"], self.engine.sample_rate)
+                         exported.append(out_path.name)
++                    except Exception as exc:
++                        QMessageBox.warning(self, "Stem export failed", f"Could not write {out_path}:\n{exc}\nCompleted: {', '.join(exported) or 'none'}")
++                        return
+             if exported:
+                 QMessageBox.information(self, "Stems Exported", f"Successfully exported {len(exported)} stem(s) to:\n{dest_dir}\n\nFiles:\n" + "\n".join(exported))
+             else:
+@@ -1588,22 +1739,15 @@
+                 if t_data.get("audio") is not None:
+                     max_len = max(max_len, len(t_data["audio"]))
+             if max_len > 0:
+-                mix = np.zeros((max_len, 2), dtype=np.float32)
+-                for t_data in self.engine.tracks.values():
+-                    if t_data.get("audio") is not None and not t_data.get("mute", False):
+-                        d = t_data["audio"]
+-                        gain = t_data.get("gain", 1.0)
+-                        if d.ndim == 1:
+-                            mix[:len(d), 0] += d * gain
+-                            mix[:len(d), 1] += d * gain
+-                        else:
+-                            mix[:len(d), 0] += d[:, 0] * gain
+-                            mix[:len(d), 1] += d[:, 1] * gain
++                mix = mix_tracks_block(self.engine.tracks, 0, max_len)
+                 peak = np.max(np.abs(mix))
+                 if peak > 1.0:
+                     mix /= peak
+-                if HAS_SOUNDFILE:
++                try:
+                     sf.write(dest_file, mix, self.engine.sample_rate)
++                except Exception as exc:
++                    QMessageBox.warning(self, "Master export failed", f"Could not write {dest_file}:\n{exc}")
++                    return
+                 QMessageBox.information(self, "Master Mix Exported", f"Successfully rendered & exported Master Mix:\n{dest_file}")
+             else:
+                 QMessageBox.warning(self, "Export Warning", "No audio tracks currently loaded in session to mix.")

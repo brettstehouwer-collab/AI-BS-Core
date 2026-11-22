@@ -1,0 +1,206 @@
+{
+  "utc": "2026-11-14T16:14:07.254291+00:00",
+  "status": "SERVICES_STARTED_WITH_RECORDED_HOLDS",
+  "base_snapshot": "docs/agent_sync/SERVICE_STARTUP_2026-11-14.json",
+  "listening_ports": [
+    80,
+    3000,
+    3001,
+    4455,
+    5173,
+    5174,
+    8000,
+    8002,
+    8005,
+    8006,
+    8010,
+    8013,
+    8080,
+    8085,
+    8088,
+    8099,
+    8189,
+    8888,
+    11434,
+    11435
+  ],
+  "listening_port_count": 20,
+  "listeners": [
+    {
+      "port": 8099,
+      "address": "127.0.0.1",
+      "pid": 4940
+    },
+    {
+      "port": 8006,
+      "address": "127.0.0.1",
+      "pid": 7004
+    },
+    {
+      "port": 8005,
+      "address": "127.0.0.1",
+      "pid": 22160
+    },
+    {
+      "port": 8000,
+      "address": "127.0.0.1",
+      "pid": 12800
+    },
+    {
+      "port": 5173,
+      "address": "127.0.0.1",
+      "pid": 23184
+    },
+    {
+      "port": 8010,
+      "address": "127.0.0.1",
+      "pid": 16080
+    },
+    {
+      "port": 80,
+      "address": "127.0.0.1",
+      "pid": 19196
+    },
+    {
+      "port": 11434,
+      "address": "0.0.0.0",
+      "pid": 27120
+    },
+    {
+      "port": 8080,
+      "address": "127.0.0.1",
+      "pid": 12820
+    },
+    {
+      "port": 8002,
+      "address": "127.0.0.1",
+      "pid": 15132
+    },
+    {
+      "port": 80,
+      "address": "::1",
+      "pid": 17804
+    },
+    {
+      "port": 80,
+      "address": "127.0.0.1",
+      "pid": 17804
+    },
+    {
+      "port": 11435,
+      "address": "127.0.0.1",
+      "pid": 35220
+    },
+    {
+      "port": 3001,
+      "address": "127.0.0.1",
+      "pid": 24884
+    },
+    {
+      "port": 80,
+      "address": "::1",
+      "pid": 19196
+    },
+    {
+      "port": 11434,
+      "address": "::",
+      "pid": 27120
+    },
+    {
+      "port": 5174,
+      "address": "127.0.0.1",
+      "pid": 30140
+    },
+    {
+      "port": 8085,
+      "address": "127.0.0.1",
+      "pid": 33148
+    },
+    {
+      "port": 4455,
+      "address": "127.0.0.1",
+      "pid": 22160
+    },
+    {
+      "port": 8013,
+      "address": "127.0.0.1",
+      "pid": 37208
+    },
+    {
+      "port": 8189,
+      "address": "127.0.0.1",
+      "pid": 5172
+    },
+    {
+      "port": 8888,
+      "address": "127.0.0.1",
+      "pid": 35200
+    },
+    {
+      "port": 8088,
+      "address": "127.0.0.1",
+      "pid": 4160
+    },
+    {
+      "port": 3000,
+      "address": "127.0.0.1",
+      "pid": 19436
+    }
+  ],
+  "late_readiness": {
+    "vst_8013": {
+      "ready": true,
+      "plugin_processing": "pedalboard prerequisite missing"
+    },
+    "bio_8085": {
+      "ready": true,
+      "ping": 200,
+      "invalid_key": 401,
+      "existing_key_nonexecuting_get": 405,
+      "credential_reused_not_replaced": true,
+      "only_new_owned_idle_process_replaced": true
+    },
+    "kernel_8088": {
+      "ready": true,
+      "streaming": false,
+      "recording": false,
+      "virtual_camera": false,
+      "encoder_qualified": false
+    },
+    "unreal_8888": {
+      "ready": true,
+      "engine_or_stream_launched": false
+    },
+    "ollama_11435": {
+      "ready": true,
+      "existing_cpu_configuration": true,
+      "inference_calls": 0
+    },
+    "social_8006": {
+      "ready": true,
+      "connected_to_twitch": false,
+      "token_configured": false
+    },
+    "minerwatch": {
+      "running": true,
+      "read_only_monitor": true
+    }
+  },
+  "holds": {
+    "node_3001": "Existing token/intentional503 hold",
+    "recdebut": "Existing hard review hold; no dispatch",
+    "wsl_hls_8089": "WSL/CallMsi/Install/REGDB_E_CLASSNOTREG; listing exited -1",
+    "live_financial_trading": "Not started",
+    "mining_plotting_compute_jobs": "Not launched by service startup"
+  },
+  "data_preservation": {
+    "chroma_documents": 15633,
+    "chroma_vector_files": 302,
+    "chroma_integrity": "PASS",
+    "original_snapshots_preserved": true,
+    "chroma_schema_migrations": false,
+    "credential_values_saved": false
+  },
+  "all_services_accepted": false,
+  "goal_status": "ACTIVE"
+}

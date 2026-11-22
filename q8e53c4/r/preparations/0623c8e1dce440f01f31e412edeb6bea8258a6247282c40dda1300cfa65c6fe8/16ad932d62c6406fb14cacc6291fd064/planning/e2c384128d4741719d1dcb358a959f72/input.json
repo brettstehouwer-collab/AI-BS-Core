@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "local_admin",
+  "request_id": "16ad932d62c6406fb14cacc6291fd064",
+  "plan_id": "e2c384128d4741719d1dcb358a959f72",
+  "snapshot_sha256": "63327daee581f6db41296005efb37a528a48b51d9bc0dd2aca5386ed69de25cc",
+  "review_digest": "9d4f284d4d79a07f663958f2b6c1aab6eaca6352149055ed26e4367685f37bdd",
+  "model_payload": {
+    "objective": "Implement clamp(value, lower, upper) in native_app.py: return lower below the lower bound, upper above the upper bound, otherwise value. Assume lower <= upper. Preserve the signature and existing tests.",
+    "source_files": [
+      {
+        "path": "native_app.py",
+        "role": "editable",
+        "sha256": "431f7ff295b4b180e99157c8bd2d5191459f8b8511799b90808ce71bc5ccc556",
+        "excerpt": "def clamp(value, lower, upper):\n    return value\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "test_native_app.py",
+        "role": "verification",
+        "sha256": "b63dc6e81da6501833b06f60ad78c2f053e6ac169c4b454d41c42d1769ee9251",
+        "excerpt": "import unittest\nfrom native_app import clamp\n\nclass ClampTests(unittest.TestCase):\n    def test_cases(self):\n        for args, expected in [((-2,0,10),0),((12,0,10),10),((5,0,10),5),((0,0,10),0),((10,0,10),10),((-5,-4,-1),-4)]:\n            with self.subTest(args=args): self.assertEqual(clamp(*args),expected)\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python_unittest",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_native_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "native_app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "313932e75e47e6fa22b066db9743a6e12317392addcbdab5025c29cc0e192326",
+  "worker": {
+    "pid": 55908,
+    "created": 1794697973.2263496
+  },
+  "created_at_utc": "2026-11-14T23:26:44.787031+00:00",
+  "entry_sha256": "717951576d718a4eaf5dc6bfc9f4a207796d98113e3bc9e4f7399cbf04f4f185"
+}

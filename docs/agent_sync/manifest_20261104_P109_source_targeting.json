@@ -1,0 +1,64 @@
+{
+  "at": "2026-11-04T23:46:11.137614+00:00",
+  "status": "source_candidate_applied_not_compiled_or_qualified",
+  "SDK_source": "0.17.4",
+  "changes": [
+    {
+      "path": "engine/include/aibs/player.hpp",
+      "before_exists": true,
+      "before_sha256": "42fc54930e0e912b5e697a31b7b62b22b8ca9bcc43c2b31d7fbfb1a4a9b48c70",
+      "before_bytes": 1262,
+      "after_sha256": "51ee654f483492f866b4c5453f12715e7f52fb6d5d3a3f0c14de09243cc96e4c",
+      "after_bytes": 1522
+    },
+    {
+      "path": "engine/apps/durable_world.cpp",
+      "before_exists": true,
+      "before_sha256": "8c37962e18f94f983ae97ad2ba45f0dddf457ffc9f8550798ee793ad5e7bef2a",
+      "before_bytes": 152196,
+      "after_sha256": "b2b62703c60e9476bc419eb85657ac7398e1f05096dc0056d25efc2d13434f28",
+      "after_bytes": 151995
+    },
+    {
+      "path": "engine/apps/opening_tour_runtime.inl",
+      "before_exists": true,
+      "before_sha256": "cb2687f2ebc0597afe688d13dd32c5674a1afde0c448f6bc3e430741add0a8de",
+      "before_bytes": 8730,
+      "after_sha256": "631563e3bda6753028785a335805e1e81fe957d5b6d23971b11b5dd19141c75c",
+      "after_bytes": 9391
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "before_exists": true,
+      "before_sha256": "720a866f374963d2702967c718a72390b0d70f8b17121da57d922b3b4b1943af",
+      "before_bytes": 62328,
+      "after_sha256": "73173b373bc849cbbf2f4be24cc6bc0bd44492528d2e8ee4c25c1c4183928f71",
+      "after_bytes": 62953
+    },
+    {
+      "path": "engine/apps/player_targeting.hpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "a2a9e4103c8f878fc58f76b057659b074b45c4c8f582f50c095ab2178a56086f",
+      "after_bytes": 864
+    },
+    {
+      "path": "engine/tests/player_targeting_tests.cpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "be7b2ef8d17f00e3a351655fed916be81a5b7e3b96a33b58b319cee8a8d76c7a",
+      "after_bytes": 8657
+    }
+  ],
+  "architecture": {
+    "requirement": "Native aimed interactions and faithful diagnostic traversal",
+    "decision": "Read configured physical body-eye anchor; detached inspection retains free-camera origin. No class data/virtual members or save/collision/reach/input rules changed. Fresh consistent SDK compilation, no mixed-definition overlay.",
+    "status": "Source implementation accepted within authorized goal; acceptance pending."
+  },
+  "old_SDKs_and_releases_preserved": true,
+  "runtime_or_launchers_changed": false,
+  "goal_complete": false,
+  "next_step": "Freeze new source and build/run player_targeting_contracts first. Correct any actual failures without weakening geometric or state invariants. Then build native runtime and prove controlled third-person E and both routes before full Release/Debug and installed SDK qualification."
+}

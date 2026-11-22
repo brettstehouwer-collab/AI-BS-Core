@@ -1,0 +1,15 @@
+09-29 23:10:52.455 77188 78004 D adb.exe : usb_windows.cpp:205 Created power notification thread
+09-29 23:10:52.455 77188 76548 D adb.exe : usb_windows.cpp:171 Created device thread
+09-29 23:10:52.470 77188 76548 D adb.exe : usb_windows.cpp:539 device zero_mask: 0x1ff
+09-29 23:10:52.472 77188 76548 D adb.exe : usb_windows.cpp:571 adding a new device \\?\usb#vid_04e8&pid_6860&adb#9&1d1d8426&0&0000#{f72fe0d4-cbcb-407d-8814-9ed673d0dd6b}
+09-29 23:10:52.472 77188 76548 D adb.exe : usb_windows.cpp:603 cannot get serial number: A device attached to the system is not functioning. (31)
+09-29 23:10:52.472 77188 76548 D adb.exe : usb_windows.cpp:442 usb_cleanup_handle
+09-29 23:10:52.943 77188 81256 I adb.exe : tls_connection.cpp:91 [client]: Initializing adbwifi TlsConnection
+09-29 23:10:52.943 77188 81256 I adb.exe : tls_connection.cpp:211 [client]: Starting adbwifi tls handshake
+09-29 23:10:52.980 77188 81256 E adb.exe : tls_connection.cpp:290 [client]: Post-handshake SSL_peek failed [SSLV3_ALERT_CERTIFICATE_UNKNOWN]
+09-29 23:10:52.980 77188 81256 I adb.exe : transport.cpp:1071 kicking transport 0x5211b70 adb-R5CY11L1QCN-cAyYc4._adb-tls-connect._tcp
+09-29 23:10:52.980 77188 77616 I adb.exe : transport.cpp:1170 adb-R5CY11L1QCN-cAyYc4._adb-tls-connect._tcp: connection terminated: read failed
+09-29 23:10:53.495 77188 76548 D adb.exe : usb_windows.cpp:539 device zero_mask: 0x1ff
+09-29 23:10:53.495 77188 76548 D adb.exe : usb_windows.cpp:571 adding a new device \\?\usb#vid_04e8&pid_6860&adb#9&1d1d8426&0&0000#{f72fe0d4-cbcb-407d-8814-9ed673d0dd6b}
+09-29 23:10:53.497 77188 76548 D adb.exe : usb_windows.cpp:603 cannot get serial number: A device attached to the system is not functioning. (31)
+09-29 23:10:53.497 77188 76548 D adb.exe : usb_windows.cpp:442 usb_cleanup_handle

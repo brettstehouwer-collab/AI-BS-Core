@@ -1,0 +1,1 @@
+2026-10-25 preparation: installed psutil.Process has no net_connections attribute (AttributeError). Pivoted to existing working psutil.net_connections(kind=tcp) with PID filtering; no process or source mutation.

@@ -1,0 +1,245 @@
+{
+  "record": 210,
+  "utc": "2026-10-31T21:35:00.318171+00:00",
+  "local_time": "2026-10-31T17:35:00.318171-04:00",
+  "version": "5.329.86",
+  "source_commit": "f35ab2d8d37933da3dd29abab195086aef1d51f8",
+  "branch": "codex/audit-v532976-20261031",
+  "status": "VERIFIED_INSTALLED_GUI_PREVIEW_FIXED_AND_LEFT_ON_CLOUD_RECORDS_CLOSED",
+  "code_scope": {
+    "source_test_version_paths": 19,
+    "document_paths": 16,
+    "all9_original_ledger_prefixes_preserved": true
+  },
+  "tests": {
+    "guarded_native": 356,
+    "groups": 29,
+    "failures": 0,
+    "errors": 0,
+    "effect_denials": 0,
+    "version_mirrors": 16
+  },
+  "actual_gui": {
+    "utc": "2026-10-31T21:20:42.351Z",
+    "version": "5.329.86",
+    "window": {
+      "app": "process:C:\\AI-BS\\native_studio\\releases\\v5.329.86\\AI_BS_Studio\\AI_BS_Studio.exe",
+      "id": 43780780,
+      "title": "AI-BS Sovereign Studio v5.329.86 [Windows 10/11 x64 Pure Native]"
+    },
+    "actual_fortnite_image_visible_in_installed_studio": true,
+    "preview_status": "delayed",
+    "prominent_control": "Program preview: ON",
+    "checkbox_enabled": true,
+    "off_state_verified": "Both controls OFF and canvas said Program preview is off",
+    "on_state_verified": "Checkbox ON synchronized prominent control and game picture returned",
+    "broadcast_stop_or_source_action_during_toggle": false,
+    "audio": "generated_silence",
+    "live_trading": "DISABLED",
+    "obs_controls_in_visible_studio": 0,
+    "images": [
+      {
+        "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_on_initial.png",
+        "bytes": 387199,
+        "sha256": "136a49f0385e7babd11c34ae597f3d25f1119ef72046d0545c8a74963adc306b",
+        "reviewed_no_credentials": true
+      },
+      {
+        "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_off.png",
+        "bytes": 352213,
+        "sha256": "420e8c5d6ade8db0f36472ea1600730f2aa283b09e92b2cd7615b2094b0ed2a2",
+        "reviewed_no_credentials": true
+      },
+      {
+        "path": "C:/AI-BS/backups/native_preview210_fix/ui/gui/v86_preview_on_final.png",
+        "bytes": 386627,
+        "sha256": "566d1bc5e38074a6d89f54a89bdc83274ac5c1f2b6bef5890d236aa6f9a514fb",
+        "reviewed_no_credentials": true
+      }
+    ]
+  },
+  "runtime_after_upgrade": {
+    "record": 210,
+    "kind": "one fresh read-only sample after parent actualv86 GUI upgrade/toggle verification",
+    "utc": "2026-10-31T21:21:03.545715+00:00",
+    "status": {
+      "status": "running_unverified",
+      "active": true,
+      "can_select": true,
+      "protocol_version": 2,
+      "controller_pid": 51964,
+      "controller_create_time": 1793481150.965731,
+      "encoder_pid": 51940,
+      "encoder_create_time": 1793481151.637907,
+      "capture_state": "capturing",
+      "game_frame_verified": true,
+      "holding_reason": "VERIFIED_GAME",
+      "source_mode": "auto_game",
+      "frames_encoded": 15224,
+      "out_time_us": 507466667,
+      "audio_mode": "generated_silence"
+    },
+    "local_hls": {
+      "sequence": 247,
+      "mtime_age_seconds": 2.048576831817627,
+      "ended": false
+    },
+    "same_pipeline_as_before_upgrade": true,
+    "matches_expected_51964_51940": true,
+    "encoder_advanced_since_before": true,
+    "owned_game_capture_verified": true,
+    "crypto_pins": {
+      "backend/core/crypto_execution_safety.py": {
+        "sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+        "baseline_sha256": "00c1257a0c6331c6dc6719cc7b1adb1d6fc51056d158aecd369b459f08850eb5",
+        "matches_baseline": true
+      },
+      "backend/core/crypto_execution_controls.py": {
+        "sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+        "baseline_sha256": "5704bd857de92e583560d67083000ee427e7e8827a9673fb6856c8bdcae0fe24",
+        "matches_baseline": true
+      },
+      "Crypto-Swarm/drip_ledger.json": {
+        "sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+        "baseline_sha256": "6a31b6bcf6fd89ef35ff6e7c41ba9749f559edcb97e5900649ddd291b12db098",
+        "matches_baseline": true
+      },
+      "backend/crypto_ledger.json": {
+        "sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+        "baseline_sha256": "0331785a0ee70ba484a00e33dfe0bf32e3840c004b8c6b0da7009691073a2efd",
+        "matches_baseline": true
+      }
+    },
+    "all_four_crypto_pins_match": true,
+    "port8007_listeners": 0,
+    "obs_process_count": 0,
+    "parent_GUI_evidence": "Root reported actualv86 game visible/delayed preview; prominent OFF then checkbox ON synchronized both and game picture returned. Root leftv86 foregroundpreviewON; this agent performed no GUI interaction.",
+    "actions": {
+      "GUI": false,
+      "runtime_start_stop": false,
+      "source_dispatch": false,
+      "IPC_writes": false,
+      "new_capture": false,
+      "keys_read": false,
+      "raw_encoder_argv_read": false,
+      "E_access": false,
+      "source_edits": false,
+      "extra_tests": false
+    }
+  },
+  "independent_static_artifact": {
+    "utc": "2026-10-31T21:21:21.875929+00:00",
+    "status": "STATIC_MEDIA_ARTIFACT_VERIFIED",
+    "version": "5.329.86.0",
+    "native_modules_equivalent": 71,
+    "frozen_input_count": 82,
+    "frozen_input_hashes_all_match": true,
+    "expected_correction_source_hashes": {
+      "native_studio/broadcast_preview.py": "b7a102d2d21093ec5026953d4e8b2502dd90b3623be506862438d815ddf9dab8",
+      "native_studio/omni_broadcast_studio.py": "4a8d018527d55d145f7d612da02346c08459d85647029a16b3065ce9b56fd5eb",
+      "native_studio/broadcast_ipc.py": "a1f244b0c4223634bd978b2ed8929ab051a54084406c0493b656affa40926cf0"
+    },
+    "private_runtime_or_fixture_files": [],
+    "media_imports": [
+      "QMediaPlayer",
+      "QVideoSink",
+      "QVideoFrame"
+    ],
+    "backend_direct_dependencies_packaged": [
+      "Qt6Multimedia.dll",
+      "Qt6Gui.dll",
+      "Qt6Core.dll",
+      "avformat-61.dll",
+      "avcodec-61.dll",
+      "swresample-5.dll",
+      "swscale-8.dll",
+      "avutil-59.dll",
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll"
+    ],
+    "media_files": {
+      "_internal/PyQt6/QtMultimedia.pyd": "1f30fea8a3327be317ab426e0e09ec5b34efb07c7f27fd4c9402f4b705d8fb3f",
+      "_internal/PyQt6/Qt6/bin/Qt6Multimedia.dll": "7cd2a057ca7838c0cfbc405303c53351bb4701ba47c29666fcd8ed31f267c2be",
+      "_internal/PyQt6/Qt6/plugins/multimedia/ffmpegmediaplugin.dll": "f0913ee8f3d732640e23b90002e4fa720cc762c5807b05df4daafca400ad97ee"
+    },
+    "exe_sha256": "089e154b13f960f88c63db4540f590c06a14ab0e3523fcc3e837610ab1737b23",
+    "backend_modules": 0,
+    "qt_imported": false,
+    "application_executed": false,
+    "runtime_actions": 0,
+    "full_gui_certification": false
+  },
+  "cloud": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "folder_url": "https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "all_assets_same_folder_and_hash_verified": true,
+    "assets": [
+      {
+        "id": "1TQGKOIoNN4mvz_xPu9Ur8dcS4sa5zKdc",
+        "path": "C:/AI-BS/docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md",
+        "bytes": 2873,
+        "sha256": "1ece9715159f7134a64118bde13b83fca57b1da234b5ee93a2e981edee10f371",
+        "same_folder": true,
+        "raw_download_matches": true,
+        "is_index": false
+      },
+      {
+        "id": "1-__M4nCzHhH_PitdGmePucZKQNshYNm-",
+        "path": "C:/AI-BS/backups/record210_close_work/AI-BS_Record210_v5.329.86_sanitized_evidence.zip",
+        "bytes": 730506,
+        "sha256": "87e2dd5e49f8832fa42c50649846d5e29431f91894bd6491897e776e53347846",
+        "same_folder": true,
+        "raw_download_matches": true,
+        "is_index": false
+      },
+      {
+        "id": "1SOpFzd0lZFB4eCcgtb6uOGfcA4BDra4h",
+        "path": "C:/AI-BS/docs/agent_sync/manifest_record210_v532986.json",
+        "bytes": 4476,
+        "sha256": "09f85a149b797beb81eed948fb3700736871ff303324932e236716b87ab1f3bb",
+        "same_folder": true,
+        "raw_download_matches": true,
+        "is_index": false
+      },
+      {
+        "id": "1X9sAttJoM6KtOBXcAh7IS3XZLPZVPOS8",
+        "path": "C:/AI-BS/backups/native_preview210_fix/drive_index_preimage210.md",
+        "bytes": 26465,
+        "sha256": "79dce599418035cdac5400e66f9e5702d410785103252b0c37349c40716bb469",
+        "same_folder": true,
+        "raw_download_matches": true,
+        "is_index": true
+      }
+    ],
+    "index": {
+      "id": "1X9sAttJoM6KtOBXcAh7IS3XZLPZVPOS8",
+      "bytes": 27593,
+      "sha256": "45eddb19be35b975d531dbf57846dfa1d3919093c65b68e999868e9417cf93bd",
+      "all_previous_history_preserved": true,
+      "same_folder": true,
+      "raw_download_matches": true
+    },
+    "private_source_binary_key_material_uploaded": false,
+    "closing_receipt": "Separate same-folder metadata-verified upload follows this frozen record."
+  },
+  "holds": {
+    "live_trading": "DISABLED",
+    "port8007": "NO_LISTENER",
+    "crypto_and_ledger_hashes": "UNCHANGED",
+    "audio": "GENERATED_SILENCE",
+    "microphone": "UNREQUESTED"
+  },
+  "limits": [
+    "No remote ingest, all-games or all-workflows acceptance claimed.",
+    "No Firebase deployment in Record210.",
+    "Encrypted full recovery backup remains blocked by existing E-key custody; no E retry or replacement key."
+  ],
+  "usage_review": {
+    "build_seconds": 120.667513,
+    "exact_active_model_time_or_task_cost": null,
+    "earlier_Bad_Request_message": "UNATTRIBUTED_NO_CONFIRMED_PLATFORM_OUTAGE",
+    "record210_gui_actions": "User explicitly reauthorized; actual bounded controls succeeded.",
+    "drive_download": "One expired retrieval URL returned403; fresh authenticated fetch succeeded without repeating expired URL."
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "actor": "/root/asset_reconciliation",
+  "timestamp_utc": "2026-10-25T21:40:18.352Z",
+  "confidence": "OBSERVED",
+  "target": "https://stehouwer-publishing.com/",
+  "method": "Two fresh isolated Chrome guest contexts at390/1440; only homepage navigation; GET/HEAD guard; Cloudflare Insights script blocked before load",
+  "scope": "Homepage availability and application boot only; no authenticated APIs, live-stream/media playback, forms or physical-device acceptance",
+  "metrics_sha256": "bce961a3dd74587366f1d74f3fbdb5e5775f7519fa467b319519124fa2adc6f0",
+  "metrics_file": "public_metrics.json",
+  "screenshots": [
+    {
+      "file": "public_390.png",
+      "bytes": 54680
+    },
+    {
+      "file": "public_1440.png",
+      "bytes": 202752
+    }
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "http_status": 200,
+      "homepage_boot": "pass",
+      "main_js_loaded": true,
+      "main_css_loaded": true,
+      "uncaught_page_errors": 0,
+      "private_or_legacy_tracking_requests": 0,
+      "expected_cloudflare_beacon_blocks": 1,
+      "body_scroll_width": 525,
+      "horizontal_overflow_px": 135,
+      "mobile_layout_acceptance": "not accepted; overflow observed",
+      "missing_background_404": true,
+      "forms_or_clicks_performed": false
+    },
+    {
+      "width": 1440,
+      "http_status": 200,
+      "homepage_boot": "pass",
+      "main_js_loaded": true,
+      "main_css_loaded": true,
+      "uncaught_page_errors": 0,
+      "private_or_legacy_tracking_requests": 0,
+      "expected_cloudflare_beacon_blocks": 1,
+      "body_scroll_width": 1440,
+      "horizontal_overflow_px": 0,
+      "mobile_layout_acceptance": "not established by this smoke",
+      "missing_background_404": true,
+      "forms_or_clicks_performed": false
+    }
+  ],
+  "known_limits": [
+    "390px body525px:135px horizontal overflow",
+    "Missing images/library_bg.jpg returns404 at both widths",
+    "External Cloudflare injected telemetry script intentionally blocked and classified separately from original application tracking"
+  ],
+  "owned_browser_cleanup": "All fresh contexts closed; browser.close executed in finally; no existing user browser/profile touched",
+  "application_source_changes": false
+}

@@ -1,0 +1,277 @@
+{
+  "observed_utc": "2026-10-25T22:25:02.859523+00:00",
+  "scope": "Raw bounded GET only; no JS execution, browser or submitted fields; no full response bodies retained",
+  "checks": [
+    {
+      "url": "https://stehouwer-publishing.com/",
+      "kind": "public_entry",
+      "observed_utc": "2026-10-25T22:25:02.144645+00:00",
+      "status": 200,
+      "bytes_read": 1876,
+      "sha256": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "bounded": true,
+      "pass": true,
+      "recognized_cf_script_count": 1,
+      "reviewed_origin_match": true,
+      "legacy_analytics_absent": true,
+      "elapsed_seconds": 0.235
+    },
+    {
+      "url": "https://www.stehouwer-publishing.com/",
+      "kind": "public_entry",
+      "observed_utc": "2026-10-25T22:25:02.144645+00:00",
+      "status": 200,
+      "bytes_read": 1876,
+      "sha256": "bbe5750e0b4f170a86a81e52df8cc31cb2f15507544472f32acec9689b90c672",
+      "bounded": true,
+      "pass": true,
+      "recognized_cf_script_count": 1,
+      "reviewed_origin_match": true,
+      "legacy_analytics_absent": true,
+      "elapsed_seconds": 0.281
+    },
+    {
+      "url": "http://127.0.0.1/",
+      "kind": "origin_entry",
+      "observed_utc": "2026-10-25T22:25:02.144645+00:00",
+      "status": 200,
+      "bytes_read": 1509,
+      "sha256": "efa51df9c46d5506358cb04fe54976d1a8124d562973a19a2ddd25a478639b10",
+      "bounded": true,
+      "pass": true,
+      "recognized_cf_script_count": 0,
+      "reviewed_origin_match": true,
+      "legacy_analytics_absent": true,
+      "byte_exact_entry_match": true,
+      "elapsed_seconds": 0.047
+    },
+    {
+      "url": "http://127.0.0.1/",
+      "kind": "origin_entry",
+      "observed_utc": "2026-10-25T22:25:02.145648+00:00",
+      "status": 200,
+      "bytes_read": 1509,
+      "sha256": "efa51df9c46d5506358cb04fe54976d1a8124d562973a19a2ddd25a478639b10",
+      "bounded": true,
+      "pass": true,
+      "recognized_cf_script_count": 0,
+      "reviewed_origin_match": true,
+      "legacy_analytics_absent": true,
+      "byte_exact_entry_match": true,
+      "elapsed_seconds": 0.047
+    },
+    {
+      "url": "https://api.brettstehouwer.live/health",
+      "kind": "api_health",
+      "observed_utc": "2026-10-25T22:25:02.186345+00:00",
+      "status": 200,
+      "bytes_read": 165,
+      "sha256": "aa4660dae31531637857ffcd648f07dc9ef23c7692ae860ae1024b96e3012864",
+      "bounded": true,
+      "pass": true,
+      "json_object": true,
+      "elapsed_seconds": 0.297
+    },
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "kind": "api_health",
+      "observed_utc": "2026-10-25T22:25:02.187344+00:00",
+      "status": 200,
+      "bytes_read": 165,
+      "sha256": "aa4660dae31531637857ffcd648f07dc9ef23c7692ae860ae1024b96e3012864",
+      "bounded": true,
+      "pass": true,
+      "json_object": true,
+      "elapsed_seconds": 0.016
+    },
+    {
+      "url": "http://127.0.0.1:8080/health",
+      "kind": "api_health",
+      "observed_utc": "2026-10-25T22:25:02.205753+00:00",
+      "status": 200,
+      "bytes_read": 602,
+      "sha256": "dcf457f8dbf900b98bb8a70a9f017df337bef8c1b4ccc63eb8252c7c8bf56bbc",
+      "bounded": true,
+      "pass": true,
+      "json_object": true,
+      "elapsed_seconds": 0.015
+    },
+    {
+      "url": "http://127.0.0.1:11434/api/version",
+      "kind": "api_health",
+      "observed_utc": "2026-10-25T22:25:02.220764+00:00",
+      "status": 200,
+      "bytes_read": 20,
+      "sha256": "71512e561cd9334b39d421f778b3bbc11c9faed5a9ba8e750f3854a34e28480f",
+      "bounded": true,
+      "pass": true,
+      "json_object": true,
+      "elapsed_seconds": 0.032
+    },
+    {
+      "url": "http://127.0.0.1:5173/",
+      "kind": "frontend_root",
+      "observed_utc": "2026-10-25T22:25:02.247419+00:00",
+      "status": 200,
+      "bytes_read": 2461,
+      "sha256": "4869c90bb36ff9d6662f9b26409518b408d3e8f29c576e7ab95bd1964e91ee49",
+      "bounded": true,
+      "pass": true,
+      "elapsed_seconds": 0.031
+    },
+    {
+      "url": "https://stehouwer-publishing.com/ledger.html",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.281882+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.172
+    },
+    {
+      "url": "https://stehouwer-publishing.com/invoice.html",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.376172+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.203
+    },
+    {
+      "url": "https://stehouwer-publishing.com/invoice.pdf",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.415172+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.188
+    },
+    {
+      "url": "https://stehouwer-publishing.com/.env",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.453776+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.172
+    },
+    {
+      "url": "https://stehouwer-publishing.com/indexnow_key.txt",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.485567+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.187
+    },
+    {
+      "url": "https://stehouwer-publishing.com/analytics.js",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.580131+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.234
+    },
+    {
+      "url": "https://stehouwer-publishing.com/security-shield.js",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.602263+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.25
+    },
+    {
+      "url": "https://stehouwer-publishing.com/api/health",
+      "kind": "negative",
+      "observed_utc": "2026-10-25T22:25:02.619975+00:00",
+      "status": 404,
+      "pass": true,
+      "body_retained": false,
+      "elapsed_seconds": 0.203
+    }
+  ],
+  "static_hash_checks": [
+    {
+      "relative": "index.html",
+      "pass": true
+    },
+    {
+      "relative": "assets/Preview-DG7rwkwP.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/dash.all.min-BJ49VMfO.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/hls-CoORUb_e.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/index-B6_3PTYU.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/index-DiVaW3ll.css",
+      "pass": true
+    },
+    {
+      "relative": "assets/index-NQ4u1ogD.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/index-UzGUYM6D.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/mixin-DIQKSja0.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-BDl8_mUz.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-BJcVQbmV.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-BSmgMon5.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-CWY_MlsN.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-CaXKJ2qg.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-D60ae7iM.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-DbfVaVVq.js",
+      "pass": true
+    },
+    {
+      "relative": "assets/react-DjczQAhS.js",
+      "pass": true
+    },
+    {
+      "relative": "images/brett.jpg",
+      "pass": true
+    },
+    {
+      "relative": "images/julie.jpg",
+      "pass": true
+    }
+  ],
+  "http_all_pass": true,
+  "static_all_pass": true,
+  "requests": 17,
+  "static_files": 19
+}

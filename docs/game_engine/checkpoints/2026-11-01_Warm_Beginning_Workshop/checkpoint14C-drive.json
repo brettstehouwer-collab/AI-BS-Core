@@ -1,0 +1,16 @@
+{
+  "status": "drive_full_roundtrip_verified",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Backups\\14C_Checkpoint_Closeout_Records.zip",
+  "archive_bytes": 308755,
+  "archive_sha256": "6201766b76bc0098484973191a8d32f03819e292a29a94d0f814e0b3a1636265",
+  "embedded_manifest_sha256": "a0a06ef01adbcb2dfea14d85a6284a89bcd387c730840ba8a99cdab05e6ee80d",
+  "selected_file_count": 27,
+  "crc_all_entries_passed": true,
+  "full_entry_sha256_readback_passed": true,
+  "private_master_excluded": true,
+  "goal_complete": false,
+  "verified_at": "2026-11-02T10:45:34.222583+00:00",
+  "drive_file_id": "1f1P3_FOgotTf4B7XEczHp_cNjdmv7Pdu",
+  "drive_url": "https://drive.google.com/file/d/1f1P3_FOgotTf4B7XEczHp_cNjdmv7Pdu/view?usp=drivesdk",
+  "cache_path": "D:\\AI-BS-Game-Resources\\cache\\6201766b76bc0098484973191a8d32f03819e292a29a94d0f814e0b3a1636265.zip"
+}

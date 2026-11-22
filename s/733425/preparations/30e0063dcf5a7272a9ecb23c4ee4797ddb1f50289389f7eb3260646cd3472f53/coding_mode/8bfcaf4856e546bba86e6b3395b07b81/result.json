@@ -1,0 +1,12 @@
+{
+  "input_sha256": "cf22f1d7dc5935c9b5bc7b16db8dd34d0ba5a4c55dc96b2027a6b34f536850e2",
+  "state": "BLOCKED",
+  "static_checks": [
+    {
+      "path": "src/app.py",
+      "kind": "syntax",
+      "status": "passed"
+    }
+  ],
+  "entry_sha256": "3373897bb19ccdf970c9047bea26a8fe904e8a923114666da350b847ae089333"
+}

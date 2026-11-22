@@ -1,0 +1,41 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "firebase:fixture:alice",
+  "payload": {
+    "execution_id": "74b6c9e0bb8a4bcea449a756d2e6c13a",
+    "request_id": "ee5dd810e6b041b9b3dec3455dc82af9",
+    "plan_id": "961094f4789541e4a2d5fe582f4bbad4",
+    "proposal_id": "50bba6e9c87743e2aada355e535c8bfd",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "d87e0a8974696bf9c48ab33b78468fa30346c15580aafbd7f7f854b442b4cdc3",
+  "files": [
+    {
+      "relative_path": "src/app.js",
+      "role": "editable",
+      "length": 18,
+      "sha256": "b31b59a228ebb473ed1b57cd3f7b2a72dc859b8a7fae9795738575722da5182d"
+    },
+    {
+      "relative_path": "tests/app.test.cjs",
+      "role": "verification",
+      "length": 180,
+      "sha256": "4878515595f0f3bb6db1673888eec442335ebf7805dfabd039a57aecee1bd9f8"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "node",
+      "argv": [
+        "node",
+        "--test",
+        "tests/app.test.cjs"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/src/app.js\n+++ b/src/app.js\n@@ -1 +1 @@\n-const value = 1;\n+const value = 42;\n",
+  "created_at_utc": "2026-11-14T14:10:18.581245+00:00",
+  "entry_sha256": "03a67147cd38a7be980ae29bb9e87ab5028a0d0fba3bbc54e42d012c13643e2c"
+}

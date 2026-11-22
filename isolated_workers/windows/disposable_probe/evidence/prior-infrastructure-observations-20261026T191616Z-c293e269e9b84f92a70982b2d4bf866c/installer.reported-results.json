@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "classification": "RETROSPECTIVE_TRANSCRIPTION_OF_PREVIOUSLY_OBSERVED_TRUSTED_INFRASTRUCTURE_TOOL_RESULTS",
+  "suite": "Installer",
+  "reported_passed": 32,
+  "reported_failed": 0,
+  "original_execution_utc": null,
+  "original_stdout_retained_in_this_file": false,
+  "verification": "PREVIOUS_TOOL_OUTPUT_OBSERVATION_ONLY_NOT_A_NEW_EXECUTION",
+  "transcribed_utc": "2026-10-26T19:16:16.3380103Z",
+  "source_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Install-WorkerOS.ps1",
+  "current_source_sha256": "bfed0e612565be7ca95b16e2dbac0a8c1c6794e2be6ca7bc8981bc7737b5f821",
+  "test_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Test-InstallWorkerInfrastructure.ps1",
+  "current_test_sha256": "167d5ea9cf2524968da65c35ab457a31f12b9643f2698b2b26d2cfcd76ee5d60",
+  "vm_operations": 0,
+  "guest_input": 0,
+  "candidate_execution": false,
+  "rerun_performed_to_create_this_record": false
+}

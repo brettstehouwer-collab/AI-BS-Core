@@ -18,24 +18,25 @@ export const useComfyWorkspace = (initialBaseUrl = 'http://127.0.0.1:8189') => {
     return initialBaseUrl;
   });
 
-  const [nodeRegistry, setNodeRegistry] = useState({});
+  const [nodeRegistry, setNodeRegistry] = useState(/** @type {Record<string, {input?: {required?: Record<string, unknown>, optional?: Record<string, unknown>}, output?: string[], output_name?: string[], category?: string, display_name?: string}>} */ ({}));
   const [activeWorkflow, setActiveWorkflow] = useState('SDXL 4K Master Cine');
-  const [executingNode, setExecutingNode] = useState(null);
+  const [executingNode, setExecutingNode] = useState(/** @type {string | null} */ (null));
   const [progress, setProgress] = useState({ value: 0, max: 0 });
-  const [outputs, setOutputs] = useState([]);
+  const [outputs, setOutputs] = useState(/** @type {Array<{filename: string, url: string, timestamp: string | number, subfolder?: string, type?: string}>} */ ([]));
   const [isConnected, setIsConnected] = useState(false);
-  const [errorStatus, setErrorStatus] = useState(null);
+  const [errorStatus, setErrorStatus] = useState(/** @type {string | null} */ (null));
 
   const clientId = useRef(
     typeof crypto !== 'undefined' && crypto.randomUUID
       ? crypto.randomUUID()
       : `aibs_${Math.random().toString(36).substring(2, 15)}`
   );
-  const ws = useRef(null);
-  const reconnectTimeout = useRef(null);
+  const ws = useRef(/** @type {WebSocket | null} */ (null));
+  const reconnectTimeout = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
 
   // Persist baseUrl changes
-  const updateBaseUrl = useCallback((newUrl) => {
+  const updateBaseUrl = useCallback(/** @param {string} newUrl */
+( newUrl) => {
     const cleaned = newUrl.replace(/\/+$/, '');
     setBaseUrl(cleaned);
     if (typeof localStorage !== 'undefined') {
@@ -55,7 +56,7 @@ export const useComfyWorkspace = (initialBaseUrl = 'http://127.0.0.1:8189') => {
       setNodeRegistry(data || {});
     } catch (err) {
       console.warn('[useComfyWorkspace] Failed to load ComfyUI node definitions from', baseUrl, err);
-      setErrorStatus(`Node schema unreachable at ${baseUrl}: ${err.message}`);
+      setErrorStatus(`Node schema unreachable at ${baseUrl}: ${(err instanceof Error ? err.message : String(err))}`);
     }
   }, [baseUrl]);
 
@@ -97,7 +98,7 @@ export const useComfyWorkspace = (initialBaseUrl = 'http://127.0.0.1:8189') => {
           }
         };
 
-        socket.onerror = (e) => {
+        socket.onerror = (_e) => {
           if (isMounted) {
             setIsConnected(false);
           }
@@ -126,7 +127,8 @@ export const useComfyWorkspace = (initialBaseUrl = 'http://127.0.0.1:8189') => {
                 break;
               case 'executed':
                 if (msg.data?.output?.images && Array.isArray(msg.data.output.images)) {
-                  const newImages = msg.data.output.images.map((img) => ({
+                  const newImages = msg.data.output.images.map(/** @param {{filename: string, subfolder?: string, type?: string}} img */
+( img) => ({
                     url: `${baseUrl}/view?filename=${img.filename}&subfolder=${img.subfolder || ''}&type=${img.type || 'output'}`,
                     filename: img.filename,
                     subfolder: img.subfolder,
@@ -162,7 +164,8 @@ export const useComfyWorkspace = (initialBaseUrl = 'http://127.0.0.1:8189') => {
   }, [baseUrl]);
 
   // 3. Queue Execution (Prompt DAG Dispatch)
-  const queueWorkflow = useCallback(async (promptDAG) => {
+  const queueWorkflow = useCallback(/** @param {string} promptDAG */
+async ( promptDAG) => {
     try {
       const res = await fetch(`${baseUrl}/prompt`, {
         method: 'POST',

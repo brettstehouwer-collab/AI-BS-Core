@@ -1,18 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import DennisBellMobileRemote from './DennisBellMobileRemote.jsx';
 import { loadRecdebutSnapshot } from '/src/utils/recdebutData.js';
-import { 
-  REC_DEBUT_BRAND, 
-  REC_DEBUT_LEADERSHIP, 
-  REC_DEBUT_AWARDS, 
-  REC_DEBUT_SPORTS_PORTALS, 
-  REC_DEBUT_FAQS, 
-  REC_DEBUT_PROGRAM_DETAILS,
-  REC_DEBUT_YOUTUBE_CHANNELS,
-  REC_DEBUT_FEATURED_VIDEOS,
-  REC_DEBUT_VERIFICATION_MATRIX
-} from './recDebutAssets.js';
+import { REC_DEBUT_BRAND, REC_DEBUT_LEADERSHIP, REC_DEBUT_AWARDS, REC_DEBUT_SPORTS_PORTALS, REC_DEBUT_FAQS } from "./recDebutAssets.js";
 
+/** Roster identifiers follow rec_debut_router.py's INTEGER primary key.
+ * @typedef {{id: number, name: string, phone: string, email?: string | null, email_status?: string | null, status: string, high_school?: string | null, school?: string | null, city?: string | null, city_state?: string | null, team_name?: string | null, sport?: string | null, grad_year?: string | null, coach_type?: string | null, school_name?: string | null, notes?: string | null, last_messaged_at?: number | null, open_count?: number, click_count?: number, athlete_phone?: string, athlete_name?: string, height?: string, state?: string, coach_name?: string, awards?: string}} Athlete
+ */
+/** @param {{backendUrl?: string, BACKEND_URL?: string}} props */
 export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_URL: propUpperBackendUrl }) {
   const BACKEND_URL = propBackendUrl || propUpperBackendUrl || (
     typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -46,12 +40,12 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
     return 'telemetry';
   });
 
-  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState(/** @type {{"funnel": {"contacted_count": number, "contacted_pct": string, "reply_rate_pct": number, "pending_count": number, "pending_pct": string, "open_rate_pct": number, "unique_opens": string, "total_opens": number, "click_rate_pct": number, "unique_clicks": string, "total_clicks": number}} | null} */ (null));
 
-  const [telemetryStats, setTelemetryStats] = useState({});
-  const [athletes, setAthletes] = useState([]);
-  const [excludedCoaches, setExcludedCoaches] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
+  const [telemetryStats, setTelemetryStats] = useState(/** @type {Partial<Record<'total' | 'contacted' | 'pending' | 'emails' | 'coaches' | 'campaigns', number>>} */ ({}));
+  const [athletes, setAthletes] = useState(/** @type {Athlete[]} */ ([]));
+  const [excludedCoaches, setExcludedCoaches] = useState(/** @type {Athlete[]} */ ([]));
+  const [campaigns, setCampaigns] = useState(/** @type {Array<{"successful_count": number, "id": string, "created_at": number, "sender_id": string, "total_recipients": number, "failed_count": number, "message_body": string}>} */ ([]));
   const [hasLiveData, setHasLiveData] = useState(false);
   const [dataError, setDataError] = useState('');
   const loadSequence = useRef(0);
@@ -62,10 +56,10 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   // Campaign Mode: 'sms' (Carrier MMS to Phones) vs 'email' (Direct to Inboxes)
   const [campaignType, setCampaignType] = useState('email');
   const [emailSubject, setEmailSubject] = useState('YOUR ELIGIBILITY IS A MUST! — NCAA Academic Requirements Breakdown');
-  const [useSwarm, setUseSwarm] = useState(true);
+  const [useSwarm] = useState(true);
 
   // SMTP Swarm State
-  const [smtpAccounts, setSmtpAccounts] = useState([]);
+  const [smtpAccounts, setSmtpAccounts] = useState(/** @type {Array<{"active": boolean, "id": string, "email": string, "label": string, "app_password_masked": string, "daily_limit": string}>} */ ([]));
   const [showAddAccountModal, setShowAddAccountModal] = useState(false);
   const [showAppPasswordGuide, setShowAppPasswordGuide] = useState(false);
   const [newAccount, setNewAccount] = useState({
@@ -76,54 +70,55 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
   });
   const [isTestingAccount, setIsTestingAccount] = useState(false);
   const [isSavingAccount, setIsSavingAccount] = useState(false);
-  const [accountActionMessage, setAccountActionMessage] = useState(null);
+  const [, setAccountActionMessage] = useState(/** @type {string | null} */ (null));
 
   // Athlete Email Hub State
-  const [athleteEmailsSummary, setAthleteEmailsSummary] = useState(null);
-  const [copiedEmailsToast, setCopiedEmailsToast] = useState(null);
+  const [, setAthleteEmailsSummary] = useState(null);
+  const [copiedEmailsToast, setCopiedEmailsToast] = useState(/** @type {string | null} */ (null));
   const [emailSearchTerm, setEmailSearchTerm] = useState('');
-  const [emailListFilter, setEmailListFilter] = useState('all'); // 'all' | 'pending' | 'messaged'
+  const [] = useState('all'); // 'all' | 'pending' | 'messaged'
 
   // Syndication Category Filter: 'pending' | 'messaged'
   const [syndicationCategory, setSyndicationCategory] = useState('pending');
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   // Inbound Athlete SMS & Email Replies State
-  const [athleteReplies, setAthleteReplies] = useState([]);
+  const [athleteReplies, setAthleteReplies] = useState(/** @type {Array<{id: number, athlete_id: number, is_read: boolean | number, athlete_name: string, sender_phone: string, reply_body: string, sender_email: string, subject?: string, received_at: number}>} */ ([]));
   const [unreadRepliesCount, setUnreadRepliesCount] = useState(0);
   const [isSyncingReplies, setIsSyncingReplies] = useState(false);
-  const [syncReplyMessage, setSyncReplyMessage] = useState(null);
+  const [syncReplyMessage, setSyncReplyMessage] = useState(/** @type {string | null} */ (null));
   const [replySearchTerm, setReplySearchTerm] = useState('');
   const [replyFilter, setReplyFilter] = useState('all'); // 'all' | 'unread'
-  const [activeReplyId, setActiveReplyId] = useState(null);
+  const [activeReplyId, setActiveReplyId] = useState(/** @type {number | null} */ (null));
   const [replyMessageText, setReplyMessageText] = useState('');
   const [isSendingReply, setIsSendingReply] = useState(false);
 
   // RecDebut Verified Assets State (All-American Alumni, Sport Portals, FAQ)
   const [awardSearchTerm, setAwardSearchTerm] = useState('');
   const [awardStateFilter, setAwardStateFilter] = useState('ALL');
-  const [selectedSportPortal, setSelectedSportPortal] = useState('all');
-  const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
+  const [] = useState('all');
+  const [expandedFaqIndex, setExpandedFaqIndex] = useState(/** @type {number | null} */ (null));
 
   // Test Dispatch State
   const [testPhone, setTestPhone] = useState('616-402-3628'); // Brett's phone by default
   const [testEmail, setTestEmail] = useState('dbell002@sbcglobal.net'); // Dennis Bell's email by default
   const [isSendingTest, setIsSendingTest] = useState(false);
-  const [testResult, setTestResult] = useState(null);
+  const [, setTestResult] = useState(null);
 
   // Transactional Email API (Resend / SendGrid) Shield State
-  const [emailApiConfig, setEmailApiConfig] = useState(null);
+  const [emailApiConfig, setEmailApiConfig] = useState(/** @type {{"is_api_active": boolean, "recommendation": string, "resend_status": string} | null} */ (null));
   const [resendApiKeyInput, setResendApiKeyInput] = useState('');
   const [resendFromInput, setResendFromInput] = useState('Dennis Bell <recruiting@recdebut.com>');
   const [selectedProvider, setSelectedProvider] = useState('auto');
   const [isSavingApiConfig, setIsSavingApiConfig] = useState(false);
-  const [apiConfigToast, setApiConfigToast] = useState(null);
+  const [apiConfigToast, setApiConfigToast] = useState(/** @type {string | null} */ (null));
   const [showApiSetupGuide, setShowApiSetupGuide] = useState(false);
 
   const handleSaveApiConfig = async () => {
     setIsSavingApiConfig(true);
     setApiConfigToast(null);
     try {
+      /** @type {{provider: string, resend_from_email: string, resend_api_key?: string}} */
       const payload = {
         provider: selectedProvider,
         resend_from_email: resendFromInput.trim() || 'Dennis Bell <recruiting@recdebut.com>'
@@ -145,7 +140,7 @@ export default function DennisBellPortal({ backendUrl: propBackendUrl, BACKEND_U
         setApiConfigToast(`❌ Error saving API config: ${data.detail || data.message}`);
       }
     } catch (e) {
-      setApiConfigToast(`❌ Network error: ${e.message}`);
+      setApiConfigToast(`❌ Network error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsSavingApiConfig(false);
       setTimeout(() => setApiConfigToast(null), 6000);
@@ -213,10 +208,10 @@ President, Recreational Debut`;
 
   const [messageScript, setMessageScript] = useState(NCAA_ELIGIBILITY_DRAFT);
   const [isStaging, setIsStaging] = useState(false);
-  const [stagedResult, setStagedResult] = useState(null);
-  const [scrubberReport, setScrubberReport] = useState(null);
+  const [stagedResult, setStagedResult] = useState(/** @type {{"message": string, "ready_athletes_count": number, "blocked_coaches_count": number, "caller_id": string, "preview_recipients": Array<{"name": string, "email": string, "phone": string}>, "sample_personalized_message": string} | null} */ (null));
+  const [, setScrubberReport] = useState(null);
   const [isBroadcastingLive, setIsBroadcastingLive] = useState(false);
-  const [liveBroadcastStatus, setLiveBroadcastStatus] = useState(null);
+  const [liveBroadcastStatus, setLiveBroadcastStatus] = useState(/** @type {string | null} */ (null));
   const pollTickRef = useRef(0);
   const [broadcastProgress, setBroadcastProgress] = useState({
     active: false,
@@ -225,17 +220,19 @@ President, Recreational Debut`;
     sent: 0,
     failed: 0,
     current_athlete: '',
+    current_account: '',
+    campaign_type: '',
     progress_pct: 0,
     error: null
   });
 
   // Daily Quota & Batch Pacing State (Safe 100% Free Gateway)
-  const [quotaStatus, setQuotaStatus] = useState({});
+  const [quotaStatus, setQuotaStatus] = useState(/** @type {{swarm_daily_ceiling?: number, sent_last_24h?: number}} */ ({}));
   const [batchSize, setBatchSize] = useState(400);
 
   // CSV / File Upload State
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadMessage, setUploadMessage] = useState(null);
+  const [, setIsUploading] = useState(false);
+  const [, setUploadMessage] = useState(/** @type {string | null} */ (null));
 
   // New Athlete Referral State
   const [referral, setReferral] = useState({
@@ -255,7 +252,8 @@ President, Recreational Debut`;
     ? `${window.location.origin}/?portal=recdebut&tab=${activeTab}` 
     : `https://ai-bs-dashboard.web.app/?portal=recdebut&tab=${activeTab}`;
 
-  const handleTabChange = (tabId) => {
+  /** @param {typeof activeTab} tabId */
+const handleTabChange = ( tabId) => {
     setActiveTab(tabId);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
@@ -291,7 +289,7 @@ President, Recreational Debut`;
       setHasLiveData(true);
     } catch (error) {
       if (sequence !== loadSequence.current) return;
-      setDataError(error.message || 'RecDebut live data is unavailable.');
+      setDataError((error instanceof Error ? error.message : String(error)) || 'RecDebut live data is unavailable.');
       setHasLiveData(false);
     } finally {
       if (sequence === loadSequence.current) setIsLoading(false);
@@ -409,7 +407,7 @@ President, Recreational Debut`;
         }
       }
     } catch (e) {
-      alert(`Network error: ${e.message}`);
+      alert(`Network error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsSendingTest(false);
     }
@@ -443,13 +441,14 @@ President, Recreational Debut`;
       const data = await res.json();
       setStagedResult(data);
     } catch (e) {
-      alert(`Staging error: ${e.message}`);
+      alert(`Staging error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsStaging(false);
     }
   };
 
   // Live Mass Broadcast Handler
+  /** @param {number | null} [countOverride] */
   const handleLaunchLiveBroadcast = async (countOverride = null) => {
     if (!messageScript.trim()) {
       alert('Message script cannot be empty.');
@@ -462,7 +461,8 @@ President, Recreational Debut`;
     }
 
     const modeName = campaignType === 'email' ? 'DIRECT EMAIL INBOX' : 'CARRIER MMS PHONE TEXT';
-    const activeGmailsCount = smtpAccounts.filter(a => a.active).length || 1;
+    const activeGmailsCount = smtpAccounts.filter( 
+a => a.active).length || 1;
     const swarmCapacity = quotaStatus.swarm_daily_ceiling || 400;
 
     const confirmed = window.confirm(
@@ -507,7 +507,7 @@ President, Recreational Debut`;
         setLiveBroadcastStatus(null);
       }
     } catch (err) {
-      alert(`Network error starting broadcast: ${err.message}`);
+      alert(`Network error starting broadcast: ${(err instanceof Error ? err.message : String(err))}`);
       setIsBroadcastingLive(false);
       setLiveBroadcastStatus(null);
     }
@@ -523,12 +523,13 @@ President, Recreational Debut`;
         alert('Broadcast cancellation requested. Engine will stop after current message.');
       }
     } catch (e) {
-      alert(`Failed to cancel: ${e.message}`);
+      alert(`Failed to cancel: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 
   // SMTP Swarm: Add Account
-  const handleSaveSmtpAccount = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSaveSmtpAccount = async ( e) => {
     e.preventDefault();
     if (!newAccount.email || !newAccount.app_password) {
       alert('Email and 16-character Google App Password are required.');
@@ -553,14 +554,19 @@ President, Recreational Debut`;
         alert(`Error: ${data.detail || data.message || 'Failed to save account'}`);
       }
     } catch (err) {
-      alert(`Error saving account: ${err.message}`);
+      alert(`Error saving account: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsSavingAccount(false);
     }
   };
 
   // SMTP Swarm: Test Account Connection
-  const handleTestSmtpAccount = async (account) => {
+  /** @param {{"email": string, "app_password"?: string}} account */
+const handleTestSmtpAccount = async ( account) => {
+    if (!account.app_password?.trim()) {
+      alert('Credential test unavailable: no explicit owned password supplied. Stored masked accounts require authenticated server-side lookup.');
+      return;
+    }
     setIsTestingAccount(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/smtp-accounts/test`, {
@@ -568,7 +574,7 @@ President, Recreational Debut`;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: account.email,
-          app_password: account.app_password || 'dnbmziwbtrfgfeht'
+          app_password: account.app_password || ''
         })
       });
       const data = await res.json();
@@ -578,14 +584,15 @@ President, Recreational Debut`;
         alert(`❌ Connection test failed for ${account.email}:\n${data.error || data.message}`);
       }
     } catch (err) {
-      alert(`Error testing account: ${err.message}`);
+      alert(`Error testing account: ${(err instanceof Error ? err.message : String(err))}`);
     } finally {
       setIsTestingAccount(false);
     }
   };
 
   // SMTP Swarm: Delete Account
-  const handleDeleteSmtpAccount = async (accountId, accountEmail) => {
+  /** @param {string} accountId @param {string} accountEmail */
+const handleDeleteSmtpAccount = async ( accountId,  accountEmail) => {
     if (!window.confirm(`Remove ${accountEmail} from the SMTP Swarm?`)) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/smtp-accounts/${accountId}`, { method: 'DELETE' });
@@ -596,22 +603,25 @@ President, Recreational Debut`;
         alert(`Notice: ${data.detail || 'Could not delete account'}`);
       }
     } catch (err) {
-      alert(`Error deleting account: ${err.message}`);
+      alert(`Error deleting account: ${(err instanceof Error ? err.message : String(err))}`);
     }
   };
 
   // Athlete Email Hub: Copy All Emails to Clipboard
   const handleCopyAllEmails = (formatted = false) => {
-    const list = athletes.filter(a => a.email && a.email.includes('@'));
+    const list = athletes.filter( 
+a => a.email && a.email.includes('@'));
     if (list.length === 0) {
       alert('No email addresses found.');
       return;
     }
     let text = '';
     if (formatted) {
-      text = list.map(a => `"${a.name}" <${a.email}>`).join(',\n');
+      text = list.map( 
+a => `"${a.name}" <${a.email}>`).join(',\n');
     } else {
-      text = list.map(a => a.email).join(', ');
+      text = list.map( 
+a => a.email).join(', ');
     }
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(text);
@@ -621,7 +631,7 @@ President, Recreational Debut`;
   };
 
   // Scrubber: Purge Coaches from Athletes
-  const handleRunCoachScrubber = async () => {
+  (async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/v1/recdebut/clean-coaches`, {
         method: 'POST',
@@ -633,12 +643,13 @@ President, Recreational Debut`;
       fetchData();
       alert(`🛡️ Coach Safety Check Complete:\n${data.purged_count} coach numbers removed from athletes roster.\nAthlete list is 100% verified coach-free.`);
     } catch (e) {
-      alert(`Scrubber error: ${e.message}`);
+      alert(`Scrubber error: ${(e instanceof Error ? e.message : String(e))}`);
     }
-  };
+  });
 
   // Bulk Status Update (Pending <-> Contacted)
-  const handleBulkStatusUpdate = async (newStatus) => {
+  /** @param {string} newStatus */
+const handleBulkStatusUpdate = async ( newStatus) => {
     if (selectedIds.size === 0) {
       alert('Please select at least one athlete.');
       return;
@@ -659,12 +670,13 @@ President, Recreational Debut`;
         fetchData();
       }
     } catch (e) {
-      alert(`Update error: ${e.message}`);
+      alert(`Update error: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 
   // Single Athlete Status Toggle
-  const handleToggleSingleStatus = async (athlete) => {
+  /** @param {Athlete} athlete */
+const handleToggleSingleStatus = async ( athlete) => {
     const nextStatus = (athlete.status === 'Contacted' || athlete.status === 'Messaged') ? 'Pending' : 'Contacted';
     try {
       await fetch(`${BACKEND_URL}/api/v1/recdebut/athletes/update-status`, {
@@ -677,23 +689,25 @@ President, Recreational Debut`;
       });
       fetchData();
     } catch (e) {
-      alert(`Update error: ${e.message}`);
+      alert(`Update error: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 
   // Delete Athlete
-  const handleDeleteAthlete = async (id) => {
+  /** @param {number} id */
+const handleDeleteAthlete = async ( id) => {
     if (!window.confirm('Delete this athlete from the tracking roster?')) return;
     try {
       await fetch(`${BACKEND_URL}/api/v1/recdebut/athletes/${id}`, { method: 'DELETE' });
       fetchData();
     } catch (e) {
-      alert(`Delete error: ${e.message}`);
+      alert(`Delete error: ${(e instanceof Error ? e.message : String(e))}`);
     }
   };
 
   // File Upload for Mass Listings
-  const handleFileUpload = (e) => {
+  (/** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+( e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -717,13 +731,13 @@ President, Recreational Debut`;
           setUploadMessage(`❌ Upload error: ${data.error || 'Failed to parse'}`);
         }
       } catch (err) {
-        setUploadMessage(`❌ Network error: ${err.message}`);
+        setUploadMessage(`❌ Network error: ${(err instanceof Error ? err.message : String(err))}`);
       } finally {
         setIsUploading(false);
       }
     };
     reader.readAsText(file);
-  };
+  });
 
   // Inbound SMS Reply Handlers
   const handleSyncReplies = async () => {
@@ -739,13 +753,14 @@ President, Recreational Debut`;
         setSyncReplyMessage(`⚠️ Sync error: ${data.error || 'Failed to sync'}`);
       }
     } catch (e) {
-      setSyncReplyMessage(`❌ Network error: ${e.message}`);
+      setSyncReplyMessage(`❌ Network error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsSyncingReplies(false);
     }
   };
 
-  const handleMarkReplyRead = async (replyId) => {
+  /** @param {number} replyId */
+const handleMarkReplyRead = async ( replyId) => {
     try {
       await fetch(`${BACKEND_URL}/api/v1/recdebut/sms/replies/${replyId}/read`, { method: 'POST' });
       setAthleteReplies(prev => prev.map(r => r.id === replyId ? { ...r, is_read: 1 } : r));
@@ -755,7 +770,8 @@ President, Recreational Debut`;
     }
   };
 
-  const handleSendQuickReply = async (reply) => {
+  /** @param {{id: number, sender_phone: string, athlete_name: string}} reply */
+const handleSendQuickReply = async ( reply) => {
     if (!replyMessageText.trim()) {
       alert('Please enter a reply message.');
       return;
@@ -781,14 +797,15 @@ President, Recreational Debut`;
         alert(`❌ Send failed: ${data.dispatch_result?.error || 'Unknown error'}`);
       }
     } catch (e) {
-      alert(`Network error: ${e.message}`);
+      alert(`Network error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsSendingReply(false);
     }
   };
 
   // Submit Referral
-  const handleSubmitReferral = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSubmitReferral = async ( e) => {
     e.preventDefault();
     if (!referral.name || !referral.phone) {
       alert('Athlete name and phone are required.');
@@ -820,14 +837,15 @@ President, Recreational Debut`;
         alert('Failed to submit athlete');
       }
     } catch (e) {
-      alert(`Error: ${e.message}`);
+      alert(`Error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsSubmittingReferral(false);
     }
   };
 
   // Export CSV Helper
-  const exportCsv = (dataList, filename, isCoach = false) => {
+  /** @param {Athlete[]} dataList @param {string} filename */
+const exportCsv = ( dataList,  filename, isCoach = false) => {
     if (dataList.length === 0) {
       alert('No records to export.');
       return;
@@ -836,10 +854,12 @@ President, Recreational Debut`;
     let rows = '';
     if (isCoach) {
       header = 'ID,Name,Phone,Type,School,Team\n';
-      rows = dataList.map(c => `"${c.id}","${c.name || ''}","${c.phone || ''}","${c.coach_type || ''}","${c.school_name || ''}","${c.team_name || ''}"`).join('\n');
+      rows = dataList.map( 
+c => `"${c.id}","${c.name || ''}","${c.phone || ''}","${c.coach_type || ''}","${c.school_name || ''}","${c.team_name || ''}"`).join('\n');
     } else {
       header = 'ID,Name,Phone,Email,Sport,HighSchool,GradYear,CityState,Status,Team,Notes\n';
-      rows = dataList.map(a => `"${a.id}","${a.name}","${a.phone}","${a.email || ''}","${a.sport || ''}","${a.high_school || ''}","${a.grad_year || ''}","${a.city_state || ''}","${a.status || 'Pending'}","${a.team_name || ''}","${a.notes || ''}"`).join('\n');
+      rows = dataList.map( 
+a => `"${a.id}","${a.name}","${a.phone}","${a.email || ''}","${a.sport || ''}","${a.high_school || ''}","${a.grad_year || ''}","${a.city_state || ''}","${a.status || 'Pending'}","${a.team_name || ''}","${a.notes || ''}"`).join('\n');
     }
     const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -853,12 +873,14 @@ President, Recreational Debut`;
 
   // Export Clean Text List (One email per line)
   const exportEmailsTxt = () => {
-    const list = athletes.filter(a => a.email && a.email.includes('@'));
+    const list = athletes.filter( 
+a => a.email && a.email.includes('@'));
     if (list.length === 0) {
       alert('No emails to export.');
       return;
     }
-    const content = list.map(a => a.email).join('\n');
+    const content = list.map( 
+a => a.email).join('\n');
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -870,10 +892,14 @@ President, Recreational Debut`;
   };
 
   // Categorize Athletes
-  const phoneOnlyAthletes = athletes.filter(a => a.email_status === 'NO_EMAIL' || (!a.email && a.phone));
-  const pendingAthletes = athletes.filter(a => (!a.status || a.status === 'Pending' || a.status === 'Selected') && a.email_status !== 'NO_EMAIL' && a.email);
-  const messagedAthletes = athletes.filter(a => a.status === 'Contacted' || a.status === 'Messaged');
-  const athletesWithEmails = athletes.filter(a => a.email && a.email.includes('@'));
+  const phoneOnlyAthletes = athletes.filter( 
+a => a.email_status === 'NO_EMAIL' || (!a.email && a.phone));
+  const pendingAthletes = athletes.filter( 
+a => (!a.status || a.status === 'Pending' || a.status === 'Selected') && a.email_status !== 'NO_EMAIL' && a.email);
+  const messagedAthletes = athletes.filter( 
+a => a.status === 'Contacted' || a.status === 'Messaged');
+  const athletesWithEmails = athletes.filter( 
+a => a.email && a.email.includes('@'));
 
   // Preserve genuine zeros from the live summary; never substitute historical seed counts.
   const effectiveTotalAthletes = telemetryStats.total ?? 0;
@@ -908,7 +934,8 @@ President, Recreational Debut`;
 
   const displayList = getActiveList();
 
-  const handleSelectAll = (e) => {
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} e */
+const handleSelectAll = ( e) => {
     if (e.target.checked) {
       const allIds = new Set(displayList.map(i => i.id));
       setSelectedIds(allIds);
@@ -917,7 +944,8 @@ President, Recreational Debut`;
     }
   };
 
-  const handleToggleSelectId = (id) => {
+  /** @param {number} id */
+const handleToggleSelectId = ( id) => {
     setSelectedIds(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -926,8 +954,10 @@ President, Recreational Debut`;
     });
   };
 
-  const totalDelivered = campaigns.reduce((acc, c) => acc + (c.successful_count || 0), 0);
-  const activeSmtpCount = smtpAccounts.filter(a => a.active).length;
+  (campaigns.reduce(
+(acc,  c) => acc + (c.successful_count || 0), 0));
+  const activeSmtpCount = smtpAccounts.filter( 
+a => a.active).length;
   const swarmDailyCapacity = quotaStatus.swarm_daily_ceiling ?? 0;
 
   if (!hasLiveData || dataError) {
@@ -991,8 +1021,9 @@ President, Recreational Debut`;
                 src="https://recdebut.com/wp-content/uploads/2025/08/Screenshot__8_-removebg-preview.png" 
                 alt="Recreational Debut" 
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                onError={(e) => {
-                  e.target.parentNode.innerHTML = '<span style="font-size: 32px; font-weight: bold; color: #001F3F;">RD</span>';
+                onError={
+( e) => {
+                  if (e.currentTarget.parentElement) e.currentTarget.parentElement.innerHTML = '<span style="font-size: 32px; font-weight: bold; color: #001F3F;">RD</span>';
                 }}
               />
             </div>
@@ -2134,7 +2165,8 @@ President, Recreational Debut`;
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '480px', overflowY: 'auto' }}>
-                  {campaigns.map((c) => (
+                  {campaigns.map(
+( c) => (
                     <div
                       key={c.id}
                       style={{
@@ -2198,7 +2230,8 @@ President, Recreational Debut`;
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={
+( e) => setSearchTerm(e.target.value)}
                     placeholder="Search athlete, school, phone, email..."
                     style={{
                       backgroundColor: '#07101e',
@@ -2243,16 +2276,18 @@ President, Recreational Debut`;
                     </tr>
                   </thead>
                   <tbody>
-                    {athletes.filter(a => {
+                    {athletes.filter( 
+a => {
                       if (!searchTerm.trim()) return true;
                       const q = searchTerm.toLowerCase();
                       return (
                         (a.name && a.name.toLowerCase().includes(q)) ||
                         (a.high_school && a.high_school.toLowerCase().includes(q)) ||
                         (a.phone && a.phone.includes(q)) ||
-                        (a.email && a.email.toLowerCase().includes(q))
+                        (a.email && (a.email || '').toLowerCase().includes(q))
                       );
-                    }).slice(0, 30).map((a) => {
+                    }).slice(0, 30).map(
+( a) => {
                       const isMessaged = a.status === 'Contacted' || a.status === 'Messaged';
                       const isReplied = a.status === 'Replied' || athleteReplies.some(r => r.athlete_id === a.id);
                       return (
@@ -2286,10 +2321,10 @@ President, Recreational Debut`;
                           <td style={{ padding: '12px 14px', color: '#cbd5e1', fontSize: '12px' }}>
                             {a.last_messaged_at ? new Date(a.last_messaged_at * 1000).toLocaleDateString() : '—'}
                           </td>
-                          <td style={{ padding: '12px 14px', color: a.open_count > 0 ? '#38bdf8' : '#64748b', fontWeight: '700' }}>
+                          <td style={{ padding: '12px 14px', color: typeof a.open_count === 'number' && a.open_count > 0 ? '#38bdf8' : '#64748b', fontWeight: '700' }}>
                             {a.open_count || 0}
                           </td>
-                          <td style={{ padding: '12px 14px', color: a.click_count > 0 ? '#c084fc' : '#64748b', fontWeight: '700' }}>
+                          <td style={{ padding: '12px 14px', color: typeof a.click_count === 'number' && a.click_count > 0 ? '#c084fc' : '#64748b', fontWeight: '700' }}>
                             {a.click_count || 0}
                           </td>
                         </tr>
@@ -2396,7 +2431,8 @@ President, Recreational Debut`;
                   <input
                     type="text"
                     value={emailSubject}
-                    onChange={(e) => setEmailSubject(e.target.value)}
+                    onChange={
+( e) => setEmailSubject(e.target.value)}
                     placeholder="Subject line..."
                     style={{
                       width: '100%',
@@ -2488,7 +2524,8 @@ President, Recreational Debut`;
               {/* Message Script Textarea */}
               <textarea
                 value={messageScript}
-                onChange={(e) => setMessageScript(e.target.value)}
+                onChange={
+( e) => setMessageScript(e.target.value)}
                 placeholder="Paste or write your custom recruitment message script here..."
                 rows={8}
                 style={{
@@ -2519,7 +2556,8 @@ President, Recreational Debut`;
                       <input
                         type="email"
                         value={testEmail}
-                        onChange={(e) => setTestEmail(e.target.value)}
+                        onChange={
+( e) => setTestEmail(e.target.value)}
                         placeholder="Test Email Address"
                         style={{
                           backgroundColor: '#07101e',
@@ -2554,7 +2592,8 @@ President, Recreational Debut`;
                       <input
                         type="text"
                         value={testPhone}
-                        onChange={(e) => setTestPhone(e.target.value)}
+                        onChange={
+( e) => setTestPhone(e.target.value)}
                         placeholder="Test Phone #"
                         style={{
                           backgroundColor: '#07101e',
@@ -2967,7 +3006,8 @@ President, Recreational Debut`;
                   <input
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={
+( e) => setSearchTerm(e.target.value)}
                     placeholder="Search name, phone, email, school..."
                     style={{
                       backgroundColor: '#07101e',
@@ -3438,7 +3478,8 @@ President, Recreational Debut`;
                   </label>
                   <select
                     value={selectedProvider}
-                    onChange={(e) => setSelectedProvider(e.target.value)}
+                    onChange={
+( e) => setSelectedProvider(e.target.value)}
                     style={{
                       width: '100%',
                       backgroundColor: '#07101e',
@@ -3463,7 +3504,8 @@ President, Recreational Debut`;
                   <input
                     type="password"
                     value={resendApiKeyInput}
-                    onChange={(e) => setResendApiKeyInput(e.target.value)}
+                    onChange={
+( e) => setResendApiKeyInput(e.target.value)}
                     placeholder="re_1234567890abcdef..."
                     style={{
                       width: '100%',
@@ -3484,7 +3526,8 @@ President, Recreational Debut`;
                   <input
                     type="text"
                     value={resendFromInput}
-                    onChange={(e) => setResendFromInput(e.target.value)}
+                    onChange={
+( e) => setResendFromInput(e.target.value)}
                     placeholder="Dennis Bell <recruiting@recdebut.com>"
                     style={{
                       width: '100%',
@@ -3756,7 +3799,8 @@ President, Recreational Debut`;
                         type="email"
                         required
                         value={newAccount.email}
-                        onChange={(e) => setNewAccount({ ...newAccount, email: e.target.value })}
+                        onChange={
+( e) => setNewAccount({ ...newAccount, email: e.target.value })}
                         placeholder="e.g. DennisBellOutreach@gmail.com"
                         style={{
                           width: '100%',
@@ -3779,7 +3823,8 @@ President, Recreational Debut`;
                         type="password"
                         required
                         value={newAccount.app_password}
-                        onChange={(e) => setNewAccount({ ...newAccount, app_password: e.target.value })}
+                        onChange={
+( e) => setNewAccount({ ...newAccount, app_password: e.target.value })}
                         placeholder="e.g. dnbmziwbtrfgfeht"
                         style={{
                           width: '100%',
@@ -3805,7 +3850,8 @@ President, Recreational Debut`;
                       <input
                         type="text"
                         value={newAccount.label}
-                        onChange={(e) => setNewAccount({ ...newAccount, label: e.target.value })}
+                        onChange={
+( e) => setNewAccount({ ...newAccount, label: e.target.value })}
                         placeholder="e.g. Dennis Secondary Gmail"
                         style={{
                           width: '100%',
@@ -3829,7 +3875,8 @@ President, Recreational Debut`;
                         min="50"
                         max="480"
                         value={newAccount.daily_limit}
-                        onChange={(e) => setNewAccount({ ...newAccount, daily_limit: parseInt(e.target.value, 10) || 400 })}
+                        onChange={
+( e) => setNewAccount({ ...newAccount, daily_limit: parseInt(e.target.value, 10) || 400 })}
                         style={{
                           width: '100%',
                           padding: '10px 12px',
@@ -3903,7 +3950,8 @@ President, Recreational Debut`;
                   <input
                     type="text"
                     value={emailSearchTerm}
-                    onChange={(e) => setEmailSearchTerm(e.target.value)}
+                    onChange={
+( e) => setEmailSearchTerm(e.target.value)}
                     placeholder="Search name, email, school..."
                     style={{
                       backgroundColor: '#07101e',
@@ -3931,11 +3979,13 @@ President, Recreational Debut`;
                     </tr>
                   </thead>
                   <tbody>
-                    {athletesWithEmails.filter(a => {
+                    {athletesWithEmails.filter( 
+a => {
                       if (!emailSearchTerm.trim()) return true;
                       const term = emailSearchTerm.toLowerCase();
-                      return a.name.toLowerCase().includes(term) || a.email.toLowerCase().includes(term) || (a.high_school && a.high_school.toLowerCase().includes(term));
-                    }).slice(0, 100).map((a, idx) => (
+                      return a.name.toLowerCase().includes(term) || (a.email || '').toLowerCase().includes(term) || (a.high_school && a.high_school.toLowerCase().includes(term));
+                    }).slice(0, 100).map(
+( a, idx) => (
                       <tr key={a.id || idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', backgroundColor: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.01)' : 'transparent' }}>
                         <td style={{ padding: '10px 14px', fontWeight: '700', color: '#ffffff' }}>
                           {a.name}
@@ -4088,7 +4138,8 @@ President, Recreational Debut`;
                 <input
                   type="text"
                   value={replySearchTerm}
-                  onChange={(e) => setReplySearchTerm(e.target.value)}
+                  onChange={
+( e) => setReplySearchTerm(e.target.value)}
                   placeholder="Search name, phone, or text content..."
                   style={{
                     backgroundColor: '#07101e',
@@ -4229,7 +4280,8 @@ President, Recreational Debut`;
                           </div>
                           <textarea
                             value={replyMessageText}
-                            onChange={(e) => setReplyMessageText(e.target.value)}
+                            onChange={
+( e) => setReplyMessageText(e.target.value)}
                             rows={3}
                             style={{
                               backgroundColor: '#07101e',
@@ -4335,7 +4387,8 @@ President, Recreational Debut`;
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {campaigns.map((c) => (
+                  {campaigns.map(
+( c) => (
                     <div key={c.id} style={{
                       background: '#0e1c31',
                       borderRadius: '10px',
@@ -4448,7 +4501,8 @@ President, Recreational Debut`;
                 <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={
+( e) => setSearchTerm(e.target.value)}
                   placeholder="Filter roster..."
                   style={{
                     backgroundColor: '#07101e',
@@ -4495,11 +4549,13 @@ President, Recreational Debut`;
                   </tr>
                 </thead>
                 <tbody>
-                  {athletes.filter(a => {
+                  {athletes.filter( 
+a => {
                     if (!searchTerm.trim()) return true;
                     const term = searchTerm.toLowerCase();
-                    return a.name.toLowerCase().includes(term) || a.phone.includes(term) || (a.email && a.email.toLowerCase().includes(term)) || (a.high_school && a.high_school.toLowerCase().includes(term));
-                  }).slice(0, 100).map((a, idx) => (
+                    return a.name.toLowerCase().includes(term) || a.phone.includes(term) || (a.email && (a.email || '').toLowerCase().includes(term)) || (a.high_school && a.high_school.toLowerCase().includes(term));
+                  }).slice(0, 100).map(
+( a, idx) => (
                     <tr key={a.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', backgroundColor: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.01)' : 'transparent' }}>
                       <td style={{ padding: '10px 14px', color: '#64748b' }}>#{a.id}</td>
                       <td style={{ padding: '10px 14px', fontWeight: '700', color: '#ffffff' }}>{a.name}</td>
@@ -4567,7 +4623,8 @@ President, Recreational Debut`;
                   type="text"
                   required
                   value={referral.name}
-                  onChange={(e) => setReferral({ ...referral, name: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, name: e.target.value })}
                   placeholder="e.g. Jordan Miller"
                   style={{
                     width: '100%',
@@ -4590,7 +4647,8 @@ President, Recreational Debut`;
                   type="tel"
                   required
                   value={referral.phone}
-                  onChange={(e) => setReferral({ ...referral, phone: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, phone: e.target.value })}
                   placeholder="e.g. 616-555-0199"
                   style={{
                     width: '100%',
@@ -4612,7 +4670,8 @@ President, Recreational Debut`;
                 <input
                   type="email"
                   value={referral.email}
-                  onChange={(e) => setReferral({ ...referral, email: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, email: e.target.value })}
                   placeholder="e.g. jmiller@gmail.com"
                   style={{
                     width: '100%',
@@ -4634,7 +4693,8 @@ President, Recreational Debut`;
                 <input
                   type="text"
                   value={referral.sport}
-                  onChange={(e) => setReferral({ ...referral, sport: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, sport: e.target.value })}
                   placeholder="Basketball, Football, Track, etc."
                   style={{
                     width: '100%',
@@ -4656,7 +4716,8 @@ President, Recreational Debut`;
                 <input
                   type="text"
                   value={referral.grad_year}
-                  onChange={(e) => setReferral({ ...referral, grad_year: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, grad_year: e.target.value })}
                   placeholder="2026, 2027, etc."
                   style={{
                     width: '100%',
@@ -4678,7 +4739,8 @@ President, Recreational Debut`;
                 <input
                   type="text"
                   value={referral.high_school}
-                  onChange={(e) => setReferral({ ...referral, high_school: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, high_school: e.target.value })}
                   placeholder="e.g. East Kentwood High School, Grand Rapids MI"
                   style={{
                     width: '100%',
@@ -4700,7 +4762,8 @@ President, Recreational Debut`;
                 <textarea
                   rows={3}
                   value={referral.notes}
-                  onChange={(e) => setReferral({ ...referral, notes: e.target.value })}
+                  onChange={
+( e) => setReferral({ ...referral, notes: e.target.value })}
                   placeholder="e.g. 6'4 Guard, 3.6 GPA, All-Conference First Team"
                   style={{
                     width: '100%',
@@ -4823,9 +4886,10 @@ President, Recreational Debut`;
                             src={leader.image} 
                             alt={leader.name}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.parentNode.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#F58426;font-weight:bold;font-size:20px;">RD</div>';
+                            onError={
+( e) => {
+                              e.currentTarget.style.display = 'none';
+                              if (e.currentTarget.parentElement) e.currentTarget.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#F58426;font-weight:bold;font-size:20px;">RD</div>';
                             }}
                           />
                         </div>
@@ -5026,7 +5090,8 @@ President, Recreational Debut`;
                 type="text"
                 placeholder="🔍 Search honoree by athlete name, high school, city, or coach..."
                 value={awardSearchTerm}
-                onChange={(e) => setAwardSearchTerm(e.target.value)}
+                onChange={
+( e) => setAwardSearchTerm(e.target.value)}
                 style={{
                   flex: 1,
                   padding: '12px 18px',
@@ -5039,7 +5104,8 @@ President, Recreational Debut`;
                 }}
               />
               <span style={{ fontSize: '12px', color: '#64748b' }}>
-                Showing {REC_DEBUT_AWARDS.filter(a => {
+                Showing {REC_DEBUT_AWARDS.filter( 
+a => {
                   const matchSearch = !awardSearchTerm || 
                     a.name.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
                     a.school.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
@@ -5053,7 +5119,8 @@ President, Recreational Debut`;
 
             {/* Awards Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-              {REC_DEBUT_AWARDS.filter(a => {
+              {REC_DEBUT_AWARDS.filter( 
+a => {
                 const matchSearch = !awardSearchTerm || 
                   a.name.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||
                   a.school.toLowerCase().includes(awardSearchTerm.toLowerCase()) ||

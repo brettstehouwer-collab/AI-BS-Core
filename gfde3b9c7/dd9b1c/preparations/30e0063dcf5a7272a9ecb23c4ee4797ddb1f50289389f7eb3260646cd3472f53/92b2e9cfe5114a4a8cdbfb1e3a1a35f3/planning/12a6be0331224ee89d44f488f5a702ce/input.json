@@ -1,0 +1,57 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "92b2e9cfe5114a4a8cdbfb1e3a1a35f3",
+  "plan_id": "12a6be0331224ee89d44f488f5a702ce",
+  "snapshot_sha256": "e77c3619b73160ddfff6e7b4c72c90ecedebbb98f16e8692e1552a0f24c62c1e",
+  "review_digest": "a3fcd5206eea123638973e7b6094d4f1bda27eed0f402c5a5c682e2e7f677a8d",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "4eb9cc5140afde9de6d0a49a0d55bf6eade70a5d29f0827d97e144a626996344",
+        "excerpt": "import unittest,pathlib\r\nclass Check(unittest.TestCase):\r\n def test_mutation(self):\r\n  pathlib.Path(\"tests/test_app.py\").write_text(\"# changed\")\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "be10d7151c8164d15c20c2d1bebc401689b5bbb4e2d2e3ef3db1eb1033072d50",
+  "worker": {
+    "pid": 12784,
+    "created": 1794782635.3494687
+  },
+  "created_at_utc": "2026-11-15T22:44:00.044417+00:00",
+  "entry_sha256": "3b7038a3b974a316af6fa0524211b85999f4cdfcb3f20b8be38d5a82027f11d7"
+}

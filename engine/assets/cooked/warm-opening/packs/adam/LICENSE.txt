@@ -1,0 +1,33 @@
+AI-BS Adam v06 garment/facial-detail DRAFT; likeness has not been approved.
+
+Anatomical source: Blender Human Base Meshes bundle v1.2.0, CC0.
+https://download.blender.org/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.2.0.zip
+License reference: https://www.blender.org/download/demo-files/
+
+Project contributions: head reference fitting, neck graft, body-derived clothing,
+authored fabric print and facial-grain texture, shoes, rig, weights and clips.
+v06 derives from the immutable v04 project master. Source family photographs
+and video were visual references only. No original photograph, video, voice,
+photo-derived texture or linked source library is embedded. Their separate
+rights are neither inferred nor transferred. Lower clothing/height provisional.
+Retain as a private project draft pending personal likeness and art review.
+
+V06 retains the v05 body-derived garments and original authored textures; facial geometry/colors are a new unapproved reference-fit interpretation. Original family photographs/video are reference-only and are not embedded or copied.
+
+V07 owned adaptation: authored oral cavity, upper teeth/gum, tapered brow/beard geometry, vertex pigment and neckline/collar cleanup. Original family reference files remain separate and unembedded. Likeness and release approval are pending.
+
+V08 owned study: reduced smile aperture/tooth exposure, heavier upper lids,
+fuller cheek/jaw forms, dense lower brows, smoothed short scalp and authored
+strand geometry, continuous warm pigment and master-only procedural surface
+detail. No original family pixels or recordings are embedded. The existing
+diffuse native material contract remains unchanged. Likeness is unapproved.
+
+V09 owned study: coherent face/socket/nasal proportion refinements, continuous
+subdivided anatomical neck/head surface, short-cap boundary smoothing and
+authored pigment adjustment. Existing clothing vertices/weights, 22-joint
+hierarchy and four authored animation clips are preserved. Original family
+references remain read-only and unembedded. This is an unapproved personal
+study, not a claim of naturalistic completion or permission to distribute a
+family likeness.
+
+V10: owned qualitative anatomical, pigment, short-hair attachment and facial-surface refinements. No photographic pixels copied. Likeness and release art remain unapproved.

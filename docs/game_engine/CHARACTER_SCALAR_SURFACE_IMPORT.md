@@ -1,0 +1,9 @@
+# Character scalar surface import and native study
+
+2026-11-04T00:12:57.825641+00:00. Developing SDK0.17.0 only. Studio105 and installed SDK0166 were rehashed unchanged. No user saves or family originals were modified.
+
+The bounded glTF importer admits finite dielectric roughness0.04..1, preserving metallic0, opaque-only, no authored emission and existing unsupported-texture/extension restrictions. The new test rejected the old importer as expected, then passed427checks in each Release/Debug configuration. Valid boundary/interior factors retain geometry, images, draw ranges and animation; invalid factors and parser cleanup remain covered. Default1 writes legacy inner payload2; nondefault factors write3. The outer typed pack remainsv2. Matching rebuilt0.17headers, libraries and runtime are required.
+
+A separate v20 surface study applies fourteen material scalars to an owned GLB and editable Blender master. Geometry, UVs, albedo, weights, bind transforms and animation are retained. Original master and GLB remain unchanged. Procedural roughness links are removed only in the new scalar-profile master. The native renderer captures seven views plus diagnostic frames, actual animation, and right-wrist material identification with zero debug warnings/errors. See verification.json for pixel differences and exact legacy comparisons. These are technical material/animation checks, not approval of Adam's likeness. The face remains a construction study and needs further refinement.
+
+Source0.17 full Release/Debug build and all registered regressions are now being run separately under P64. Full installed consumers, source-native opening admission, complete chapter/package restart/acceptance, current human pacing and gameplay measurements, captions listening review and final likeness are incomplete. Normal/roughness textures, tangent transport and richer skin/fabric shading are not claimed. Existing Studio105 remains usable withv18.

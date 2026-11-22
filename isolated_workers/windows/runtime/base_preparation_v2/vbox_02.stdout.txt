@@ -1,0 +1,3 @@
+Virtual machine 'AI-BS-Eval-Base-20261023' is created and registered.
+UUID: 6c5a53da-ab80-4ecb-8be6-4059266f736e
+Settings file: 'C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vms\AI-BS-Eval-Base-20261023\AI-BS-Eval-Base-20261023.vbox'

@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "7d44d0e9a670400c85ba3cf8853abdf2",
+  "plan_id": "83e5a695556a420bb3a44ce61ca4885f",
+  "snapshot_sha256": "9869c2695aaa08be34c308fcc41e4bf4f9bab6d5bf82917f5fe06a274beb66b9",
+  "review_digest": "d7e35c8beb4a4311dda1ed8ba33f2774a5433570d5c4d9cb48a0c5e889616df1",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "91527bcee0904617b207dbe5f03e622c",
+  "reviewed_plan_sha256": "8e0e7eed7421f83f6d0306a11663312bd3a5bed3dd06da1eaa7abbad753c8c20",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 14128,
+    "created": 1794664760.6603472
+  },
+  "created_at_utc": "2026-11-14T13:59:24.816331+00:00",
+  "entry_sha256": "a183fcbb1b3db1ff46ae23ce1cd167f14e41d8e95588924d1a2362e16c40d811"
+}

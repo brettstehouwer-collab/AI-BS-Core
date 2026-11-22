@@ -1,0 +1,31 @@
+{
+  "status": "verified_authenticated_Drive_raw_readback",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\30P_Safe_Pause_20261103T074842Z.zip",
+  "bytes": 340668,
+  "sha256": "5f3a8fb9b24a64c857192f2625da6c86d9258ba04befa1be3b4fbe2ae7c9e904",
+  "members": 33,
+  "scope": "Selected pause increment only. Full current-source/art restore checkpoint remains pending; no family originals, dumps, credentials, Git data or private Master ledger.",
+  "canonical_handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_safe_pause_20261103T074842Z.json",
+  "local_manifest": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P30_pause_20261103T074842Z\\manifest.json",
+  "public_documents_written": [
+    "engine/out/warm_beginning/monitor_summary.json",
+    "engine/out/build_progress.json",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/WARM_BEGINNING.md"
+  ],
+  "public_documents_pending_permission": [],
+  "space_free_bytes": {
+    "C": 64597004288,
+    "D": 88279605248,
+    "E": 146813599744
+  },
+  "verified_at": "2026-11-03T07:50:07.516161+00:00",
+  "Drive_file_id": "11cLi4ebrlH8O3MqCo5rtRpUteOx9AO89",
+  "Drive_url": "https://drive.google.com/file/d/11cLi4ebrlH8O3MqCo5rtRpUteOx9AO89/view?usp=drivesdk",
+  "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "all_member_sizes_SHA256_CRC_and_exact_membership_verified": true,
+  "owned_processes_sessions_jobs_reported_live": 0,
+  "agents_quiescent": true,
+  "goal_complete": false
+}

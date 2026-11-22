@@ -10,8 +10,99 @@ import shutil
 import re
 import logging
 from typing import Dict, Any, List, Optional
+from .tool_call_contract import ToolCallValidationError, validate_tool_call
 
 logger = logging.getLogger("ToolRegistry")
+
+
+_BS_CHAT_DIAGNOSTIC_NAMES = frozenset((
+    'run_coding_smoke', 'verify_sqlite_wal', 'inspect_source_diff',
+    'check_service_health', 'inspect_database_schema', 'discover_databases',
+    'process_batch_status',
+))
+
+
+def _bs_chat_diagnostic_declarations():
+    # Explicit source opt-in; importing the registry never activates diagnostics.
+    if os.environ.get('AI_BS_ENABLE_CHAT_TOOL_BRIDGE') != '1':
+        return []
+    specifications = (
+        ('run_coding_smoke', 'Observe the existing twelve-check coding candidate profile.',
+         {'max_checks': {'type': 'integer', 'enum': [12, 13, 14, 15]}}, []),
+        ('verify_sqlite_wal', 'Observe registered database read-only connection settings.', {}, []),
+        ('inspect_source_diff', 'Observe metadata for an exact task-approved source file.',
+         {'path': {'type': 'string'}}, ['path']),
+        ('check_service_health', 'Observe a fixed local HTTP endpoint.',
+         {'service': {'type': 'string', 'enum': ['backend', 'coding_candidate', 'browser']}}, []),
+        ('inspect_database_schema', 'Observe bounded registered database schema without row values.',
+         {'database': {'type': 'string', 'enum': ['backend_master', 'cdz_audit']}}, ['database']),
+        ('discover_databases', 'Observe availability of the two registered database files.', {}, []),
+        ('process_batch_status', 'Observe sanitized counts from an already bound controller.', {}, []),
+    )
+    return [{'name': name, 'description': description,
+             'parameters': {'type': 'object', 'properties': properties,
+                            'required': required, 'additionalProperties': False}}
+            for name, description, properties, required in specifications]
+
+
+def _resolve_host_read_path(file_path: str, workspace_root: str = r"C:\AI-BS") -> str:
+    """Keep explicit paths; resolve one known bare project-document alias only."""
+    if os.path.isabs(file_path):
+        return file_path
+    target = os.path.abspath(os.path.join(workspace_root, file_path))
+    if os.path.exists(target):
+        return target
+    if file_path.casefold() == "codex_handoff.md":
+        canonical = os.path.join(workspace_root, "docs", "CODEX_HANDOFF.md")
+        root_real = os.path.normcase(os.path.realpath(workspace_root))
+        canonical_real = os.path.normcase(os.path.realpath(canonical))
+        try:
+            contained = os.path.commonpath([root_real, canonical_real]) == root_real
+        except ValueError:
+            contained = False
+        if contained and os.path.isfile(canonical):
+            return canonical
+    return target
+
+
+def _write_host_text_atomic(target: str, content: str, workspace_root: str = r"C:\AI-BS"):
+    """Preserve each prior file and publish complete bytes for cooperating writers."""
+    import hashlib
+    import tempfile
+    import uuid
+    from core.coding_locks import record_lock
+
+    data = content.encode("utf-8")
+    target = os.path.abspath(target)
+    parent = os.path.dirname(target)
+    os.makedirs(parent, exist_ok=True)
+    identity = os.path.normcase(os.path.realpath(target))
+    lock_name = hashlib.sha256(identity.encode("utf-8")).hexdigest() + ".lock"
+    lock_path = os.path.join(workspace_root, "workspace", "host_write_locks", lock_name)
+    with record_lock(lock_path):
+        if os.path.islink(target) or (hasattr(os.path, "isjunction") and os.path.isjunction(target)):
+            raise ValueError("Linked host files require an explicit canonical target.")
+        backup_path = None
+        if os.path.lexists(target):
+            if not os.path.isfile(target):
+                raise ValueError("The target is not a regular file.")
+            backup_path = f"{target}.{uuid.uuid4().hex}.bak"
+            with open(target, "rb") as source, open(backup_path, "xb") as backup:
+                shutil.copyfileobj(source, backup)
+                backup.flush()
+                os.fsync(backup.fileno())
+            shutil.copystat(target, backup_path)
+        descriptor, staged = tempfile.mkstemp(prefix=".aibs-host-write-", suffix=".tmp", dir=parent)
+        # Failed staging files and complete backups remain available for recovery.
+        with os.fdopen(descriptor, "wb") as output:
+            output.write(data)
+            output.flush()
+            os.fsync(output.fileno())
+        if backup_path is not None:
+            shutil.copymode(target, staged)
+        os.replace(staged, target)
+        return backup_path, len(data)
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from comfy_bridge import (
@@ -51,7 +142,9 @@ class ToolRegistry:
     @staticmethod
     def get_tool_declarations():
         """Returns JSON schema definitions of all registered tools for the LLM."""
-        return [
+        from core.crypto_preview_chat import crypto_preview_declarations
+        from core.crypto_trial_status_chat import crypto_trial_status_declarations, crypto_protective_review_declarations, crypto_preparation_status_declarations
+        return _bs_chat_diagnostic_declarations() + crypto_preview_declarations() + crypto_trial_status_declarations() + crypto_protective_review_declarations() + crypto_preparation_status_declarations() + [
             {
                 "name": "read_sandbox_file",
                 "description": "Reads contents of a file inside the isolated backend sandbox.",
@@ -575,7 +668,7 @@ class ToolRegistry:
             },
             {
                 "name": "write_host_file",
-                "description": "Writes or mutates any file across host drives with automated timestamped .bak backup creation prior to mutation.",
+                "description": "Writes or mutates a host file with a unique .bak preimage and atomic publication of complete content.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -839,7 +932,7 @@ class ToolRegistry:
             },
             {
                 "name": "build_project",
-                "description": "Executes builds (compilation, package installs, and build scripts) on a software project directory or program. Supports npm, cargo, go, cmake, make, pip, dotnet, build.ps1/bat/sh.",
+                "description": "Builds a software project. Default canonical AI-BS/frontend/backend builds run durable local check/update jobs and restart only the authenticated loopback API; use maintenance_action=status and maintenance_job_id to poll. Custom commands and other projects retain their existing build behavior; no cloud deployment is implied.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -854,6 +947,14 @@ class ToolRegistry:
                         "timeout_seconds": {
                             "type": "integer",
                             "description": "Build timeout in seconds (default: 300)"
+                        },
+                        "maintenance_action": {
+                            "type": "string", "enum": ["start", "status", "restart"],
+                            "description": "Default start; status reads a durable local job; restart queues only the verified loopback API restart."
+                        },
+                        "maintenance_job_id": {
+                            "type": "string",
+                            "description": "Canonical32hex identifier for idempotent local submission/status."
                         }
                     },
                     "required": ["project_name_or_dir"]
@@ -2196,6 +2297,12 @@ class ToolRegistry:
     def execute_tool(tool_name: str, arguments: dict):
         """Executes a tool by name with provided arguments and returns execution result dict."""
         try:
+            tool_name, arguments = validate_tool_call(
+                tool_name, arguments, ToolRegistry.get_tool_declarations()
+            )
+            if tool_name in ('preview_crypto_spot', 'get_crypto_trial_status', 'get_crypto_protective_review', 'get_crypto_preparation_status') or tool_name in _BS_CHAT_DIAGNOSTIC_NAMES:
+                from tools.bs_chat_tool_bridge import bs_chat_bridge
+                return bs_chat_bridge.execute_tool(tool_name, arguments)
             import time, os, sys, json, re, subprocess, urllib.request
             if tool_name == "kraken_op":
                 from core.kraken_service import kraken_service
@@ -2875,60 +2982,43 @@ class ToolRegistry:
                 }
 
             elif tool_name == "execute_sandbox_script":
-                filename = os.path.basename(arguments.get("filename", ""))
-                target_path = os.path.join(SANDBOX_DIR, filename)
-                if not os.path.exists(target_path):
-                    return {
-                        "status": "error",
-                        "message": f"Script '{filename}' not found in sandbox.",
-                    }
-                result = subprocess.run(
-                    ["python", target_path], capture_output=True, text=True, timeout=15
+                from pathlib import Path
+                import stat
+                from core.ide_orchestrator.sandbox_runner import SubprocessSandboxRunner
+
+                filename = arguments['filename']
+                if (Path(filename).name != filename or '/' in filename or '\\' in filename
+                        or ':' in filename or not filename.lower().endswith('.py')
+                        or filename == '_runner_entrypoint.py'):
+                    return {'status': 'error', 'error_code': 'INVALID_SANDBOX_SCRIPT',
+                            'message': 'A plain Python filename is required.'}
+                root = Path(SANDBOX_DIR).resolve()
+                candidate = root / filename
+                try:
+                    metadata = candidate.lstat()
+                    target = candidate.resolve(strict=True)
+                    if (not target.is_relative_to(root) or not stat.S_ISREG(metadata.st_mode)
+                            or getattr(metadata, 'st_file_attributes', 0) & 0x400):
+                        raise ValueError('Candidate is not a regular sandbox file.')
+                    with candidate.open('rb') as source:
+                        raw_code = source.read(2 * 1024 * 1024 + 1)
+                    if len(raw_code) > 2 * 1024 * 1024:
+                        raise ValueError('Candidate exceeds size limit.')
+                    code = raw_code.decode('utf-8-sig')
+                except (OSError, ValueError, UnicodeError):
+                    return {'status': 'error', 'error_code': 'INVALID_SANDBOX_SCRIPT',
+                            'message': 'Candidate unavailable or invalid; no execution was submitted.'}
+                checked = SubprocessSandboxRunner(default_timeout_sec=15).execute_in_sandbox(
+                    str(candidate), code, timeout_sec=15
                 )
-
-                output_payload = {
-                    "status": "success" if result.returncode == 0 else "failed",
-                    "returncode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                }
-
-                # Auto-Reflexive Verification Loop for Failures (Single Attempt, 15s Timeout)
-                if result.returncode != 0 and result.stderr:
-                    try:
-                        import urllib.request
-
-                        script_code = ""
-                        with open(target_path, "r", encoding="utf-8") as sf:
-                            script_code = sf.read()
-
-                        prompt = (
-                            "You are the Heuristics Daemon. Analyze this script failure and provide a 1-sentence auto-fix recommendation.\n"
-                            f"Code:\n{script_code[:1000]}\nError:\n{result.stderr[:1000]}"
-                        )
-                        req_data = json.dumps(
-                            {
-                                "model": "stehouwer_llm",
-                                "prompt": prompt,
-                                "stream": False,
-                            }
-                        ).encode("utf-8")
-                        req = urllib.request.Request(
-                            "http://127.0.0.1:11434/api/generate",
-                            data=req_data,
-                            headers={"Content-Type": "application/json"},
-                        )
-                        with urllib.request.urlopen(req, timeout=15) as resp:
-                            res_json = json.loads(resp.read().decode("utf-8"))
-                            output_payload["auto_reflexive_fix"] = res_json.get(
-                                "response", ""
-                            ).strip()
-                    except Exception as reflex_err:
-                        output_payload["auto_reflexive_fix"] = (
-                            f"Heuristics daemon unavailable: {str(reflex_err)}"
-                        )
-
-                return output_payload
+                if checked.isolation_verified is not True or checked.patch_applied is not False:
+                    return {'status': 'error', 'error_code': 'ISOLATION_UNAVAILABLE',
+                            'message': 'A verified VM guest is required; host execution and promotion are disabled.',
+                            'isolation_verified': False, 'patch_applied': False}
+                passed = checked.status == 'PASSED' and type(checked.exit_code) is int and checked.exit_code == 0
+                return {'status': 'success' if passed else 'failed',
+                        'returncode': checked.exit_code, 'stdout': checked.stdout,
+                        'stderr': checked.stderr, 'isolation_verified': True, 'patch_applied': False}
 
             elif tool_name == "generate_comfy_image":
                 raw_prompt = arguments.get("prompt", "futuristic AI server matrix room")
@@ -4052,252 +4142,8 @@ class ToolRegistry:
                     }
 
             elif tool_name == "generate_comfy_video":
-                raw_prompt = arguments.get("prompt", "a cinematic scene in motion")
-                positive_prompt = (
-                    f"{raw_prompt}, 8k, photorealistic, cinematic lighting, smooth motion, high frame rate, masterpiece"
-                )
-                negative_prompt = arguments.get(
-                    "negative_prompt",
-                    "low quality, static, blurry, distorted, jittery, flicker, artifacts, glitch",
-                )
-
-                # Parse and constrain duration to 3 - 8 seconds (default 3s for fast ~55s RTX 4090 synthesis)
-                try:
-                    dur_raw = int(arguments.get("duration_seconds", 3))
-                except Exception:
-                    dur_raw = 3
-                duration_seconds = max(3, min(8, dur_raw))
-
-                try:
-                    fps_raw = int(arguments.get("fps", 16))
-                except Exception:
-                    fps_raw = 16
-                fps = max(12, min(24, fps_raw))
-
-                # Wan 2.1 requires frame counts matching (4 * k) + 1
-                # k=12 yields 49 frames (~3.06s @ 16fps) which finishes in ~55s on RTX 4090
-                # k=20 yields 81 frames (~5.06s @ 16fps) which finishes in ~95s on RTX 4090
-                k_val = max(12, min(32, round((duration_seconds * fps - 1) / 4)))
-                num_frames = int(k_val * 4 + 1)
-                actual_duration = round(num_frames / fps, 2)
-
-                # Wan 2.1 patch embeds require width and height to be strict multiples of 16.
-                # Clamped to native 832x480 envelope for peak RTX 4090 inference throughput.
-                try:
-                    raw_w = int(arguments.get("width", 832))
-                except Exception:
-                    raw_w = 832
-                try:
-                    raw_h = int(arguments.get("height", 480))
-                except Exception:
-                    raw_h = 480
-                width = max(512, min(960, (raw_w // 16) * 16))
-                height = max(384, min(544, (raw_h // 16) * 16))
-                try:
-                    steps_raw = int(arguments.get("steps", 8))
-                except Exception:
-                    steps_raw = 8
-                steps = max(6, min(14, steps_raw))
-
-                import random
-                seed_val = random.randint(1, 1000000000)
-
-                # Primary pipeline: Wan 2.1 Diffusion Video Engine on local RTX 4090
-                wan_payload = {
-                    "prompt": {
-                        "11": {
-                            "class_type": "LoadWanVideoT5TextEncoder",
-                            "inputs": {
-                                "model_name": "umt5_xxl_fp16.safetensors",
-                                "precision": "bf16",
-                                "load_device": "offload_device",
-                                "quantization": "disabled",
-                            },
-                        },
-                        "16": {
-                            "class_type": "WanVideoTextEncode",
-                            "inputs": {
-                                "t5": ["11", 0],
-                                "positive_prompt": positive_prompt,
-                                "negative_prompt": negative_prompt,
-                                "force_offload": True,
-                                "use_disk_cache": False,
-                                "device": "gpu",
-                            },
-                        },
-                        "22": {
-                            "class_type": "WanVideoModelLoader",
-                            "inputs": {
-                                "model": "wan2.1-t2v-1.3B.safetensors",
-                                "base_precision": "bf16",
-                                "quantization": "disabled",
-                                "load_device": "offload_device",
-                                "attention_mode": "sdpa",
-                            },
-                        },
-                        "37": {
-                            "class_type": "WanVideoEmptyEmbeds",
-                            "inputs": {
-                                "width": width,
-                                "height": height,
-                                "num_frames": num_frames,
-                            },
-                        },
-                        "27": {
-                            "class_type": "WanVideoSampler",
-                            "inputs": {
-                                "model": ["22", 0],
-                                "image_embeds": ["37", 0],
-                                "text_embeds": ["16", 0],
-                                "steps": steps,
-                                "cfg": 6.0,
-                                "shift": 5.0,
-                                "seed": seed_val,
-                                "force_offload": True,
-                                "scheduler": "unipc",
-                                "riflex_freq_index": 0,
-                                "denoise_strength": 1.0,
-                                "batched_cfg": False,
-                                "rope_function": "comfy",
-                            },
-                        },
-                        "38": {
-                            "class_type": "WanVideoVAELoader",
-                            "inputs": {
-                                "model_name": "Wan2_1_VAE_bf16.safetensors",
-                                "precision": "bf16",
-                            },
-                        },
-                        "28": {
-                            "class_type": "WanVideoDecode",
-                            "inputs": {
-                                "vae": ["38", 0],
-                                "samples": ["27", 0],
-                                "enable_vae_tiling": True,
-                                "tile_x": 272,
-                                "tile_y": 272,
-                                "tile_stride_x": 144,
-                                "tile_stride_y": 128,
-                                "normalization": "default",
-                            },
-                        },
-                        "30": {
-                            "class_type": "VHS_VideoCombine",
-                            "inputs": {
-                                "images": ["28", 0],
-                                "frame_rate": float(fps),
-                                "loop_count": 0,
-                                "filename_prefix": "AI_BS_Wan21_HD",
-                                "format": "video/h264-mp4",
-                                "pingpong": False,
-                                "save_output": True,
-                            },
-                        },
-                    }
-                }
-
-                try:
-                    logger.info(
-                        f"🎬 [VideoGen] Launching Wan2.1 video generation: {num_frames} frames @ {fps}fps ({actual_duration}s) | prompt: {raw_prompt[:60]}..."
-                    )
-                    prompt_id = _run_async_safe(
-                        queue_comfyui_workflow(wan_payload["prompt"])
-                    )
-                    history_entry = _run_async_safe(
-                        await_generation_result(
-                            prompt_id, poll_interval=3.0, timeout=900.0
-                        )
-                    )
-                    media_info = extract_output_media(history_entry)
-                    return {
-                        "status": "success",
-                        "prompt_id": prompt_id,
-                        "filename": media_info.get("filename"),
-                        "image_url": media_info.get("image_url"),
-                        "duration_seconds": actual_duration,
-                        "fps": fps,
-                        "num_frames": num_frames,
-                    }
-                except Exception as ex:
-                    logger.warning(
-                        f"⚠️ Wan2.1 video generation failed ({str(ex)}), attempting fallback multi-frame workflow..."
-                    )
-                    # Robust fallback to multi-frame animation workflow
-                    fallback_payload = {
-                        "prompt": {
-                            "3": {
-                                "class_type": "KSampler",
-                                "inputs": {
-                                    "seed": seed_val,
-                                    "steps": 20,
-                                    "cfg": 6.5,
-                                    "sampler_name": "euler",
-                                    "scheduler": "normal",
-                                    "denoise": 1,
-                                    "model": ["4", 0],
-                                    "positive": ["6", 0],
-                                    "negative": ["7", 0],
-                                    "latent_image": ["5", 0],
-                                },
-                            },
-                            "4": {
-                                "class_type": "CheckpointLoaderSimple",
-                                "inputs": {"ckpt_name": "sd_xl_base_1.0.safetensors"},
-                            },
-                            "5": {
-                                "class_type": "EmptyLatentImage",
-                                "inputs": {"width": 832, "height": 480, "batch_size": min(num_frames, 8)},
-                            },
-                            "6": {
-                                "class_type": "CLIPTextEncode",
-                                "inputs": {"text": positive_prompt, "clip": ["4", 1]},
-                            },
-                            "7": {
-                                "class_type": "CLIPTextEncode",
-                                "inputs": {"text": negative_prompt, "clip": ["4", 1]},
-                            },
-                            "8": {
-                                "class_type": "VAEDecode",
-                                "inputs": {"samples": ["3", 0], "vae": ["4", 2]},
-                            },
-                            "30": {
-                                "class_type": "VHS_VideoCombine",
-                                "inputs": {
-                                    "images": ["8", 0],
-                                    "frame_rate": float(fps),
-                                    "loop_count": 0,
-                                    "filename_prefix": "AI_BS_VideoGen_Fallback",
-                                    "format": "video/h264-mp4",
-                                    "pingpong": False,
-                                    "save_output": True,
-                                },
-                            },
-                        }
-                    }
-                    try:
-                        prompt_id = _run_async_safe(
-                            queue_comfyui_workflow(fallback_payload["prompt"])
-                        )
-                        history_entry = _run_async_safe(
-                            await_generation_result(
-                                prompt_id, poll_interval=2.0, timeout=600.0
-                            )
-                        )
-                        media_info = extract_output_media(history_entry)
-                        return {
-                            "status": "success",
-                            "prompt_id": prompt_id,
-                            "filename": media_info.get("filename"),
-                            "image_url": media_info.get("image_url"),
-                            "duration_seconds": actual_duration,
-                            "fps": fps,
-                            "num_frames": num_frames,
-                        }
-                    except Exception as fb_ex:
-                        return {
-                            "status": "error",
-                            "message": f"Video generation error: {str(ex)} | Fallback error: {str(fb_ex)}",
-                        }
+                from core.video_generation import generate_video
+                return _run_async_safe(generate_video(arguments))
 
             elif tool_name == "modify_react_file":
                 action = arguments.get("action", "read")
@@ -4548,13 +4394,7 @@ class ToolRegistry:
                 if not file_path:
                     return {"status": "error", "message": "Missing required argument 'file_path'."}
                 
-                target = file_path
-                if not os.path.isabs(target):
-                    candidate = os.path.join(r"C:\AI-BS", target)
-                    if os.path.exists(candidate):
-                        target = candidate
-                    else:
-                        target = os.path.abspath(os.path.join(r"C:\AI-BS", target))
+                target = _resolve_host_read_path(file_path)
                 
                 if not os.path.exists(target):
                     return {"status": "error", "message": f"File not found: {target}"}
@@ -4562,14 +4402,25 @@ class ToolRegistry:
                     return {"status": "error", "message": f"Path is a directory, not a file: {target}"}
 
                 try:
-                    with open(target, "r", encoding="utf-8", errors="replace") as f:
-                        content = f.read()
+                    import hashlib
+                    with open(target, "rb") as f:
+                        raw = f.read()
+                    decoding_errors_replaced = False
+                    try:
+                        content = raw.decode("utf-8")
+                    except UnicodeDecodeError:
+                        content = raw.decode("utf-8", errors="replace")
+                        decoding_errors_replaced = True
                     return {
                         "status": "success",
                         "file_path": os.path.abspath(target),
                         "content": content,
-                        "size_bytes": os.path.getsize(target),
-                        "lines": len(content.splitlines())
+                        "size_bytes": len(raw),
+                        "lines": len(content.splitlines()),
+                        "sha256": hashlib.sha256(raw).hexdigest(),
+                        "encoding": "utf-8",
+                        "decoding_errors_replaced": decoding_errors_replaced,
+                        "truncated": False
                     }
                 except Exception as e:
                     return {"status": "error", "message": f"Failed to read file: {e}"}
@@ -4586,20 +4437,12 @@ class ToolRegistry:
 
                 backup_path = None
                 try:
-                    import shutil
-                    import time
-                    os.makedirs(os.path.dirname(target), exist_ok=True)
-                    if os.path.exists(target):
-                        backup_path = f"{target}.{int(time.time())}.bak"
-                        shutil.copy2(target, backup_path)
-                    
-                    with open(target, "w", encoding="utf-8", errors="replace") as f:
-                        f.write(content)
+                    backup_path, bytes_written = _write_host_text_atomic(target, content)
                     
                     return {
                         "status": "success",
                         "file_path": os.path.abspath(target),
-                        "bytes_written": len(content.encode("utf-8")),
+                        "bytes_written": bytes_written,
                         "backup_path": backup_path,
                         "message": f"Successfully wrote {len(content.encode('utf-8'))} bytes to {target}."
                     }
@@ -4738,6 +4581,10 @@ class ToolRegistry:
                     port_num = int(port)
                 except ValueError:
                     return {"status": "error", "message": f"Invalid port number: {port}"}
+
+                if port_num == 8080 and action == "restart":
+                    from core.project_maintenance import submit as submit_project_maintenance
+                    return submit_project_maintenance('backend', 'restart')
 
                 def _probe_port(p: int):
                     pid = None
@@ -5774,6 +5621,13 @@ class ToolRegistry:
                 )
 
             elif tool_name in ["build_project", "execute_build", "run_build", "project_build"]:
+                from core.project_maintenance import dispatch as dispatch_project_maintenance
+                target_project = arguments.get("project_name_or_dir", arguments.get("project_name", arguments.get("project_dir", "")))
+                maintenance = dispatch_project_maintenance(target_project, arguments.get("build_command"),
+                    maintenance_action=arguments.get("maintenance_action", "start"),
+                    job_id=arguments.get("maintenance_job_id"))
+                if maintenance is not None:
+                    return maintenance
                 from core.program_builder_engine import AutonomousProgramBuilder
                 return AutonomousProgramBuilder.build_project(
                     project_name_or_dir=arguments.get("project_name_or_dir", arguments.get("project_name", arguments.get("project_dir", ""))),
@@ -5796,6 +5650,8 @@ class ToolRegistry:
             else:
                 return {"status": "error", "message": f"Unknown tool name: {tool_name}"}
 
+        except ToolCallValidationError as e:
+            return {"status": "error", "error_code": "INVALID_TOOL_CALL", "message": str(e)}
         except Exception as e:
             return {"status": "error", "exception": str(e)}
 

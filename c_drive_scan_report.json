@@ -1,0 +1,282 @@
+{
+  "c_drive_storage": {
+    "total_gb": 1673.52,
+    "used_gb": 1559.77,
+    "free_gb": 113.76,
+    "free_pct": 6.8
+  },
+  "c_root_directories": [
+    {
+      "name": "$Recycle.Bin",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": ".GamingRoot",
+      "type": "FILE"
+    },
+    {
+      "name": "AI-BS",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "AI-BS-Models",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "AMD",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "audio.log",
+      "type": "FILE"
+    },
+    {
+      "name": "Certbot",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Documents and Settings",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "DumpStack.log.tmp",
+      "type": "FILE"
+    },
+    {
+      "name": "inetpub",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Library",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "M-AI_BS_Android_Build",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "NVIDIA Corporation",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "OneDriveTemp",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "opt",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Output.txt",
+      "type": "FILE"
+    },
+    {
+      "name": "pagefile.sys",
+      "type": "FILE"
+    },
+    {
+      "name": "path",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "PerfLogs",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Program Files",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Program Files (x86)",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "ProgramData",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Recovery",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "state",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "StehouwerPublishing.com",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "swapfile.sys",
+      "type": "FILE"
+    },
+    {
+      "name": "System Volume Information",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Users",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Windows",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "Workspaces",
+      "type": "DIRECTORY"
+    },
+    {
+      "name": "XboxGames",
+      "type": "DIRECTORY"
+    }
+  ],
+  "aibs_health": {
+    "ports": {
+      "8000": {
+        "desc": "Go Matrix / FastAPI Gateway",
+        "status": "ONLINE",
+        "code": 404
+      },
+      "8189": {
+        "desc": "ComfyUI (RTX 4090 Native)",
+        "status": "ONLINE",
+        "code": 200
+      },
+      "8080": {
+        "desc": "Unreal Engine 5.8 Bridge",
+        "status": "ONLINE",
+        "code": 200
+      },
+      "8088": {
+        "desc": "OBS Zero-Copy D3D11 Streamer",
+        "status": "ONLINE",
+        "code": 404
+      },
+      "11434": {
+        "desc": "Ollama Swarm Daemon",
+        "status": "ONLINE",
+        "code": 200
+      },
+      "5173": {
+        "desc": "Vite React Dev Server",
+        "status": "ONLINE",
+        "code": 200
+      }
+    },
+    "databases": [
+      {
+        "name": "aibs_master.db",
+        "size_kb": 48.0,
+        "table_count": 3,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "audio_catalog.db",
+        "size_kb": 128328.0,
+        "table_count": 13,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "calendar.db",
+        "size_kb": 24.0,
+        "table_count": 3,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "cro_quantitative_ledger.db",
+        "size_kb": 20.0,
+        "table_count": 4,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "drip_ledger.db",
+        "size_kb": 16.0,
+        "table_count": 3,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "leads_store.db",
+        "size_kb": 20.0,
+        "table_count": 2,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "learning_data.db",
+        "size_kb": 8.0,
+        "table_count": 1,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "LLM_CrossCheck_Ledger.db",
+        "size_kb": 648.0,
+        "table_count": 2,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "message_broker.db",
+        "size_kb": 16.0,
+        "table_count": 3,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "model_state.db",
+        "size_kb": 4.0,
+        "table_count": 0,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "personal_intelligence.db",
+        "size_kb": 0.0,
+        "table_count": 0,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "reasoning_traces_pending.db",
+        "size_kb": 12.0,
+        "table_count": 1,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "security_events.db",
+        "size_kb": 24.0,
+        "table_count": 4,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "stehouwer_chronology.db",
+        "size_kb": 1156.0,
+        "table_count": 8,
+        "status": "HEALTHY"
+      },
+      {
+        "name": "vision_sync_state.db",
+        "size_kb": 644.0,
+        "table_count": 1,
+        "status": "HEALTHY"
+      }
+    ],
+    "system_resources": {
+      "total_ram_gb": 61.65,
+      "available_ram_gb": 5.13,
+      "ram_usage_pct": 91.7,
+      "cpu_usage_pct": 39.3,
+      "cpu_cores_logical": 32
+    },
+    "ollama_models": [
+      "stehouwer_llm:latest",
+      "nemotron-3.5-lightning:latest",
+      "gemma4:12b",
+      "qwen3.6:latest",
+      "stehouwer_dolphin:latest",
+      "stehouwer_qwen:latest",
+      "stehouwer_hermes:latest",
+      "qwen2.5-coder:latest",
+      "llama3.1:latest",
+      "command-r:latest",
+      "mixtral:latest",
+      "llama3:latest",
+      "nomic-embed-text:latest"
+    ]
+  }
+}

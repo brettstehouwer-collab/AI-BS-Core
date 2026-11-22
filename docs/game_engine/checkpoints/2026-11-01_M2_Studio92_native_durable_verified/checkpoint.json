@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "checkpoint_id": "2026-11-01_M2_Studio92_native_durable_verified",
+  "created_at": "2026-11-01T11:41:21.614591+00:00",
+  "purpose": "Codex context-window checkpoint; selected complete source/evidence, not a formal repository hash handoff",
+  "game_identity": "Adam's Infinite-Brett Stehouwer Living Learning Memoir",
+  "full_goal_status": "active",
+  "milestones": {
+    "M0": "complete",
+    "M1": "complete",
+    "M2": "complete",
+    "M3": "in_progress"
+  },
+  "repository": {
+    "root": "C:\\AI-BS",
+    "branch": "codex/audit-v532976-20261031",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "scoped_status": " M version.txt\n?? docs/game_engine/\n?? engine/\n?? native_studio/game_build_monitor.py\n?? native_studio/game_build_view.py\n?? scripts/build_native_game_release.py\n?? scripts/tests/test_native_game_release.py\n",
+    "unrelated_changes": "preserved; no commit/reset/cleanup; formal hashes/manifest/root-master-ledger sync deferred under AGENTS.md"
+  },
+  "release": {
+    "schema_version": 1,
+    "milestone": "M2",
+    "status": "VERIFIED",
+    "app_version": "5.329.92",
+    "sdk_version": "0.7.0",
+    "completed_at": "2026-11-01T11:37:36.840171+00:00",
+    "retention": "keep_all_marked_milestones",
+    "scope": "Native durable gameplay continuity; not the complete First Boot chapter",
+    "native_tests_per_configuration": 26,
+    "installed_sdk_consumers": 2,
+    "monitor_ui_tests": 43,
+    "package_checks": 13,
+    "native_processes_per_proof": 23,
+    "package_bytes": 556391467,
+    "package_files": 2260,
+    "full_goal": "active; M3 through later milestones remain",
+    "evidence": [
+      "engine/out/debug07-native-final.log",
+      "engine/out/release07-native-final.log",
+      "engine/out/durable_world_verification.json",
+      "engine/out/packaged92-durable-world/durable_world_verification.json",
+      "engine/out/native92-release-smoke.json",
+      "backups/native_game92_20261101_m2/static_package_verification.json",
+      "backups/native_game92_20261101_m2/shortcut_deployment.json"
+    ]
+  },
+  "public_site_version": "5.329.87; unchanged separate playground",
+  "live_builds": [],
+  "active_source_writers": [],
+  "new_native_mode": {
+    "command": "aibs_motherboard.exe --durable-world",
+    "default_save": "%LOCALAPPDATA%/AI-BS/FirstBootDurableWorld/world.sqlite",
+    "old_modes": "Original format1/undo/redo and MovementCourse remain unchanged",
+    "import": "Explicit --import-checkpoint original.aibs with a new --world-db; source stays unchanged",
+    "actual_native_proof": "engine/out/durable_world_verification.json",
+    "packaged_proof": "engine/out/packaged92-durable-world/durable_world_verification.json",
+    "native_processes_per_proof": 23,
+    "hud": "Visible/acknowledged durable heads and SAVING/UNSAVED-RETRY/SAVED; actual Win32 labels checked",
+    "close": "Keep owner/window alive until saved; F5 live retry; forced termination restores committed state only"
+  },
+  "source_boundaries": {
+    "game_module": "engine/include/aibs/durable_first_boot.hpp; engine/games/durable_first_boot.cpp",
+    "native": "engine/apps/durable_world.cpp",
+    "generic_store": "Gameplay/Codec/Store/Worker/World remain generic; no AI service required",
+    "identity": "Known original IDs remain preserved; relay tombstones and source historical UUIDs cannot be recycled",
+    "memory": "Visible authored hint, acknowledged semantic facts and validated imported edit evidence remain separate; no invented memoir quotations"
+  },
+  "remaining_limits": [
+    "Small motherboard construction yard, not full Jenison-to-Pencil-Room chapter.",
+    "Whole-world copies and complete-history startup replay remain bounded alpha limitations.",
+    "Native typed undo/redo and creator authoring remain M4.",
+    "Player/camera pose remains transient; edits rebuild collision/GPU dependencies.",
+    "No generic versioned registry evolution API yet; M3 must explicitly plan/test adding door/power/NPC components instead of reinterpreting Node v1 fields.",
+    "Physical power-loss, broad hardware/performance and clean-machine validation remain unverified.",
+    "Optional generation/streaming contracts remain staged designs; no provider, IPC bridge or open-world streamer implemented."
+  ],
+  "storage": {
+    "observed_at": "2026-11-01T11:38:45.628553+00:00",
+    "engine_storage": {
+      "generated": {
+        "bytes": 3799823032,
+        "file_count": 15890,
+        "partial": false
+      },
+      "installed": {
+        "bytes": 167968748,
+        "file_count": 750,
+        "partial": false
+      }
+    },
+    "drives": [
+      {
+        "drive": "C:/",
+        "free_bytes": 109742505984,
+        "total_bytes": 1796861837312
+      },
+      {
+        "drive": "D:/",
+        "free_bytes": 184193118208,
+        "total_bytes": 510770802688
+      },
+      {
+        "drive": "E:/",
+        "free_bytes": 146813599744,
+        "total_bytes": 899427594240
+      }
+    ],
+    "google_drive_remaining_quota": "unavailable through current connector"
+  },
+  "exact_next_steps": [
+    "Inspect current source-backed story/memory/character notes and verify Echos Within origins before adding personal story facts or dialogue.",
+    "Design explicit tested component/registry evolution for M3 door/power/quest state; preserve M2 saves/UUIDs/receipts/events and unknown-version rejection.",
+    "Build fixed-tick telegraphed power faults/arcs, diagnostic clues and repair/isolation versus relay-bypass rules as real atomic outcomes.",
+    "Connect hostile Jenison, secured return, shelter/Pencil Room and one friendly NPC hint/optional side quest inside the motherboard world.",
+    "Walk both routes: open/close, build/dismantle, depart/return, help/decline and save/reload; keep coherent hints and alternate progression.",
+    "Then M4 creator and M5 complete personal20–30minute chapter/audio/assets/settings/cinematic RTX awakening. Keep full goal active."
+  ]
+}

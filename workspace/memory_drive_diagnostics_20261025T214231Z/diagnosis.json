@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-25T21:47:38.436794+00:00",
+  "target_pid": 33936,
+  "identity": {
+    "pid": 33936,
+    "start": "2026-10-25T05:47:46.5943813Z",
+    "exe": "C:\\Users\\footb\\AppData\\Local\\OpenAI\\Codex\\bin\\2993767bd1dfb009\\codex.exe",
+    "private_commit_bytes": 145376296960,
+    "working_set_bytes": 18530672640
+  },
+  "role": "Codex app-server child of ChatGPT.exe PID31220; verified by selected-argument classification, rawcommandline notretained",
+  "private_commit_gib": 135.392,
+  "working_set_gib": 17.258,
+  "system_commit_gib": 189.236,
+  "system_commit_limit_gib": 191.609,
+  "system_commit_percent": 98.76,
+  "commit_headroom_gib": 2.373,
+  "physical_total_gib": 61.647,
+  "physical_used_gib": 52.042,
+  "pagefile_counter_allocated_gib": 129.961,
+  "pagefile_counter_actual_usage_gib": 50.172,
+  "pagefile_metadata_length_gib_later": 132.656,
+  "pagefile_metadata_utc": "2026-10-25T21:46:04.5957215Z",
+  "private_growth_bytes_between_own_samples": 137043968,
+  "sample_interval_seconds": 117.815,
+  "private_growth_mib": 130.695,
+  "per_drive_pagefile_setting": "C:/pagefile.sys InitialSize0 MaximumSize0; all-drives AutomaticManagedPagefileFalse, per-drive systemmanaged0/0",
+  "permanent_folder_sizes": "User-reported only; no recursive size scan",
+  "ollama_junction": "C:/Users/footb/.ollama -> C:/AI-BS/models/ollama; nottwo independent stores",
+  "changes_made": "Small evidence files only. No process stop/restart, paging setting, deletion, model/cache/directory move or reboot."
+}

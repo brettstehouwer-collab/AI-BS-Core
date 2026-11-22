@@ -1,0 +1,58 @@
+{
+  "timestamp_utc": "2026-11-14T15:02:56.803686-05:00",
+  "status": "LOCAL_REVIEW_ONLY",
+  "source": "C:\\StehouwerPublishing.com\\website-rebuild",
+  "review_root": "C:\\AI-BS\\work\\publishing-review-20261114",
+  "preview": "http://127.0.0.1:4178",
+  "source_baseline_commit": "f9d94c30de42adc66836b2088dc1888661f298d1",
+  "original_source_normalized_comparisons": 33,
+  "original_source_drift": [],
+  "website_smoke": {
+    "passed": 14,
+    "total": 14
+  },
+  "checks": {
+    "build_exit": 0,
+    "node_tests_passed": 24,
+    "collector_assertions": 18,
+    "statistics_assertions": 18,
+    "patch_checks": {
+      "nginx": 0,
+      "dashboard": 0,
+      "backend": 0,
+      "analytics_helper": 0
+    },
+    "dashboard_jsx_parse_exit": 0
+  },
+  "activation": {
+    "website_published": false,
+    "running_backend_changed": false,
+    "running_dashboard_changed": false,
+    "nginx_reloaded": false,
+    "production_telemetry_seeded": false,
+    "cloud_uploaded": false
+  },
+  "historical_scope": [
+    "C:/StehouwerPublishing.com/SAVED_CHECKPOINT.md",
+    "C:/AI-BS/AGENTS.md",
+    "C:/AI-BS/PLAN.md selected current pointers",
+    "C:/AI-BS/docs/CODEX_HANDOFF.md current and selected historical entries",
+    "C:/AI-BS/docs/architecture/SITES_SERVERS_REGISTER_2026-11-11.json publishing entries",
+    "Codex chat 01a1c6bb-0ddd-7683-ad81-7eaeafe3a704 newest turn only; unrelated active gateway scope"
+  ],
+  "limitations": [
+    "No approved PDF samples supplied",
+    "Package inclusions and surcharge basis require owner confirmation",
+    "Nginx patch is not deployed or runtime-qualified",
+    "Historical telemetry is retained; no visitor identity claim",
+    "Live email, payment and stream operations not exercised",
+    "Existing input/copy telemetry privacy disclosure remains review item"
+  ],
+  "patches": {
+    "review-artifacts\\website-changes.diff": "fd6f38e6c961cc4a869a1c4f700d36ab12fe99e1821a3b20cf2bba073f6f2eb7",
+    "review-artifacts\\nginx-routing.patch": "bb7e1d7884418fd7be20f8da53b896c35fa92e606ca4849eb58b1588833dac58",
+    "statistics-candidate\\statistics.patch": "982d036ad4cddf0907ddf8ef2d8cfe9b74558babea53f185bf4ee387d9eec674",
+    "statistics-candidate\\dashboard-labels.patch": "298227ccb933e89b55a5adf9a556c45477d58bf11a963bd215f69bea4fc2c2a9",
+    "statistics-candidate\\analytics-data.patch": "0aa7da947dcd0852d1ec91a29e10011682355d38a1dee6aa21e63a4d70d324ce"
+  }
+}

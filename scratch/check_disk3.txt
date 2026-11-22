@@ -1,0 +1,3 @@
+select disk 3
+detail disk
+list volume

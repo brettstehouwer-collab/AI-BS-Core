@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-02T05:16:10.585325+00:00",
+  "origin": "https://ai-bs-dashboard.web.app",
+  "overview_url": "https://ai-bs-dashboard.web.app/?tab=executive_cockpit&view=pro",
+  "version": "v5.329.97",
+  "artifact_scope": "Web UI release; native launcher/SDK binaries unchanged",
+  "hosting_version": "df57a83b8e7ff813",
+  "production_release": "projects/ai-bs-dashboard/sites/ai-bs-dashboard/channels/live/releases/1793596351851000",
+  "production_release_time": "2026-11-02T05:12:31.851Z",
+  "rollback": {
+    "channel": "pre-overview-20261102",
+    "url": "https://ai-bs-dashboard--pre-overview-20261102-p806klen.web.app",
+    "hosting_version": "db09b7fde6d7ab26",
+    "application_version": "v5.329.94"
+  },
+  "preview_origin": "https://ai-bs-dashboard--ui-overview-v97-20261102-hd1h88u0.web.app",
+  "same_immutable_preview_promoted": true,
+  "client_files": 1142,
+  "platform_reserved_files": [
+    "__/firebase/init.js",
+    "__/firebase/init.json"
+  ],
+  "cloud_active_files": 1144,
+  "checks": [
+    "42 focused UI/truth tests, TypeScript and Python syntax passed",
+    "499 files across three mirrors match canonical source",
+    "666 compiled dependency references resolve",
+    "Build secret scan passed and non-VITE token absent from all uploadable bytes",
+    "All1142 client/cache/cloud hashes match;2actual reserved public SDK configs reviewed",
+    "Preview and production each passed57 HTTP checks across12files and5protected paths",
+    "Production live version is the exact verified preview version",
+    "Production authenticated session restored; Studio overview heading/class and zinc background visibly rendered; Dispatch disabled;0browser startup errors",
+    "Native257 runtime source inputs and all21UI source hashes remain exact"
+  ],
+  "browser": {
+    "method": "cua_repl production normal session restoration and DOM/style observation",
+    "authenticated_overview_visible": true,
+    "overview_class": "aibs-studio-overview",
+    "background": "rgb(9, 9, 11)",
+    "dispatch_enabled": false,
+    "console_errors": 0,
+    "scope": "No new sign-in, governance, trading, microphone or message action exercised"
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 2881,
+      "sha256": "98a87896c0b5477a1592686eaf6e4d0c80e1f34c4d2292c26e9fb7e596a1303c",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "version.json",
+      "bytes": 194,
+      "sha256": "e30a77a376057a6ea66fbce778031f5af4c164dfcc21ee395b2b49024c80c379",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "js/main.Cy7UQaw0.js",
+      "bytes": 329937,
+      "sha256": "9f0ea2f26c4cb2097a855ab2777aace28109bd2ff589c1a5710d7139e9d66f99",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "css/index.C1mZEUbl.css",
+      "bytes": 80135,
+      "sha256": "e26aecac8da61d1f4b99b6671741b4804a30385c2cbe2324a0c7861ba9864f2e",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "css/vendor.DULRuONn.css",
+      "bytes": 3750,
+      "sha256": "4ff88c6f6299d6ac70598650eb8fb0c3c5d097b957d4fafc2c649b2d7119b4af",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "css/main.za8UzT5A.css",
+      "bytes": 77132,
+      "sha256": "3989290ca5b0e611580b757ae822dfd30c5f4c9258441f18837fc5c0e284fe0b",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "js/ExecutiveCockpitTab.Bo0KCTzs.js",
+      "bytes": 39569,
+      "sha256": "43f3a999e87a42175cc9cebacd5d89134cb0dbedc6f193aacd9e30647df5b3c5",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "css/ExecutiveCockpitTab.BmmORqWr.css",
+      "bytes": 5651,
+      "sha256": "ac3c8fc3bcaad71872d3ea9ab710fb98b08b2ff63f731f452206473d900c4dba",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "writer.html",
+      "bytes": 1340,
+      "sha256": "ef42908cb07921e7777c8d9d07bd9efe471e9c8aee86c1f911d1f4b9de74bd9b",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "bs-game/index.html",
+      "bytes": 33576,
+      "sha256": "469241b4e13e91a43db31e238655404467f67a683698d1e87e239312ad3d5fb2",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "bs-game/vendor/three-r128.min.js",
+      "bytes": 603445,
+      "sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+      "status": 200,
+      "match": true
+    },
+    {
+      "path": "assets/bs-game-native-preview.png",
+      "bytes": 32241,
+      "sha256": "b20d6ee7edeee137d9d096e1ed81a64b9e683b708d6b3b4840f4b5ecc8de3652",
+      "status": 200,
+      "match": true
+    }
+  ],
+  "protected": [
+    {
+      "path": "NoCo_Executive_Due_Diligence_Dossier_2026.pdf",
+      "status": 200,
+      "is_spa_fallback": true,
+      "content_type": "text/html",
+      "safe": true
+    },
+    {
+      "path": "downloads/AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "status": 200,
+      "is_spa_fallback": true,
+      "content_type": "text/html",
+      "safe": true
+    },
+    {
+      "path": "downloads/ledger.html",
+      "status": 200,
+      "is_spa_fallback": true,
+      "content_type": "text/html",
+      "safe": true
+    },
+    {
+      "path": "downloads/omni_archive.html",
+      "status": 200,
+      "is_spa_fallback": true,
+      "content_type": "text/html",
+      "safe": true
+    },
+    {
+      "path": "downloads/STEHOUWER_OMNI_CHRONOLOGICAL_MASTER_ARCHIVE.md",
+      "status": 200,
+      "is_spa_fallback": true,
+      "content_type": "text/html",
+      "safe": true
+    }
+  ],
+  "source_inputs": {
+    "ui_manifest": "docs/agent_sync/manifest_studio_overview_20261102T042646Z.json",
+    "native_source_sha256": "9774833c71487c4d0065b2bf4b15c8f655d4bdbb0a9bce227acd079d694f2539",
+    "native_inputs_unchanged": 257
+  },
+  "tooling": {
+    "firebase_cli": "15.34.2",
+    "node": "24.18.0",
+    "firebase_commands_cwd": "D:\\AI-BS-Game-Resources\\Deployments\\UI_Overview_20261102\\cli",
+    "notes": "Use clean CLI directory: frontend/firebase.js otherwise shadows CLI via Windows file association"
+  },
+  "known_corrected_harness_issues": [
+    "Initial CLI filename-association resolution corrected without touching source",
+    "Clone progress prefix required metadata readback rather than treating stdout as pure JSON",
+    "1144cloud vs1142client discrepancy investigated and completely reconciled, not ignored"
+  ],
+  "limitations": [
+    "No backend/cloud-function/Firestore changes or native executable deployment",
+    "Authentication sign-in flow and real backend execution/trading were not exercised",
+    "Full8\u201312minute native opening, GPU character/likeness/audio and frozen delivery remain unfinished"
+  ],
+  "evidence_directory": "D:\\AI-BS-Game-Resources\\Deployments\\UI_Overview_20261102",
+  "free_bytes": {
+    "C": 85068963840,
+    "D": 181146087424,
+    "E": 146813599744
+  }
+}

@@ -842,40 +842,14 @@ Dialogue: 0,0:00:01.00,0:00:03.50,Default,,0,0,0,,{{\\k25}}AI-BS {{\\k30}}SOVERE
     # =========================================================================
     @staticmethod
     def execute_media_pipeline_recipe(recipe: Dict[str, Any], job_id: Optional[str] = None) -> Dict[str, Any]:
+        """Hold orchestration until a verified domain dispatcher exists.
+
+        Existing checkpoints are unverified and are never execution evidence.
         """
-        Executes a composite multi-stage production pipeline with atomic SQLite
-        checkpointing per domain, allowing instant resumption from failure.
-        """
-        start_time = time.time()
-        j_id = job_id or f"media_job_{int(start_time)}"
-        steps = recipe.get("stages") or recipe.get("steps") or []
-        executed_stages = []
-
-        logger.info(f"[MediaEngine] Executing recipe with {len(steps)} domain stages for Job '{j_id}'...")
-
-        # Domain 1: Reserve stage & checkpoint initialization
-        vram_arbiter.save_checkpoint(j_id, 1, "pipeline_init", "COMPLETED", {"recipe_name": recipe.get("name") or recipe.get("title")})
-        executed_stages.append("D1_vram_init")
-
-        for step in steps:
-            d_id = step.get("domain", 0)
-            stage_name = step.get("action") or step.get("stage", "stage")
-            vram_arbiter.save_checkpoint(j_id, d_id, stage_name, "COMPLETED", step.get("params", {}), {"status": "ok"})
-            executed_stages.append(f"D{d_id}_{stage_name}")
-
-        render_ms = round((time.time() - start_time) * 1000, 2)
-        return {
-            "status": "success",
-            "domain": 9,
-            "job_id": j_id,
-            "recipe_name": recipe.get("name") or recipe.get("title", "UnnamedRecipe"),
-            "stages_completed": len(executed_stages),
-            "total_stages": len(steps) + 1,
-            "checkpoints_saved": True,
-            "executed_stages": executed_stages,
-            "render_time_ms": render_ms,
-            "message": f"Successfully completed multi-stage recipe with {len(executed_stages)} atomic checkpoints"
-        }
+        return {"status": "held", "domain": 9, "job_id": job_id,
+                "stages_completed": 0, "checkpoints_saved": False,
+                "executed_stages": [], "checkpoint_verification": "unverified",
+                "message": "Domain execution and durable completion receipts are unavailable."}
 
     @staticmethod
     def query_media_workflow_vault(query_str: str, top_k: int = 3) -> Dict[str, Any]:

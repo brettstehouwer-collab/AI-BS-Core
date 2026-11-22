@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "d6359aa577be4f3c8d4bfb575d9ecebe",
+  "plan_id": "22095c6a9fc249f098777eafe78790c6",
+  "snapshot_sha256": "b1dbc435b9d14fc137c8977f8d9d676dbac32e92cad6b1f66c2a514cd2121ceb",
+  "review_digest": "c2b1da50e48bfe39f670fea0906007669b4fd63812d33be3babfb979a00b8b85",
+  "model_payload": {
+    "objective": "Explain how to change the returned value to42 and keep the existing checks.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "excerpt": "# selected immutable test fixture; never executed\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "669d758e12f382f4fcddf76ad6355fc97117929e82229430f097055b061c7571",
+  "worker": {
+    "pid": 30008,
+    "created": 1794779746.4607692
+  },
+  "created_at_utc": "2026-11-15T21:55:49.667884+00:00",
+  "entry_sha256": "ca970547567093281ffd781157e287ac0630caf0da4202f527913467fb206dd0"
+}

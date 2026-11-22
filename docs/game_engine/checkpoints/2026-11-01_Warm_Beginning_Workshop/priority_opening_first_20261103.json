@@ -1,0 +1,21 @@
+{
+  "id": "USER-PRIORITY-20261103-OPENING-FIRST",
+  "status": "APPROVED_BY_USER",
+  "at": "2026-11-03T14:15:33.135520+00:00",
+  "instruction": "If it makes sense to do shift priorities while keeping the full plan just add to the plan with priorities being the new updated proposal. If the logic is on point.",
+  "basis": "Read-only review recommended a playable, measured opening first, with essential Adam guidance retained; user subsequently authorizes the priority update.",
+  "original_design": "Complete checkpoints3\u20138 delivering8\u201312minute Warm Beginning; existing M5 private alpha targets20\u201330minute Jenison-to-Pencil-Room chapter.",
+  "change": "Reorder execution toward playable routes and measurements before supporting expansions, retaining every original checkpoint and M0\u2013M11 gate.",
+  "justification": "Packaged smoke/unit tests establish components, not a coherent enjoyable timed chapter. Player experience and pacing are the largest remaining uncertainties.",
+  "compatibility": "Documentation/queue priority only; no runtime/source/SDK/save schema or existing gate-status change.",
+  "plan": "docs/game_engine/OPENING_FIRST_PRIORITY_PLAN.md",
+  "priorities": [
+    "P0_finish_existing_Studio102_backup_launcher_handoff",
+    "P1_playable_measured8_12minute_opening_with_essential_Adam",
+    "P2_expand_measured20_30minute_M5_chapter",
+    "P3_retained_Warm_Beginning_finish_and_polish",
+    "P4_Unreal_phone_companion_monitor_UI_and_extra_tools"
+  ],
+  "full_scope_preserved": true,
+  "goal_complete": false
+}

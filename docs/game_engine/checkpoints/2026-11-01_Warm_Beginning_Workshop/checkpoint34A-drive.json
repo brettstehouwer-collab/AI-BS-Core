@@ -1,0 +1,19 @@
+{
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\34A_Warm_Beginning_Entry_Source_And_Native_View.zip",
+  "bytes": 535350,
+  "sha256": "38c63fb6927fbacc89bc1d33ffd251cc8ddb982c9a2a1e520c8892a01f0ecfab",
+  "members": 33,
+  "goal_complete": false,
+  "space_free_bytes": {
+    "C": 60589232128,
+    "D": 87067496448,
+    "E": 146813599744
+  },
+  "at": "2026-11-03T14:57:34.147823+00:00",
+  "folder_id": "1zGYuM73glnp3vPtHFJXrOeG3CInePhZF",
+  "file_id": "1w1u15u90oRSiHgS9109Mp7YjApEv7Oz5",
+  "url": "https://drive.google.com/file/d/1w1u15u90oRSiHgS9109Mp7YjApEv7Oz5/view?usp=drivesdk",
+  "restored_cache": "D:\\AI-BS-Game-Resources\\cache\\38c63fb6927fbacc89bc1d33ffd251cc8ddb982c9a2a1e520c8892a01f0ecfab.zip",
+  "all_member_sizes_hashes_crc_and_exact_set_verified": true
+}

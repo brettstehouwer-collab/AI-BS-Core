@@ -1,0 +1,55 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "aa914dd629f8a5d53ecfde393d7329465752c89875be9cdb4870d416dbb51d80",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "proposed_sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682",
+        "content": "value = 42\n",
+        "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+      },
+      {
+        "path": "src/App.jsx",
+        "base_sha256": "7d6571bf1b9756186d93f0f105e6ae88746da743b70020b4d9139eb1bf712bb4",
+        "proposed_sha256": "1118f4846fabf1af89a9ff7f30f7ae43161522cb844ce6eea2162cbab48ef8e1",
+        "content": "export default function App() { const value = 42; return <span>{value}</span>; }\n",
+        "diff": "--- a/src/App.jsx\n+++ b/src/App.jsx\n@@ -1 +1 @@\n-export default function App() { const value = 1; return <span>{value}</span>; }\n+export default function App() { const value = 42; return <span>{value}</span>; }\n"
+      }
+    ],
+    "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n--- a/src/App.jsx\n+++ b/src/App.jsx\n@@ -1 +1 @@\n-export default function App() { const value = 1; return <span>{value}</span>; }\n+export default function App() { const value = 42; return <span>{value}</span>; }\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      },
+      {
+        "path": "src/App.jsx",
+        "base_sha256": "7d6571bf1b9756186d93f0f105e6ae88746da743b70020b4d9139eb1bf712bb4",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.016,
+  "finished_at_utc": "2026-11-14T13:59:28.198389+00:00",
+  "response_sha256": "7deb12d70be2c51f32f2fa4b1ce7243362dd95dcf65afc9f111bf219df51dfad",
+  "response_bytes": 399,
+  "entry_sha256": "ac8e3db29a33aaea3df3c38080292047e9b96bbf4733f8377900eeddce6eaf2e"
+}

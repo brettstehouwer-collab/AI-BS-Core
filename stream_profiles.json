@@ -1,0 +1,91 @@
+{
+  "version": "5.320.0",
+  "active_platform": "twitch",
+  "destinations": {
+    "twitch": {
+      "enabled": true,
+      "url": "rtmps://ingest.global-contribute.live-video.net/app",
+      "vod_track": 2,
+      "key_dpapi": "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2o7gNpfR1ka+ErfKCQMLqAAAAAAwAAAAQQBJAC0AQgBTACAAcwB0AHIAZQBhAG0AIABjAHIAZQBkAGUAbgB0AGkAYQBsAAAAEGYAAAABAAAgAAAABPttbAI1RyzpgJbb8OChJKmSphX/mT69MkFJvW4Ez5gAAAAADoAAAAACAAAgAAAAylkLAI5TMYtmicvYide028QY+8KGMgYLh6THQEirDhowAAAA+zJ3tKty7NBtUl7BnkWfA22XjGjOrwIj/MvQTHUayXm5gp/lgxW4DXDE/ySxwJUyQAAAANgGOY9UkVViY1RBoMM45ALp8Ug3z+pLhj6wZNE/3jQjR7W6eFxiiO1B6rkSUaAsuwgB0aurz6r2n/iXcHc8/1A="
+    },
+    "youtube": {
+      "enabled": true,
+      "url": "rtmp://a.rtmp.youtube.com/live2",
+      "key_dpapi": "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2o7gNpfR1ka+ErfKCQMLqAAAAAAwAAAAQQBJAC0AQgBTACAAcwB0AHIAZQBhAG0AIABjAHIAZQBkAGUAbgB0AGkAYQBsAAAAEGYAAAABAAAgAAAAvAwFDO62UlLNLy7qxSL4yKdqtCBJoikUj1nRF/6slo8AAAAADoAAAAACAAAgAAAAOK9/faUWSNfhwd9Z42d/sVHTsBLNqlS5xtW1C/UrjaAgAAAADex4JYsi8Tj4MXB/DoWN1HzU+YuvR5kWI6btcaberdxAAAAAUIod7oI7X216tWJHeelBQIG9AXs3ECc+NNxjcb1kuE+e6J4Mr7V1seWg1oeFSejDMkyYNwnmdI6MK/xQN+4t6g=="
+    },
+    "kick": {
+      "enabled": true,
+      "url": "rtmps://fa723fc1b171.global-contribute.live-video.net/",
+      "key_dpapi": "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2o7gNpfR1ka+ErfKCQMLqAAAAAAwAAAAQQBJAC0AQgBTACAAcwB0AHIAZQBhAG0AIABjAHIAZQBkAGUAbgB0AGkAYQBsAAAAEGYAAAABAAAgAAAAyJTKwms5Xuz6zQbREOySX2y13BbWvZM88EmyP+fXljUAAAAADoAAAAACAAAgAAAAMCAQu9iLPPDf/gb3ZsM9xUwFa6aCm0fBsJrYvFR62WBAAAAAPi1e7cgA4pz2PG7MvmJROVelxY++CutLbj0D5j/hyi+Eehzm4/BOAQaM+9JHG3zFZ5t3A7tdBB38iu7ZGJuKEUAAAADb9Se1TGINZJZ3reBzEYse8S0RQksz5ioENiM031DMc9tHgHEdF/o+DEerwYOZJ200hPoxA0ZyKFQUMvqrmKat"
+    },
+    "tiktok": {
+      "enabled": false,
+      "url": "rtmp://live.tiktok.com/live/"
+    },
+    "facebook": {
+      "enabled": true,
+      "url": "rtmps://live-api-s.facebook.com:443/rtmp/",
+      "key_dpapi": "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2o7gNpfR1ka+ErfKCQMLqAAAAAAwAAAAQQBJAC0AQgBTACAAcwB0AHIAZQBhAG0AIABjAHIAZQBkAGUAbgB0AGkAYQBsAAAAEGYAAAABAAAgAAAAoA/tuW/NXinfj6nfG6afsnl99WsED7XMZ5MSzDB8NoEAAAAADoAAAAACAAAgAAAAOGpr8QnAWVKXMVQhMON+zFZlt5gaO2uCkUzIMe1EaaAwAAAA0u5i36rtJLQLbyEZBU/fi2SbPTDZTJcbcHlfoEANfEzAb4YpnkqnD1WPYhl+1JZxQAAAAMCOJJ716NgQ65Pbajxtz7QOdDsVKRNve29YlkhKbA67erpx4zgICHXQedQq2HaVYJboNDuSe5iRQd93U4lG3Os="
+    },
+    "sovereign_srt": {
+      "enabled": false,
+      "url": "srt://127.0.0.1:8089?mode=caller&latency=120"
+    }
+  },
+  "profiles": {
+    "twitch_standard": {
+      "platform": "twitch",
+      "resolution": "1920x1080",
+      "codec": "H.264 (NVENC AVC)",
+      "bitrate_kbps": 6000
+    },
+    "youtube_4k_av1": {
+      "platform": "youtube_4k",
+      "resolution": "3840x2160",
+      "codec": "AV1 (Dual NVENC 8th Gen)",
+      "bitrate_kbps": 25000
+    },
+    "kick_pro": {
+      "platform": "kick",
+      "resolution": "1920x1080",
+      "codec": "H.264 (CBR)",
+      "bitrate_kbps": 8000
+    },
+    "tiktok_vertical": {
+      "platform": "tiktok",
+      "resolution": "1080x1920",
+      "codec": "H.264",
+      "bitrate_kbps": 6000
+    }
+  },
+  "encoder": {
+    "codec": "H.264 (NVENC Studio CBR)",
+    "resolution": "1920x1080",
+    "fps": 30,
+    "bitrate_kbps": 60000,
+    "rate_control": "CBR (Constant Bitrate)",
+    "keyframe_sec": 1.0,
+    "preset": "P1: Fastest (Ultra Low Latency)",
+    "tuning": "Low Latency",
+    "bframes": 2,
+    "lookahead": true,
+    "spatial_aq": true,
+    "temporal_aq": true,
+    "audio_bitrate_kbps": 320,
+    "audio_sample_rate": 48000
+  },
+  "network": {
+    "stream_delay_sec": 15,
+    "auto_reconnect": true,
+    "retry_delay_sec": 1,
+    "max_retries": 10,
+    "low_latency_pacing": true,
+    "mmcss_priority_requested": false
+  },
+  "preview": {
+    "studio_mode": false,
+    "safe_areas": false,
+    "scale_filter": "Lanczos",
+    "aspect_preset": "16:9 (1080p 60fps)"
+  }
+}

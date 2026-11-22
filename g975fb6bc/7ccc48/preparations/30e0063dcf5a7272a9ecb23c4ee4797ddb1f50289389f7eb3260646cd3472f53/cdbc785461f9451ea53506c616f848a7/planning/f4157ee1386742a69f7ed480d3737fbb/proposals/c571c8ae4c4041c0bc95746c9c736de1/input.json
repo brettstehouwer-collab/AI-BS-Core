@@ -1,0 +1,61 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "cdbc785461f9451ea53506c616f848a7",
+  "plan_id": "f4157ee1386742a69f7ed480d3737fbb",
+  "snapshot_sha256": "010b30af03e5b85a34aca8ebc7d4d65cbb62ecc022dbbce652351d1c0ebb281f",
+  "review_digest": "cff059dd92783de69afcb42b34b5c5cd4957f98e967761b60353ada08be9f6e6",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "c571c8ae4c4041c0bc95746c9c736de1",
+  "reviewed_plan_sha256": "be26ddedb20308434f4e61e3b2020fdecec16fa3a8cb66baaaec52acc31933e1",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.js",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "content": "const value = 1;\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/app.test.cjs",
+        "role": "verification",
+        "sha256": "4878515595f0f3bb6db1673888eec442335ebf7805dfabd039a57aecee1bd9f8",
+        "content": "const test=require('node:test'); const assert=require('node:assert/strict');\ntest('candidate',()=>assert.match(require('node:fs').readFileSync('src/app.js','utf8'),/value = 42/));\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "node",
+        "argv": [
+          "node",
+          "--test",
+          "tests/app.test.cjs"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "905d59edae5ce1ab43e180d6651ae295c412361e62937011c3860713dcf7f0d3",
+  "worker": {
+    "pid": 32992,
+    "created": 1794779768.2750049
+  },
+  "created_at_utc": "2026-11-15T21:56:09.414678+00:00",
+  "entry_sha256": "f4c22ecec444c11b9b73fd6f52cbf8bb72e4de1ef0f14008a0b901b01c3c949f"
+}

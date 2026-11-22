@@ -1,0 +1,38 @@
+diff --git a/native_studio/app.py b/native_studio/app.py
+index 4d9ddb69..2981c0ce 100644
+--- a/native_studio/app.py
++++ b/native_studio/app.py
+@@ -989,6 +989,9 @@ class MainWindow(QMainWindow):
+             view = NocoVisionNativeView(self.bus)
+         elif key in ("unified_crypto", "crypto_trader"):
+             view = CryptoSwarmNativeView(self.bus)
++        elif key == "game_build":
++            from native_studio.game_build_view import GameBuildNativeView
++            view = GameBuildNativeView(self.bus)
+         elif key == "gaming_lab":
+             view = GamingLabNativeView(self.bus)
+         elif key == "steam_gaming":
+@@ -1045,6 +1048,10 @@ class MainWindow(QMainWindow):
+         if getattr(self, '_sampler_close_pending', False):
+             event.ignore()
+             return
++        game_workspace = getattr(self, '_subviews_cache', {}).get('game_build')
++        if game_workspace is not None and not game_workspace.prepare_close(self.close):
++            event.ignore()
++            return
+         for part in (self.view_daw,):
+             try:
+                 part.shutdown()
+@@ -1085,6 +1092,12 @@ class MainWindow(QMainWindow):
+ 
+ 
+ def main() -> int:
++    if "--game-build-smoke" in sys.argv:
++        from native_studio.game_release_smoke import run_game_release_smoke
++        index = sys.argv.index("--game-build-smoke")
++        if index + 1 >= len(sys.argv):
++            return 2
++        return run_game_release_smoke(Path(sys.argv[index + 1]))
+     if "--check-local-connection" in sys.argv:
+         from native_studio.local_connection import write_connection_diagnostic
+         return 0 if write_connection_diagnostic() else 2

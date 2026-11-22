@@ -1,0 +1,10 @@
+{
+  "state": "TIMED_OUT",
+  "input_sha256": "c61591c281e600c6bf765229be96ace8196252658ce405012d181baa9298795d",
+  "proposal": null,
+  "model_output": null,
+  "error_code": "proposal_deadline",
+  "elapsed_seconds": null,
+  "finished_at_utc": "2026-11-15T22:43:46.359077+00:00",
+  "entry_sha256": "61d219d40abcfe31f2f17c441d0e0c59313d38251266823757fa390a44a6b31c"
+}

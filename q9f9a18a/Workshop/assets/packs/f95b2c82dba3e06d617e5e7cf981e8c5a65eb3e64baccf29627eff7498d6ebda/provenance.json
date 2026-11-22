@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"0c103c9c-6a88-42f1-bbb8-87919fa79b5b",
+  "name":"Warm Beginning fault proxy enclosure kit v02",
+  "source":{"sha256":"d3ac291e316e3a663230beff6258ff64c9f5cbcc515abbceb619d50a32e6cebd","bytes":1668283},
+  "materials":{"sha256":"611991dca7584edae6c50e4a294f3a0cd279daa15f40ae2bbbcf4473dfe1a53c","bytes":690},
+  "license":{"sha256":"0799d1bf09687cf7089cf7a32fbbfdcf3317a359e89b6a967ebfee150fdd83c2","bytes":294},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"29f1f3317961848edafd9b11697254cfc4cacfeef429eebecc496bfe3643d256.aibmesh","sha256":"29f1f3317961848edafd9b11697254cfc4cacfeef429eebecc496bfe3643d256","bytes":597830}
+}

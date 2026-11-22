@@ -1,7 +1,8 @@
-import React from 'react';
+import 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
+/** @param {{id:string,items:(string|number|{id:string|number})[],children:import("react").ReactNode,className?:string}} props */
 export default function DroppableContainer({ id, items, children, className = '' }) {
   const { isOver, setNodeRef } = useDroppable({ id });
 

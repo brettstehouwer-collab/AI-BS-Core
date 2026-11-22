@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "6175ce1dc61b41e6a355bf93dd8350f2",
+  "plan_id": "1fcbad752eb04b09975f82052ae99656",
+  "snapshot_sha256": "e728c6f8ea81705d586ea3e799345da27ed7561a946042e75bcc30cb1f497c64",
+  "review_digest": "ce33e91b338e11bc73fe86b2a74c05b10ab0a6e0bc80d87c42b599ccd08eacef",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "64c8b6d1a1a843ac81bd2a1b753c1c2a",
+  "reviewed_plan_sha256": "be9de58407a737d6c5bba8762a4d6e8f95f4dee5da13f71a38d19342dd1e45cb",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33484,
+    "created": 1794771330.1265812
+  },
+  "created_at_utc": "2026-11-15T19:35:33.172047+00:00",
+  "entry_sha256": "03000d956d7b7121c87e810141fa35d087c351306b55c834d671fa0de7f521c0"
+}

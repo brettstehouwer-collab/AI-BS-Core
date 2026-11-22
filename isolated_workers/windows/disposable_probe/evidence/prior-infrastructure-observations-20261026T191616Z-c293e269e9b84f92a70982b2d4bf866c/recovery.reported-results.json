@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "classification": "RETROSPECTIVE_TRANSCRIPTION_OF_PREVIOUSLY_OBSERVED_TRUSTED_INFRASTRUCTURE_TOOL_RESULTS",
+  "suite": "Recovery",
+  "reported_passed": 54,
+  "reported_failed": 0,
+  "original_execution_utc": null,
+  "original_stdout_retained_in_this_file": false,
+  "verification": "PREVIOUS_TOOL_OUTPUT_OBSERVATION_ONLY_NOT_A_NEW_EXECUTION",
+  "transcribed_utc": "2026-10-26T19:16:16.3852128Z",
+  "source_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Resume-InstalledWorker.ps1",
+  "current_source_sha256": "12e905bcc7f69d799baed89f5f2df13d89bd1dbc48700cd55311e9a9a31cabaf",
+  "test_path": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\Test-ResumeWorkerInfrastructure.ps1",
+  "current_test_sha256": "c0bacf8d30ef381a45558e3a55c1a2fdedbf8a6689829e2b311a682c46d8d2b2",
+  "vm_operations": 0,
+  "guest_input": 0,
+  "candidate_execution": false,
+  "rerun_performed_to_create_this_record": false
+}

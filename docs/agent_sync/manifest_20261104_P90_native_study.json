@@ -1,0 +1,33 @@
+{
+  "at": "2026-11-04T18:54:42.439443+00:00",
+  "status": "verified_local_native_v27_study_not_likeness_acceptance",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "evidence_root": "E:\\T90",
+  "native": {
+    "status": "passed_actual_native_band_material_and_animation",
+    "vertices": 53243,
+    "indices": 236646,
+    "joints": 22,
+    "clips": 4,
+    "decoded_bytes": 17564956,
+    "content_gpu_bytes": 18284544,
+    "visible_pixel_difference": 284062,
+    "animated_pixel_difference": 69083,
+    "band_material_changed_pixels": 11852,
+    "debug_errors": 0,
+    "debug_warnings": 0,
+    "likeness_approved": false,
+    "installed_model_replaced": false
+  },
+  "chapter_admission": true,
+  "matched_parent_and_candidate_views": true,
+  "visual_review": "Mouth change subtle. Rough face, hair cap, neck and clothing remain unfinished; not naturalistic likeness acceptance. No new geometry changes after native review.",
+  "failure_retained": "Initial separate viewer exact SDK0170 request rejected0172. Fresh build0172 configured after correcting copied consumer request. MSB8029 temporary-output warning retained; build and native checks passed.",
+  "cloud_backup_verified": false,
+  "cloud_upload": "Held. Automatic approval review rejected personal family-derived likeness archive upload; explicit archive-specific user approval pending. No retry.",
+  "installed_release_changed": false,
+  "goal_complete": false,
+  "next_step": "Verify all four authored clips with native readbacks, then address face likeness against selected store reference in a separate protected study. Human opening playthrough, caption review, current1080p60measurements and final package/backup remain required.",
+  "evidence_manifest": "native-evidence-manifest.json"
+}

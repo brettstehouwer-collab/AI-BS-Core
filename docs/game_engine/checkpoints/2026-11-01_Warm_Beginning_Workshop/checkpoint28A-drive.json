@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "checkpoint": "28A",
+  "status": "passed_authenticated_part_download_reassembly_and_full_ZIP_restore",
+  "verified_at": "2026-11-03T01:40:22.390775+00:00",
+  "folder_id": "1imOJZGZ0Chl_5HGtYoD55QylqfUr42-f",
+  "folder_url": "https://drive.google.com/drive/folders/1imOJZGZ0Chl_5HGtYoD55QylqfUr42-f",
+  "parent_Workshop_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "archive_name": "28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip",
+  "archive_bytes": 68659943,
+  "archive_sha256": "dfb531298f2f47d26d901743bd52ae9f59869b0fd53f9b9b3c8d7b15f5d7d402",
+  "manifest_sha256": "5d914a182cf0840ad0107f9e0cc2958add65842b03531c42a90137b67328c168",
+  "parts": [
+    {
+      "name": "28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part01of03",
+      "file_id": "1EOkaHWE-gCbLXd4RVDif0wbgg20bNyvE",
+      "url": "https://drive.google.com/file/d/1EOkaHWE-gCbLXd4RVDif0wbgg20bNyvE/view",
+      "bytes": 25165824,
+      "sha256": "e0d68c93de0117e38cfe96374198658a2e9fd4d0c2f677ca4e15e6201c8f2264"
+    },
+    {
+      "name": "28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part02of03",
+      "file_id": "1Ri2e79svt4LoNRiS6_mQR7ULsUd7fkJ_",
+      "url": "https://drive.google.com/file/d/1Ri2e79svt4LoNRiS6_mQR7ULsUd7fkJ_/view",
+      "bytes": 25165824,
+      "sha256": "62299f9e573c78111409c9ff4d78339067a518d4fac02058c24b9b3a279e20e4"
+    },
+    {
+      "name": "28A_Adam_Face_Studies_v11-v13_UNAPPROVED.zip.part03of03",
+      "file_id": "16l4wufhOjUt1Z_YEo2NY--ZiMcOvVniL",
+      "url": "https://drive.google.com/file/d/16l4wufhOjUt1Z_YEo2NY--ZiMcOvVniL/view",
+      "bytes": 18328295,
+      "sha256": "c0e7827559dfb4339670cefa421b5e511ce080cbce27fa83902b57e3f2e3f793"
+    }
+  ],
+  "selected_complete_files": 152,
+  "ZIP_members": 154,
+  "all_part_sizes_SHA256": true,
+  "reassembly_SHA256": true,
+  "every_member_size_SHA256_CRC_exact_set": true,
+  "packed_image_certification_sha256": "6eca0fa37264d35a3c8fd2a97b3488bc90705ab069c99a06397b38dbf6cded53",
+  "all_seven_masters_only_pack_owned_shirt_print": true,
+  "original_family_media_included": false,
+  "private_v14_study_included": false,
+  "likeness_approved": false,
+  "v13_Root_face_review_accepted": false,
+  "game_or_launcher_changed": false,
+  "goal_complete": false,
+  "scope": "Preserved unapproved v11-v13 development iterations; no final likeness or native integration claim",
+  "authorization": "User approved27A and future verified project checkpoints with original-family/credential/privateGit-Master exclusions"
+}

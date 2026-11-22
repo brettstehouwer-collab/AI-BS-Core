@@ -1,0 +1,212 @@
+[
+  {
+    "path": "October7_VocalStudio_DAW/source/ace_step_pipeline.json",
+    "bytes": 3864,
+    "sha256": "625020306f1ba1890dec2b321c4fc0c1504dc346a9e592cbf7acd4be6b2679f2"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/app_native.py",
+    "bytes": 95950,
+    "sha256": "a7af7f4a81a593a12438ace9bb6a94e2f6af869ce7427df3f979ef0eebd75386"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/build_windows_app.py",
+    "bytes": 1601,
+    "sha256": "62720b244ed55c85980a660ca7aaa7c36d7507e980902da680a6e334e3be1d63"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/deploy_native_release.ps1",
+    "bytes": 1865,
+    "sha256": "d72ee5373aefd63b5c0baf9344bd3a3a8b9e195fc6f6929ead9e449c89969e90"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/GEMINI.md",
+    "bytes": 1691,
+    "sha256": "13717b5b72d6a8136d83737075d474391ca483a4dc24eedd6df103e02c5aef89"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/Install_October7_DAW.bat",
+    "bytes": 266,
+    "sha256": "1b43f80ebeeda2b9040e2d0eaa9959bb483bce7479042b22a8880dabd9337908"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/Install_Wizard.ps1",
+    "bytes": 432,
+    "sha256": "7dcdfa48e091361f5f9939fe11646f6135120911f9feba6ebcf5250416cdba82"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/latency_calibrator.py",
+    "bytes": 4497,
+    "sha256": "bad32faf68bf58f94d6aed3f5aa12e7f08f430418bdc983b5f418608db7e047b"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/Launch Studio.bat",
+    "bytes": 632,
+    "sha256": "40196ef0f2eb6379beef7dff173cc719479a688c7d6d3afaa579e8a8c37d8387"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/native_version_info.txt",
+    "bytes": 1050,
+    "sha256": "5095ad851b68b11e1715408d0424f5fb5495d6adf30688e6e8bcf2874a2f14a3"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/october7_core.py",
+    "bytes": 52512,
+    "sha256": "ea5bdee78cce364f711d3e9f216dc684d83cfe1f4976e631a33b7160753affb4"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/October7_DAW_Setup.spec",
+    "bytes": 741,
+    "sha256": "b7ae8925ec35e2f8b34d6e11dc7ac61024ba76141cb2dc07f82dd626c1283c0b"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/October7_VocalStudio_DAW.spec",
+    "bytes": 980,
+    "sha256": "e3f09323d7547b95bf22ff7fdad40039756666dc60d2b259181758e73a14a84c"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/October7_VocalStudio_Native.spec",
+    "bytes": 1320,
+    "sha256": "93cec0633a85f0083f3185c3993e87639f514d9064731663c9d842b709ec1412"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/preprocess_dataset.py",
+    "bytes": 5434,
+    "sha256": "64bc8d27fd9df0e412f78473baef135aa7516490d3ff40ccd2de7a114a74b93c"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/requirements-native.hashes.txt",
+    "bytes": 1955,
+    "sha256": "6cd6280cd37c917e24d5c48f5eac25b4cc30f4eb4bf4d1da5bc9463fd64421fd"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/requirements-native.lock.txt",
+    "bytes": 528,
+    "sha256": "f17c0e52a3774bf89fd642b08ecba4c33fb9b05101f16f1ebd90e8fa324a393c"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/run_lora_train.bat",
+    "bytes": 1600,
+    "sha256": "3f10e5b4ae7a887a0f968460dbce817dae29438271156a3c343ac1cf7191bc9c"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/server.js",
+    "bytes": 3944,
+    "sha256": "ce799967735b2e07a64412d6753afc6d18ff0dc3eab0dc2fcb14a303a58cbc8c"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/setup_installer.py",
+    "bytes": 443,
+    "sha256": "493a12d23b8cee509d4701b44f430c949bfad4fc0ed47af6983fb4c74b6f52e4"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/sign_release_binary.ps1",
+    "bytes": 5242,
+    "sha256": "69508b4e37fbbdf9a9c6f5a0a8551dc3a2e7aa00fcf77542c874cd54bea2a04a"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/test_stress_validation.py",
+    "bytes": 16320,
+    "sha256": "4f3a5a06a9e9bd2523d881557f5163b1a46f12515724d727bf1c93594fc1af0f"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/verify_native_engine.ps1",
+    "bytes": 2591,
+    "sha256": "9d57338653984d8e59b235affb9ac7e848711a52eea5b74b615b4e9491c253b4"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/vocal_to_midi.py",
+    "bytes": 6637,
+    "sha256": "604c7ce538cc2aca935632fa82996777933a3d91f0a0d419c65f5580b6217a42"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/VOICECOACH PROGRAM.backup.html",
+    "bytes": 27122,
+    "sha256": "5e968abe9b3a826e78835947795f71045583a2cf0dc43507f637734b58915509"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/source/VOICECOACH PROGRAM.html",
+    "bytes": 232781,
+    "sha256": "2258632492cd3bf2f307c4bf67691f4172f4c445025f8e8cd70083016ad4eb44"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/.gitignore",
+    "bytes": 305,
+    "sha256": "6595f62698e73d89f9841dc7609aa15883bb0d7fc92d25f9898f3c2d82326384"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/PROJECT_GUIDE.md",
+    "bytes": 6117,
+    "sha256": "e8ab3bae0d00b02f2e1ee410e4bb1ab84f5a0b1067ebe03cc7dddba07b49e072"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/setup_installer.py",
+    "bytes": 24218,
+    "sha256": "776e29ca13d759a24c92859eecbda9ebc8ee23a8ab14c836d5a720e6805fecff"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/Install_Wizard.ps1",
+    "bytes": 25054,
+    "sha256": "b6fb0341fdf0761c8fd3db791223b21619a2590e62c233c0eb489e51f2340aed"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/Install_October7_DAW.bat",
+    "bytes": 508,
+    "sha256": "d125fca4daac58a2289619257ac1398b30b7190244e5eed4889c59d8b00234a7"
+  },
+  {
+    "path": "October7_VocalStudio_DAW/Uninstall_October7_DAW.bat",
+    "bytes": 275,
+    "sha256": "b130bbe85e64ef4084af9e72b903c6603b9ed3591e7278fa64beeae3a6ab3e22"
+  },
+  {
+    "path": "AI-BS.code-workspace",
+    "bytes": 2150,
+    "sha256": "7c772dc88792661cca9a58fc320452ec203ba653ba0cdcbd9ca812de0ae5e176"
+  },
+  {
+    "path": "AI-BS_Sovereign.code-workspace",
+    "bytes": 1064,
+    "sha256": "2a284e44f0b37581da0445ceaba6e635ec517ddc8dfa3b9a6b6bafd74bbd1e4e"
+  },
+  {
+    "path": "native_studio/broadcast_secondary_control.py",
+    "bytes": 16549,
+    "sha256": "11de286c08f246c166f4a0ed0fe7e417b19fa41cf5f36f937a7a6888db5b0f13"
+  },
+  {
+    "path": "scripts/core_boot.py",
+    "bytes": 9659,
+    "sha256": "43c83a9f717148c69b13a486daaf987fd843f1b8c5526df3a2bed9c17ff77776"
+  },
+  {
+    "path": "scripts/tests/october7_browser212.test.cjs",
+    "bytes": 6902,
+    "sha256": "e0788bd2e435cb997d508e806fa2e1360851b18139ede33741d1b7b80d441b65"
+  },
+  {
+    "path": "scripts/tests/test_october7_build212.py",
+    "bytes": 6573,
+    "sha256": "f55299083bda3a81740a4c640efc96a6c42f7e85841da2fba072c818f37d66b5"
+  },
+  {
+    "path": "scripts/tests/test_october7_installer212.py",
+    "bytes": 10202,
+    "sha256": "fa56515a68f41fe368d1c65dcf1d682dbc2b8dc22f8e311c2bcbdecc354dfa34"
+  },
+  {
+    "path": "scripts/tests/test_october7_legacy_security212.py",
+    "bytes": 12831,
+    "sha256": "e3cf31bfabe5218420c73dd14faaa2279543d736a843c1e86f97044df19cc544"
+  },
+  {
+    "path": "scripts/tests/test_october7_native212.py",
+    "bytes": 18647,
+    "sha256": "15d01e1dcb8de658d7a64176f18c89f31a267288527fe6fb05cd1c39f16ad899"
+  },
+  {
+    "path": "scripts/tests/test_broadcast_reboot_recovery213.py",
+    "bytes": 3979,
+    "sha256": "c9a930445b482fc479393844466d739a45cc369f93404bc72d63c97e67db4705"
+  }
+]

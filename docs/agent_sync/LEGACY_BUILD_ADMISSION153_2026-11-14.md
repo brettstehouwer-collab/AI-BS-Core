@@ -1,0 +1,9 @@
+# Legacy execution admission correction — source153
+
+A3 source correction closes the reviewed legacy host-command fallback. build_project first preserves the existing fixed maintenance dispatcher; other projects/custom commands return unavailable/legacy_execution_not_admitted without legacy source scanning or process execution. run_existing_program returns the same result. build_program requests that ask to build or run return before writes; explicit execute_build=false/run_immediately=false scaffolding remains available. No confirmation field, root-wide trust flag or host-shell-as-sandbox claim is introduced. The existing Coding-mode accepted isolated-worker and explicit per-task Trusted local paths retain their own contracts. Retained legacy bodies are unreachable behind these entry gates.
+
+The new12-check inert profile initially failed11cases and then passed12/12 after the patch. A separate actual source-only fixture produced source, manifest and ZIP without executing subprocesses. Version consistency passed without drift. Fixed maintenance was tested through a dispatch spy; no real maintenance build/restart was performed. Historical positive host-execution tests were neither changed nor run. Full regression remains a final pre-apply/promotion gate.
+
+Source is5.329.153. Retained native152, compiled web151, hosted146 and running service generations remain separate. No application/service restart, deployment, inference, private-store change or default-launcher promotion occurred. The stopped browser operation remains untouched; real-owner native creative acceptance is still open.
+
+Evidence: backups/legacy_build_admission153_20261114_v01/. Next qualify mounted denial and native unavailable-result presentation before runtime rollout. Actual worker admission/containment and protected apply remain separate gates. Goal ACTIVE/incomplete.

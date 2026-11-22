@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-05T00:56:07.788606+00:00",
+  "status": "paused_by_user_all_owned_workers_joined",
+  "summary": "PAUSED at the user request to conserve model usage. No owned build/test/recording workers remain. SDK0.17.4 R2 Release build and all129registered Release tests passed; Debug build passed, but its suite was intentionally stopped after39passes before full qualification. Private native first-person repair7/bypass9cases passed. Instrumented third-person repair completed its seven-panel tour; the earlier third-person isolation-return failure was not reproduced and its cause remains unproven. All failed/partial evidence is retained. No SDK174publication, Studio110build or launcher change occurred. Installed107 and held108/109, real saves and family originals are preserved; E was unused for builds.",
+  "next_step": "Do not resume development until the user requests it. On resume read PROJECT_INDEX and this handoff, verify current source and storage, then qualify the remaining Debug tests using fresh evidence or an explicitly recorded resume of the unchanged profile. Do not relabel interrupted Debug results as an engine failure or full pass. Finish remaining third-person native cases with observational input logging; retain the unexplained V01failure. The remaining-matrix helper was interrupted during preparation and is not ready to execute. Then staged/relocated consumers, verified source/SDK backups and fresh Studio110/current174-v33 ordinary-play review. Human pacing/performance/likeness and checked original captions remain open. Preserve all prior releases, failed evidence, original media and saves.",
+  "Release_tests": 129,
+  "Debug_passed_before_interruption": 39,
+  "Debug_suite_complete": false,
+  "all_owned_processes_joined": true,
+  "source_pins_unchanged": true,
+  "source_file_count": 563,
+  "free_GiB": {
+    "C": 261.94,
+    "D": 86.86
+  },
+  "SDK_published": false,
+  "launcher_updated": false,
+  "goal_complete": false,
+  "pause_stop_note": "Owned CTest was stopped with exit125. Stop helper hit an already-exiting process; final owned Job accounting confirms active0, all retained test children joined. No unrelated process was stopped.",
+  "helper_state": "Native remaining matrix preparation interrupted, not executable. Publication/current-review helpers prepared only and not validated/executed."
+}

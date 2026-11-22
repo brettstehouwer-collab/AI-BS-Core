@@ -1,0 +1,56 @@
+{
+  "at": "2026-11-03T19:15:48.414319+00:00",
+  "classification": "progress",
+  "previous_goal_turn": "Progress: v16 art/provenance backup and source-side manual review kit prepared with verified backups43A/44A.",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "scope": "SDK0.16.5 private gameplay-measurement development candidate, not deployed",
+  "source_sha256": {
+    "engine/CMakeLists.txt": "23d2a46aec0a7acf5ea590e9ecbe1f102089235554eecc4f4498394b1f185cbb",
+    "engine/include/aibs/frame_measurement.hpp": "83870895032f135abd568a0914a357db7ddd8bfc4c9433b04e18b012120e774d",
+    "engine/src/frame_measurement.cpp": "f048737c11232db5e9b3898d5904377262e41abf365a0579c27898290b00c51b",
+    "engine/tests/frame_measurement_tests.cpp": "4dbc956f95c562d75ac6d6c209083be97f62f117b36e9da8da7a9457e9749f59",
+    "engine/apps/durable_world.cpp": "36630fdfc2f2c66408ae6d3f5c446837042ddf884ad2435fd2aaabe3bb7aa306",
+    "engine/apps/performance_runtime.inl": "7b76589edfe39385390e68a18d78059f792d8598eca09e21f6368b00c37f6d39",
+    "engine/apps/performance_readiness.hpp": "6ddda29ccffb0099baf201c6a93d67aaa6f00a53ce861ef52bdf1d9bdd08dc88",
+    "engine/tests/performance_readiness_tests.cpp": "fa937e3919f6ae3720a6240043cd9a601496da66ece00f3a56dc5d28b2a1edd5",
+    "engine/tools/measure_opening.py": "df325bd73abd0cc47325193d87403abab89179e1960cbdfe01ed0f5372851af7",
+    "engine/tests/test_measure_opening.py": "3ffcf85e13ecc6305bb477a167161bd856e95d52c35981fca01f502f39351008",
+    "engine/GAMEPLAY_MEASUREMENT.md": "8158895fe9c7afbd28b1e84fea76d58c06e9d0bcb7de8786209372f8c3788871"
+  },
+  "source_patch": "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\source.patch",
+  "source_preimages": "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\preimages",
+  "verification": "D:\\AI-BS-Game-Resources\\P45\\GameplayMeasurement\\verification.json",
+  "all_owned_processes_joined": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\45A_Gameplay_Measurement_Source_And_Evidence.zip",
+    "bytes": 3569859,
+    "sha256": "f8232719477dbc630748a133b6ab0d3f4a96a1bf5f9656abf86c46218962f186",
+    "members": 141,
+    "local_zip_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T19:15:48.414319+00:00",
+    "archive_and_every_member_size_sha_crc_exact_set_verified": true,
+    "drive_file_id": "1a1-dZiF9abwYXb2REsSemU3WjG_bsaX0",
+    "drive_folder_id": "1ZncJshsE8pC2y6_wv9Htwenjj0CLO3q5",
+    "scope": "Selected SDK0.16.5 development source/preimages/evidence delta. Not a final installed release backup. Original family media, user saves, compiled binaries and private Git/Master data excluded."
+  },
+  "completed": [
+    "Bounded separate gameplay measurement source including own panels and saving, normal-close finish and long-frame/outcome reporting",
+    "Release/Debug build and49 timing +86 real hidden-HWND checks each",
+    "10 actual native CLI cases and8 Python tool regressions",
+    "Two actual1080p hidden DX12 opening readbacks, zero debug errors/warnings",
+    "Installed SDK898files, Studio executable/5shortcut hashes and original family references preserved",
+    "Organized45A backup authenticated raw-restored all141members"
+  ],
+  "not_verified": [
+    "Real foreground gameplay measurement through UI and saves",
+    "First-time8\u201312minute human pacing/qualitative acceptance",
+    "SDK0.16.5full regression/install/consumer and Studio package acceptance",
+    "Final Adam likeness approval and final recording/caption presentation",
+    "Final accepted packaged opening/walkthrough and complete source/art backup"
+  ],
+  "next_step": "Exercise actual gameplay sampling without forcing focus; retain failed or interrupted reports. User selected manual stable103 review for later; do not open a visible game automatically. Complete SDK/package regressions before installing new candidate. Personal v16 likeness feedback remains pending.",
+  "retained_diagnostics": "Exploratory first compile had a live owned mspdbsrv until natural idle exit; it was not restarted or globally killed. Final compiler builds use embedded debug info and disable only third-party debug-symbol generation."
+}

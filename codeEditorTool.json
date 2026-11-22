@@ -1,0 +1,10 @@
+{
+  "editor": {
+    "path": "C:\\Users\\footb\\AI-BS_Matrix\\.vscode"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./handoff_state.json",
+    "codeEditorTool": "node"
+  }
+}

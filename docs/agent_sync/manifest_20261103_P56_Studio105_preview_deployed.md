@@ -1,0 +1,65 @@
+# P56 Studio105 preview deployed
+
+{
+  "id": "20261103_P56_Studio105_preview_deployed",
+  "at": "2026-11-03T22:50:52.434500+00:00",
+  "repository": {
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "dirty": true,
+    "full_status_local": "D:\\AI-BS-Game-Resources\\P56\\Studio105Preparation\\working-tree-status.local.txt"
+  },
+  "source": {
+    "engine/CMakeLists.txt": {
+      "bytes": 62584,
+      "sha256": "13546075b50d214c82a6cb5d5a6a5d0ba476e1314284d95ec89b0c181b355131"
+    },
+    "native_studio/game_build_view.py": {
+      "bytes": 47667,
+      "sha256": "6ce889c5cf97bb4d7dbc3fa06cb26c8bfb5a777f23a9e242acfe29eadac13151"
+    },
+    "engine/tests/test_game_build_runtime_discovery.py": {
+      "bytes": 11451,
+      "sha256": "357187ad1ceb3dc7e4f30413b5cf6a3bc9d199fbe5985d070efbb171dea8368a"
+    },
+    "engine/tests/test_native_build_view.py": {
+      "bytes": 54007,
+      "sha256": "cdf9f874789953b39c4788f44a556237624094f4e2a509a7cb01777a269f4691"
+    },
+    "engine/out/warm_beginning/monitor_summary.json": {
+      "bytes": 13277,
+      "sha256": "9fac7eb431525b453aceb925aef2f5c4aecc67c5e3ad5b993c2b31175ccd1e31"
+    },
+    "engine/out/build_progress.json": {
+      "bytes": 101882,
+      "sha256": "3d32e495137c7ce1862418caa00238e8f254a04096642655449dd740303582a9"
+    },
+    "docs/game_engine/STUDIO105_READER2_V18_PREVIEW.md": {
+      "bytes": 2688,
+      "sha256": "5eae5d73218e2455fda51383c95ef092fa650a26353e07abee6876e0ae04ea70"
+    }
+  },
+  "verified": [
+    "SDK0166 all127engine+8independent consumer checks in each Release/Debug",
+    "Studio105 static/frozen saved play/Creator/Hub/limited startup",
+    "Both v18 routes and real normal save reopens",
+    "Five launchers retargeted preserving existing properties",
+    "55A and56A Drive raw restore exact-member verification",
+    "Software walkthrough decoded/sample reviewed; separate video upload metadata readback",
+    "Current actual monitor parser and regression tests"
+  ],
+  "failed_retained": [
+    "Initial NVENC walkthrough bounded-write deadline; all processes joined",
+    "Initial P56 monitor candidate status/extra SDK key corrected; original in56A"
+  ],
+  "incomplete": [
+    "Current full-gameplay performance and first-time8\u201312minute human pacing",
+    "Naturalistic likeness and personal approval",
+    "Caption listening review",
+    "Final full acceptance package/backup"
+  ],
+  "next_step": "Update separate current gameplay-review collector pins/assets to verified105/0166/v18, run offline contracts, prepare user-run launcher and preserve historical103 reports; do not launch human review unattended. Continue goal, do not mark complete.",
+  "deployment": "C:\\AI-BS\\native_studio\\releases\\v5.329.105\\AI_BS_Studio\\AI_BS_Studio.exe",
+  "existing_saves_and_originals_preserved": true,
+  "goal_complete": false
+}

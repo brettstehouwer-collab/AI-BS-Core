@@ -1,0 +1,503 @@
+{
+  "handoff_id": "record207_v532983",
+  "utc": "2026-10-31T19:37:42.923278+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next AI-BS audit session",
+  "repository": {
+    "branch": "codex/audit-v532976-20261031",
+    "source_commit": "765a95d1837f29ad94d5b07e02d510d3c23c44ce",
+    "base_commit": "4c3bf3e4ac9566da88d12656c991f9d8fbff503f",
+    "working_tree": "Unrelated pre-existing dirty and untracked files retained; selected source scope has no diff from source_commit"
+  },
+  "version": "v5.329.83",
+  "source_manifest_checksum": "57b977828bd7d8d52a0858bb4d274ef997e0c97958fdcec538fe0cfbb67c56b9",
+  "source_manifest": "C:\\AI-BS\\backups\\windows_integration_v83_20261031_record207\\selected_source_manifest207.json",
+  "selected_files": {
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": {
+      "bytes": 1150065,
+      "sha256": "89c3b2c74c21a7fa9479b9bb7f52cd25ea8d9af532a244d766e2d23790b36329"
+    },
+    "BroadcastStudioApp/package-lock.json": {
+      "bytes": 222035,
+      "sha256": "71a76ef71f8a195a4dd195fc7203af8e29de39d9511dbb01550705b7603d66ae"
+    },
+    "BroadcastStudioApp/package.json": {
+      "bytes": 3011,
+      "sha256": "616fec0021c0a0da2d77dcc51247b9b3fb5eceee08c2dc691fd9a1e0bd9f01dc"
+    },
+    "BroadcastStudioApp/src/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "MASTER_HISTORICAL_INDEX.md": {
+      "bytes": 124509,
+      "sha256": "58c26afe02e8d3eef97ac28fcda2f393485b4c37779c6b025e7449b3828b0331"
+    },
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md": {
+      "bytes": 110106,
+      "sha256": "2b17b8f5eb764156a0cd10e1b3ae19c02f7e8ff8e4d06b4c3986317fd1b5ff8b"
+    },
+    "MASTER_TASKS_CHRONOLOGY.md": {
+      "bytes": 235051,
+      "sha256": "52f126dc3c09ba3a4ada3a4896cc7067c26602b6e3fa2f310a7c51b75fd44185"
+    },
+    "NotebookLM_Records/artifact_history.md": {
+      "bytes": 173144,
+      "sha256": "534b60c266f25cff25251857c566070a822f91d6b152c7d537dfef632283c931"
+    },
+    "SAVED_CHECKPOINT.md": {
+      "bytes": 17646,
+      "sha256": "da3249eba4a67748c9612ce262a1cdcc3e23c7cfa30ea744e74a892ddaab2898"
+    },
+    "backend/aibs_broadcast_daemon.py": {
+      "bytes": 65561,
+      "sha256": "81156f597682beb7a0e96594a160c73ea4fd18bf672e6e5132e8c1505eec331d"
+    },
+    "backend/core/broadcast_relay.py": {
+      "bytes": 13944,
+      "sha256": "23f253917b52ad2b24e0a17c6e8a35395f39b2de3d07bd5562ae90002fad2c22"
+    },
+    "backend/core/broadcast_secondary.py": {
+      "bytes": 26397,
+      "sha256": "650664f5e2768599c5dff7c7b03c0041d3e8db454153557e351874ea10f3fa72"
+    },
+    "backend/core/game_capture_selection.py": {
+      "bytes": 28761,
+      "sha256": "03bd5d77efb4fe44ecc14c38e28a69020910ae6072d1ed87919cbf29ed9d74c7"
+    },
+    "backend/core/game_follow_capture.py": {
+      "bytes": 13222,
+      "sha256": "9220417e3ba23cd7808f5291c4895810a8726d97879b54e69f7091b54d782d83"
+    },
+    "backend/core/game_selection_sampler.py": {
+      "bytes": 10474,
+      "sha256": "2bc25a10686e4078e5ed6dc50d46bef1041b3efb8c9d8e36ebab1a978e60ddd5"
+    },
+    "docs/CODEX_DECISIONS.md": {
+      "bytes": 248711,
+      "sha256": "428c8b36bbcf29a90f62a209fbbf86cd6f59bebf72e0e14be922d1d3795e2f14"
+    },
+    "docs/CODEX_HANDOFF.md": {
+      "bytes": 1132917,
+      "sha256": "11c7e0f156bc818ab376331e0114c5afb9934f8a6c35a02e0996bc0ed4239c9a"
+    },
+    "docs/CODEX_JOURNAL.md": {
+      "bytes": 758744,
+      "sha256": "46d9697b5bb939463248d5e42796f45bd965e48d8073262e453b4956d354b30e"
+    },
+    "docs/CODEX_TASKS.md": {
+      "bytes": 354911,
+      "sha256": "3fa884d40bbbaf8522efa4970e59c8d59bf50ebdb0ff78aa3e188a0ddaf95077"
+    },
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.json": {
+      "bytes": 19944,
+      "sha256": "535e8970808385d0823266df20d8a76b9af90ce6a44eb9d60cfe10f7f5fe23f5"
+    },
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.md": {
+      "bytes": 13638,
+      "sha256": "9817f5cc57e152c96b390614ad83918d53ecf7ad67b2e55275160313c536669a"
+    },
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.json": {
+      "bytes": 35977,
+      "sha256": "4bb35fe43a3b865bb91d1eccf30d53d6bb12b32f21b69677a24bccebbdbac44a"
+    },
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md": {
+      "bytes": 19211,
+      "sha256": "415bb7db9ec1ba88948524beedd97ccf6f035e4e5531f9e173069afeb6d3286f"
+    },
+    "docs/audit/2026-10-30-complete/README.md": {
+      "bytes": 13451,
+      "sha256": "39f98bf905f7b01420054c2013e0cb02e3b139ba99509e873367edb55be89acc"
+    },
+    "docs/audit/2026-10-30-complete/coverage.json": {
+      "bytes": 16914,
+      "sha256": "b9a4854563a2e8bd47a189e4ce6582e8634cc9715b5a0227dddc722f58cc3ab9"
+    },
+    "docs/audit/2026-10-30-complete/findings.json": {
+      "bytes": 66089,
+      "sha256": "4c41bc0653913e6dbd91ff65b221ce4fb6937a535732ae7c47c246bcc05af59c"
+    },
+    "docs/audit/2026-10-30-complete/recovery_gate.json": {
+      "bytes": 5434,
+      "sha256": "1abf8ba3933fae7cd8d929ad184b684dedd037ef56a1cb0dd0d616402a6f03c8"
+    },
+    "frontend/components/components/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "frontend/components/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "frontend/package-lock.json": {
+      "bytes": 778993,
+      "sha256": "3dda78bbed0fe72f969accc2a139d6e61f4af53685216d159834b53ff1e808ec"
+    },
+    "frontend/package.json": {
+      "bytes": 3582,
+      "sha256": "f5971507f1bf86ae57fdc1fdf7d7d5c9cda4889967c7a2c4cee0f50db89f6473"
+    },
+    "frontend/public/version.json": {
+      "bytes": 194,
+      "sha256": "82c712c8cc7c73eeaaa5764437eb593a4e082fa9c8ad8a91eb1d4f354f11fb34"
+    },
+    "frontend/src/components/components/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "frontend/src/components/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "frontend/src/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "frontend/version.js": {
+      "bytes": 354,
+      "sha256": "4633dfdb93a2557440f09c283d51740e36213759901ba974222f6e0774a09f17"
+    },
+    "native_studio/broadcast_control.py": {
+      "bytes": 3576,
+      "sha256": "df1c42362fe54a5873ecdb3d4bb57a06168c0fb395c99a7f68c14f9892f7f5ad"
+    },
+    "native_studio/broadcast_ipc.py": {
+      "bytes": 7214,
+      "sha256": "354270a677d315e8b0506f4fba53c405c9be786f143143e6e2729a8f2e8e4fd3"
+    },
+    "native_studio/broadcast_secondary_control.py": {
+      "bytes": 14547,
+      "sha256": "a7558a6f67308e137e1f6702702c137f8b32c9ce1b0f3cd46d11461e08e77e1b"
+    },
+    "native_studio/broadcast_service.py": {
+      "bytes": 11760,
+      "sha256": "64abe6398f26293e0c9413be784d4e05a02e0b702f6107b74379a6fbd80417cd"
+    },
+    "native_studio/local_connection.py": {
+      "bytes": 11168,
+      "sha256": "166407a089f63f5e259e5376826c546b0d348fa7a953119ea7d1abc11565dea6"
+    },
+    "native_studio/omni_broadcast_studio.py": {
+      "bytes": 131225,
+      "sha256": "9ce40bae35a0fb98590c70469ed7ea722f3eb6ab2cbc6741ada812b4bfc12953"
+    },
+    "package-lock.json": {
+      "bytes": 199,
+      "sha256": "7a54de848747fa9e5ab0345d92ec2d65a990992c357d32bae005a91483c6dd5d"
+    },
+    "package.json": {
+      "bytes": 429,
+      "sha256": "b8b61f728e2c8fe5fca91ef234dc104bc31ea52500ef113ea48217f31451c8e0"
+    },
+    "release.json": {
+      "bytes": 193,
+      "sha256": "653dc822ac424f09e7aabe0f6398d900f0c59cce06e2a12dbd28aaf2f252f7f4"
+    },
+    "scripts/tests/test_broadcast_capture_inputs205.py": {
+      "bytes": 15588,
+      "sha256": "24054cc54f8a4059887cdc0c1a806fd1c0d6edef36e59d9e20603efd18eec68e"
+    },
+    "scripts/tests/test_broadcast_daemon_integrity.py": {
+      "bytes": 8049,
+      "sha256": "6acdfe1915d55762e522c8856e8f8bd93b09310f06dbab6d08fcfdbff14db8f9"
+    },
+    "scripts/tests/test_broadcast_ipc_atomic207.py": {
+      "bytes": 2363,
+      "sha256": "b889a466d1035585d065bfcf827496bbe514f553015b44a2442ddd484cd4c416"
+    },
+    "scripts/tests/test_broadcast_relay206.py": {
+      "bytes": 8883,
+      "sha256": "c744ec751a82e9dd0494557427002a25560017d7730b08c96c9ede2c127653b5"
+    },
+    "scripts/tests/test_broadcast_secondary206.py": {
+      "bytes": 20974,
+      "sha256": "6927cd01fca2deff80fd8bf1138b8bb3e8c7bb9525cd09c7bd1df027dac6c630"
+    },
+    "scripts/tests/test_broadcast_service205.py": {
+      "bytes": 18528,
+      "sha256": "b8903226506c50b5812d419a71af99585355f0a17d3514bace976ed5badefe14"
+    },
+    "scripts/tests/test_game_capture_selection206.py": {
+      "bytes": 24716,
+      "sha256": "dbcc1b748e3f3792af470d49d8a89a088dc243d8ba3cbfd0c08758fc39b7ad8c"
+    },
+    "scripts/tests/test_game_follow_capture207.py": {
+      "bytes": 12363,
+      "sha256": "aee03063891155759a923f4591b8cbd23fe93e149b0af137012c29e53a9b3db4"
+    },
+    "scripts/tests/test_game_selection_sampler207.py": {
+      "bytes": 12399,
+      "sha256": "48547f374fe803fbcf7f1b9cd388db5c1445061b8dd7e17fed8f8cb2bde106a3"
+    },
+    "scripts/tests/test_legacy_broadcast_guard207.py": {
+      "bytes": 5178,
+      "sha256": "3e59de6cb31293e93b0564f8dcfcf4939c3d5f8e900bbf49e4a225211633f50f"
+    },
+    "scripts/tests/test_native_broadcast_coordinator207.py": {
+      "bytes": 26791,
+      "sha256": "3fc521cf537a9060e5020a2f6fbd11f53ba6b951b4acea6633e078424562c514"
+    },
+    "scripts/tests/test_native_broadcast_preview205.py": {
+      "bytes": 5088,
+      "sha256": "cd9abaaa0c855ad527c9ead724624c56eda5ad99ef14dfc4098b36ce9d0cd42b"
+    },
+    "scripts/tests/test_native_broadcast_setup205.py": {
+      "bytes": 7130,
+      "sha256": "a70ea1974bec76802cf99965ec0fbc495866bfd8b7916f26717a2692db94dae2"
+    },
+    "scripts/tests/test_native_broadcast_truth204.py": {
+      "bytes": 11884,
+      "sha256": "23508d23d30127229020b3802b80537e2019ace2cf2e7db87c7d164b6314ad58"
+    },
+    "scripts/tests/test_native_broadcast_validation205.py": {
+      "bytes": 6509,
+      "sha256": "4d4239d31137c5df29580189557a96a518d868d109acabe7b744f6d1a346dc5f"
+    },
+    "scripts/tests/test_native_connection_diagnostics.py": {
+      "bytes": 1821,
+      "sha256": "bac924953a25d5cc496122203a01c602b8060e3cb927ecbf8ad11b3f849a8b2b"
+    },
+    "scripts/tests/test_native_window_capture205.py": {
+      "bytes": 8534,
+      "sha256": "93b308e2528fee5a89813877a373d195248cf853f49f4f676903d7a0271c12f2"
+    },
+    "scripts/tests/test_private_broadcast_ipc207.py": {
+      "bytes": 7127,
+      "sha256": "636cca0670688cbdf5ae295f10ae14342a717d14f97a342d87f059f7400f869e"
+    },
+    "scripts/tests/test_secondary_control207.py": {
+      "bytes": 11752,
+      "sha256": "7747dfd58f319ba38ce2bf96cf8f250f76c85fc724cb6c65d4801f99e8f42004"
+    },
+    "scripts/tests/test_window_capture_pipe205.py": {
+      "bytes": 3445,
+      "sha256": "80653bcacdbf75d94c6c3cbf030f1792246454b9f0d67f0dd2af31ae9899cb59"
+    },
+    "scripts/verify_native_broadcast_offline.py": {
+      "bytes": 9767,
+      "sha256": "e33d21072d81c227d1123926266a61d40cd0dc02af831fc42fadcf49c21646eb"
+    },
+    "version.txt": {
+      "bytes": 10,
+      "sha256": "f3bd16a7eec97fedd9c7ab5e7b14001090027a350754dcfd20a3e65839e2f5a5"
+    }
+  },
+  "changed_paths": [
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "BroadcastStudioApp/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/src/version.js",
+    "MASTER_HISTORICAL_INDEX.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "NotebookLM_Records/artifact_history.md",
+    "SAVED_CHECKPOINT.md",
+    "backend/aibs_broadcast_daemon.py",
+    "backend/core/broadcast_relay.py",
+    "backend/core/broadcast_secondary.py",
+    "backend/core/game_capture_selection.py",
+    "backend/core/game_follow_capture.py",
+    "backend/core/game_selection_sampler.py",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_TASKS.md",
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.json",
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.82.md",
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.json",
+    "docs/audit/2026-10-30-complete/NATIVE_BROADCAST_INTEGRATION_v5.329.83.md",
+    "docs/audit/2026-10-30-complete/README.md",
+    "docs/audit/2026-10-30-complete/coverage.json",
+    "docs/audit/2026-10-30-complete/findings.json",
+    "docs/audit/2026-10-30-complete/recovery_gate.json",
+    "frontend/components/components/version.js",
+    "frontend/components/version.js",
+    "frontend/package-lock.json",
+    "frontend/package.json",
+    "frontend/public/version.json",
+    "frontend/src/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/version.js",
+    "frontend/version.js",
+    "native_studio/broadcast_control.py",
+    "native_studio/broadcast_ipc.py",
+    "native_studio/broadcast_secondary_control.py",
+    "native_studio/broadcast_service.py",
+    "native_studio/local_connection.py",
+    "native_studio/omni_broadcast_studio.py",
+    "package-lock.json",
+    "package.json",
+    "release.json",
+    "scripts/tests/test_broadcast_daemon_integrity.py",
+    "scripts/tests/test_broadcast_ipc_atomic207.py",
+    "scripts/tests/test_broadcast_relay206.py",
+    "scripts/tests/test_broadcast_secondary206.py",
+    "scripts/tests/test_game_capture_selection206.py",
+    "scripts/tests/test_game_follow_capture207.py",
+    "scripts/tests/test_game_selection_sampler207.py",
+    "scripts/tests/test_legacy_broadcast_guard207.py",
+    "scripts/tests/test_native_broadcast_coordinator207.py",
+    "scripts/tests/test_native_broadcast_setup205.py",
+    "scripts/tests/test_native_broadcast_truth204.py",
+    "scripts/tests/test_native_connection_diagnostics.py",
+    "scripts/tests/test_private_broadcast_ipc207.py",
+    "scripts/tests/test_secondary_control207.py",
+    "scripts/verify_native_broadcast_offline.py",
+    "version.txt"
+  ],
+  "patch": {
+    "path": "C:\\AI-BS\\backups\\windows_integration_v83_20261031_record207\\reviewed_staged207.patch",
+    "sha256": "d53610e41a27e0a56384d7f93c355f5ee2dc7ee40895d7d1f3c1897393ed85da"
+  },
+  "completed": [
+    "Automatic game / exact selected-window controls use one owned coordinator",
+    "User-profile physical IPC with protected current-user/SYSTEM ACL",
+    "Installed v5.329.83 and retargeted four existing shortcuts; all2256 package hashes match",
+    "Actual frozen local backend diagnostic exit0 ready; actual installed compiled control reads physical IPC",
+    "Earlier Fortnite Auto acquisition and public/local HLS bytes and decoded game frame verified",
+    "All nine ledger original byte prefixes preserved"
+  ],
+  "tests": {
+    "command": "python -B scripts/verify_native_broadcast_offline.py",
+    "actual_run_command": "python -B backups/record207_close_work/guarded_final83_207.py",
+    "runners_byte_identical": true,
+    "receipt": {
+      "groups": [
+        "scripts.tests.test_native_broadcast_truth204",
+        "scripts.tests.test_native_broadcast_validation205",
+        "scripts.tests.test_native_broadcast_setup205",
+        "scripts.tests.test_native_broadcast_preview205",
+        "scripts.tests.test_broadcast_service205",
+        "scripts.tests.test_native_broadcast_coordinator207",
+        "scripts.tests.test_private_broadcast_ipc207",
+        "scripts.tests.test_broadcast_ipc_atomic207",
+        "scripts.tests.test_game_capture_selection206",
+        "scripts.tests.test_game_selection_sampler207",
+        "scripts.tests.test_game_follow_capture207",
+        "scripts.tests.test_secondary_control207",
+        "scripts.tests.test_broadcast_secondary206",
+        "scripts.tests.test_broadcast_relay206",
+        "scripts.tests.test_broadcast_daemon_integrity",
+        "scripts.tests.test_broadcast_capture_inputs205",
+        "scripts.tests.test_window_capture_pipe205",
+        "scripts.tests.test_native_window_capture205",
+        "scripts.tests.test_legacy_broadcast_guard207",
+        "scripts.tests.test_native_connection_diagnostics"
+      ],
+      "tests": 304,
+      "failures": 0,
+      "errors": 0,
+      "guard_denials": [],
+      "stdlib_local_self_pipe_events": {
+        "socket.__new__": 24,
+        "socket.bind": 12,
+        "socket.connect": 12
+      },
+      "runner_error": null,
+      "passed": true,
+      "evidence": "C:\\AI-BS\\backups\\native_broadcast207_work\\guarded_native\\run_1793475030460448500",
+      "real_runtime_actions_authorized": false
+    },
+    "build_signing_fixtures": 23,
+    "typescript_no_emit": "PASS",
+    "version_mirrors_16": "PASS"
+  },
+  "installed_build": {
+    "exe": "C:\\AI-BS\\native_studio\\releases\\v5.329.83\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "exe_sha256": "5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52",
+    "file_version": "5.329.83.0",
+    "package_files": 2256,
+    "package_bytes": 552588185,
+    "all_package_bytes_match_stage": true
+  },
+  "frozen_backend_diagnostic": {
+    "argument": "--check-local-connection",
+    "normal_ui_launched": false,
+    "runtime_dispatch_action": "NONE",
+    "exit": 0,
+    "timed_out": false,
+    "new_diagnostic_files": 1,
+    "physical_path": "C:\\Users\\footb\\.aibs-private\\NativeDiagnostics",
+    "physical_path_matches": true,
+    "report": {
+      "available": true,
+      "stage": "ready",
+      "profilePresent": true,
+      "currentOwnerMatches": true,
+      "listenerPresent": true,
+      "servicePidMatches": true,
+      "serviceCreationMatches": true,
+      "serviceExeMatches": true,
+      "serviceOwnerMatches": true,
+      "frozen": true,
+      "networkRequestsSent": false,
+      "profileWritten": false,
+      "utc": "2026-10-31T19:33:46.861384+00:00"
+    },
+    "stderr_bytes": 0,
+    "quiet_exit": true
+  },
+  "compiled_control_read": {
+    "status": "VERIFIED_INSTALLED_COMPILED_CONTROL_READS_PHYSICAL_IPC",
+    "exe": "C:\\AI-BS\\native_studio\\releases\\v5.329.83\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "compiled_modules_from_installed_pyz": [
+      "native_studio.broadcast_ipc",
+      "native_studio.broadcast_secondary_control"
+    ],
+    "physical_status_path": "C:\\Users\\footb\\.aibs-private\\BroadcastIPC\\broadcast_secondary_status.json",
+    "physical_path_matches": true,
+    "private_owner_acl_validated": true,
+    "session_nonce_omitted": true,
+    "normal_ui_launched": false,
+    "before": {
+      "status": "running_unverified",
+      "active": true,
+      "controller_pid": 42344,
+      "encoder_pid": 10552,
+      "source_mode": "auto_game",
+      "capture_state": "holding",
+      "game_frame_verified": false,
+      "holding_reason": "NO_VERIFIED_GAME",
+      "frames_encoded": 2244,
+      "out_time_us": 74800000
+    },
+    "after": {
+      "status": "running_unverified",
+      "active": true,
+      "controller_pid": 42344,
+      "encoder_pid": 10552,
+      "source_mode": "auto_game",
+      "capture_state": "holding",
+      "game_frame_verified": false,
+      "holding_reason": "NO_VERIFIED_GAME",
+      "frames_encoded": 2275,
+      "out_time_us": 75833333
+    },
+    "advancing": true,
+    "cross_host_process_launch_tested": false,
+    "runtime_dispatch_action": "NONE"
+  },
+  "current_runtime": "42344/10552 Auto holding NO_VERIFIED_GAME; old46560/44780 was also holding before controlled migration; current game capture is not claimed",
+  "architectural_decisions": [
+    "Manual selected-window intent overrides automatic games",
+    "No verified game or unsupported full-screen sharing produces explicit holding without desktop fallback",
+    "Fixed720p30 H2644500kb/s; generated silent AAC, no microphone setup",
+    "Native-only release; no backend bundle or Firebase parity claim"
+  ],
+  "known_limits": [
+    "Whole-screen sharing held/unsupported; native video preview unavailable",
+    "No full GUI/tab/workflow or every-game certification; separate desktop-host launch not exercised",
+    "Current platform ingest and finalized archive remain separate from local sender status",
+    "Repository cross-user write ACL, Chroma recovery and broader full-system audit remain open",
+    "One unguarded legacy STOP test incident plus v82 diagnostic failure retained and accounted; no uninterrupted-stream claim",
+    "E/key custody unreadable: encrypted complete source/binary cloud backup remains blocked; C originals retained"
+  ],
+  "holds": {
+    "live_trading": "DISABLED",
+    "audio": "generated_silence",
+    "microphone": "NOT_CONFIGURED",
+    "outreach": "DISABLED"
+  },
+  "cloud_folder": "https://drive.google.com/drive/folders/1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "exact_next_step": "Open one game normally and observe automatic reacquisition, preserving manual selected-window priority. Configure audio/microphone later at user request; continue remaining audit without enabling trading."
+}

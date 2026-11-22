@@ -1,0 +1,23 @@
+{
+  "status": "verified_authenticated_Drive_raw_restore",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\31A_Worker_Window_Drain_Source_20261103.zip",
+  "bytes": 303780,
+  "sha256": "922cec67190d5cadedc51faa38a4605ca020c0aeb8df02348a116a036ee49023",
+  "members": 57,
+  "source_fix_tests_distinct": 67,
+  "actual_source_window_exit_code": 0,
+  "owned_jobs_live": 0,
+  "goal_complete": false,
+  "scope": "31A selected complete Creator source/tests/evidence increment; not full current project/art restore. No original family media, private dumps/WER, credentials or private Master/Git data.",
+  "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P31_worker_window.json",
+  "space_free_bytes": {
+    "C": 63129096192,
+    "D": 88278626304,
+    "E": 146813599744
+  },
+  "at": "2026-11-03T13:38:13.629762+00:00",
+  "Drive_file_id": "1TcPV1zGXkd2xGFi-jL-Ax3Rr5sX1FhDd",
+  "Drive_url": "https://drive.google.com/file/d/1TcPV1zGXkd2xGFi-jL-Ax3Rr5sX1FhDd/view?usp=drivesdk",
+  "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "every_member_SHA256_size_CRC_and_exact_set_verified": true
+}

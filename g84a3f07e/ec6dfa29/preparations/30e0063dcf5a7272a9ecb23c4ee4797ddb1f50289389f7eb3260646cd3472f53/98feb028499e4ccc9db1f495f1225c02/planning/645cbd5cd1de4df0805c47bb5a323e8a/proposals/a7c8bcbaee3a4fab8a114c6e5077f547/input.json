@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "98feb028499e4ccc9db1f495f1225c02",
+  "plan_id": "645cbd5cd1de4df0805c47bb5a323e8a",
+  "snapshot_sha256": "6ea750532ebc1f17e9fbfd773231ff182cf8d881e23524cd0e95fa8d603a4be1",
+  "review_digest": "17d423fae8a07dd8286ead327ae11402c7fd96ce7b246d189b368be07b8a80d5",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "a7c8bcbaee3a4fab8a114c6e5077f547",
+  "reviewed_plan_sha256": "e21bd5d32490f59e5748594e2fab0a79b6dfbe47d1417c6187489491e157ab57",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33764,
+    "created": 1794666055.1427324
+  },
+  "created_at_utc": "2026-11-14T14:21:04.778398+00:00",
+  "entry_sha256": "eb2c8d43b5e622573ca1dd9d5948782220acd3fcfcdda902e541a93b2427e7f4"
+}

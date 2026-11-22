@@ -1,53 +1,84 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{id: string, name: string, icon: string, description?: string, models: string[], requires_key: boolean, key_hint?: string, masked_key?: string, saved_model?: string, is_configured?: boolean, credential_source?: string}} Provider */
+import { useState, useEffect, useRef } from 'react';
+import { chatAuthHeaders } from '/src/utils/chatAuth.js';
 
+/** @param {{isOpen: boolean, onClose: () => void, backendUrl?: string, onProviderChange?: (provider: string, model: string) => void}} props */
 export default function AIProviderSettingsModal({
   isOpen,
   onClose,
   backendUrl = 'http://127.0.0.1:8000',
   onProviderChange
 }) {
-  const [providers, setProviders] = useState([]);
+  const [providers, setProviders] = useState(/** @type {Provider[]} */ ([]));
   const [activeProvider, setActiveProvider] = useState('local');
   const [selectedProviderTab, setSelectedProviderTab] = useState('local');
-  const [keysState, setKeysState] = useState({});
-  const [modelsState, setModelsState] = useState({});
-  const [showKeyMap, setShowKeyMap] = useState({});
-  const [testingStatus, setTestingStatus] = useState({}); // { [id]: { status: 'idle'|'testing'|'valid'|'error', msg: '' } }
+  const [keysState, setKeysState] = useState(/** @type {Record<string, string>} */ ({}));
+  const [modelsState, setModelsState] = useState(/** @type {Record<string, string>} */ ({}));
+  const [showKeyMap, setShowKeyMap] = useState(/** @type {Record<string, boolean>} */ ({}));
+  const [testingStatus, setTestingStatus] = useState(/** @type {Record<string, {status: string, msg: string}>} */ ({})); // { [id]: { status: 'idle'|'testing'|'valid'|'error', msg: '' } }
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+  const [loadError, setLoadError] = useState('');
+  const validationSessionRef = useRef(0);
+  const validationRequestsRef = useRef(/** @type {Record<string, {provider: string, key: string, model: string, session: number}>} */ ({}));
 
   // Fetch current provider configuration
   useEffect(() => {
+    const session = ++validationSessionRef.current;
+    validationRequestsRef.current = {};
+    setTestingStatus({});
     if (!isOpen) return;
+    let cancelled = false;
+    const isCurrentSession = () => !cancelled && validationSessionRef.current === session;
 
     const fetchConfig = async () => {
+      setLoadError('');
       try {
-        const res = await fetch(`${backendUrl}/api/ai/providers`);
+        const headers = await chatAuthHeaders();
+        if (!isCurrentSession()) return;
+        const res = await fetch(`${backendUrl}/api/ai/providers`, {
+          headers
+        });
+        if (!isCurrentSession()) return;
         if (res.ok) {
           const data = await res.json();
+          if (!isCurrentSession()) return;
           setProviders(data.providers || []);
           setActiveProvider(data.active_provider || 'local');
           setSelectedProviderTab(data.active_provider || 'local');
 
           // Initialize keys and models from local storage or server
-          const initialKeys = {};
-          const initialModels = {};
+          /** @type {Record<string, string>} */
+const initialKeys = {};
+          /** @type {Record<string, string>} */
+const initialModels = {};
           const localKeys = JSON.parse(localStorage.getItem('aibs_custom_ai_keys') || '{}');
 
-          (data.providers || []).forEach(p => {
-            initialKeys[p.id] = localKeys[p.id] || p.masked_key || '';
+          (/** @type {Provider[]} */ (data.providers || [])).forEach(p => {
+            initialKeys[p.id] = p.id === 'openai' ? '' : (localKeys[p.id] || p.masked_key || '');
             initialModels[p.id] = p.saved_model || (p.models && p.models[0]) || '';
           });
 
+          validationRequestsRef.current = {};
+          setTestingStatus({});
           setKeysState(initialKeys);
           setModelsState(initialModels);
+        } else {
+          setLoadError('Sign in to AI-BS as an administrator to manage AI providers.');
         }
       } catch (err) {
-        console.error('Failed to fetch AI provider config:', err);
+        if (isCurrentSession()) {
+          setLoadError('Unable to load AI providers. Sign in to AI-BS as an administrator and try again.');
+        }
       }
     };
 
     fetchConfig();
+    return () => {
+      cancelled = true;
+      ++validationSessionRef.current;
+      validationRequestsRef.current = {};
+    };
   }, [isOpen, backendUrl]);
 
   if (!isOpen) return null;
@@ -61,52 +92,69 @@ export default function AIProviderSettingsModal({
     requires_key: false
   };
 
-  const handleKeyChange = (providerId, val) => {
+  /** @param {string} providerId @param {string} val */
+const handleKeyChange = (providerId, val) => {
+    delete validationRequestsRef.current[providerId];
     setKeysState(prev => ({ ...prev, [providerId]: val }));
     // Reset test status if key changes
     setTestingStatus(prev => ({ ...prev, [providerId]: { status: 'idle', msg: '' } }));
   };
 
-  const handleModelChange = (providerId, val) => {
+  /** @param {string} providerId @param {string} val */
+const handleModelChange = (providerId, val) => {
+    delete validationRequestsRef.current[providerId];
     setModelsState(prev => ({ ...prev, [providerId]: val }));
+    setTestingStatus(prev => ({ ...prev, [providerId]: { status: 'idle', msg: '' } }));
   };
 
-  const toggleShowKey = (providerId) => {
+  /** @param {string} providerId */
+const toggleShowKey = (providerId) => {
     setShowKeyMap(prev => ({ ...prev, [providerId]: !prev[providerId] }));
   };
 
   // Test live connection with provider
-  const handleTestConnection = async (providerId) => {
-    setTestingStatus(prev => ({ ...prev, [providerId]: { status: 'testing', msg: 'Testing connection...' } }));
+  /** @param {string} providerId */
+const handleTestConnection = async (providerId) => {
+    // Each receipt belongs to one provider/key/model snapshot and modal opening.
+    const snapshot = {
+      provider: providerId,
+      key: keysState[providerId] || '',
+      model: modelsState[providerId] || '',
+      session: validationSessionRef.current
+    };
+    validationRequestsRef.current[providerId] = snapshot;
+    const isCurrentRequest = () => validationSessionRef.current === snapshot.session
+      && validationRequestsRef.current[providerId] === snapshot;
+    /** @param {string} status @param {string} msg */
+    const publishStatus = (status, msg) => setTestingStatus(prev => isCurrentRequest()
+      ? { ...prev, [providerId]: { status, msg } } : prev);
+    publishStatus('testing', 'Testing connection...');
     try {
-      const apiKey = keysState[providerId] || '';
+      const enteredKey = snapshot.key;
+      const apiKey = enteredKey.startsWith('***') || enteredKey.includes('...') ? '' : enteredKey;
+      const headers = await chatAuthHeaders({ 'Content-Type': 'application/json' });
+      if (!isCurrentRequest()) return;
       const res = await fetch(`${backendUrl}/api/ai/validate-key`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           provider: providerId,
           api_key: apiKey,
-          model: modelsState[providerId]
+          model: snapshot.model
         })
       });
 
       const data = await res.json();
+      if (!isCurrentRequest()) return;
       if (res.ok && data.status === 'valid') {
-        setTestingStatus(prev => ({
-          ...prev,
-          [providerId]: { status: 'valid', msg: data.message || 'Authenticated successfully!' }
-        }));
+        const message = data.message || 'Connection check passed.';
+        publishStatus('valid', data.generation_verified === false
+          ? `${message} Text generation has not been verified by this check.` : message);
       } else {
-        setTestingStatus(prev => ({
-          ...prev,
-          [providerId]: { status: 'error', msg: data.message || 'Validation failed. Check API key.' }
-        }));
+        publishStatus('error', data.message || data.detail || 'Validation failed. Check API key.');
       }
     } catch (err) {
-      setTestingStatus(prev => ({
-        ...prev,
-        [providerId]: { status: 'error', msg: 'Network error connecting to validation endpoint.' }
-      }));
+      publishStatus('error', 'Network error connecting to validation endpoint.');
     }
   };
 
@@ -115,10 +163,11 @@ export default function AIProviderSettingsModal({
     setSaving(true);
     setSaveMessage('');
     try {
-      // Save unmasked keys to browser localStorage
-      const cleanKeys = {};
+      // Keep the OpenAI connection on the server, outside browser storage.
+      /** @type {Record<string, string>} */
+const cleanKeys = {};
       Object.keys(keysState).forEach(k => {
-        if (keysState[k] && !keysState[k].includes('...')) {
+        if (k !== 'openai' && keysState[k] && !keysState[k].startsWith('***') && !keysState[k].includes('...')) {
           cleanKeys[k] = keysState[k];
         }
       });
@@ -126,17 +175,21 @@ export default function AIProviderSettingsModal({
       localStorage.setItem('aibs_active_ai_provider', activeProvider);
 
       // Save to backend configuration
-      const providerPayload = {};
+/** @type {Record<string, {api_key?: string, model: string}>} */
+const providerPayload = {};
       providers.forEach(p => {
         providerPayload[p.id] = {
-          api_key: keysState[p.id] || '',
           model: modelsState[p.id] || (p.models && p.models[0]) || ''
         };
+        const enteredKey = keysState[p.id] || '';
+        if (enteredKey && !enteredKey.startsWith('***') && !enteredKey.includes('...')) {
+          providerPayload[p.id].api_key = enteredKey;
+        }
       });
 
       const res = await fetch(`${backendUrl}/api/ai/config`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await chatAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           active_provider: activeProvider,
           providers: providerPayload
@@ -219,6 +272,7 @@ export default function AIProviderSettingsModal({
         </div>
 
         {/* Body: Split Sidebar & Content */}
+        {loadError && <div role="alert" style={{ padding: '12px 24px', color: '#f85149' }}>{loadError}</div>}
         <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
           
           {/* Provider Tabs Sidebar */}
@@ -241,7 +295,7 @@ export default function AIProviderSettingsModal({
             {providers.map(p => {
               const isSelected = selectedProviderTab === p.id;
               const isActive = activeProvider === p.id;
-              const hasKey = Boolean(keysState[p.id]) || p.id === 'local';
+              const hasKey = Boolean(keysState[p.id]) || p.is_configured || p.id === 'local';
 
               return (
                 <button
@@ -361,7 +415,7 @@ export default function AIProviderSettingsModal({
                       type={showKeyMap[currentProvider.id] ? 'text' : 'password'}
                       value={keysState[currentProvider.id] || ''}
                       onChange={(e) => handleKeyChange(currentProvider.id, e.target.value)}
-                      placeholder={`Enter your ${currentProvider.name} API Key`}
+                      placeholder={currentProvider.id === 'openai' && currentProvider.is_configured ? 'Leave blank to use the configured connection' : `Enter your ${currentProvider.name} API Key`}
                       style={{
                         width: '100%',
                         padding: '8px 40px 8px 12px',
@@ -395,7 +449,7 @@ export default function AIProviderSettingsModal({
                   <button
                     type="button"
                     onClick={() => handleTestConnection(currentProvider.id)}
-                    disabled={testingStatus[currentProvider.id]?.status === 'testing' || !keysState[currentProvider.id]}
+                    disabled={testingStatus[currentProvider.id]?.status === 'testing' || (!keysState[currentProvider.id] && !(currentProvider.id === 'openai' && currentProvider.is_configured))}
                     style={{
                       padding: '8px 16px',
                       backgroundColor: '#21262d',
@@ -408,7 +462,7 @@ export default function AIProviderSettingsModal({
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    {testingStatus[currentProvider.id]?.status === 'testing' ? 'Testing...' : '🧪 Test Key'}
+                    {testingStatus[currentProvider.id]?.status === 'testing' ? 'Testing...' : '🧪 Test Connection'}
                   </button>
                 </div>
 
@@ -425,7 +479,11 @@ export default function AIProviderSettingsModal({
                 )}
 
                 <div style={{ marginTop: '12px', fontSize: '11px', color: '#8b949e', lineHeight: '1.4' }}>
-                  🔒 <strong>Privacy Guarantee:</strong> Your API keys are encrypted client-side in your browser session and transmitted only via direct HTTPS requests to the respective provider.
+                  {currentProvider.id === 'openai' && currentProvider.is_configured ? (
+                    <>🔒 OpenAI is configured on your server. Leave the key field blank to use that connection.</>
+                  ) : (
+                    <>Keys entered here are sent to your AI-BS backend for provider requests. OpenAI keys are not saved in browser storage.</>
+                  )}
                 </div>
               </div>
             ) : (
@@ -453,7 +511,7 @@ export default function AIProviderSettingsModal({
                   🧪 Test Local Ollama
                 </button>
                 {testingStatus['local']?.status === 'valid' && (
-                  <span style={{ marginLeft: '10px', fontSize: '12px', color: '#3fb950' }}>🟢 Local Ollama Online!</span>
+                  <span style={{ marginLeft: '10px', fontSize: '12px', color: '#3fb950' }}>🟢 {testingStatus['local'].msg}</span>
                 )}
               </div>
             )}

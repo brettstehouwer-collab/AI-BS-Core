@@ -1,0 +1,124 @@
+{
+  "kind": "project_preparation",
+  "request_id": "a23ea5cff4f34c43af16d668d67824fe",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "a23ea5cff4f34c43af16d668d67824fe",
+    "repository_id": "ai-bs",
+    "objective": "Explain how to change the returned value to42 and keep the existing checks.",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification"
+      },
+      {
+        "relative_path": "src/App.jsx",
+        "role": "editable"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "profile": "python_unittest",
+        "targets": [
+          "tests.test_app"
+        ]
+      },
+      {
+        "check_id": "frontend",
+        "profile": "npm_script",
+        "targets": [
+          "test"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "9bae3b5145f4f83a3a9d06b9ad170b1f7238b5d38ee37268ae555e1172c61eef",
+  "repository_policy_sha256": "669777c3d8a0255dc24c5e10cddc8a6aa7f124300d3947ac72f0859b85bf761c",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "f865f603b1ca2bd5052e4675e1be7d17e9d7ea33",
+    "files": [
+      {
+        "relative_path": "src/app.py",
+        "role": "editable",
+        "length": 10,
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886"
+      },
+      {
+        "relative_path": "tests/test_app.py",
+        "role": "verification",
+        "length": 50,
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8"
+      },
+      {
+        "relative_path": "src/App.jsx",
+        "role": "editable",
+        "length": 57,
+        "sha256": "549272e92a0d5e4e47f4a43f78f548cc0fb644f96ff21de05bf0e81c5efeaec2"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency",
+        "length": 37,
+        "sha256": "0d0ab98503da8f39fbef4ba5d6321a4dc0c39307cd2c5abfa97f05e42d6d2914"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency",
+        "length": 21,
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265"
+      }
+    ],
+    "byte_count": 175,
+    "captured_at_utc": "2026-11-14T14:20:49.333094+00:00",
+    "snapshot_sha256": "77690c1ff6d97aa4efeb7d5cca258a6bdc915c7a485b317ec1b9454c891891ed"
+  },
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_app"
+      ]
+    },
+    {
+      "check_id": "frontend",
+      "argv": [
+        "npm",
+        "run",
+        "test"
+      ]
+    }
+  ],
+  "review_digest": "0fc63f96b7730329fafece69f5483996cb3d4e13017a1eab3b392cd0ad9d2446",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 40612,
+    "created": 1794666047.5348592
+  },
+  "created_at_utc": "2026-11-14T14:20:49.333610+00:00",
+  "entry_sha256": "85f789671188e92807c6544520af05d8039c30234396c86c6d23746cb0a7102d"
+}

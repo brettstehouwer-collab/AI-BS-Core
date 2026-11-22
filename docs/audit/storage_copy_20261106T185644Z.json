@@ -1,0 +1,43 @@
+{
+  "started_utc": "20261106T185644Z",
+  "mode": "copy_only_originals_preserved",
+  "index_settings": "C:\\AI-BS\\.vscode\\settings.json",
+  "batches": [
+    {
+      "source": "C:\\AI-BS\\backups\\firebase_release_5_329_1_20261023",
+      "destination": "F:\\AI-BS_DATA\\archives\\backups\\firebase_release_5_329_1_20261023",
+      "files": 2348,
+      "bytes": 4621399265,
+      "status": "SHA256_VERIFIED",
+      "original_preserved": true,
+      "directories_verified": 123
+    },
+    {
+      "source": "C:\\AI-BS\\backups\\firebase_release_5_329_3_20261023",
+      "destination": "F:\\AI-BS_DATA\\archives\\backups\\firebase_release_5_329_3_20261023",
+      "files": 2348,
+      "bytes": 4621399780,
+      "status": "SHA256_VERIFIED",
+      "original_preserved": true,
+      "directories_verified": 123
+    },
+    {
+      "source": "C:\\AI-BS\\backups\\firebase_release_5_329_6_20261023",
+      "destination": "F:\\AI-BS_DATA\\archives\\backups\\firebase_release_5_329_6_20261023",
+      "files": 2349,
+      "bytes": 4621553797,
+      "status": "SHA256_VERIFIED",
+      "original_preserved": true,
+      "directories_verified": 124
+    }
+  ],
+  "freed_source_bytes": 0,
+  "live_trading": "not modified; no services or order dispatch started",
+  "completed_utc": "2026-11-06T18:59:49.699353+00:00",
+  "checks": {
+    "settings_jsonc_valid": true,
+    "previous_go_settings_preserved": true,
+    "dispatch_enabled": false,
+    "directory_sets_match": true
+  }
+}

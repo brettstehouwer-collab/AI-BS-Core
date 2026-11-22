@@ -1,43 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { getApiBase } from '../config/api';
 
-export default function SyndicationTab({ backendUrl, currentUser }) {
-  const apiHost = backendUrl || getApiBase() || 'http://127.0.0.1:8000';
+/** @param {{"backendUrl": string, "currentUser": import('firebase/auth').User | null}} props */
+export default function SyndicationTab({ backendUrl }) {
+  (backendUrl || getApiBase() || 'http://127.0.0.1:8000');
   
   // Broadcaster State
   const [siteName, setSiteName] = useState('Stehouwer Publishing L.L.C.');
   const [targetUrl, setTargetUrl] = useState('https://stehouwer-publishing.com');
   const [feedUrl, setFeedUrl] = useState('https://stehouwer-publishing.com/library');
   const [customMsg, setCustomMsg] = useState('Stehouwer-Publishing.com');
-  const [selectedBroadcastTier, setSelectedBroadcastTier] = useState('all');
+  const [selectedBroadcastTier] = useState('all');
   
   // Campaign Multiplexer Mode
   const [campaignMode, setCampaignMode] = useState('single'); // 'single', 'footprint', 'music', 'literary'
   
   // Social & Community Channels Toggles
-  const [channels, setChannels] = useState({
+  const [channels, setChannels] = useState(/** @type {Record<string, boolean>} */ ({
     discord: true,
     telegram: true,
     bluesky: true,
     mastodon: true,
     sitemap: true
-  });
+  }));
 
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const [broadcastResults, setBroadcastResults] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [copiedId, setCopiedId] = useState(null);
+  const [broadcastResults, setBroadcastResults] = useState(/** @type {{"results": Array<{"category": string, "target": string, "type": string, "status": string, "details"?: string, "latency_ms"?: number}>, "successful_targets": string, "total_targets": number, "formatted_time": string} | null} */ (null));
+  const [history, setHistory] = useState(/** @type {Array<{"formatted_time": string, "target_url": string, "custom_message": string, "site_name": string, "successful_targets": number, "total_targets": number, "results": Array<{"target": string}>}>} */ ([]));
+  const [copiedId, setCopiedId] = useState(/** @type {string | null} */ (null));
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [resultsFilter, setResultsFilter] = useState('all');
-  const [nodeSearchQuery, setNodeSearchQuery] = useState('');
+  const [nodeSearchQuery] = useState('');
   
   // Node Health State
-  const [matrixHealth, setMatrixHealth] = useState(null);
+  const [, setMatrixHealth] = useState(null);
   const [isAuditing, setIsAuditing] = useState(false);
   const [smartSkipDeadNodes, setSmartSkipDeadNodes] = useState(true);
 
   // Campaign Multiplexer Presets
-  const CAMPAIGN_PRESETS = {
+  /** @type {Record<string, {"name": string, "description": string, "urls": Array<string>}>} */
+const CAMPAIGN_PRESETS = {
     single: {
       name: '🎯 Single Target URL',
       description: 'Broadcast a single custom destination URL across the matrix.',
@@ -76,7 +78,7 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
   };
 
   // 37 Node Protocol & Channel Tiers
-  const PROTOCOL_TIERS = [
+  ([
     { id: 'all', label: 'All 37 Channels & Nodes', count: 37, color: '#38bdf8' },
     { id: 'social', label: 'Community & Social', count: 4, color: '#00f0ff' },
     { id: 'indexnow', label: 'IndexNow Fleet', count: 7, color: '#10b981' },
@@ -86,7 +88,7 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
     { id: 'archival', label: 'Archival Gateways', count: 2, color: '#facc15' },
     { id: 'aggregator', label: 'Aggregator Gateways', count: 5, color: '#6366f1' },
     { id: 'local', label: 'Local Sitemap / RSS', count: 1, color: '#22c55e' }
-  ];
+  ]);
 
   // Ad Copy Presets
   const adPresets = [
@@ -140,7 +142,8 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
 
   const [activeHost, setActiveHost] = useState(backendUrl || 'http://127.0.0.1:8080');
 
-  const fetchWithFallback = async (endpoint, options = {}) => {
+  /** @param {string} endpoint */
+const fetchWithFallback = async ( endpoint, options = {}) => {
     // 1. Try active host first
     try {
       const res = await fetch(`${activeHost}${endpoint}`, options);
@@ -204,7 +207,7 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
         alert('Failed to execute matrix audit.');
       }
     } catch (e) {
-      alert(`Audit error: ${e.message}`);
+      alert(`Audit error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsAuditing(false);
     }
@@ -249,19 +252,21 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
         alert('Broadcast failed or backend is offline. Verify FastAPI is running on Port 8080.');
       }
     } catch (e) {
-      alert(`Network error: ${e.message}`);
+      alert(`Network error: ${(e instanceof Error ? e.message : String(e))}`);
     } finally {
       setIsBroadcasting(false);
     }
   };
 
-  const copyToClipboard = (text, id) => {
+  /** @param {string} text @param {typeof copiedId} id */
+const copyToClipboard = ( text,  id) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const toggleChannel = (key) => {
+  /** @param {string} key */
+const toggleChannel = ( key) => {
     setChannels(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -382,7 +387,7 @@ export default function SyndicationTab({ backendUrl, currentUser }) {
               src="https://recdebut.com/wp-content/uploads/2025/08/Screenshot__8_-removebg-preview.png" 
               alt="RD" 
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              onError={(e) => { e.target.parentNode.innerHTML = '<span style="font-size:22px">🏀</span>'; }}
+              onError={(e) => { if (e.currentTarget.parentElement) e.currentTarget.parentElement.textContent = '🏀'; }}
             />
           </div>
           <div>

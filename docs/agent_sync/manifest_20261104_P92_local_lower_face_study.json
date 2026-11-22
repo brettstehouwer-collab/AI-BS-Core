@@ -1,0 +1,64 @@
+{
+  "at": "2026-11-04T19:04:50.716865+00:00",
+  "status": "verified_private_v28_lower_face_study_not_approved",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P92\\AdamLowerFaceStudy\\adam-character-v28-head-shape-study.blend",
+  "source": "E:\\AI_BS_Resources\\FirstBoot\\P92\\AdamLowerFaceStudy\\adam-character-v28-head-shape-candidate.glb",
+  "geometry": {
+    "status": "passed_separate_v28_geometry_preservation_checks",
+    "source_sha256": "df934816362b3ce612df3485059197c54f91730532a1a98a6fc1ffc918fc2029",
+    "changed_vertices": 5317,
+    "maximum_delta_m": 0.00476831307189032,
+    "minimum_triangle_area_ratio": 0.8047481876824408,
+    "minimum_normal_dot": 0.9526030994165922,
+    "minimum_area_m2": 1.4407746941096805e-10,
+    "likeness_approved": false,
+    "native_export_or_render_verified": false,
+    "installed_model_changed": false,
+    "master_sha256": "6f24d584dfda121fc45c5b84a77f4a622ef29ecab1a08ef2317a0a06afb5e491",
+    "contracts": {
+      "topology": "ec95c798816b90b4ed7b7633dc17cc126c4360f112cd60dce1db0495ee50cfe5",
+      "UV": "0943cacc847d70afa0056617cb1216a80fdac16f2af070d2e254933b4d71b02a",
+      "colors": "459019fee7ada837feacec6d6c9f93a12229edd69104499f7b899d33f0692d0d",
+      "weights": "f63e80d8f55433bf2af03f9a3b14f54b54aba2d3aa86f484d53a7529e79c3418",
+      "binds": "0554467b32516504802d3e4ddd2bbb1bfe0fc1dcb2cf64675c493c430d222872",
+      "actions": "aaaf04233ffb34a15ea55dd9cc4d9dd8b776d272d17881b5da4032f88b03da1e",
+      "images": [
+        [
+          "authored-hair-albedo-v26.png",
+          "2776f7e9ff48403a605df95128555a2c25d05f6a6a7d82d83665696ddee7e31d"
+        ],
+        [
+          "authored-head-albedo-v24c.png",
+          "01c52db42df0f8b2b41859fd70247b50ec969f5cc3d674d63d9f886df4a3f9b9"
+        ],
+        [
+          "authored-shirt-print.png",
+          "3e3ca8b112f38ac6fc51dac75da62ac50ed1fb581bf14e611fe5a1f8336625a4"
+        ]
+      ]
+    },
+    "topology_UV_colors_weights_binds_actions_images_exact": true,
+    "neck_eyes_hair_clothes_right_band_unchanged": true
+  },
+  "native_evidence_root": "E:\\T92",
+  "all_four_native_clips_passed": true,
+  "both_routes_new_process_reload_passed": true,
+  "likeness_approved": false,
+  "visual_review": "Fuller lower face and narrower nose/mouth are visible. Cheek transitions remain pronounced; not accepted as naturalistic or closer likeness. Source/store reference has partly closed eyes and unspecified age; no neutral-eye/age inference. Existing neck defect/hair-cap/clothing limitations unchanged.",
+  "preserved": "Sourcev27/v26, original family references, Studio107, SDKs and actual user saves retained. Topology/UV/color/weights/binds/actions/ownedimages exact.",
+  "failures_retained": [
+    {
+      "operation": "read-only material bounds inspection",
+      "error": "min() arg is an empty sequence for unused material slot",
+      "resolution": "Skip empty unused material slots; no model mutation"
+    },
+    {
+      "operation": "first GLB export",
+      "error": "Missing authored-shirt-print.png in separate project folder",
+      "resolution": "Copied all three exact parent-owned PNGs and verified SHA before second export passed"
+    }
+  ],
+  "backup_status": "Local masters and reports preserved. No P92cloud upload attempted;90Aart upload remains held after automatic-review rejection pending explicit authorization. Latest verified software checkpoint91A excludes personal assets.",
+  "goal_complete": false,
+  "next_step": "Await optional user comparison feedback while retaining both studies. Next address hair silhouette/surface and coherent cheek transitions in another separate protected study; do not repeat stopped P73neck recipe. Full opening still requires approved likeness, checked captions, human8-12minute pacing/current1080p60measurement, final package matrix and verified final backup."
+}

@@ -1,0 +1,51 @@
+{
+  "observed_utc": "2026-10-25T22:24:41.3183544Z",
+  "tasks": [
+    {
+      "name": "Stehouwer-Publishing-Reviewed-Static-Origin",
+      "state": "Running",
+      "principal": "footb",
+      "logon_type": "Interactive",
+      "run_level": "Limited",
+      "triggers": [
+        {
+          "type": "MSFT_TaskLogonTrigger",
+          "enabled": true,
+          "user": "AI-BS\\footb"
+        }
+      ],
+      "actions": [
+        {
+          "execute": "C:\\Users\\footb\\AppData\\Local\\Microsoft\\WinGet\\Packages\\nginxinc.nginx_Microsoft.Winget.Source_8wekyb3d8bbwe\\nginx-1.31.3\\nginx.exe",
+          "arguments": "-p \"C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/\" -c \"C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf\"",
+          "working_directory": "C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z"
+        }
+      ],
+      "last_run_utc": "2026-10-25T22:13:08.0000000Z",
+      "last_result": 267009
+    },
+    {
+      "name": "AI-BS-Publishing-Cloudflare-Tunnel",
+      "state": "Running",
+      "principal": "footb",
+      "logon_type": "Interactive",
+      "run_level": "Highest",
+      "triggers": [
+        {
+          "type": "MSFT_TaskLogonTrigger",
+          "enabled": true,
+          "user": null
+        }
+      ],
+      "actions": [
+        {
+          "execute": "C:\\Program Files (x86)\\cloudflared\\cloudflared.exe",
+          "arguments": "tunnel --config \"C:\\Users\\footb\\.cloudflared\\config.yml\" run d1acbd25-06c3-4be0-a7f4-ae3943263aed",
+          "working_directory": null
+        }
+      ],
+      "last_run_utc": "2026-10-25T22:13:08.0000000Z",
+      "last_result": 267009
+    }
+  ]
+}

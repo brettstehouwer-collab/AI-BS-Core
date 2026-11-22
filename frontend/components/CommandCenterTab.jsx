@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAppStore } from './useAppStore';
 import DraggableGridWorkspace from './DraggableGridWorkspace.jsx';
 import DroppableContainer from './dnd/DroppableContainer.jsx';
@@ -29,6 +29,7 @@ const STATUS_STYLES = {
 };
 
 // Friendly display names for each daemon key
+/** @type {Record<string,{icon:string,name:string,desc:string}>} */
 const DAEMON_LABELS = {
   infinite_learning_loop: { icon: '♾️', name: 'Infinite Learning Loop', desc: 'Autonomous heuristic deduction & transcript synthesis daemon' },
   trainer_daemon: { icon: '📼', name: 'Trainer Daemon',  desc: 'Tails agent transcripts → structured JSONL logs' },
@@ -36,12 +37,13 @@ const DAEMON_LABELS = {
   chroma_daemon:  { icon: '🗄️', name: 'ChromaDB Server', desc: 'Serves Stehouwer Vector Memory on port 8001' },
 };
 
+/** @param {{backendUrl?: string}} props */
 function DaemonSupervisor({ backendUrl }) {
-  const [daemons, setDaemons]       = useState({});
+  const [daemons, setDaemons]       = useState(/** @type {Record<string,{running:boolean,pid?:number,restart_count?:number}>} */ ({}));
   const [polling, setPolling]       = useState(true);
-  const [restarting, setRestarting] = useState({});
-  const [lastFetch, setLastFetch]   = useState(null);
-  const [fetchError, setFetchError] = useState(null);
+  const [restarting, setRestarting] = useState(/** @type {Record<string,boolean>} */ ({}));
+  const [lastFetch, setLastFetch]   = useState(/** @type {Date|null} */ (null));
+  const [fetchError, setFetchError] = useState(/** @type {string|null} */ (null));
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -54,7 +56,7 @@ function DaemonSupervisor({ backendUrl }) {
       setLastFetch(new Date());
       setFetchError(null);
     } catch (err) {
-      setFetchError(err.message);
+      setFetchError(errorMessage(err));
     }
   }, [backendUrl]);
 
@@ -66,7 +68,7 @@ function DaemonSupervisor({ backendUrl }) {
     return () => clearInterval(id);
   }, [fetchStatus, polling]);
 
-  const handleRestart = async (name) => {
+  const handleRestart = async (/** @type {string} */ name) => {
     setRestarting(prev => ({ ...prev, [name]: true }));
     try {
       const res = await fetch(`${backendUrl}/api/daemons/${name}/restart`, {
@@ -77,7 +79,7 @@ function DaemonSupervisor({ backendUrl }) {
       // Give the backend a moment then re-poll
       setTimeout(fetchStatus, 1500);
     } catch (err) {
-      alert(`Restart failed for ${name}: ${err.message}`);
+      alert(`Restart failed for ${name}: ${errorMessage(err)}`);
     } finally {
       setRestarting(prev => ({ ...prev, [name]: false }));
     }
@@ -154,7 +156,7 @@ function DaemonSupervisor({ backendUrl }) {
                   {info.pid && (
                     <span className="daemon-pid">PID {info.pid}</span>
                   )}
-                  {info.restart_count > 0 && (
+                  {(info.restart_count ?? 0) > 0 && (
                     <span className="daemon-restarts" title="Auto-restart count">
                       ↺ {info.restart_count}
                     </span>
@@ -222,6 +224,7 @@ const ORCHESTRATOR_COMMANDS = [
   },
 ];
 
+/** @param {{backendUrl?: string, workspaceMode?: string, onToggleWorkspaceMode: () => void, onNavigateTab?: (tab: string) => void, onOpenGuide?: () => void, onStartTour?: () => void, currentUser?: import("firebase/auth").User | null}} props */
 export default function CommandCenterTab({ 
   backendUrl: propBackendUrl,
   workspaceMode = 'simple',
@@ -275,7 +278,7 @@ export default function CommandCenterTab({
     );
   }
 
-  const handleLaunchAgent = async (agentType, extraArgs = '') => {
+  const handleLaunchAgent = async (/** @type {string} */ agentType, extraArgs = '') => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/agents/launch`, {
         method: 'POST',
@@ -287,11 +290,11 @@ export default function CommandCenterTab({
         setActiveAgents(prev => [...prev.filter(a => a.agent !== agentType), { agent: agentType, pid: data.pid, is_running: true }]);
       }
     } catch (err) {
-      alert(`Failed to launch agent: ${err.message}`);
+      alert(`Failed to launch agent: ${errorMessage(err)}`);
     }
   };
 
-  const handleKillAgent = async (agentType) => {
+  const handleKillAgent = async (/** @type {string} */ agentType) => {
     try {
       await fetch(`${BACKEND_URL}/api/agents/kill`, {
         method: 'POST',
@@ -300,7 +303,7 @@ export default function CommandCenterTab({
       });
       setActiveAgents(prev => prev.map(a => a.agent === agentType ? { ...a, is_running: false } : a));
     } catch (err) {
-      alert(`Failed to kill agent: ${err.message}`);
+      alert(`Failed to kill agent: ${errorMessage(err)}`);
     }
   };
 
@@ -318,12 +321,12 @@ export default function CommandCenterTab({
       setPullingStatus(prev => ({ ...prev, [model]: { status: data.status || 'Complete', progress: 100, log: data.message || 'Done.' } }));
       setTimeout(() => setPullingStatus(prev => { const n = { ...prev }; delete n[model]; return n; }), 5000);
     } catch (err) {
-      setPullingStatus(prev => ({ ...prev, [model]: { status: 'Error', progress: 0, log: err.message } }));
+      setPullingStatus(prev => ({ ...prev, [model]: { status: 'Error', progress: 0, log: errorMessage(err) } }));
     }
     setPullModelInput('');
   };
 
-  const updateSsdSettings = async (path) => {
+  const updateSsdSettings = async (/** @type {string} */ path) => {
     setIsSsdLoading(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/ssd-ram/config`, {
@@ -336,7 +339,7 @@ export default function CommandCenterTab({
       setSsdRamSize(data.size_bytes || 0);
       setSsdRamCount(data.turn_count || 0);
     } catch (err) {
-      alert(`SSD RAM config failed: ${err.message}`);
+      alert(`SSD RAM config failed: ${errorMessage(err)}`);
     } finally {
       setIsSsdLoading(false);
     }
@@ -350,7 +353,7 @@ export default function CommandCenterTab({
       setSsdRamSize(0);
       setSsdRamCount(0);
     } catch (err) {
-      alert(`Wipe failed: ${err.message}`);
+      alert(`Wipe failed: ${errorMessage(err)}`);
     } finally {
       setIsSsdLoading(false);
     }
@@ -512,15 +515,15 @@ export default function CommandCenterTab({
           {activeAgents.filter(a => a.is_running).length === 0 ? (
             <div className="session-empty">No active background agent sessions.</div>
           ) : (
-            <DroppableContainer id="active_sessions_list" items={activeAgents.filter(a => a.is_running).map(a => a.agent)}>
+            <DroppableContainer id="active_sessions_list" items={activeAgents.filter(a => a.is_running).map(a => a.agent || a.name || String(a.pid ?? ''))}>
               {activeAgents.filter(a => a.is_running).map(agent => (
-                <DraggableItem key={agent.agent} id={agent.agent}>
+                <DraggableItem key={agent.agent} id={agent.agent || agent.name || String(agent.pid ?? '')}>
                   <div className="session-row">
                     <div>
-                      <div className="session-name">{agent.agent.toUpperCase()} Sync Daemon</div>
+                      <div className="session-name">{(agent.agent || agent.name || 'Agent').toUpperCase()} Sync Daemon</div>
                       <div className="session-meta">PID: {agent.pid} | ACTIVE</div>
                     </div>
-                    <button onClick={() => handleKillAgent(agent.agent)} className="btn-red-outline">
+                    <button onClick={() => handleKillAgent(agent.agent || '')} className="btn-red-outline">
                       Terminate
                     </button>
                   </div>
@@ -576,7 +579,7 @@ export default function CommandCenterTab({
           <h3 className="cmd-lib-title drag-handle cursor-move" style={{ marginTop: 0 }}>🧠 Orchestrator Command Library</h3>
           <div className="cmd-grid" style={{ flexGrow: 1, overflowY: 'auto' }}>
             <DroppableContainer id="cmd_library_list" items={ORCHESTRATOR_COMMANDS.map(cmd => cmd.title)}>
-              {ORCHESTRATOR_COMMANDS.map((cmd, idx) => (
+              {ORCHESTRATOR_COMMANDS.map((cmd) => (
                 <DraggableItem key={cmd.title} id={cmd.title} className="cmd-card-draggable-wrapper">
                   <div className="cmd-card glass-panel" style={{ height: 'fit-content' }}>
                     <h4 className="cmd-title">{cmd.title}</h4>
@@ -604,4 +607,10 @@ export default function CommandCenterTab({
       </DraggableGridWorkspace>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

@@ -1,0 +1,44 @@
+{
+  "id": "20261103_P51_deployed_backup_verified",
+  "at": "2026-11-03T21:08:51.651024+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_complete": false,
+  "deployed": "Studio104 SDK0.16.5 Creator/opening preview",
+  "launchers": "D:\\AI-BS-Game-Resources\\P51\\Studio104Bypass\\launcher-deployment.json",
+  "bypass_and_restart": "passed; exact logical history preserved; persisted Adam guidance visible",
+  "repair_and_restart": "P48 passed",
+  "failed_prior_bypass": "Retained P48 focus-lost evidence, not relabeled",
+  "source_backup": "48A verified raw restore",
+  "deployment_evidence_backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\51A_Studio104_Deployment_And_Bypass_Restart_Evidence.zip",
+    "bytes": 2473683,
+    "sha256": "e69d4b1cb0a946c0eb95a5f2ae193420cd344a47f136aef7ca86cc4213748a0a",
+    "members": 48,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T21:08:51.651024+00:00",
+    "drive_file_id": "1k-4ql1oMBFNPdZdD5_Dip7oN5XkTKvzf",
+    "drive_parent_id": "1Jyi7Z5oBWWahyj0-_kMUfnqOBhuQwr4s",
+    "crc_verified": true,
+    "exact_member_set_verified": true,
+    "all_member_hashes_verified": true,
+    "scope": "Studio104 preview deployment and real-time bypass/restart evidence; family originals and user saves excluded; final acceptance incomplete"
+  },
+  "model": "Installed v10 unchanged; v17separate study unapproved; confirmed right-wrist Pray for Kids silicone band not yet modeled",
+  "family_references": "All six new supplied images hash-checked and copied to private local reference folder; age16and post-highschool labels user-supplied; raw photos excluded from archive",
+  "all_owned_test_processes_joined": true,
+  "initial_wrapper_failure": "Missing D:/T51parent before process creation; preserved pre-fix script and corrected mkdir parents; actual test ran once",
+  "remaining": [
+    "Right-wrist band and naturalistic likeness refinement/approval",
+    "Checked captions and optional original recording binding",
+    "Combined actual gameplay performance and human8-12minute pacing",
+    "Final accepted packaged opening and final verified backup"
+  ],
+  "next_step": "Add rigged right-wrist Pray for Kids band in a separate character master; verify all four animations, native rendering and chapter admission. Existing saves/releases remain preserved.",
+  "storage_free_gib": {
+    "C": 60.13,
+    "D": 58.96,
+    "E": 136.73
+  }
+}

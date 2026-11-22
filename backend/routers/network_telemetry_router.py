@@ -8,18 +8,71 @@ stehouwer-publishing.com traffic filters, and ambient RF wave hardware sensor te
 import json
 import asyncio
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, Header, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.routing import APIRoute
 from fastapi.responses import StreamingResponse
-from modules.network_telemetry import network_telemetry_engine, telemetry_manager
-from modules.ambient_sensor_telemetry import air_sensor_engine
+from modules.network_telemetry import network_telemetry_engine, sanitize_telemetry_record
+from security.firebase_auth import get_admin_principal
+
+PRIVATE_HEADERS = {
+    "Cache-Control": "private, no-store",
+    "Vary": "Authorization, X-Admin-Key, X-Api-Key",
+}
+
+
+def get_air_sensor_engine():
+    # The legacy sensor singleton initializes its SQLite schema. Do not import
+    # it at application startup or before the administrator boundary succeeds.
+    from modules.ambient_sensor_telemetry import air_sensor_engine
+    return air_sensor_engine
+
+
+async def get_tenant(request: Request) -> str:
+    """Verified administrator for global host telemetry, never a client tenant claim."""
+    principal = await asyncio.to_thread(
+        get_admin_principal,
+        request.headers.get("x-admin-key") or request.headers.get("x-api-key", ""),
+        request.headers.get("authorization", ""),
+    )
+    if not principal:
+        raise HTTPException(403, "Administrator authorization is required for host telemetry.",
+                            headers=PRIVATE_HEADERS)
+    return principal
+
+
+class PrivateTelemetryRoute(APIRoute):
+    """Apply private cache/error boundaries to JSON, validation and SSE responses."""
+    def get_route_handler(self):
+        handler = super().get_route_handler()
+
+        async def private_handler(request: Request):
+            try:
+                response = await handler(request)
+            except HTTPException as exc:
+                raise HTTPException(exc.status_code, exc.detail,
+                                    headers={**(exc.headers or {}), **PRIVATE_HEADERS}) from None
+            except RequestValidationError:
+                raise HTTPException(422, "Invalid telemetry request.", headers=PRIVATE_HEADERS) from None
+            except Exception:
+                raise HTTPException(503, "Host telemetry is unavailable.", headers=PRIVATE_HEADERS) from None
+            response.headers.update(PRIVATE_HEADERS)
+            return response
+
+        return private_handler
+
+
+def host_response(payload):
+    """All admitted administrators inspect one host; records are not tenant-owned."""
+    return dict(sanitize_telemetry_record(payload), scope="global_host_admin_only")
+
 
 router = APIRouter(
     prefix="/api/network-telemetry",
-    tags=["Network Telemetry & Over-The-Air Wave Sensors"]
+    tags=["Network Telemetry & Over-The-Air Wave Sensors"],
+    dependencies=[Depends(get_tenant)],
+    route_class=PrivateTelemetryRoute,
 )
-
-def get_tenant(x_client_id: Optional[str] = Header(default="stehouwer_publishing")) -> str:
-    return x_client_id if x_client_id else "stehouwer_publishing"
 
 
 @router.get("/summary")
@@ -30,7 +83,7 @@ async def get_network_summary(tenant: str = Depends(get_tenant)):
     """
     summary = network_telemetry_engine.get_summary()
     summary["tenant"] = tenant
-    return summary
+    return host_response(summary)
 
 
 @router.get("/capture-mode")
@@ -39,11 +92,11 @@ async def get_engine_mode(tenant: str = Depends(get_tenant)):
     Returns current capture engine configuration.
     """
     summary = network_telemetry_engine.get_summary()
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "capture_engine": summary.get("capture_engine", {})
-    }
+    })
 
 
 @router.post("/capture-mode")
@@ -53,27 +106,9 @@ async def set_engine_mode(
     bpf: str = Query(default="tcp or udp"),
     tenant: str = Depends(get_tenant)
 ):
-    """
-    Toggles between pure ASGI, Npcap raw wire promiscuous capture, or parallel Hybrid telemetry.
-    """
-    try:
-        res = network_telemetry_engine.set_mode(mode=mode, interface=interface, bpf_filter=bpf)
-        res["tenant"] = tenant
-        return res
-    except RuntimeError as e:
-        return {
-            "status": "error",
-            "message": str(e),
-            "npcap_available": False,
-            "active_mode": network_telemetry_engine.capture_mode,
-            "tenant": tenant
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": str(e),
-            "tenant": tenant
-        }
+    """Held until capture/runtime ownership and a safe lifecycle are verified."""
+    raise HTTPException(503, "Capture control is held pending verified runtime and ownership migration.",
+                        headers=PRIVATE_HEADERS)
 
 
 @router.get("/interfaces")
@@ -82,12 +117,12 @@ async def get_network_interfaces(tenant: str = Depends(get_tenant)):
     Returns list of discovered host network adapters with name, description, MAC, and IP addresses.
     """
     interfaces = network_telemetry_engine.get_interfaces()
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "count": len(interfaces),
         "interfaces": interfaces
-    }
+    })
 
 
 @router.get("/traffic")
@@ -120,13 +155,13 @@ async def get_traffic_records(
         engine=engine,
         trusted_only=trusted_only
     )
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "record_type": record_type,
         "count": len(records),
         "traffic": records
-    }
+    })
 
 
 @router.get("/flows")
@@ -135,11 +170,11 @@ async def get_network_flows(tenant: str = Depends(get_tenant)):
     Returns active L4 conversational 5-tuple flows.
     """
     summary = network_telemetry_engine.get_summary()
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "flows": summary.get("flows", {})
-    }
+    })
 
 
 @router.get("/routes")
@@ -148,11 +183,11 @@ async def get_route_distribution(tenant: str = Depends(get_tenant)):
     Returns endpoint route frequency counts.
     """
     summary = network_telemetry_engine.get_summary()
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "top_routes": summary.get("transactions", {}).get("top_routes", summary.get("top_routes", []))
-    }
+    })
 
 
 @router.get("/correlation")
@@ -167,26 +202,21 @@ async def get_flow_correlation(
     """
     res = network_telemetry_engine.get_flow_correlation(flow_id=flow_id, transaction_id=transaction_id)
     if not res:
-        return {
+        return host_response({
             "status": "not_found",
             "tenant": tenant,
             "message": "No correlated flow found for provided flow_id or transaction_id."
-        }
+        })
     res["status"] = "success"
     res["tenant"] = tenant
-    return res
+    return host_response(res)
 
 
 @router.get("/air/scan")
 async def scan_ambient_air(tenant: str = Depends(get_tenant)):
-    """
-    Triggers an active on-demand over-the-air RF wave sweep across host PC hardware sensors
-    (Wi-Fi 2.4/5/6 GHz beacon frames and Bluetooth BLE advertisements), generates deterministic
-    SHA-256 beacon hashes, persists them to SQLite, and returns live discovered signals.
-    """
-    scan_result = air_sensor_engine.scan_air()
-    scan_result["tenant"] = tenant
-    return scan_result
+    """GET must not trigger hardware scans or write new radio observations."""
+    raise HTTPException(503, "Active radio scans are held pending verified capture controls.",
+                        headers=PRIVATE_HEADERS)
 
 
 @router.get("/air/records")
@@ -201,19 +231,19 @@ async def get_air_records(
     """
     Queries historical over-the-air radio wave beacon records from SQLite.
     """
-    records = air_sensor_engine.get_records(
+    records = get_air_sensor_engine().get_records(
         limit=limit,
         offset=offset,
         sensor_type=sensor_type,
         band=band,
         hash_query=hash_query
     )
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "count": len(records),
         "records": records
-    }
+    })
 
 
 @router.get("/air/summary")
@@ -221,50 +251,68 @@ async def get_air_summary(tenant: str = Depends(get_tenant)):
     """
     Returns aggregated air wave telemetry statistics.
     """
-    summary = air_sensor_engine.get_summary()
+    summary = get_air_sensor_engine().get_summary()
     summary["tenant"] = tenant
-    return summary
+    return host_response(summary)
 
 
 @router.post("/clear")
-@router.post("/air/clear")
 async def clear_traffic(tenant: str = Depends(get_tenant)):
     """
     Clears in-memory ring buffers and resets telemetry counters.
     """
     network_telemetry_engine.clear()
-    return {
+    return host_response({
         "status": "success",
         "tenant": tenant,
         "message": "Network telemetry transaction and frame buffers cleared."
-    }
+    })
+
+
+@router.post("/air/clear")
+async def clear_air_records(tenant: str = Depends(get_tenant)):
+    """Retain sensor history until a reviewed retention/reset contract exists."""
+    raise HTTPException(503, "Radio history reset is held pending verified retention controls.",
+                        headers=PRIVATE_HEADERS)
 
 
 @router.get("/stream")
-async def stream_live_telemetry(tenant: str = Depends(get_tenant)):
+async def stream_live_telemetry(request: Request, tenant: str = Depends(get_tenant)):
     """
     Real-time Server-Sent Events (SSE) stream emitting live L7 transactions and L2/L3 frames.
     """
     queue: asyncio.Queue = asyncio.Queue(maxsize=100)
-    with network_telemetry_engine.lock:
-        network_telemetry_engine.subscribers.append(queue)
-
     async def event_generator():
+        # Register only when consumption begins, so an unconsumed/cancelled
+        # response does not leave an orphan subscriber.
+        with network_telemetry_engine.lock:
+            network_telemetry_engine.subscribers.append(queue)
         try:
             # Yield initial connection confirmation
-            init_payload = {
+            init_payload = host_response({
                 "event": "connected",
                 "timestamp": network_telemetry_engine.get_summary()["transactions"],
-                "capture_engine": network_telemetry_engine.capture_mode
-            }
+                "capture_engine": network_telemetry_engine.capture_mode,
+                "tenant": tenant,
+            })
             yield f"event: ping\ndata: {json.dumps(init_payload)}\n\n"
 
             while True:
                 try:
                     record = await asyncio.wait_for(queue.get(), timeout=15.0)
-                    yield f"event: packet\ndata: {json.dumps(record)}\n\n"
                 except asyncio.TimeoutError:
+                    record = None
+                # Revalidate before every data publication, and on idle
+                # heartbeats. Expired/revoked/changed identities end the stream.
+                try:
+                    if await get_tenant(request) != tenant:
+                        return
+                except HTTPException:
+                    return
+                if record is None:
                     yield ": keepalive\n\n"
+                else:
+                    yield f"event: packet\ndata: {json.dumps(sanitize_telemetry_record(record))}\n\n"
         except asyncio.CancelledError:
             pass
         finally:
@@ -276,7 +324,7 @@ async def stream_live_telemetry(tenant: str = Depends(get_tenant)):
         event_generator(),
         media_type="text/event-stream",
         headers={
-            "Cache-Control": "no-cache",
+            **PRIVATE_HEADERS,
             "Connection": "keep-alive",
             "X-Accel-Buffering": "no"
         }

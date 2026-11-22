@@ -1,0 +1,98 @@
+{
+  "kind": "project_preparation",
+  "request_id": "532f044341af4e7c85be5a0253bd43d0",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "532f044341af4e7c85be5a0253bd43d0",
+    "repository_id": "ai-bs",
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "files": [
+      {
+        "relative_path": "src/app.js",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/app.test.cjs",
+        "role": "verification"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "npm",
+        "profile": "npm_script",
+        "targets": [
+          "check"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "949c5a855070af58d884401529d860822588841c41e26cbc7252878fcccd555e",
+  "repository_policy_sha256": "7cc1fd6beb1a03e02e396999f7c3d004a86f0aea090a5f4784af53742b134649",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "cdc7fc5ba66629ac4ba831e04698c67f207f3026",
+    "files": [
+      {
+        "relative_path": "src/app.js",
+        "role": "editable",
+        "length": 17,
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d"
+      },
+      {
+        "relative_path": "tests/app.test.cjs",
+        "role": "verification",
+        "length": 142,
+        "sha256": "65de91e27330ad94491c6723465667e99ac3a02e59787368acfc76225ddf3f14"
+      },
+      {
+        "relative_path": "package.json",
+        "role": "dependency",
+        "length": 145,
+        "sha256": "dcecf8cc830ac548798645cc1d7ed17b6c1c9063c7d2b7b19af8fc0220c77230"
+      },
+      {
+        "relative_path": "package-lock.json",
+        "role": "dependency",
+        "length": 21,
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265"
+      }
+    ],
+    "byte_count": 325,
+    "captured_at_utc": "2026-11-15T21:56:10.271095+00:00",
+    "snapshot_sha256": "b29d39159d1388dc59694ab712dd3754a55747a845368d646af7a63d9f6db0dc"
+  },
+  "checks": [
+    {
+      "check_id": "npm",
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ]
+    }
+  ],
+  "review_digest": "3eb39a40a0bb5168708247ef0d68f98fe90ac720f21ffcef8999bb614d6cf90e",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 32992,
+    "created": 1794779768.2750049
+  },
+  "created_at_utc": "2026-11-15T21:56:10.271095+00:00",
+  "entry_sha256": "271c58479a789f7875b1e565fa41dbd244cfa9096012f1e047477fc56a61d7f4"
+}

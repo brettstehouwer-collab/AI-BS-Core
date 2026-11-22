@@ -1,0 +1,146 @@
+{
+  "handoff_id": "handoff_20261109T105754Z",
+  "protocol": "AI-BS-UADP-1.0",
+  "timestamp_utc": "2026-11-09T10:57:54.539316+00:00",
+  "outgoing_agent": "Google Antigravity",
+  "receiving_agent": "OpenAI Codex",
+  "synchronization_score": "7/7",
+  "checklist": {
+    "1_git_commit_identity": true,
+    "2_source_file_hashes": true,
+    "3_architecture_ledger": true,
+    "4_dependency_environment": true,
+    "5_acceptance_tests": true,
+    "6_handoff_manifest": true,
+    "7_task_continuity": true
+  },
+  "git": {
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "is_clean": false,
+    "status_summary": "4111 modified/untracked files"
+  },
+  "critical_file_hashes": {
+    "AGENTS.md": "72e761feebe2673dc6cf912cd8b45e24ef27c8b448f0f05f28de26a07ec51bf9",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "2786ee0d04ad0f4674dd91ccd583c0283dcba032173aab74ea4f26dfb483b43f",
+    "docs/CODEX_HANDOFF.md": "87f7ab6260b43de29e65d2486107fc9fea2bd5b85cf719e656e4d53a948822cd",
+    "docs/CODEX_DECISIONS.md": "890288247b3949386a9164f1246b4629dd536e39216e0799bde9fd2781a0b6f0",
+    "docs/CODEX_JOURNAL.md": "d009cefc9c48a9925abc08e386ae842740f402cad1edb3768bb50fbcbb0cf255",
+    "docs/CODEX_TASKS.md": "d1242f679fcf6a355d5fc29c162673074c18dad20b9042cf33a8e2e48fc5ef5e",
+    "docs/memory/Conversation_Learning_and_RAG.md": "7c2425a91c1d9f66c133f44c907a3f961db5eb73e546443e0f37411323b186ab",
+    "backend/AI_BS_Backend.py": "5a3ce00f480081d355fe4bbfe9959f25cb6e2da3958ffbc2d559751285748c7c",
+    "backend/routers/chat_router.py": "1108e25bcd3226c9f9a1a845acdf53a89d7ebffa0656cce707281092f5561281",
+    "backend/core/coding_guest_runner.py": "df591b2b548c143dbefc5812bd860e3f0f610245b2d4c98e840b5250d2069e69",
+    "backend/core/coding_workflow.py": "3967f093238f64b79b4868aa3fe3cf9a9ad308c6ad19511ddfd8cc45791e5e8c",
+    "backend/core/coding_chat.py": "788ed664688d31364fca92d09a9219a4a2d5391038ea4d5da69cd592a75c44da",
+    "backend/core/coding_review.py": "003f220a5fa74346dcd35c3e8851448b953bc0a1cbd39213fde56e6892d42c9f",
+    "backend/core/hybrid_reasoning_engine.py": "efc8e80c7c58b87973b9a505f6b9a8af5af3b0b04c69e04bcb9a707f2b8cf10f",
+    "backend/core/optional_web_search.py": "a8b5fdfc7a75bfe6dbac36cb5ea42d9b348d53b5ff98ec91c4ebe11d0b925111",
+    "backend/tools/tool_registry.py": "62539debf29d3bde36919ac0ec406153fd78593cfd9ad7593e2364a71a7558ec",
+    "backend/core/sovereign_reasoning/document_engine.py": "1dd1a27f0300578332bf1f4025f3b6b728c5b2bb30d28923e62cde5baef62b58",
+    "backend/core/subagent_coordinator.py": "4b2643fae8591b359cc44adf55bdc3ddfdd520241233763692a54456c6a2f48f",
+    "backend/core/pipeline_context_injector.py": "74823743af60324e9583231573977c93a3375e386acf7189db42f4f248a89b33",
+    "backend/core/bs_chat_provider.py": "c024665159e853a5a313ebf98a2bd7c7e19dc85f3c0094145a39e22f61aef9ca",
+    "backend/routers/agent_crew_router.py": "8cc76e34f5011399c77bf287cee987f8bff6ff4d75938b753967fefc89df0511",
+    "frontend/src/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+    "scripts/verify_immutable_diff.py": "db08055a92f9aaec5b732d97e81a62a1e6aca1b53b472207f48d5e85bab50f4c",
+    "scripts/verify_and_connect_guest_runner.py": "3ad26fe1d993c4b3fd7fe6b53bfa0996a23eb2aa73b25ba8abf8a4b3032ab0d8",
+    "scripts/tests/test_coding_guest_runner.py": "344c10872b75fbcbb57dcd931182e26d9c52df14348897ecddce86f09934f657",
+    "scripts/agent_sync/sync_gateway.py": "948946eec966b92df89d7dabb4753df88037a6769c3f31c5de8f7447eb0abfa4"
+  },
+  "mirror_parity": {
+    "ChatTab.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/ChatTab.jsx": "88c41e7bc37f9a79840d5d0fa9c9d2c6f4816bf9d1aef8697216e0f7000cfd4f",
+        "frontend/components/ChatTab.jsx": "88c41e7bc37f9a79840d5d0fa9c9d2c6f4816bf9d1aef8697216e0f7000cfd4f",
+        "frontend/src/components/components/ChatTab.jsx": "88c41e7bc37f9a79840d5d0fa9c9d2c6f4816bf9d1aef8697216e0f7000cfd4f",
+        "frontend/components/components/ChatTab.jsx": "88c41e7bc37f9a79840d5d0fa9c9d2c6f4816bf9d1aef8697216e0f7000cfd4f"
+      }
+    },
+    "MobileStehouwerChat.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/MobileStehouwerChat.jsx": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "frontend/components/MobileStehouwerChat.jsx": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "frontend/src/components/components/MobileStehouwerChat.jsx": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "frontend/components/components/MobileStehouwerChat.jsx": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d"
+      }
+    },
+    "SpecialistSwarmExplorer.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/SpecialistSwarmExplorer.jsx": "a44e063b79d85bf1be7428302bf708a111fa943d6d107a99ce7fb9f8bc047212",
+        "frontend/components/SpecialistSwarmExplorer.jsx": "a44e063b79d85bf1be7428302bf708a111fa943d6d107a99ce7fb9f8bc047212",
+        "frontend/src/components/components/SpecialistSwarmExplorer.jsx": "a44e063b79d85bf1be7428302bf708a111fa943d6d107a99ce7fb9f8bc047212",
+        "frontend/components/components/SpecialistSwarmExplorer.jsx": "a44e063b79d85bf1be7428302bf708a111fa943d6d107a99ce7fb9f8bc047212"
+      }
+    },
+    "MobileBottomNav.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/MobileBottomNav.jsx": "b126e437b2d2b60ba2aef1fbf0383892d980481e422b42b5b061fc93706917cd",
+        "frontend/components/MobileBottomNav.jsx": "b126e437b2d2b60ba2aef1fbf0383892d980481e422b42b5b061fc93706917cd",
+        "frontend/src/components/components/MobileBottomNav.jsx": "b126e437b2d2b60ba2aef1fbf0383892d980481e422b42b5b061fc93706917cd",
+        "frontend/components/components/MobileBottomNav.jsx": "b126e437b2d2b60ba2aef1fbf0383892d980481e422b42b5b061fc93706917cd"
+      }
+    },
+    "CodingTaskReviewCard.jsx": {
+      "parity": true,
+      "mirrors": {
+        "frontend/src/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/src/components/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922",
+        "frontend/components/components/CodingTaskReviewCard.jsx": "220991968a377789236c732ceb72773892629b17408d36fb63e9c48b54c34922"
+      }
+    }
+  },
+  "acceptance_tests": {
+    "schema": "aibs.observable_test_evidence.v1",
+    "scope": "configured_unittest_suite_only",
+    "command": [
+      "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "scripts.tests.test_coding_guest_runner",
+      "scripts.tests.test_chat_attachment_upload",
+      "scripts.tests.test_bs_chat_openai",
+      "scripts.tests.test_ai_provider_environment",
+      "scripts.tests.test_audio_router_trace"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 25.875,
+    "status": "passed",
+    "passed": true,
+    "counts": {
+      "run": 70,
+      "confirmed_passed": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0
+    },
+    "stdout": "",
+    "stderr": "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n  from starlette.testclient import TestClient as TestClient  # noqa\n..................................................................C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py:789: ResourceWarning: unclosed file <_io.FileIO name='C:\\\\Users\\\\footb\\\\AppData\\\\Local\\\\Temp\\\\tmp_tdn02ch\\\\synthetic_test.wav' mode='rb' closefd=True>\n  def call_soon(self, callback, *args, context=None):\nResourceWarning: Enable tracemalloc to get the object allocation traceback\n....\n----------------------------------------------------------------------\nRan 70 tests in 24.824s\n\nOK\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "d8f30f79b81ac81a07e44edc03e2793032af6924996619881277e03777ab22d1",
+    "error": null
+  },
+  "model_quality_evaluation": {
+    "status": "not_run",
+    "affects_acceptance": false,
+    "rubric_id": null,
+    "evaluator_id": null,
+    "scores": []
+  },
+  "tasks_completed": [
+    "Expanded SQLite WAL specialist registry in backend/core/subagent_coordinator.py (C:\\AI-BS\\backend\\data\\aibs_master.db) from 14 to 64 specialist subagent profiles across 7 operational domains mapped to Chat (24), Cockpit (8), NoCo (8), VLC/Media (8), and All Tools (16), with bounded semaphores (max_concurrent_llm=1, max_concurrent_builds=1), two-tier HierarchicalDomainRouter, and Role 49 (immutable_fire_scribe) verbatim lexical diff guard (scripts/verify_immutable_diff.py)",
+    "Wired /api/v1/agents/domains, /api/v1/agents/specialists, /api/v1/agents/route-hierarchical, and /api/v1/agents/immutable-scribe/verify in backend/routers/agent_crew_router.py",
+    "Created backend/core/pipeline_context_injector.py (Stage 1 of Pipeline 6/6) with AIBS_SOVEREIGN_SYSTEM_PROMPT and SHORTHAND_DISAMBIGUATION_MAP, hooked into backend/core/bs_chat_provider.py, backend/core/sovereign_reasoning/dispatcher.py, and backend/routers/chat_router.py, and restored active_provider='local' in database/ai_providers_config.json (36/36 provider/OpenAI tests passing)",
+    "Patched mobile streaming Markdown code-block renderer (MobileStehouwerChat.jsx, ChatTab.jsx, MobileGeminiChat.jsx, ArtifactRenderer.jsx) to eliminate the 00:52 'undefined' string flicker, added SPECIALIST_NAV_CATALOG to MobileBottomNav.jsx, verified 499/499 4-mirror SHA-256 byte parity, bumped version to v5.329.128, compiled Vite production bundle, and deployed live to https://ai-bs-dashboard.web.app"
+  ],
+  "next_step": "Codex runs 'python C:\\AI-BS\\scripts\\agent_sync\\sync_gateway.py verify', 'python C:\\AI-BS\\backend\\core\\subagent_coordinator.py --test', and 'python -m unittest scripts.tests.test_bs_chat_openai scripts.tests.test_ai_provider_environment' to confirm 7/7 synchronization parity, 64/64 SQLite WAL specialist contracts, and Stage 1 Pipeline (6/6) identity injection."
+}

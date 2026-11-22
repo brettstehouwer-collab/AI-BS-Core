@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "7f24b66c41ee457483bebc0227815b8f",
+  "plan_id": "5a6087aec84d4f3fb65d57282a78a592",
+  "snapshot_sha256": "ed5e923e193312bc1c444323f2f59d57a0814c40535e36f4822eaeb32f3b22ed",
+  "review_digest": "ffc705ce72966c6f7fa7f48385a530ef6f31b7e5f87a43b75163e724611a6af1",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "fbda778c8c76460b976e423c3eaf7bcf",
+  "reviewed_plan_sha256": "e879c180edfce5339d595ae8c512335f97b43c7f792127d5abf57093f6139ae5",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 43708,
+    "created": 1794664880.930138
+  },
+  "created_at_utc": "2026-11-14T14:01:25.519205+00:00",
+  "entry_sha256": "f3b1361ca5e172d4b57aeec4a2818c967c397ea0a9ae39cf77754f7788299efe"
+}

@@ -1,0 +1,16 @@
+{
+  "archive": "C:\\AI-BS\\backups\\checkpoint_20261101_assets_materials\\AI_BS_Assets_Materials_Source.zip",
+  "bytes": 25551025,
+  "sha256": "b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469",
+  "files": 2541,
+  "raw_selected_bytes": 750846426,
+  "changed_files": 1032,
+  "CRC_and_per_file_current_SHA256": "passed",
+  "utc": "2026-11-02T00:03:16.582629+00:00",
+  "free_bytes": {
+    "C": 110247677952,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed"
+}

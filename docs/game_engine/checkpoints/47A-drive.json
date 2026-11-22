@@ -1,0 +1,23 @@
+{
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\47A_Combined_Review_And_Launch_Diagnostics.zip",
+  "bytes": 1761172,
+  "sha256": "c3e1160c3dda41625ff5d123b5823387fc93a0dc0e795b70006d5181d1aa9ac0",
+  "members": 59,
+  "local_zip_verified": true,
+  "drive_restore_verified": true,
+  "at": "2026-11-03T20:13:50.087356+00:00",
+  "archive_and_every_member_size_sha_crc_exact_set_verified": true,
+  "drive_file_id": "1U1x5ilQB7dqMswdkuxdAr0E1NIvXvnqE",
+  "drive_folder_id": "1BsS60bnvu-PEaTqtvf9UE0V4IT14wCth",
+  "scope": "Combined review source, runtime pins, launcher, tests, native preparation evidence and early diagnostics design. No original family media, user saves, credentials/private Git/Master data or compiled binaries. Developer proof is not a user run.",
+  "post_seal_user_clarification": {
+    "at": "2026-11-03T20:13:50.087356+00:00",
+    "user_confirmed_launcher": "Run_20Second_Opening_Check.cmd",
+    "scope": "Stationary nook FPS check, not the chapter playthrough",
+    "known_saved_report": "D:/AI-BS-Game-Resources/PerformanceSessions/20261103T181529Z-93a0ea7c-2ccb-41b0-9be8-09f0665ca40e/performance.json",
+    "known_FPS": 59.99740211248853,
+    "newer_report_verified": false,
+    "manual_chapter_playthrough_verified": false,
+    "note": "Filename was confirmed after47A was sealed. The archived pending-filename snapshot remains correct for its earlier timestamp; this sidecar records the update. No claim that a new second run produced a result."
+  }
+}

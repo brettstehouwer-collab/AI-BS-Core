@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "verified_full_drive_roundtrip",
+  "verified_at_utc": "2026-11-02T13:03:34.272548+00:00",
+  "drive_file_id": "1ViNVqnLWHNk34tTPI11V9y1jE4WQvnRi",
+  "drive_url": "https://drive.google.com/file/d/1ViNVqnLWHNk34tTPI11V9y1jE4WQvnRi/view",
+  "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+  "bytes": 4174213,
+  "sha256": "fa93ac7e2389aa80c635cb930947ae753cc94ea630fd34c197c8df290194a54e",
+  "embedded_manifest_sha256": "efa1e5a88121fd72e39efd11738ca30fc78c8634e4f6ae12501e7353b97e3e29",
+  "crc_verified": true,
+  "all_member_sizes_and_hashes_verified": true,
+  "verified_files": 178,
+  "source_or_character_approval": false
+}

@@ -1,0 +1,3 @@
+# Additional dependency for the protected native screenplay import workflow.
+# Install into the same runtime used for AI_BS_Studio.spec.
+pypdf==6.14.2

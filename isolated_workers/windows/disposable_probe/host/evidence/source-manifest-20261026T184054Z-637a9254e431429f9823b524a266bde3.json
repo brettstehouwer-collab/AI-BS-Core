@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "evidence_class": "trusted_controller_source_and_infrastructure_only",
+  "created_utc": "2026-10-26T18:40:54.5376004Z",
+  "files": [
+    {
+      "name": "CONTROLLER_SEAL_CONTRACT.md",
+      "length": 4658,
+      "sha256": "cb40f265c649eea6e6462eef44820c49c1f1f6e5aed70dc4c365bc3078f1ee14"
+    },
+    {
+      "name": "DisposableProbe.psm1",
+      "length": 51174,
+      "sha256": "fe1f22eebbe9b94a6718e26be3935a3fde72b38029ea58a1d42a950e3c3f4c47"
+    },
+    {
+      "name": "Guest-BootstrapReadback.ps1",
+      "length": 6685,
+      "sha256": "160b2506d57e5376ccc8971fa8f60fd7fee8987cf64f309f97b21a4a3ca1cc51"
+    },
+    {
+      "name": "Invoke-WorkerTransport.ps1",
+      "length": 814,
+      "sha256": "d169e943f41138790bd15c0b6953fd53b576eb6ae508df04e6d1d3c52029e650"
+    },
+    {
+      "name": "Readback-And-SnapshotWorker.ps1",
+      "length": 15951,
+      "sha256": "bc227622b2ed0b762f5e7319cbcfdb3e49eec35f8d0fefca96dae662db943fbf"
+    },
+    {
+      "name": "README.md",
+      "length": 11017,
+      "sha256": "3c28d64ebed4355d2a4f354a81d4c93466c1397bc4a00f8199d9e7895a7e44dd"
+    },
+    {
+      "name": "Start-BootstrapPreparation.ps1",
+      "length": 5187,
+      "sha256": "4f9b2b0d38c500f8df85275613cb4a0ae29d0734d4ee471dc5a5580e3d0e834f"
+    },
+    {
+      "name": "Test-Infrastructure.ps1",
+      "length": 26730,
+      "sha256": "03148049cb8c539c36e73987d0c51a21ce66a029ca2ff7be62cd44a445f3544b"
+    }
+  ],
+  "infrastructure_results": "C:\\AI-BS\\isolated_workers\\windows\\disposable_probe\\host\\evidence\\infra-20261026T184011Z-cc099d32a7f34228a31221608a75b809\\results.json",
+  "infrastructure_passed": 84,
+  "infrastructure_failed": 0,
+  "vm_operations_performed_by_this_subtask": false,
+  "guest_readback_executed_by_this_subtask": false,
+  "candidate_tests_executed": false,
+  "profile_published": false,
+  "controller_sealing_implementation_remaining": true
+}

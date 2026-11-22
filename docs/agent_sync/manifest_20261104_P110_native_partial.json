@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-05T00:42:20.871916+00:00",
+  "status": "Release_passed_native_matrix_partial_failure_preserved",
+  "summary": "P110 R2 full Release suite passed all129registered tests with563source pins unchanged. Private174native first-person repair7cases and bypass9cases passed, including seven-panel tours, doors, help/decline, departure/return, fall, relay rebuild, reload and inspection. Third-person controller E plus truck/diagnostic/bypass panels passed; repair tour then failed on its first isolation-switch return walk afterrevision5:feet(-36.677391,0,-5.339321),target(-35.510742,-5.339321). This may be input/pause or movement; cause is not yet established. Failure/DB/logs retained, owned job29344 terminalexit1 with children joined. No blind retry, publication or launcher change.",
+  "next_step": "Diagnose the third-person isolation return using existing failed evidence and one bounded observational native diagnostic if needed. Capture actual active/forward/reading/critical/clock/camera state without extra input consumption, forced focus, teleport or weakened guards. Only after resolving the actual cause finish all requested native modes/routes, Debug and installed/relocated consumers, then package and verify a current user-started play review. Keep E read-only and preserve every failure.",
+  "Release_tests": 129,
+  "native_completed_cases": 16,
+  "actual_third_person_controller_E": {
+    "case": "third",
+    "pressed": true,
+    "reading": true,
+    "selected_fixture_id": "4454bd27-4419-4d46-be24-e7fbba2b3d47",
+    "expected_fixture_id": "4454bd27-4419-4d46-be24-e7fbba2b3d47",
+    "third_person": true,
+    "inspection": false,
+    "target": [
+      -34.7000008,
+      1.39999998,
+      -29
+    ],
+    "camera": [
+      -34.5673599,
+      2.8585217,
+      -22.8779869
+    ],
+    "ray": [
+      -0.0210716855,
+      -0.231704369,
+      -0.972558022
+    ]
+  },
+  "source_freeze": "D:\\AI-BS-Game-Resources\\P110\\SDK174Recovery\\source-freeze.json",
+  "native_failure": "D:\\R174R2\\P110Native174v01\\failure.json",
+  "free_GiB": {
+    "C": 262.39,
+    "D": 93.75
+  },
+  "SDK_published": false,
+  "launcher_updated": false,
+  "goal_complete": false
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-11-11T10:01:54.167101+00:00",
+  "status": "CONTROLLED_V2_SYNTHETIC_OFFSCREEN_WORKFLOW_PASS",
+  "production_activation": false,
+  "gui_evidence": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-pipe-gui-20261111T095941290912Z\\result.json",
+  "gui_evidence_sha256": "9ee9567af0fb84fe2a2ef1c0299a7dcd14b1846dd3e264dfdba88f50476e14c0",
+  "checks": {
+    "integrated_suite": {
+      "cases": 122,
+      "result": "PASS",
+      "log": "work/v2-controller-integrated-suite.log"
+    },
+    "blocked_service_retention": {
+      "cases": 1,
+      "result": "PASS",
+      "log": "work/v2-controller-blocked-service-corrected.log"
+    },
+    "interrupt_and_entry": {
+      "cases": 7,
+      "result": "PASS",
+      "log": "work/v2-controller-interrupt-entry.log"
+    },
+    "gui_workflow": {
+      "cases": 1,
+      "result": "PASS",
+      "phases": 2,
+      "log": "work/native-pipe-gui-final.log"
+    }
+  },
+  "scope_note": "Separate partly overlapping scopes; do not add counts into a fabricated single suite.",
+  "phases": [
+    {
+      "phase": "edit-save",
+      "normal_exit_code": 0,
+      "fixture_termination_requested": false,
+      "controller_result": {
+        "acknowledged": true,
+        "termination_requested": false,
+        "job_drained": null
+      },
+      "source_sha256_after": {
+        "original.pdf": "0b0750c0389abb5ac2479e6115e2f3b4667da225ec956b2dc12ee7fce0b1abfa",
+        "source_packet.json": "25c70ac8bd3882bd12786c7e523cf0a9f31d261522b9051fa85c46efbae4e3b9",
+        "source_exports/layout.fdx": "01a2d84207ccafeaa690d656497d0eebd88ff4e5b36c4553e1764c0665364caa",
+        "source_exports/layout.pdf": "bd5bb5f930018cdcd6da609e53e66790e0c1f07554d1ba074f3820665e2d31f1"
+      },
+      "http_calls": 0
+    },
+    {
+      "phase": "reopen-export",
+      "normal_exit_code": 0,
+      "fixture_termination_requested": false,
+      "controller_result": {
+        "acknowledged": true,
+        "termination_requested": false,
+        "job_drained": null
+      },
+      "source_sha256_after": {
+        "original.pdf": "0b0750c0389abb5ac2479e6115e2f3b4667da225ec956b2dc12ee7fce0b1abfa",
+        "source_packet.json": "25c70ac8bd3882bd12786c7e523cf0a9f31d261522b9051fa85c46efbae4e3b9",
+        "source_exports/layout.fdx": "01a2d84207ccafeaa690d656497d0eebd88ff4e5b36c4553e1764c0665364caa",
+        "source_exports/layout.pdf": "bd5bb5f930018cdcd6da609e53e66790e0c1f07554d1ba074f3820665e2d31f1"
+      },
+      "http_calls": 0
+    }
+  ],
+  "original_synthetic_source_hashes": {
+    "original.pdf": "0b0750c0389abb5ac2479e6115e2f3b4667da225ec956b2dc12ee7fce0b1abfa",
+    "source_packet.json": "25c70ac8bd3882bd12786c7e523cf0a9f31d261522b9051fa85c46efbae4e3b9",
+    "source_exports/layout.fdx": "01a2d84207ccafeaa690d656497d0eebd88ff4e5b36c4553e1764c0665364caa",
+    "source_exports/layout.pdf": "bd5bb5f930018cdcd6da609e53e66790e0c1f07554d1ba074f3820665e2d31f1"
+  },
+  "exports": {
+    "fdx": {
+      "bytes": 3451,
+      "sha256": "db561a8292dbce12c3ca4a2ae8b570e66d8d1439397b3bad8364750ba5af2a62",
+      "edit_present": true
+    },
+    "pdf": {
+      "bytes": 3042,
+      "sha256": "093d421c65bea1edb447ae15a64c1ff432ab1604a5e5f25e3a27b5b00473cd9d",
+      "edit_present": true
+    }
+  },
+  "remaining": [
+    "actual backend-process loss and private draft recovery",
+    "reviewed candidate/default service configuration",
+    "fresh real Firebase-owner browser/native admission",
+    "original manuscript processing/export qualification",
+    "installed/hosted/release and human gates"
+  ],
+  "renderer_limit": "Explicit reflow export used its working renderer fallback after optional WeasyPrint-library warning; not faithful/professional layout acceptance.",
+  "failed_evidence_retained": [
+    "work/native-pipe-gui-20261111T095519198320Z/result.json",
+    "work/native-pipe-gui-20261111T095625534456Z/result.json",
+    "work/native-pipe-gui-20261111T095625534456Z/offline_validation.json"
+  ]
+}

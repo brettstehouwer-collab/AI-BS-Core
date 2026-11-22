@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "821017e33b3f4e54a3f258641779f4af",
+  "plan_id": "3b980a1de69e4a328a6f4a41d4649f38",
+  "snapshot_sha256": "7ffcca23c461978ec4094e92ef962dab3d5ebe8df86a2f0c843b18ebc2ec03f5",
+  "review_digest": "7f50d73eee1358bccfd48f019ffc4a77f633d5fb72ebef8df7b9d2ca92807f21",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "1c7f304751e442fda06ed7f6f56f19d2",
+  "reviewed_plan_sha256": "5888472937ee8e4c2dea7e0ee1d8da754d9206c423f7aa3747fc046be2e8874c",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 31832,
+    "created": 1794664490.3250988
+  },
+  "created_at_utc": "2026-11-14T13:54:51.633689+00:00",
+  "entry_sha256": "5a439b5dc3f3c7c4d46d68f62d360eb3fd42e44320c5b44865a7e76c48feaf8a"
+}

@@ -14,3 +14,9 @@ pyarrow
 openpyxl
 python-multipart
 fastparquet
+
+# Explicit optional web-search provider; existing legacy imports remain available.
+ddgs==9.16.1
+
+# Explicit selected-window Windows Graphics Capture; never falls back to desktop.
+windows-capture==2.0.1; sys_platform == "win32"

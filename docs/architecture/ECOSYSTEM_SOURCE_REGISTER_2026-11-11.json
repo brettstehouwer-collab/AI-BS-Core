@@ -1,0 +1,6319 @@
+{
+  "schema_version": 1,
+  "captured_utc": "2026-11-11T09:20:10.335354+00:00",
+  "canonical_root": "C:\\AI-BS",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "scope": "Static direct-file/navigation inventory, not runtime route registration or feature acceptance.",
+  "router_files": [
+    {
+      "path": "backend/routers/aeo_router.py",
+      "sha256": "f15da76af90cc39a95e681a440cbafa132054d2d9b685c152c02ccc9b9270be3",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "get_aeo_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/evaluate",
+          "handler": "evaluate_custom_prompt"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/agent_crew_router.py",
+      "sha256": "150d4193b72b114b94809c2897bc2167b66a9b4446a1068ef1fcefabdc797e1e",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/crews",
+          "handler": "list_crews_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/model-matrix",
+          "handler": "get_model_matrix_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/classify-model",
+          "handler": "classify_model_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cross-model/stream",
+          "handler": "stream_cross_model_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/route",
+          "handler": "route_specialist_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/security/validate",
+          "handler": "validate_security_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/domains",
+          "handler": "list_specialist_domains_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/specialists",
+          "handler": "list_64_specialists_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/route-hierarchical",
+          "handler": "route_hierarchical_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/immutable-scribe/verify",
+          "handler": "verify_immutable_scribe_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/immutable-scribe/chapters",
+          "handler": "list_sealed_chapters_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/immutable-scribe/seal",
+          "handler": "seal_immutable_chapter_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/specialists/{agent_id}/run-gate",
+          "handler": "run_specialist_gate_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/specialists/{agent_id}/evidence",
+          "handler": "get_specialist_evidence_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/agent_harness_router.py",
+      "sha256": "46c8b42fd01be9cc189aeb1d4f88ad6518e29ef698af9168ba750f5afe5d8ef2",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/apps",
+          "handler": "list_agent_apps"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sessions",
+          "handler": "list_agent_sessions"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/session/create",
+          "handler": "create_agent_session"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/session/{session_id}",
+          "handler": "get_agent_session"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/session/{session_id}/turn",
+          "handler": "execute_turn_in_session"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/session/{session_id}",
+          "handler": "terminate_agent_session"
+        },
+        {
+          "method": "WEBSOCKET",
+          "path_literal": "/ws/{session_id}",
+          "handler": "websocket_agent_session"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/session/{session_id}/stream",
+          "handler": "sse_agent_session_stream"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/swarm/presets",
+          "handler": "list_swarm_presets"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/swarm/execute",
+          "handler": "execute_swarm_pipeline"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/swarm/jobs",
+          "handler": "list_swarm_jobs"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/swarm/jobs/{job_id}",
+          "handler": "get_swarm_job"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/swarm/jobs/{job_id}/stream",
+          "handler": "stream_swarm_job"
+        },
+        {
+          "method": "WEBSOCKET",
+          "path_literal": "/swarm/ws/{job_id}",
+          "handler": "websocket_swarm_job"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/agent_routing.py",
+      "sha256": "48775e30406078428a9cc1ac469c52b1d73c43702c001d7944f96aed43f45ce5",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/profiles",
+          "handler": "get_agent_profiles"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/draft",
+          "handler": "route_creative_draft"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/compile",
+          "handler": "route_code_compilation"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/noco",
+          "handler": "route_noco_biomimetics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/route",
+          "handler": "route_universal_task"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/ai_audio_router.py",
+      "sha256": "f329479a48c2bd76a30ca94a2de84ec6e707ef8d2512133aa56583f8602b52c0",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/api/ai/audio/generate",
+          "handler": "generate_ai_audio"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/audio/suno/structure",
+          "handler": "generate_suno_prompt_structure"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/audio/stems/split",
+          "handler": "split_audio_stems"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/ai_providers_router.py",
+      "sha256": "ccfe6db9058a80e18d4ee4e653623f2d1a148d298f6035cfb020c575ef8b57e7",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/providers",
+          "handler": "list_providers"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/config",
+          "handler": "save_provider_configuration"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/validate-key",
+          "handler": "validate_provider_api_key"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate",
+          "handler": "generate_with_provider"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/opencode/models",
+          "handler": "list_opencode_workers"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/opencode/work",
+          "handler": "delegate_opencode_work"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/artifacts_sync_router.py",
+      "sha256": "04c1dcb4aaeca0ffd5f7a338d2d0a1cb7251d1a446a9fa428400b7fc291af2b4",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/live",
+          "handler": "get_live_artifacts"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/programs/build",
+          "handler": "build_program"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/programs/run",
+          "handler": "run_program"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/programs/list",
+          "handler": "list_programs"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/programs/download/{project_name}",
+          "handler": "download_program_zip"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/audio_demucs_router.py",
+      "sha256": "04979ac1349f23049fb444be6085cb16fd153df53ad30d155cbf456b228bebac",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/separate",
+          "handler": "separate_audio_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload_and_separate",
+          "handler": "upload_and_separate_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/hardware",
+          "handler": "get_audio_hardware_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sessions",
+          "handler": "get_stem_sessions"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/file/{session_id}/{filename}",
+          "handler": "get_stem_audio_file"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/audio_dsp_prosody_router.py",
+      "sha256": "2d29a45672823b45fa640a78655773fe650d2308de7f716ecd450fac7bdbb2fa",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/dsp/filter",
+          "handler": "dsp_filter_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dsp/stretch",
+          "handler": "pitch_stretch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/prosody/map",
+          "handler": "prosody_map_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/audit_ledger_router.py",
+      "sha256": "e1017cdde5b09e080ea80ae40ec18bf319792cac9ae6cbc9cfe6219ac5f276a9",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/summary",
+          "handler": "get_summary"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/blocks",
+          "handler": "get_blocks"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scan",
+          "handler": "scan_sources"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/autonomous_swarm_graph_router.py",
+      "sha256": "8bb44213eabecb8ed38a0393377469ef2dc343083a452b465d42af5c4d663147",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/code/refine",
+          "handler": "refine_code_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/graph/record",
+          "handler": "record_graph_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/graph/query",
+          "handler": "query_graph_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/digital-twin/sync",
+          "handler": "digital_twin_sync_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/binary_hardware_workbench_router.py",
+      "sha256": "e174e016088e139c1e8161d5b42aea16f753e048318ab863b2f862da4038b3ed",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/disassemble",
+          "handler": "disassemble_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/flashrom",
+          "handler": "flashrom_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/bench/diagnostics",
+          "handler": "bench_diagnostics_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/calendar_tasks_router.py",
+      "sha256": "9f95a439b8bd3960ee82370d41897170160b794d5e16139eefa6fa14f766afc8",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/appointments",
+          "handler": "get_appointments"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/appointments",
+          "handler": "create_appointment"
+        },
+        {
+          "method": "PUT",
+          "path_literal": "/appointments/{apt_id}",
+          "handler": "update_appointment"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/appointments/{apt_id}",
+          "handler": "delete_appointment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/nlp/parse",
+          "handler": "nlp_parse_appointment"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/tasks",
+          "handler": "get_tasks"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/tasks",
+          "handler": "create_task"
+        },
+        {
+          "method": "PUT",
+          "path_literal": "/tasks/{task_id}",
+          "handler": "update_task"
+        },
+        {
+          "method": "PATCH",
+          "path_literal": "/tasks/{task_id}/toggle",
+          "handler": "toggle_task_status"
+        },
+        {
+          "method": "PATCH",
+          "path_literal": "/tasks/{task_id}/status",
+          "handler": "update_task_status"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/tasks/{task_id}",
+          "handler": "delete_task"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/tasks/ai-extract",
+          "handler": "ai_extract_action_items"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/combined-events",
+          "handler": "get_combined_calendar_events"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stats",
+          "handler": "get_task_statistics"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/chat_router.py",
+      "sha256": "696903b22ace6e0c165fa36c5f0b492102e06a5b110d3f9595b135bb3fe8f476",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/models",
+          "handler": "get_available_models"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/embed",
+          "handler": "generate_embedding"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/embeddings",
+          "handler": "generate_embedding"
+        },
+        {
+          "method": "POST",
+          "path_literal": "",
+          "handler": "generate_chat_completion"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/completions",
+          "handler": "generate_chat_completion"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/chef_analytics_router.py",
+      "sha256": "041a19a8ee8b9f42e8c2025d938235cd99ef6c084cca15f658fe0745969fee0b",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/overview",
+          "handler": "get_analytics_overview"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/semantic-insights",
+          "handler": "get_semantic_insights"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ingest-event",
+          "handler": "ingest_visitor_event"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/monthly-report",
+          "handler": "get_monthly_client_report"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/chef_orders_router.py",
+      "sha256": "bdc947309e7f2f5f2aeb585c6c3c06ab604230bfd522c9e39446a55ed87305de",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/order",
+          "handler": "place_chef_order"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/orders",
+          "handler": "list_chef_orders"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/order/{order_id}/status",
+          "handler": "update_order_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stats",
+          "handler": "get_chef_stats"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/invoice",
+          "handler": "get_invoice_pdf"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/invoice/pdf",
+          "handler": "get_invoice_pdf"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/invoice/html",
+          "handler": "get_invoice_html"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/codebase_knowledge_router.py",
+      "sha256": "cde4f27b975695141a1e56d18c93e1839177c8b13aa44d5d2150fd8fe1aea937",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/search",
+          "handler": "search_codebase_knowledge"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/file",
+          "handler": "get_sourcecode_file"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/summary",
+          "handler": "get_codebase_summary"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/coding_preparation_router.py",
+      "sha256": "107b6d369abee9a8110d99b5d1b95874cfb431d6c47dd137347d34e9bbfc0dad",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/preview",
+          "handler": "preview"
+        },
+        {
+          "method": "POST",
+          "path_literal": "",
+          "handler": "prepare"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/identity",
+          "handler": "identity"
+        },
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}",
+          "handler": "inspect"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/recover",
+          "handler": "recover"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans",
+          "handler": "generate_plan"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}/plans",
+          "handler": "plan_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}/plans/{plan_id}",
+          "handler": "inspect_plan"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans/{plan_id}/recover",
+          "handler": "recover_plan"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans/{plan_id}/cancel",
+          "handler": "cancel_plan"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposal-review",
+          "handler": "proposal_review"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposals",
+          "handler": "proposal_history"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposals",
+          "handler": "generate_proposal"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposals/{proposal_id}",
+          "handler": "inspect_proposal"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposals/{proposal_id}/recover",
+          "handler": "recover_proposal"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{request_id}/plans/{plan_id}/proposals/{proposal_id}/cancel",
+          "handler": "cancel_proposal"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/coding_review_router.py",
+      "sha256": "3a1adf28e685310112a8e47f78cb8a1f26c0f699a6a0aba3aa58a574746f1091",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/{task_id}/cancel",
+          "handler": "cancel_coding_task"
+        },
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "list_saved_coding_tasks"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{task_id}/review",
+          "handler": "get_coding_review"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{task_id}/apply",
+          "handler": "apply_coding_review"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{task_id}/recover",
+          "handler": "recover_saved_coding_task"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/comfy_processing_router.py",
+      "sha256": "2b1202b766af421d8356e2f2f54bf8b8ce175c2e192a18724a76cc7572d96c30",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/matting",
+          "handler": "matting_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upscale",
+          "handler": "upscale_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media/download/{filename}",
+          "handler": "download_processed_media"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/comfyui_router.py",
+      "sha256": "88e3d875faed80fc62fd6e26d3ed6d8b99e9d4382d374f05ba4da3fe9ad6530a",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/workflows",
+          "handler": "list_workflows"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload",
+          "handler": "upload_base_image"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate",
+          "handler": "generate_media"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status/{prompt_id}",
+          "handler": "check_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/view",
+          "handler": "view_media"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate_chained",
+          "handler": "generate_media_chained"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate_script",
+          "handler": "generate_media_script"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/comfyui_workspace_router.py",
+      "sha256": "6b78612e8c80a7f55f0e4d94dcdbd5841cc4aa15f0bc29c571c6905f5cb8fd50",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/capabilities",
+          "handler": "get_capabilities"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/styles",
+          "handler": "list_styles"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/styles",
+          "handler": "add_style"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/styles/{style_id}",
+          "handler": "delete_style"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/run",
+          "handler": "run_pipeline"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/gallery",
+          "handler": "get_recent_gallery"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/free",
+          "handler": "free_vram"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/blueprints/grid",
+          "handler": "run_grid_blueprint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/blueprints/feather",
+          "handler": "run_feather_blueprint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/content_governance_router.py",
+      "sha256": "c0657a9039a12d9988ff981cc52f331276a1d70043ba6ced4595856576f7e156",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/analyze",
+          "handler": "analyze_content_risk"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/categories",
+          "handler": "get_governance_categories"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/conversation_router.py",
+      "sha256": "838daa45e6035048d9e58cea558c0375a850986c872bb92a859486e74af9cc0b",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/identity",
+          "handler": "conversation_identity"
+        },
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "conversation_list"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/{conversation_id}",
+          "handler": "conversation_read"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/{conversation_id}",
+          "handler": "conversation_save"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/cro_ledger_router.py",
+      "sha256": "3524c54df4ec99b908945ea214cbab705af69294e954d527d95bc1607802bb83",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/ledger",
+          "handler": "get_trade_ledger"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/trade",
+          "handler": "record_trade"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/history",
+          "handler": "get_price_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/predict",
+          "handler": "get_pattern_prediction"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/snapshot",
+          "handler": "record_live_snapshot"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/data_feed_router.py",
+      "sha256": "467f16bea938e2748db40935f994138014146c8ba1bbb021e6b92c2eaddc1ef9",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/latest/{topic}",
+          "handler": "get_latest_feed"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/demo_industry_suites.py",
+      "sha256": "9b6d0a003584d56b279de33d197cec738103470ee441e8f35be73f2b97cd2d59",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/real_estate",
+          "handler": "get_real_estate"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/legal",
+          "handler": "get_legal"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/medical",
+          "handler": "get_medical"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/retail",
+          "handler": "get_retail"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/finance",
+          "handler": "get_finance"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/education",
+          "handler": "get_education"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/manufacturing",
+          "handler": "get_manufacturing"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/agriculture",
+          "handler": "get_agriculture"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/entertainment",
+          "handler": "get_entertainment"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cybersecurity",
+          "handler": "get_cybersecurity"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/hr",
+          "handler": "get_hr"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/customer_support",
+          "handler": "get_customer_support"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/logistics",
+          "handler": "get_logistics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/insurance",
+          "handler": "get_insurance"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/construction",
+          "handler": "get_construction"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/automotive",
+          "handler": "get_automotive"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/travel",
+          "handler": "get_travel"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/gaming",
+          "handler": "get_gaming"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ngo",
+          "handler": "get_ngo"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/journalism",
+          "handler": "get_journalism"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/wellness",
+          "handler": "get_wellness"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/events",
+          "handler": "get_events"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/gov",
+          "handler": "get_gov"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/energy",
+          "handler": "get_energy"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/telecom",
+          "handler": "get_telecom"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/mining",
+          "handler": "get_mining"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/aerospace",
+          "handler": "get_aerospace"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/pharma",
+          "handler": "get_pharma"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fashion",
+          "handler": "get_fashion"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/foodbev",
+          "handler": "get_foodbev"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/audio",
+          "handler": "get_audio"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/video",
+          "handler": "get_video"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/photography",
+          "handler": "get_photography"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/animation",
+          "handler": "get_animation"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/translation",
+          "handler": "get_translation"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/writing",
+          "handler": "get_writing"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/seo",
+          "handler": "get_seo"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/socialmedia",
+          "handler": "get_socialmedia"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/pr",
+          "handler": "get_pr"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sports",
+          "handler": "get_sports"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/landscaping",
+          "handler": "get_landscaping"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/realestatedev",
+          "handler": "get_realestatedev"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/hvac",
+          "handler": "get_hvac"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/plumbing",
+          "handler": "get_plumbing"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/electrical",
+          "handler": "get_electrical"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cleaning",
+          "handler": "get_cleaning"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/security",
+          "handler": "get_security"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/pestcontrol",
+          "handler": "get_pestcontrol"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/wastemgmt",
+          "handler": "get_wastemgmt"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/delivery",
+          "handler": "get_delivery"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/datacenter",
+          "handler": "get_datacenter"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/devops",
+          "handler": "get_devops"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cloudfinops",
+          "handler": "get_cloudfinops"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/quantum",
+          "handler": "get_quantum"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/robotics",
+          "handler": "get_robotics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cv",
+          "handler": "get_cv"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/blockchain",
+          "handler": "get_blockchain"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/syntheticbio",
+          "handler": "get_syntheticbio"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/materials",
+          "handler": "get_materials"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/nlpresearch",
+          "handler": "get_nlpresearch"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/edgeiot",
+          "handler": "get_edgeiot"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/observability",
+          "handler": "get_observability"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/embedded",
+          "handler": "get_embedded"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/gamearch",
+          "handler": "get_gamearch"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/pentesting",
+          "handler": "get_pentesting"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/autovehicles",
+          "handler": "get_autovehicles"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ardev",
+          "handler": "get_ardev"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/semiconductors",
+          "handler": "get_semiconductors"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/nanotech",
+          "handler": "get_nanotech"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/deepspace",
+          "handler": "get_deepspace"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/document_converter_router.py",
+      "sha256": "8abf6c78b7a49dcf8fa8e4c5a1941e0f254fd3ebc3bd919ace137e41bafe0c4b",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/export_docx",
+          "handler": "export_to_microsoft_word"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/export_fdx",
+          "handler": "export_to_fdx"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/import_docx",
+          "handler": "import_word_document"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/import_gdoc_url",
+          "handler": "import_from_google_docs_url"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/banquet/generate_beo",
+          "handler": "generate_banquet_beo"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/drop_sniffer_router.py",
+      "sha256": "5f58cbc3e220f09e253db43b33ad68ebb3e329e600312466dae2c37a16222458",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_sniffer_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drops",
+          "handler": "get_detected_drops"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/inventory",
+          "handler": "get_hub_inventory"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/catalog-free",
+          "handler": "get_free_catalog_drops"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cross-check",
+          "handler": "get_cross_check_matrix"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/ebook_factoring_router.py",
+      "sha256": "8d83b405bb1143b557adfebaff2c5a84cf43dd695448b90c4a00be9b221f809f",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/ebook/convert",
+          "handler": "convert_ebook_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/pdf/optimize",
+          "handler": "optimize_pdf_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/ecosystem_telemetry_router.py",
+      "sha256": "155922a5bd101f772c83f5a874dfe7507f628e94ad03786101f3972eaa326d13",
+      "static_decorated_endpoints": [
+        {
+          "method": "WEBSOCKET",
+          "path_literal": "/ws/ecosystem/telemetry",
+          "handler": "websocket_ecosystem_telemetry"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/v1/system/ecosystem/telemetry",
+          "handler": "get_ecosystem_telemetry_snapshot"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/v1/system/ecosystem/telemetry/ingest",
+          "handler": "ingest_port_telemetry"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/v1/system/ecosystem/ports/discover",
+          "handler": "discover_port_tools_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/v1/system/ecosystem/ports/dispatch",
+          "handler": "dispatch_port_tool_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/email_client_router.py",
+      "sha256": "880de049671dfb96509a599bd4ee8737b8043e45a7520aceea626233f4ec2416",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_email_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/config-status",
+          "handler": "get_email_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "get_emails"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/",
+          "handler": "get_emails"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/update",
+          "handler": "update_email_state"
+        },
+        {
+          "method": "PATCH",
+          "path_literal": "/{email_id}",
+          "handler": "update_email_state"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/bulk",
+          "handler": "bulk_email_action"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/incoming",
+          "handler": "receive_incoming_email"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sync",
+          "handler": "sync_emails_from_imap"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/send",
+          "handler": "send_email"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate-reply",
+          "handler": "generate_email_reply"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/executive_cockpit_router.py",
+      "sha256": "41a44d21ecc0fbebba3ae86b29edc1f894e25746a64302933f988b1704844168",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/chat",
+          "handler": "executive_chat_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/actions/pending",
+          "handler": "get_pending_actions_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/actions/{action_id}/resolve",
+          "handler": "resolve_action_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/actions/history",
+          "handler": "get_action_history_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/matrix/status",
+          "handler": "get_matrix_status_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/settings/autonomy",
+          "handler": "set_autonomy_setting_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/settings/autonomy",
+          "handler": "get_autonomy_setting_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/actions/halt",
+          "handler": "emergency_halt_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sentinel/alerts",
+          "handler": "get_sentinel_alerts_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sentinel/status",
+          "handler": "get_sentinel_status_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sentinel/scan",
+          "handler": "trigger_sentinel_scan_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sentinel/expand-media",
+          "handler": "expand_media_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cloud/status",
+          "handler": "get_cloud_status_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cloud/config",
+          "handler": "configure_cloud_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/voice/status",
+          "handler": "get_voice_status_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vibe-checkpoint",
+          "handler": "create_vibe_checkpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vibe-rollback",
+          "handler": "rollback_vibe_checkpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/route-audit",
+          "handler": "get_route_audit"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/export_router.py",
+      "sha256": "3cfd91a2b7af8838fb38662f35868514ac65d953a952ba7f285ad1ff2a823130",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/timeline",
+          "handler": "export_timeline"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/download/{filename}",
+          "handler": "download_export"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/fe_express_router.py",
+      "sha256": "80c3cf2d55961e624438b9e12a87645d0e099e746a777980eabd93fdd82638b5",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/pin/login",
+          "handler": "pin_login"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/pin/logout",
+          "handler": "pin_logout"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/loads",
+          "handler": "get_loads"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/loads/evaluate",
+          "handler": "evaluate_ad_hoc_load"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/loads/sync-public",
+          "handler": "sync_public_boards_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/loads/ingest",
+          "handler": "ingest_loads"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/loads/{load_id}/bid",
+          "handler": "generate_broker_bid"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/loads/{load_id}/fuel-analysis",
+          "handler": "calculate_load_fuel_and_margins"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/loads/{load_id}/backhauls",
+          "handler": "get_load_backhauls"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/alerts/check/{load_id}",
+          "handler": "check_load_alert"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/brokers/credit",
+          "handler": "get_broker_credit"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/loads/{load_id}/benchmark",
+          "handler": "get_load_benchmark"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/active-dispatches",
+          "handler": "get_active_dispatches"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/book-load",
+          "handler": "book_active_load"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dispatches/{dispatch_id}/accounting",
+          "handler": "update_dispatch_accounting"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drivers",
+          "handler": "get_drivers"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/drivers",
+          "handler": "save_driver"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/settlements",
+          "handler": "get_settlements"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/settlements",
+          "handler": "record_settlement"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/version",
+          "handler": "get_fe_express_version"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/update-manifest",
+          "handler": "get_update_manifest"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/triangulation-chains",
+          "handler": "get_triangulation_chains"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/factoring/submit",
+          "handler": "submit_instant_factoring"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ifta/summary",
+          "handler": "get_ifta_summary"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/navigation/hazards",
+          "handler": "check_route_hazards"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/maintenance/dvir",
+          "handler": "get_maintenance_dvir_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fraud-shield",
+          "handler": "check_fraud_shield"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/blast-bid",
+          "handler": "send_blast_bid"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/horizon-map",
+          "handler": "get_horizon_map"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/detention-sentinel",
+          "handler": "trigger_detention_sentinel"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/dock-intelligence",
+          "handler": "get_dock_intelligence"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cpm-calibration",
+          "handler": "get_cpm_calibration"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/accessorial-claim",
+          "handler": "create_accessorial_claim"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fuel-optimizer",
+          "handler": "get_fuel_optimizer"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/capacity-broadcast",
+          "handler": "post_capacity_broadcast"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/lumper-escrow",
+          "handler": "post_lumper_escrow"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/fleet-escrow/deduction",
+          "handler": "post_fleet_escrow_deduction"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fmcsa-profile",
+          "handler": "get_fmcsa_profile"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/mesh-haul/match",
+          "handler": "post_mesh_haul_match"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/fatigue-catalyst",
+          "handler": "post_fatigue_catalyst"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scope3-carbon",
+          "handler": "post_scope3_carbon"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/black-swan-radar",
+          "handler": "get_black_swan_radar"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ar-hud",
+          "handler": "get_ar_hud"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scraper/sync-public-boards",
+          "handler": "post_sync_public_boards"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/functional_utilities.py",
+      "sha256": "ee3b6ad3f8aa948d7af35b11e520ab1337dce069e0f3954b2e5934d1186fb3ad",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/cad_telemetry",
+          "handler": "run_cad_telemetry"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/plc_override",
+          "handler": "run_plc_override"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/supply_chain",
+          "handler": "run_supply_chain"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/pos_anomaly",
+          "handler": "run_pos_anomaly"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/inventory_forecast",
+          "handler": "run_inventory_forecast"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/zoning_map",
+          "handler": "run_zoning_map"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/vram_balancer",
+          "handler": "run_vram_balancer"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/vuln_scanner",
+          "handler": "run_vuln_scanner"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/zerotrust_monitor",
+          "handler": "run_zerotrust_monitor"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/emergency_heatmap",
+          "handler": "run_emergency_heatmap"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/hospital_beds",
+          "handler": "run_hospital_beds"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/utilities/grid_shedding",
+          "handler": "run_grid_shedding"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/gpu_telemetry_router.py",
+      "sha256": "3de55d4aa97403689c6232e3842a9afbb8dbb8a19c7bf1e69dcafb6d8f032cbe",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/controller",
+          "handler": "get_adaptive_gpu_controller_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/telemetry",
+          "handler": "get_gpu_telemetry"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/history",
+          "handler": "get_gpu_history"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/fan-control",
+          "handler": "control_gpu_fan"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/compute-target",
+          "handler": "get_compute_target"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stream",
+          "handler": "stream_gpu_telemetry"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/industry_tools_router.py",
+      "sha256": "1f1ecf56c9a277025c2028ff02ee278ea45d4923cca9cef031f7db25fac30284",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/financialhedgefund/telemetry_scan",
+          "handler": "run_scan_financialhedgefund"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/financialhedgefund/autonomous_override",
+          "handler": "run_override_financialhedgefund"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/ecommerceretail/telemetry_scan",
+          "handler": "run_scan_ecommerceretail"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/ecommerceretail/autonomous_override",
+          "handler": "run_override_ecommerceretail"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/realestatearchitecture/telemetry_scan",
+          "handler": "run_scan_realestatearchitecture"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/realestatearchitecture/autonomous_override",
+          "handler": "run_override_realestatearchitecture"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/realestatedevelopment/telemetry_scan",
+          "handler": "run_scan_realestatedevelopment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/realestatedevelopment/autonomous_override",
+          "handler": "run_override_realestatedevelopment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/insuranceclaims/telemetry_scan",
+          "handler": "run_scan_insuranceclaims"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/insuranceclaims/autonomous_override",
+          "handler": "run_override_insuranceclaims"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/humanresourcesrecruiting/telemetry_scan",
+          "handler": "run_scan_humanresourcesrecruiting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/humanresourcesrecruiting/autonomous_override",
+          "handler": "run_override_humanresourcesrecruiting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/legalcompliance/telemetry_scan",
+          "handler": "run_scan_legalcompliance"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/legalcompliance/autonomous_override",
+          "handler": "run_override_legalcompliance"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/customersupportcallcenters/telemetry_scan",
+          "handler": "run_scan_customersupportcallcenters"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/customersupportcallcenters/autonomous_override",
+          "handler": "run_override_customersupportcallcenters"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nonprofitngo/telemetry_scan",
+          "handler": "run_scan_nonprofitngo"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nonprofitngo/autonomous_override",
+          "handler": "run_override_nonprofitngo"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/traveltourism/telemetry_scan",
+          "handler": "run_scan_traveltourism"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/traveltourism/autonomous_override",
+          "handler": "run_override_traveltourism"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/medicalbioinformatics/telemetry_scan",
+          "handler": "run_scan_medicalbioinformatics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/medicalbioinformatics/autonomous_override",
+          "handler": "run_override_medicalbioinformatics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/pharmaceuticals/telemetry_scan",
+          "handler": "run_scan_pharmaceuticals"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/pharmaceuticals/autonomous_override",
+          "handler": "run_override_pharmaceuticals"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/syntheticbiologycrispr/telemetry_scan",
+          "handler": "run_scan_syntheticbiologycrispr"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/syntheticbiologycrispr/autonomous_override",
+          "handler": "run_override_syntheticbiologycrispr"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/quantumcomputingresearch/telemetry_scan",
+          "handler": "run_scan_quantumcomputingresearch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/quantumcomputingresearch/autonomous_override",
+          "handler": "run_override_quantumcomputingresearch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/materialsscience/telemetry_scan",
+          "handler": "run_scan_materialsscience"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/materialsscience/autonomous_override",
+          "handler": "run_override_materialsscience"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nanotechnology/telemetry_scan",
+          "handler": "run_scan_nanotechnology"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nanotechnology/autonomous_override",
+          "handler": "run_override_nanotechnology"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nlpresearch/telemetry_scan",
+          "handler": "run_scan_nlpresearch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/nlpresearch/autonomous_override",
+          "handler": "run_override_nlpresearch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/computervisionengineering/telemetry_scan",
+          "handler": "run_scan_computervisionengineering"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/computervisionengineering/autonomous_override",
+          "handler": "run_override_computervisionengineering"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/roboticsautomation/telemetry_scan",
+          "handler": "run_scan_roboticsautomation"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/roboticsautomation/autonomous_override",
+          "handler": "run_override_roboticsautomation"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/aerospacedefense/telemetry_scan",
+          "handler": "run_scan_aerospacedefense"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/aerospacedefense/autonomous_override",
+          "handler": "run_override_aerospacedefense"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/datacenteroperations/telemetry_scan",
+          "handler": "run_scan_datacenteroperations"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/datacenteroperations/autonomous_override",
+          "handler": "run_override_datacenteroperations"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/devopscicd/telemetry_scan",
+          "handler": "run_scan_devopscicd"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/devopscicd/autonomous_override",
+          "handler": "run_override_devopscicd"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cloudinfrastructurefinops/telemetry_scan",
+          "handler": "run_scan_cloudinfrastructurefinops"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cloudinfrastructurefinops/autonomous_override",
+          "handler": "run_override_cloudinfrastructurefinops"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/edgeaiiot/telemetry_scan",
+          "handler": "run_scan_edgeaiiot"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/edgeaiiot/autonomous_override",
+          "handler": "run_override_edgeaiiot"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/telemetryobservability/telemetry_scan",
+          "handler": "run_scan_telemetryobservability"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/telemetryobservability/autonomous_override",
+          "handler": "run_override_telemetryobservability"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/embeddedsystems/telemetry_scan",
+          "handler": "run_scan_embeddedsystems"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/embeddedsystems/autonomous_override",
+          "handler": "run_override_embeddedsystems"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/networksecuritypentesting/telemetry_scan",
+          "handler": "run_scan_networksecuritypentesting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/networksecuritypentesting/autonomous_override",
+          "handler": "run_override_networksecuritypentesting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cybersecurityinfosec/telemetry_scan",
+          "handler": "run_scan_cybersecurityinfosec"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cybersecurityinfosec/autonomous_override",
+          "handler": "run_override_cybersecurityinfosec"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/blockchainweb3security/telemetry_scan",
+          "handler": "run_scan_blockchainweb3security"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/blockchainweb3security/autonomous_override",
+          "handler": "run_override_blockchainweb3security"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/telecommunications/telemetry_scan",
+          "handler": "run_scan_telecommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/telecommunications/autonomous_override",
+          "handler": "run_override_telecommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/entertainmentmedia/telemetry_scan",
+          "handler": "run_scan_entertainmentmedia"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/entertainmentmedia/autonomous_override",
+          "handler": "run_override_entertainmentmedia"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/gamingesports/telemetry_scan",
+          "handler": "run_scan_gamingesports"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/gamingesports/autonomous_override",
+          "handler": "run_override_gamingesports"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/gameenginearchitecture/telemetry_scan",
+          "handler": "run_scan_gameenginearchitecture"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/gameenginearchitecture/autonomous_override",
+          "handler": "run_override_gameenginearchitecture"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/augmentedrealitydevelopment/telemetry_scan",
+          "handler": "run_scan_augmentedrealitydevelopment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/augmentedrealitydevelopment/autonomous_override",
+          "handler": "run_override_augmentedrealitydevelopment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/animationvfx/telemetry_scan",
+          "handler": "run_scan_animationvfx"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/animationvfx/autonomous_override",
+          "handler": "run_override_animationvfx"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/videobroadcasting/telemetry_scan",
+          "handler": "run_scan_videobroadcasting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/videobroadcasting/autonomous_override",
+          "handler": "run_override_videobroadcasting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/audiopodcasting/telemetry_scan",
+          "handler": "run_scan_audiopodcasting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/audiopodcasting/autonomous_override",
+          "handler": "run_override_audiopodcasting"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/photographyimaging/telemetry_scan",
+          "handler": "run_scan_photographyimaging"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/photographyimaging/autonomous_override",
+          "handler": "run_override_photographyimaging"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/journalismpublishing/telemetry_scan",
+          "handler": "run_scan_journalismpublishing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/journalismpublishing/autonomous_override",
+          "handler": "run_override_journalismpublishing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/creativewritingpublishing/telemetry_scan",
+          "handler": "run_scan_creativewritingpublishing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/creativewritingpublishing/autonomous_override",
+          "handler": "run_override_creativewritingpublishing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/governmentpublicsector/telemetry_scan",
+          "handler": "run_scan_governmentpublicsector"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/governmentpublicsector/autonomous_override",
+          "handler": "run_override_governmentpublicsector"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/energyutilities/telemetry_scan",
+          "handler": "run_scan_energyutilities"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/energyutilities/autonomous_override",
+          "handler": "run_override_energyutilities"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/electricalgrid/telemetry_scan",
+          "handler": "run_scan_electricalgrid"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/electricalgrid/autonomous_override",
+          "handler": "run_override_electricalgrid"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/wastemanagement/telemetry_scan",
+          "handler": "run_scan_wastemanagement"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/wastemanagement/autonomous_override",
+          "handler": "run_override_wastemanagement"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/miningmetals/telemetry_scan",
+          "handler": "run_scan_miningmetals"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/miningmetals/autonomous_override",
+          "handler": "run_override_miningmetals"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/deepspacecommunications/telemetry_scan",
+          "handler": "run_scan_deepspacecommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/deepspacecommunications/autonomous_override",
+          "handler": "run_override_deepspacecommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/autonomousvehicles/telemetry_scan",
+          "handler": "run_scan_autonomousvehicles"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/autonomousvehicles/autonomous_override",
+          "handler": "run_override_autonomousvehicles"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/translationlocalization/telemetry_scan",
+          "handler": "run_scan_translationlocalization"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/translationlocalization/autonomous_override",
+          "handler": "run_override_translationlocalization"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/educationedtech/telemetry_scan",
+          "handler": "run_scan_educationedtech"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/educationedtech/autonomous_override",
+          "handler": "run_override_educationedtech"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/semiconductorsvlsi/telemetry_scan",
+          "handler": "run_scan_semiconductorsvlsi"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/semiconductorsvlsi/autonomous_override",
+          "handler": "run_override_semiconductorsvlsi"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/seodigitalmarketing/telemetry_scan",
+          "handler": "run_scan_seodigitalmarketing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/seodigitalmarketing/autonomous_override",
+          "handler": "run_override_seodigitalmarketing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/socialmediainfluencer/telemetry_scan",
+          "handler": "run_scan_socialmediainfluencer"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/socialmediainfluencer/autonomous_override",
+          "handler": "run_override_socialmediainfluencer"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/prcommunications/telemetry_scan",
+          "handler": "run_scan_prcommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/prcommunications/autonomous_override",
+          "handler": "run_override_prcommunications"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/eventsticketing/telemetry_scan",
+          "handler": "run_scan_eventsticketing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/eventsticketing/autonomous_override",
+          "handler": "run_override_eventsticketing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/fashionapparel/telemetry_scan",
+          "handler": "run_scan_fashionapparel"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/fashionapparel/autonomous_override",
+          "handler": "run_override_fashionapparel"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/foodbeverage/telemetry_scan",
+          "handler": "run_scan_foodbeverage"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/foodbeverage/autonomous_override",
+          "handler": "run_override_foodbeverage"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/sportsathletics/telemetry_scan",
+          "handler": "run_scan_sportsathletics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/sportsathletics/autonomous_override",
+          "handler": "run_override_sportsathletics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/wellnessfitness/telemetry_scan",
+          "handler": "run_scan_wellnessfitness"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/wellnessfitness/autonomous_override",
+          "handler": "run_override_wellnessfitness"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/logisticsshipping/telemetry_scan",
+          "handler": "run_scan_logisticsshipping"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/logisticsshipping/autonomous_override",
+          "handler": "run_override_logisticsshipping"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/deliverycourier/telemetry_scan",
+          "handler": "run_scan_deliverycourier"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/deliverycourier/autonomous_override",
+          "handler": "run_override_deliverycourier"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/manufacturingsupplychain/telemetry_scan",
+          "handler": "run_scan_manufacturingsupplychain"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/manufacturingsupplychain/autonomous_override",
+          "handler": "run_override_manufacturingsupplychain"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/agriculturefarming/telemetry_scan",
+          "handler": "run_scan_agriculturefarming"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/agriculturefarming/autonomous_override",
+          "handler": "run_override_agriculturefarming"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/constructionengineering/telemetry_scan",
+          "handler": "run_scan_constructionengineering"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/constructionengineering/autonomous_override",
+          "handler": "run_override_constructionengineering"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/automotivedealership/telemetry_scan",
+          "handler": "run_scan_automotivedealership"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/automotivedealership/autonomous_override",
+          "handler": "run_override_automotivedealership"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/landscapinggrounds/telemetry_scan",
+          "handler": "run_scan_landscapinggrounds"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/landscapinggrounds/autonomous_override",
+          "handler": "run_override_landscapinggrounds"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/hvacclimatecontrol/telemetry_scan",
+          "handler": "run_scan_hvacclimatecontrol"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/hvacclimatecontrol/autonomous_override",
+          "handler": "run_override_hvacclimatecontrol"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/plumbingwatersystems/telemetry_scan",
+          "handler": "run_scan_plumbingwatersystems"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/plumbingwatersystems/autonomous_override",
+          "handler": "run_override_plumbingwatersystems"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cleaningfacility/telemetry_scan",
+          "handler": "run_scan_cleaningfacility"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/cleaningfacility/autonomous_override",
+          "handler": "run_override_cleaningfacility"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/securitysurveillance/telemetry_scan",
+          "handler": "run_scan_securitysurveillance"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/securitysurveillance/autonomous_override",
+          "handler": "run_override_securitysurveillance"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/pestcontrol/telemetry_scan",
+          "handler": "run_scan_pestcontrol"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/pestcontrol/autonomous_override",
+          "handler": "run_override_pestcontrol"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/industry_tools/{sector}/{tool_id}",
+          "handler": "handle_dynamic_industry_tool"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/knowledge_router.py",
+      "sha256": "149bcff8f05840e9c773f60511b6c8355457f778f298f1cace70ef42e517d51d",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/databases",
+          "handler": "list_databases"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/query",
+          "handler": "query_database"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/lexicon_router.py",
+      "sha256": "64386fd86503585b3bf0259cda715c11fa55a5a85a91f30ff7ad6be7278049c6",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/synonyms",
+          "handler": "get_synonyms"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/enrich",
+          "handler": "enrich_text"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/matrix_router.py",
+      "sha256": "122a8cf131e43fb102cababb56d42c4068ced5b0de0500109f62e6518a57f5a1",
+      "static_decorated_endpoints": [
+        {
+          "method": "WEBSOCKET",
+          "path_literal": "/ws/matrix",
+          "handler": "matrix_websocket_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/matrix/publish",
+          "handler": "publish_matrix_event"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/matrix/channels",
+          "handler": "get_matrix_channels"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/media_render_router.py",
+      "sha256": "9d9ccf68b8bca44781a464cb5df217980c0b4c34423ccc6b4883b8af8d89f114",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/upload",
+          "handler": "upload_media_file"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stream",
+          "handler": "stream_media_file"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/inspect",
+          "handler": "inspect_media_file"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/pipeline/execute",
+          "handler": "execute_media_pipeline"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/pipeline/resume/{job_id}",
+          "handler": "resume_media_pipeline"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/vram/telemetry",
+          "handler": "get_vram_telemetry_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vram/flush",
+          "handler": "flush_vram_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/checkpoints/{job_id}",
+          "handler": "get_job_checkpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vision/scene-detect",
+          "handler": "detect_scenes_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vision/smart-reframe",
+          "handler": "smart_reframe_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/image/compose-psd",
+          "handler": "compose_psd_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/image/raster-transform",
+          "handler": "raster_transform_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/video/assemble-timeline",
+          "handler": "assemble_timeline_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/video/strip-silence",
+          "handler": "strip_silence_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/video/apply-lut",
+          "handler": "apply_lut_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/audio/voice-clone",
+          "handler": "voice_clone_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/audio/deepfilter-clean",
+          "handler": "deepfilter_clean_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/audio/duck-music",
+          "handler": "duck_music_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/qc/vmaf",
+          "handler": "verify_vmaf_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/qc/aesthetic-thumbnails",
+          "handler": "score_thumbnails_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vault/query",
+          "handler": "query_vault_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/script/to-recipe",
+          "handler": "script_to_recipe_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/script/storyboard",
+          "handler": "script_storyboard_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/render/manim/scene",
+          "handler": "render_manim_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/render/blender/headless",
+          "handler": "render_blender_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/render/canvas/overlay",
+          "handler": "render_canvas_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chat/stream",
+          "handler": "stream_media_chat"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vault/index",
+          "handler": "index_media_asset_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vault/search",
+          "handler": "search_media_vault_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/vault/stats",
+          "handler": "get_media_vault_stats"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vlm/analyze",
+          "handler": "analyze_visual_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/media_router.py",
+      "sha256": "484e2e2e5d21451de53497fc38d42680ae960e100c9c662708bda6ada8c85dd8",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/health",
+          "handler": "get_media_engine_health"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/outputs",
+          "handler": "list_media_outputs"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/file/{category}/{filename}",
+          "handler": "serve_media_file"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate_image",
+          "handler": "generate_image"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/render_video",
+          "handler": "render_video"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/memory_lab_router.py",
+      "sha256": "ac6598fd60008449ffa1a6e4e5e825b2ac8e41b7fcb5b8b10efba96428243080",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/processes",
+          "handler": "list_processes"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/attach",
+          "handler": "attach_process"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_memory_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/read",
+          "handler": "read_memory"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/write",
+          "handler": "write_memory"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/profiles",
+          "handler": "get_profiles"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/profile/action",
+          "handler": "trigger_profile_action"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/detach",
+          "handler": "detach_process"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scan-cash",
+          "handler": "scan_match_cash"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/filter-cash",
+          "handler": "filter_match_cash"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/set-cash",
+          "handler": "set_match_cash"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scan-coins",
+          "handler": "scan_coins"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/set-coins",
+          "handler": "set_monkey_money"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/memory_router.py",
+      "sha256": "b98454beb9ba8e57e84128ecd3b4dc481dd01d957b01cbc3a7c1f43dc1913fd7",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/items/{record_id}",
+          "handler": "read_vault_item"
+        },
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "get_all_memories"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_status_overview"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/learning-loop/status",
+          "handler": "get_learning_loop_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/learning-loop/start",
+          "handler": "start_learning_loop"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/learning-loop/stop",
+          "handler": "stop_learning_loop"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/learning-loop/tick",
+          "handler": "trigger_learning_tick"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/collections",
+          "handler": "list_collections"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/query",
+          "handler": "query_vector_memory"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/store",
+          "handler": "store_memory_item"
+        },
+        {
+          "method": "POST",
+          "path_literal": "",
+          "handler": "create_memory_direct"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/{memory_id}",
+          "handler": "delete_memory_by_id"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ingest-chat",
+          "handler": "ingest_chat_messages"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scan-root",
+          "handler": "trigger_root_scan"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/moe_specialist_router_api.py",
+      "sha256": "4ea38ddf9ad6c232411531395bc2e5ed776bc807e947c1ba537a528f422ea4e7",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/matrix",
+          "handler": "get_specialist_matrix"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fleet",
+          "handler": "get_ollama_fleet_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/classify",
+          "handler": "classify_prompt_specialist"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/route",
+          "handler": "route_and_execute"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/stream",
+          "handler": "stream_specialist_execution"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/music_assistant_router.py",
+      "sha256": "28aa1114eec317845153ca729bf7b99edc66108a08fa3688b9492a3d8e7f9778",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/chat",
+          "handler": "music_assistant_chat"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "music_assistant_status"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/nda_signer_router.py",
+      "sha256": "d7af6ba2d08000db1fb0ee144f44f9ddf73f80cfb407cb17fd90e87093bbc1ba",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/schema",
+          "handler": "get_nda_schema"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate-signed",
+          "handler": "generate_signed_nda"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/verify-integrity",
+          "handler": "verify_pdf_integrity"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/simulate-tamper",
+          "handler": "simulate_tamper_attack"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/network_telemetry_router.py",
+      "sha256": "55bf220e5f7d2ab594b4b27d62d04bc56f62d612b8a655d56cc074f18955594f",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/summary",
+          "handler": "get_network_summary"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/capture-mode",
+          "handler": "get_engine_mode"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/capture-mode",
+          "handler": "set_engine_mode"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/interfaces",
+          "handler": "get_network_interfaces"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/traffic",
+          "handler": "get_traffic_records"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/flows",
+          "handler": "get_network_flows"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/routes",
+          "handler": "get_route_distribution"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/correlation",
+          "handler": "get_flow_correlation"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/air/scan",
+          "handler": "scan_ambient_air"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/air/records",
+          "handler": "get_air_records"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/air/summary",
+          "handler": "get_air_summary"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/clear",
+          "handler": "clear_traffic"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/air/clear",
+          "handler": "clear_air_records"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stream",
+          "handler": "stream_live_telemetry"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/news_catalyst_router.py",
+      "sha256": "26af400590624e9677856f603eb9230fd9b213b1866b2be9fcc96fd8894e792a",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/news-catalysts",
+          "handler": "get_news_catalysts"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/novelizer_router.py",
+      "sha256": "1a07266e2e64678587f78856101a20dc033c4dee31f7d9636e9b74462ac9fa0b",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/styles",
+          "handler": "get_style_profiles"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/projects",
+          "handler": "get_novelizer_projects"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/group_chapters",
+          "handler": "group_script_into_chapters"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/convert_scene",
+          "handler": "convert_scene_to_prose"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/convert_chapter",
+          "handler": "convert_chapter_to_prose"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/save_draft",
+          "handler": "save_novel_chapter_draft"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/get_drafts/{project_name}",
+          "handler": "get_project_novel_drafts"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/export_book",
+          "handler": "export_full_book"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/obs_broadcast_router.py",
+      "sha256": "bd33512428aee91b31a3e02bcc63c5578492a8b5f57a9883346c19b15ceb2545",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/state",
+          "handler": "get_obs_state_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/scene",
+          "handler": "switch_scene_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/clip-marker",
+          "handler": "clip_marker_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/operations_audit_router.py",
+      "sha256": "2713d9d3edb98f0621f126313aa3e5bc53ff10af8bc7649f9696232b899e4ca0",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/processes",
+          "handler": "get_live_processes"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/process-action",
+          "handler": "control_process"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-workloads",
+          "handler": "get_media_workloads"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-file",
+          "handler": "get_media_file"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/saves-and-work",
+          "handler": "get_saves_and_work"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/admin-submissions",
+          "handler": "get_admin_submissions"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/error-diagnostics",
+          "handler": "get_error_diagnostics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/log-tail",
+          "handler": "tail_log_file"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/personal_intelligence_router.py",
+      "sha256": "a916397e15b81482840e4b637253373df19f54c805fe4fd526f3a6f5608b6163",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "",
+          "handler": "list_personal_memories"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/add",
+          "handler": "add_personal_memory"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/delete/{fact_id}",
+          "handler": "delete_personal_memory"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/query",
+          "handler": "query_personal_memory"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/activity",
+          "handler": "get_activity_timeline"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/log_event",
+          "handler": "log_ecosystem_event"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/phone_repair_router.py",
+      "sha256": "045860c01fc00238ea2c292a2dee58745cf214d57bde813f60e3d8d805ccc095",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/categories",
+          "handler": "list_repair_categories"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/guides",
+          "handler": "list_repair_guides"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/guide/{guide_id}",
+          "handler": "get_single_guide"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/diagnostics",
+          "handler": "get_diagnostic_trees"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ic_reference",
+          "handler": "get_ic_references"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/tools_reference",
+          "handler": "get_tools_and_chemical_reference"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/tickets",
+          "handler": "get_repair_tickets"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/tickets/create",
+          "handler": "create_repair_ticket"
+        },
+        {
+          "method": "PUT",
+          "path_literal": "/tickets/{ticket_id}/status",
+          "handler": "update_ticket_status"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/photo_studio.py",
+      "sha256": "90fd00556af4a58464773ecb780c358ad4ddbbe56e87118f51d447213a4fbaa2",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/health",
+          "handler": "get_health"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/process-matte",
+          "handler": "process_matte"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/mask",
+          "handler": "generate_mask"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/models",
+          "handler": "list_available_models"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/power_washing_router.py",
+      "sha256": "fc9c6840d39fb511eb4fde6beb9421cf799ca43e93cd55b5b79b4c2ca16e152f",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/analyze_surface",
+          "handler": "analyze_surface"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/gis_quote",
+          "handler": "calculate_gis_quote"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/route_payload",
+          "handler": "calculate_route_payload"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/weather_dispatch",
+          "handler": "get_weather_dispatch_telemetry"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/fleet",
+          "handler": "list_fleet_units"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/fleet",
+          "handler": "create_fleet_unit"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/fleet_log",
+          "handler": "log_fleet_wash_completion"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/clients",
+          "handler": "list_clients"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/clients",
+          "handler": "create_or_update_client"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/clients/{client_id}",
+          "handler": "delete_client"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/jobs",
+          "handler": "list_jobs"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/jobs",
+          "handler": "create_job"
+        },
+        {
+          "method": "PUT",
+          "path_literal": "/jobs/{job_id}/status",
+          "handler": "update_job_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/telemetry",
+          "handler": "get_telemetry"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/powershell_process_router.py",
+      "sha256": "5f34e965cdcc65181c847b776d8b23e5bf740518306960a3444296e5163eb00b",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/execute",
+          "handler": "execute_powershell_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chrome/profiles",
+          "handler": "manage_chrome_profiles_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/directory/inspect",
+          "handler": "inspect_directory_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ecosystem/ports",
+          "handler": "get_ecosystem_ports"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/publishing_engine_router.py",
+      "sha256": "5e7c2efd92ec86272b3f3cc3b745fbfa603340fc4282984368bf4cd6a83bee47",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/typst/compile",
+          "handler": "compile_typst_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/kdp-manuscript",
+          "handler": "generate_kdp_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/pandoc/convert",
+          "handler": "convert_pandoc_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/download/{filename}",
+          "handler": "download_published_pdf"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/templates",
+          "handler": "list_publishing_templates"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/quantitative_spatial_analytics_router.py",
+      "sha256": "34aeec61967d02d111016c8b78b2e554d4fa17cbe84b0f88bde53b1615a1be89",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/analytics/duckdb/query",
+          "handler": "duckdb_query_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/crypto/indicators/calculate",
+          "handler": "indicators_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/infrastructure/noco/spatial",
+          "handler": "noco_spatial_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/rag_bridge.py",
+      "sha256": "b65261c2e027dc876ad457e77940e2a8637eea0c6a7d99afb6a9f58b3e18a69f",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/query",
+          "handler": "query_rag"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/rag/query",
+          "handler": "query_rag"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "rag_status"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/rec_debut_lead_quality.py",
+      "sha256": "480a0e4efd72e23ec56158f9cca24b1329aff348d9f606fe394d9a5edd0d05ed",
+      "static_decorated_endpoints": []
+    },
+    {
+      "path": "backend/routers/rec_debut_router (2).py",
+      "sha256": "5ab78796087529f6f346c40acb3011ec4da08564b39fb61ab4b7f45d15603f3f",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_all_athletes"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/excluded-coaches",
+          "handler": "get_excluded_coaches"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes/update-status",
+          "handler": "update_athletes_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/clean-coaches",
+          "handler": "clean_coaches_from_athletes"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/athletes/{athlete_id}",
+          "handler": "delete_athlete"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes/upload-csv",
+          "handler": "upload_athletes_csv"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/broadcast",
+          "handler": "mass_sms_broadcast"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/broadcast/status",
+          "handler": "get_broadcast_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/broadcast/cancel",
+          "handler": "cancel_broadcast"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scheduler/status",
+          "handler": "get_scheduler_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/test-sms",
+          "handler": "send_test_sms"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/test-email",
+          "handler": "send_test_email"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/email-api/config",
+          "handler": "get_email_api_config"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/email-api/config",
+          "handler": "update_email_api_config"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/email-api/test",
+          "handler": "test_email_api_connection"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/quota-status",
+          "handler": "get_daily_quota_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/smtp-accounts",
+          "handler": "get_smtp_accounts"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/smtp-accounts",
+          "handler": "add_or_update_smtp_account"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/smtp-accounts/{account_id}",
+          "handler": "delete_smtp_account"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/smtp-accounts/test",
+          "handler": "test_smtp_account_login"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athlete-emails",
+          "handler": "get_athlete_emails_summary"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/campaigns",
+          "handler": "get_campaigns_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sms/replies",
+          "handler": "get_athlete_sms_replies"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/sync-replies",
+          "handler": "trigger_sms_replies_sync"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/replies/{reply_id}/read",
+          "handler": "mark_reply_as_read"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/replies/{reply_id}/respond",
+          "handler": "respond_to_athlete_reply"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/test-route-dennis",
+          "handler": "test_route_reply_to_dennis"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/open/{campaign_id}/{athlete_id}",
+          "handler": "track_email_open"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/click/{campaign_id}/{athlete_id}",
+          "handler": "track_email_click"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/outreach-analytics",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/outreach-analytics",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/engagement",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/engagement",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cloudflared/status",
+          "handler": "get_cloudflared_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cloudflared/send",
+          "handler": "send_via_cloudflared"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cloudflared/test-ping",
+          "handler": "test_ping_cloudflared"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/site-data",
+          "handler": "get_recdebut_site_data"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate-registration-link",
+          "handler": "generate_sport_registration_link"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/coaches",
+          "handler": "get_coaches_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/coaches",
+          "handler": "get_coaches_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_athletes_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_athletes_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload_roster",
+          "handler": "upload_roster_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload_roster",
+          "handler": "upload_roster_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ai_generate",
+          "handler": "generate_ai_pitch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ai_generate",
+          "handler": "generate_ai_pitch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dispatch_batch",
+          "handler": "dispatch_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dispatch_batch",
+          "handler": "dispatch_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/register",
+          "handler": "register_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/register",
+          "handler": "register_athlete_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/lead-alerts",
+          "handler": "get_lead_alerts_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/lead-alerts",
+          "handler": "get_lead_alerts_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/lead-alerts/test",
+          "handler": "test_lead_alert_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/lead-alerts/test",
+          "handler": "test_lead_alert_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drip/cohorts",
+          "handler": "get_drip_cohorts_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drip/cohorts",
+          "handler": "get_drip_cohorts_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/drip/dispatch",
+          "handler": "dispatch_drip_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/drip/dispatch",
+          "handler": "dispatch_drip_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-assets",
+          "handler": "get_media_assets_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-assets",
+          "handler": "get_media_assets_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/threads",
+          "handler": "get_chat_threads_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/threads",
+          "handler": "get_chat_threads_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/messages/{athlete_id}",
+          "handler": "get_chat_messages_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/messages/{athlete_id}",
+          "handler": "get_chat_messages_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chat/send",
+          "handler": "send_chat_message_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chat/send",
+          "handler": "send_chat_message_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scouting-card/{athlete_id}",
+          "handler": "get_scouting_card_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scouting-card/{athlete_id}",
+          "handler": "get_scouting_card_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/assistant/query",
+          "handler": "assistant_query_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/assistant/query",
+          "handler": "assistant_query_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_recdebut_status_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_recdebut_status_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/rec_debut_router.py",
+      "sha256": "f8d295defaef91659040b46be78343c27e2da5bcb6d559eafab265030c8cb30e",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/stats",
+          "handler": "get_recdebut_stats"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/stats",
+          "handler": "get_recdebut_stats"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_all_athletes"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/excluded-coaches",
+          "handler": "get_excluded_coaches"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes/update-status",
+          "handler": "update_athletes_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/clean-coaches",
+          "handler": "clean_coaches_from_athletes"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/athletes/{athlete_id}",
+          "handler": "delete_athlete"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes/upload-csv",
+          "handler": "upload_athletes_csv"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/broadcast",
+          "handler": "mass_sms_broadcast"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/broadcast/status",
+          "handler": "get_broadcast_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/broadcast/cancel",
+          "handler": "cancel_broadcast"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scheduler/status",
+          "handler": "get_scheduler_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/test-sms",
+          "handler": "send_test_sms"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/test-email",
+          "handler": "send_test_email"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/email-api/config",
+          "handler": "get_email_api_config"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/email-api/config",
+          "handler": "update_email_api_config"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/email-api/test",
+          "handler": "test_email_api_connection"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/quota-status",
+          "handler": "get_daily_quota_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/smtp-accounts",
+          "handler": "get_smtp_accounts"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/smtp-accounts",
+          "handler": "add_or_update_smtp_account"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/smtp-accounts/{account_id}",
+          "handler": "delete_smtp_account"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/smtp-accounts/test",
+          "handler": "test_smtp_account_login"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athlete-emails",
+          "handler": "get_athlete_emails_summary"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/campaigns",
+          "handler": "get_campaigns_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/textbee/status",
+          "handler": "get_textbee_gateway_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/textbee/status",
+          "handler": "get_textbee_gateway_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/textbee/messages",
+          "handler": "get_textbee_gateway_messages"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/textbee/messages",
+          "handler": "get_textbee_gateway_messages"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/textbee/sync-inbound",
+          "handler": "sync_textbee_inbound_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/textbee/sync-inbound",
+          "handler": "sync_textbee_inbound_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/textbee/dispatch-batch",
+          "handler": "dispatch_textbee_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/textbee/dispatch-batch",
+          "handler": "dispatch_textbee_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/webhooks/textbee",
+          "handler": "handle_textbee_inbound_webhook"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/webhooks/textbee",
+          "handler": "handle_textbee_inbound_webhook"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/inbound",
+          "handler": "handle_textbee_inbound_webhook"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/sms/replies",
+          "handler": "get_athlete_sms_replies"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/sync-replies",
+          "handler": "trigger_sms_replies_sync"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/replies/{reply_id}/read",
+          "handler": "mark_reply_as_read"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/replies/{reply_id}/respond",
+          "handler": "respond_to_athlete_reply"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sms/test-route-dennis",
+          "handler": "test_route_reply_to_dennis"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/open/{campaign_id}/{athlete_id}",
+          "handler": "track_email_open"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/open/{campaign_id}/{athlete_id}",
+          "handler": "track_email_open"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/click/{campaign_id}/{athlete_id}",
+          "handler": "track_email_click"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/track/click/{campaign_id}/{athlete_id}",
+          "handler": "track_email_click"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/r/{athlete_id}",
+          "handler": "short_sms_tracking_redirect"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/r/{athlete_id}",
+          "handler": "short_sms_tracking_redirect"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/r/{athlete_id}",
+          "handler": "short_sms_tracking_redirect"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/outreach-analytics",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/outreach-analytics",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/engagement",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/engagement",
+          "handler": "get_outreach_analytics"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/cloudflared/status",
+          "handler": "get_cloudflared_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cloudflared/send",
+          "handler": "send_via_cloudflared"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/cloudflared/test-ping",
+          "handler": "test_ping_cloudflared"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/site-data",
+          "handler": "get_recdebut_site_data"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/generate-registration-link",
+          "handler": "generate_sport_registration_link"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/coaches",
+          "handler": "get_coaches_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/coaches",
+          "handler": "get_coaches_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_athletes_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/athletes",
+          "handler": "get_athletes_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/athletes",
+          "handler": "create_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload_roster",
+          "handler": "upload_roster_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload_roster",
+          "handler": "upload_roster_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ai_generate",
+          "handler": "generate_ai_pitch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/ai_generate",
+          "handler": "generate_ai_pitch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dispatch_batch",
+          "handler": "dispatch_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/dispatch_batch",
+          "handler": "dispatch_batch_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/register",
+          "handler": "register_athlete_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/register",
+          "handler": "register_athlete_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/lead-alerts",
+          "handler": "get_lead_alerts_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/lead-alerts",
+          "handler": "get_lead_alerts_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/lead-alerts/test",
+          "handler": "test_lead_alert_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/lead-alerts/test",
+          "handler": "test_lead_alert_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drip/cohorts",
+          "handler": "get_drip_cohorts_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/drip/cohorts",
+          "handler": "get_drip_cohorts_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/drip/dispatch",
+          "handler": "dispatch_drip_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/drip/dispatch",
+          "handler": "dispatch_drip_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-assets",
+          "handler": "get_media_assets_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/media-assets",
+          "handler": "get_media_assets_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/threads",
+          "handler": "get_chat_threads_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/threads",
+          "handler": "get_chat_threads_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/messages/{athlete_id}",
+          "handler": "get_chat_messages_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/chat/messages/{athlete_id}",
+          "handler": "get_chat_messages_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chat/send",
+          "handler": "send_chat_message_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/chat/send",
+          "handler": "send_chat_message_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scouting-card/{athlete_id}",
+          "handler": "get_scouting_card_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/scouting-card/{athlete_id}",
+          "handler": "get_scouting_card_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/assistant/query",
+          "handler": "assistant_query_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/assistant/query",
+          "handler": "assistant_query_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_recdebut_status_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_recdebut_status_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/resource_vault_router.py",
+      "sha256": "cdbb0ff301e8d24d03eb902972ec8a7af6d006f20624d2cdf30ff4f054802284",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/list",
+          "handler": "list_vaults"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/schema/{vault_name}",
+          "handler": "get_vault_schema"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/query",
+          "handler": "execute_vault_query"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/index-schemas",
+          "handler": "index_vault_schemas_to_chroma"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/screenwriting_router.py",
+      "sha256": "6afe927b2a8ae7ef6c7e9d9ff17a2034c3b364466de3b956d546f0c8adc8f5a9",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/api/screenplay/adapt/capabilities",
+          "handler": "adaptation_capabilities"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenplay/adapt",
+          "handler": "start_book_adaptation"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenplay/adapt/text",
+          "handler": "start_text_adaptation"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenplay/adapt/status",
+          "handler": "get_adaptation_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenplay/adapt/active-jobs",
+          "handler": "get_active_adaptation_jobs"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenplay/adapt/cancel",
+          "handler": "cancel_adaptation_endpoint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenplay/adapt/reset",
+          "handler": "reset_adaptation_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenplay/adapt/stream",
+          "handler": "stream_adaptation_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects",
+          "handler": "list_projects"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/create",
+          "handler": "create_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/archive",
+          "handler": "delete_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/delete",
+          "handler": "delete_project"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/archives",
+          "handler": "list_project_archives"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/restore",
+          "handler": "restore_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/switch",
+          "handler": "switch_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/native/launch",
+          "handler": "launch_native_creative"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/native/redeem",
+          "handler": "redeem_native_creative"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/read",
+          "handler": "read_screenplay"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/write",
+          "handler": "write_screenplay"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/parse",
+          "handler": "parse_screenplay"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/branches",
+          "handler": "list_branches"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/branch/create",
+          "handler": "create_branch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/branch/switch",
+          "handler": "switch_branch"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/workflow/recover",
+          "handler": "recover_workflow"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/sprints",
+          "handler": "list_sprints"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/sprint/start",
+          "handler": "start_sprint"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/sprint/end",
+          "handler": "end_sprint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/characters",
+          "handler": "get_characters"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/characters",
+          "handler": "save_character"
+        },
+        {
+          "method": "DELETE",
+          "path_literal": "/api/screenwriting/projects/characters",
+          "handler": "delete_character"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/beats/reorder",
+          "handler": "reorder_beats"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/scene_video",
+          "handler": "save_scene_video"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/import-pdf-source",
+          "handler": "import_pdf_source_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/import-fdx-source",
+          "handler": "import_fdx_source_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/fdx-working-copy",
+          "handler": "create_fdx_working_copy"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/import",
+          "handler": "do_import_project"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/coverage",
+          "handler": "generate_coverage"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/export/fdx",
+          "handler": "export_fdx"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/export/pdf",
+          "handler": "export_pdf"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/production_breakdown",
+          "handler": "production_breakdown"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/tax_incentives",
+          "handler": "get_tax_incentives"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/stage_play_breakdown",
+          "handler": "stage_play_breakdown"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/telemetry/scroll",
+          "handler": "log_scroll_telemetry"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/telemetry/scroll",
+          "handler": "get_scroll_telemetry"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/project-assistant/stats",
+          "handler": "get_project_assistant_stats"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/project-assistant/sync",
+          "handler": "sync_project_assistant_chroma"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/project-assistant/chat",
+          "handler": "chat_project_assistant"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/{project_name}/audio/info",
+          "handler": "get_project_audio_info"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/{project_name}/audio/stream",
+          "handler": "stream_project_audio"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/projects/{project_name}/audio/transcribe",
+          "handler": "start_audio_transcription"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/{project_name}/audio/transcribe/status",
+          "handler": "get_audio_transcription_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/projects/{project_name}/audio/transcript",
+          "handler": "get_project_audio_transcript"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/api/screenwriting/studio_voices",
+          "handler": "get_studio_voices"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/generate_audio",
+          "handler": "generate_studio_audio"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/screenwriting/ghostwrite",
+          "handler": "ghostwrite_screenplay"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/security_router.py",
+      "sha256": "d2b162ce799c274e1708f630cc0bf2aaa2d5c526e070eeb973b769722724ed50",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/health",
+          "handler": "get_security_health"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/backups",
+          "handler": "get_database_backups"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/backups/run",
+          "handler": "trigger_database_backup"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/watchdog/status",
+          "handler": "get_watchdog_status"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/self_healing_router.py",
+      "sha256": "ae28ef5d303156dcfa721b5743729f5c7464fbd0e95301cae010c2f3b2107258",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_sentinel_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/incidents",
+          "handler": "list_incidents"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/heal",
+          "handler": "trigger_self_healing"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/circuit-breaker/reset",
+          "handler": "reset_circuit_breaker"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/shared_drive_router.py",
+      "sha256": "ad7478402d6e7db1360b1f3cbd91d42c6489f4ffd81c4ef7711e07b37e02d5a2",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/files",
+          "handler": "list_files"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/upload",
+          "handler": "upload_files"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/create_folder",
+          "handler": "create_folder"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/create_document",
+          "handler": "create_document"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/read_document",
+          "handler": "read_document"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/save_document",
+          "handler": "save_document"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/rename",
+          "handler": "rename_item"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/move",
+          "handler": "move_items"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/delete",
+          "handler": "delete_items"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/download",
+          "handler": "download_file"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/zip_download",
+          "handler": "zip_download"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/preview",
+          "handler": "preview_media"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/storage_stats",
+          "handler": "get_storage_stats"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/media-ticket",
+          "handler": "create_media_ticket"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/sitemap_seo_router.py",
+      "sha256": "a6eadf8b50aec7763f0d591ed4c328898eed5c74703c44a886008410d3282fe7",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/sitemap.xml",
+          "handler": "serve_dynamic_sitemap"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/feed.json",
+          "handler": "serve_json_feed"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/json-ld",
+          "handler": "serve_json_ld_graph"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/schema.jsonld",
+          "handler": "serve_json_ld_graph"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/openapi.yaml",
+          "handler": "serve_openapi_yaml"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sitemap/generate",
+          "handler": "generate_and_save_all_syndication"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/syndicate/all",
+          "handler": "generate_and_save_all_syndication"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sitemap/ping",
+          "handler": "ping_search_engines"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_seo_telemetry"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/social_outreach_router.py",
+      "sha256": "6bd64bef60e8012e93686e7d5089b9caaba17a468ad0590bee3f1c930c553633",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/optimize",
+          "handler": "optimize_social_post"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/topics",
+          "handler": "get_available_topics"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/steam_router.py",
+      "sha256": "8618e1d98f7b8e590db22944ad0c2b2df89ca3648e818ee867b44e55b404be87",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/library",
+          "handler": "get_steam_library"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/launch",
+          "handler": "launch_steam_game"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/system_health_router.py",
+      "sha256": "030c396751705fdd2fe727c0e3f78ce108973bdec54327ab91d1638482a33b46",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/logs/history",
+          "handler": "get_log_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/logs/stream",
+          "handler": "stream_logs"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/system_router.py",
+      "sha256": "1559b5e7e088b1297f2c41dca118b65b9ad4459c222e145dba853f4238e4c940",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/health",
+          "handler": "system_health"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ports",
+          "handler": "get_ports_topology"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ports/status",
+          "handler": "get_ports_live_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/events",
+          "handler": "stream_matrix_events"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/events/history",
+          "handler": "get_events_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/satellites",
+          "handler": "get_satellites_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/matrix/doctor",
+          "handler": "get_matrix_doctor_diagnostics"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/matrix/doctor/heal",
+          "handler": "trigger_matrix_doctor_heal"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/gpu-telemetry",
+          "handler": "get_gpu_telemetry_detailed"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/telemetry_websocket.py",
+      "sha256": "2820dce096544c2b2ed2faaeb8eef63fa8dcee99996b9ea6534c39fa0efddfb7",
+      "static_decorated_endpoints": [
+        {
+          "method": "WEBSOCKET",
+          "path_literal": "/ws/telemetry/{industry}",
+          "handler": "websocket_telemetry_endpoint"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/trading_router.py",
+      "sha256": "180d3afaf39c411c6d9b67d8bedd13e240a2ea37dc4c91ffaeaba227d5af3916",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_trader_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/ledger",
+          "handler": "get_trade_ledger"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/balances",
+          "handler": "get_wallet_balances"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/order",
+          "handler": "execute_trade_order"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/status",
+          "handler": "get_kraken_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/balance",
+          "handler": "get_kraken_balance"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/ticker",
+          "handler": "get_kraken_ticker"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/kraken/order",
+          "handler": "execute_kraken_order"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/orders/open",
+          "handler": "get_kraken_open_orders"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/trades",
+          "handler": "get_kraken_trade_history"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/kraken/deposit_address",
+          "handler": "get_kraken_deposit_address"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/tshark_telemetry_router.py",
+      "sha256": "871164883e33bf9e5717c18259040d36b3c34424b174797d4991b72b14d0605f",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/capture",
+          "handler": "capture_packets_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/mining-audit",
+          "handler": "audit_mining_endpoint"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/info",
+          "handler": "get_tshark_info"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/unreal_bridge_new.py",
+      "sha256": "abf160d1f0a08e65abf732168766f88c916130b834f4f2c2c80aa7f2209a5487",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/remote-control",
+          "handler": "unreal_remote_control"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/spawn_asset",
+          "handler": "spawn_asset"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/set_environment",
+          "handler": "set_environment"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/execute",
+          "handler": "execute_unreal_script"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/execute_screenplay",
+          "handler": "execute_screenplay_script"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/tracker/start",
+          "handler": "start_opencv_tracker"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/tracker/stop",
+          "handler": "stop_opencv_tracker"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/tracker/status",
+          "handler": "tracker_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/launch_streamer",
+          "handler": "launch_unreal_streamer"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/kill_streamer",
+          "handler": "kill_unreal_streamer"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "unreal_status"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/unreal_mcp_router.py",
+      "sha256": "4807d6f7ae6915a1710253abb93e223ea0182771f3aaefaf026786dcff3c7dff",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_unreal_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/launch",
+          "handler": "launch_unreal_on_demand"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/assets",
+          "handler": "list_unreal_assets"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/rpc",
+          "handler": "execute_mcp_rpc"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/camera/spawn",
+          "handler": "spawn_cinematic_camera"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/sequencer/trigger",
+          "handler": "trigger_sequencer"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/updater_router.py",
+      "sha256": "26504d11ce2fa469a72acc743058ee053779f8a97fe019bb5fe607b96824c931",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/status",
+          "handler": "get_updater_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/check",
+          "handler": "check_for_updates"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/download",
+          "handler": "start_download"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/download-progress",
+          "handler": "get_download_progress"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/apply",
+          "handler": "apply_update"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/payload",
+          "handler": "serve_local_payload"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/upgrades_router.py",
+      "sha256": "fd6c4c5619d1981e7cbecbeb2c148d4635f4fa29c473cba743f79dc384b26277",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/vram/status",
+          "handler": "get_vram_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vram/allocate",
+          "handler": "allocate_vram"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/vram/release",
+          "handler": "release_vram"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/events/publish",
+          "handler": "publish_event"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/events/recent",
+          "handler": "get_recent_events"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/usb_recovery_router.py",
+      "sha256": "b7f51c3a7e43e4d5d587e1f9eab50e15586c5f03768273f9e52e46b922c36c67",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/devices",
+          "handler": "list_usb_devices"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/probe",
+          "handler": "probe_usb_disk"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/rebuild-partition",
+          "handler": "rebuild_partition"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/video_router.py",
+      "sha256": "643d5bc346265f315826463428f9cfd498a50e4d2915e6588c644ea5dd9d8e9e",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/test_pipeline",
+          "handler": "run_single_scene_pipeline"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/batch_pipeline",
+          "handler": "start_batch_pipeline"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/batch_status/{job_id}",
+          "handler": "get_batch_status"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/start_stream",
+          "handler": "start_video_stream"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/media-ticket",
+          "handler": "create_video_media_ticket"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/script",
+          "handler": "get_script_content"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/unreal/execute_script",
+          "handler": "execute_unreal_script"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/unreal/launch_editor",
+          "handler": "launch_unreal_editor"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/unreal/execute_code",
+          "handler": "execute_unreal_code"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/transcribe",
+          "handler": "transcribe_audio"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/export_master",
+          "handler": "export_master"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/vst_router.py",
+      "sha256": "5268a1dc59da929df060c11a69002210902eb4869c4663aa8a322e68de725e52",
+      "static_decorated_endpoints": [
+        {
+          "method": "GET",
+          "path_literal": "/scan",
+          "handler": "scan_plugins"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/theme-state",
+          "handler": "get_theme_state"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/trigger-theme",
+          "handler": "trigger_theme"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/api/vst/trigger-theme",
+          "handler": "trigger_theme"
+        }
+      ]
+    },
+    {
+      "path": "backend/routers/wan_media_router.py",
+      "sha256": "0b2798a3a3e30e73277242d5533124aed8e4c2f61fd8444cd5e4a89dad2d7ead",
+      "static_decorated_endpoints": [
+        {
+          "method": "POST",
+          "path_literal": "/dance/animate",
+          "handler": "generate_character_motion"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/audio/compose",
+          "handler": "generate_soundtrack"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/status/{prompt_id}",
+          "handler": "check_media_status"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/t2v/scenes",
+          "handler": "get_screenplay_scenes"
+        },
+        {
+          "method": "POST",
+          "path_literal": "/t2v/generate",
+          "handler": "generate_wan_video_motion"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/t2v/jobs",
+          "handler": "list_wan_jobs"
+        },
+        {
+          "method": "GET",
+          "path_literal": "/t2v/job/{job_id}",
+          "handler": "get_wan_job"
+        }
+      ]
+    }
+  ],
+  "core_direct_files": [
+    "backend/core/adaptation_store.py",
+    "backend/core/agent_specialist_crew.py",
+    "backend/core/ai_adapter.py",
+    "backend/core/aibs_dragonfly_cache.py",
+    "backend/core/aibs_event_bus.py",
+    "backend/core/aibs_mount_loader.py",
+    "backend/core/aibs_nats_broker.py",
+    "backend/core/aibs_temporal_orchestrator.py",
+    "backend/core/attached_source_context.py",
+    "backend/core/audio_dsp_prosody_engine.py",
+    "backend/core/audio_transcriber.py",
+    "backend/core/autonomous_sentinel_engine.py",
+    "backend/core/autonomous_swarm_graph_engine.py",
+    "backend/core/binary_hardware_workbench_engine.py",
+    "backend/core/broadcast_audio.py",
+    "backend/core/broadcast_outputs.py",
+    "backend/core/broadcast_relay.py",
+    "backend/core/broadcast_secondary.py",
+    "backend/core/bs_chat_provider.py",
+    "backend/core/character_extractor.py",
+    "backend/core/chat_archive.py",
+    "backend/core/chat_pdf_sources.py",
+    "backend/core/chroma_native_integrity.py",
+    "backend/core/cinematic_storyboard_assembler.py",
+    "backend/core/cleanup.py",
+    "backend/core/cloud_gpu_burst_engine.py",
+    "backend/core/code_quality_gate.py",
+    "backend/core/coding_chat.py",
+    "backend/core/coding_guest_runner.py",
+    "backend/core/coding_inference_worker.py",
+    "backend/core/coding_journal.py",
+    "backend/core/coding_locks.py",
+    "backend/core/coding_preparation.py",
+    "backend/core/coding_preparation_planning.py",
+    "backend/core/coding_preparation_proposals.py",
+    "backend/core/coding_process.py",
+    "backend/core/coding_recovery.py",
+    "backend/core/coding_repository_snapshot.py",
+    "backend/core/coding_review.py",
+    "backend/core/coding_vm_artifacts.py",
+    "backend/core/coding_vm_inputs.py",
+    "backend/core/coding_vm_staging.py",
+    "backend/core/coding_vm_transfer.py",
+    "backend/core/coding_workflow.py",
+    "backend/core/comfy_image_processor.py",
+    "backend/core/comfy_workflow_builders.py",
+    "backend/core/command_registry.py",
+    "backend/core/conversation_sessions.py",
+    "backend/core/cro_quantitative_ledger.py",
+    "backend/core/crypto_execution_controls.py",
+    "backend/core/crypto_execution_safety.py",
+    "backend/core/crypto_ledger_io.py",
+    "backend/core/cryptographic_vault.py",
+    "backend/core/daemon_manager.py",
+    "backend/core/demucs_audio_engine.py",
+    "backend/core/demucs_worker.py",
+    "backend/core/document_filing.py",
+    "backend/core/document_text.py",
+    "backend/core/ebook_factoring_engine.py",
+    "backend/core/ecosystem_telemetry_engine.py",
+    "backend/core/email_nlp_daemon.py",
+    "backend/core/event_bus.py",
+    "backend/core/executive_action_dispatcher.py",
+    "backend/core/fdx_source_documents.py",
+    "backend/core/fe_express_dispatcher_dream_cockpit.py",
+    "backend/core/fe_express_owner_operator_engine.py",
+    "backend/core/fountain_unreal.py",
+    "backend/core/friction_manager.py",
+    "backend/core/game_capture_selection.py",
+    "backend/core/game_follow_capture.py",
+    "backend/core/game_selection_sampler.py",
+    "backend/core/health_check.py",
+    "backend/core/heuristic_filter.py",
+    "backend/core/historical_reference_context.py",
+    "backend/core/hot_cache.py",
+    "backend/core/http_fallback.py",
+    "backend/core/hybrid_reasoning_engine.py",
+    "backend/core/immutable_publishing_engine.py",
+    "backend/core/infinite_learning_loop.py",
+    "backend/core/kraken_service.py",
+    "backend/core/lexicon_ingestor.py",
+    "backend/core/lexicon_service.py",
+    "backend/core/live_event_overlay.py",
+    "backend/core/live_overlay_runtime.py",
+    "backend/core/local_chat_inference.py",
+    "backend/core/local_ollama_http.py",
+    "backend/core/local_web_reader.py",
+    "backend/core/lost_property_scanner.py",
+    "backend/core/matrix_docs.py",
+    "backend/core/media_chromadb_vault.py",
+    "backend/core/media_delivery.py",
+    "backend/core/media_intent_policy.py",
+    "backend/core/media_render_engine.py",
+    "backend/core/memory_bank.py",
+    "backend/core/memory_service.py",
+    "backend/core/mission_control_engine.py",
+    "backend/core/mission_status.py",
+    "backend/core/native_window_capture.py",
+    "backend/core/news_firehose_daemon.py",
+    "backend/core/obs_broadcast_controller.py",
+    "backend/core/omni_space_manager.py",
+    "backend/core/opencode_worker.py",
+    "backend/core/optional_web_search.py",
+    "backend/core/orchestrator_config.py",
+    "backend/core/outbound_messaging_policy.py",
+    "backend/core/oversight_parent_engine.py",
+    "backend/core/owned_rag_sources.py",
+    "backend/core/owned_vault.py",
+    "backend/core/payment_receipts.py",
+    "backend/core/pdf_text_source.py",
+    "backend/core/personal_intelligence_memory.py",
+    "backend/core/personal_memory_scope.py",
+    "backend/core/phone_repair_knowledge.py",
+    "backend/core/pipeline_context_injector.py",
+    "backend/core/plugin_loader.py",
+    "backend/core/powershell_process_engine.py",
+    "backend/core/program_builder_engine.py",
+    "backend/core/program_status_readonly.py",
+    "backend/core/project_maintenance.py",
+    "backend/core/project_maintenance_worker.py",
+    "backend/core/project_rag.py",
+    "backend/core/quantitative_spatial_analytics_engine.py",
+    "backend/core/real_system_tools.py",
+    "backend/core/rec_debut_daily_dispatcher.py",
+    "backend/core/safety_guardrails.py",
+    "backend/core/sandbox_executor.py",
+    "backend/core/screenplay_pdf.py",
+    "backend/core/screenplay_professional.py",
+    "backend/core/screenplay_reorder_bundle.py",
+    "backend/core/screenplay_workflows.py",
+    "backend/core/self_healing_sentinel.py",
+    "backend/core/social_optimizer_engine.py",
+    "backend/core/specialist_execution.py",
+    "backend/core/state_tax_incentives.py",
+    "backend/core/stehouwer_history_retriever.py",
+    "backend/core/storage_manager.py",
+    "backend/core/subagent_coordinator.py",
+    "backend/core/system_logger.py",
+    "backend/core/technical_indicators.py",
+    "backend/core/tenant_isolation.py",
+    "backend/core/thesimplechef_analytics_daemon.py",
+    "backend/core/token_budget_estimator.py",
+    "backend/core/tool_result.py",
+    "backend/core/tool_schemas.py",
+    "backend/core/tshark_telemetry_engine.py",
+    "backend/core/typst_pandoc_engine.py",
+    "backend/core/unified_crypto_pearl_watchdog.py",
+    "backend/core/unified_stehouwer_launcher.py",
+    "backend/core/unreal_lifecycle_daemon.py",
+    "backend/core/vector_vault.py",
+    "backend/core/video_generation.py",
+    "backend/core/video_workflows.py",
+    "backend/core/vram_resource_arbiter.py",
+    "backend/core/web_research_orchestrator.py",
+    "backend/core/window_capture_pipe.py"
+  ],
+  "native_view_named_files": [
+    "native_studio/accounting_view.py",
+    "native_studio/automation_console_view.py",
+    "native_studio/banquet_cad_view.py",
+    "native_studio/bible_hub_view.py",
+    "native_studio/broadcast_preview.py",
+    "native_studio/calendar_view.py",
+    "native_studio/clients_crm_view.py",
+    "native_studio/cloud_drive_view.py",
+    "native_studio/cluster_view.py",
+    "native_studio/comfy_workspace_view.py",
+    "native_studio/compute_view.py",
+    "native_studio/creative_suite_views.py",
+    "native_studio/crypto_swarm_view.py",
+    "native_studio/daw_subviews.py",
+    "native_studio/ecosystem_blueprint_view.py",
+    "native_studio/email_client_view.py",
+    "native_studio/engineering_views.py",
+    "native_studio/fe_express_view.py",
+    "native_studio/game_build_view.py",
+    "native_studio/intelligence_views.py",
+    "native_studio/lexicon_view.py",
+    "native_studio/media_view.py",
+    "native_studio/music_daw_view.py",
+    "native_studio/noto_inventory_view.py",
+    "native_studio/nutrition_view.py",
+    "native_studio/onboarding_view.py",
+    "native_studio/operations_views.py",
+    "native_studio/patch_orphaned_views.py",
+    "native_studio/phone_repair_view.py",
+    "native_studio/power_washing_view.py",
+    "native_studio/rec_debut_view.py",
+    "native_studio/screen_mirror_view.py",
+    "native_studio/screenwriting_view.py",
+    "native_studio/steam_gaming_view.py",
+    "native_studio/subsystem_views.py",
+    "native_studio/syndication_view.py",
+    "native_studio/system_health_view.py",
+    "native_studio/views.py",
+    "native_studio/web_telemetry_view.py"
+  ],
+  "frontend_tabs": [
+    {
+      "key": "specialist_swarm",
+      "label": "🤖 64-Specialist Swarm Explorer",
+      "component": "SpecialistSwarmExplorer"
+    },
+    {
+      "key": "chat",
+      "label": "💬 BS-CHAT Assistant",
+      "component": "MobileStehouwerChat"
+    },
+    {
+      "key": "video_streaming",
+      "label": "🎬 VLC Media Player & Video Studio",
+      "component": "VideoStudioTab"
+    },
+    {
+      "key": "executive_cockpit",
+      "label": "⚡ Executive Cockpit",
+      "component": "ExecutiveCockpitTab"
+    },
+    {
+      "key": "nutrition_subsystem",
+      "label": "🥗 Clinical Nutrition & Detox Engine",
+      "component": "NutritionSubsystemLedger"
+    },
+    {
+      "key": "sovereign_apps",
+      "label": "🤖 Sovereign Agent Apps Hub",
+      "component": "SovereignAgentAppsTab"
+    },
+    {
+      "key": "gpu_telemetry",
+      "label": "🔥 GPU Hardware Telemetry Hub",
+      "component": "GpuHardwareTelemetryTab"
+    },
+    {
+      "key": "central_gaming_hub",
+      "label": "🎮 Central Gaming Hub",
+      "component": "CentralGamingHubTab"
+    },
+    {
+      "key": "bs_game",
+      "label": "🛠️ BS Game · First Boot",
+      "component": "BSGameHubTab"
+    },
+    {
+      "key": "dashboard",
+      "label": "Command Center",
+      "component": "DashboardView"
+    },
+    {
+      "key": "operations_audit",
+      "label": "Omni Operations & Live Audit Hub",
+      "component": "OperationsAuditHubTab"
+    },
+    {
+      "key": "workflow_dag",
+      "label": "⚡ Multi-Agent DAG Builder",
+      "component": "VisualWorkflowDAGTab"
+    },
+    {
+      "key": "shared_cloud_drive",
+      "label": "Shared Cloud Drive",
+      "component": "AdminSharedDriveTab"
+    },
+    {
+      "key": "power_washing",
+      "label": "Prestige Mobile Wash",
+      "component": "PowerWashingTab"
+    },
+    {
+      "key": "phone_repair",
+      "label": "🔧 Phone & Tablet Repair Lab",
+      "component": "PhoneRepairGuideTab"
+    },
+    {
+      "key": "bible_hub",
+      "label": "📖 Sovereign Bible Hub",
+      "component": "BibleStudyTab"
+    },
+    {
+      "key": "system_health",
+      "label": "System Health & Logs",
+      "component": "SystemHealthTab"
+    },
+    {
+      "key": "onboarding",
+      "label": "Client Onboarding",
+      "component": "OnboardingTab"
+    },
+    {
+      "key": "client_directory",
+      "label": "Client Directory",
+      "component": "ClientsTab"
+    },
+    {
+      "key": "system_economics",
+      "label": "System Economics",
+      "component": "UnifiedSystemEconomics"
+    },
+    {
+      "key": "unified_crypto",
+      "label": "Crypto & Mining Suite",
+      "component": "UnifiedCryptoHub"
+    },
+    {
+      "key": "security_monitor",
+      "label": "Admin Security & Telemetry Interceptor",
+      "component": "AdminSecurityMonitorTab"
+    },
+    {
+      "key": "vms",
+      "label": "Virtual Machines",
+      "component": "VirtualMachineTab"
+    },
+    {
+      "key": "ide",
+      "label": "BS-CHAT Interface",
+      "component": "IdeView"
+    },
+    {
+      "key": "creation_suite",
+      "label": "Creation Suite",
+      "component": "UniversalCreationSuite"
+    },
+    {
+      "key": "leadmatrix",
+      "label": "Lead Matrix",
+      "component": "BullshitLeadMatrix"
+    },
+    {
+      "key": "terminal",
+      "label": "Terminal",
+      "component": "TerminalPanelWrapper"
+    },
+    {
+      "key": "automation_console",
+      "label": "Automation Console",
+      "component": "AutomationConsole"
+    },
+    {
+      "key": "advertising",
+      "label": "Advertising",
+      "component": "AdvertisingTab"
+    },
+    {
+      "key": "syndication",
+      "label": "🌐 Automated Syndication",
+      "component": "SyndicationTab"
+    },
+    {
+      "key": "clients",
+      "label": "Clients Hub",
+      "component": "ClientsModuleTab"
+    },
+    {
+      "key": "fe_express",
+      "label": "🚚 FE Express Box Truck Automation Hub (Devin)",
+      "component": "FEExpressDispatcherTab"
+    },
+    {
+      "key": "rec_debut",
+      "label": "🏀 Recreational Debut",
+      "component": "RecreationalDebutTab"
+    },
+    {
+      "key": "nda_module",
+      "label": "📜 Sovereign NDA & Anti-Tamper",
+      "component": "NdaModuleTab"
+    },
+    {
+      "key": "moneytrack",
+      "label": "Money Track",
+      "component": "MoneyTrackTab"
+    },
+    {
+      "key": "definitions",
+      "label": "Definitions & Lore",
+      "component": "DefinitionsModuleTab"
+    },
+    {
+      "key": "beta",
+      "label": "📈 Web Traffic & Telemetry",
+      "component": "BetaAnalyticsTab"
+    },
+    {
+      "key": "agent_memory",
+      "label": "Agent Memory",
+      "component": "AgentMemoryDashboardTab"
+    },
+    {
+      "key": "public_checkout",
+      "label": "Pricing & Passes",
+      "component": "PublicCheckoutTab"
+    },
+    {
+      "key": "digital_storefront",
+      "label": "Digital Storefront",
+      "component": "DigitalStorefrontTab"
+    },
+    {
+      "key": "public_playground",
+      "label": "AI Studio & Playground",
+      "component": "PublicPlaygroundTab"
+    },
+    {
+      "key": "personal_brand",
+      "label": "Personal Brand Studio",
+      "component": "PersonalBrandStudioTab"
+    },
+    {
+      "key": "calendar",
+      "label": "Workspace Calendar",
+      "component": "WorkspaceCalendarTab"
+    },
+    {
+      "key": "client_scheduler",
+      "label": "Client Content Scheduler",
+      "component": "AutomatedClientSchedulerTab"
+    },
+    {
+      "key": "deep_learning_studio",
+      "label": "Deep Learning Studio",
+      "component": "DeepLearningStudioTab"
+    },
+    {
+      "key": "reasoning_attention",
+      "label": "Self-Refinement & Attention Studio",
+      "component": "ReasoningAttentionTab"
+    },
+    {
+      "key": "stehouwer_cms",
+      "label": "Stehouwer CMS",
+      "component": "StehouwerCMSTab"
+    },
+    {
+      "key": "brett_data_hub",
+      "label": "Brett Stehouwer Data",
+      "component": "BrettDataTab"
+    },
+    {
+      "key": "master_accounting",
+      "label": "Master Accounting & Taxes",
+      "component": "MasterAccountingTab"
+    },
+    {
+      "key": "api_recon",
+      "label": "RapidAPI Recon",
+      "component": "RapidApiReconTab"
+    },
+    {
+      "key": "learning_material_hub",
+      "label": "Educational Modules",
+      "component": "LearningMaterialHub"
+    },
+    {
+      "key": "noco_vision",
+      "label": "Project NoCo & Living Stage Studio",
+      "component": "ProjectNoCoStudioTab"
+    },
+    {
+      "key": "lost_property",
+      "label": "Lost Property",
+      "component": "LostPropertyTab"
+    },
+    {
+      "key": "email_client",
+      "label": "Local Email",
+      "component": "EmailClientTab"
+    },
+    {
+      "key": "unified_osint",
+      "label": "OSINT Recon & API Hub",
+      "component": "UnifiedOsintHub"
+    },
+    {
+      "key": "unified_calendar",
+      "label": "Master Calendar & Scheduler",
+      "component": "UnifiedCalendarHub"
+    },
+    {
+      "key": "unified_financial",
+      "label": "Financial Ledger & Yields",
+      "component": "UnifiedFinancialHub"
+    },
+    {
+      "key": "unified_creation",
+      "label": "Universal Screenwriting Studio",
+      "component": "UniversalCreationSuite"
+    },
+    {
+      "key": "notos_enterprise",
+      "label": "Noto's Enterprise OS",
+      "component": "NotosEnterpriseOSTab"
+    },
+    {
+      "key": "noto_inventory",
+      "label": "Notō Multi-Bar Stock & Dispatch",
+      "component": "NotoBarInventoryHub"
+    },
+    {
+      "key": "banquet_architect",
+      "label": "Banquet Architect Studio",
+      "component": "BanquetArchitectTab"
+    },
+    {
+      "key": "industry_grid",
+      "label": "70-Vertical Module Grid",
+      "component": "EnterpriseIndustryHubTab"
+    },
+    {
+      "key": "campaign_automation",
+      "label": "Campaign & Audience Engine",
+      "component": "CampaignAutomationTab"
+    },
+    {
+      "key": "unified_media_gallery",
+      "label": "Unified Media Gallery",
+      "component": "UnifiedMediaVaultTab"
+    },
+    {
+      "key": "neon_lounge_studio",
+      "label": "Neon Lounge Studio",
+      "component": "FuturisticNeonLoungeStudio"
+    },
+    {
+      "key": "project_noco",
+      "label": "Project NoCo & Living Stage Studio",
+      "component": "ProjectNoCoStudioTab"
+    },
+    {
+      "key": "universal_studio",
+      "label": "Universal AV Studio",
+      "component": "OmniStudioTab"
+    },
+    {
+      "key": "bv_media_creator",
+      "label": "🎨 BV-Media Creator & BsMedia-Chat",
+      "component": "BsMediaCreatorTab"
+    },
+    {
+      "key": "comfy_workspace",
+      "label": "🧩 ComfyUI Creative Studio",
+      "component": "ComfyWorkspaceTab"
+    },
+    {
+      "key": "media_studio",
+      "label": "🎬 Autonomous Media Studio",
+      "component": "MediaStudioTab"
+    },
+    {
+      "key": "music_daw",
+      "label": "FL Music Studio (DAW)",
+      "component": "MusicDAWStudioTab"
+    },
+    {
+      "key": "ecosystem_blueprint",
+      "label": "Matrix Blueprint & ROI",
+      "component": "EcosystemBlueprintTab"
+    },
+    {
+      "key": "lexicon_dashboard",
+      "label": "🎭 Lexicon Engine Dashboard",
+      "component": "LexiconTheatricalDashboard"
+    },
+    {
+      "key": "cluster_engine",
+      "label": "⚡ Cluster Engine",
+      "component": "ClusterEngineDashboard"
+    }
+  ],
+  "owned_sites": {
+    "captured_utc": "2026-11-11 09:08:53 UTC",
+    "sites": [
+      {
+        "id": "appgprj_6af244fe0bb481919916930646b23aae",
+        "title": "AI-BS · Agent Foundry",
+        "description": "Design, compare, and verify AI-BS sub-agents.",
+        "current_user_role": "owner",
+        "status": "active",
+        "current_live_url": "https://aibs-agent-foundry.snugolive34.chatgpt.site",
+        "expected_url": null,
+        "access_mode": "custom",
+        "version": 1,
+        "updated_at": "2026-11-09T22:17:42.563348+00:00"
+      },
+      {
+        "id": "appgprj_6ae82a0e83748191aac0c2a6e6b6f194",
+        "title": "Stehouwer — Stories, Learning & Possibilities",
+        "description": "A unified hub for Stehouwer projects, creative work, and practical guides.",
+        "current_user_role": "owner",
+        "status": "active",
+        "current_live_url": "https://stehouwer-project-hub.snugolive34.chatgpt.site",
+        "expected_url": null,
+        "access_mode": "public",
+        "version": 2,
+        "updated_at": "2026-11-02T06:39:57.867846+00:00"
+      }
+    ],
+    "custom_domains": [
+      {
+        "project_id": "appgprj_6af244fe0bb481919916930646b23aae",
+        "domains": [],
+        "error": false
+      },
+      {
+        "project_id": "appgprj_6ae82a0e83748191aac0c2a6e6b6f194",
+        "domains": [],
+        "error": false
+      }
+    ],
+    "scope": "Account owner Sites listing complete, no cursor; hosting metadata only, not functional testing. No access, source, environment or deployment mutation."
+  },
+  "local_history_sources": [
+    {
+      "path": "C:\\Library",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-08-27T21:30:23.906976+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\M-AI_BS_Android_Build",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-07-22T15:37:59.946342+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AI-BS",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-11T00:08:33.017951+00:00",
+      "role": "canonical_project"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_1bc95637dde84db2bb0e99fec483796f",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:12:03.163475+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_1f5dc45cadef45dda55d30ec3496a8fb",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:12:03.146804+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_03de2134ad0f4f57bc621c1ccf49cec7",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T12:16:03.283064+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_8a3449548aa147d4837d8c21bae9df6a",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:12:03.164475+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_519a9918aa1546728ce3007d407f1e5f",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:12:03.161474+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_02375a83729a44abb02b115a12f9afe1",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:11:25.402255+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_6859de34b8ca4f268666fd6425195f0e",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:12:03.154316+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_25886c0e133147ffbbbadfac347224f7",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T12:16:03.299597+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_98234e8f8ae44ca89828bdb1cf4c5433",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:11:25.384310+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_22695059e7864623b052adaf75e8e41f",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T12:16:03.297539+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_c1d1af89634a44988dd042077335ecec",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:11:25.399967+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_c1e0257a04f043749a45e2812ff883bb",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:11:25.403776+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_d48a2aba2cb845dcab4c92bbb503056d",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T12:16:03.293328+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_dddef73bf04c4485a947dbb0a9ab318d",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T12:16:03.288722+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AIBS_Ancestor_Fixture_e0c3806bbe4840079be6f38eb47baf0f",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-26T11:11:25.391963+00:00",
+      "role": "ancestor_fixture_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AI-BS-Models",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": true,
+      "modified_utc": "2026-10-15T17:38:07.265943+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AI-BS-Recovery",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-04T17:58:17.605996+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AI-BS-UI-Preview",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-02T04:19:49.309441+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AI-BS-UI-Preview-Output",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-02T03:57:36.658642+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\AMD",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-06T06:09:01.450014+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\BS-Studio",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-10-13T16:40:49.207013+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\Certbot",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-09T17:41:17.060723+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    },
+    {
+      "path": "C:\\inetpub",
+      "registration": "USER_DESIGNATED_HISTORY_AND_SOURCE_REFERENCE",
+      "content_review": "NOT_REVIEWED",
+      "execution_authority": false,
+      "available": true,
+      "is_directory": true,
+      "reparse_point": false,
+      "modified_utc": "2026-11-10T21:10:20.930947+00:00",
+      "role": "historical_or_supporting_reference_pending_verification"
+    }
+  ]
+}

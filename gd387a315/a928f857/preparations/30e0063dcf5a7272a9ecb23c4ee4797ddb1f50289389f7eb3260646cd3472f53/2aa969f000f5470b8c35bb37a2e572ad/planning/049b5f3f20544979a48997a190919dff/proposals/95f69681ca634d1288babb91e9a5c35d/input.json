@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "2aa969f000f5470b8c35bb37a2e572ad",
+  "plan_id": "049b5f3f20544979a48997a190919dff",
+  "snapshot_sha256": "789f87fba55d88dc82edc0333583960a3287120157906c7cb2e7dbadf8fe5ed0",
+  "review_digest": "0e3f698801e1e07dec8bebc691ee26cc522b085d8578621b0ec52bfc2f0af8cf",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "95f69681ca634d1288babb91e9a5c35d",
+  "reviewed_plan_sha256": "84e83331fe5437724adddbbf2a67a98ba15c23f59d3e2eda10e02f4ce598616d",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "34c1c057b9a15c17e225e71939b719c489009af44a9133744c964da1d4baf347",
+        "content": "\ufeffvalue = 1\r\nother = 2\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "92110865e9647d0e58f1224419faa31007961ec6dd13b70d3f4ce7fda25fc8df",
+  "worker": {
+    "pid": 59156,
+    "created": 1794718679.0745277
+  },
+  "created_at_utc": "2026-11-15T04:58:01.197071+00:00",
+  "entry_sha256": "16b10e99d83dbef71c81a171feae396be960e6777f090809a4219513f9ee8207"
+}

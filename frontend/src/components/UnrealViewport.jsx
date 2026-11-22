@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
+/** @param {{"signalingUrl"?: string}} props */
 export default function UnrealViewport({ signalingUrl = 'ws://127.0.0.1:8888' }) {
-    const videoRef = useRef(null);
+    const videoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
     const [status, setStatus] = useState('Disconnected');
 
     useEffect(() => {

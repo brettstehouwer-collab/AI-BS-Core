@@ -8,6 +8,7 @@ import urllib.request
 from typing import Dict, Any, Optional, List, Union
 from fastapi import APIRouter, Request, Header, HTTPException, Depends
 from security.analytics_access import require_analytics_access
+from core.outbound_messaging_policy import outbound_messaging_enabled
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -150,13 +151,20 @@ from datetime import datetime
 # --- Multi-Channel Notifier Credentials & State ---
 _ALERT_COOLDOWN_MAP: Dict[str, float] = {}
 
+def _dashboard_notifications_enabled(channel: str = "dashboard") -> bool:
+    return outbound_messaging_enabled("dashboard") and (
+        channel == "dashboard" or outbound_messaging_enabled(channel)
+    )
+
 def _load_notifier_credentials() -> Dict[str, str]:
+    if not _dashboard_notifications_enabled():
+        return {}
     creds = {
-        "DISCORD_WEBHOOK_URL": "https://discord.com/api/webhooks/1526362047917588510/CDD0CK6ck5jcQF8YmzZyz17JKi-d5XfbGmmb4PmTF0cvADJapSfBikHFzIYQST-FKYej",
-        "OPERATOR_EMAIL": "footballstar0325@gmail.com",
-        "IMAP_USER": "footballstar0325@gmail.com",
-        "IMAP_APP_PASSWORD": "dnbmziwbtrfgfeht",
-        "OPERATOR_PHONE": "1-616-402-3628",
+        "DISCORD_WEBHOOK_URL": "",
+        "OPERATOR_EMAIL": "",
+        "IMAP_USER": "",
+        "IMAP_APP_PASSWORD": "",
+        "OPERATOR_PHONE": "",
         "SMTP_HOST": "smtp.gmail.com",
         "SMTP_PORT": "587"
     }
@@ -187,7 +195,11 @@ def _load_notifier_credentials() -> Dict[str, str]:
     return creds
 
 def _send_discord_alert_async(webhook_url: str, title: str, description: str, fields: List[Dict[str, Any]], color: int = 0x38bdf8):
+    if not _dashboard_notifications_enabled("discord"):
+        return
     def _post():
+        if not _dashboard_notifications_enabled("discord"):
+            return
         try:
             payload = {
                 "username": "AI-BS Sentinel",
@@ -207,27 +219,34 @@ def _send_discord_alert_async(webhook_url: str, title: str, description: str, fi
                 data=data,
                 headers={"Content-Type": "application/json", "User-Agent": "AI-BS-Dashboard-Notifier/1.0"}
             )
+            if not _dashboard_notifications_enabled("discord"):
+                return
             with urllib.request.urlopen(req, timeout=3.0) as resp:
                 pass
             logger.info("Dispatched Discord Webhook alert for AI-BS Dashboard session.")
         except Exception as ex:
-            logger.warning(f"Discord webhook dispatch failed: {ex}")
+            logger.warning("Discord webhook dispatch failed (%s).", type(ex).__name__)
 
     threading.Thread(target=_post, daemon=True).start()
 
 def _send_email_and_sms_async(subject: str, body_text: str, is_login: bool = False):
+    if not _dashboard_notifications_enabled():
+        return
     def _send():
+        if not _dashboard_notifications_enabled():
+            return
+        server = None
         try:
             creds = _load_notifier_credentials()
-            smtp_user = creds.get("OPERATOR_EMAIL") or creds.get("IMAP_USER") or "footballstar0325@gmail.com"
-            smtp_pwd = creds.get("IMAP_APP_PASSWORD") or "dnbmziwbtrfgfeht"
+            smtp_user = creds.get("OPERATOR_EMAIL") or creds.get("IMAP_USER") or ""
+            smtp_pwd = creds.get("IMAP_APP_PASSWORD") or ""
             smtp_host = creds.get("SMTP_HOST", "smtp.gmail.com")
             smtp_port = int(creds.get("SMTP_PORT", 587))
 
             if not smtp_user or not smtp_pwd:
                 return
 
-            phone_raw = creds.get("OPERATOR_PHONE", "1-616-402-3628")
+            phone_raw = creds.get("OPERATOR_PHONE", "")
             phone_digits = "".join(filter(str.isdigit, phone_raw))
             sms_gateways = []
             if len(phone_digits) >= 10:
@@ -247,9 +266,17 @@ def _send_email_and_sms_async(subject: str, body_text: str, is_login: bool = Fal
                     f"{ten}@myuscellular.com",          # US Cellular
                 ]
 
+            if not _dashboard_notifications_enabled():
+                return
             server = smtplib.SMTP(smtp_host, smtp_port, timeout=15.0)
+            if not _dashboard_notifications_enabled():
+                return
             server.starttls()
+            if not _dashboard_notifications_enabled():
+                return
             server.ehlo()
+            if not _dashboard_notifications_enabled():
+                return
             server.login(smtp_user, smtp_pwd)
 
             # Send email to operator
@@ -258,12 +285,16 @@ def _send_email_and_sms_async(subject: str, body_text: str, is_login: bool = Fal
             email_msg["From"] = f"AI-BS Sentinel <{smtp_user}>"
             email_msg["To"] = smtp_user
             try:
+                if not _dashboard_notifications_enabled():
+                    return
                 server.sendmail(smtp_user, [smtp_user], email_msg.as_string())
             except Exception as e_err:
-                logger.warning(f"Operator email dispatch notice: {e_err}")
+                logger.warning("Operator email dispatch notice (%s).", type(e_err).__name__)
 
             # Send individually to each carrier gateway to avoid carrier multi-recipient spam filtering
             for gw in sms_gateways:
+                if not _dashboard_notifications_enabled():
+                    return
                 try:
                     sms_msg = MIMEText(body_text, "plain", "utf-8")
                     sms_msg["Subject"] = subject
@@ -271,16 +302,27 @@ def _send_email_and_sms_async(subject: str, body_text: str, is_login: bool = Fal
                     sms_msg["To"] = gw
                     server.sendmail(smtp_user, [gw], sms_msg.as_string())
                 except Exception as sms_err:
-                    logger.debug(f"SMS gateway {gw} notice: {sms_err}")
+                    logger.debug("SMS gateway dispatch notice (%s).", type(sms_err).__name__)
 
             server.quit()
-            logger.info(f"Dispatched SMS & Email notifications to {recipients}")
+            server = None
+            logger.info("Dispatched dashboard email/SMS notification batch.")
         except Exception as ex:
-            logger.warning(f"Email/SMS dispatch failed: {ex}")
+            logger.warning("Email/SMS dispatch failed (%s).", type(ex).__name__)
+        finally:
+            if server is not None:
+                try:
+                    server.close()
+                except Exception:
+                    pass
 
     threading.Thread(target=_send, daemon=True).start()
 
 def trigger_dashboard_notification(event_type: str, user_email: str, ip: str, geo: Dict[str, str], metadata: Optional[Dict[str, Any]] = None):
+    # Sign-in and analytics intake are never activation for announcements.
+    # Check before reading private configuration, changing cooldowns or spawning.
+    if not _dashboard_notifications_enabled():
+        return "disabled"
     now = time.time()
     is_login = (event_type in ["user_login", "login", "auth_login", "dashboard_login"])
     
@@ -290,7 +332,7 @@ def trigger_dashboard_notification(event_type: str, user_email: str, ip: str, ge
     
     last_time = _ALERT_COOLDOWN_MAP.get(cooldown_key, 0)
     if now - last_time < cooldown_period:
-        return
+        return "cooldown"
     _ALERT_COOLDOWN_MAP[cooldown_key] = now
 
     time_str = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p EDT")
@@ -324,17 +366,26 @@ def trigger_dashboard_notification(event_type: str, user_email: str, ip: str, ge
     # 1. Discord Webhook
     creds = _load_notifier_credentials()
     webhook = creds.get("DISCORD_WEBHOOK_URL")
-    if webhook and webhook.startswith("http"):
+    if _dashboard_notifications_enabled("discord") and webhook and webhook.startswith("http"):
         _send_discord_alert_async(webhook, title, desc, fields, color)
 
     # 2. Email & SMS
     _send_email_and_sms_async(title, sms_text, is_login)
 
     # 3. Host speech announcement if local
+    if _dashboard_notifications_enabled():
+        speech_text = f"Dashboard alert: {clean_email or 'User'} active on AI-BS"
+        threading.Thread(target=_speak_dashboard_alert, args=(speech_text,), daemon=True).start()
+    return "queued"
+
+
+def _speak_dashboard_alert(speech_text: str):
+    if not _dashboard_notifications_enabled():
+        return
     try:
         from bullshit_senses import speak_direct
-        speech_text = f"Dashboard alert: {clean_email or 'User'} active on AI-BS"
-        threading.Thread(target=speak_direct, args=(speech_text,), daemon=True).start()
+        if _dashboard_notifications_enabled():
+            speak_direct(speech_text)
     except Exception:
         pass
 
@@ -541,11 +592,13 @@ async def notify_dashboard_login(payload: DashboardLoginPayload, request: Reques
     """Instant notification endpoint when a user logs into or accesses ai-bs-dashboard.web.app."""
     cf_ip = request.headers.get("cf-connecting-ip")
     ip = cf_ip if cf_ip else (request.client.host if request.client else "127.0.0.1")
-    geo = resolve_ip_geo(ip)
+    geo = resolve_ip_geo(ip) if _dashboard_notifications_enabled() else {
+        "country": "Unknown", "city": "Not resolved (announcements disabled)"
+    }
     now = time.time()
 
     # 1. Dispatch Multi-Channel Alerts (Discord, SMS, Email, TTS)
-    trigger_dashboard_notification(
+    notification_status = trigger_dashboard_notification(
         event_type="user_login",
         user_email=payload.email,
         ip=ip,
@@ -589,7 +642,8 @@ async def notify_dashboard_login(payload: DashboardLoginPayload, request: Reques
         logger.warning(f"Failed to record login event to sqlite: {ex}")
 
     return {
-        "status": "notified",
+        "status": "recorded",
+        "notifications": notification_status,
         "user": payload.email,
         "timestamp": now,
         "geo": geo,

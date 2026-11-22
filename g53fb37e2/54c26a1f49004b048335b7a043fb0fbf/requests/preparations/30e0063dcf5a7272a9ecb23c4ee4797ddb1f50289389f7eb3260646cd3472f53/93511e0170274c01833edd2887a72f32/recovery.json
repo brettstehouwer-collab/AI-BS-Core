@@ -1,0 +1,6 @@
+{
+  "state": "INTERRUPTED",
+  "intent_sha256": "4dfecab2cfcac502517297fc1c69415879d81a145e1f9769ae44038bdf669c0a",
+  "reason": "worker_ended_no_actions_replayed",
+  "entry_sha256": "0fd087b03b978900676e047e2bf237801f83cdde497f6dadef4c644674d8426f"
+}

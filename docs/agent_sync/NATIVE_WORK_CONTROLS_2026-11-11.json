@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T17:03:18.095565+00:00",
+  "goal_status": "PAUSED",
+  "status": "PASS_SCOPED_SOURCE_NATIVE_WORK_CONTROLS_AND_EDITOR_RECOVERY",
+  "installed_studio": "107 unchanged",
+  "held_candidate": "143 unchanged; new source not packaged",
+  "tests": {
+    "passed": 113,
+    "seconds": 24.251,
+    "log": "C:\\AI-BS\\backups\\native_batch_controls_20261111_v01\\combined-final-tests.log"
+  },
+  "actual_gui": {
+    "source_batch_passed": 2,
+    "terminal_helper_normal": true,
+    "terminal_helper_exit": 0,
+    "terminal_command_exit": 0,
+    "job_drained": true,
+    "normal_source_close": true,
+    "receipt": "C:\\AI-BS\\backups\\native_batch_controls_20261111_v01\\gui-final-v03.json",
+    "standalone_launcher": "Observed normal open/close, screen fit and readable scrolling controls; no jobs selected"
+  },
+  "user_error": {
+    "code": "2147942632 / 0x800700e8",
+    "cause": "Synthetic descendant test missing Hidden; corrected",
+    "evidence": "backups/native_terminal_hidden_descendant_test.log"
+  },
+  "preservation": {
+    "real_model_requests": 0,
+    "private_master_opened_by_tests": false,
+    "original_manuscripts_touched": false,
+    "global_permissions_or_policy_changed": false,
+    "provider_configuration_changed": false,
+    "business_activation": false
+  },
+  "report": "docs/architecture/NATIVE_WORK_CONTROLS_2026-11-11.md",
+  "remaining": [
+    "Existing backend/GPU/server engines retain independent controls",
+    "Actual WSL unavailable",
+    "No genuine proposal generation qualification",
+    "New source not frozen/installed/release qualified",
+    "Creative launcher dependency pins require reconciliation",
+    "No bulk screenplay/manuscript SQLite migration or universal zero-loss claim"
+  ]
+}

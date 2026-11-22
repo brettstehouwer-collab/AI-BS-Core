@@ -1,0 +1,14 @@
+{
+  "status": "verified_authenticated_raw_restore_all_members",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\37A_Tested_Return_Path_And_Tour_Diagnostics.zip",
+  "bytes": 424199,
+  "sha256": "16e4cd28a15bbe60d3a4e0ae9759c5ba38a7016696706a14a7ba717f6de92246",
+  "members": 80,
+  "goal_complete": false,
+  "at": "2026-11-03T15:39:06.900474+00:00",
+  "file_id": "1xg2h_G5a2tyYKlF2H3VZzNvLODYJEroL",
+  "folder_id": "1Xa8Pt37lmyjB1X9QHw_n6gH3uX-_alUk",
+  "url": "https://drive.google.com/file/d/1xg2h_G5a2tyYKlF2H3VZzNvLODYJEroL/view?usp=drivesdk",
+  "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+  "runtime_acceptance": "Current canonical tour remains incomplete and undeployed; return-path CPU contracts pass"
+}

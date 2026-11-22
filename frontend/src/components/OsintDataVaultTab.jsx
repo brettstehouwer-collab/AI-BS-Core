@@ -1,6 +1,13 @@
-import React, { useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from "react";
 import { useAppStore } from './useAppStore.js';
-import { Archive, ExternalLink, ShieldAlert, KeyRound, Database, RefreshCw, Eye, AlertTriangle } from 'lucide-react';
+import { Archive, ShieldAlert, KeyRound, Database, RefreshCw, Eye, AlertTriangle } from "lucide-react";
+
+/** @param {unknown} value @returns {Record<string, unknown> | null} */
+function vaultRecord(value) { return value !== null && typeof value === 'object' && !Array.isArray(value) ? /** @type {Record<string, unknown>} */ (value) : null; }
+/** @param {unknown} value */
+function vaultMessage(value) { const data = vaultRecord(value); const text = data?.message || data?.detail; return typeof text === 'string' ? text : ''; }
+/** @param {unknown} value */
+function vaultSourceUrl(value) { const data = vaultRecord(value); return typeof data?.url === 'string' ? data.url : undefined; }
 
 export default function OsintDataVaultTab() {
   const { osintVaultItems, setOsintVaultItems, fetchPastSavedData } = useAppStore();
@@ -10,12 +17,13 @@ export default function OsintDataVaultTab() {
   }, []);
 
   const groupedItems = useMemo(() => {
-    return osintVaultItems.reduce((acc, item) => {
+    return osintVaultItems.reduce(
+(acc,  item) => {
       const cat = item.category || 'Uncategorized';
       if (!acc[cat]) acc[cat] = [];
       acc[cat].push(item);
       return acc;
-    }, {});
+    }, /** @type {Record<string, import('/types/domain').VaultItem[]>} */ ({}));
   }, [osintVaultItems]);
 
   const handleClearVault = () => {
@@ -24,7 +32,8 @@ export default function OsintDataVaultTab() {
     }
   };
 
-  const renderIconForCategory = (category) => {
+  /** @param {string} category */
+const renderIconForCategory = ( category) => {
     if (category.toLowerCase().includes('crypto')) return <Database size={16} className="text-yellow-400" />;
     if (category.toLowerCase().includes('finance') || category.toLowerCase().includes('bank')) return <Database size={16} className="text-green-400" />;
     if (category.toLowerCase().includes('breach') || category.toLowerCase().includes('leak')) return <ShieldAlert size={16} className="text-red-400" />;
@@ -32,7 +41,8 @@ export default function OsintDataVaultTab() {
     return <Archive size={16} className="text-gray-400" />;
   };
 
-  const renderActionButtons = (item) => {
+  /** @param {{"category": string}} item */
+const renderActionButtons = ( item) => {
     if (item.category.toLowerCase().includes('rapidapi')) {
       return (
         <button className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/20 text-blue-300 hover:bg-blue-500/40 rounded border border-blue-500/30 text-xs transition-colors">
@@ -90,7 +100,8 @@ export default function OsintDataVaultTab() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
+              {items.map(
+( item) => (
                 <div key={item.id} className="bg-gradient-to-b from-gray-900/80 to-black/80 backdrop-blur-md border border-white/10 rounded-lg p-4 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(0,255,255,0.15)] transition-all duration-300">
                   <div>
                     <div className="flex justify-between items-start mb-2">
@@ -101,10 +112,10 @@ export default function OsintDataVaultTab() {
                     </div>
                     
                     <div className="text-sm text-gray-300 font-mono mb-3 relative" style={{ wordBreak: 'break-word' }}>
-                      {item.data && (item.data.message || item.data.detail) ? (
+                      {vaultMessage(item.data) ? (
                         <div className="mb-2 p-2 bg-red-900/20 border border-red-500/30 rounded flex items-start gap-2">
                           <AlertTriangle size={14} className="text-red-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-xs text-red-200">{item.data.message || item.data.detail}</span>
+                          <span className="text-xs text-red-200">{vaultMessage(item.data)}</span>
                         </div>
                       ) : item.data ? (
                         Object.entries(item.data).filter(([key]) => key !== 'snippet' && key !== 'url').slice(0, 10).map(([key, val]) => (
@@ -119,9 +130,9 @@ export default function OsintDataVaultTab() {
                         <div className="text-xs text-gray-500">No structured data found.</div>
                       )}
                       
-                      {item.data && item.data.url && (
+                      {vaultSourceUrl(item.data) && (
                         <div className="mt-2">
-                          <a href={item.data.url} target="_blank" rel="noreferrer" className="text-cyan-400 text-xs break-all hover:underline drop-shadow-sm">
+                          <a href={vaultSourceUrl(item.data)} target="_blank" rel="noreferrer" className="text-cyan-400 text-xs break-all hover:underline drop-shadow-sm">
                             View Source
                           </a>
                         </div>

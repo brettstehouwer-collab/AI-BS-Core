@@ -1,0 +1,115 @@
+{
+  "id": "recdebut_20261029T170927Z",
+  "utc": "20261029T170927Z",
+  "outgoing_agent": "OpenAI Codex /root",
+  "receiving_agent": "Gemini/Antigravity continuation",
+  "status": "PREPARED_AWAITING_RECEIVER_VERIFICATION",
+  "head": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732",
+  "branch": "main",
+  "working_tree": {
+    "status_file": "backups/recdebut_email_20261029/git_status_20261029T170927Z.z",
+    "sha256": "2d581d982e203bdeca70b0f41015a98fc1744e3505ebed0c51e81b6edc39f25b",
+    "entries": 52637,
+    "tracked_entries": 161,
+    "untracked_entries": 52476
+  },
+  "source_manifest_sha256": "1df500946eae6dac7fe61905e931628e43fa45502d9ee4d977fcfda37c5d1764",
+  "source_files": {
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "d400f1ce981c0d54f1a92857377af452081d710e0adc1c2ee06e41ce5e886d85",
+    "backend/recdebut_campaign_links.py": "62bf6d5720e446ababf7bf828e9c4b9eb1623755b9f6fc818689152c6fed4714",
+    "backend/recdebut_delivery.py": "e02ad939d388f394c5085fe9882c69b14142bd5e392cb7c2daf1cad439f19fe1",
+    "backend/recdebut_email_unsubscribe.py": "1f95ac549de2464b0d33168f2ad36f650acd259a0af9285e31205e6c109521f2",
+    "backend/recdebut_workflow.py": "6ba2a19794181f88d4131ee5812e8325b644c48e0cc0604ff6a53a214557755d",
+    "backend/requirements.txt": "d96e43aa5f9dc9d760fca1415e43298913c529eef7b5d03baf42812ec2697bff",
+    "backend/security/recdebut_access.py": "57609d76a6685a68dbb6313e67b14469cedc9da6bb06f830a6be56bda32e368c",
+    "backend/tests/test_recdebut_campaign_links.py": "6d88f755610cf2199370dd388a780acbd46b316810bb248d2a24f453664a82ff",
+    "frontend/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/package-lock.json": "bb3878495850f0495e04340effe3280212f63df9822bc9e2eb17a81f5c95db10",
+    "frontend/package.json": "b33f0e79ace4e1700005e2f90f78b12aa0598c7ff73cf8ec35906282d342a699",
+    "frontend/src/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/src/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "package-lock.json": "6d26b9bd78be835469d37961ae62fba500f2cfc0802d7a813105eb4fec53447a",
+    "package.json": "cf727b6276d3436f25494d6c131705c17de62a84bf218df73647e02a0b5bece5",
+    "pyproject.toml": "3efe8f0a2049e82941ab9d38016b529b60bd3e9dd9debff67da9c19c319f763e",
+    "requirements.txt": "88929fc96893e0f7f93b2340e5886aa0f057952734fbbd9186fd529b5db89213",
+    "version.txt": "d4e06bc33a12ff4f7cfe450043fe58cbd3283f7e0d210eb2306bd52818bb4f7d"
+  },
+  "complete_source_snapshot": "backups/recdebut_email_20261029/source_20261029T170927Z",
+  "changed_paths": [
+    "backend/recdebut_campaign_links.py",
+    "backend/recdebut_delivery.py",
+    "backend/security/recdebut_access.py",
+    "backend/tests/test_recdebut_campaign_links.py",
+    "frontend/components/clients/RecDebutWorkspace.jsx",
+    "frontend/components/components/clients/RecDebutWorkspace.jsx",
+    "frontend/src/components/clients/RecDebutWorkspace.jsx",
+    "frontend/src/components/components/clients/RecDebutWorkspace.jsx",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_TASKS.md",
+    "docs/CODEX_DECISIONS.md"
+  ],
+  "patch_references": {
+    "backend/recdebut_campaign_links.py": "backups/recdebut_email_20261029/patches_20261029T170927Z/backend__recdebut_campaign_links.py.patch",
+    "backend/recdebut_delivery.py": "backups/recdebut_email_20261029/patches_20261029T170927Z/backend__recdebut_delivery.py.patch",
+    "backend/security/recdebut_access.py": "backups/recdebut_email_20261029/patches_20261029T170927Z/backend__security__recdebut_access.py.patch",
+    "backend/tests/test_recdebut_campaign_links.py": "backups/recdebut_email_20261029/patches_20261029T170927Z/backend__tests__test_recdebut_campaign_links.py.patch",
+    "frontend/components/clients/RecDebutWorkspace.jsx": "backups/recdebut_email_20261029/patches_20261029T170927Z/frontend__components__clients__RecDebutWorkspace.jsx.patch",
+    "frontend/components/components/clients/RecDebutWorkspace.jsx": "backups/recdebut_email_20261029/patches_20261029T170927Z/frontend__components__components__clients__RecDebutWorkspace.jsx.patch",
+    "frontend/src/components/clients/RecDebutWorkspace.jsx": "backups/recdebut_email_20261029/patches_20261029T170927Z/frontend__src__components__clients__RecDebutWorkspace.jsx.patch",
+    "frontend/src/components/components/clients/RecDebutWorkspace.jsx": "backups/recdebut_email_20261029/patches_20261029T170927Z/frontend__src__components__components__clients__RecDebutWorkspace.jsx.patch",
+    "docs/CODEX_HANDOFF.md": "backups/recdebut_email_20261029/patches_20261029T170927Z/docs__CODEX_HANDOFF.md.patch",
+    "docs/CODEX_JOURNAL.md": "backups/recdebut_email_20261029/patches_20261029T170927Z/docs__CODEX_JOURNAL.md.patch",
+    "docs/CODEX_DECISIONS.md": "backups/recdebut_email_20261029/patches_20261029T170927Z/docs__CODEX_DECISIONS.md.patch",
+    "docs/CODEX_TASKS.md": "backups/recdebut_email_20261029/patches_20261029T170927Z/docs__CODEX_TASKS.md.patch"
+  },
+  "document_hashes_before_append": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "976c9bafbf0d80c8150c2e3e83be09aa9e2af7f7847d9a8988a0989ceedf0b56",
+    "docs/CODEX_JOURNAL.md": "1b797cb4b528f30bec4cb52333ade9ae5244762d43e564a905ab4c732554353c",
+    "docs/CODEX_DECISIONS.md": "fa4657fc4f6ec74d63da92cda30232e287c20089ed5b6dd13926f51f461abee4",
+    "docs/CODEX_TASKS.md": "556d083620b0dc94f5b5175cd396667bb7e58203e0c023653772c80748dd6889"
+  },
+  "document_hashes_at_checkpoint": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "fc8521066a21a06aa99b08446809d710612bbbb707803f8e68d3514caeaf8015",
+    "docs/CODEX_JOURNAL.md": "f8111daf12bc80df0a356d9284a8559f0f83432cd75425668a387b35b9c52124",
+    "docs/CODEX_DECISIONS.md": "81d784f78d99e0dc72db25b5d1aeff4091e534fb3b425f93da2e7b7b19f78348",
+    "docs/CODEX_TASKS.md": "8933299fdbf357290711c9674213319da6f9e6296749eea58cfbf4bd78a93d72"
+  },
+  "document_note": "Checkpoint appends are byte-prefix verified; lifecycle hooks may later append the journal. Reconcile any unexpected source or authoritative handoff drift before edits. No whole-repository clean or global gateway parity claim.",
+  "evidence": {
+    "backups/recdebut_email_20261029/packet_inventory.json": "d4c7f8bc4ce0309181b178806c92ec9fddb6fdccad1900a383bb55e321f05fb5",
+    "backups/recdebut_email_20261029/dennis_copy_send_receipt.json": "84afbe97f05dfb0d7bfb38657fb0a0b48c67f3f6c4e84d0ccfe69d7b1ab80660",
+    "backups/recdebut_email_20261029/portal_draft_receipt.json": "6fc309a8325da77954c13cdc8e92efb6c2d48adbbf5c7030784188f239c139de",
+    "backups/recdebut_email_20261029/portal_worklog_receipt.json": "8700f6f2a243f78f533b0baf85f9045f76e4e03ff8c55b7277208c377975aff8",
+    "backups/recdebut_email_20261029/runtime_feature_probe.json": "0aceb1bc181ffd626e58295c2693ee0f3113d328666817cd5aaa3888777d2878",
+    "backups/recdebut_email_20261029/recdebut_regression.log": "e10efed1840595a22ad14109dcaebb19b7ebd8d0c87c90bc929340bf1ccb26a0",
+    "backups/recdebut_email_20261029/historical_copy_review.json": "da0762c3e44881196be59d23e3f49a180df2f14603b1a592fc5891a0fc8c8159",
+    "backups/recdebut_email_20261029/preparation_receipt.json": "2256e1d51adeea5f99407f148b89545eb2e5c6fb236061d17543d448cf2c538e",
+    "backups/recdebut_email_20261029/RecDebut_Email_Blast_Plan_2026-10-29_v2.txt": "6959a89bd976767a295ceef5ec970be834aca2859b54d620ef9084d66c525b9c",
+    "backups/recdebut_email_20261029/checkpoint_attempt1_failure.txt": "0d1709ff480e44ac417446b0c781c688c50b4d3bfde230211ff7b55d5eee4354"
+  },
+  "verification": {
+    "focused_recdebut_tests": {
+      "status": "VERIFIED",
+      "command": "python -X utf8 -m pytest backend/tests/test_recdebut_campaign_links.py backend/tests/test_recdebut_delivery.py backend/tests/test_recdebut_workflow.py backend/tests/test_recdebut_textbee.py backend/tests/test_recdebut_registration.py backend/tests/test_recdebut_inbox.py backend/tests/test_recdebut_email_unsubscribe.py backend/tests/test_recdebut_bounded_sms.py -q --disable-warnings --maxfail=1",
+      "result": "287 passed, 1 warning in 25.66s"
+    },
+    "four_ui_mirror_sha256": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "jsx_transform": "VERIFIED: esbuild transform, zero warnings; no production build",
+    "runtime_traffic_route": "UNVERIFIED: running old service returns 404",
+    "athlete_campaign": "HELD_UNSENT",
+    "inbound_reply_forwarding": "OPEN_INACTIVE"
+  },
+  "decisions": [
+    "ADR-110; independent review/activation and eligibility gates preserved"
+  ],
+  "next_step": "Read Record178 and this manifest; recompute commit/source hashes, inspect exact patches and reconcile shared dirty ownership before changes. Complete address/source evidence and genuine reply-copy verification before a controlled runtime release or eligible send-plan review.",
+  "failures": [
+    "Historical parser attempts and initial credential lookup retained; see Record178 and private artifacts.",
+    "Live traffic/sender/browser acceptance absent; incoming reply-forwarding incomplete."
+  ],
+  "receiving_agent_acknowledgement": null
+}

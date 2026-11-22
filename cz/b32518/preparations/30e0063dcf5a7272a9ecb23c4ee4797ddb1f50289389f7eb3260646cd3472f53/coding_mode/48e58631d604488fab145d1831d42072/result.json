@@ -1,0 +1,13 @@
+{
+  "input_sha256": "7bb2d73377df7d53218b55f8cc179931002ffb920ad3b47a4ff41173a7480dff",
+  "state": "BLOCKED",
+  "static_checks": [
+    {
+      "path": "src/app.js",
+      "kind": "syntax",
+      "status": "passed",
+      "parser_sha256": "914c11c83f502189db0479fa0452db4baf86cdb1b75555e5ed7ff77cd118ce8e"
+    }
+  ],
+  "entry_sha256": "c27c52af46e1c5532934c35997f70d27bac819b449e62483f598c22f0d981d95"
+}

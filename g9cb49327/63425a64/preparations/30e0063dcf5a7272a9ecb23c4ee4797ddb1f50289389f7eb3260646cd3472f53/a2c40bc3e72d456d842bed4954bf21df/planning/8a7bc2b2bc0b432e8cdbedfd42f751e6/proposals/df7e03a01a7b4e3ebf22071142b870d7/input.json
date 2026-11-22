@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "a2c40bc3e72d456d842bed4954bf21df",
+  "plan_id": "8a7bc2b2bc0b432e8cdbedfd42f751e6",
+  "snapshot_sha256": "43f15b0b8eb2cc35314db2e982054f1030f9c1cd78bae6b025fc83c8ca694485",
+  "review_digest": "9c677a76d7b4ac74b9ecad215168d54c07e1927de0ccd9d135c2f260368bc3cf",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "df7e03a01a7b4e3ebf22071142b870d7",
+  "reviewed_plan_sha256": "4830df3e010e92e49e41b98a3a1c86ca6e86249bdb14d232b6a52894dee7526a",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 34044,
+    "created": 1794771319.110771
+  },
+  "created_at_utc": "2026-11-15T19:35:25.455056+00:00",
+  "entry_sha256": "ceba4af76f5544f4996bfd027d82f0fd0e34dd6c81d328044209c2bcd596b9c8"
+}

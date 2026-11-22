@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { theme } from '../styles/theme';
-import { 
-  ShieldCheck, Cpu, DollarSign, Zap, Layers, Server, Sparkles, 
-  Film, Music, Building2, Briefcase, Database, Terminal, ArrowRight,
-  TrendingUp, CheckCircle, ExternalLink, Activity, HardDrive, Compass,
-  Sliders, XCircle, Calculator, PieChart, ShieldAlert
-} from 'lucide-react';
+import { Cpu, Layers, Server, Film, Building2, Database, TrendingUp, CheckCircle, ExternalLink, Activity, Compass, XCircle, Calculator } from 'lucide-react';
 
 const HUBS_DATA = [
   {
@@ -105,14 +100,14 @@ export default function EcosystemBlueprintTab() {
 
   // Theatrical Gateway State
   const [theatricalMode, setTheatricalMode] = useState(false);
-  const [plays, setPlays] = useState([]);
+  const [plays, setPlays] = useState(/** @type {string[]} */ ([]));
   const [newPlayName, setNewPlayName] = useState('');
 
   // Matrix Doctor State
-  const [matrixDoctorData, setMatrixDoctorData] = useState(null);
+  const [matrixDoctorData, setMatrixDoctorData] = useState(/** @type {{health_score:number,system_status:string,online_ports:number,total_ports:number,critical_online:number,total_critical:number,orphan_locks:unknown[],ports:Record<string,{online:boolean,name:string,category:string,status:string}>}|null} */ (null));
   const [isDoctorProbing, setIsDoctorProbing] = useState(false);
   const [isDoctorHealing, setIsDoctorHealing] = useState(false);
-  const [doctorHealMsg, setDoctorHealMsg] = useState(null);
+  const [doctorHealMsg, setDoctorHealMsg] = useState(/** @type {string|null} */ (null));
 
   const fetchMatrixDoctorStatus = async () => {
     setIsDoctorProbing(true);
@@ -141,7 +136,7 @@ export default function EcosystemBlueprintTab() {
         setMatrixDoctorData(data.post_diagnosis);
       }
     } catch (e) {
-      setDoctorHealMsg(`❌ Heal error: ${e.message}`);
+      setDoctorHealMsg(`❌ Heal error: ${errorMessage(e)}`);
     } finally {
       setIsDoctorHealing(false);
       setTimeout(() => setDoctorHealMsg(null), 7000);
@@ -226,7 +221,7 @@ export default function EcosystemBlueprintTab() {
   const monthlyNetSavings = totalSaasMo - totalAibsMo;
   const breakEvenMonth = monthlyNetSavings > 0 ? Math.ceil(SETUP_FEE / monthlyNetSavings) : 0;
 
-  const formatUSD = (val) => '$' + Math.round(val).toLocaleString();
+  const formatUSD = (/** @type {number} */ val) => '$' + Math.round(val).toLocaleString();
 
   return (
     <div style={{
@@ -242,7 +237,7 @@ export default function EcosystemBlueprintTab() {
       {/* Top Header Banner */}
       <div style={{
         background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(122, 40, 138, 0.15) 50%, rgba(0, 0, 0, 0.95) 100%)',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${theme.colors.textMuted}`,
         padding: '24px 32px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -538,7 +533,7 @@ export default function EcosystemBlueprintTab() {
             return (
               <div style={{
                 background: 'rgba(13, 16, 24, 0.95)',
-                border: `1px solid ${theme.colors.border}`,
+                border: `1px solid ${theme.colors.textMuted}`,
                 borderRadius: '8px',
                 padding: '20px'
               }}>
@@ -832,3 +827,9 @@ export default function EcosystemBlueprintTab() {
 
 
 
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

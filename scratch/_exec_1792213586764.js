@@ -1,0 +1,1 @@
+console.log('NODE_MULTI_OK', 100 + 23)

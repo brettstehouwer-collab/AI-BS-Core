@@ -3,7 +3,7 @@ import glob
 import time
 from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
 WORKSPACE_ROOT = r"C:\AI-BS"
@@ -16,6 +16,7 @@ class ProgramBuildRequest(BaseModel):
     files: List[Dict[str, str]]
     entrypoint: str = "main.py"
     run_immediately: bool = True
+    execute_build: bool = True
 
 class ProgramRunRequest(BaseModel):
     project_name: str
@@ -127,8 +128,11 @@ def build_program(req: ProgramBuildRequest):
             description=req.description,
             files=req.files,
             entrypoint=req.entrypoint,
-            run_immediately=req.run_immediately
+            run_immediately=req.run_immediately,
+            execute_build=req.execute_build
         )
+        if res.get("status") == "unavailable":
+            return JSONResponse(status_code=503, content={"status": "unavailable", "program": res})
         return {"status": "success", "program": res}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -142,6 +146,8 @@ def run_program(req: ProgramRunRequest):
             project_name=req.project_name,
             entrypoint=req.entrypoint
         )
+        if res.get("status") == "unavailable":
+            return JSONResponse(status_code=503, content=res)
         return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

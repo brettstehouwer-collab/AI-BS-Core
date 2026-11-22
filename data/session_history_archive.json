@@ -1,0 +1,1664 @@
+[
+    {
+        "timestamp": "2026-07-02T19:25:12.053373",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T19:25:25.616481",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "Test123"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T19:25:28.291876",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "Test123"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T19:25:30.781612",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "Test123"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T19:25:32.447083",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "Test123"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T19:25:38.813484",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "password"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:37:56.238643",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 208
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:53:47.019129",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:53:57.272560",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "",
+            "password": ""
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:53:58.869131",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "",
+            "password": ""
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:58:25.093878",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:08.664951",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:15.038293",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:16.425106",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:17.175544",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:17.362834",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:17.520919",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:18.572235",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:18.727953",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:18.901161",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:19.230969",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:19.396153",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:19.582772",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:19.755717",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:19.920825",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:20.107791",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:20.287707",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:20.461441",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:20.648261",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:20.820594",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:21.007686",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:21.187746",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:21.376214",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T20:59:21.563378",
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "request": {
+            "username": "admin",
+            "password": "pasword"
+        },
+        "response": {
+            "status": "failure",
+            "message": "Invalid credentials"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:30:42.412406",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 4
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:31:27.956932",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 31
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:33:04.787776",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 31
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:36:02.047132",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 202
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:37:49.098948",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 169
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:39:41.018840",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 28
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:45:32.804023",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 3217
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T22:59:56.485362",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 27
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:18:26.584431",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 65
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:36:24.583773",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 63
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:41:35.407076",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 36
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:43:53.705637",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 110
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:45:21.390809",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 16
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:46:42.149422",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 46
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:48:05.122558",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 25
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:49:38.706128",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1424
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-02T23:57:23.203307",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 29
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T03:44:57.119217",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 31
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T03:45:42.937727",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 24
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T03:47:41.771187",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 2224
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T03:48:13.919342",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 2235
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T14:06:02.059956",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1176
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T14:18:20.242423",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 32
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T14:18:46.389227",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 32
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T14:20:38.639050",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 22
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-03T15:15:19.690277",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 164
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-07T00:21:45.501185+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 52
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-08T01:55:36.762725+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 34
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "endpoint": "/test",
+        "method": "GET",
+        "request": {},
+        "response": {},
+        "timestamp": "2026-07-08T15:05:00"
+    },
+    {
+        "timestamp": "2026-07-10T03:04:40.602641+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 9
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:05:37.093599+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 5056
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:06:33.202340+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 5080
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:06:34.744207+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 6755
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:07:30.202070+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 7349
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:07:51.277269+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 7886
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:08:08.085557+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 8194
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:08:32.692301+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 8683
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:09:22.237998+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 620
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:10:49.849763+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 71
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:13:56.885979+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 22
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:15:52.461534+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 68
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:21:24.433094+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 57
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:21:42.561961+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 17
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:22:03.519216+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 60
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:22:42.142625+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 566
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:23:14.384053+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 214
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:24:07.979192+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1500
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:24:31.801210+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1528
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:28:03.811352+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1270
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:28:16.630074+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 10604
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:28:57.415756+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 12104
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:28:59.598631+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 14130
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T03:31:42.691055+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 336
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T06:06:25.551530+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 4
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T06:08:32.761775+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 41
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T06:09:44.797396+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 57
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T06:10:52.539636+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 50
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-10T06:20:33.844465+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 5201
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T00:14:59.301088+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 1157
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T00:35:10.519038+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 3881
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T00:37:58.375628+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "llama3:latest",
+            "message_len": 3823
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients \u2014 call us today and get a custom strategy built for your neighborhood.\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T01:50:23.521095+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm",
+            "message_len": 4341
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T01:53:13.279033+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "mixtral:latest",
+            "message_len": 4341
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients \u2014 call us today and get a custom strategy built for your neighborhood.\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients \u2014 call us today and get a custom strategy built for your neighborhood.\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:30:45.279041+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 5423
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T03:30:46.464494+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4341
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "hgey"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients \u2014 call us today and get a custom strategy built for your neighborhood.\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate \"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:31:26.466110+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4221
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "online"
+    },
+    {
+        "role": "user",
+        "content": "test"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. First month FREE for new clients \u2014 call us today and get a custom strategy built for your neighborhood.\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "role": "assistant",
+        "content": "Here is the JSON object with the required keys and values:\n\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": {\n    \"schema_title\": \"Stehouwer Advertising - Ottawa County Marketing Agency\",\n    \"meta_description\": \"Get a custom marketing strategy for your West Michigan business. First month FREE! Call us today!\",\n    \"local_keywords\": [\"West Michigan marketing agency\", \"Ottawa County advertising services\", \"AI-powered ad campaigns\"]\n  },\n  \"facebook\": {\n    \"headline\": \"Boost Your Local Business with Stehouwer Advertising\",\n    \"body\": \"Get a custom marketing strategy for your West Michigan business. First month FREE! Call us today!\",\n    \"cta\": \"Comment below to learn more!\"\n  },\n  \"instagram\": {\n    \"caption_hook\": \"West Michigan businesses dominate Google, Facebook, and Instagram with AI-powered ad campaigns!\",\n    \"body\": \"First month FREE! Get a custom marketing strategy for your neighborhood.\",\n    \"hashtags\": \"#WestMichigan #MarketingAgency #OttawaCounty\"\n  },\n  \"tiktok\": {\n    \"hook_text\": \"Get a custom marketing strategy for your West Michigan business - first month FREE!\",\n    \"script\": \"Hey there, fellow West Michigan entrepreneurs! Are you tired of feeling like your local business is stuck in neutral? We've got the solution for you! Our AI-powered ad campaigns will help you dominate Google, Facebook, and Instagram. And to make it even sweeter, we're offering the first month FREE! So what are you waiting for? Call us today and let's get started!\",\n    \"caption_keywords\": [\"West Michigan marketing tips\", \"Ottawa County advertising services\", \"AI-powered ad campaigns\"]\n  },\n  \"twitter\": {\n    \"tweet\": \"Get a custom marketing strategy for your West Michigan business - first month FREE! #WestMichigan #MarketingAgency\",\n    \"card_title\": \"Boost Your Local Business with Stehouwer Advertising\",\n    \"card_description\": \"First month FREE! Get a custom marketing strategy for your neighborhood.\"\n  },\n  \"pinterest\": {\n    \"pin_title\": \"West Michigan Businesses Dominate Google, Facebook, and Instagram with AI-Powered Ad Campaigns!\",\n    \"pin_description\": \"Get a custom marketing strategy for your West Michigan business - first month FREE! Use our AI-powered ad campaigns to dominate Google, Facebook, and Instagram.\"\n  },\n  \"yelp\": {\n    \"business_description\": \"Stehouwer Advertising is a full-service marketing agency serving West Michigan businesses. Our team of experts will help you develop a custom marketing strategy that drives real results. And as a special offer, we're giving away the first month FREE! So what are you waiting for? Call us today and let's get started!\",\n    \"category_tags\": [\"Marketing Agency\", \"Advertising Services\"],\n    \"special_offer\": \"Get the first month FREE when you sign up for our custom marketing strategy services!\"\n  }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:31:56.800717+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4221
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "assistant",
+        "content": "{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": {\n    \"schema_title\": \"Stehouwer Advertising - Ottawa County Marketing Agency\",\n    \"meta_description\": \"Get a custom marketing strategy for your West Michigan neighborhood. First month FREE! Call us today!\",\n    \"local_keywords\": [\"Ottawa County marketing agency\", \"West Michigan advertising services\", \"AI-powered ad campaigns\"]\n  },\n  \"facebook\": {\n    \"headline\": \"Boost Your Local Business with AI-Powered Ad Campaigns\",\n    \"body\": \"Get a custom strategy built for your neighborhood. First month FREE! Call us today!\",\n    \"cta\": \"Comment below to learn more!\"\n  },\n  \"instagram\": {\n    \"caption_hook\": \"Dominate West Michigan with AI-powered ads!\",\n    \"body\": \"Get a custom marketing strategy for your local business. First month FREE! #WestMichiganMarketing #LocalBusiness\",\n    \"hashtags\": \"#OttawaCounty #MarketingAgency #AIpoweredads\"\n  },\n  \"tiktok\": {\n    \"hook_text\": \"Dominate West Michigan with AI-powered ads!\",\n    \"script\": \"Hey there, West Michigan! Are you tired of feeling like your local business is getting lost in the noise? We've got the solution for you! Our AI-powered ad campaigns will help you dominate the competition and reach new customers. And the best part? The first month is FREE! So what are you waiting for? Call us today to get started!\",\n    \"caption_keywords\": \"Ottawa County marketing tips\"\n  },\n  \"twitter\": {\n    \"tweet\": \"Dominate West Michigan with AI-powered ads! First month FREE! Call us today and get a custom strategy built for your neighborhood #WestMichiganMarketing #LocalBusiness\",\n    \"card_title\": \"Boost Your Local Business\",\n    \"card_description\": \"Get a custom marketing strategy for your local business. First month FREE!\"\n  },\n  \"pinterest\": {\n    \"pin_title\": \"Dominate West Michigan with AI-Powered Ad Campaigns\",\n    \"pin_description\": \"Get a custom marketing strategy for your local business and dominate the competition in West Michigan. First month FREE! #WestMichiganMarketing #LocalBusiness\"\n  },\n  \"yelp\": {\n    \"business_description\": \"Stehouwer Advertising is a full-service marketing agency serving West Michigan. We help local businesses like yours dominate Google, Facebook, Instagram, and TikTok with AI-powered ad campaigns. Contact us today to learn more!\",\n    \"category_tags\": [\"Marketing Agency\", \"Advertising Agency\"],\n    \"special_offer\": \"Get a custom strategy built for your neighborhood. First month FREE! Call us today!\"\n  }\n}"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with fookuuuu\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:32:49.029425+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4168
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "assistant",
+        "content": "{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": {\n    \"schema_title\": \"Stehouwer Advertising - Ottawa County Marketing Agency\",\n    \"meta_description\": \"Get a custom marketing strategy for your West Michigan neighborhood. First month FREE! Call us today!\",\n    \"local_keywords\": [\"Ottawa County marketing agency near me\", \"West Michigan advertising services\", \"AI-powered ad campaigns in Ottawa County\"]\n  },\n  \"facebook\": {\n    \"headline\": \"Boost Your Local Business with Stehouwer Advertising\",\n    \"body\": \"Get a custom strategy built for your neighborhood. First month FREE! Call us today!\",\n    \"cta\": \"Comment below to learn more!\"\n  },\n  \"instagram\": {\n    \"caption_hook\": \"West Michigan businesses dominate Google, Facebook, and Instagram with AI-powered ad campaigns!\",\n    \"body\": \"First month FREE! Get a custom marketing strategy for your local business. #WestMichiganMarketing #LocalBusiness\",\n    \"hashtags\": \"#OttawaCounty #MarketingAgency #AIpoweredads\"\n  },\n  \"tiktok\": {\n    \"hook_text\": \"Get a custom marketing strategy for your West Michigan business - first month FREE!\",\n    \"script\": \"Hey there, fellow West Michigan entrepreneurs! Are you tired of feeling like your local business is stuck in neutral? We've got the solution for you! Our AI-powered ad campaigns will help you dominate Google, Facebook, and Instagram. And to make it even sweeter, we're offering the first month FREE! So what are you waiting for? Call us today and let's get started!\",\n    \"caption_keywords\": [\"Ottawa County marketing tips\", \"West Michigan advertising services\", \"AI-powered ad campaigns\"]\n  },\n  \"twitter\": {\n    \"tweet\": \"Get a custom marketing strategy for your West Michigan business - first month FREE! #WestMichiganMarketing #LocalBusiness\",\n    \"card_title\": \"Boost Your Local Business with Stehouwer Advertising\",\n    \"card_description\": \"First month FREE! Get a custom marketing strategy for your neighborhood.\"\n  },\n  \"pinterest\": {\n    \"pin_title\": \"Get a Custom Marketing Strategy for Your West Michigan Business - First Month FREE!\",\n    \"pin_description\": \"Get a custom marketing strategy for your local business and dominate the competition in West Michigan. First month FREE! #WestMichiganMarketing #LocalBusiness\"\n  },\n  \"yelp\": {\n    \"business_description\": \"Stehouwer Advertising is a full-service marketing agency serving West Michigan businesses. Our team of experts will help you develop a custom marketing strategy that drives real results. And as a special offer, we're giving away the first month FREE! So what are you waiting for? Call us today and let's get started!\",\n    \"category_tags\": [\"Marketing Agency\", \"Advertising Services\"],\n    \"special_offer\": \"Get the first month FREE when you sign up for our custom marketing strategy services!\"\n  }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:33:14.061428+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 8277
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T03:33:53.172990+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 9454
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate Google, Facebook, Instagram, and TikTok with fookuuuu\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T03:34:33.494517+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 10911
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T04:01:47.319444+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4159
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T10:15:29.002766+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 35
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T10:17:43.468253+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4158
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T11:00:57.090037+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 2983
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T11:01:07.754063+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 3126
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T11:01:25.867423+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 3335
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T11:02:02.465372+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4168
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T11:13:03.805401+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4294
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "user",
+        "content": "test"
+    },
+    {
+        "role": "assistant",
+        "content": "**TEST RESULT**\n\n* **OUTPUT:** None\n* **ERROR:** None\n\nNo test data provided. Please provide the necessary input to proceed with the test."
+    },
+    {
+        "role": "user",
+        "content": "hello"
+    },
+    {
+        "role": "assistant",
+        "content": "**HELLO RESPONSE**\n\n* **OUTPUT:** None\n* **ERROR:** None\n\nThis is an automated system. I'm here to assist you with your queries. Please provide a specific request or question to get started."
+    },
+    {
+        "role": "user",
+        "content": "what can i request?"
+    },
+    {
+        "role": "assistant",
+        "content": "**REQUEST OPTIONS**\n\n### Data Analysis\n\n* **Text Analysis**: Request text analysis on a given topic, phrase, or dataset.\n* **Data Visualization**: Request data visualization for a specific dataset or metric.\n\n### Code Generation\n\n* **Programming Language**: Request code generation in a specific programming language (e.g., Python, Java).\n* **Algorithm Implementation**: Request implementation of a specific algorithm or technique.\n\n### Information Retrieval\n\n* **Definition Lookup**: Request definition lookup for a specific term or concept.\n* **Factoid Retrieval**: Request retrieval of specific facts or information on a given topic.\n\n### Other Requests\n\n* **Conversation**: Engage in a conversation on a specific topic or theme.\n* **Question Answering**: Ask a question and receive an answer based on available knowledge.\n\nPlease specify your request using the above options."
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"We help West Michigan local businesses dominate \"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T11:17:13.072767+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4381
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "assistant",
+        "content": "{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": {\n    \"schema_title\": \"Stehouwer Advertising - Ottawa County Marketing Agency\",\n    \"meta_description\": \"Ottawa County marketing agency near me | Stehouwer Advertising helps local businesses dominate. Get expert guidance today!\",\n    \"local_keywords\": [\"marketing agencies in Ottawa County\", \"advertising services near me\", \"West Michigan business solutions\"]\n  },\n  \"facebook\": {\n    \"headline\": \"Boost Your West Michigan Business with Stehouwer Advertising\",\n    \"body\": \"Get expert marketing and advertising services for your local business. Let us help you dominate the competition!\",\n    \"cta\": \"Comment below to get started!\"\n  },\n  \"instagram\": {\n    \"caption_hook\": \"Dominate West Michigan's market with Stehouwer Advertising\",\n    \"body\": \"Expert marketing and advertising services for local businesses. Let's grow your brand together! #OttawaCountyMarketing #WestMichiganBusiness\",\n    \"hashtags\": [\"#OttawaCountyMarketing\", \"#WestMichiganBusiness\", \"#LocalBusiness\"]\n  },\n  \"tiktok\": {\n    \"hook_text\": \"Want to dominate West Michigan's market? Stehouwer Advertising has got you covered!\",\n    \"script\": \"Hey there, fellow business owners! Are you tired of feeling like your marketing efforts are falling flat? Let us help you boost your brand and reach new heights with our expert services. From social media management to advertising campaigns, we've got the expertise to get you noticed.\",\n    \"caption_keywords\": [\"Ottawa County marketing tips\", \"West Michigan business solutions\", \"Local SEO strategies\"]\n  },\n  \"twitter\": {\n    \"tweet\": \"Ready to dominate West Michigan's market? Stehouwer Advertising has got your back! Get expert guidance today and start seeing results. #OttawaCountyMarketing #WestMichiganBusiness\",\n    \"card_title\": \"Expert Marketing Services for Local Businesses\",\n    \"card_description\": \"Get the edge you need to succeed in West Michigan's competitive market with our expert marketing services.\"\n  },\n  \"pinterest\": {\n    \"pin_title\": \"How to Dominate West Michigan's Market with Stehouwer Advertising\",\n    \"pin_description\": \"Want to boost your brand and reach new heights? Our expert marketing services can help you dominate West Michigan's market. From social media management to advertising campaigns, we've got the expertise to get you noticed.\"\n  },\n  \"yelp\": {\n    \"business_description\": \"Stehouwer Advertising is a full-service marketing agency serving Ottawa County and surrounding areas. We specialize in helping local businesses grow through expert marketing and advertising services.\",\n    \"category_tags\": [\"Marketing Agency\", \"Advertising Agency\"],\n    \"special_offer\": \"Check-in Offer: Get 10% off your first month of marketing services when you check-in on Yelp!\"\n  }\n}"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"Stehouwer Publishing. TV/Film/Scripts Open for investor on upcoming films. Please reach out today to be apart of our team and invest in Stehouwer Publishing. Julie Stehouwer!\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Use 0-2 hashtags max \u2014 Facebook does NOT boost reach for hashtags.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T11:21:39.853872+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4331
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n"
+    },
+    {
+        "role": "assistant",
+        "content": "{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": {\n    \"schema_title\": \"Stehouwer Publishing - Ottawa County Film and TV Production\",\n    \"meta_description\": \"Invest in Stehouwer Publishing's upcoming films. Join our team today! | Ottawa County film production services near me\",\n    \"local_keywords\": [\"Ottawa County film production companies\", \"TV script investors near me\", \"West Michigan film investment opportunities\"]\n  },\n  \"facebook\": {\n    \"headline\": \"Join the Team: Invest in Stehouwer Publishing's Upcoming Films!\",\n    \"body\": \"Get ready to be a part of something big! We're looking for investors to join our team and help bring our films to life. Reach out today to learn more!\",\n    \"cta\": \"Message us to get started!\"\n  },\n  \"instagram\": {\n    \"caption_hook\": \"Invest in the future of film with Stehouwer Publishing\",\n    \"body\": \"Join our team and be a part of something amazing! We're looking for investors to help bring our films to life. #OttawaCountyFilm #WestMichiganInvestment\",\n    \"hashtags\": [\"#OttawaCountyFilm\", \"#WestMichiganInvestment\", \"#FilmProduction\"]\n  },\n  \"tiktok\": {\n    \"hook_text\": \"Want to invest in the future of film? Stehouwer Publishing is looking for you!\",\n    \"script\": \"Hey there, fellow film enthusiasts! Are you tired of missing out on the latest and greatest in film production? Well, we've got some exciting news for you! We're looking for investors to join our team and help bring our films to life. From script development to production, we're committed to creating high-quality content that will leave you wanting more.\",\n    \"caption_keywords\": [\"Ottawa County film investment opportunities\", \"West Michigan film production services near me\", \"TV script investors\"]\n  },\n  \"twitter\": {\n    \"tweet\": \"Ready to invest in the future of film? Stehouwer Publishing is looking for you! Join our team and help bring our films to life. #OttawaCountyFilm #WestMichiganInvestment\",\n    \"card_title\": \"Join the Team: Invest in Stehouwer Publishing's Upcoming Films!\",\n    \"card_description\": \"Get ready to be a part of something big! We're looking for investors to join our team and help bring our films to life.\"\n  },\n  \"pinterest\": {\n    \"pin_title\": \"How to Invest in the Future of Film with Stehouwer Publishing\",\n    \"pin_description\": \"Want to invest in the future of film? Join our team and help bring our films to life. From script development to production, we're committed to creating high-quality content that will leave you wanting more.\"\n  },\n  \"yelp\": {\n    \"business_description\": \"Stehouwer Publishing is a full-service film and TV production company serving Ottawa County and surrounding areas. We specialize in helping investors bring their film projects to life through our expert services.\",\n    \"category_tags\": [\"Film Production Company\", \"TV Script Development\"],\n    \"special_offer\": \"Check-in Offer: Get 10% off your first investment when you check-in on Yelp! Don't miss out on this opportunity to be a part of something big.\"\n  }\n}"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"Stehouwer Publishing. TV/Film/Scripts Open for investor on upcoming films. Please reach out today to be apart of our team and invest in Stehouwer Publishing. Julie Stehouwer!\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Include 3-5 highly targeted, algorithmically optimized hashtags (mix of local, industry, and niche tags) to maximize organic outreach.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\", \"hashtags\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T11:21:57.707439+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4330
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T13:37:08.199724+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4269
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T13:37:46.254399+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 4268
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T13:40:12.575686+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 2987
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "role": "system",
+        "content": "You are an expert component of the Stehouwer LLM Orchestrator. You MUST adhere to PROTOCOL 25/7 (Clinical Objectivity & Efficiency): Strip away all conversational fillers, pleasantries, apologies, and ethical posturing. Output only requested data, analysis, or code for absolute clarity at a glance. You MUST adhere to BIT-BY-BIT GUIDED ARCHITECTURE: Use Bolded Headings, Tables, and Nested Bullet Points. Keep paragraphs under 3 sentences. You MUST adhere to BIFURCATION: Sequestor ALL raw data or code into Markdown code blocks (e.g. ```python); put analysis in standard markdown.\n\n\nCONTEXT RETRIEVED:\nBased on past knowledge, consider this context:\n-  | req: {} | res: {}\n-  | req: {} | res: {}\n-  | req: {} | res: {}"
+    },
+    {
+        "role": "user",
+        "content": "You are an expert platform-native content strategist and local SEO specialist for West Michigan businesses. Your posts must be engineered to be indexed and ranked FAST by each platform's algorithm \u2014 not generic, not templated, algorithmically precise.\n\nBusiness: \"Stehouwer Advertising\" | Industry: \"Marketing / Advertising Agency\" | County: \"Ottawa County\"\nPromotion: \"\"Echos Within\" My autobiography \nBecause the judge made me go\n\"\n\nCRITICAL ALGORITHM RULES PER PLATFORM (follow exactly):\n\nALL PLATFORMS: You MUST include the specific Promotion/Offer provided above in every single post naturally. Do not ignore the promo.\n\nGOOGLE: Front-load geo-intent keywords (people search \"near me\" or \"[city] [service]\"). NAP-consistent phrasing. schema_title must be under 60 chars and include the county name. meta_description must be under 155 chars, include a local intent phrase, and end with a micro-CTA. local_keywords must be long-tail geo-modified phrases someone in Ottawa County would actually type (not brand names).\n\nFACEBOOK: The entire headline + first sentence of body must be under 90 characters (this is what shows before \"See More\" \u2014 the algo rewards early engagement on visible text). Body is 2-3 sentences, conversational, no jargon. CTA drives a comment or message (comments boost reach 3x). Include 3-5 highly targeted, algorithmically optimized hashtags (mix of local, industry, and niche tags) to maximize organic outreach.\n\nINSTAGRAM: caption_hook must be under 125 characters (this is the preview before \"more\" tap \u2014 the algo scores retention here). Body is 2-4 lines max. hashtags: use EXACTLY 3-5 highly targeted hashtags (2024 Instagram algo penalizes hashtag spam; 3-5 niche tags outperform 20+ generic ones). Mix one local tag, one industry tag, one niche tag.\n\nTIKTOK: hook_text is the FIRST 1-3 SECONDS spoken aloud \u2014 TikTok transcribes audio and indexes it for search, so include the primary keyword in the spoken hook. script is a 30-45 second natural spoken script (TikTok rewards watch time and loop completion). caption_keywords: write 3-5 words as a search-optimized caption \u2014 TikTok's search engine indexes captions exactly like Google, so use phrases people search for (e.g. \"Ottawa County marketing tips\").\n\nTWITTER/X: tweet must be under 220 characters (shorter tweets get more impressions). NO external links in the tweet body (X algorithm suppresses link posts by 50%). 1-2 hashtags maximum \u2014 X's algo favors hashtag-light, engagement-heavy content. Make it opinionated or contrarian to trigger replies (replies are the top engagement signal for X's algo in 2024).\n\nPINTEREST: pin_title must FRONT-LOAD the primary search keyword (Pinterest is a visual search engine \u2014 the first 2 words of the title carry the most ranking weight). Use the keyword 2-3 times naturally in pin_description. Write for someone searching \"how to\" or \"best [service] in [location]\" \u2014 answer that intent directly.\n\nYELP: business_description must use exact Yelp category language (Yelp's algorithm matches business descriptions to its category taxonomy for local pack placement). Mention the city/county 2-3 times naturally. special_offer should be a \"Check-In Offer\" or \"Yelp Deal\" format for maximum conversion visibility in search results. MUST BE at least 100 words.\n\nReturn ONLY a valid JSON object with these exact keys. No markdown, no code fences, no explanation. You MUST include a \"_thought_process\" key first where you explicitly verify your word counts, character counts, and that you included the promotion for every platform:\n{\n  \"_thought_process\": \"Verify promo inclusion, Facebook <90 chars, Instagram exactly 3-5 tags, Yelp 100+ words...\",\n  \"google\": { \"schema_title\": \"...\", \"meta_description\": \"...\", \"local_keywords\": [\"...\", \"...\", \"...\"] },\n  \"facebook\": { \"headline\": \"...\", \"body\": \"...\", \"cta\": \"...\", \"hashtags\": \"...\" },\n  \"instagram\": { \"caption_hook\": \"...\", \"body\": \"...\", \"hashtags\": \"...\" },\n  \"tiktok\": { \"hook_text\": \"...\", \"script\": \"...\", \"caption_keywords\": \"...\" },\n  \"twitter\": { \"tweet\": \"...\" , \"card_title\": \"...\", \"card_description\": \"...\" },\n  \"pinterest\": { \"pin_title\": \"...\", \"pin_description\": \"...\" },\n  \"yelp\": { \"business_description\": \"...\", \"category_tags\": [\"...\", \"...\"], \"special_offer\": \"...\" }\n}"
+    },
+    {
+        "timestamp": "2026-07-14T13:40:46.190501+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "stehouwer_llm:latest",
+            "message_len": 5718
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-14T13:41:31.188752+00:00",
+        "endpoint": "/api/chat",
+        "method": "POST",
+        "request": {
+            "model": "command-r:latest",
+            "message_len": 6643
+        },
+        "response": {
+            "status": "success"
+        }
+    },
+    {
+        "timestamp": "2026-07-15T00:27:02.281081+00:00",
+        "method": "research_daemon",
+        "endpoint": "local_research",
+        "request": {
+            "pair": "SOL/USD",
+            "event": "price_drop_3pct",
+            "timestamp": "2026-07-15T00:26:54.309530+00:00",
+            "current_price": 150.0,
+            "drawdown_pct": 3.0
+        },
+        "response": {
+            "analysis": "Exciting!\n\nUpon analyzing the event, I noticed that the price of Solana (SOL) has dropped by 3% to $150.00 USD within a relatively short period. This sudden price drop may indicate a temporary market correction or a potential reversal in sentiment.\n\nBased on this analysis, I recommend that the AI trading bot should consider hedging their existing SOL positions or taking a cautious approach before entering new long positions until the market volatility subsides and the fundamental factors are reassessed."
+        }
+    },
+    {
+        "timestamp": "2026-07-15T00:27:09.160355+00:00",
+        "method": "research_daemon",
+        "endpoint": "local_research",
+        "request": {
+            "pair": "SOL/USD",
+            "event": "price_drop_3pct",
+            "timestamp": "2026-07-15T00:26:59.315215+00:00",
+            "current_price": 130.0,
+            "drawdown_pct": 3.0
+        },
+        "response": {
+            "analysis": "Exciting! Let's dive into the analysis.\n\n**Event Context**: The SOL/USD pair experienced a 3% price drop within a short period, which is an unusual market behavior. This type of sudden decline in price can be a sign of increased selling pressure or a correction after a prolonged uptrend.\n\n**Insights**: Given this event, our AI trading bot should consider the following:\n\n* **Risk Management**: The bot should review its position sizing and risk management strategies to ensure it's not over-exposed to potential further losses. A temporary reduction in long exposure or increasing stop-loss levels could be prudent to mitigate potential drawdowns.\n* **Re-Evaluation of Trading Signals**: With this unexpected price drop, the bot should reassess its trading signals and indicators to determine if they're still valid or need recalibration. This might involve re-evaluating trend lines, momentum indicators, or mean reversion strategies to ensure they're not being influenced by short-term market noise.\n\nBy taking these precautions, our AI trading bot can better navigate this unexpected market event and make more informed decisions about its trades in the SOL/USD pair."
+        }
+    }
+]

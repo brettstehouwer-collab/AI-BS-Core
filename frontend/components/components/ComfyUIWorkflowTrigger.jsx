@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { getApiBase } from '/src/config/api.js';
+
+// Button label -> real workflow file in backend/comfyui_workflows (served by routers/comfyui_router.py).
+const WORKFLOW_FILES = { SDXL: 'flux_image_generation.json', 'Wan2.1': 'wan2.1_i2v_lightx2v_fixed_workflow.json' };
 
 export default function ComfyUIWorkflowTrigger() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || getApiBase();
 
   const [workflowType, setWorkflowType] = useState('SDXL');
   const [prompt, setPrompt] = useState('Futuristic cybernetic workstation, RTX 4090 neon lighting, ultra detailed 8k');
   const [steps, setSteps] = useState(30);
   const [cfg, setCfg] = useState(7.0);
   const [isTriggering, setIsTriggering] = useState(false);
-  const [lastStatus, setLastStatus] = useState(null);
+  const [lastStatus, setLastStatus] = useState(/** @type {{status:string,workflow:string,vram_allocation_mb?:number|null}|null} */ (null));
 
-  const handleTrigger = async (e) => {
+  const handleTrigger = async (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault();
     if (!prompt.trim()) return;
     setIsTriggering(true);
     try {
-      const res = await fetch(`${backendUrl}/api/proxy/8002/api/v1/comfyui/trigger`, {
+      // Previously proxied to :8002 (ChromaDB). Steps/CFG come from the workflow file itself.
+      const workflowFile = WORKFLOW_FILES[workflowType];
+      const res = await fetch(`${backendUrl}/api/comfyui/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workflow_type: workflowType, prompt, steps, cfg, seed: 42 })
+        body: JSON.stringify({ workflow_filename: workflowFile, prompt_text: prompt })
       });
-      if (res.ok) {
-        const data = await res.json();
-        setLastStatus(data);
-      }
+      const data = await res.json().catch(() => ({}));
+      setLastStatus(res.ok
+        ? { status: `Queued (prompt ${data.prompt_id})`, workflow: workflowFile, vram_allocation_mb: null }
+        : { status: `Rejected (HTTP ${res.status}): ${data.detail || 'ComfyUI unavailable'}`, workflow: workflowFile, vram_allocation_mb: null });
     } catch (err) {
-      console.warn('Backend ComfyUI workflow trigger using offline fallback.', err);
-      setLastStatus({ status: 'QUEUED (LOCAL_FALLBACK)', workflow: workflowType, steps, vram_allocation_mb: 18432 });
+      console.warn('ComfyUI workflow request failed.', err);
+      setLastStatus({ status: 'Unavailable: request failed; no queue acknowledgement', workflow: workflowType, vram_allocation_mb: null });
     } finally {
       setIsTriggering(false);
     }
@@ -133,7 +139,7 @@ export default function ComfyUIWorkflowTrigger() {
           fontSize: '11px',
           color: '#7ee787'
         }}>
-          ✅ Render Request Dispatched to GPU Queue | Status: {lastStatus.status} | Model: {lastStatus.workflow} | VRAM: {lastStatus.vram_allocation_mb} MB
+          Render request outcome | Status: {lastStatus.status} | Model: {lastStatus.workflow} | VRAM: {lastStatus.vram_allocation_mb ?? 'Unavailable'} MB
         </div>
       )}
     </div>

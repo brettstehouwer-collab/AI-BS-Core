@@ -1,18 +1,19 @@
-import React from 'react';
+import 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+/** @param {{content:string}} props */
 const ArtifactRenderer = ({ content }) => {
   return (
     <div className="artifact-markdown-container">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          code({ node, inline, className, children, ...props }) {
+          code({ node, ref, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
-            return !inline && match ? (
+            return match ? (
               <div className="code-block-wrapper">
                 <div className="code-block-header">
                   <span>{match[1]}</span>
@@ -22,13 +23,12 @@ const ArtifactRenderer = ({ content }) => {
                   language={match[1]}
                   PreTag="div"
                   className="syntax-highlighter-block"
-                  {...props}
                 >
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
               </div>
             ) : (
-              <code className={`inline-code ${className || ''}`} {...props}>
+              <code ref={ref} className={`inline-code ${className || ''}`} {...props}>
                 {children}
               </code>
             );
@@ -36,9 +36,8 @@ const ArtifactRenderer = ({ content }) => {
           blockquote({ node, children, ...props }) {
             // Check for GitHub style alerts inside blockquotes
             // e.g. > [!NOTE], > [!IMPORTANT], > [!WARNING]
-            const textContent = node.children
-              .filter(child => child.type === 'element' && child.tagName === 'p')
-              .map(p => p.children.filter(c => c.type === 'text').map(t => t.value).join(''))
+            const textContent = (node?.children || [])
+              .flatMap(child => child.type === 'element' && child.tagName === 'p' ? child.children.map(c => c.type === 'text' ? c.value : '') : [])
               .join('\n');
 
             let alertType = null;

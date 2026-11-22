@@ -1,0 +1,314 @@
+{
+  "record": 209,
+  "title": "Incident and usage review \u2014 native preview corrective release",
+  "utc": "2026-10-31T20:43:31.595563+00:00",
+  "purpose": "User-requested support-ready factual record; no support submission performed. Finish native preview verification after documenting the incident.",
+  "classification": {
+    "confirmed_application_defect": "AI-BS Windows non-delete-sharing readers can block atomic private-status/HLS publication. Recorded controller terminal code STATUS_WRITE_UNAVAILABLE.",
+    "causality_limit": "The HLS rename error is separate from the controller terminal status-write error. Its presence alone is not proof it directly caused shutdown.",
+    "platform_outage": "NOT_CONFIRMED",
+    "usage_or_refund_entitlement": "NOT_ESTABLISHED_BY_THIS_REPORT"
+  },
+  "incident": {
+    "prior_version": "5.329.84",
+    "corrective_version": "5.329.85",
+    "controller_pid": 52852,
+    "encoder_pid": 43860,
+    "terminal_error": "STATUS_WRITE_UNAVAILABLE",
+    "failure_observation_utc": "2026-10-31T20:19:50Z",
+    "failure_time_precision": "Second-level summary; actual FFmpeg mtime20:19:50.094034Z retained in diagnosis.",
+    "root_sent_stop": false,
+    "prior_preview": "Initially worked; toggling preview off/on kept the same encoder before later failure.",
+    "reproduction": "Isolated C Windows fixtures reproduce denied atomic replacement while readers are open. Shared-delete reads plus bounded retries publish after brief readers close; immediate open-handle replacement remains unsupported on this host.",
+    "repair": "FILE_SHARE_READ|WRITE|DELETE bounded local reads; classified5/32/33 atomic-replace retries; Qt playback through fixed loopback HTTP9011 instead of directly opening the writer playlist.",
+    "restoration": "Root used native84 GUI Start with preview off around20:30UTC. First exact subsequent soak sample20:30:31UTC; root reports192seconds healthy observation.85installed preview acceptance remains a later separate step.",
+    "continuity": "NOT_UNINTERRUPTED"
+  },
+  "timeline_utc": [
+    {
+      "time": "2026-10-31T20:04:07.842777Z",
+      "event": "First retained local scope/preimage evidence for this work. This is not the full chat/session start.",
+      "basis": "backups/record209_web/scope.json"
+    },
+    {
+      "time": "2026-10-31T20:19:50Z",
+      "event": "Prior sender terminal failure; controller/encoder later confirmed gone.",
+      "basis": "backups/native_broadcast_preview209_work/runtime_failure209/initial_readonly_diagnosis.json"
+    },
+    {
+      "time": "2026-10-31T20:25:40Z",
+      "event": "Read-only loopback HTTP9011HLS route verified.",
+      "basis": "backups/native_preview_v85_20261031_record209/loopback_http_route209.json"
+    },
+    {
+      "time": "2026-10-31T20:29:47.722Z",
+      "event": "Corrective85Windows build began.",
+      "basis": "PARENT_REPORTED_BUILD_START"
+    },
+    {
+      "time": "2026-10-31T20:30:31Z",
+      "event": "First exact sample after native84GUI restore with preview off; does not establish the exact Start click time.",
+      "basis": "PARENT_REPORTED_SOAK_SAMPLE"
+    },
+    {
+      "time": "2026-10-31T20:32:17.543Z",
+      "event": "Corrective85Windows build completed.",
+      "basis": "PARENT_REPORTED_BUILD_END"
+    },
+    {
+      "time": "2026-10-31T20:32:48Z",
+      "event": "Corrective85installed,2256package files matched and4shortcuts retargeted.",
+      "basis": "backups/native_preview_v85_20261031_record209/installation209.json"
+    }
+  ],
+  "measured_or_bounded_time": {
+    "corrective85_build_seconds": 149.821,
+    "failure_to_route_seconds": 350.0,
+    "failure_to_first_observed_restore_seconds": 641.0,
+    "failure_to85_install_seconds": 778.0,
+    "first_retained_scope_to85_install_seconds": 1720.157,
+    "restored_sender_healthy_observation_seconds": 192.156,
+    "interpretation": "These are local build duration, timestamp-to-timestamp elapsed windows and an observed soak duration. They include overlapping work, tests, backups, rebuilds, waits and tool actions. They are not measured active model time, exact billed usage, or exact outage duration."
+  },
+  "tool_and_harness_observations": [
+    {
+      "type": "CUA_OBSERVED_SYMPTOM",
+      "classification": "RECOVERED_STATE_CACHE_PRECONDITION_NO_PLATFORM_OUTAGE",
+      "message": "call get_window_state before using this window",
+      "context": "Parent saw invalidated post-input/minimized-window state cache. Activate and fresh state refresh recovered; navigation then worked. This is not attributed to user error or a confirmed tool/backend outage."
+    },
+    {
+      "type": "CUA_OBSERVED_SYMPTOM",
+      "classification": "RECOVERED_STATE_CACHE_PRECONDITION_NO_PLATFORM_OUTAGE",
+      "message": "foreground window did not report a process id",
+      "context": "Parent saw invalidated post-input/minimized-window state cache. Activate and fresh state refresh recovered; navigation then worked. This is not attributed to user error or a confirmed tool/backend outage."
+    },
+    {
+      "type": "CALLER_SCHEMA_ERROR",
+      "classification": "LOCAL_TOOL_INVOCATION_CORRECTION",
+      "message": "Click target schema vs direct element arguments",
+      "context": "Corrected invocation; not recorded as a confirmed tool/backend defect."
+    },
+    {
+      "type": "LOCAL_SERIALIZATION_ERROR",
+      "classification": "LOCAL_DIAGNOSTIC_HANDLING_CORRECTION",
+      "message": "Base64/tail serialization handling mistake",
+      "context": "Corrected; raw base64 and credential-bearing screenshots are excluded."
+    },
+    {
+      "type": "TEST_HARNESS_ALLOWLIST_ERROR",
+      "classification": "LOCAL_FIXTURE_GUARD_CONFIGURATION",
+      "message": "First352case run had5fixture-mkdir guard errors/denials.",
+      "context": "Failed run retained; only exact physical fixture location admitted, followed by separate352PASS/0denial run. Operational effect guards remain intact."
+    },
+    {
+      "type": "CUA_RESOLUTION",
+      "classification": "RECOVERED",
+      "message": "Two calls requested get_window_state before using the window.",
+      "context": "Verified85reopened/maximized; activate and refresh recovered navigation. No additional game start or broadcast restart requested."
+    },
+    {
+      "type": "CUA_CONCURRENT_USER_INPUT_GUARD",
+      "classification": "EXPECTED_INPUT_COORDINATION_STOP_NOT_PLATFORM_OUTAGE",
+      "message": "user input was detected in this window; call get_window_state before continuing",
+      "count": 2,
+      "outcome": "Root stopped inputs. Preview last observed OFF; final ON not confirmed. User source draft edits were not assumed applied."
+    }
+  ],
+  "usage_review": {
+    "account_limits_snapshot": {
+      "path": "backups/native_preview_v85_20261031_record209/usage_snapshot209.json",
+      "snapshot": {
+        "utc": "2026-10-31T20:35:26.374Z",
+        "scope": "ACCOUNT_WIDE_NOT_TASK_ATTRIBUTABLE",
+        "usedPercent": 67,
+        "windowDurationMins": 10080,
+        "resetsAt": 1793777600,
+        "exact_task_tokens": null,
+        "exact_task_cost": null,
+        "refund_or_adjustment_submitted": false
+      },
+      "interpretation": "67percent used across an account-wide10080minute(7day) window at snapshot time. It is not usage or cost attributable to this task."
+    },
+    "per_task_billable_tokens": null,
+    "active_model_time_seconds": null,
+    "per_task_cost": null,
+    "account_charge_amount": null,
+    "refund_amount": null,
+    "support_request": "Please review this session\u2019s recorded incidents and applicable account usage, and advise whether any adjustment is appropriate under your policies.",
+    "submission_performed": false,
+    "refund_promised": false,
+    "important_limit": "Account-level limits, if provided, do not establish usage attributable to this task or money charged."
+  },
+  "verification": {
+    "corrective_guarded_tests": 352,
+    "groups": 28,
+    "failures": 0,
+    "errors": 0,
+    "guard_denials": 0,
+    "web_tests": 35,
+    "typescript_exit": 0,
+    "final_native_preview": "VERIFIED_INSTALLED_PREVIEW_CAPABILITY_HTTP_DECODER_AND_SAFE_HELD_GUI_LIVE_GAME_UNVERIFIED",
+    "build_install_sha256": "26db181ca8414de555f31ec0010acf51bb35a679d042bd50a72f03e82d0fb34c",
+    "build_duration_seconds": 149.821,
+    "saved_first_soak": {
+      "receipt": "backups/native_preview_v85_20261031_record209/runtime/20261031T203059Z/soak.json",
+      "start_utc": "2026-10-31T20:30:59.216459+00:00",
+      "end_utc": "2026-10-31T20:34:11.286589+00:00",
+      "seconds": 192.156,
+      "controller_pid": 36868,
+      "encoder_pid": 31084,
+      "frames": [
+        1240,
+        6999
+      ],
+      "hls_sequences": [
+        15,
+        111
+      ],
+      "new_errors": 0,
+      "same_pipeline": true,
+      "preview85HTTPactivated": false
+    },
+    "http_decoder": {
+      "receipt": "backups/native_preview_v85_20261031_record209/runtime/http_qt_probe/receipt.json",
+      "frames": 200,
+      "seconds": 7.25,
+      "size": [
+        1280,
+        720
+      ],
+      "timestamps_advance": true,
+      "images_black_holding": true,
+      "media_errors": [],
+      "audio_output": false,
+      "actual_GUI_render_tested": false
+    },
+    "last_runtime": {
+      "receipt": "backups/native_preview_v85_20261031_record209/runtime/final_runtime209.json",
+      "before": {
+        "utc": "2026-10-31T20:43:37.296788+00:00",
+        "preview_phase": "root-reported OFF, before ON confirmation",
+        "status": {
+          "status": "running_unverified",
+          "active": true,
+          "controller_pid": 36868,
+          "controller_create_time": 1793478612.624772,
+          "encoder_pid": 31084,
+          "encoder_create_time": 1793478613.372554,
+          "capture_state": "holding",
+          "game_frame_verified": false,
+          "holding_reason": "NO_VERIFIED_GAME",
+          "source_mode": "auto_game",
+          "frames_encoded": 24003,
+          "out_time_us": 800100000,
+          "audio_mode": "generated_silence"
+        },
+        "port8007_listeners": 0,
+        "obs_process_count": 0
+      },
+      "later_readonly_sample": {
+        "utc": "2026-10-31T20:50:17.913779+00:00",
+        "preview_phase": "root-confirmed last observed OFF; ON not performed because user input was detected twice",
+        "status": {
+          "status": "running_unverified",
+          "active": true,
+          "can_select": true,
+          "protocol_version": 2,
+          "controller_pid": 36868,
+          "controller_create_time": 1793478612.624772,
+          "encoder_pid": 31084,
+          "encoder_create_time": 1793478613.372554,
+          "capture_state": "holding",
+          "game_frame_verified": false,
+          "holding_reason": "NO_VERIFIED_GAME",
+          "source_mode": "auto_game",
+          "frames_encoded": 36009,
+          "out_time_us": 1200300000,
+          "audio_mode": "generated_silence"
+        },
+        "port8007_listeners": 0,
+        "obs_process_count": 0
+      },
+      "completed_ON_toggle": false,
+      "all_four_crypto_pins_match": true
+    },
+    "last_observed_checkbox": "OFF",
+    "final_ON": "BLOCKED_TWICE_BY_CONCURRENT_USER_INPUT_GUARD_ROOT_STOPPED_INPUTS",
+    "credential_cleanup_receipt": "backups/record209_secret_default_cleanup/completion.json"
+  },
+  "evidence": [
+    "backups/native_broadcast_preview209_work/runtime_failure209/initial_readonly_diagnosis.json",
+    "backups/native_broadcast_preview209_work/runtime_failure209/hls_error_fixed_text.json",
+    "backups/native_broadcast_preview209_work/runtime_failure209/sharing_violation_fixture.json",
+    "backups/native_broadcast_preview209_work/ipc_hotfix209/completion.json",
+    "backups/native_preview_v85_20261031_record209/loopback_http_route209.json",
+    "backups/native_preview_v85_20261031_record209/build_verification/build_independent_verification209.json",
+    "backups/native_preview_v85_20261031_record209/installation209.json",
+    "backups/native_broadcast207_work/guarded_native/run_1793478363110168600/receipt.json",
+    "backups/native_broadcast207_work/guarded_native/run_1793478440711116700/receipt.json",
+    "backups/native_preview_v85_20261031_record209/usage_snapshot209.json",
+    "backups/native_preview_v85_20261031_record209/runtime/20261031T203059Z/soak.json",
+    "backups/native_preview_v85_20261031_record209/runtime/holding_advancement_readonly.json",
+    "backups/native_preview_v85_20261031_record209/runtime/final_runtime209.json",
+    "backups/native_preview_v85_20261031_record209/runtime/http_qt_probe/receipt.json"
+  ],
+  "privacy": "No chat secrets, API/stream keys, private URLjobs, raw logs, credential screenshots or full binaries included. Root uploads sanitized records solely into the existing audit folder.",
+  "trading": "DISABLED",
+  "audio": "GENERATED_SILENCE_NO_MIC_CHANGE",
+  "window_closure": {
+    "classification": "USER_CONFIRMED_INTENTIONAL",
+    "resolution": "User explicitly confirmed closing Fortnite and all studios to prevent a failure loop. This is not classified as a crash or platform outage.",
+    "prior_observation": {
+      "window_utc": "2026-10-31T20:34Z_to20:35Z",
+      "classification": "UNATTRIBUTED_WINDOW_LOSS_USER_RESPONSE_PENDING",
+      "observed": "Fortnite and83/84/85visible app windows disappeared concurrently; hidden legacy78GUIprocess35288remained.",
+      "os_event_limit": "No Application1000/1001errors found in the queried previous8minutes; absence of those events does not prove no crash occurred.",
+      "sender": "Sender31084was present; log last-write20:34:11needed separate liveness verification. This observation alone is not a healthy-stream proof.",
+      "user_action": "Root asked whether the user closed applications; do not assume either user closure or crash.",
+      "next_action": "Root reopens only verified85through computer-use and checks actual preview/runtime.",
+      "attribution": "No confirmed platform outage or cause.",
+      "later_readonly_state": {
+        "utc": "2026-10-31T20:36:54.258841+00:00",
+        "basis": "SAVED_FILTERED_READONLY_RECEIPT",
+        "controller_pid": 36868,
+        "encoder_pid": 31084,
+        "both_alive": true,
+        "frames": 11906,
+        "media_seconds": 396.885,
+        "capture_state": "holding",
+        "holding_reason": "NO_VERIFIED_GAME",
+        "game_frame_verified": false,
+        "meaning": "Liveness with correct no-game holding; not85GUIpreview or remote-ingest acceptance.",
+        "receipt": "backups/native_preview_v85_20261031_record209/runtime/holding_advancement_readonly.json"
+      }
+    },
+    "current_runtime": "Existing sender correctly holds NO_VERIFIED_GAME after intentional game closure.",
+    "user_constraint": "Do not reopen games or restart the broadcast for acceptance.",
+    "application_reopen": "Verified85reopened/maximized and navigation recovered. Program preview checked, statusheld, canvas correctly blank because no verified game.",
+    "final_preview_control": "Last observed OFF; user advised to enable Program preview manually. No game or broadcast restart."
+  },
+  "reviewed_GUI_evidence": [
+    {
+      "path": "backups/native_preview_v85_20261031_record209/gui/preview_held.png",
+      "sha256": "601bf69888664f5544676fbbdf98de2b3a16fd5575a1ee4e5a9961fd694942a3",
+      "bytes": 351794,
+      "approved_visual_no_credentials": true,
+      "version": "5.329.85"
+    },
+    {
+      "path": "backups/native_preview_v85_20261031_record209/gui/preview_off.png",
+      "sha256": "b48d6897d63f9b8f2896ac78d94e5104b5bb472c935d3b6b45545c3bd0da11be",
+      "bytes": 351235,
+      "approved_visual_no_credentials": true,
+      "version": "5.329.85"
+    }
+  ],
+  "final_user_constraint": "NO_MORE_SCREEN_CURSOR_CONTROL_OR_GUI_RETRIES_BACKEND_FRONTEND_OFFLINE_READONLY_ONLY",
+  "credential_default_cleanup": {
+    "id": "R209-CREDENTIAL-DEFAULTS",
+    "severity": "HIGH",
+    "status": "REPAIRED_CURRENT_SOURCE_DEFAULTS_EMPTY_AST_RED_GREEN_VERIFIED",
+    "finding": "Two hardcoded Twitch/Facebook stream-key defaults existed in the standalone broadcast component. Exactly those defaults are now empty; saved settings and handlers are preserved. No credential rotation, historical exposure assessment or clean-old-history claim is made. Original source/preimages remain private C-only and are excluded from cloud."
+  }
+}

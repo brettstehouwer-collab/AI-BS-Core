@@ -1,0 +1,422 @@
+--- Brain 2ac9501e-8a07-458e-b522-e1a61ab03a32 ---
+# LTX-Video ComfyUI Integration Walkthrough
+## What Was Completed
+## How To Run It
+- Added integration with the new ComfyUI Studio frontend tab to easily trigger video generation without terminal commands.
+- **Bugfixes:**
+--- Brain eb7f2fc0-1a12-4cc2-8dcd-7183d1072c96 ---
+# UE5 Auto-Importer Setup Complete!
+## Changes Made
+## How to Test It
+--- Brain 3aae2718-d524-42d8-a733-89ca01d44f80 ---
+# Unreal Engine Matrix & Video Pipeline Integration Complete!
+## 1. Video Pipeline Integration
+- Added the `analyze_video_pipeline` tool to Stehouwer LLM's `tool_registry.py`.
+- The LLM can now autonomously trigger `c:\AI-BS\AI-BS_Modual_Video_Editing\test_pipeline.py`, which will process video through scene segmentation, audio analysis, object tracking, and facial recognition, outputting a highly structured JSON EDL (Edit Decision List).
+## 2. Unreal Engine 3D Matrix
+--- Brain 6b3665cb-f498-4d66-9ef6-eb5ddee2f4cb ---
+# Implementation Walkthrough
+## Phase 39: Omni-Dashboard Telemetry Consolidation
+### What Changed
+- **Unified Telemetry Hook:** Created `useUnifiedTelemetry.js` which aggregates data from the Crypto Trader API, the Stehouwer-Publishing.com live traffic beacon, and the local SHM Websocket.
+- **Stehouwer CMS Tab Refactor:** The `StehouwerCMSTab.jsx` now features a 3-way toggle between the `📝 Code Editor`, `👁️ Live Preview`, and the new `📊 Master Telemetry`.
+--- Brain 437115e5-5d97-4681-8487-8fcc4d32da73 ---
+# Walkthrough: Unreal Engine 3D Environment Integration
+## What was completed
+## Validation 
+--- Brain 66a76b78-898d-4f0e-bfcf-d15852f8e3fc ---
+# Final Draft (.FDX) & Fountain Unified Editor Architecture
+## 1. Unified AST System
+- **`FDXParser.js` & `FDXSerializer.js`**: Fully implemented native browser XML parsing using `DOMParser`. It seamlessly translates between `<Paragraph Type="Character">` XML syntax and our JSON block state without server round-trips.
+- **`FountainAdapter.js`**: If you upload a `.fountain` file instead of an `.fdx` file, it maps that plain text directly into the same block structure.
+## 2. Unison Screenplay Editor
+--- Brain 2a4cd234-1f22-4da8-9570-7722aad54b71 ---
+# Phase 26 Complete: Continuous Data Ingestion Engine & Live External APIs
+## What Was Completed
+### 1. Dedicated Ingestion Daemons
+- Created **`backend/ingest_finance_api.py`**: Runs as a background daemon, polling the CoinGecko public API every 60 seconds for live cryptocurrency metrics (Bitcoin, Ethereum, Solana) and pushing the payload to the `finance_ticker` topic on the Message Broker.
+- Created **`backend/ingest_news_rss.py`**: Runs as a background daemon, using `feedparser` to parse the BBC Technology RSS feed every 120 seconds and pushing the top headlines to the `news_feed` topic on the Message Broker.
+--- Brain 4a80712f-c17a-4b4c-b09a-5974fbd63d2d ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+ok lets now save and im going to bed for the night
+</USER_REQUEST>
+<ADDITIONAL_METADA
+--- Brain 2748ab81-5e2e-4b2d-9727-54dc2c0058a1 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+check running prosseses the terminal wont quit even after restarting this IDE
+</USER_
+--- Brain eb5b1a40-4bc0-4e2e-834c-c5cb7e3e54eb ---
+# Global Unreal Asset Integration - Walkthrough
+## 1. High-Speed Asset Registry
+## 2. Hybrid Spatial UI in Banquet Architect
+- **Search Bar:** You can type terms like "Chair", "Wood", or "Stage" directly into the UI.
+- **Instant Previews:** The UI queries the global registry live.
+--- Brain c2edc56e-50fd-4880-9045-65764320e4b8 ---
+# AI Media Assistant (Auto-Tool Orchestrator) Installed
+## Accomplishments
+## How to Use It
+--- Brain 81ee1b99-5617-4ece-abb5-ded54bcccfc7 ---
+# AI-BS Infrastructure Fixes Walkthrough
+## 1. Resolved Image Generator Error
+- I have **migrated ComfyUI to port `8189`** to completely bypass the GPU miner's proxy. 
+- I globally updated all AI-BS backend routers, the `comfy_bridge.py`, the `tool_registry.py`, and the `Launch_AI_BS.bat` startup sequence to use port `8189`.
+- The previous ComfyUI process on port 8188 was terminated.
+--- Brain 7884f40b-dc84-4745-9400-4f03664da890 ---
+# AI Adapter Resiliency Walkthrough
+## What Was Done
+## Validation
+- I ran a test run with `Test book to convert to film.pdf` (which previously aborted because Chroma/Ollama weren't active in the sandbox).
+- The orchestrator Symbol Graph has been successfully rebuilt to include the updated logic.
+--- Brain 7a25295d-2f8f-4db6-9342-df30d795358c ---
+# 🎬 Screenwriting Suite Progress
+## Phase 4.8 Features (Previously Completed)
+- **Split-Pane Preview**: Real-time Fountain syntax parsing and formatting.
+- **Alt-Take Dialogue Engine**: Local LLaMA 3 integration for instant dialogue re-writes.
+- **Beat Board**: Visual indexing of scenes and elements.
+--- Brain 4b548763-501b-4092-a98f-3ec07ea72291 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+im trying to figure out where we left off last in AI-BS
+</USER_REQUEST>
+<ADDITIONAL_M
+--- Brain b24d0027-d6a3-404f-9ff9-1eaaccd09f24 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+herer is a new api key for clore.ai:
+
+
+nd8F-.ARV8rOpttFMH6QvQ6a6MU0Ej6c
+</USER_REQUES
+--- Brain d4177269-68d7-4d39-99c3-2e084452f3d0 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Marketplace
+Docs
+Bare metal
+Statistics
+VPN
+App
+Token
+Stake PoH
+PoH rent
+Wall
+--- Brain 1c44be2e-1cc4-44e8-a916-e053b2fbbf7b ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+systemctl status clore-hosting.service
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The curr
+--- Brain d21bc9fa-021b-4e94-a413-3d94753453ad ---
+# USDC Crypto Payout API Integration Completed
+## How it works
+## Configuration Requirements
+# Your Destination Address (the raw 0x... address attached to your Crypto.com PayString)
+# The Private Key of the Hot Wallet that AI-BS will use to SEND funds
+--- Brain 7ec24639-23c8-4029-98d8-316f9a613d5e ---
+# Efficiency Mode Implementation Summary
+## What was built:
+## Verification
+- We verified the UI rendering and fixed a React hooks crash natively. 
+- The live production deployment (`ai-bs-dashboard.web.app`) successfully compiled.
+--- Brain bdb10743-773a-4f4e-b103-dec89790596c ---
+# Vertex AI MCP Integration Walkthrough
+## What Was Done
+### 1. Robust Authentication & JSON-RPC Client
+- It uses standard `jsonrpc: 2.0` syntax payload structures over HTTP to communicate seamlessly with `aiplatform.googleapis.com`.
+### 2. Research Agent Bindings
+--- Brain a556e409-e894-41ae-961d-f33ca98e200f ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+/grill-me 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-0
+--- Brain 9ea6f83a-093a-4f23-9287-967b4bbf0a61 ---
+# Web OSINT Email Sniffer Completed
+### What Was Built
+### Verification
+-   The backend gracefully handles missing `duckduckgo_search` modules and network timeouts.
+-   The frontend UI parses the hit array properly and isolates long text snippets to keep the grid looking sharp and readable.
+--- Brain 9d2b5e64-868f-4ec1-a63d-87c629b0eb3c ---
+# Walkthrough: Mobile ADB Target Integration
+## What was implemented:
+### 1. `Launch_Mobile_Tunnel.bat`
+- Created a standalone initialization script located at `C:\AI-BS\Launch_Mobile_Tunnel.bat`.
+- This script automatically binds port 5173 (React), 8000 (Backend API), and 8003 (Crypto Swarm) on the PC to the exact same ports on your Android device. 
+--- Brain b51a519f-093b-49bf-8232-c3ef5fcdeb0c ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+show me in a bullet point simple click style
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+Th
+--- Brain bc5bb536-bea0-4991-98d1-23948761f9be ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+C:\AI-BS should this be movied to this profile?
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+--- Brain fcb5096c-26c3-4bc2-8044-cc7d26e0a710 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-31T10:23:19
+--- Brain c05366e1-df52-439a-a1f6-987a0ff9df11 ---
+# Central Daemon Integration Complete
+### What Was Done
+### How to Verify
+--- Brain 4fd175b5-1896-4eb2-9bdd-c9ba93321251 ---
+# Full End-to-End System Fine-Tuning Report (v8.2.0)
+## Implemented Fine-Tuning Optimizations
+---
+## Master Documentation & Checkpoint Sync
+- Master Architectural Ledger updated in `AI_BS_MASTER_ARCHITECTURAL_LEDGER.md`.
+--- Brain 9cb23e16-009c-47d5-8924-67b70832fd79 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+i need help looking through some archives with any refrence to "Products
+
+MemeScout
+--- Brain 6d671b63-3332-428d-8b99-a9f88d82af2d ---
+# Walkthrough: Hybrid GPU Inference Topology (v6.4.3)
+## What Was Completed
+### 1. Global Codebase Refactor
+### 2. Ping Verification
+### 3. Ecosystem Synchronization (v6.4.3)
+--- Brain e15adcba-30b3-4dec-aa16-53c3d4481774 ---
+# Walkthrough - Anti-Gravity Diagnostic & Boot Sequence Stabilization
+## Changes Made
+### 1. Port 8080 Enforcement & Pre-Flight Reclamation
+- **File:** [AI_BS_Backend.py](file:///C:/AI-BS/backend/AI_BS_Backend.py)
+### 2. Auto-Healer Hardening & Persistent Loop
+--- Brain 7fe7421d-945d-4896-abd4-547a7fa05ebb ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+create save point 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2
+--- Brain 350981ca-ce41-4700-bb88-2656912c1238 ---
+# Theatrical World Mode Implementation Walkthrough
+## 1. Top-Level Entity Extraction (Standalone Gateway)
+- We created a brand new top-level directory: `C:\AI-BS\theatrical_world_module\`.
+- Built **[theatrical_gateway.py](file:///C:/AI-BS/theatrical_world_module/theatrical_gateway.py)**, a standalone FastAPI application that runs on an independent port (`8001`). 
+- Ripped all theatrical endpoints out of the Swarm's `gpu_network_router.py`. The Swarm now has zero knowledge of the theatrical operations.
+--- Brain 91153813-e464-47cc-87c9-1cc2972400ef ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+C:\AI-BS\backend\research_agent_daemon.py:46: RuntimeWarning: This package (`duckduck
+--- Brain f6cca01b-8544-4f88-b11a-b70e4e5efbbf ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+retrive last save point
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time 
+--- Brain ffff7803-babf-4317-b3a8-f2d72fe52cd4 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+yes
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-29T09:44
+--- Brain d8a73088-f013-49a6-821c-de468981bb78 ---
+# Walkthrough: Smart Paste RapidAPI UI 
+### What Changed
+- **[RapidApiReconTab.jsx](file:///C:/AI-BS/frontend/components/RapidApiReconTab.jsx)** was completely rewritten to feature a single, massive **Smart Paste** input bar. 
+- You can now paste URLs, email addresses, stock tickers, or domains directly into the bar, and the system uses real-time regex routing to identify what type of OSINT/Scrape action you want to perform.
+- Once the action is identified, a single "✨ Execute Request" button appears for you to click.
+--- Brain d8407438-d894-427d-a147-e0e4527c48f8 ---
+# Walkthrough: AI-BS GPU Compute Time-Slot Scheduler & WSL2 Capping
+## Changes Made
+### 1. Host Hardware Boundary
+- **[C:\Users\footb\.wslconfig](file:///C:/Users/footb/.wslconfig)**: Created configuration file enforcing strict bounds on WSL2:
+### 2. Multi-Provider Scheduler Daemon
+--- Brain 60d65a70-5112-4cb9-b472-0470e7f13c4c ---
+# Storage Recovery Walkthrough
+## What Was Removed
+## Validation Results
+- **Free Space:** 652.45 GB
+- **Chia Plot Capacity:** 5 new k=32 plots
+--- Brain 7b0c1e70-73c7-42cd-8b92-da7e5896e3f6 ---
+# Walkthrough: AI-BS Ecosystem Compliance & Audit
+## What Was Done
+--- Brain 0fcc2b02-231e-41ae-8f4e-e0e90b3f74ac ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+ i can no longer connect to localhost:5173
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The 
+--- Brain 27ac3206-71b3-4ac4-b020-19d61ccb0570 ---
+# Walkthrough: Native Android Project Generation for Google Play Store
+## Overview
+---
+### What Was Configured:
+---
+--- Brain d6a6ca0b-8594-4480-9e3c-e66aa275d5e9 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-27T23:43:08
+--- Brain f9b02831-09c1-4669-956d-33b8392707a4 ---
+# Rules Integration Walkthrough
+---
+## 📝 Rules Committed
+---
+## 🛠️ Verification
+--- Brain 1dd91e45-8dc0-43c0-8a6d-ee68da8d93c6 ---
+# Walkthrough - Deep Learning Architecture & Autograd Computational DAG Studio
+---
+## 🧠 Key Deep Learning Systems Implemented
+### 1. Define-by-Run Dynamic Autograd DAG Engine ([aibs_autograd_engine.py](file:///C:/AI-BS/backend/aibs_autograd_engine.py))
+- **`AIBSTensor` Engine**: Tracks mathematical operations during forward pass and builds dynamic execution graphs.
+--- Brain 1546ffa0-acb1-4ce5-bd20-31c88bf3380b ---
+# Monetization Engine Component Inspection & Launch Walkthrough
+---
+## 🟢 Component Verification Status Matrix
+---
+## 📸 Live Site Changes
+--- Brain 23ba623f-e59b-41e2-a556-7871cca319e8 ---
+# Walkthrough: Unified Analytics Suite & Traffic Viewer
+## Changes Made
+### Backend Subsystem (`AI-BS`)
+#### [site_analytics_router.py](file:///c:/AI-BS/backend/commercial_gateway/site_analytics_router.py)
+- Created SQLite table (`site_traffic_events`) storing session tokens, timestamp, client IP, page path, document title, referrer, event type, and screen dimensions.
+--- Brain ef32a8bd-fc49-4c9e-acf2-673dbec063c0 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-25T04:00:46
+--- Brain 8cde205e-ab47-485c-8cea-71b2888e9f47 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Register a domain
+Search domain
+2
+DNS configuration
+DNS publishes your domain's r
+--- Brain 729e1e7a-851b-4f02-9c60-134e6f2af3bd ---
+# Backend Architectural Consolidation
+## Changes Made
+## Validation
+- I ran a syntax compilation test (`py_compile`) against the newly cleaned `AI_BS_Backend.py` to ensure there are no syntax or critical import errors.
+- The `daemon_manager.py` regex replace correctly updated the file paths from `base / "name.py"` to `base / "backend" / "name.py"`.
+--- Brain 00372bb5-300a-4e2a-b3a6-f27f2efead86 ---
+# Stehouwer Publishing Website Rebuild
+## Asset Extraction Update
+## Rebuild Completed
+### Pages Rebuilt:
+### Technical Details:
+--- Brain e809d2b5-6561-48d3-8310-56ed550301f7 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Updated Python Wayback Extraction Script
+Run this script directly in your Antigravity
+--- Brain 96ada08f-9faa-4f32-9a18-eae5a2839b9f ---
+# Walkthrough: Additive LLLM Feature Integration
+---
+## Changes Made
+### 1. Master Memory Baseline Persistence (`commit_to_master_memory`)
+- **[tool_registry.py](file:///c:/AI-BS/backend/tools/tool_registry.py):** Added `commit_to_master_memory` JSON schema definition and implementation.
+--- Brain a96f2d7d-3aeb-4b26-b55b-862c19e847f3 ---
+# AI-BS ComfyUI Media Proxy Fix & Error Test Script
+## Changes Made
+- **Created a proxy endpoint**: Added `/api/comfy/media` to `c:\AI-BS\backend\AI_BS_Backend.py` to securely route ComfyUI media through the authenticated FastAPI layer and Cloudflare tunnel, bypassing local origin blocks.
+- **Updated ComfyUI Bridge**: Modified `c:\AI-BS\backend\comfy_bridge.py` to return relative `/api/comfy/media?...` paths instead of `127.0.0.1:8188` absolute URLs.
+- **Created Test Script**: Created [test_purposeful_error.py](file:///c:/AI-BS/test_purposeful_error.py) containing deliberate logic errors (dictionary modification during iteration and undefined variable usage) designed to test the AI-BS Chat Coder tool's diagnostic capabilities.
+--- Brain f5b145c7-b0d8-44bd-929f-82082f12daa8 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+srv  update_slots: all slots are idle
+[GIN] 2026/07/23 - 13:22:22 | 200 |     59.3177
+--- Brain 16effffd-b495-4988-889e-a978595ece04 ---
+# Multimodal Voice, Explainability & Edge Optimization Walkthrough
+---
+## 🛠️ Implemented Architectural Capabilities
+### 1. 🎙️ Multimodal Voice Interaction & 🔊 Text-To-Speech
+- **Speech-To-Text Dictation (STT)**: Click the 🎙️ microphone icon in `ChatTab` to dictate prompts directly into the AI-BS chat window.
+--- Brain 732106dc-1cc4-4dfe-bab6-0fc6940c6439 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+last update for the night i need it to display the photo in the chat or in a saved me
+--- Brain 5d2398b8-3209-4aa7-9c66-cd2b6870c3c4 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+well its not giving any responses the chat is not working
+</USER_REQUEST>
+<ADDITIONAL
+--- Brain 86c3414e-094b-4332-831e-507b50037507 ---
+# Stehouwer LLM Upgrade & Tool Integration — Walkthrough
+---
+## 🚀 Accomplishments
+### 1. Save Point 1: Baseline Backup & Verification
+- Created timestamped backup: `c:\AI-BS\backend\backups\pre_tool_upgrade_20260722`.
+--- Brain 9e4b6ccc-a7b2-44b4-b181-a18f024066f9 ---
+# Universal Backend Update: 5 New APIs
+## What was built
+## How to use them
+--- Brain ee2d159e-22ef-49b8-8a29-b73ffabdac5e ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+i just installed it
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 
+--- Brain c8affcee-9aab-4f62-881d-6ff71e0f2f57 ---
+# C:\ Drive Migration Walkthrough
+## What Was Done
+## Next Steps
+--- Brain f07c600f-5825-45b4-bdd2-498ac5faa1de ---
+# Async MRQ Engine Fix
+## The Problem
+## The Solution
+- The script now hooks directly into the `on_executor_finished_delegate`.
+- It uses a `slate_post_tick_callback` loop to keep the Python execution context alive indefinitely.
+--- Brain b753766f-9823-4943-8eaa-311fad8a573d ---
+# Wan2.1 Video Generation Setup Complete!
+## What Was Done
+## Verification
+--- Brain 0f57ae6a-350c-456f-95b9-202bb697f1f9 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+t5-v1_1-xxl-encoder-Q8_0.gguf this one?
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The cur
+--- Brain 181a0f3d-3f64-40bd-a82f-b97ac370ad9b ---
+# AI-BS Directory Audit and Organization Walkthrough
+## Changes Made
+### 1. Directory Cleanup & Archiving
+- Created `E:\AI-BS\_archive_v1\backups` and `E:\AI-BS\_archive_v1\logs`.
+- Moved all old `.bak` files (such as `predictive_engine.py.bak`, `drip_trader_daemon.py.bak`) into the `backups` directory.
+--- Brain 0d559a36-1a8c-4e50-b194-694c1690ca16 ---
+# Unreal Engine Headless Execution Automation
+## What changed
+- **`video_batch_worker.py`**: Added a sub-process hook that launches `UnrealEditor-Cmd.exe` headlessly. It uses the specific paths you provided for the engine binary and your `AI_BS.uproject` file. The `-ExecutePythonScript` flag is passed so that as soon as the project loads in the background, your AI-generated script runs.
+- **`unreal_bridge.py`**: Updated the Gemini system prompt to forcefully instruct the AI to include `unreal.EditorLoadingAndSavingUtils.save_current_level()` at the end of its scripts. This ensures that any actors spawned during headless execution are saved before the background process terminates, so you actually see them when you manually open the editor later!
+## How to use it
+--- Brain f50eab29-ea98-4380-85ae-959a32043abf ---
+# Unreal Engine Bridge Completed!
+## What Was Built
+### 1. The Unreal Python Generator
+### 2. Batch Stitching for Code
+### 3. Video Studio UI Updates
+--- Brain d2c1412a-1de6-47fe-a455-8298426b232f ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+where do i add it in the json
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local
+--- Brain 3ae7a8a4-1f36-45c0-a08c-dcf2c74b5525 ---
+# AI-BS Data Migration Walkthrough
+## What Was Done
+## Validation Results
+## Next Steps
+--- Brain 53e3e424-aa90-45cb-9acd-88f0bd848cd0 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Wasn't able to get Go environment. Can't start Tooltitude.
+</USER_REQUEST>
+<ADDITIONA
+--- Brain 3b2033b8-1a66-4c5e-9c7c-1d7cd3b1191a ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Wasn't able to get Go environment. Can't start Tooltitude.
+</USER_REQUEST>
+<ADDITIONA
+--- Brain a06fdd08-0927-49ce-b21c-f253988ddad6 ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+be sure all the bat files are routewd to the correct path now since we had to reinsta
+--- Brain aaf63d8c-fc07-480d-8f4f-fd6a23d8fefa ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Co
+--- Brain 219c7fe4-8b79-486a-8900-8194d245b05c ---
+No walkthrough. Last user prompt: <USER_REQUEST>
+irm https://antigravity.google/cli/install.ps1 | iex
+</USER_REQUEST>
+<ADDITIONAL_META

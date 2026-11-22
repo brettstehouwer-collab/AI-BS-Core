@@ -1,0 +1,14 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VRAMBudgetSchema",
+  "type": "object",
+  "properties": {
+    "requester": { "type": "string" },
+    "required_vram_gb": { "type": "number" },
+    "auto_evict": { "type": "boolean" },
+    "granted": { "type": "boolean" },
+    "free_vram_gb": { "type": "number" },
+    "timestamp": { "type": "number" }
+  },
+  "required": ["requester", "required_vram_gb"]
+}

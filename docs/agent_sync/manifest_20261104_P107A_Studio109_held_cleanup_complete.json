@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-04T23:15:46.378328+00:00",
+  "status": "held_studio109_backed_up_cleanup_complete_and_backed_up",
+  "candidate_version": "5.329.109",
+  "SDK_version": "0.17.3",
+  "installed_version": "5.329.107",
+  "candidate_route_acceptance": false,
+  "repair_cases_passed": 7,
+  "independent_reading_controls_passed": 37,
+  "independent_companion_normal_restart_passed": true,
+  "backup_receipts": [
+    "E:\\AI_BS_Resources\\FirstBoot\\P107\\Studio109Candidate\\107A-drive.json",
+    "E:\\AI_BS_Resources\\FirstBoot\\P107\\StorageCleanup\\107S-drive.json"
+  ],
+  "cleanup": {
+    "logical_bytes_deleted": 5957499271,
+    "compressed_verified_files": 20112,
+    "reported_reduction_bytes": 73187585681,
+    "accounting_limit": "Deletion logical bytes, observed volume free delta and GetCompressedFileSizeW reductions are distinct accounting bases. Compression before values may be logical rather than rounded cluster allocation; no exact whole-volume attribution claimed."
+  },
+  "owned_jobs_terminal": [
+    "Studio109 build",
+    "Packaged runtime smokes",
+    "Native route matrix stopped after first unexpected bypass failure",
+    "Independent remaining controls",
+    "D compression session55192"
+  ],
+  "helper_records": [
+    {
+      "actor": "/root/bypass_read_review",
+      "role": "Read-only source/geometry review; no cause established and no execution."
+    },
+    {
+      "actor": "/root/studio109_remaining_checks",
+      "role": "Actual independent reading/companion/normal-player checks; exact reports in E:/T107C."
+    },
+    {
+      "actor": "/root/cleanup_evidence_review",
+      "role": "Read-only terminal accounting, retained original hashes and 15 post-read samples; scope/limits in cleanup-verification."
+    }
+  ],
+  "free_GiB": {
+    "C": 286.06,
+    "D": 97.86,
+    "E": 89.49
+  },
+  "launchers_or_real_saves_or_family_originals_modified": false,
+  "ProgramData_deletion": false,
+  "previous_goal_turn_classification": "progress_candidate_build_actual_packaged_checks_retained_failure_and_verified_cleanup_backups",
+  "goal_complete": false,
+  "next_step": "Build a private instrumented SDK 0.17.3 consumer without canonical changes. Capture the exact E input once, actual feet/camera and nearest all-object pick after aiming, action result/actual notice/selected inspection immediately after action, then panel visibility after drain/frame. Evaluate chapter_press before constructing diagnostic text. Use a copied failed fixture in a new diagnostic slot and preserve frozen109 and original failure. Do not loosen reach/occlusion guards or blindly repeat the failed tour. Compression session55192 and all Studio109 jobs are terminal; do not restart them. Final likeness, checked captions, human 8-12-minute pacing and current gameplay performance remain open.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P107\\Studio109Candidate\\private-git-status.txt",
+  "private_worktree_sha256": "e8efdfadcf32664bba413d8c5cee0115320d1ed1b6859653fa5f25c855e0e11f",
+  "private_git_uploaded": false
+}

@@ -1,0 +1,44 @@
+{
+  "id": "20261104_P86A_relay_identity_route_candidate",
+  "at": "2026-11-04T18:00:19.020315+00:00",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "checkpoint": {
+    "at": "2026-11-04T17:59:53.054726+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\86A_RelayIdentity_And_RouteRegression.zip",
+    "bytes": 967137,
+    "sha256": "c33f6db2a91e769a86f65946b98284cbefe885e8f448496e1b9679289a27799d",
+    "members": 290,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1q6RNwHNyZGTVJvsvxFkJ6Yp2HY-I6fbm",
+    "drive_file_id": "14jdaxUH3JNv-LyuFh1RoDu4q2xWHxYnv",
+    "drive_restore_verified": true
+  },
+  "changed_source": [
+    "engine/apps/durable_world.cpp",
+    "engine/apps/workshop_tour_runtime.inl"
+  ],
+  "verified": [
+    "14current route native checks pass on final candidate",
+    "36legacy native processes pass0GPUdebugerrors",
+    "New relay UUID/old tombstone/current test signature survive reload",
+    "Repeated commissioning0outcomes preserves permanent claim",
+    "Ordinary command/action/frame code unchanged from pre-P85",
+    "25owned jobs joined; one earlier wrong assertion retained",
+    "All2301installed107files unchanged",
+    "86ArawDrive restore290members exact"
+  ],
+  "correction": "Existing bench ownership is permanent; healthy alternate supply restores online status without another claim. Fresh load testing records the actual source, and repeat commissioning is idempotent. Do not introduce a new gameplay gate from the earlier incorrect probe assumptions.",
+  "qualification": "Source candidate only; no SDK publication or launcher changes this phase. Public SDK0171 and installed107 remain retained.",
+  "next_step": "Revalidate two candidate source hashes and86A receipt; stage full Release/Debug qualification for a new patch SDK on a roomy owned resource drive before any installed replacement. Continue naturalistic Adam art and human/caption/performance gates; do not confuse technical diagnostics with final acceptance.",
+  "remaining": [
+    "Candidate release qualification/publication",
+    "Naturalistic Adam likeness approval",
+    "Checked captions and optional original recording binding",
+    "Actual human8-12minute readability/pacing",
+    "Current1080p60Release measurement",
+    "Final accepted package and verified backup"
+  ],
+  "goal_complete": false
+}

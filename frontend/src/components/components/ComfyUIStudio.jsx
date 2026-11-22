@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{prompt:string,duration:number|string}} ScriptScene */
+import { useState, useEffect } from 'react';
 
+/** @param {{backendUrl?: string}} props */
 export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) {
-  const [workflows, setWorkflows] = useState([]);
+  const [workflows, setWorkflows] = useState(/** @type {string[]} */ ([]));
   const [selectedWorkflow, setSelectedWorkflow] = useState('');
   
   // Script / Scenes state
-  const [scenes, setScenes] = useState([
+  const [scenes, setScenes] = useState(/** @type {ScriptScene[]} */ ([
     { prompt: 'Futuristic Weeble Wobble, 8k ultra detailed', duration: 5 }
-  ]);
+  ]));
   
-  const [baseImage, setBaseImage] = useState(null);
+  const [baseImage, setBaseImage] = useState(/** @type {File|null} */ (null));
   const [isGenerating, setIsGenerating] = useState(false);
   const [status, setStatus] = useState('Idle');
-  const [generatedMedia, setGeneratedMedia] = useState(null);
+  const [generatedMedia, setGeneratedMedia] = useState(/** @type {string | null} */ (null));
   
   // Global Chunk Duration
-  const [chunkDuration, setChunkDuration] = useState(5);
+  const [chunkDuration, setChunkDuration] = useState(/** @type {number|string} */ (5));
 
   // Fetch available workflows on load
   useEffect(() => {
-    fetch(`${backendUrl}/api/comfyui/workflows`)
+    fetch(`${backendUrl}/api/audio/api/comfyui/workflows`)
       .then(res => res.json())
       .then(data => {
         if (data.workflows && data.workflows.length > 0) {
@@ -34,32 +36,35 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
     setScenes([...scenes, { prompt: '', duration: 5 }]);
   };
 
-  const removeScene = (index) => {
+  const removeScene = (/** @type {number} */ index) => {
     if (scenes.length <= 1) return;
     const newScenes = [...scenes];
     newScenes.splice(index, 1);
     setScenes(newScenes);
   };
 
+  /** @template {keyof ScriptScene} K @param {number} index @param {K} field @param {ScriptScene[K]} value */
   const updateScene = (index, field, value) => {
     const newScenes = [...scenes];
     newScenes[index][field] = value;
     setScenes(newScenes);
   };
 
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
   const handleScriptUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0] || null;
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const text = event.target.result;
+      const text = event.target?.result;
+      if (typeof text !== 'string') return;
       const lines = text.split('\n');
       
       const hollywoodKeywords = /^(INT\.|EXT\.|CUT TO:|FADE TO:|FADE IN:|TRANSITION TO:|DISSOLVE TO:)/i;
       
-      const calculateDuration = (text) => {
-        const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      const calculateDuration = (/** @type {string} */ text) => {
+        const wordCount = text.trim().split(/\s+/).filter(/** @param {string} w */ w => w.length > 0).length;
         // Industry standard: 130 words = 60 seconds
         let seconds = Math.round((wordCount / 130) * 60);
         if (seconds < 2) seconds = 2; // Minimum 2 seconds
@@ -92,10 +97,11 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
       }
     };
     reader.readAsText(file);
-    e.target.value = null; // reset input
+    e.target.value = ''; // reset input
   };
 
 
+  /** @param {import("react").FormEvent} e */
   const handleGenerate = async (e) => {
     e.preventDefault();
     if (!selectedWorkflow || scenes.some(s => !s.prompt.trim())) return;
@@ -123,13 +129,14 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
 
       setStatus('Queuing script workflow to ComfyUI GPU...');
       
+      /** @type {{workflow_filename:string,scenes:{prompt_text:string,target_duration_sec:number}[],chunk_duration_sec:number,base_image?:string}} */
       const reqBody = { 
         workflow_filename: selectedWorkflow, 
         scenes: scenes.map(s => ({
             prompt_text: s.prompt,
-            target_duration_sec: parseFloat(s.duration)
+            target_duration_sec: parseFloat(String(s.duration))
         })),
-        chunk_duration_sec: parseFloat(chunkDuration)
+        chunk_duration_sec: parseFloat(String(chunkDuration))
       };
       if (baseImageFilename) reqBody.base_image = baseImageFilename;
 
@@ -155,7 +162,7 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
     }
   };
 
-  const pollStatus = (promptId) => {
+  const pollStatus = (/** @type {string} */ promptId) => {
     setStatus('Rendering on GPU... (This may take a while)');
     const interval = setInterval(async () => {
       try {
@@ -180,7 +187,7 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
     }, 3000);
   };
 
-  const totalDuration = scenes.reduce((sum, s) => sum + parseFloat(s.duration || 0), 0);
+  const totalDuration = scenes.reduce((sum, s) => sum + parseFloat(String(s.duration || 0)), 0);
 
   return (
     <div style={{
@@ -223,7 +230,7 @@ export default function ComfyUIStudio({ backendUrl = 'http://127.0.0.1:8000' }) 
           <input 
             type="file" 
             accept="image/*"
-            onChange={(e) => setBaseImage(e.target.files[0])}
+            onChange={(e) => setBaseImage(e.target.files?.[0] || null)}
             style={{
               width: '100%',
               backgroundColor: '#161b22',

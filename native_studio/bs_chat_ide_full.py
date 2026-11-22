@@ -1,23 +1,14 @@
-"""1:1 Web-Parity Native Desktop Port of BS-CHAT Autonomous Agentic IDE.
+"""Native BS-Chat: authenticated shared conversation/media service and private recovery.
 
-Matches the exact visual layout and interactive experience of ChatTab.jsx and unifies:
-- Full PowerShell Host Execution Authority: /ps, /powershell, /cmd, /sh, /run, /exec, /build, /test
-- Scratchpad Code Runner: Direct '⚡ Run Script (PowerShell)' execution for Python, PowerShell, and Batch
-- Top Sub-Header: '⚡ AI-BS Autonomous Agentic IDE Chat' + '● Single-Pane Active (Phase 7 Sandbox)' + '↔ Toggle Split View'
-- Interactive Empty-State Hero: 'Stehouwer LLM Assistant' gradient header, 9 category filter pills, and 3x3 interactive launch cards
-- Seamless transition between Starter Card Grid and Live Streaming Transcript via QStackedWidget
-- Collapsible Right-Hand Code & Media Scratchpad (hidden by default for full-width single-pane focus)
-- 5-Tier Bottom Command & Governance Deck:
-  1. @Mention Context Pills (@Developer, @PowerShell, @Ecosystem, @Calendar, @Documents, @Email)
-  2. Context Budget Progress Strip (0 chars • ~0 tokens • 0% of 8,192 max window)
-  3. Active Agent Tools Pill Bar (⚡ Run in PowerShell, 🔨 PowerShell Build, 🧪 Pytest Runner, Mode: Plan & Review, Shadow Coder, Media Studio, etc.)
-  4. Unified Prompt Bar (🧰 Artifacts & Tools, ⚡ PowerShell, ⚡ Ecosystem Ports, [/] Commands ▲, Input Box, Send)
-  5. Governance & Oversight Footer (⚡ PowerShell Shell, Disable Backend, 43-Module Oversight, 11 Spaces, Ingest to DB, Risk & Governance, Context Stress Test, Auto-Save Active)
+Existing explicit operator tools and the scratchpad remain available; their full
+workflow matrix is separate from shared chat/media acceptance. Generated model
+code is display data and is never automatically executed by the response path.
 """
 
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import sqlite3
@@ -28,11 +19,12 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 import httpx
-from PyQt6.QtCore import Qt, QUrl, pyqtSignal
+from PyQt6.QtCore import Qt, QUrl, QTimer, pyqtSignal
 from PyQt6.QtGui import QAction, QCursor, QTextCursor
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
+    QCheckBox,
     QFileDialog,
     QFrame,
     QGridLayout,
@@ -54,6 +46,22 @@ from PyQt6.QtWidgets import (
 )
 
 from native_studio.engine import EngineBus
+
+def _program_result_text(result):
+    status = str(result.get("status", "error")).upper()
+    lines = [f"Status: {status}"]
+    if result.get("executed") is False:
+        lines.append("Not executed.")
+    if result.get("exit_code") is not None:
+        lines.append(f"Exit Code: {result['exit_code']}")
+    if result.get("command"):
+        lines.append(f"Command: {result['command']}")
+    if result.get("job_id"):
+        lines.append(f"Job: {result['job_id']}")
+    for name in ("message", "stdout", "stderr"):
+        if result.get(name):
+            lines.append(str(result[name]))
+    return "\n".join(lines)
 
 STARTER_CARDS: List[Tuple[str, str, str, str, str, str]] = [
     (
@@ -300,13 +308,17 @@ class BsChatIdeFullView(QWidget):
     def __init__(self, bus: EngineBus, parent: QWidget | None = None, *, session_store=None) -> None:
         super().__init__(parent)
         self.bus = bus
+        from native_studio.chat_service import NativeChatService
+        self.chat_service=NativeChatService()
         self._is_streaming = False
         self._split_active = False
-        self._auto_heal_enabled = True
+        self._auto_heal_enabled = False
         self._mobile_synergy_active = False
         self._dpi_profile_id = "native_desktop"
         self._active_category = "All"
         self._current_editor_file: Optional[str] = None
+        self._current_editor_loaded_sha256 = None
+        self._current_editor_encoding = 'utf-8'
         self._last_referenced_file: Optional[str] = None
         self._conversation_history: List[Tuple[str, str]] = []
         self._card_widgets: List[Tuple[str, QFrame]] = []
@@ -345,6 +357,8 @@ class BsChatIdeFullView(QWidget):
             ("mixtral", "mixtral"),
         ]:
             self.model_picker.addItem(label, val)
+        self.model_picker.clear();self.model_picker.addItem("Stehouwer shared service","stehouwer_llm")
+        self.model_picker.setToolTip("Model routing is managed by the shared service; direct model selection is not connected here.")
         sh_lay.addWidget(self.model_picker)
 
         # Resolution & DPI Profile Selector (Parsec / Tailscale + RustDesk Mobile Workstation)
@@ -374,7 +388,7 @@ class BsChatIdeFullView(QWidget):
 
         sh_lay.addStretch()
 
-        self.pane_status_lbl = QLabel("● Single-Pane Active (Phase 7 Sandbox)")
+        self.pane_status_lbl = QLabel("● Shared service; commands are explicit")
         self.pane_status_lbl.setStyleSheet("color: #10b981; font-size: 8pt; font-weight: bold;")
         sh_lay.addWidget(self.pane_status_lbl)
 
@@ -397,6 +411,14 @@ class BsChatIdeFullView(QWidget):
         sh_lay.addWidget(self.btn_toggle_split)
 
         root.addWidget(sub_hdr)
+
+        # Source opt-in only; existing chat and installed releases stay unchanged.
+        if os.environ.get('AI_BS_CODING_MODE') == '1':
+            self.coding_mode_picker = QComboBox()
+            self.coding_mode_picker.addItems(['Chat', 'Coding'])
+            sh_lay.addWidget(self.coding_mode_picker)
+            self._coding_mode_panel = None
+            self.coding_mode_picker.currentIndexChanged.connect(self._select_coding_mode)
 
         # ── 1.5. MOBILE SYNERGY & BLUETOOTH TRACKPAD 1-TAP DOCK (HIDDEN BY DEFAULT) ──
         self.mobile_dock = QFrame()
@@ -456,11 +478,31 @@ class BsChatIdeFullView(QWidget):
         bottom_deck = self._build_bottom_command_deck()
         root.addWidget(bottom_deck)
 
+        from native_studio.process_batch_view import open_batch_controls
+        batch_row = QHBoxLayout()
+        self.batch_controls_button = QPushButton('Background batch controls')
+        self.batch_controls_button.clicked.connect(lambda: open_batch_controls(self.bus, self))
+        batch_row.addWidget(self.batch_controls_button)
+        batch_row.addStretch()
+        root.addLayout(batch_row)
+
         self.token_chunk.connect(self._append_token)
         self.action_log_signal.connect(self._append_action_log)
         from native_studio.chat_recovery import ChatRecoveryController
         self._chat_recovery = ChatRecoveryController(self, bus, session_store)
         self._chat_recovery.begin()
+
+    def _select_coding_mode(self, index):
+        if index != 1:
+            if self._coding_mode_panel is not None:
+                self._coding_mode_panel.hide()
+            return
+        if self._coding_mode_panel is None:
+            from native_studio.coding_mode_view import CodingModeView
+            self._coding_mode_panel = CodingModeView(self.bus, self)
+            self._coding_mode_panel.finished.connect(lambda _result: self.coding_mode_picker.setCurrentIndex(0))
+        self._coding_mode_panel.show()
+        self._coding_mode_panel.raise_()
 
     def _build_web_hero_page(self) -> QWidget:
         scroll = QScrollArea()
@@ -630,6 +672,11 @@ class BsChatIdeFullView(QWidget):
         btn_save_file.clicked.connect(self._save_last_code_to_file)
         tb_lay.addWidget(btn_save_file)
 
+        self.open_media_btn=QPushButton('Open saved media')
+        self.open_media_btn.setToolTip('Open protected media referenced by this recovered conversation. This does not submit a new generation.')
+        self.open_media_btn.clicked.connect(self._show_saved_media)
+        tb_lay.addWidget(self.open_media_btn)
+
         btn_spawn_ps = QPushButton("🖥️ Interactive PowerShell Window")
         btn_spawn_ps.setStyleSheet(
             "QPushButton { background: #0f172a; color: #38bdf8; border: 1px solid #0284c7; border-radius: 4px; padding: 3px 8px; font-size: 7.5pt; font-weight: bold; }"
@@ -638,7 +685,8 @@ class BsChatIdeFullView(QWidget):
         btn_spawn_ps.clicked.connect(self._spawn_powershell_terminal)
         tb_lay.addWidget(btn_spawn_ps)
 
-        self.btn_auto_heal = QPushButton("🩹 Auto-Heal: ON (3x)")
+        self.btn_auto_heal = QPushButton("Automatic code execution: OFF")
+        self.btn_auto_heal.setEnabled(False)
         self.btn_auto_heal.setStyleSheet(
             "QPushButton { background: #064e3b; color: #34d399; border: 1px solid #10b981; border-radius: 4px; padding: 3px 8px; font-size: 7.5pt; font-weight: bold; }"
             "QPushButton:hover { background: #065f46; color: #ffffff; }"
@@ -658,6 +706,9 @@ class BsChatIdeFullView(QWidget):
 
         lay.addWidget(tb)
         lay.addWidget(self.chat_display, 1)
+        from native_studio.media_view import NativeMediaPanel
+        self.media_panel=NativeMediaPanel(self.bus)
+        lay.addWidget(self.media_panel)
         return page
 
     def _build_scratchpad_pane(self) -> QWidget:
@@ -757,19 +808,19 @@ class BsChatIdeFullView(QWidget):
 
         # Tier 2: Context Budget Bar (1,000,000 Token Window • 4,096 GPU VRAM + CPU Port 11435 + ChromaDB 8001)
         b_row = QHBoxLayout()
-        self.lbl_budget = QLabel("📊 Context Budget: 0 chars • ~0 tokens (0.00% of 1,000,000 max window • 1M+ Offload RAG Active)")
+        self.lbl_budget = QLabel("Message: 0 characters | Recent conversation through shared service")
         self.lbl_budget.setStyleSheet("color: #38bdf8; font-size: 7.5pt; font-weight: bold;")
         b_row.addWidget(self.lbl_budget)
         b_row.addStretch()
 
-        self.lbl_rag_status = QLabel("🧠 ChromaDB 1M+ Vector RAG: ACTIVE (Port 8001 | CPU 11435 | Vault: 139K Records)")
+        self.lbl_rag_status = QLabel("Retrieval is service-managed; local vector state is not verified.")
         self.lbl_rag_status.setStyleSheet("color: #10b981; font-size: 7.5pt; font-weight: bold;")
         b_row.addWidget(self.lbl_rag_status)
         d_lay.addLayout(b_row)
 
         self.budget_bar = QProgressBar()
         self.budget_bar.setFixedHeight(3)
-        self.budget_bar.setRange(0, 1000000)
+        self.budget_bar.setRange(0, 128000)
         self.budget_bar.setValue(0)
         self.budget_bar.setTextVisible(False)
         self.budget_bar.setStyleSheet(
@@ -866,7 +917,7 @@ class BsChatIdeFullView(QWidget):
             ("/program list", "📦 List Programs in saved_data/built_programs"),
             ("/program build ", "🔨 Build/Compile Program or Project"),
             ("/program run ", "⚡ Run Built Program in PowerShell"),
-            ("/terminal", "🖥️ Spawn Interactive PowerShell Terminal"),
+            ("/terminal", "🖥️ Open Native PowerShell / WSL Terminal"),
             ("/runlast", "⚡ Run Last Code Block (with Stage 1 Auto-Heal)"),
             ("/scratchlast", "📋 Load Last Code to Scratchpad"),
             ("/dir ", "📂 List Directory via PowerShell"),
@@ -897,8 +948,9 @@ class BsChatIdeFullView(QWidget):
         in_row.addWidget(btn_cmds)
 
         self.input_edit = QLineEdit()
+        self.input_edit.setAccessibleName("Message Stehouwer")
         self.input_edit.setPlaceholderText(
-            "Message Stehouwer LLM or run /blast, /graph, /distill, /dpi, /ps, /wsl, /cmd, /run... (Enter to execute)"
+            "Message Stehouwer, request media, or enter an explicit slash command..."
         )
         self.input_edit.setStyleSheet(
             "background: #070a12; color: #f8fafc; border: 1px solid #1e293b; "
@@ -915,6 +967,9 @@ class BsChatIdeFullView(QWidget):
         )
         self.send_btn.clicked.connect(self._send)
         in_row.addWidget(self.send_btn)
+        self.web_search=QCheckBox("Use Web Search")
+        self.web_search.setToolTip("Optional. Only the current query is searched; off when this view opens.")
+        in_row.addWidget(self.web_search)
 
         d_lay.addLayout(in_row)
 
@@ -958,7 +1013,7 @@ class BsChatIdeFullView(QWidget):
             self.pane_status_lbl.setText("● Split-Pane Active (Code + Chat)")
             self.splitter.setSizes([700, 520])
         else:
-            self.pane_status_lbl.setText("● Single-Pane Active (Phase 7 Sandbox)")
+            self.pane_status_lbl.setText("● Shared service; commands are explicit")
 
     def _toggle_auto_heal(self) -> None:
         self._auto_heal_enabled = not self._auto_heal_enabled
@@ -1028,221 +1083,57 @@ class BsChatIdeFullView(QWidget):
                 pass
         self.bus.submit(_apply_backend_dpi)
 
-    def _update_context_budget(self, text: str) -> None:
-        chars = len(text)
-        tokens = max(0, chars // 4)
-        pct = min(100.0, (tokens / 1000000.0) * 100.0)
-        self.lbl_budget.setText(
-            f"📊 Context Budget: {chars:,} chars • ~{tokens:,} tokens ({pct:.2f}% of 1,000,000 max window • 1M+ Offload RAG Active)"
-        )
-        self.budget_bar.setValue(min(1000000, tokens))
+    def _update_context_budget(self,text):
+        chars=len(text);self.lbl_budget.setText(f'Message: {chars:,} characters | Recent conversation sent through the shared service')
+        self.budget_bar.setValue(min(128000,chars))
 
     def _insert_slash_command(self, cmd: str) -> None:
         self.input_edit.setText(cmd)
         self.input_edit.setFocus()
 
     def _send(self) -> None:
-        if hasattr(self, '_chat_recovery') and not self._chat_recovery.ready:
+        if not self._chat_recovery.ready or self._chat_recovery._load_failed or self._is_streaming:
             return
-        txt = self.input_edit.text().strip()
-        if not txt or self._is_streaming:
+        text=self.input_edit.text().strip()
+        if not text:return
+        if text.startswith('/')and not text.startswith(('/image ','/video ','/voice ')):
+            self._handle_slash_command(text)
             return
-        self.input_edit.clear()
-        self.left_stack.setCurrentIndex(1)
+        self._start_service_chat(text)
 
-        # 1. Explicit slash commands
-        if txt.startswith("/"):
-            self._handle_slash_command(txt)
-            return
+    def _start_service_chat(self,text):
+        if self._is_streaming or not self._chat_recovery.ready or self._chat_recovery._load_failed:return
+        self._is_streaming=True;self.send_btn.setEnabled(False);self.left_stack.setCurrentIndex(1)
+        submitted_draft=self.input_edit.text();history=list(self._conversation_history)
+        search=self.web_search.isChecked()
+        self.chat_display.appendPlainText(f'\n[OPERATOR @ {time.strftime("%H:%M:%S")}]:\n{text}\n\n[BS-CHAT SERVICE]:\n')
+        def completed(reply):
+            self._is_streaming=False;self.send_btn.setEnabled(self._chat_recovery.ready)
+            self._conversation_history=(self._conversation_history+[(text,reply)])[-10:]
+            if self.input_edit.text()==submitted_draft:self.input_edit.clear()
+            self.media_panel.add_references(reply)
+            QTimer.singleShot(0,self.chat_display.ensureCursorVisible)
+            self._chat_recovery.tick()
+        def failed(message):
+            from native_studio.chat_service import safe_chat_failure_notice
+            self._is_streaming=False;self.send_btn.setEnabled(self._chat_recovery.ready)
+            self.chat_display.appendPlainText('\n[RESPONSE NOT CONFIRMED]: Partial text and your draft are retained. No automatic retry was sent.\n')
+            self.chat_display.appendPlainText('Reason: '+safe_chat_failure_notice(message)+'\n')
+            self._chat_recovery.tick()
+        def work():return self.chat_service.stream(text,history=history,use_web_search=search,on_text=self.token_chunk.emit)
+        try:self.bus.submit(work,on_result=completed,on_error=failed)
+        except Exception:failed('')
 
-        # 2. Direct @powershell or @ps mention prefix
-        if txt.lower().startswith("@powershell ") or txt.lower().startswith("@ps "):
-            ps_body = txt.split(maxsplit=1)[1].strip()
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')} (Direct PowerShell)]:\n{ps_body}\n")
-            self.bus.submit(self._run_powershell_task, ps_body)
-            return
+    def _show_saved_media(self):
+        self.media_panel.add_references(self.chat_display.toPlainText())
+        self.chat_display.moveCursor(QTextCursor.MoveOperation.End)
+        QTimer.singleShot(0,self.chat_display.ensureCursorVisible)
 
-        # 3. Direct PowerShell cmdlet prefixes (37+ standard verbs)
-        ps_cmdlet_prefixes = (
-            "Get-", "Set-", "Start-", "Stop-", "Restart-", "Test-", "New-", "Remove-",
-            "Invoke-", "Write-", "Read-", "Select-", "Where-", "Clear-", "Copy-", "Move-",
-            "Install-", "Update-", "Out-", "Export-", "Import-", "Convert-", "Measure-",
-            "Wait-", "Add-", "Rename-", "Format-", "Show-", "Find-", "Register-", "Unregister-",
-            "Enter-", "Exit-", "Resolve-", "Join-", "Split-", "Enable-", "Disable-"
+    def _program_request_failed(self, _message: str) -> None:
+        self._append_action_log(
+            "PROGRAM REQUEST NOT COMPLETED",
+            "No successful execution was confirmed. Check local build tools availability; your draft is retained.",
         )
-        if any(txt.startswith(p) for p in ps_cmdlet_prefixes):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')} (PowerShell Cmdlet)]:\n{txt}\n")
-            self.bus.submit(self._run_powershell_task, txt)
-            return
-
-        # 4. Direct developer CLI execution tokens
-        cli_tokens = txt.split()
-        first_token = cli_tokens[0].lower() if cli_tokens else ""
-        if first_token in (
-            "powershell", "powershell.exe", "pwsh", "pwsh.exe",
-            "python", "python.exe", "py",
-            "pip", "pip3", "pytest", "npm", "npx", "git", "cargo", "dotnet", "firebase",
-            "node", "node.exe", "wsl", "wsl.exe", "bash", "sh"
-        ):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')} (Direct Host CLI)]:\n{txt}\n")
-            if first_token in ("python", "python.exe", "py"):
-                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
-                ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" {rest}'
-                self.bus.submit(self._run_powershell_task, ps_cmd)
-                return
-            elif first_token in ("pip", "pip3"):
-                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
-                ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pip {rest}'
-                self.bus.submit(self._run_powershell_task, ps_cmd)
-                return
-            elif first_token in ("bash", "sh"):
-                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
-                self.bus.submit(self._run_multi_runtime_with_auto_heal, rest, "bash", None)
-                return
-            elif first_token == "pytest":
-                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
-                ps_cmd = f'& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pytest {rest}'
-                self.bus.submit(self._run_powershell_task, ps_cmd)
-                return
-            elif first_token in ("powershell", "powershell.exe", "pwsh", "pwsh.exe"):
-                rest = txt.split(maxsplit=1)[1] if len(cli_tokens) > 1 else ""
-                ps_cmd = rest or "Get-Host"
-                self.bus.submit(self._run_powershell_task, ps_cmd)
-                return
-            else:
-                ps_cmd = txt
-                self.bus.submit(self._run_powershell_task, ps_cmd)
-                return
-
-        # 5. Natural Language Developer & Host Action Dispatch (Zero Slash Commands Required)
-        p_low = txt.lower()
-
-        # Clear Chat / Screen
-        if re.search(r'\b(?:clear|clean|wipe)\s+(?:the\s+)?(?:chat|transcript|screen)\b', p_low):
-            self.chat_display.clear()
-            self.left_stack.setCurrentIndex(0)
-            return
-
-        # Open / Spawn PowerShell Terminal
-        if re.search(r'\b(?:open|spawn|give\s+me|launch)\s+(?:a\s+)?(?:terminal|console|powershell(?:\s+console|\s+window)?|cmd)\b', p_low):
-            self._spawn_powershell_terminal()
-            return
-
-        # Run Pytest / Automated Test Battery
-        if re.search(r'\b(?:run|execute|start)?\s*(?:the\s+)?(?:pytest|tests|test\s+suite|test\s+battery|test\s+native\s+studio)\b', p_low):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self.chat_display.appendPlainText("[POWERSHELL PYTEST]: Running Pytest test suite in PowerShell...\n")
-            self.bus.submit(
-                self._run_powershell_task,
-                '& "C:\\AI-BS\\pyppeteer_env\\Scripts\\python.exe" -m pytest "C:\\AI-BS\\native_studio\\test_native_studio.py" -v',
-            )
-            return
-
-        # Build / Compile Application
-        if re.search(r'\b(?:build|compile)\s+(?:the\s+)?(?:program|app|application|binaries|exe|release|native\s+studio)\b', p_low):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self.chat_display.appendPlainText("[POWERSHELL BUILD]: Initiating production build in PowerShell...\n")
-            self.bus.submit(self._run_powershell_task, 'powershell -ExecutionPolicy Bypass -Command "npm run build"')
-            return
-
-        # Run Scratchpad / Code Editor Program
-        if re.search(r'\b(?:run|execute)\s+(?:this|the|my)?\s*(?:code|script|program|scratchpad)\b', p_low) or (p_low in ("run it", "execute it")):
-            self._run_scratchpad_in_powershell()
-            return
-
-        # Check VRAM / Hardware Telemetry
-        if re.search(r'\b(?:vram|check\s+vram|gpu\s+status|how\s+is\s+(?:the\s+|my\s+)?gpu|how\s+much\s+vram|hardware|thermals|rtx\s*4090)\b', p_low):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self.bus.submit(self._check_vram)
-            return
-
-        # Check Ecosystem Sockets / Ports / Daemons / Matrix Doctor
-        if re.search(r'\b(?:check\s+ports|ports|daemons|system\s+health|matrix\s+doctor|services|socket\s+status|are\s+ports\s+online)\b', p_low):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self.bus.submit(self._check_ports)
-            return
-
-        # Git Status / Uncommitted Changes
-        if re.search(r'\b(?:git\s+status|what\s+changed|check\s+git|git\s+diffs|uncommitted\s+changes)\b', p_low):
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self.bus.submit(self._run_powershell_task, "git status --short")
-            return
-
-        # Show in Explorer
-        if re.search(r'\b(?:show|reveal|open|explore)\b.*?\b(?:in\s+)?(?:file\s+explorer|explorer)\b', p_low):
-            m_f = re.search(r'([a-zA-Z]:\\[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))', txt)
-            target = m_f.group(1).strip('"\'`:,') if m_f else (self._current_editor_file or self._last_referenced_file or r"C:\AI-BS")
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            self._show_in_file_explorer(target)
-            return
-
-        # Open / View in Editor
-        if (
-            re.search(r'\b(?:open|view|show|display|load)\b.*?\b(?:in\s+editor|editor|code\s+canvas)\b', p_low)
-            or re.search(r'\b(?:open|view|inspect)\s+(?:it|this\s+file|the\s+file)\b', p_low)
-        ):
-            m_f = re.search(r'([a-zA-Z]:\\[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))', txt)
-            target = m_f.group(1).strip('"\'`:,') if m_f else (self._current_editor_file or self._last_referenced_file)
-            if target:
-                self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-                self._open_file_in_editor(target)
-                return
-
-        # Bare File Path Entered
-        m_bare = re.fullmatch(r'["\']?([a-zA-Z]:\\[^\s"\'`:,]+|[a-zA-Z0-9_\-]+\.(?:txt|py|js|jsx|ts|tsx|json|md|html|css|env|bat|sh|ps1|yml|yaml|sql|csv|conf|toml|log))["\']?', txt.strip())
-        if m_bare:
-            raw_path = m_bare.group(1).strip('"\'`:,')
-            abs_fp = os.path.abspath(raw_path) if os.path.isabs(raw_path) else os.path.abspath(os.path.join(r"C:\AI-BS", raw_path))
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n")
-            if os.path.isfile(abs_fp):
-                self._open_file_in_editor(abs_fp)
-            else:
-                self.chat_display.appendPlainText(f"[SYSTEM]: File path does not exist on disk:\n{abs_fp}\n")
-            return
-
-        # 6. Natural Language 1M+ RAG Search & Vector Offload Triggers
-        if re.search(r'\b(?:search|query|find\s+in)\s+(?:rag|vectors?|chroma|knowledge\s+base|vector\s+memory)\b', p_low):
-            q_text = re.sub(r'^(?:search|query|find\s+in)\s+(?:rag|vectors?|chroma|knowledge\s+base|vector\s+memory)\s*(?:for|about)?\s*', '', txt, flags=re.IGNORECASE).strip()
-            self._handle_slash_command(f"/rag {q_text}")
-            return
-
-        # Ingest / Offload to 1M+ RAG
-        if re.search(r'\b(?:ingest|offload|index)\s+(?:this\s+file|it|file|document)?\s*(?:to|into)?\s*(?:rag|chroma|vector\s+store|vault)\b', p_low):
-            self._handle_slash_command("/rag_ingest")
-            return
-
-        # Map-Reduce 1M Summarizer
-        if re.search(r'\b(?:summarize|novel(?:ize)?|compress)\s+(?:this\s+)?(?:1m\s+)?(?:file|document|script|novel|codebase)\b', p_low) or p_low in ("map reduce", "summarize 1m"):
-            self._handle_slash_command("/summarize_1m")
-            return
-
-        # 6.5. Massive 1M+ Direct Input Buffer Detection & Automatic Offload
-        if len(txt) > 25000:
-            est_tokens = len(txt) // 4
-            self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n[Pasted Massive Document: {len(txt):,} characters (~{est_tokens:,} tokens)]\n")
-            self.chat_display.appendPlainText(
-                f"[1M+ RAG OFFLOAD BUFFER DETECTED]: Input exceeds single-prompt VRAM capacity (~{est_tokens:,} tokens).\n"
-                f"• Staging massive input into 'C:\\AI-BS\\workspace\\pasted_1m_buffer.txt'...\n"
-                f"• Automatically offloading into ChromaDB (Port 8001 / CPU Port 11435 AVX-512)...\n"
-            )
-            stage_dir = Path(r"C:\AI-BS\workspace")
-            stage_dir.mkdir(parents=True, exist_ok=True)
-            stage_fp = stage_dir / "pasted_1m_buffer.txt"
-            with open(stage_fp, "w", encoding="utf-8", errors="replace") as sf:
-                sf.write(txt)
-            self._open_file_in_editor(str(stage_fp))
-
-            def _auto_ingest_pasted():
-                ok, msg = self._ingest_file_to_rag(str(stage_fp))
-                self.action_log_signal.emit("1M+ BUFFER RAG INGESTION", msg)
-            self.bus.submit(_auto_ingest_pasted)
-            return
-
-        # 7. Fallthrough to Autonomous Streaming LLM with Enriched Host & 1M+ Vector Context
-        self._is_streaming = True
-        self.chat_display.appendPlainText(f"\n[OPERATOR @ {time.strftime('%H:%M:%S')}]:\n{txt}\n\n[BS-CHAT]:\n")
-        m = self.model_picker.currentData()
-        self.bus.submit(self._stream_response, m, txt)
 
     def _handle_slash_command(self, cmd_line: str) -> None:
         self.left_stack.setCurrentIndex(1)
@@ -1569,20 +1460,13 @@ class BsChatIdeFullView(QWidget):
             b_dir = parts_b[0] if parts_b else r"C:\AI-BS"
             b_custom = parts_b[1] if len(parts_b) > 1 else None
 
-            self.chat_display.appendPlainText(f"[PROJECT BUILD]: Initiating build for '{b_dir}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+            self.chat_display.appendPlainText(f"[PROJECT BUILD]: Requesting build for '{b_dir}'...\n")
             def _build_project_task():
                 from core.program_builder_engine import AutonomousProgramBuilder
                 res = AutonomousProgramBuilder.build_project(b_dir, build_command=b_custom)
                 status_str = res.get("status", "error").upper()
-                exit_code = res.get("exit_code", 1)
-                cmd_run = res.get("command", "N/A")
-                out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
-                if res.get("stdout"):
-                    out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
-                if res.get("stderr"):
-                    out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
-                self.action_log_signal.emit(f"Project '{b_dir}' build completed ({status_str})", out_text)
-            self.bus.submit(_build_project_task)
+                self.action_log_signal.emit(f"Project '{b_dir}' build result ({status_str})", _program_result_text(res))
+            self.bus.submit(_build_project_task, on_error=self._program_request_failed)
             return
 
         if cmd == "/test":
@@ -1613,31 +1497,24 @@ class BsChatIdeFullView(QWidget):
                 b_parts = prog_arg.split(maxsplit=1)
                 b_proj = b_parts[0]
                 b_custom = b_parts[1] if len(b_parts) > 1 else None
-                self.chat_display.appendPlainText(f"[PROJECT BUILD]: Building '{b_proj}'" + (f" with command '{b_custom}'" if b_custom else " (auto-detecting build tools)") + "...\n")
+                self.chat_display.appendPlainText(f"[PROJECT BUILD]: Requesting build for '{b_proj}'...\n")
                 def _build_prog_task():
                     from core.program_builder_engine import AutonomousProgramBuilder
                     res = AutonomousProgramBuilder.build_project(b_proj, build_command=b_custom)
                     status_str = res.get("status", "error").upper()
-                    exit_code = res.get("exit_code", 1)
-                    cmd_run = res.get("command", "N/A")
-                    out_text = f"Status: {status_str} (Exit Code: {exit_code})\nCommand: {cmd_run}\n"
-                    if res.get("stdout"):
-                        out_text += f"\n--- STDOUT ---\n{res.get('stdout')}\n"
-                    if res.get("stderr"):
-                        out_text += f"\n--- STDERR ---\n{res.get('stderr')}\n"
-                    self.action_log_signal.emit(f"Project '{b_proj}' build completed ({status_str})", out_text)
-                self.bus.submit(_build_prog_task)
+                    self.action_log_signal.emit(f"Project '{b_proj}' build result ({status_str})", _program_result_text(res))
+                self.bus.submit(_build_prog_task, on_error=self._program_request_failed)
                 return
             elif sub == "run":
                 if not prog_arg:
                     self.chat_display.appendPlainText("[USAGE]: /program run <project_name>\n")
                     return
-                self.chat_display.appendPlainText(f"[PROGRAM BUILDER]: Running program '{prog_arg}' in PowerShell...\n")
+                self.chat_display.appendPlainText(f"[PROGRAM BUILDER]: Checking run request for '{prog_arg}'...\n")
                 def _run_prog_task():
                     from core.program_builder_engine import AutonomousProgramBuilder
                     res = AutonomousProgramBuilder.run_existing_program(prog_arg)
-                    self.action_log_signal.emit(f"Program '{prog_arg}' executed with status: {res.get('status')}", str(res.get("stdout") or res.get("stderr") or ""))
-                self.bus.submit(_run_prog_task)
+                    self.action_log_signal.emit(f"Program '{prog_arg}' run result: {res.get('status')}", _program_result_text(res))
+                self.bus.submit(_run_prog_task, on_error=self._program_request_failed)
                 return
             else:
                 self.chat_display.appendPlainText("[USAGE]: /program [list | build <name> [cmd] | run <name>]\n")
@@ -1759,92 +1636,19 @@ class BsChatIdeFullView(QWidget):
             self.bus.submit(self._run_1m_map_reduce_task, target)
             return
 
-        self._is_streaming = True
-        self.chat_display.appendPlainText("[BS-CHAT]:\n")
-        m = self.model_picker.currentData()
-        self.bus.submit(self._stream_response, m, cmd_line)
+        self._start_service_chat(cmd_line)
 
-    def _run_multi_runtime_with_auto_heal(
-        self,
-        code_or_cmd: str,
-        runtime: str = "auto",
-        file_path: Optional[str] = None,
-    ) -> None:
-        """Executes code/commands across any shell or language runtime with Stage 1 Autonomous Self-Healing (up to 3 attempts)."""
+    def _run_multi_runtime_with_auto_heal(self,code_or_cmd,runtime='auto',file_path=None):
+        # Explicit operator command only; no backend import, local fallback,
+        # automatic repair or retry in the frozen client.
         try:
-            from backend.executive_runtime_router import auto_heal_code, execute_multi_runtime
-        except Exception as e:
-            self._run_powershell_task(code_or_cmd)
-            return
-
-        current_code = code_or_cmd
-        max_attempts = 3 if self._auto_heal_enabled else 1
-
-        for attempt in range(1, max_attempts + 1):
-            res = execute_multi_runtime(
-                command=current_code,
-                runtime=runtime,
-                cwd=r"C:\AI-BS",
-                file_path=file_path,
-            )
-            rt_used = res.get("runtime_used", runtime)
-            rc = res.get("returncode", -1)
-            elapsed_ms = res.get("elapsed_ms", 0)
-            stdout_text = (res.get("stdout") or "").strip()
-            stderr_text = (res.get("stderr") or "").strip()
-
-            out_lines = [
-                f"RUNTIME: {rt_used.upper()} | ATTEMPT: {attempt}/{max_attempts}",
-                f"STATUS: {'SUCCESS (Exit 0)' if rc == 0 else f'EXIT {rc}'} | ELAPSED: {elapsed_ms} ms | CWD: C:\\AI-BS",
-            ]
-            if stdout_text:
-                out_lines.append(f"\n[STDOUT]:\n{stdout_text}")
-            if stderr_text:
-                out_lines.append(f"\n[STDERR]:\n{stderr_text}")
-            if not stdout_text and not stderr_text:
-                out_lines.append("\n[OUTPUT]: (Completed with exit code 0)")
-
-            header = (
-                f"MULTI-RUNTIME EXECUTION ({rt_used.upper()} SUCCESS)"
-                if rc == 0
-                else f"MULTI-RUNTIME EXECUTION ({rt_used.upper()} FAILED — EXIT {rc})"
-            )
-            self.action_log_signal.emit(header, "\n".join(out_lines))
-            self.token_chunk.emit(f"\n{header}\n" + "\n".join(out_lines) + "\n\n")
-
-            if rc == 0 or not self._auto_heal_enabled or attempt >= max_attempts:
-                break
-
-            # Trigger Stage 1 Autonomous Self-Healing via qwen2.5-coder with Grammar-Locked JSON
-            self.action_log_signal.emit(
-                f"🩺 STAGE 1 AUTO-HEAL (ATTEMPT {attempt}/{max_attempts - 1})",
-                f"Feeding stderr traceback into qwen2.5-coder (Grammar-Locked JSON schema) to synthesize surgical fix...",
-            )
-            heal_res = auto_heal_code(
-                code=current_code,
-                stderr=stderr_text or f"Process exited with non-zero returncode {rc}",
-                runtime=rt_used,
-                file_path=file_path,
-                attempt=attempt,
-            )
-            fixed_code = (heal_res.get("fixed_code") or "").strip()
-            if heal_res.get("status") == "success" and fixed_code and fixed_code != current_code.strip():
-                root_cause = heal_res.get("root_cause", "Runtime error detected")
-                explanation = heal_res.get("explanation", "Applied surgical code fix")
-                line_num = heal_res.get("error_line")
-                heal_summary = (
-                    f"• Root Cause (Line {line_num or '?'}): {root_cause}\n"
-                    f"• Surgical Fix Applied: {explanation}\n"
-                    f"• Re-executing healed code automatically..."
-                )
-                self.action_log_signal.emit("🩺 STAGE 1 AUTO-HEAL PATCH SYNTHESIZED", heal_summary)
-                current_code = fixed_code
-            else:
-                self.action_log_signal.emit(
-                    "🩺 STAGE 1 AUTO-HEAL HALTED",
-                    f"Could not synthesize a distinct repair patch: {heal_res.get('explanation', 'No diff produced')}",
-                )
-                break
+            result=self.chat_service.execute_once(code_or_cmd,runtime=runtime,file_path=file_path)
+            code=result['returncode'];label='COMPLETED'if code==0 else 'FAILED'
+            text=f"Runtime: {runtime} | Exit: {code}\n"+str(result.get('stdout')or '')
+            if result.get('stderr'):text+='\n[STDERR]:\n'+str(result['stderr'])
+            self.action_log_signal.emit('SERVICE COMMAND '+label,text)
+        except Exception:
+            self.action_log_signal.emit('SERVICE COMMAND NOT CONFIRMED','Inspect the service history before retrying. No automatic retry was sent.')
 
     def _run_powershell_task(self, command: str) -> None:
         """Executes a PowerShell script or command asynchronously with real-time capture."""
@@ -2248,167 +2052,10 @@ class BsChatIdeFullView(QWidget):
         except Exception as e:
             self.action_log_signal.emit("MAP-REDUCE ERROR", str(e))
 
-    def _stream_response(self, model: str, prompt: str) -> None:
-        # ── 1. AUTONOMOUS HOST TOOL EXECUTION (ZERO-DEPENDENCY STANDALONE + BACKEND REGISTRY) ──
-        handled, out_msg, should_stop = self._execute_host_intent_standalone(prompt)
-        if handled:
-            self.token_chunk.emit(out_msg)
-            self._conversation_history.append((prompt, out_msg))
-            if len(self._conversation_history) > 10:
-                self._conversation_history = self._conversation_history[-10:]
-            if should_stop:
-                self._is_streaming = False
-                return
-
-        backend_dir = r"C:\AI-BS\backend"
-        if backend_dir not in sys.path:
-            sys.path.insert(0, backend_dir)
-        try:
-            from core.hybrid_reasoning_engine import detect_tool_intent
-            from tools.tool_registry import ToolRegistry
-
-            t_name, t_args = detect_tool_intent(prompt)
-            if t_name and t_name in ("read_host_file", "scan_directory_tree", "execute_powershell", "execute_bash", "execute_pip", "check_hardware", "probe_port"):
-                res = ToolRegistry.execute_tool(t_name, t_args)
-                self.token_chunk.emit(
-                    f"⚡ [AUTONOMOUS HOST TOOL EXECUTED: {t_name}]\n"
-                    f"{json.dumps(res, indent=2)}\n\n"
-                )
-                if t_name in ("execute_powershell", "execute_bash", "execute_pip"):
-                    self._is_streaming = False
-                    return
-                prompt = (
-                    f"[LIVE HOST TOOL RESULT ({t_name})]:\n{json.dumps(res, indent=2)}\n\n"
-                    f"[USER REQUEST]: {prompt}\n"
-                    f"Provide a direct, accurate answer using the verified host tool output above."
-                )
-        except Exception:
-            pass
-
-        # ── 2. OLLAMA STREAMING WITH MULTI-TURN HOST CONTEXT & RECENT HISTORY ──
-        context_blocks = []
-        if self._current_editor_file or self._last_referenced_file:
-            context_blocks.append("[HOST WORKSPACE CONTEXT]:")
-            if self._current_editor_file:
-                context_blocks.append(f"• Active File in IDE Code Editor: {self._current_editor_file}")
-            if self._last_referenced_file and self._last_referenced_file != self._current_editor_file:
-                context_blocks.append(f"• Last Referenced Host File: {self._last_referenced_file}")
-            context_blocks.append("")
-
-        if self._conversation_history:
-            context_blocks.append("[RECENT CONVERSATION HISTORY]:")
-            for u_hist, a_hist in self._conversation_history[-4:]:
-                u_clean = u_hist.strip()[:250]
-                a_clean = a_hist.strip()[:250].replace("\n", " ")
-                context_blocks.append(f"Operator: {u_clean}")
-                context_blocks.append(f"BS-Chat: {a_clean}")
-            context_blocks.append("")
-
-        # ── 2.5. CHROMA VECTOR & SQLITE VAULT 1M+ RAG OFFLOAD INJECTION ──
-        rag_context = self._retrieve_1m_rag_context(prompt, self._current_editor_file)
-        if rag_context:
-            context_blocks.append("[1M+ CHROMA VECTOR & VAULT RAG OFFLOAD CONTEXT]:")
-            context_blocks.append(rag_context)
-            context_blocks.append("")
-
-        context_blocks.append(f"[CURRENT OPERATOR REQUEST]:\n{prompt}")
-        enriched_prompt = "\n".join(context_blocks)
-
-        url = "http://127.0.0.1:11434/api/generate"
-        system_instruction = (
-            "You are the Stehouwer Autonomous AI-BS Sovereign Intelligence Engine in BS-Chat. "
-            "The operator is pair-programming and executing host operations with you on Windows 11. "
-            "You have 100% unrestricted root host execution authority via Windows PowerShell (-ExecutionPolicy Bypass) in C:\\AI-BS. "
-            "CRITICAL EXECUTION RULE: When the operator asks you to perform a host action (write/create a file, run a script, check a directory, or inspect the C: drive), "
-            "any ```powershell code block you output WILL BE AUTOMATICALLY EXECUTED on the host system immediately by BS-Chat. "
-            "CRITICAL HYPERLINK RULE: Whenever you reference, create, inspect, or write a host file on disk, ALWAYS format the file path as a clickable markdown hyperlink using the file:/// scheme (e.g., [C:\\AI-BS\\exampleFile.txt](file:///C:/AI-BS/exampleFile.txt)). "
-            "The operator can click this hyperlink to view and edit the file directly in the BS-Chat IDE Code Editor, or right-click to 'Show in File Explorer'. "
-            "NEVER tell the user to click '⚡ Run Last Code (PowerShell)' and NEVER say 'Once executed...'. "
-            "Output clean, syntactically valid ```powershell or ```python code blocks and state the exact C:\\ path."
-        )
-        full_reply = ""
-        dynamic_ctx = 4096 if len(enriched_prompt) < 10000 else min(32768, (len(enriched_prompt) // 3) + 2048)
-        try:
-            with httpx.stream(
-                "POST",
-                url,
-                json={
-                    "model": model,
-                    "prompt": enriched_prompt,
-                    "system": system_instruction,
-                    "stream": True,
-                    "keep_alive": 0,
-                    "options": {"num_ctx": dynamic_ctx},
-                },
-                timeout=120.0
-            ) as r:
-                for line in r.iter_lines():
-                    if not self._is_streaming:
-                        break
-                    if line:
-                        chunk = json.loads(line)
-                        tok = chunk.get("response", "")
-                        full_reply += tok
-                        self.token_chunk.emit(tok)
-                        if chunk.get("done"):
-                            break
-
-            if full_reply:
-                self._conversation_history.append((prompt, full_reply))
-                if len(self._conversation_history) > 10:
-                    self._conversation_history = self._conversation_history[-10:]
-
-            # ── 3. POST-STREAM AUTONOMOUS POWERSHELL / PYTHON EXECUTION ──
-            if full_reply:
-                lang, code = self._extract_last_code_block(full_reply)
-                p_low = prompt.lower()
-                host_action_requested = any(
-                    w in p_low for w in (
-                        "write", "create", "save", "make", "run", "execute", "delete",
-                        "remove", "copy", "move", "rename", "list", "check", "find",
-                        "locate", "host", "c drive", "c:\\", "c:/", "file", "folder", "directory"
-                    )
-                )
-                ps_has_side_effect = any(
-                    cmdlet in code for cmdlet in (
-                        "Out-File", "Set-Content", "Add-Content", "New-Item",
-                        "Copy-Item", "Move-Item", "Remove-Item", "Get-ChildItem", "Get-Content"
-                    )
-                )
-                if code and (lang in ("powershell", "ps1", "ps", "cmd", "bat", "sh") or ps_has_side_effect) and host_action_requested:
-                    self.token_chunk.emit("\n\n⚡ [AUTONOMOUS HOST EXECUTION: Running generated PowerShell on C:\\AI-BS...]\n")
-                    res = subprocess.run(
-                        ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", code],
-                        cwd=r"C:\AI-BS",
-                        capture_output=True,
-                        text=True,
-                        timeout=60,
-                    )
-                    stdout_s = (res.stdout or "").strip()
-                    stderr_s = (res.stderr or "").strip()
-                    status_str = "SUCCESS (Exit 0)" if res.returncode == 0 else f"EXIT {res.returncode}"
-                    exec_summary = f"• Execution Status: {status_str}\n"
-                    if stdout_s:
-                        exec_summary += f"• Host Output:\n{stdout_s}\n"
-                    if stderr_s:
-                        exec_summary += f"• Host Stderr:\n{stderr_s}\n"
-                    # Verify any C:\ file path mentioned in the code block and format as clickable hyperlinks
-                    for path_m in re.finditer(r'([A-Za-z]:\\[A-Za-z0-9_.\-\\]+\.[A-Za-z0-9]+)', code):
-                        cand_path = path_m.group(1)
-                        if os.path.isfile(cand_path):
-                            cand_url = f"file:///{cand_path.replace(os.sep, '/')}"
-                            exec_summary += f"• Verified File on Disk: [{cand_path}]({cand_url}) ({os.path.getsize(cand_path)} bytes)\n"
-                    self.token_chunk.emit(exec_summary)
-        except Exception as e:
-            self.token_chunk.emit(f"[Stream Error on Port 11434: {e}]")
-        finally:
-            self._is_streaming = False
-            # Sovereign On-Demand VRAM Reclamation: evict loaded weights immediately
-            try:
-                with httpx.Client(timeout=2.0) as evict_c:
-                    evict_c.post(f"http://127.0.0.1:11434/api/generate", json={"model": model, "keep_alive": 0})
-            except Exception:
-                pass
+    def _stream_response(self, model: str, prompt: str):
+        # The authenticated service owns model routing. Generated code remains
+        # display data and is never automatically executed by the native client.
+        return self.chat_service.stream(prompt,history=list(self._conversation_history),on_text=self.token_chunk.emit)
 
     def _extract_last_code_block(self, custom_text: Optional[str] = None) -> Tuple[str, str]:
         """Extracts the most recent code block from the chat transcript or provided text."""
@@ -2472,13 +2119,17 @@ class BsChatIdeFullView(QWidget):
             target = os.path.join(r"C:\AI-BS", target)
 
         try:
-            os.makedirs(os.path.dirname(target), exist_ok=True)
-            with open(target, "w", encoding="utf-8") as f:
-                f.write(code)
+            from native_studio.editor_file_store import durable_write_source
+            durable_write_source(target, code.encode('utf-8'))
             self.chat_display.appendPlainText(f"\n[SYSTEM]: Saved code block to {target} ({len(code)} bytes).\n")
             QMessageBox.information(self, "Saved", f"File saved successfully to:\n{target}")
         except Exception as e:
-            QMessageBox.critical(self, "Save Error", f"Failed to save file:\n{e}")
+            if getattr(e, 'written', False):
+                QMessageBox.warning(self, 'Save needs verification',
+                    'File bytes were promoted, but final verification or journal acknowledgement failed. '
+                    f'Keep the draft and inspect checkpoint {getattr(e, "operation_id", "unknown")} before retrying.')
+            else:
+                QMessageBox.critical(self, "Save Error", f"Failed to save file; draft retained:\n{e}")
 
     def _open_file_in_editor(self, file_path: str) -> None:
         """Opens the target file in the BS-Chat IDE Code Editor / Scratchpad right pane."""
@@ -2491,10 +2142,17 @@ class BsChatIdeFullView(QWidget):
             return
 
         try:
-            with open(abs_path, "r", encoding="utf-8", errors="replace") as f:
-                content = f.read()
+            raw = Path(abs_path).read_bytes()
+            if Path(abs_path).suffix.lower() == '.py':
+                import io, tokenize
+                encoding, _ = tokenize.detect_encoding(io.BytesIO(raw).readline)
+            else:
+                encoding = 'utf-8-sig' if raw.startswith(b'\xef\xbb\xbf') else 'utf-8'
+            content = raw.decode(encoding, errors='strict')
 
             self._current_editor_file = abs_path
+            self._current_editor_loaded_sha256 = hashlib.sha256(raw).hexdigest()
+            self._current_editor_encoding = encoding
             self._last_referenced_file = abs_path
             self.code_editor.set_current_file(abs_path)
             self.code_editor.setPlainText(content)
@@ -2554,10 +2212,14 @@ class BsChatIdeFullView(QWidget):
                 target = os.path.join(r"C:\AI-BS", target)
 
         try:
-            os.makedirs(os.path.dirname(target), exist_ok=True)
-            with open(target, "w", encoding="utf-8") as f:
-                f.write(code)
+            from native_studio.editor_file_store import durable_write_source
+            draft = code.encode(self._current_editor_encoding, errors='strict')
+            if self._current_editor_file and self._current_editor_loaded_sha256 is not None:
+                durable_write_source(target, draft, expected_sha256=self._current_editor_loaded_sha256)
+            else:
+                durable_write_source(target, draft)
             self._current_editor_file = target
+            self._current_editor_loaded_sha256 = hashlib.sha256(draft).hexdigest()
             self._last_referenced_file = target
             self.code_editor.set_current_file(target)
             size_b = os.path.getsize(target)
@@ -2566,28 +2228,24 @@ class BsChatIdeFullView(QWidget):
             self.chat_display.appendPlainText(f"\n[SYSTEM]: Saved active code to {link_html} ({size_b} bytes).\n")
             QMessageBox.information(self, "Saved", f"File saved successfully to:\n{target}")
         except Exception as e:
-            QMessageBox.critical(self, "Save Error", f"Failed to save file:\n{e}")
+            if getattr(e, 'written', False):
+                QMessageBox.warning(self, 'Save needs verification',
+                    'File bytes were promoted, but final verification or journal acknowledgement failed. '
+                    f'Keep the draft and inspect checkpoint {getattr(e, "operation_id", "unknown")} before retrying.')
+            else:
+                QMessageBox.critical(self, "Save Error", f"Failed to save file; draft retained:\n{e}")
 
     def _spawn_powershell_terminal(self) -> None:
-        r"""Spawns an interactive elevated PowerShell console window in C:\AI-BS."""
-        try:
-            cmd = (
-                'start powershell.exe -NoExit -ExecutionPolicy Bypass -Command '
-                '"Set-Location \'C:\\AI-BS\'; '
-                'Write-Host \'================================================================\' -ForegroundColor Cyan; '
-                'Write-Host \'  ⚡ AI-BS SOVEREIGN DEVELOPMENT CONSOLE (POWERSHELL BYPASS)  \' -ForegroundColor Yellow; '
-                'Write-Host \'  Root host privileges active • Working directory: C:\\AI-BS    \' -ForegroundColor Green; '
-                'Write-Host \'================================================================\' -ForegroundColor Cyan; '
-                'Get-Host | Select-Object Version, UI; "'
-            )
-            subprocess.Popen(["cmd.exe", "/c", cmd], shell=True)
-            self.chat_display.appendPlainText(f"\n[SYSTEM @ {time.strftime('%H:%M:%S')}]: Spawned interactive PowerShell console window (Bypass Mode).\n")
-        except Exception as e:
-            QMessageBox.critical(self, "Console Error", f"Failed to spawn PowerShell console:\n{e}")
+        """Open the native streaming console under this process's existing authority."""
+        from native_studio.process_batch_view import open_batch_controls
+        open_batch_controls(self.bus, self, section='terminal')
 
     def shutdown(self) -> None:
         self._is_streaming = False
+        if getattr(self, '_syntax_check', None) is not None:
+            self._syntax_check.shutdown()
         self._chat_recovery.shutdown()
+        self.media_panel.shutdown()
 
     def _append_token(self, chunk: str) -> None:
         if any(marker in chunk for marker in ("file:///", "[C:", "C:\\", "✅", "⚡", "📂", "📄")):
@@ -2647,7 +2305,27 @@ class BsChatIdeFullView(QWidget):
 
     def _validate_syntax(self) -> None:
         try:
-            compile(self.code_editor.toPlainText(), "<scratchpad>", "exec")
-            QMessageBox.information(self, "Syntax Check", "Python Syntax Validated: 100% Valid AST structure.")
-        except Exception as e:
-            QMessageBox.warning(self, "Syntax Error", str(e))
+            if getattr(self, '_syntax_check', None) is None:
+                from native_studio.syntax_check import SyntaxCheck
+                self._syntax_check = SyntaxCheck(self.bus, self)
+                self._syntax_check.completed.connect(self._syntax_checked)
+            self._syntax_check.submit(self.code_editor.toPlainText())
+            self._syntax_snapshot_revision = self.code_editor.document().revision()
+        except (ValueError, RuntimeError, OSError, UnicodeError):
+            QMessageBox.warning(self, 'Syntax Check', 'Check unavailable or busy. Your editor text is retained; inspect background controls.')
+
+    def _syntax_checked(self, result) -> None:
+        try:
+            current = hashlib.sha256(self.code_editor.toPlainText().encode('utf-8')).hexdigest()
+        except UnicodeError:
+            return
+        if (current != result['sha256']
+                or self.code_editor.document().revision() != self._syntax_snapshot_revision):
+            return
+        if result['status'] == 'valid':
+            QMessageBox.information(self, 'Syntax Check', 'Python syntax is valid. Code was not executed.')
+        elif result['status'] == 'invalid':
+            location = f" at line {result['line']}" if result.get('line') is not None else ''
+            QMessageBox.warning(self, 'Syntax Error', 'Python compilation failed' + location + '. Editor text retained; code was not executed.')
+        else:
+            QMessageBox.warning(self, 'Syntax Check', 'Check was not confirmed. Editor text and local snapshot retained.')

@@ -1,0 +1,69 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "9238ecceaeca4ad5b710e020d4cfb978",
+  "plan_id": "1d9dcb764160494f8a7fcbb539a64023",
+  "snapshot_sha256": "4528c2454147c2cd147d9718702319abc6132e44125662a999771bebd4f536ae",
+  "review_digest": "7a5a4d50fd64cb03ca68960ff0ede1c3d7711a05813e58359a9c5a0a992917af",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "415b2fadde5f48a2a0bd0d5f2e6512b8",
+  "reviewed_plan_sha256": "0d51d953162a204efd4dd94552b48c4198616f9da227d4258658c161d400729a",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "9f70b36f029addc92c78901796a906f8ed8b74cdb05b22e7c5c4e08727f7ff56",
+        "content": "import unittest, runpy\r\nclass Check(unittest.TestCase):\r\n def test_value(self):\r\n  self.assertEqual(runpy.run_path(\"src/app.py\")[\"value\"], 42)\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content": "",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "30e796d5f462672f3d55ae379158b4fb5572f83fb692371971a545cc12b36105",
+  "worker": {
+    "pid": 41760,
+    "created": 1794666071.918716
+  },
+  "created_at_utc": "2026-11-14T14:21:13.775801+00:00",
+  "entry_sha256": "4817838e0e8f791687cf3b473a4e8a9d445cfa271d9d8e563e5bf1ea6558a8a0"
+}

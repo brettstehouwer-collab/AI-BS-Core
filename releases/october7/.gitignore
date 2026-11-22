@@ -1,0 +1,3 @@
+# Generated candidates are retained locally, not committed as source.
+*
+!.gitignore

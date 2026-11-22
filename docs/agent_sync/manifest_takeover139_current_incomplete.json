@@ -1,0 +1,56 @@
+{
+  "handoff_id": "takeover139_current_incomplete",
+  "utc": "2026-11-10T14:20:08.447867+00:00",
+  "repository_commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "working_tree": "Shared dirty checkout preserved; exact status private in current139-acceptance-audit/git-status.private.txt",
+  "receiving_agent": "Codex continuation",
+  "source_bundle": "backups/antigravity_takeover_20261109T190150Z/final-source/g003/manifest.json",
+  "source_bundle_sha256": "749dbc0ff253999819b71536306520d1da5efa288617d17c2dbfa94f65dcadbf",
+  "source_bundle_scope": "Dated draft; later continuity documents are separate",
+  "acceptance_audit": "C:\\AI-BS\\backups\\antigravity_takeover_20261109T190150Z\\current139-acceptance-audit\\audit.json",
+  "acceptance_audit_sha256": "f7b8b0b4e5f9b7b852d1345b490ad82320290e298277b21e20a7b5d613ff43a8",
+  "qualification": "INCOMPLETE",
+  "all_ten_goals_complete": false,
+  "current_runtime": {
+    "version": "5.329.139",
+    "job": "5f053a57b8794593aa08ce458179c1d0",
+    "api_identity": {
+      "pid": 24892,
+      "created": 1794286707.6784232,
+      "argv": [
+        "C:\\Users\\footb\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-m",
+        "uvicorn",
+        "AI_BS_Backend:app",
+        "--app-dir",
+        "C:\\AI-BS\\backend",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8080",
+        "--workers",
+        "1",
+        "--no-access-log"
+      ],
+      "cwd": "C:\\AI-BS\\backend"
+    },
+    "qualified_source_inputs": 53880,
+    "source_unchanged_at_build": true,
+    "held135_executable_unchanged": true
+  },
+  "pending": [
+    "Actual139 browser interaction/display/follow-up; computer-use tools currently unavailable",
+    "Native ordinary held movement/reading/route/companion/durable save/fresh-process reopen",
+    "Measured Release1080p and human pacing/captions/likeness",
+    "Unread selected history pages/full carryover reconciliation",
+    "Final sanitized ledger/source-document freeze and machine-readable handoff"
+  ],
+  "retained_failures": [
+    "138 wrong PDF pages56/2",
+    "138 embedding502",
+    "139 initial probe post-index client-table omission; never relabeled whole-probe pass"
+  ],
+  "deployment_activation": "No new hosted deployment/native installation/campaign/trading/USB activation",
+  "next_step": "Qualify actual139 frontend using restored computer-use capability; continue independent history/ledger/source audit while unavailable. Original First Boot gate retained."
+}

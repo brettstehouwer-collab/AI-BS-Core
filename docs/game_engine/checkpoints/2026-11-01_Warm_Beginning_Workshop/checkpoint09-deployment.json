@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "completed_at": "2026-11-02T06:50:16.466548+00:00",
+  "native_release": {
+    "version": "5.329.98",
+    "sdk_version": "0.11.0",
+    "status": "VERIFIED_DEPLOYED",
+    "executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.98\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "sha256": "05b42903df4341c4834f670007918bc1d97c1fabd8662782006a2af9dc49ab33",
+    "shortcuts": 5,
+    "report": "backups/native_game98_checkpoint09/shortcut_deployment.json",
+    "full_opening_complete": false
+  },
+  "archive": {
+    "drive_url": "https://drive.google.com/file/d/1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL/view?usp=drivesdk",
+    "sha256": "d105a48346651285a78b3c71715a6db1e11cfb45a5602d28c16d33f725e2ce03",
+    "bytes": 15196792
+  },
+  "source_freshness": {
+    "status": "current",
+    "file_count": 352,
+    "method": "Modification-time inventory; deletions and backdated edits require source-manifest verification"
+  },
+  "documentation_freshness": {
+    "status": "changed",
+    "file_count": 270
+  },
+  "goal_status": "active; opening incomplete",
+  "free_bytes": {
+    "C": 77838647296,
+    "D": 180995035136,
+    "E": 146813599744
+  }
+}

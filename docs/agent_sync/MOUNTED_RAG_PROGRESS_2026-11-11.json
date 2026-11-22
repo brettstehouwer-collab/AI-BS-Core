@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "utc": "2026-11-11T11:29:13.938762+00:00",
+  "status": "SOURCE_REPAIR_AND_CONTROLLED_MOUNTED_RESTART_PASS_BROWSER_RELEASE_OPEN",
+  "mobile_source": {
+    "mounted_entry": "frontend/App.jsx imports components/MobileStehouwerChat.jsx for chat",
+    "files": [
+      {
+        "path": "frontend/components/MobileStehouwerChat.jsx",
+        "before_sha256": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "after_sha256": "20e4ed0c4e3728819378eadf853e45f04908d5f61fd5a1b90844ce4cbc5c8720",
+        "after_bytes": 114545
+      },
+      {
+        "path": "frontend/src/components/MobileStehouwerChat.jsx",
+        "before_sha256": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "after_sha256": "20e4ed0c4e3728819378eadf853e45f04908d5f61fd5a1b90844ce4cbc5c8720",
+        "after_bytes": 114545
+      },
+      {
+        "path": "frontend/components/components/MobileStehouwerChat.jsx",
+        "before_sha256": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "after_sha256": "20e4ed0c4e3728819378eadf853e45f04908d5f61fd5a1b90844ce4cbc5c8720",
+        "after_bytes": 114545
+      },
+      {
+        "path": "frontend/src/components/components/MobileStehouwerChat.jsx",
+        "before_sha256": "3fb746817b6a02bb9f342feebe6828f6c96941a4387b33d6c4405a82bb4bf03d",
+        "after_sha256": "20e4ed0c4e3728819378eadf853e45f04908d5f61fd5a1b90844ce4cbc5c8720",
+        "after_bytes": 114545
+      },
+      {
+        "path": "frontend/src/utils/bsChatProvider.js",
+        "before_sha256": "0a78d1b731b592600e5d38adfa38ac578863ff8dde5abf391055932b9503120e",
+        "after_sha256": "816a3fec2eb5021925f2adb622d1b6f21a0b3f94e1af9ea6472da086c019a787",
+        "after_bytes": 5584
+      },
+      {
+        "path": "scripts/tests/test_bs_chat_provider.mjs",
+        "before_sha256": "3a93eb59c5e165369904cf002d21d1eb403a9471472583a5f49082959ec78b8f",
+        "after_sha256": "2a3be53a75f7717946aa8e363c3ad19ad4c17a6645c7db3a2c849033e2ac59f1",
+        "after_bytes": 7888
+      },
+      {
+        "path": "scripts/tests/test_mobile_attached_sources.mjs",
+        "before_sha256": null,
+        "after_sha256": "f4f280770e3d73eb853d9b27a06817bbc913ada3759ff13d03b7fb61954f6fc2",
+        "after_bytes": 15511
+      }
+    ],
+    "checks": {
+      "new_mobile_handler_cases": 88,
+      "provider_cases": 19,
+      "combined_total": 165,
+      "pass": 165,
+      "fail": 0,
+      "skip": 0,
+      "duration_ms": 407.8384,
+      "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\mobile-attached-sources-integration-final.log"
+    },
+    "behavior": [
+      "Fresh owner-matched upload and send authentication",
+      "PDF source IDs and hashes passed separately from metadata-only prompts in provider/stream/fallback paths",
+      "Source references persist only within owner/conversation/backend scope",
+      "Local pending failed PDF retained without serialized file bytes",
+      "Explicit-source uncertain or empty replies and HTTP429 are terminal; no silent replay; partial text preserved",
+      "Owned stream reader released on EOF/read failure without masking original error"
+    ],
+    "preimages": "C:\\AI-BS\\backups\\mobile_attached_sources_20261111T112105727002Z"
+  },
+  "backend_checks": {
+    "combined": 60,
+    "result": "PASS9.936s",
+    "final_strengthened_restart_case": "PASS1.754s; final child environment allowlisted and wrongdigest has no row write",
+    "scope": "Actual memory_router imported and actual attachment AST decorator mounted in isolated FastAPI ASGI. Synthetic SDK verification; actual SQLite and PDF cache; two fresh processes; verified original bytes and passage offsets/digests; no network/model calls. Does not import full operational backend.",
+    "assertions": [
+      "Authenticated multipart upload/index/readback",
+      "Fresh-process same-source retrieval",
+      "Anonymous upload/query403",
+      "Cross-owner record404",
+      "Forged owner field422",
+      "Wrong source digest422/no new record"
+    ]
+  },
+  "live_boundary": {
+    "backend_identity_unchanged": true,
+    "eight_activation_flags_false": true,
+    "http": {
+      "8080/health": 200,
+      "8080/api/memory/query": 403,
+      "8000/health": 200,
+      "8000/api/memory/query": 401
+    },
+    "scope": "Live health and anonymous rejection only; no authenticated live RAG or model call"
+  },
+  "remaining": [
+    "Actual signed-in browser attachment/upload/status and responsive/mobile workflow",
+    "Actual-account attachment/retrieval and mounted-client restart recovery",
+    "Original-manuscript creative edit/export and rich FDX real-account workflow",
+    "Installed Studio107/hosted parity and complete release qualification"
+  ],
+  "not_performed": [
+    "Provider/model inference or replay",
+    "New browser permissions",
+    "Whole-fleet/background/business activation",
+    "Deployment or public posting",
+    "Saved-data migration"
+  ],
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_CHECKPOINT_112913Z",
+  "drive_receipt": "backups/real_owner_mobile_rag_20261111T112913Z/drive_verified.json",
+  "browser_gate": "Supported Chromium file-chooser automation requires extension Allow access to file URLs, previously missing. Guidance rechecked; no failed upload repeated, permission changed or manual test requested. Actual browser acceptance remains open."
+}

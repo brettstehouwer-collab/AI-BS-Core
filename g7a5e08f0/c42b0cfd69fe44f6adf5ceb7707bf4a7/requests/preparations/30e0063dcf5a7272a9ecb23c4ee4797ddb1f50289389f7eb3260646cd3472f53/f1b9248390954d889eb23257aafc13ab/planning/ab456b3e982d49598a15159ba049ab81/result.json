@@ -1,0 +1,21 @@
+{
+  "state": "CANCELLED",
+  "input_sha256": "93e004dd2a24f7f6f86f4d990818d86418b60176ab2c7a997c8ed08903644bf2",
+  "proposal": null,
+  "error_code": "cancel_requested",
+  "finished_at_utc": "2026-11-14T14:20:48.945084+00:00",
+  "elapsed_seconds": 0.0,
+  "response_sha256": "313684b8fb0e8950ae45116cfc92319a5880cbbf34f2d7ce7bf54788a892aa54",
+  "response_bytes": 160,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "6a9fbeb0d0af59d87a9da186274b003a3a6631da6263116b35ac675735ce88dc"
+}

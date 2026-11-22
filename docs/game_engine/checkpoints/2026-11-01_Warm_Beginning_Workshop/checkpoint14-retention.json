@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "completed_at": "2026-11-02T09:42:07.131949+00:00",
+  "retained_sdk010_files": 398,
+  "sdk010_all_manifest_file_bytes_verified": true,
+  "sdk010_file_set_exact": true,
+  "studio97_executable_sha256": "d6d7dd9f228023e81f75094f6d19292ac3cb664dde51d888f1bbb9d7cdb44758",
+  "studio98_executable_sha256": "05b42903df4341c4834f670007918bc1d97c1fabd8662782006a2af9dc49ab33",
+  "original_memoir_sha256": "b375b07d263931b90a6af836be7d798123fdae01e6c0b40016fe843dd6f06138",
+  "originals_modified_by_workflow": false,
+  "sdk011_status": "Retained existing prefix; no write targets in this workflow, no complete baseline-byte comparison asserted",
+  "original_media": "Family photos/video remain reference inputs; no originals included in checkpoint source selection"
+}

@@ -10,7 +10,7 @@ function useCodingSession() {
   const [session] = useState(() => {
     let generation = 0;
     const snapshot = () => JSON.stringify([generation, contextStamp(useAppStore.getState())]);
-    return { snapshot, /** @param {()=>void} notify */ subscribe(notify) {
+    return { snapshot, subscribe(/** @type {()=>void} */ notify) {
       const unsubscribe = useAppStore.subscribe((next, previous) => {
         if (contextStamp(next) !== contextStamp(previous)) { generation++; notify(); }
       });
@@ -57,7 +57,7 @@ function ScopedCodingTaskHistory({ backendUrl, isCurrent }) {
       const data = await readChatHttpResponse(response);
       if (!current()) return false;
       if (!response.ok) throw new Error(data.detail || `Saved tasks unavailable (${response.status})`);
-      if (!Array.isArray(data?.items) || data.items.some(item => !item || !['task','request'].includes(item.kind) || !/^[0-9a-f]{32}$/.test(item.id || ''))) {
+      if (!Array.isArray(data?.items) || data.items.some(/** @param {{"kind": string, "id": string}} item */ item => !item || !['task','request'].includes(item.kind) || !/^[0-9a-f]{32}$/.test(item.id || ''))) {
         throw new Error('Saved-task list response is invalid.');
       }
       setItems(data.items);

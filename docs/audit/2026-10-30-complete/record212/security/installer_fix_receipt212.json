@@ -1,0 +1,93 @@
+{
+  "scope": "C:\\AI-BS\\October7_VocalStudio_DAW",
+  "original_installed_app_untouched": true,
+  "executed_installers": false,
+  "files": [
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\setup_installer.py",
+      "before_sha256": "6712a790eef7bccd149bc0913798f64fa80a0cd121fe1a93449f6755abd2ed32",
+      "after_sha256": "776e29ca13d759a24c92859eecbda9ebc8ee23a8ab14c836d5a720e6805fecff",
+      "installed_original_current_sha256": "6712a790eef7bccd149bc0913798f64fa80a0cd121fe1a93449f6755abd2ed32",
+      "installed_original_unchanged": true,
+      "original_path": "C:\\Program Files\\October7_VocalStudio_DAW\\setup_installer.py"
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\Install_Wizard.ps1",
+      "before_sha256": "79908f111f3df0fac553252fb18c2da43755fadaa26281f1b5862a44a2d8663b",
+      "after_sha256": "b6fb0341fdf0761c8fd3db791223b21619a2590e62c233c0eb489e51f2340aed",
+      "installed_original_current_sha256": "79908f111f3df0fac553252fb18c2da43755fadaa26281f1b5862a44a2d8663b",
+      "installed_original_unchanged": true,
+      "original_path": "C:\\Program Files\\October7_VocalStudio_DAW\\Install_Wizard.ps1"
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\Install_October7_DAW.bat",
+      "before_sha256": "2f7eca9ce81e7e708e42d5150cc5879191d6ffb02a8565bcd6807b35c4f104bb",
+      "after_sha256": "d125fca4daac58a2289619257ac1398b30b7190244e5eed4889c59d8b00234a7",
+      "installed_original_current_sha256": "2f7eca9ce81e7e708e42d5150cc5879191d6ffb02a8565bcd6807b35c4f104bb",
+      "installed_original_unchanged": true,
+      "original_path": "C:\\Program Files\\October7_VocalStudio_DAW\\Install_October7_DAW.bat"
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\Uninstall_October7_DAW.bat",
+      "before_sha256": "7802f0d5a5987af6f83a283360e58933440540af7a7255a28b9211fdee8bd658",
+      "after_sha256": "b130bbe85e64ef4084af9e72b903c6603b9ed3591e7278fa64beeae3a6ab3e22",
+      "installed_original_current_sha256": "7802f0d5a5987af6f83a283360e58933440540af7a7255a28b9211fdee8bd658",
+      "installed_original_unchanged": true,
+      "original_path": "C:\\Program Files\\October7_VocalStudio_DAW\\Uninstall_October7_DAW.bat"
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\source\\setup_installer.py",
+      "preimage": "C:\\AI-BS-Recovery\\October7_Audit212\\pre_repair\\source\\setup_installer.py",
+      "before_sha256": "e32e845a5b4410e2ba4362a0705248d5d376bffb349742e0b2f0f64a3822c20a",
+      "after_sha256": "493a12d23b8cee509d4701b44f430c949bfad4fc0ed47af6983fb4c74b6f52e4",
+      "original_path": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF\\setup_installer.py",
+      "installed_original_current_sha256": "e32e845a5b4410e2ba4362a0705248d5d376bffb349742e0b2f0f64a3822c20a",
+      "installed_original_unchanged": true
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\source\\Install_Wizard.ps1",
+      "preimage": "C:\\AI-BS-Recovery\\October7_Audit212\\pre_repair\\source\\Install_Wizard.ps1",
+      "before_sha256": "ba7fc2374dc3ed04970dfdca28cbcc8701c1da656e560f12822b5cb9781f4803",
+      "after_sha256": "7dcdfa48e091361f5f9939fe11646f6135120911f9feba6ebcf5250416cdba82",
+      "original_path": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF\\Install_Wizard.ps1",
+      "installed_original_current_sha256": "ba7fc2374dc3ed04970dfdca28cbcc8701c1da656e560f12822b5cb9781f4803",
+      "installed_original_unchanged": true
+    },
+    {
+      "path": "C:\\AI-BS\\October7_VocalStudio_DAW\\source\\Install_October7_DAW.bat",
+      "preimage": "C:\\AI-BS-Recovery\\October7_Audit212\\pre_repair\\source\\Install_October7_DAW.bat",
+      "before_sha256": "1fe5000125aa6381f7e7b1a3a82021e2331cae3e1e31ff6e3b31e14cd9ae5990",
+      "after_sha256": "1b43f80ebeeda2b9040e2d0eaa9959bb483bce7479042b22a8880dabd9337908",
+      "original_path": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF\\Install_October7_DAW.bat",
+      "installed_original_current_sha256": "1fe5000125aa6381f7e7b1a3a82021e2331cae3e1e31ff6e3b31e14cd9ae5990",
+      "installed_original_unchanged": true
+    }
+  ],
+  "offline_regressions": {
+    "before": "9 original defects + 3 unsafe source duplicates + 1 native preference expected failures",
+    "after": "13 passed",
+    "red_logs": [
+      "red_installer212.log",
+      "red_source_wrappers212.log",
+      "red_native_preference212.log"
+    ],
+    "green_log": "green_installer212.log"
+  },
+  "powershell_parse_errors": [],
+  "python_ast_parse": "passed (root installer, source wrapper, test)",
+  "limitations": [
+    "No actual installer, uninstaller, GUI, app, trust-store, audio or live server was run.",
+    "Three reference source installer wrappers require the repaired parent package installers; they are not standalone redistributables.",
+    "Working-copy changes do not alter installed or compiled executables.",
+    "Installer resource deployment is non-atomic; transactional upgrades remain a follow-up.",
+    "Python installer background-thread Tk updates remain a static follow-up."
+  ],
+  "powershell_copy_helper_fixture": {
+    "installer_executed": false,
+    "fixture": "C:\\AI-BS\\backups\\october7_audit212\\security\\fixtures\\ps_copy_e09fe302d1c046c0b62501c8335395f6",
+    "status": "PASS",
+    "gui_audio_registry_com_accessed": false,
+    "assertions": 4,
+    "scope": "extracted copy helper only"
+  }
+}

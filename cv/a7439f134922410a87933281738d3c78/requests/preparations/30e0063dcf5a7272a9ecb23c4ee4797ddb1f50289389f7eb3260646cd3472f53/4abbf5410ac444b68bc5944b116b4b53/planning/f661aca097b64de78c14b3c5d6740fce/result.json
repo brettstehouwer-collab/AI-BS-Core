@@ -1,0 +1,30 @@
+{
+  "state": "PLAN_PROPOSED",
+  "input_sha256": "3b4942af56b537f0d0fe5df8795340f0ffc7c952f4e253f24f89bbf177c30974",
+  "proposal": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "other.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": []
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-14T13:59:43.427643+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "313684b8fb0e8950ae45116cfc92319a5880cbbf34f2d7ce7bf54788a892aa54",
+  "response_bytes": 160,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": []
+  },
+  "entry_sha256": "36d4c2a12f7535076536c244135c8a2dbab83833fc789d4b35015f9a89e9c534"
+}

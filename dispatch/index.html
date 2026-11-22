@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FE Express • Dispatcher Realtime Dashboard</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #141b2d;
+      --card-border: #1f293d;
+      --accent-blue: #2563eb;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --text-dim: #6b7280;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 24px) 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 16px; }
+
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .brand-subtitle { font-size: 0.75rem; color: var(--text-sub); }
+    .owner-pill {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      color: #93c5fd;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .status-EN_ROUTE { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .status-APPROACHING_GATE { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+
+    /* Turn-by-Turn Card */
+    .nav-banner {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-icon {
+      font-size: 2rem;
+      color: #38bdf8;
+      line-height: 1;
+    }
+    .nav-instruction {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .nav-distance {
+      font-size: 0.82rem;
+      color: #38bdf8;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .truck-clearance-badge {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent-green);
+      color: #6ee7b7;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Live Tracking Grid */
+    .tracking-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .track-cell {
+      background: rgba(0,0,0,0.25);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .track-lbl { font-size: 0.7rem; color: var(--text-dim); }
+    .track-val { font-size: 1rem; font-weight: 700; color: #fff; margin-top: 2px; }
+
+    /* Progress Bar */
+    .progress-bar-container { margin-top: 14px; }
+    .progress-track { width: 100%; height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #10b981); width: 0%; transition: width 0.4s ease; }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* Gate Intel */
+    .gate-highlight { font-size: 1.1rem; font-weight: 700; color: #60a5fa; }
+    .gate-facility { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
+    .gate-approach { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; }
+    .gate-notes {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid var(--accent-yellow);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #fbbf24;
+    }
+
+    /* Media Strip */
+    .media-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-audio { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+    .btn-audio.active { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border-color: var(--accent-green); }
+    .btn-cam { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+    .btn-cam.active { background: rgba(37, 99, 235, 0.2); color: #93c5fd; border-color: #60a5fa; }
+
+    .camera-viewer {
+      margin-top: 12px;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .camera-live-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    /* Event Audit */
+    .event-log { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; max-height: 180px; overflow-y: auto; }
+    .event-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 6px;
+      font-size: 0.78rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div>
+      <div class="brand-title">FE Express Navigation System</div>
+      <div class="brand-subtitle">AI-BS • Unit 274 Active Truck Guidance</div>
+    </div>
+    <div class="owner-pill">Proud owner: Trucker Devin</div>
+  </header>
+
+  <!-- Live Turn-by-Turn Navigation Guidance Card -->
+  <div class="card">
+    <div class="card-title">
+      <span>Turn-by-Turn Truck Guidance</span>
+      <span style="font-size: 0.72rem; color: #38bdf8; font-weight: 700;">VALHALLA TRUCK COSTING</span>
+    </div>
+
+    <div class="nav-banner">
+      <div class="nav-icon" id="navIcon">&uarr;</div>
+      <div>
+        <div class="nav-instruction" id="navInstruction">Continue on I-96 West past Lansing corridor</div>
+        <div class="nav-distance" id="navNextDist">In 42.1 miles &bull; Next: Exit 43A for US-131 South</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <span class="truck-clearance-badge">&#10004; Box Truck 12'6" Height Clearance Verified</span>
+      <span class="truck-clearance-badge">&#10004; Weight Limit: 26,000 lbs OK</span>
+    </div>
+
+    <!-- Live Tracking Fix Data -->
+    <div class="tracking-grid">
+      <div class="track-cell">
+        <div class="track-lbl">GPS SPEED</div>
+        <div class="track-val" id="trackSpeed">62.5 mph</div>
+      </div>
+      <div class="track-cell">
+        <div class="track-lbl">BEARING</div>
+        <div class="track-val" id="trackBearing">270&deg; W</div>
+      </div>
+      <div class="track-cell">
+        <div class="track-lbl">EST. ARRIVAL</div>
+        <div class="track-val" id="trackEta">45 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Trip Card -->
+  <div class="card">
+    <div class="card-title">
+      <span>Active Trip Overview</span>
+      <span class="status-badge status-EN_ROUTE" id="tripStatusBadge">EN_ROUTE</span>
+    </div>
+    <div style="font-size: 1.05rem; font-weight: 700;" id="tripRoute">Detroit Depot &rarr; FE Logistics Grand Rapids Terminal</div>
+
+    <div class="progress-bar-container">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width: 65%;"></div></div>
+      <div class="progress-labels">
+        <span>Detroit</span>
+        <span id="progressPctLabel">65% Complete</span>
+        <span>Grand Rapids</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate Intelligence Card -->
+  <div class="card">
+    <div class="card-title">
+      <span>Gate Intelligence & Approach</span>
+      <span style="font-size: 0.72rem; color: #10b981; font-weight: 600;">CONFIRMED (DRIVER REPORTED)</span>
+    </div>
+    <div class="gate-highlight" id="gateName">North Shipping Gate 4</div>
+    <div class="gate-facility" id="gateFacility">FE Logistics Grand Rapids Terminal</div>
+    <div class="gate-approach" id="gateApproach">Approach Corridor: 44th St SW & Clay Ave</div>
+    <div class="gate-notes" id="gateNotes">Delivery Notes: Use gate intercom 4# upon arrival. Staging area is past the security kiosk on the left.</div>
+  </div>
+
+  <!-- Dispatch Connect Media -->
+  <div class="card">
+    <div class="card-title">
+      <span>Dispatch Connect Media</span>
+      <span style="font-size: 0.72rem; color: var(--text-dim);" id="mediaStatusText">Ready</span>
+    </div>
+    <div class="media-buttons">
+      <button class="btn btn-audio" id="btnAudio" onclick="toggleAudio()">
+        <span>&#128222;</span> <span id="btnAudioText">Join Two-Way Audio</span>
+      </button>
+      <button class="btn btn-cam" id="btnCamera" onclick="toggleCamera()">
+        <span>&#128247;</span> <span id="btnCameraText">Request Road Cam</span>
+      </button>
+    </div>
+
+    <div class="camera-viewer">
+      <div class="camera-live-indicator" id="camIndicator">LIVE WINDSHIELD CAM</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim);" id="camStatusPlaceholder">Road camera feed inactive (Tap to request driver stream)</div>
+    </div>
+  </div>
+
+  <!-- Event Log -->
+  <div class="card">
+    <div class="card-title">
+      <span>Trip Event Audit Stream</span>
+      <span style="font-size: 0.72rem; color: var(--text-dim);">Live Ingest</span>
+    </div>
+    <div class="event-log" id="eventLogContainer">
+      <div class="event-item"><div><strong>INTERSTATE_TRANSIT</strong><br><span style="color: #94a3b8">corridor: I-96 Westbound • mile_marker: MP 88</span></div></div>
+      <div class="event-item"><div><strong>DEPARTED</strong><br><span style="color: #94a3b8">note: Departed terminal on schedule</span></div></div>
+      <div class="event-item"><div><strong>TRIP_DISPATCHED</strong><br><span style="color: #94a3b8">origin: Detroit Distribution Depot • vehicle: Unit 274</span></div></div>
+    </div>
+  </div>
+
+  <footer style="text-align: center; padding: 12px 0 24px 0; color: #64748b; font-size: 0.75rem;">
+    FE Express Navigation System &bull; AI-BS Platform &bull; <em>Proud owner: Trucker Devin</em>
+  </footer>
+</div>
+
+<script>
+  const TRIP_ID = "TRIP-2026-DEVIN-01";
+  let activeTrip = null;
+
+  async function pollGuidance() {
+    try {
+      const res = await fetch(`/v1/navigation/guidance/${TRIP_ID}`);
+      if (res.ok) {
+        const g = await res.json();
+        const activeM = g.maneuvers[g.active_maneuver_index];
+        document.getElementById("navInstruction").textContent = activeM.instruction;
+        document.getElementById("navNextDist").textContent = `In ${g.distance_to_next_maneuver_miles} miles • Next maneuver`;
+      }
+      const trackRes = await fetch(`/v1/navigation/tracking/${TRIP_ID}`);
+      if (trackRes.ok) {
+        const tr = await trackRes.json();
+        document.getElementById("trackSpeed").textContent = `${tr.speed_mph.toFixed(1)} mph`;
+        document.getElementById("trackBearing").textContent = `${tr.bearing_degrees.toFixed(0)}°`;
+      }
+    } catch (e) {
+      console.warn("Guidance sync:", e);
+    }
+  }
+
+  setInterval(pollGuidance, 3000);
+  pollGuidance();
+</script>
+</body>
+</html>

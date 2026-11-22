@@ -1,0 +1,24 @@
+{
+  "utc": "2026-11-01T00:26:10.116825+00:00",
+  "source": "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\VOICECOACHF\\app_native.py",
+  "bytes": 77816,
+  "sha256": "050ea0cdd76f8942799df21c4559ffa021647e25f2e126db7b2079971bc1e72f",
+  "syntax": "PASS",
+  "compilation_comparison": [
+    {
+      "exe": "October7_VocalStudio_DAW.exe",
+      "matches_optimization_levels": [],
+      "source_equivalent": false
+    },
+    {
+      "exe": "October7_VocalStudio_Native.exe",
+      "matches_optimization_levels": [
+        0,
+        1
+      ],
+      "source_equivalent": true
+    }
+  ],
+  "source_executed": false,
+  "source_imported": false
+}

@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "utc": "2026-11-11T11:47:51.678636+00:00",
+  "status": "CONTROLLED_BLENDER53_TO_PRIVATE_SDK174_CPU_DX12_REOPEN_PASS_ART_RELEASE_OPEN",
+  "tool": "engine/tools/export_blender_rtx_variant.py",
+  "tool_sha256": "f2513cacf06441e86d3c1dfbe636c6ed873fdf423daec5adfbf1984ef47995f7",
+  "variant_root": "D:\\AI-BS-Game-Resources\\RTX_Variants_20261111\\Prop01_5_3_20261111T113903Z",
+  "blender": {
+    "version": "5.3.0",
+    "render": "RTX4090 OptiX only,256x256,8samples; no preference/startup writes",
+    "vertices": 6842,
+    "triangles": 13500,
+    "corners": 40500,
+    "fresh_reimport": "PASS exactIEEEfloat32 triangle-corner cyclic multiset/winding/UV; oneUVset/localtextures/sourcepins",
+    "actual_saved_texture_color_spaces": "Albedo sRGB; normal/roughness/metallic Non-Color; matches intent"
+  },
+  "native": {
+    "scope": "Pinned existing private SDK0.17.4 consumers, not current full player/Studio/release",
+    "cpu_creation_checks": 81,
+    "fresh_cpu_reopen_checks": 35,
+    "gpu": "RTX4090,1600x900,debuglayer enabled,0errors/0warnings",
+    "gpu_assertions_note": "GPU create checks include repeated per-vertex assertions; not independent test-case count",
+    "fresh_gpu_reopen": "0pixel difference contextual and closeup;0debugerrors/warnings",
+    "new_hero_and_repeated_packs": true
+  },
+  "preservation": {
+    "protected_existing_files": 37,
+    "all_unchanged": true,
+    "originals_or_real_saves_modified": false,
+    "blender_preferences_unchanged": true
+  },
+  "retained_failures": [
+    "Decimal-rounding comparison false failure, fixed exactfloat32 verifier",
+    "Initial CPUfixture started at-22.5 then intentional move+1.5 leftfinal-21.0; GPUfixed-camera/radial-normal assertions expected-22.5. Freshfixture starts-24, same move final-22.5. No geometry or normals changed.",
+    "Wrapper update used misspelled utf8-sig encoding; original export ran, independently confirmed by manifest/render/stdout. Subsequent scripts use utf-8-sig and --python-exit-code1."
+  ],
+  "open_gates": [
+    "Lettering mirrored in native and preview top-cap exposure held; not art approved",
+    "Actual creator GUI/current player asset integration",
+    "Nsight capture and separate ordinary performance qualification",
+    "Original save compatibility and human pacing/caption/likeness gates remain separate",
+    "Browser upload permission/account/mobile acceptance and original creative edit/export/installed/hosted release remain open"
+  ],
+  "local_asset_archive": {
+    "status": "VERIFIED_LOCAL_NEW_VARIANT_ARCHIVE_MEMBER_READBACK",
+    "archive": "D:\\AI-BS-Game-Resources\\RTX_Local_Checkpoints\\Prop01_5_3_20261111T113903Z.zip",
+    "archive_bytes": 68827856,
+    "archive_sha256": "b45659d666f9c5e4e7571de734de66a4295f3fb6380dddd9a8858ccab1323f92",
+    "members": 148,
+    "source_bytes": 332436003,
+    "not_cloud_uploaded": true,
+    "scope": "Complete newly generated named variant/test evidence only; previous originals and SDK dependency closure remain separately preserved"
+  },
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_SOURCE_EVIDENCE_114901Z",
+  "no_deploy_or_provider_activation": true,
+  "drive_receipt": "C:\\AI-BS\\backups\\rtx_asset_pipeline_20261111T114901Z\\drive_verified.json",
+  "next_diagnostic": "Old and new OBJ v/vt/vn/f rows are byte-identical. Investigate actual native camera/basis/UV convention with asymmetric orientation evidence. The (x,z,-y) mapping has determinant+1; that rotation alone does not prove the historical handedness explanation. Do not apply an untested reflection or relabel the caveat solved."
+}

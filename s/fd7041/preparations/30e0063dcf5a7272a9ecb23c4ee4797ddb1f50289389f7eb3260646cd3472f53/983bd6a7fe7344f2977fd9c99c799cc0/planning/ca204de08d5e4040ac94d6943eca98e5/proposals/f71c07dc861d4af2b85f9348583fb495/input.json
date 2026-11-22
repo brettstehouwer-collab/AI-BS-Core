@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "983bd6a7fe7344f2977fd9c99c799cc0",
+  "plan_id": "ca204de08d5e4040ac94d6943eca98e5",
+  "snapshot_sha256": "0f07e131fffb3cc294d61d452ea0c907f1d26b11408bf178d4e5748b10bac7a8",
+  "review_digest": "31e9f72fd35fbb0c1a7afb505bf2fb175812a6b87120daeb134150c769856c19",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "f71c07dc861d4af2b85f9348583fb495",
+  "reviewed_plan_sha256": "569295f02ace28ab12fd8852d61ce56d08b72c3e869fbd07d773b3ee0f74e3cf",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 35052,
+    "created": 1794664412.676453
+  },
+  "created_at_utc": "2026-11-14T13:53:33.911133+00:00",
+  "entry_sha256": "84874d1a4823093c51e1d9508ddc35c73579646d7030e0323c855801b298a3d2"
+}

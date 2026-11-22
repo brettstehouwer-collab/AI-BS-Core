@@ -1,0 +1,11 @@
+﻿{
+    "State":  "READ_ONLY_PROBE_COMPLETE",
+    "Detail":  "No guest boot or VM configuration command issued.",
+    "VMName":  "AI-BS-Eval-Base-20261023",
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Step":  3,
+    "PID":  225940,
+    "TimestampUTC":  "2026-10-23T21:52:47.1956664Z",
+    "StartedGuest":  false,
+    "AcceptedWindowsTerms":  false
+}

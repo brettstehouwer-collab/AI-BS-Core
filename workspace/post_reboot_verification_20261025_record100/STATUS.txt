@@ -1,0 +1,15 @@
+Record100: post-reboot check complete
+
+Stehouwer Publishing and www are online (HTTP 200). Public API health is also 200. Both publishing logon tasks recovered under footb. All 19 reviewed files match, and private paths remain 404. These are startup and basic availability checks; full workflows remain pending.
+
+At 2026-10-25T22:30:25.6840339Z (6:30 PM Eastern):
+- C: has 146.2 GiB free, about 21.5 GiB more than the final pre-reboot sample.
+- System commit is 30.4%.
+- Codex private commit is 16.3 GiB. It rose from 4.3 to 8.3 to 16.3 GiB during this run, then stayed near 16.3 for the final three minutes. The underlying cause is unresolved.
+- The pagefile is 61.6 GiB; its settings were not changed.
+
+Major work remains deferred. For the next diagnostic, save other active work, close/reopen Codex, and use a small fresh task from NEXT_SESSION.txt. This is a diagnostic step, not a promised fix. No reboot, app termination/update, deletion, paging change or network reconfiguration was performed by this run.
+
+Checkpoint: C:/AI-BS/backups/post_reboot_verification_20261025_record100/checkpoint.json
+Detailed evidence: Recovery_Report.txt and the timestamped JSON samples in this directory.
+Official OpenAI troubleshooting reference: https://learn.chatgpt.com/docs/reference/troubleshooting

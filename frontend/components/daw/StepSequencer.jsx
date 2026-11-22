@@ -1,7 +1,8 @@
-import React from 'react';
+import "react";
 import { useDawStore } from './dawStore';
 import { theme } from '../../styles/theme';
 
+/** @param {{channel: import("/types/daw").DawChannel}} props */
 const StepSequencer = ({ channel }) => {
   const toggleStep = useDawStore((state) => state.toggleStep);
   const currentStep = useDawStore((state) => state.currentStep);

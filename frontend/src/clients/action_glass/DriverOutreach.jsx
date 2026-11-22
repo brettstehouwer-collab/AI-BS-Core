@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
-export default function DriverOutreach({ backendUrl }) {
+/** @param {{"backendUrl": string}} props */
+export default function DriverOutreach({  }) {
   const [selectedSchool, setSelectedSchool] = useState('');
   const [emailDraft, setEmailDraft] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -17,6 +18,7 @@ export default function DriverOutreach({ backendUrl }) {
     // Simulate AI generation for B2B partnership pitch
     setTimeout(() => {
       const school = schools.find(s => s.id === selectedSchool);
+      if (!school) { setIsGenerating(false); return; }
       setEmailDraft(`Subject: Ensuring Safety for Your New Drivers at ${school.name}\n\nHi [Name],\n\nAs a local business here in West Michigan, we know that ${school.name} puts driver safety above all else.\n\nAt Action Glass, we specialize in OEM-quality windshield replacement and ADAS (Advanced Driver Assistance Systems) camera recalibration. Many parents don't realize that if a new driver cracks a windshield, replacing the glass without properly recalibrating the lane-assist cameras can be incredibly dangerous.\n\nWe'd love to partner with you to offer an exclusive "New Driver Safety Discount" for your graduating students. We handle the insurance ($0 out of pocket for them) and ensure their safety systems are 100% calibrated.\n\nCould we drop off some partnership flyers at your ${school.address} location next week?\n\nBest,\nAction Glass Team\n(616) 669-8888`);
       setIsGenerating(false);
     }, 1500);

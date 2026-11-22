@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"f0739fd8-f772-470b-a0f2-58f348de43c3",
+  "name":"Warm Beginning nook proxy enclosure kit v02b",
+  "source":{"sha256":"37adbeafc36c46ac99ff17cf2ba9dbaf87e55385cbfda0a00483aaefe2f5fd3e","bytes":3448250},
+  "materials":{"sha256":"025bb7c3ff80209870de02fb60ef8f6d851498400266f9c324af6df37fe27604","bytes":729},
+  "license":{"sha256":"0799d1bf09687cf7089cf7a32fbbfdcf3317a359e89b6a967ebfee150fdd83c2","bytes":294},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"b9a7569aa52897b55819afc84d4d7383e14ecfed1565fefb462d5d8924a774cd.aibmesh","sha256":"b9a7569aa52897b55819afc84d4d7383e14ecfed1565fefb462d5d8924a774cd","bytes":1223910}
+}

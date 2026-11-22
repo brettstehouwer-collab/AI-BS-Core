@@ -1,0 +1,9 @@
+{
+  "state": "TIMED_OUT",
+  "input_sha256": "affc7e7d74dc12e39fc1e4a88b68069b764dc17dbeec54013d2481f84920ae9c",
+  "proposal": null,
+  "error_code": "planning_deadline",
+  "finished_at_utc": "2026-11-14T14:20:50.402697+00:00",
+  "elapsed_seconds": 0.031,
+  "entry_sha256": "7880e84ddd4d9e06226a559735d13d45e5672f5e7bf93e9ba4eca011f80b5aaa"
+}

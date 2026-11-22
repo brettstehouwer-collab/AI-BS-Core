@@ -1,0 +1,16 @@
+﻿{
+    "Arguments":  [
+                      "storageattach",
+                      "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+                      "--storagectl=SATA",
+                      "--port=1",
+                      "--device=0",
+                      "--type=dvddrive",
+                      "--medium=C:\\Users\\footb\\Downloads\\26300.9457.260913-1737.26h2_ge_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+                      "--passthrough=off"
+                  ],
+    "PID":  135556,
+    "ExitCode":  0,
+    "TimedOut":  false,
+    "TimestampUTC":  "2026-10-23T22:48:54.3383456Z"
+}

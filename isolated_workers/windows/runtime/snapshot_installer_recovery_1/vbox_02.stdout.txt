@@ -1,0 +1,13 @@
+UUID:           a33ecdc9-9aa5-46d4-b99e-5cd44ef2f721
+Parent UUID:    3f632eb6-4348-4aaa-a21d-12b9fdb0f99a
+State:          created
+Type:           normal (differencing)
+Auto-Reset:     off
+Location:       C:\AI-BS\isolated_workers\windows\runtime\base_preparation_v2\vms\AI-BS-Eval-Base-20261023\Snapshots/{a33ecdc9-9aa5-46d4-b99e-5cd44ef2f721}.vdi
+Storage format: VDI
+Format variant: differencing default
+Capacity:       65536 MBytes
+Size on disk:   2 MBytes
+Encryption:     disabled
+Property:       AllocationBlockSize=1048576
+In use by VMs:  AI-BS-Eval-Base-20261023 (UUID: 6c5a53da-ab80-4ecb-8be6-4059266f736e)

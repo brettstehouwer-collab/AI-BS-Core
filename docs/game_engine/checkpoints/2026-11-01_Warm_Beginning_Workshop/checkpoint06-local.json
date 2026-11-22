@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\06_Companion_Runtime_And_Character_CPU.zip",
+  "bytes": 16927043,
+  "sha256": "d3e0434f2e909b7390f605246558ab9a920aea5af2ea1be021cdff356223b6f2",
+  "files": 2642,
+  "source_manifest_sha256": "536dc9455086f45b8259fbd7ff4cf5bf2cdbe3e23adb853be6b5be48b415f732",
+  "local_verification": "All ZIP CRCs, per-file lengths/SHA and current selected bytes match",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "free_bytes": {
+    "C": 86227996672,
+    "D": 183493025792,
+    "E": 146813599744
+  }
+}

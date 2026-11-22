@@ -1,0 +1,22 @@
+{
+  "skills": [
+    {
+      "name": "grill",
+      "command": "/grill",
+      "file": "SKILL_GRILL.md",
+      "description": "Architectural stress-testing and constraint validation before execution"
+    },
+    {
+      "name": "audit",
+      "command": "/audit",
+      "file": "SKILL_AUDIT.md",
+      "description": "Pre-flight AST, syntax, dependency, and secret scanning"
+    },
+    {
+      "name": "test-first",
+      "command": "/test-first",
+      "file": "SKILL_TEST_FIRST.md",
+      "description": "Autonomous red-green-refactor test-driven development loop"
+    }
+  ]
+}

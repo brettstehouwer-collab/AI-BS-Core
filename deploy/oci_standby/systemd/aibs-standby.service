@@ -1,0 +1,29 @@
+[Unit]
+Description=AI-BS Passive Standby Trading Observer (Strictly Read-Only, No Trade Key)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aibs-standby
+Group=aibs-standby
+WorkingDirectory=/opt/ai-bs/scratch
+Environment=PYTHONUNBUFFERED=1
+Environment=AIBS_SAFE_RECOVERY_MODE=passive
+EnvironmentFile=/etc/aibs/standby-readonly.env
+ExecStart=/usr/bin/python3 -u -B /opt/ai-bs/scratch/structural_dip_engine.py --role passive --standby-readonly
+Restart=on-failure
+RestartSec=15
+
+# Hardening: passive service has read-only exchange key only and zero access to gateway keys
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/aibs-standby /var/log/aibs-standby
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

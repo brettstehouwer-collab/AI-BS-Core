@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "1cbdae6bb5b842d3b1c82d16aef3bf78",
+  "plan_id": "f40f3bfa130a4151a5fc5183f9aa1930",
+  "snapshot_sha256": "22ccb6abfc5465fc982cf27bf5f468f387c119be11cfadc52e1c20e41b3ef499",
+  "review_digest": "94dbfce317ad992f25010f15bd3156bcb858462db0c5b387e36d3132b47df57f",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "60349679e6684b258852ed61465c4412",
+  "reviewed_plan_sha256": "fea0017a9c3ce44b4c6310b2e68c383cc69e657499b037e2ac7b080c592b6547",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33484,
+    "created": 1794771330.1265812
+  },
+  "created_at_utc": "2026-11-15T19:35:31.407507+00:00",
+  "entry_sha256": "5ae3486c3ed0795ba7cd799af8f085ba76d9145b07c8fd58613abfe55faa227e"
+}

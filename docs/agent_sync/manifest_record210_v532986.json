@@ -1,0 +1,101 @@
+{
+  "record": 210,
+  "utc": "2026-10-31T21:33:55.300273+00:00",
+  "version": "5.329.86",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Next authorized AI-BS agent",
+  "source_commit": "f35ab2d8d37933da3dd29abab195086aef1d51f8",
+  "base_commit": "1c5b058acacf387198c72ed397e13e2110dfcff3",
+  "branch": "codex/audit-v532976-20261031",
+  "status": "VERIFIED_INSTALLED_GUI_GAME_PREVIEW_AND_OFF_ON_CONTROLS",
+  "modified_paths": [
+    "native_studio/omni_broadcast_studio.py",
+    "scripts/verify_native_broadcast_offline.py",
+    "scripts/tests/test_preview_ui210.py",
+    "version.txt",
+    "package.json",
+    "package-lock.json",
+    "frontend/package.json",
+    "frontend/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/package-lock.json",
+    "release.json",
+    "frontend/public/version.json",
+    "frontend/version.js",
+    "frontend/src/version.js",
+    "frontend/components/version.js",
+    "frontend/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/components/components/version.js",
+    "BroadcastStudioApp/src/version.js",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_DECISIONS.md",
+    "docs/CODEX_TASKS.md",
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+    "MASTER_TASKS_CHRONOLOGY.md",
+    "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+    "MASTER_HISTORICAL_INDEX.md",
+    "NotebookLM_Records/artifact_history.md",
+    "SAVED_CHECKPOINT.md",
+    "docs/audit/2026-10-30-complete/README.md",
+    "docs/audit/2026-10-30-complete/findings.json",
+    "docs/audit/2026-10-30-complete/coverage.json",
+    "docs/audit/2026-10-30-complete/recovery_gate.json",
+    "docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.md",
+    "docs/audit/2026-10-30-complete/NATIVE_PREVIEW_CONTROLS_v5.329.86_RECORD210.json"
+  ],
+  "source_manifest": {
+    "path": "backups\\record210_source_closure\\manifest.json",
+    "sha256": "e729e08446393790f800ac8d8d8315dcfb0bc263c3797e7956ebdd91edc9d855",
+    "cloud_uploaded": false
+  },
+  "document_manifest": {
+    "path": "backups\\record210_close_work\\manifest.json",
+    "sha256": "de082f026cc10e01431f8b97e74c0a15f494df85b4fb9c68b36d2f9aeb53ecb6"
+  },
+  "worktree": {
+    "unrelated_dirty_and_untracked_preserved": true,
+    "exact_local_status": "backups\\native_preview210_fix\\worktree_status210.local.txt",
+    "sha256": "c40044d4c9a3aafa407e53d3a01cbc1ed154d227e9c2d310786133da718cb520",
+    "lines": 71972
+  },
+  "verification": {
+    "guarded_native_tests": 356,
+    "failures": 0,
+    "errors": 0,
+    "operational_guard_denials": 0,
+    "version_mirrors": 16,
+    "compiled_native_modules": 71,
+    "exe_sha256": "089e154b13f960f88c63db4540f590c06a14ab0e3523fcc3e837610ab1737b23",
+    "actual_installed_gui": "backups\\native_preview210_fix\\ui\\gui\\actual_gui_acceptance210.json",
+    "runtime_after": "backups\\native_preview210_fix\\runtime\\after_upgrade210.json",
+    "core_unchanged": true,
+    "preview_left_on": true,
+    "same_broadcast_pipeline": true
+  },
+  "tests_command": "C:/AI-BS/pyppeteer_env/Scripts/python.exe -B scripts/verify_native_broadcast_offline.py",
+  "completed": [
+    "Synchronized real program-preview controls",
+    "Truthful canvas off/held/buffering/stale labels",
+    "v86 build, package verification, installation, actual GUI game rendering and off/on test",
+    "Live trading remains disabled; protected crypto and ledgers unchanged"
+  ],
+  "decisions": [
+    "Preserve explicit user OFF across status polls.",
+    "No decoder, GPU, capture or order-dispatch change; core reproduction passed once coordinator was running.",
+    "PC control explicitly reauthorized by user for bounded verification."
+  ],
+  "remaining_limits": [
+    "No all-games/all-workflows or remote ingest certification.",
+    "Audio remains silent and microphone unrequested.",
+    "No Firebase deployment this turn.",
+    "Existing E recovery-key issue blocks encrypted full-source/binary cloud backup; no retry or substitute key."
+  ],
+  "cloud": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "status": "SANITIZED_UPLOAD_AND_RAW_READBACK_RECORDED_IN_SEPARATE_CLOSURE",
+    "private_source_or_binary_uploaded": false
+  },
+  "next_step": "Use the running v86 Studio with Program preview ON; monitor actual game output without changing trading or audio holds."
+}

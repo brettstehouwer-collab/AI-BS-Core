@@ -1,0 +1,35 @@
+tunnel: d1acbd25-06c3-4be0-a7f4-ae3943263aed
+credentials-file: C:\Users\footb\.cloudflared\d1acbd25-06c3-4be0-a7f4-ae3943263aed.json
+
+ingress:
+  - hostname: api.brettstehouwer.live
+    path: /sse
+    service: http://127.0.0.1:8099
+  - hostname: api.brettstehouwer.live
+    path: /messages
+    service: http://127.0.0.1:8099
+  - hostname: api.brettstehouwer.live
+    service: http://127.0.0.1:8000
+  - hostname: ai-bs.brettstehouwer.live
+    service: http://127.0.0.1:8080
+  - hostname: stehouwer-publishing.com
+    service: http://127.0.0.1:80
+  - hostname: www.stehouwer-publishing.com
+    service: http://127.0.0.1:80
+  - hostname: stehouwerpublishing.com
+    service: http://127.0.0.1:80
+  - hostname: www.stehouwerpublishing.com
+    service: http://127.0.0.1:80
+  - hostname: recdebut-recruit.org
+    path: /api/
+    service: http://127.0.0.1:8080
+  - hostname: recdebut-recruit.org
+    path: /r/
+    service: http://127.0.0.1:8080
+  - hostname: r.recdebut-recruit.org
+    service: http://127.0.0.1:8080
+  - hostname: recdebut-recruit.org
+    service: http://127.0.0.1:8080
+  - hostname: www.recdebut-recruit.org
+    service: http://127.0.0.1:8080
+  - service: http_status:404

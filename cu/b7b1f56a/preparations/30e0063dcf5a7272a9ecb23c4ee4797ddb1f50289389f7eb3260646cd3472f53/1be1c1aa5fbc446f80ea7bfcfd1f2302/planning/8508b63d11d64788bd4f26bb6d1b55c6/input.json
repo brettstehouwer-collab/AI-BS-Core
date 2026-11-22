@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "1be1c1aa5fbc446f80ea7bfcfd1f2302",
+  "plan_id": "8508b63d11d64788bd4f26bb6d1b55c6",
+  "snapshot_sha256": "1fa219f808be605ab64bf39c28b7ded29d8900760957c9ffe0b1c9377e36c657",
+  "review_digest": "a71b2dbdf80e488d54975435217bc4f48eec68854dacc96ed25d7bbb577f2bc5",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "3948362411f43a00cfbe551e27a87b03667da9706f3240964e2f1a2211481afc",
+        "excerpt": "# input larger than complete-source budget\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n# x\n#",
+        "excerpt_complete": false
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "excerpt": "# selected immutable test fixture; never executed\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "cacd61afcc0863b52f0ee25aaf0dd6ccae58bbb8bb635a77000382031d08a4a8",
+  "worker": {
+    "pid": 14128,
+    "created": 1794664760.6603472
+  },
+  "created_at_utc": "2026-11-14T13:59:24.500062+00:00",
+  "entry_sha256": "a423b1e523ad990c423bdd6fb4e045d712aba4f7771b1852238eafd1805df410"
+}

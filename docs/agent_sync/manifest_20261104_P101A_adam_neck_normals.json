@@ -1,0 +1,42 @@
+{
+  "at": "2026-11-04T21:21:32.215522+00:00",
+  "status": "verified_v32_normal_only_partial_collar_improvement_backed_up",
+  "model": "E:\\AI_BS_Resources\\FirstBoot\\P101\\AdamNeckNormalStudy\\master\\adam-character-v32-neck-normal-study.blend",
+  "model_sha256": "b83a3b2777b1a5903b78e4135b2318254367211a711b54ce411674b336fcdd7f",
+  "comparison": "E:\\AI_BS_Resources\\FirstBoot\\P101\\AdamNeckNormalStudy\\master\\matched-neck-normal-review.png",
+  "evidence": "E:\\AI_BS_Resources\\FirstBoot\\P101\\AdamNeckNormalStudy\\qualification.json",
+  "backup_receipt": "docs/game_engine/checkpoints/101A-drive.json",
+  "native_source_changed": false,
+  "installed_release_or_private_review_default_changed": false,
+  "real_saves_or_original_family_media_changed": false,
+  "seam_resolved": false,
+  "likeness_approved": false,
+  "monitor_status": "available",
+  "monitor_sha256": "0dbf5991e68f1c060e550d2f297ecc086644697edae2f559c962ef39cee45080",
+  "free_GiB": {
+    "C": 204.24,
+    "D": 24.23,
+    "E": 39.9
+  },
+  "goal_complete": false,
+  "next_step": "Use the v32 matched native study as the reversible normal-smoothing baseline. Inspect the remaining neck transition with uniform-lit versus authored-albedo views and local geometry/color boundaries; do not repeat stopped unconstrained smoothing or claim seam/likeness solved. Preserve face direction/rig/four clips/right wrist band. Human8-12minute pacing/current gameplay1080p60, checked captions and exact final installed art/media/package acceptance remain open.",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "private_worktree_snapshot": "E:\\AI_BS_Resources\\FirstBoot\\P101\\AdamNeckNormalStudy\\private-git-status.txt",
+  "private_worktree_sha256": "5e7a5b219fb02719234a64133f4db6a1d72e3de7c1bdd7408f48d3d19a4771fe",
+  "private_git_uploaded": false,
+  "historical_scope_read": [
+    "P100 game index and continuation",
+    "P95 constrained neck model/diagnostic sources and matching review",
+    "P96 exporter/native views/animation consumers",
+    "Actual v31 mesh/corner normals and matched native views"
+  ],
+  "changed_paths": [
+    "docs/CODEX_HANDOFF.md",
+    "docs/game_engine/PROJECT_INDEX.md",
+    "docs/game_engine/WARM_BEGINNING_ACCEPTANCE_AUDIT.md",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "docs/game_engine/checkpoints/101A-drive.json",
+    "engine/out/warm_beginning/monitor_summary.json"
+  ]
+}

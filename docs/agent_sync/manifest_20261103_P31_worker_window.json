@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "at": "2026-11-03T13:35:45.753698+00:00",
+  "goal_status": "active",
+  "goal_complete": false,
+  "previous_goal_turn": "progress: checkpoint30A source lifecycle fix and authenticated cloud restore",
+  "classification": "progress: worker drain/window close implemented,67distinct CPU tests pass, actual source MainWindow exits0 and all owned processes joined",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree": "Existing dirty/untracked tree preserved. Selected exact source hashes/full files/diffs included; no global Git status, private Git metadata or Master ledger included.",
+  "changes": {
+    "engine": "Explicit bounded bool shutdown with legacy3000ms default; STOPPING admission fence; GUI-owned queued result/error relay; retained wrappers through actual waitForDone; one-shot drained notification and GUI timer polling. Queued clear tasks retire after real barrier. No thread termination.",
+    "window": "Prepare chapter and latest snapshots from every instantiated chat before freeze/teardown. Veto keeps editing/retry live. Stop submission timers, disable new UI actions, run unique subview teardown once, request bus/sampler with0ms wait, retain window/event loop until bus real drain and sampler wait(0). Notifications/completion races/repeated close covered. Teardown exception retains window and reports state.",
+    "sampler": "Optional timeout_ms defaults2000ms; GUI path uses0. Sampling thread retains mapping through its final write.",
+    "chat": "Closed begin/flush and repeat shutdown do not access released Qt owners or admit new work; late autosave acknowledgment cannot replace final confirmed state."
+  },
+  "verification": {
+    "EngineBus_RED": "7actual pool tests;6expected failures before fix; cleanup joined",
+    "window_sampler_RED": "new combined close barrier absent and sampler0ms unsupported; expected failures before edit",
+    "chat_RED": "9tests,2failures+1error before closed-entry guards; all controlled",
+    "engine_GREEN": "8/8 actual Qt pool tests including3second default timeout, queued clear, finished-before-native-return, normal GUI delivery and late success/error fencing",
+    "regression_GREEN": "59/59 actual Qt/inert-service recovery,executive/sharedchat,window and sampler cases",
+    "distinct_passed_tests": 67,
+    "source_window": "One actual normal source MainWindow, correct own title and bounded WM_NULL/WM_CLOSE,exit0,all owned Job processes joined,no forced termination. Full service-backed UI constructed with daemon/update/global cleanup flags false. Not a packaged or full-tab proof.",
+    "static_import_closure": {
+      "declared_modules": 108,
+      "source_modules": 107,
+      "local_dependencies": 106
+    }
+  },
+  "retention": {
+    "Studio100": {
+      "studio100_file_count": 2301,
+      "studio100_executable_sha256": "6bb59d809dce98f1f9db99fb78351f0ef2f1c59162873401b15af5ef56794e6c",
+      "shortcut_count": 5,
+      "all_exact": true
+    },
+    "Studio101_all2301_exact": true,
+    "Studio101": "still immutable failed normal-close candidate; source changes are unbundled",
+    "SDK": "0.16.3 unchanged; native source/render baseline retained, no new GPU claim",
+    "family_originals_and_existing_saves": "No direct edit/removal; original references excluded from backups"
+  },
+  "debugger": "Earlier two-strike halted helper remains unused/unvalidated; no further fixture retries or actual101 debugger run. SIP cause unproven. A passing source close is not a causal diagnosis.",
+  "remaining_risks": [
+    "Full packaged build/restart/normal close remains unverified for these changes.",
+    "Normal completed-task wrappers are retained until a whole-pool idle barrier; continuous overlapping work may retain more wrappers until idle. Measure real memory during full acceptance.",
+    "Final chat flush still performs the existing synchronous lock/fsync; this preserves save safety but does not prove bounded disk latency.",
+    "Other standalone clients sharing EngineBus must honor False; this checkpoint verifies the AI-BS MainWindow close path."
+  ],
+  "next_step": "Prepare a fresh Studio102 candidate using current source and unchanged SDK0.16.3; preserve100/101. Re-run bounded staging/package tests, packaged saved-play/Creator/Hub and actual normal-close acceptance before any launcher update. Continue Adam likeness, human8\u201312minute pacing,1080p60 measurement,current walkthrough and complete final backups.",
+  "owned_live_processes_jobs_sessions": 0,
+  "source_SHA256": {
+    "native_studio/engine.py": "ce022003b06474133cda5a9a7f9a5b252b48fa91263d7d8034e27795293d96f1",
+    "native_studio/app.py": "2e2f167a3942f9775af0baf43e15d50ffcba22acf0fd2483aa8a89230b092192",
+    "native_studio/telemetry_hub.py": "7acfb5d548aecf79424c09aaca2abad9017b02c71aeed56df94f110fbe6e9fb2",
+    "native_studio/chat_recovery.py": "16113a2b3ae2637f70de2b565cabd3e3f22ecca980bcda38382c1235d68ec10e",
+    "scripts/tests/test_native_engine_bus_shutdown.py": "5f0a21317438fc8a7c58c7a300ee8b4ef366fc4ee89e0f828401766601cb7f33",
+    "scripts/tests/test_native_window_shutdown.py": "07f3ab96fd3395d01ff7c961f90e2287682b81c8e36d58dc6170b659bb692d15",
+    "scripts/tests/test_native_telemetry_shutdown.py": "c7c52c499290f8ec36ceeb0a277c5d4c80b6bbc79cb357d860c572ff3b21d1ea",
+    "scripts/tests/test_native_chat_recovery_lifetime.py": "3aed709d4ff1687e2f5dfc9b8048f591705be12c0e767f42c867e361684ea59b"
+  },
+  "space_free_bytes": {
+    "C": 63129096192,
+    "D": 88278626304,
+    "E": 146813599744
+  },
+  "backup_scope": "31A selected complete Creator source/tests/evidence increment; not full current project/art restore. No original family media, private dumps/WER, credentials or private Master/Git data.",
+  "checkpoint_encoding_repair": {
+    "scope": [
+      "engine/out/warm_beginning/monitor_summary.json"
+    ],
+    "cause": "Checkpoint writer inherited Windows cp1252 for JSON containing punctuation. Re-encoded same parsed data as UTF8 before publication; preimage retained. No runtime/source change.",
+    "status": "repaired_UTF8_JSON_readback_passed"
+  },
+  "backup31A": {
+    "status": "verified_authenticated_Drive_raw_restore",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\31A_Worker_Window_Drain_Source_20261103.zip",
+    "bytes": 303780,
+    "sha256": "922cec67190d5cadedc51faa38a4605ca020c0aeb8df02348a116a036ee49023",
+    "members": 57,
+    "source_fix_tests_distinct": 67,
+    "actual_source_window_exit_code": 0,
+    "owned_jobs_live": 0,
+    "goal_complete": false,
+    "scope": "31A selected complete Creator source/tests/evidence increment; not full current project/art restore. No original family media, private dumps/WER, credentials or private Master/Git data.",
+    "handoff": "C:\\AI-BS\\docs\\agent_sync\\manifest_20261103_P31_worker_window.json",
+    "space_free_bytes": {
+      "C": 63129096192,
+      "D": 88278626304,
+      "E": 146813599744
+    },
+    "at": "2026-11-03T13:38:13.629762+00:00",
+    "Drive_file_id": "1TcPV1zGXkd2xGFi-jL-Ax3Rr5sX1FhDd",
+    "Drive_url": "https://drive.google.com/file/d/1TcPV1zGXkd2xGFi-jL-Ax3Rr5sX1FhDd/view?usp=drivesdk",
+    "parent_folder_id": "1hd8NugIW8IeHaoMGD_9XKXZYmR48pwBx",
+    "every_member_SHA256_size_CRC_and_exact_set_verified": true
+  },
+  "public_document_SHA256": {
+    "engine/out/warm_beginning/monitor_summary.json": "dc5831a33c64708325567eb0667e28046141053fb8b9b70cd6c4f539b088a4ca",
+    "engine/out/build_progress.json": "0fb5454cb11ace587c0413c44a352ae08b339fc515059edc5a24b28df1d080ed",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "2f143ec21b90a7cc06a051a6cb79276cbee0926ffd3b4d66100561ac4ebcce58",
+    "engine/BUILD_STATUS.md": "cd19f63d5fba8befcfe49224a9bd269798a8953f86c3eea280713119ae2b2cfe",
+    "engine/WARM_BEGINNING.md": "78697773da5be4aee4c498c12999cc141d68277dd30e2f3906b8033f094d065a"
+  },
+  "space_free_bytes_closeout": {
+    "C": 63125237760,
+    "D": 88277286912,
+    "E": 146813599744
+  }
+}

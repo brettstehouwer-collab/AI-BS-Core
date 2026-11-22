@@ -1,0 +1,723 @@
+=== INPUT AREA & CONTROLS ===
+Line 2899: onClick={() => handleSendMessage(card.prompt)}
+  2894:               {starterCards
+  2895:                 .filter(c => starterCategory === 'All' || c.category === starterCategory)
+  2896:                 .map((card, idx) => (
+  2897:                   <div
+  2898:                     key={idx}
+  2899:                     onClick={() => handleSendMessage(card.prompt)}
+  2900:                     style={{
+  2901:                       background: 'rgba(22, 27, 38, 0.75)',
+  2902:                       border: '1px solid rgba(255, 255, 255, 0.08)',
+  2903:                       borderRadius: '10px',
+  2904:                       padding: '14px',
+  2905:                       cursor: 'pointer',
+  2906:                       transition: 'all 0.2s ease-in-out',
+  2907:                       display: 'flex',
+  2908:                       flexDirection: 'column',
+  2909:                       justifyContent: 'space-between'
+  2910:                     }}
+  2911:                     onMouseEnter={(e) => {
+  2912:                       e.currentTarget.style.borderColor = 'rgba(96, 165, 250, 0.6)';
+  2913:                       e.currentTarget.style.background = 'rgba(30, 41, 59, 0.95)';
+  2914:                       e.currentTarget.style.transform = 'translateY(-2px)';
+  2915:                       e.currentTarget.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.15)';
+  2916:                     }}
+  2917:                     onMouseLeave={(e) => {
+  2918:                       e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+  2919:                       e.currentTarget.style.background = 'rgba(22, 27, 38, 0.75)';
+  2920:                       e.currentTarget.style.transform = 'translateY(0)';
+  2921:                       e.currentTarget.style.boxShadow = 'none';
+  2922:                     }}
+  2923:                   >
+  2924:                     <div>
+  2925:                       <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#f1f5f9', marginBottom: '4px' }}>
+  2926:                         {card.title}
+  2927:                       </div>
+  2928:                       <div style={{ fontSize: '0.78rem', color: '#94a3b8', lineHeight: '1.4' }}>
+
+==================================================
+Line 3079: <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 8192 ? '#f87171' : '#38bdf8' }}>
+  3074:         </div>
+  3075: 
+  3076:         {/* Live Context Token Budget Gauge */}
+  3077:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '0.72rem', color: '#94a3b8', padding: '0 2px' }}>
+  3078:           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+  3079:             <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 8192 ? '#f87171' : '#38bdf8' }}>
+  3080:               📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} tokens
+  3081:             </span>
+  3082:             <span style={{ color: '#64748b' }}>({Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}% of 8,192 max window)</span>
+  3083:           </div>
+  3084:           <div style={{ width: '120px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+  3085:             <div style={{
+  3086:               width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3087:               height: '100%',
+  3088:               background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+
+==================================================
+Line 3080: 📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} t
+  3075: 
+  3076:         {/* Live Context Token Budget Gauge */}
+  3077:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '0.72rem', color: '#94a3b8', padding: '0 2px' }}>
+  3078:           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+  3079:             <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 8192 ? '#f87171' : '#38bdf8' }}>
+  3080:               📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} tokens
+  3081:             </span>
+  3082:             <span style={{ color: '#64748b' }}>({Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}% of 8,192 max window)</span>
+  3083:           </div>
+  3084:           <div style={{ width: '120px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+  3085:             <div style={{
+  3086:               width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3087:               height: '100%',
+  3088:               background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+  3109:               fontSize: '0.8rem',
+
+==================================================
+Line 3082: <span style={{ color: '#64748b' }}>({Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}% of 8
+  3077:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '0.72rem', color: '#94a3b8', padding: '0 2px' }}>
+  3078:           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+  3079:             <span style={{ fontWeight: '600', color: Math.floor(footerInput.length / 4) > 8192 ? '#f87171' : '#38bdf8' }}>
+  3080:               📊 Context Budget: {footerInput.length.toLocaleString()} chars • ~{Math.floor(footerInput.length / 4).toLocaleString()} tokens
+  3081:             </span>
+  3082:             <span style={{ color: '#64748b' }}>({Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}% of 8,192 max window)</span>
+  3083:           </div>
+  3084:           <div style={{ width: '120px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+  3085:             <div style={{
+  3086:               width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3087:               height: '100%',
+  3088:               background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+  3109:               fontSize: '0.8rem',
+  3110:               fontWeight: '700',
+  3111:               display: 'flex',
+
+==================================================
+Line 3086: width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3081:             </span>
+  3082:             <span style={{ color: '#64748b' }}>({Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}% of 8,192 max window)</span>
+  3083:           </div>
+  3084:           <div style={{ width: '120px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+  3085:             <div style={{
+  3086:               width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3087:               height: '100%',
+  3088:               background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+  3109:               fontSize: '0.8rem',
+  3110:               fontWeight: '700',
+  3111:               display: 'flex',
+  3112:               alignItems: 'center',
+  3113:               gap: '6px',
+  3114:               color: isArtifactsModalOpen ? '#ffffff' : '#34d399',
+  3115:               transition: 'all 0.2s ease',
+
+==================================================
+Line 3088: background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3083:           </div>
+  3084:           <div style={{ width: '120px', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+  3085:             <div style={{
+  3086:               width: `${Math.min(100, Math.round((Math.floor(footerInput.length / 4) / 8192) * 100))}%`,
+  3087:               height: '100%',
+  3088:               background: Math.floor(footerInput.length / 4) > 8192 ? '#ef4444' : 'linear-gradient(90deg, #38bdf8, #818cf8)'
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+  3109:               fontSize: '0.8rem',
+  3110:               fontWeight: '700',
+  3111:               display: 'flex',
+  3112:               alignItems: 'center',
+  3113:               gap: '6px',
+  3114:               color: isArtifactsModalOpen ? '#ffffff' : '#34d399',
+  3115:               transition: 'all 0.2s ease',
+  3116:               whiteSpace: 'nowrap',
+  3117:               flexShrink: 0
+
+==================================================
+Line 3094: <ChatToolControlBar onToolToggle={setActiveTools} />
+  3089:             }} />
+  3090:           </div>
+  3091:         </div>
+  3092: 
+  3093:         {/* Phase 7.1 Control Bar Injected Above Input */}
+  3094:         <ChatToolControlBar onToolToggle={setActiveTools} />
+  3095:         <ChatContextToolbar activeContexts={activeContexts} onToggleContext={toggleContext} />
+  3096: 
+  3097:         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+  3098:           {/* Artifacts & Tools Hub Button */}
+  3099:           <button
+  3100:             onClick={() => setIsArtifactsModalOpen(true)}
+  3101:             title="Open Live Artifacts & Autonomous Program Builder Hub"
+  3102:             style={{
+  3103:               height: '42px',
+  3104:               padding: '0 12px',
+  3105:               background: isArtifactsModalOpen ? 'linear-gradient(135deg, #059669, #10b981)' : 'rgba(16, 185, 129, 0.12)',
+  3106:               border: `1px solid ${isArtifactsModalOpen ? '#34d399' : 'rgba(16, 185, 129, 0.35)'}`,
+  3107:               borderRadius: '10px',
+  3108:               cursor: 'pointer',
+  3109:               fontSize: '0.8rem',
+  3110:               fontWeight: '700',
+  3111:               display: 'flex',
+  3112:               alignItems: 'center',
+  3113:               gap: '6px',
+  3114:               color: isArtifactsModalOpen ? '#ffffff' : '#34d399',
+  3115:               transition: 'all 0.2s ease',
+  3116:               whiteSpace: 'nowrap',
+  3117:               flexShrink: 0
+  3118:             }}
+  3119:           >
+  3120:             <span>📦 Artifacts & Tools</span>
+  3121:           </button>
+  3122: 
+  3123:           {/* Preset Dropdown Button & Menu by Chat Bar */}
+
+==================================================
+Line 3186: handleSendMessage(card.prompt);
+  3181:                 {starterCards.map((card, idx) => (
+  3182:                   <div
+  3183:                     key={idx}
+  3184:                     onClick={() => {
+  3185:                       setShowPresetDropdown(false);
+  3186:                       handleSendMessage(card.prompt);
+  3187:                     }}
+  3188:                     style={{
+  3189:                       padding: '8px 10px',
+  3190:                       borderRadius: '8px',
+  3191:                       cursor: 'pointer',
+  3192:                       background: 'rgba(255, 255, 255, 0.02)',
+  3193:                       border: '1px solid transparent',
+  3194:                       transition: 'all 0.15s ease'
+  3195:                     }}
+  3196:                     onMouseEnter={(e) => {
+  3197:                       e.currentTarget.style.background = 'rgba(56, 189, 248, 0.15)';
+  3198:                       e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+  3199:                     }}
+  3200:                     onMouseLeave={(e) => {
+  3201:                       e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+  3202:                       e.currentTarget.style.borderColor = 'transparent';
+  3203:                     }}
+  3204:                   >
+  3205:                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+  3206:                       <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f1f5f9' }}>{card.title}</span>
+  3207:                       <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.06)', padding: '1px 6px', borderRadius: '4px', color: '#94a3b8' }}>{card.category}</span>
+  3208:                     </div>
+  3209:                     <div style={{ fontSize: '0.7rem', color: '#94a3b8', lineHeight: '1.3' }}>{card.desc}</div>
+  3210:                   </div>
+  3211:                 ))}
+  3212:               </div>
+  3213:             )}
+  3214:           </div>
+  3215: 
+
+==================================================
+Line 3234: value={footerInput}
+  3229:           >
+  3230:             📎
+  3231:           </button>
+  3232: 
+  3233:           <textarea
+  3234:             value={footerInput}
+  3235:             onChange={(e) => setFooterInput(e.target.value)}
+  3236:             onKeyDown={(e) => {
+  3237:               if (e.key === 'Enter' && !e.shiftKey) {
+  3238:                 e.preventDefault();
+  3239:                 handleSendMessage();
+  3240:               }
+  3241:             }}
+  3242:             placeholder={attachments.length > 0 ? "Add instructions for attached files..." : "Message Stehouwer LLM or run /ps, /wsl, /edit, /deploy, /kill... (Enter to send)"}
+  3243:             rows={2}
+  3244:             style={{
+  3245:               flex: 1,
+  3246:               background: 'rgba(0,0,0,0.5)',
+  3247:               border: '1px solid rgba(255,255,255,0.12)',
+  3248:               borderRadius: '10px',
+  3249:               color: '#f8fafc',
+  3250:               padding: '10px 14px',
+  3251:               fontSize: '0.9rem',
+  3252:               resize: 'none',
+  3253:               outline: 'none',
+  3254:               fontFamily: 'inherit',
+  3255:               lineHeight: '1.5',
+  3256:             }}
+  3257:           />
+  3258: 
+  3259:           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+  3260:             <div style={{ display: 'flex', gap: '4px' }}>
+  3261:               <button
+  3262:                 onClick={toggleListening}
+  3263:                 title="Toggle Voice Input (STT)"
+
+==================================================
+Line 3239: handleSendMessage();
+  3234:             value={footerInput}
+  3235:             onChange={(e) => setFooterInput(e.target.value)}
+  3236:             onKeyDown={(e) => {
+  3237:               if (e.key === 'Enter' && !e.shiftKey) {
+  3238:                 e.preventDefault();
+  3239:                 handleSendMessage();
+  3240:               }
+  3241:             }}
+  3242:             placeholder={attachments.length > 0 ? "Add instructions for attached files..." : "Message Stehouwer LLM or run /ps, /wsl, /edit, /deploy, /kill... (Enter to send)"}
+  3243:             rows={2}
+  3244:             style={{
+  3245:               flex: 1,
+  3246:               background: 'rgba(0,0,0,0.5)',
+  3247:               border: '1px solid rgba(255,255,255,0.12)',
+  3248:               borderRadius: '10px',
+  3249:               color: '#f8fafc',
+  3250:               padding: '10px 14px',
+  3251:               fontSize: '0.9rem',
+  3252:               resize: 'none',
+  3253:               outline: 'none',
+  3254:               fontFamily: 'inherit',
+  3255:               lineHeight: '1.5',
+  3256:             }}
+  3257:           />
+  3258: 
+  3259:           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+  3260:             <div style={{ display: 'flex', gap: '4px' }}>
+  3261:               <button
+  3262:                 onClick={toggleListening}
+  3263:                 title="Toggle Voice Input (STT)"
+  3264:                 style={{
+  3265:                   width: '42px', height: '40px',
+  3266:                   background: isListening ? 'rgba(239,68,68,0.25)' : 'rgba(255,255,255,0.06)',
+  3267:                   border: `1px solid ${isListening ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.12)'}`,
+  3268:                   borderRadius: '10px', cursor: 'pointer', fontSize: '1.1rem',
+
+==================================================
+Line 3289: onClick={() => handleSendMessage()}
+  3284:               >
+  3285:                 🔊
+  3286:               </button>
+  3287:             </div>
+  3288:             <button
+  3289:               onClick={() => handleSendMessage()}
+  3290:               disabled={(!footerInput.trim() && attachments.length === 0) || isLoading}
+  3291:               style={{
+  3292:                 width: '42px', height: '40px',
+  3293:                 background: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#2563eb' : 'rgba(255,255,255,0.06)',
+  3294:                 border: 'none',
+  3295:                 borderRadius: '10px',
+  3296:                 cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3297:                 fontSize: '1.1rem',
+  3298:                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+  3299:                 color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3300:                 transition: 'background 0.2s',
+  3301:               }}
+  3302:             >
+  3303:               ➤
+  3304:             </button>
+  3305:           </div>
+  3306:         </div>
+  3307: 
+  3308:         {/* Clear screen & Action Toolbar */}
+  3309:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+  3310:           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  3311:             {chatMessages.length > 0 && (
+  3312:               <button
+  3313:                 onClick={() => setChatMessages([])}
+  3314:                 style={{
+  3315:                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+  3316:                 }}
+  3317:               >
+  3318:                 Clear Screen (Retains Memory)
+
+==================================================
+Line 3290: disabled={(!footerInput.trim() && attachments.length === 0) || isLoading}
+  3285:                 🔊
+  3286:               </button>
+  3287:             </div>
+  3288:             <button
+  3289:               onClick={() => handleSendMessage()}
+  3290:               disabled={(!footerInput.trim() && attachments.length === 0) || isLoading}
+  3291:               style={{
+  3292:                 width: '42px', height: '40px',
+  3293:                 background: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#2563eb' : 'rgba(255,255,255,0.06)',
+  3294:                 border: 'none',
+  3295:                 borderRadius: '10px',
+  3296:                 cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3297:                 fontSize: '1.1rem',
+  3298:                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+  3299:                 color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3300:                 transition: 'background 0.2s',
+  3301:               }}
+  3302:             >
+  3303:               ➤
+  3304:             </button>
+  3305:           </div>
+  3306:         </div>
+  3307: 
+  3308:         {/* Clear screen & Action Toolbar */}
+  3309:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+  3310:           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  3311:             {chatMessages.length > 0 && (
+  3312:               <button
+  3313:                 onClick={() => setChatMessages([])}
+  3314:                 style={{
+  3315:                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+  3316:                 }}
+  3317:               >
+  3318:                 Clear Screen (Retains Memory)
+  3319:               </button>
+
+==================================================
+Line 3293: background: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#2563eb' : 'rgba(255,255,255,0.06)',
+  3288:             <button
+  3289:               onClick={() => handleSendMessage()}
+  3290:               disabled={(!footerInput.trim() && attachments.length === 0) || isLoading}
+  3291:               style={{
+  3292:                 width: '42px', height: '40px',
+  3293:                 background: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#2563eb' : 'rgba(255,255,255,0.06)',
+  3294:                 border: 'none',
+  3295:                 borderRadius: '10px',
+  3296:                 cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3297:                 fontSize: '1.1rem',
+  3298:                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+  3299:                 color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3300:                 transition: 'background 0.2s',
+  3301:               }}
+  3302:             >
+  3303:               ➤
+  3304:             </button>
+  3305:           </div>
+  3306:         </div>
+  3307: 
+  3308:         {/* Clear screen & Action Toolbar */}
+  3309:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+  3310:           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  3311:             {chatMessages.length > 0 && (
+  3312:               <button
+  3313:                 onClick={() => setChatMessages([])}
+  3314:                 style={{
+  3315:                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+  3316:                 }}
+  3317:               >
+  3318:                 Clear Screen (Retains Memory)
+  3319:               </button>
+  3320:             )}
+  3321: 
+  3322:             <button
+
+==================================================
+Line 3296: cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3291:               style={{
+  3292:                 width: '42px', height: '40px',
+  3293:                 background: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#2563eb' : 'rgba(255,255,255,0.06)',
+  3294:                 border: 'none',
+  3295:                 borderRadius: '10px',
+  3296:                 cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3297:                 fontSize: '1.1rem',
+  3298:                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+  3299:                 color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3300:                 transition: 'background 0.2s',
+  3301:               }}
+  3302:             >
+  3303:               ➤
+  3304:             </button>
+  3305:           </div>
+  3306:         </div>
+  3307: 
+  3308:         {/* Clear screen & Action Toolbar */}
+  3309:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+  3310:           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  3311:             {chatMessages.length > 0 && (
+  3312:               <button
+  3313:                 onClick={() => setChatMessages([])}
+  3314:                 style={{
+  3315:                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+  3316:                 }}
+  3317:               >
+  3318:                 Clear Screen (Retains Memory)
+  3319:               </button>
+  3320:             )}
+  3321: 
+  3322:             <button
+  3323:               onClick={() => handleSendMessage('/monitor')}
+  3324:               style={{
+  3325:                 background: 'rgba(245, 158, 11, 0.12)',
+
+==================================================
+Line 3299: color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3294:                 border: 'none',
+  3295:                 borderRadius: '10px',
+  3296:                 cursor: (footerInput.trim() || attachments.length > 0) && !isLoading ? 'pointer' : 'not-allowed',
+  3297:                 fontSize: '1.1rem',
+  3298:                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+  3299:                 color: (footerInput.trim() || attachments.length > 0) && !isLoading ? '#fff' : '#475569',
+  3300:                 transition: 'background 0.2s',
+  3301:               }}
+  3302:             >
+  3303:               ➤
+  3304:             </button>
+  3305:           </div>
+  3306:         </div>
+  3307: 
+  3308:         {/* Clear screen & Action Toolbar */}
+  3309:         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+  3310:           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  3311:             {chatMessages.length > 0 && (
+  3312:               <button
+  3313:                 onClick={() => setChatMessages([])}
+  3314:                 style={{
+  3315:                   background: 'none', border: 'none', color: '#64748b', fontSize: '0.75rem', cursor: 'pointer',
+  3316:                 }}
+  3317:               >
+  3318:                 Clear Screen (Retains Memory)
+  3319:               </button>
+  3320:             )}
+  3321: 
+  3322:             <button
+  3323:               onClick={() => handleSendMessage('/monitor')}
+  3324:               style={{
+  3325:                 background: 'rgba(245, 158, 11, 0.12)',
+  3326:                 color: '#fbbf24',
+  3327:                 border: '1px solid rgba(245, 158, 11, 0.35)',
+  3328:                 borderRadius: '6px',
+
+==================================================
+Line 3323: onClick={() => handleSendMessage('/monitor')}
+  3318:                 Clear Screen (Retains Memory)
+  3319:               </button>
+  3320:             )}
+  3321: 
+  3322:             <button
+  3323:               onClick={() => handleSendMessage('/monitor')}
+  3324:               style={{
+  3325:                 background: 'rgba(245, 158, 11, 0.12)',
+  3326:                 color: '#fbbf24',
+  3327:                 border: '1px solid rgba(245, 158, 11, 0.35)',
+  3328:                 borderRadius: '6px',
+  3329:                 padding: '3px 8px',
+  3330:                 fontSize: '0.72rem',
+  3331:                 cursor: 'pointer',
+  3332:                 fontWeight: '600'
+  3333:               }}
+  3334:               title="Monitor all 43 Master Hub modules, 20 daemons, and storage matrix"
+  3335:             >
+  3336:               👑 43-Module Oversight
+  3337:             </button>
+  3338: 
+  3339:             <button
+  3340:               onClick={() => handleSendMessage('/spaces')}
+  3341:               style={{
+  3342:                 background: 'rgba(99, 102, 241, 0.12)',
+  3343:                 color: '#a5b4fc',
+  3344:                 border: '1px solid rgba(99, 102, 241, 0.35)',
+  3345:                 borderRadius: '6px',
+  3346:                 padding: '3px 8px',
+  3347:                 fontSize: '0.72rem',
+  3348:                 cursor: 'pointer',
+  3349:                 fontWeight: '600'
+  3350:               }}
+  3351:               title="Inspect all 11 memory-mapped SQLite database spaces"
+  3352:             >
+
+==================================================
+Line 3340: onClick={() => handleSendMessage('/spaces')}
+  3335:             >
+  3336:               👑 43-Module Oversight
+  3337:             </button>
+  3338: 
+  3339:             <button
+  3340:               onClick={() => handleSendMessage('/spaces')}
+  3341:               style={{
+  3342:                 background: 'rgba(99, 102, 241, 0.12)',
+  3343:                 color: '#a5b4fc',
+  3344:                 border: '1px solid rgba(99, 102, 241, 0.35)',
+  3345:                 borderRadius: '6px',
+  3346:                 padding: '3px 8px',
+  3347:                 fontSize: '0.72rem',
+  3348:                 cursor: 'pointer',
+  3349:                 fontWeight: '600'
+  3350:               }}
+  3351:               title="Inspect all 11 memory-mapped SQLite database spaces"
+  3352:             >
+  3353:               🔍 11 Spaces
+  3354:             </button>
+  3355: 
+  3356:             <button
+  3357:               onClick={() => {
+  3358:                 const text = window.prompt("Enter data or note to persist into SQLite database space:");
+  3359:                 if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
+  3360:               }}
+  3361:               style={{
+  3362:                 background: 'rgba(16, 185, 129, 0.12)',
+  3363:                 color: '#34d399',
+  3364:                 border: '1px solid rgba(16, 185, 129, 0.35)',
+  3365:                 borderRadius: '6px',
+  3366:                 padding: '3px 8px',
+  3367:                 fontSize: '0.72rem',
+  3368:                 cursor: 'pointer',
+  3369:                 fontWeight: '600'
+
+==================================================
+Line 3359: if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
+  3354:             </button>
+  3355: 
+  3356:             <button
+  3357:               onClick={() => {
+  3358:                 const text = window.prompt("Enter data or note to persist into SQLite database space:");
+  3359:                 if (text && text.trim()) handleSendMessage('/ingest ' + text.trim());
+  3360:               }}
+  3361:               style={{
+  3362:                 background: 'rgba(16, 185, 129, 0.12)',
+  3363:                 color: '#34d399',
+  3364:                 border: '1px solid rgba(16, 185, 129, 0.35)',
+  3365:                 borderRadius: '6px',
+  3366:                 padding: '3px 8px',
+  3367:                 fontSize: '0.72rem',
+  3368:                 cursor: 'pointer',
+  3369:                 fontWeight: '600'
+  3370:               }}
+  3371:               title="On-demand structured data ingestion to database"
+  3372:             >
+  3373:               💾 Ingest to DB
+  3374:             </button>
+  3375: 
+  3376:             <button
+  3377:               onClick={() => setIsGovernanceOpen(true)}
+  3378:               style={{
+  3379:                 background: 'rgba(56, 189, 248, 0.1)',
+  3380:                 color: '#38bdf8',
+  3381:                 border: '1px solid rgba(56, 189, 248, 0.3)',
+  3382:                 borderRadius: '6px',
+  3383:                 padding: '3px 8px',
+  3384:                 fontSize: '0.72rem',
+  3385:                 cursor: 'pointer',
+  3386:                 fontWeight: '600'
+  3387:               }}
+  3388:             >
+
+==================================================
+Line 3443: initialText={footerInput}
+  3438: 
+  3439:       {/* Content Governance & Risk Assessment Modal */}
+  3440:       <ContentGovernanceRiskModal 
+  3441:         isOpen={isGovernanceOpen} 
+  3442:         onClose={() => setIsGovernanceOpen(false)}
+  3443:         initialText={footerInput}
+  3444:         onApplyRefinement={(newText) => setFooterInput(newText)}
+  3445:       />
+  3446: 
+  3447:       {/* Context Window Stress Test Benchmark Modal */}
+  3448:       {isStressTestOpen && (
+  3449:         <div style={{
+  3450:           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+  3451:           background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(8px)',
+  3452:           zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px'
+  3453:         }}>
+  3454:           <div style={{
+  3455:             background: '#0f172a', border: '1px solid rgba(129, 140, 248, 0.4)',
+  3456:             borderRadius: '16px', width: '100%', maxWidth: '640px', padding: '24px',
+  3457:             boxShadow: '0 20px 50px rgba(0,0,0,0.6)', color: '#f8fafc'
+  3458:           }}>
+  3459:             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+  3460:               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  3461:                 <span style={{ fontSize: '1.3rem' }}>📊</span>
+  3462:                 <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#818cf8' }}>BS-Chat Context Window Capacity Benchmark</h3>
+  3463:               </div>
+  3464:               <button onClick={() => setIsStressTestOpen(false)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+  3465:             </div>
+  3466: 
+  3467:             <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: 0, marginBottom: '18px' }}>
+  3468:               Test BS-Chat context limits and needle-in-a-haystack accuracy across local RTX 4090 hardware context windows.
+  3469:             </p>
+  3470: 
+  3471:             <div style={{ marginBottom: '20px' }}>
+  3472:               <label style={{ fontSize: '0.78rem', color: '#cbd5e1', fontWeight: '600', display: 'block', marginBottom: '8px' }}>
+
+==================================================

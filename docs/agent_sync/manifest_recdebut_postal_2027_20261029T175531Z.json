@@ -1,0 +1,134 @@
+{
+  "id": "recdebut_postal_2027_20261029T175531Z",
+  "utc": "2026-10-29T17:55:33.507131+00:00",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "Gemini / operator review",
+  "status": "VERIFIED_POSTAL_CONFIGURED_SENDING_HELD",
+  "head": "e45f1b5075619bd3ae7f4bbb506c0ea021eb6732",
+  "branch": "main",
+  "source_manifest_sha256": "3dc9bf195e36a5a762bb7f067bfadb863ba941daa09f7085251fe647152b7ff4",
+  "source_files": {
+    "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md": "d400f1ce981c0d54f1a92857377af452081d710e0adc1c2ee06e41ce5e886d85",
+    "backend/recdebut_campaign_links.py": "62bf6d5720e446ababf7bf828e9c4b9eb1623755b9f6fc818689152c6fed4714",
+    "backend/recdebut_delivery.py": "30ccf13dcb50d92b44822a43d99746c2b46cd27a067c5c940ed172a4357b4779",
+    "backend/recdebut_email_unsubscribe.py": "1f95ac549de2464b0d33168f2ad36f650acd259a0af9285e31205e6c109521f2",
+    "backend/recdebut_workflow.py": "6ba2a19794181f88d4131ee5812e8325b644c48e0cc0604ff6a53a214557755d",
+    "backend/requirements.txt": "d96e43aa5f9dc9d760fca1415e43298913c529eef7b5d03baf42812ec2697bff",
+    "backend/security/recdebut_access.py": "57609d76a6685a68dbb6313e67b14469cedc9da6bb06f830a6be56bda32e368c",
+    "backend/tests/test_recdebut_campaign_links.py": "6817e536f098651d3be95011ebe5500308047e95f3783a1e29be55ed17685ec1",
+    "frontend/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/package-lock.json": "bb3878495850f0495e04340effe3280212f63df9822bc9e2eb17a81f5c95db10",
+    "frontend/package.json": "b33f0e79ace4e1700005e2f90f78b12aa0598c7ff73cf8ec35906282d342a699",
+    "frontend/src/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "frontend/src/components/components/clients/RecDebutWorkspace.jsx": "231f0170062dee7a6108789782e24cb7c6e5884fd2b25367f35e4eca15d823a2",
+    "package-lock.json": "6d26b9bd78be835469d37961ae62fba500f2cfc0802d7a813105eb4fec53447a",
+    "package.json": "cf727b6276d3436f25494d6c131705c17de62a84bf218df73647e02a0b5bece5",
+    "pyproject.toml": "3efe8f0a2049e82941ab9d38016b529b60bd3e9dd9debff67da9c19c319f763e",
+    "requirements.txt": "88929fc96893e0f7f93b2340e5886aa0f057952734fbbd9186fd529b5db89213",
+    "version.txt": "d4e06bc33a12ff4f7cfe450043fe58cbd3283f7e0d210eb2306bd52818bb4f7d"
+  },
+  "complete_source_snapshot": "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/source",
+  "previous_manifest": "C:\\AI-BS\\docs\\agent_sync\\manifest_recdebut_ionos_2027_20261029T173650Z.json",
+  "source_inputs": {
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Emails_Legal_Recruiting_2025_2027.csv": "43f9096963e4db09c9636ffa786d4c7bf369fbef0406065f70d9858abba74bb4",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Legal_Recruiting_2025_2027_Detailed.csv": "5888943af60857b6ad56880d5818c9a61619a953705a3ad9d1ef00c010907b4c",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_Emails_HighSchool_2025_2029.csv": "fc8e35786b6664c279f4a5a558c0fd7f069a335ba103141eab7fc4b951c324ea",
+    "C:\\Users\\footb\\OneDrive\\Desktop\\carrytodex\\Athletes_HighSchool_2025_2029_Detailed.csv": "0f7a15aa4d4c92411b428466f20c8973e3300867766832eb1e1dd7fc807988c5"
+  },
+  "changed_paths": [
+    ".env",
+    "docs/CODEX_HANDOFF.md",
+    "docs/CODEX_JOURNAL.md",
+    "docs/CODEX_TASKS.md"
+  ],
+  "patch_references": {
+    "docs/CODEX_HANDOFF.md": "backups/recdebut_email_20261029/postal_footer_20261029_record183/patches/docs__CODEX_HANDOFF.md.patch",
+    "docs/CODEX_JOURNAL.md": "backups/recdebut_email_20261029/postal_footer_20261029_record183/patches/docs__CODEX_JOURNAL.md.patch",
+    "docs/CODEX_TASKS.md": "backups/recdebut_email_20261029/postal_footer_20261029_record183/patches/docs__CODEX_TASKS.md.patch"
+  },
+  "private_configuration": {
+    "receipt": "backups/recdebut_email_20261029/postal_footer_20261029_record183/private_configuration_receipt.json",
+    "exact_backup": "restricted postal setup before/.env; excluded from shared source snapshot"
+  },
+  "document_hashes_before_append": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "81f1391bd218db951ecbe9422cd44f2efc5c059b0179ff8fef1e8a7558931f56",
+    "docs/CODEX_JOURNAL.md": "7db73f3c8ccfdb878b48c9b97802f88a437bab82eec6e44b2b4b148194bf0eab",
+    "docs/CODEX_DECISIONS.md": "d2b3a71d95e7f77e149bd432041891abcf94f8e6d127186219c3c713a9bf1c20",
+    "docs/CODEX_TASKS.md": "d61e40916d214a45708b6e7ba6bf64643d070b2851e232312082f430eb8295a2"
+  },
+  "document_hashes_at_checkpoint": {
+    "AGENTS.md": "46e5541ddef2e02f01ca6b21dae7db3882f458a12d421a8540fde55e3a7647a3",
+    "docs/CODEX_HANDOFF.md": "c0ecc0fb023e210127065b5289649e9e2b489439cc0d02366cea07bc33298386",
+    "docs/CODEX_JOURNAL.md": "653a353185b877d703ab3447dc19d1b0f40e40db5cf6a599050f089d46d110e1",
+    "docs/CODEX_DECISIONS.md": "d2b3a71d95e7f77e149bd432041891abcf94f8e6d127186219c3c713a9bf1c20",
+    "docs/CODEX_TASKS.md": "f5cd2c4d335f25d63ee86aa2def8fa7b75e07acd7b60abb038070623ddb6597f"
+  },
+  "document_snapshot_before": "backups/recdebut_email_20261029/postal_footer_20261029_record183/before",
+  "document_snapshot_after": "backups/recdebut_email_20261029/postal_footer_20261029_record183/after",
+  "working_tree": {
+    "file": "backups/recdebut_email_20261029/postal_footer_20261029_record183/git_status_porcelain_v1_z.bin",
+    "sha256": "5c4f2f5fcc3305a6febe99b5d75963a7370f1100562e27dec0cc3880ad32aedc",
+    "entries": 52792
+  },
+  "evidence": {
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/smtp_auth_only_receipt.json": "efc301e14ec7fba794df4799a28b4a2ab60c8cdbb7ad4a496149e441acb87499",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/private_configuration_receipt.json": "ba133c9143a1d0f15a057be1bc2c4c946842d5b0ec49df813349e6a5a6af16ee",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/public_unsubscribe_probe.json": "8c45c16e1dd9a32633a37674734973c695b8d4a51c99d7d79cf0b96be771ef12",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/backend_reload_receipt.json": "5687e9b1cb9bb4ca544c112f00e7e4a788a955cea80e6935577cbd612b3d81ea",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/sample_receipt.json": "29b2d7c29d9c207dbed0ae75918c768f32ee1d6f575922b802f7d6b1d24dba85",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/Dennis_2027_Personalized_Sample_UNSENT.txt": "cca9114983d789e2b5de5da8767197d25332dbec1e009a1902aa9800c6d6a7f0",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/portal_ionos_worklog_receipt.json": "0e48b6c474ac0811015a036a9a4d115b51dfc5b72a3f935cbcb481fcd16f5842",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/focused_regression_receipt.json": "0bdec663cef124f02975774e71208ced66be303b31144a4ce48b44e4cbfce97f",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/dns_read_only_receipt.json": "7b352ecb11d8cdf7b000f97ec5a63894c7039adf23c86bab1714408ac4421739",
+    "backups/recdebut_email_20261029/ionos_setup_20261029T173022Z/reload_backend_only.py": "a34cfad22f7811b1568ecac1da23b5559b465525b18ad3e1ffb979a7866ea2b3",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/before_manifest.json": "2cf75fc3eb0b686d0d66b3682c1b0b61559a9e992bf5b29047082c9d6364d220",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/private_configuration_receipt.json": "ff2f969a19549d2828605f70393525af8a2c91d6f950d076f7df940c3017255b",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/address_attestation.json": "dae476e369ffb9665aa9568e0ed2e92fa896b186faef4a4c624a98bcf6d94201",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/backend_reload_receipt.json": "f37f30676c3adebd24aeb045af25c6c0a211789f614a1b93a9ce2708ef13c8ec",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/sample_receipt.json": "9e977ef414d0718126ebe7439396bcff81b30f8e6c53c763d72f0106f04ba994",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/Dennis_2027_Personalized_Sample_With_Footer_UNSENT.txt": "8fa67203016e64403880389787bf9e1e7eab9945b6eb5214e46bdddfdc57a7c7",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/portal_postal_worklog_receipt.json": "13dbd2ffbc999f32a895b81e67e6403f7f90b73d1bea8bfca922b2219dcc9605",
+    "backups/recdebut_email_20261029/postal_footer_20261029_record183/reload_backend_only.py": "7d05e898545525b76c2708622ee1bb537083ef5b12fb49ed627160cc477afb42"
+  },
+  "verification": {
+    "csv_counts_sets_hashes": "VERIFIED",
+    "original_sources_unchanged": "VERIFIED",
+    "rendered_script_and_video": "VERIFIED in 1,074 / 3,408 held drafts; no new backend source change",
+    "backend_tests": "Record182:288 passed,1 warning in27.66s; all19 source hashes unchanged; configuration verified live",
+    "consent_provenance": "SUPPLIED_DENNIS_AUDIENCE_INSTRUCTION; REGISTRATION_PERMISSION_UNRESOLVED",
+    "identity_discrepancies": 2,
+    "new_athlete_sends": 0,
+    "live_tracking": "CONFIGURED_ROUTE200_NO_EMAIL_TRAFFIC_CLAIM",
+    "inbound_reply_forwarding": "INACTIVE; NO_AUTOMATIC_FORWARDER",
+    "portal_preparation_worklog_revision": 6,
+    "initial_campaign_cohort": {
+      "grad_year": 2027,
+      "unique_addresses": 1021,
+      "drafts": 1020,
+      "identity_blanks": 1
+    },
+    "smtp_tls_auth_only": "VERIFIED_TLS1.3_AUTH235_ZERO_SUBMISSIONS",
+    "sender_profile_loaded": "VERIFIED_IONOS_GUARDED_SENDING_FALSE",
+    "outgoing_copy": "LOADED_AND_OFFLINE_VERIFIED_NO_RECEIPT_TEST",
+    "reply_addressing": "LOADED_TWO_VALIDATED_RECIPIENTS; CLIENT_HONOR_AND_DELIVERY_UNVERIFIED",
+    "runtime_backend_pid": 27848,
+    "six_flags_false": true,
+    "test_emails_sent": 0,
+    "postal_address": "OPERATOR_CONFIRMED_AND_LOADED",
+    "email_sender_preflight_blockers": [],
+    "sending_enabled": false,
+    "actual_campaign_audience_empty": true
+  },
+  "decisions": [
+    "ADR-110 unchanged",
+    "ADR-111 unchanged",
+    "Apply direct operator-approved postal address; retain all independent review/audience/reply gates"
+  ],
+  "known_failures": [
+    "Initial graduation-year representation false positives retained in tier_review; use tier_review_v2."
+  ],
+  "next_step": "Review updated sample, reconcile one2027 identity and source-permission evidence, verify reply/suppression handling before separately authorized bounded sending.",
+  "receiving_agent_acknowledgement": null
+}

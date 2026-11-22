@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "review_id": "AI_BS_TECH_BRIEFING_REVIEW_2026-11-14",
+  "reviewed_at_utc": "2026-11-14T11:54:14Z",
+  "agent": "Codex research subagent",
+  "status": "RESEARCH_ONLY",
+  "input": {
+    "date": "2026-11-13",
+    "attachment_id": "927458dd-14d5-4480-8802-7911221474a0",
+    "file_name": "Pasted text.txt"
+  },
+  "repository": {
+    "root": "C:/AI-BS",
+    "branch": "codex/audit-v532976-20261031",
+    "commit": "64fad2871e0a716d9964f506bdef1050612b173d"
+  },
+  "authority": {
+    "classification": "research leads only",
+    "backlog_goal": 10,
+    "current_priority": "Preserve owning agent's current chat/creative acceptance work",
+    "execution_authorized_by_briefing": false
+  },
+  "summary": {
+    "announcement_or_initiative_claims_corroborated": 4,
+    "scientific_claims_unverified": 1,
+    "benchmark_version_discrepancies": 1,
+    "independent_performance_replications": 0
+  },
+  "sources": [
+    {
+      "id": "ibm_announcement",
+      "url": "https://huggingface.co/blog/ibm-granite/llmon-an-llm-native-markup-language-now-in-granite",
+      "publisher": "IBM Granite team",
+      "published_date": "2026-11-12",
+      "retrieval": "direct official-page scrape",
+      "evidence_type": "vendor announcement and research-team benchmark claims"
+    },
+    {
+      "id": "ibm_model_card",
+      "url": "https://huggingface.co/ibm-granite/granite-4.1-8b-llmon-preview",
+      "publisher": "IBM Granite team",
+      "published_date": "2026-11-12",
+      "retrieval": "search-returned primary-page content",
+      "evidence_type": "model card"
+    },
+    {
+      "id": "google_announcement",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+      "publisher": "Google",
+      "published_date": "2026-11-12",
+      "retrieval": "direct official-page scrape",
+      "evidence_type": "vendor announcement and benchmarks"
+    },
+    {
+      "id": "antigravity_announcement",
+      "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity",
+      "publisher": "Google Antigravity team",
+      "published_date": "2026-11-12",
+      "retrieval": "direct official-page scrape",
+      "evidence_type": "vendor announcement and benchmarks"
+    },
+    {
+      "id": "worldlabs_tools",
+      "url": "https://worldlabs.ai/atlas",
+      "publisher": "World Labs",
+      "published_date": null,
+      "release_date_supported_by": "worldlabs_dated_link",
+      "retrieval": "direct official-page scrape",
+      "evidence_type": "product capabilities"
+    },
+    {
+      "id": "worldlabs_introduction",
+      "url": "https://worldlabs.ai/blog/atlas",
+      "publisher": "World Labs",
+      "published_date": "2026-09-01",
+      "retrieval": "search-returned primary-page content",
+      "evidence_type": "model introduction"
+    },
+    {
+      "id": "worldlabs_dated_link",
+      "url": "https://worldlabs.ai/blog/marble-world-model",
+      "publisher": "World Labs",
+      "published_date": "2025-11-12",
+      "related_atlas_release_date": "2026-11-12",
+      "retrieval": "search-returned primary-page content",
+      "evidence_type": "dated related-release link; older page itself concerns Marble"
+    },
+    {
+      "id": "lmsys_announcement",
+      "url": "https://www.lmsys.org/blog/2026-11-12-sglang-consortium/",
+      "publisher": "LMSYS Org",
+      "published_date": "2026-11-12",
+      "retrieval": "direct official-page scrape",
+      "evidence_type": "consortium announcement"
+    }
+  ],
+  "claims": [
+    {
+      "id": "ibm_llmon",
+      "status": "VERIFIED",
+      "claim_scope": "Experimental Granite 4.1 3B/8B LLMON preview announcement dated November 12",
+      "sources": [
+        "ibm_announcement",
+        "ibm_model_card"
+      ],
+      "performance_status": "VENDOR_REPORTED_UNREPLICATED",
+      "limitations": [
+        "Static indirect-injection evidence is not a guarantee against adaptive attacks",
+        "Learned behavior does not enforce application tool permissions",
+        "Preview is not production-qualified",
+        "No AI-BS runtime or RTX 4090 qualification"
+      ]
+    },
+    {
+      "id": "google_hydrogen",
+      "status": "VERIFIED",
+      "claim_scope": "Hydrogen/Orchestrator release, four thinking levels and one-million-token context as announced November 12",
+      "sources": [
+        "google_announcement",
+        "antigravity_announcement"
+      ],
+      "performance_status": "VENDOR_REPORTED_UNREPLICATED",
+      "reported_efficiency": {
+        "quota_reduction_percent": 24,
+        "completion_time_reduction_percent": 19,
+        "task_success": "near Carbon; workload-specific"
+      },
+      "benchmark_version": {
+        "status": "UNVERIFIED",
+        "google_main_announcement": "Terminal-Bench 4.0",
+        "antigravity_announcement": "Terminal-Bench 4.1",
+        "resolution": "Do not choose a version without reconciliation"
+      },
+      "limitations": [
+        "API release does not establish downloadable local weights",
+        "Account/model eligibility and quota are unverified",
+        "No provider calls or configuration changes"
+      ]
+    },
+    {
+      "id": "worldlabs_atlas",
+      "status": "VERIFIED",
+      "claim_scope": "Atlas tools/product announcement including Viewfinder, Chisel, splat-to-mesh, API and Blender integration",
+      "sources": [
+        "worldlabs_tools",
+        "worldlabs_introduction",
+        "worldlabs_dated_link"
+      ],
+      "dates": {
+        "model_introduced": "2026-09-01",
+        "tools_release_link": "2026-11-12"
+      },
+      "limitations": [
+        "Product claims only",
+        "Licensing/account access and exact API contract not reviewed",
+        "No mesh, collision, Unreal import or performance testing"
+      ]
+    },
+    {
+      "id": "ru_o_cr_electrolysis",
+      "status": "UNVERIFIED",
+      "claim_scope": "Nature Materials November 12 publication, 55.7-fold reduced Ru dissolution and 285 hours at 1 A/cm^2",
+      "sources": [],
+      "reason": "Single focused nature.com search returned zero results; no exact paper title, authors, DOI or URL supplied",
+      "limitations": [
+        "No primary paper or supporting information retrieved",
+        "No judgment that claim is false",
+        "Comparator and experimental conditions unresolved"
+      ]
+    },
+    {
+      "id": "sglang_consortium",
+      "status": "VERIFIED",
+      "claim_scope": "November 12 consortium launch at inaugural summit and exact named founders",
+      "sources": [
+        "lmsys_announcement"
+      ],
+      "founders": [
+        "NVIDIA",
+        "AMD",
+        "Intel",
+        "Google",
+        "Meta",
+        "Cloudflare",
+        "Modal",
+        "RadixArk"
+      ],
+      "limitations": [
+        "Formation does not establish inference superiority",
+        "Windows, model support, and current-runtime comparison untested"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "id": "structured_context_security",
+      "status": "PROPOSED",
+      "goal": 10,
+      "dependencies": [
+        "Inspect actual prompt and permission boundaries in a later scoped phase",
+        "Preserve SQLite provenance and Chroma bin isolation",
+        "Pin model revision/license/tokenizer/chat template and verify runtime/memory support",
+        "Synthetic data and isolated harness"
+      ],
+      "proposed_measures": [
+        "100 legitimate and 100 synthetic injection cases as candidate corpus",
+        "task success",
+        "attack success",
+        "false refusals",
+        "tokens",
+        "latency",
+        "separate adaptive/multi-turn cases"
+      ],
+      "executed": false
+    },
+    {
+      "id": "sglang_baseline_comparison",
+      "status": "PROPOSED",
+      "goal": 10,
+      "dependencies": [
+        "Inventory actual baseline engine and exact model/quantization",
+        "Verify current official OS/WSL/CUDA/model support",
+        "Isolated environment, ports and GPU scheduling",
+        "Preserve working runtime"
+      ],
+      "proposed_measures": [
+        "prefill throughput",
+        "decode throughput",
+        "p50/p95 latency",
+        "peak VRAM",
+        "errors",
+        "task completion"
+      ],
+      "executed": false
+    },
+    {
+      "id": "atlas_unreal_asset_validation",
+      "status": "PROPOSED",
+      "goal": 10,
+      "dependencies": [
+        "Authorized access/export rights",
+        "Supported Blender/Unreal versions",
+        "Nonprivate controlled reference assets",
+        "Isolated test project"
+      ],
+      "proposed_measures": [
+        "import success",
+        "poly counts",
+        "UV/materials",
+        "units/scale",
+        "collision/navigation",
+        "cleanup time",
+        "frame cost"
+      ],
+      "executed": false
+    },
+    {
+      "id": "multimodel_orchestration_comparison",
+      "status": "PROPOSED",
+      "goal": 10,
+      "dependencies": [
+        "Reconcile Google benchmark-version discrepancy",
+        "Preserve official-client/provider ownership",
+        "Separately scoped account availability and quota review",
+        "Reproducible workload"
+      ],
+      "proposed_measures": [
+        "task completion",
+        "human correction",
+        "elapsed time",
+        "actual quota/cost"
+      ],
+      "executed": false
+    },
+    {
+      "id": "electrolysis_source_followup",
+      "status": "PROPOSED",
+      "goal": 10,
+      "dependencies": [
+        "Exact DOI/title",
+        "Primary paper and supporting information"
+      ],
+      "proposed_measures": [
+        "comparator",
+        "dissolution method",
+        "loading",
+        "cell conditions",
+        "uncertainty",
+        "durability definition"
+      ],
+      "executed": false
+    }
+  ],
+  "retrieval": {
+    "provider": "Firecrawl connected tools",
+    "primary_sources_only": true,
+    "search_count": 5,
+    "search_batch_sizes": [
+      4,
+      1
+    ],
+    "queries": [
+      {
+        "claim": "ibm_llmon",
+        "query": "IBM LLMON \"Granite 4.1\" 3B 8B November 12 2026",
+        "domains": [
+          "ibm.com",
+          "huggingface.co"
+        ],
+        "search_id": "01a1d9e7-5ac3-7712-aed9-d4db2ba6ad77"
+      },
+      {
+        "claim": "google_hydrogen",
+        "query": "\"Gemini 4 Hydrogen\" \"Antigravity Orchestrator\"",
+        "domains": [
+          "blog.google",
+          "deepmind.google",
+          "developers.googleblog.com"
+        ],
+        "search_id": "01a1d9e7-5b44-736b-9d61-41a7c9cdad2c"
+      },
+      {
+        "claim": "worldlabs_atlas",
+        "query": "World Labs Atlas Chisel Blender November 12 2026",
+        "domains": [
+          "worldlabs.ai",
+          "docs.worldlabs.ai"
+        ],
+        "search_id": "01a1d9e7-5b64-772d-8da7-ba291252485f"
+      },
+      {
+        "claim": "ru_o_cr_electrolysis",
+        "query": "\"ruthenium\" \"55.7\" \"285\" chromium Nature Materials",
+        "domains": [
+          "nature.com"
+        ],
+        "search_id": "01a1d9e7-5a69-77d3-b827-553b99d715ba",
+        "web_result_count": 0
+      },
+      {
+        "claim": "sglang_consortium",
+        "query": "SGLang Consortium November 12 2026 founding NVIDIA AMD Intel Google Meta Cloudflare Modal RadixArk",
+        "domains": [
+          "lmsys.org",
+          "sglang.io"
+        ],
+        "search_id": "01a1d9e7-942f-763c-9d09-51d2767d5b57"
+      }
+    ],
+    "search_feedback_submitted": 5,
+    "coverage": "Bounded targeted review; not exhaustive literature or benchmark-methodology audit"
+  },
+  "actions": {
+    "written_paths": [
+      "docs/research/AI_BS_TECH_BRIEFING_REVIEW_2026-11-14.md",
+      "docs/research/AI_BS_TECH_BRIEFING_REVIEW_2026-11-14.json"
+    ],
+    "implementation_modified": false,
+    "installs": 0,
+    "model_calls": 0,
+    "benchmarks": 0,
+    "provider_switches": 0,
+    "private_data_access": false,
+    "uploads": 0,
+    "backup_restore_verified": false
+  },
+  "next_step": "Retain Goal 10 candidates; later selected research may resolve paper DOI and Google benchmark version. Preserve current implementation acceptance priority."
+}

@@ -1,0 +1,57 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "1fffd83daa2f488bb005019e1b7963d5",
+  "plan_id": "85a56b6e111246f9b6ea22da4302d78b",
+  "snapshot_sha256": "616f10662ba6e90f5d8943732dc62d960ad0bd417059c8691468db010119d1e9",
+  "review_digest": "dff2568b933fd4417db033be8117e4daef6770854558c960154de7c69d64015a",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "excerpt": "value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "b700d64c56a137085c92ddef7839108ce44a8121bc84a3070068ab6868e57935",
+        "excerpt": "import unittest\r\nclass Check(unittest.TestCase):\r\n def test_failure(self):\r\n  self.fail(\"synthetic failure\")\r\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/__init__.py",
+        "role": "dependency",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "excerpt": "",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "6575381499ec2cb0a8e83159698f54a1a93164390b9cf147c11bd528a5fdf9c6",
+  "worker": {
+    "pid": 32992,
+    "created": 1794779768.2750049
+  },
+  "created_at_utc": "2026-11-15T21:56:13.987972+00:00",
+  "entry_sha256": "d2c48557f1c69d5debe23ce64bbbce2ca53bc36a5848c200b135c0d657280f3e"
+}

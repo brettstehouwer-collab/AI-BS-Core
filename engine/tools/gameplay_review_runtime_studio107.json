@@ -1,0 +1,50 @@
+{
+  "sdk_version": "0.17.1",
+  "studio_version": "5.329.107",
+  "prefix": "D:\\AI-BS-Game-Resources\\SDK\\0.17.1\\release",
+  "studio_bundle": "C:\\AI-BS\\native_studio\\releases\\v5.329.107\\AI_BS_Studio\\_internal",
+  "qualification": "docs/agent_sync/manifest_20261104_P82A_studio107_restart_backup_verified.json",
+  "opening_manifest_sha256": "8a69e1c6a369ba5eee118de4dc16f104f91461da541759eb4babebe5bcbbd56c",
+  "files": {
+    "bin/aibs_capabilities.json": {
+      "bytes": 836,
+      "sha256": "e791809f646b110378db41a2f8b24e7d9ac850c13e45d9d554517a4620871210"
+    },
+    "bin/aibs_motherboard.exe": {
+      "bytes": 3958784,
+      "sha256": "8740a3c76ad6518030a9e01c99d91074f4246009ce7dbedbb23bea40fd1e542c"
+    },
+    "bin/aibs_warm_opening_project.exe": {
+      "bytes": 2767360,
+      "sha256": "05e98d721974102b120b7fb64049936244859c4b4ef7bdf93334040bf34fdf18"
+    },
+    "bin/shaders/character.ps.cso": {
+      "bytes": 13548,
+      "sha256": "4132b9d3ff001a15777d0a758415a7622e0e27dda9cdbbb3df4a94f5f33fccc9"
+    },
+    "bin/shaders/character.vs.cso": {
+      "bytes": 9452,
+      "sha256": "2f0fd895edfc67290e1b4b6e0631bf9176faf5f6bd4baa8e3fbc3551fbe5eba8"
+    },
+    "bin/shaders/motherboard.ps.cso": {
+      "bytes": 7336,
+      "sha256": "7add355c2de08dee89cc9635b841d38e0e9cbc56ef4a6800c74c8e1a4df51b8a"
+    },
+    "bin/shaders/motherboard.vs.cso": {
+      "bytes": 4800,
+      "sha256": "099ef3ec8a2584080ad31fd77e1716fa47f9aefbe058472e55db257c2428dcf8"
+    },
+    "bin/shaders/shadow.vs.cso": {
+      "bytes": 3712,
+      "sha256": "0dc99534b07f6d3f3656794ba714412a023f9b2ffb055a069722669a77aaa4c8"
+    },
+    "bin/shaders/textured.ps.cso": {
+      "bytes": 8236,
+      "sha256": "c659e8dc64e6cbd4c7eac99b23772cc6c158c15deece97905c80b11307ad2975"
+    },
+    "bin/shaders/textured.vs.cso": {
+      "bytes": 4508,
+      "sha256": "633b0eb6e5186536f101f2a63136b3b549253565da67f277ca7dbf9cfb56ceea"
+    }
+  }
+}

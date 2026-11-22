@@ -1,0 +1,13 @@
+[Unit]
+Description=AI-BS Consistent SQLite WAL Backup (OPS-03)
+
+[Service]
+Type=oneshot
+User=aibs-gateway
+Group=aibs-gateway
+ExecStart=/usr/bin/python3 /opt/ai-bs/deploy/oci_standby/backup_and_restore.py --db /var/lib/aibs-gateway/authority_journal.db --backup-dir /var/backups/aibs
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/backups/aibs /var/lib/aibs-gateway

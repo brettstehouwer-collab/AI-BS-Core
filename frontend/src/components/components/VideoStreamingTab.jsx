@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { 
-  Video, VideoOff, Mic, MicOff, Monitor, StopCircle, PhoneOff, 
-  Calendar, Clock, Users, Plus, Mail, Copy, Check, MessageSquare, 
-  Sparkles, ExternalLink, ShieldCheck, Share2, Circle
-} from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { Video, VideoOff, Mic, MicOff, Monitor, StopCircle, PhoneOff, Calendar, Clock, Plus, Mail, Copy, Check, MessageSquare, Share2, Circle } from "lucide-react";
 import { useBackendHealth } from './useBackendHealth';
 import { db } from '../firebase';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query } from "firebase/firestore";
+
+/** External meeting writes and invitations require verified owned receipts. */
+function outboundMeetingDispatchHeld() { return true; }
 
 const TEAM_MEMBERS = [
   { name: 'Brett Stehouwer', email: 'brett@StehouwerPublishing.com', role: 'Executive Founder / CEO' },
@@ -15,7 +14,7 @@ const TEAM_MEMBERS = [
 ];
 
 export default function VideoStreamingTab() {
-  const { backendUrl } = useBackendHealth();
+  useBackendHealth();
   
   // Call State
   const [inCall, setInCall] = useState(false);
@@ -28,18 +27,18 @@ export default function VideoStreamingTab() {
   const [copiedLink, setCopiedLink] = useState(false);
 
   // WebRTC State
-  const wsRef = useRef(null);
-  const peersRef = useRef({});
-  const [remoteStreams, setRemoteStreams] = useState({});
+  const wsRef = useRef(/** @type {WebSocket | null} */ (null));
+  const peersRef = useRef(/** @type {Record<string, RTCPeerConnection>} */ ({}));
+  const [remoteStreams, setRemoteStreams] = useState(/** @type {Record<string, MediaStream>} */ ({}));
   const [isHost, setIsHost] = useState(false);
 
   // In-Meeting Chat
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState(/** @type {Array<{"sender": string, "time": string, "text": string}>} */ ([]));
   const [chatInput, setChatInput] = useState('');
 
   // Scheduled Meetings State
-  const [scheduledMeetings, setScheduledMeetings] = useState([
+  const [scheduledMeetings, setScheduledMeetings] = useState(/** @type {Array<{id?: string, title?: string, host?: string, date?: string, time?: string, duration?: string, roomCode?: string, invitees?: string[], agenda?: string}>} */ ([
     {
       id: 'meet-001',
       title: 'Stehouwer Publishing Q3 Executive Strategy',
@@ -51,7 +50,7 @@ export default function VideoStreamingTab() {
       invitees: ['brett@StehouwerPublishing.com', 'sean@StehouwerPublishing.com', 'julie@StehouwerPublishing.com'],
       agenda: 'Review Q3 revenue targets, OSINT LeadEngine deployment, and Cloudflare Email Worker integration.'
     }
-  ]);
+  ]));
 
   // Schedule Modal Form State
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
@@ -71,11 +70,11 @@ export default function VideoStreamingTab() {
   const [scheduleStatus, setScheduleStatus] = useState('');
 
   // Media Refs
-  const localVideoRef = useRef(null);
-  const localStreamRef = useRef(null);
-  const screenStreamRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const recordedChunksRef = useRef([]);
+  const localVideoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
+  const localStreamRef = useRef(/** @type {MediaStream | null} */ (null));
+  const screenStreamRef = useRef(/** @type {MediaStream | null} */ (null));
+  const mediaRecorderRef = useRef(/** @type {MediaRecorder | null} */ (null));
+  const recordedChunksRef = useRef(/** @type {Blob[]} */ ([]));
 
   // Check URL query parameters for direct room joining
   useEffect(() => {
@@ -106,7 +105,8 @@ export default function VideoStreamingTab() {
   }, []);
 
   // Start Video Call
-  const startCall = async (codeToUse, titleToUse) => {
+  /** @param {string | null | undefined} codeToUse @param {string | undefined} titleToUse */
+const startCall = async ( codeToUse,  titleToUse) => {
     const isNewRoom = !codeToUse;
     const code = codeToUse || `meet-${Math.floor(100 + Math.random() * 900)}-${Math.floor(100 + Math.random() * 900)}-${Math.floor(100 + Math.random() * 900)}`;
     setRoomCode(code);
@@ -137,14 +137,14 @@ export default function VideoStreamingTab() {
             const pc = createPeerConnection(sender, stream, myClientId);
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
-            wsRef.current.send(JSON.stringify({ target: sender, type: 'offer', payload: offer }));
+            wsRef.current?.send(JSON.stringify({ target: sender, type: 'offer', payload: offer }));
          } 
          else if (type === 'offer') {
             const pc = createPeerConnection(sender, stream, myClientId);
             await pc.setRemoteDescription(new RTCSessionDescription(payload));
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
-            wsRef.current.send(JSON.stringify({ target: sender, type: 'answer', payload: answer }));
+            wsRef.current?.send(JSON.stringify({ target: sender, type: 'answer', payload: answer }));
          }
          else if (type === 'answer') {
             const pc = peersRef.current[sender];
@@ -162,7 +162,7 @@ export default function VideoStreamingTab() {
 
       wsRef.current.onopen = () => {
          if (!isNewRoom) {
-            wsRef.current.send(JSON.stringify({ target: code, type: 'join', payload: {} }));
+            wsRef.current?.send(JSON.stringify({ target: code, type: 'join', payload: {} }));
          }
       };
       
@@ -171,15 +171,17 @@ export default function VideoStreamingTab() {
     }
   };
 
-  const createPeerConnection = (peerId, localStream, myClientId) => {
+  /** @param {string} peerId @param {MediaStream} localStream @param {string} _myClientId */
+const createPeerConnection = ( peerId,  localStream,  _myClientId) => {
      const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
      peersRef.current[peerId] = pc;
      
-     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+     localStream.getTracks().forEach( 
+track => pc.addTrack(track, localStream));
      
      pc.onicecandidate = (event) => {
         if (event.candidate && wsRef.current) {
-           wsRef.current.send(JSON.stringify({ target: peerId, type: 'ice-candidate', payload: event.candidate }));
+           wsRef.current?.send(JSON.stringify({ target: peerId, type: 'ice-candidate', payload: event.candidate }));
         }
      };
      
@@ -204,10 +206,12 @@ export default function VideoStreamingTab() {
   // End Video Call
   const endCall = () => {
     if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => track.stop());
+      localStreamRef.current.getTracks().forEach( 
+track => track.stop());
     }
     if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks().forEach(track => track.stop());
+      screenStreamRef.current.getTracks().forEach( 
+track => track.stop());
     }
     if (isRecording && mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
@@ -227,7 +231,8 @@ export default function VideoStreamingTab() {
   // Toggle Mic
   const toggleMic = () => {
     if (localStreamRef.current) {
-      localStreamRef.current.getAudioTracks().forEach(track => {
+      localStreamRef.current.getAudioTracks().forEach( 
+track => {
         track.enabled = !track.enabled;
       });
       setMicMuted(!micMuted);
@@ -237,7 +242,8 @@ export default function VideoStreamingTab() {
   // Toggle Camera
   const toggleCam = () => {
     if (localStreamRef.current) {
-      localStreamRef.current.getVideoTracks().forEach(track => {
+      localStreamRef.current.getVideoTracks().forEach( 
+track => {
         track.enabled = !track.enabled;
       });
       setCamMuted(!camMuted);
@@ -248,7 +254,8 @@ export default function VideoStreamingTab() {
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
       if (screenStreamRef.current) {
-        screenStreamRef.current.getTracks().forEach(track => track.stop());
+        screenStreamRef.current.getTracks().forEach( 
+track => track.stop());
       }
       if (localVideoRef.current && localStreamRef.current) {
         localVideoRef.current.srcObject = localStreamRef.current;
@@ -306,7 +313,8 @@ export default function VideoStreamingTab() {
   };
 
   // Send In-Meeting Chat
-  const handleSendChat = (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSendChat = ( e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
     setChatMessages(prev => [
@@ -325,8 +333,10 @@ export default function VideoStreamingTab() {
   };
 
   // Toggle Invitee Selection
-  const toggleInvitee = (email) => {
-    setSelectedInvitees(prev => prev.includes(email) ? prev.filter(e => e !== email) : [...prev, email]);
+  /** @param {string} email */
+const toggleInvitee = ( email) => {
+    setSelectedInvitees(prev => prev.includes(email) ? prev.filter( 
+e => e !== email) : [...prev, email]);
   };
 
   // Add Custom External Invitee
@@ -339,10 +349,16 @@ export default function VideoStreamingTab() {
     }
   };
 
-  // Handle Schedule & Send Invites Form
-  const handleScheduleMeeting = async (e) => {
+  // Handle Meeting Invitation Draft Form
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleScheduleMeeting = async ( e) => {
     e.preventDefault();
     if (!formTitle.trim()) return;
+    if (outboundMeetingDispatchHeld()) {
+      setIsScheduling(false);
+      setScheduleStatus('HELD: External schedule writes and invitations are unavailable pending verification. Your draft remains here; no invitations were sent.');
+      return;
+    }
     setIsScheduling(true);
     setScheduleStatus('');
 
@@ -426,7 +442,7 @@ Room Code: ${newCode}`;
     }
 
     setScheduledMeetings(prev => [newMeeting, ...prev]);
-    setScheduleStatus('✅ Meeting scheduled & email invites dispatched live!');
+    setScheduleStatus('Schedule operation pending receipt verification. No delivery confirmation is available.');
 
     setTimeout(() => {
       setIsScheduling(false);
@@ -460,7 +476,7 @@ Room Code: ${newCode}`;
               </button>
 
               <button style={styles.scheduleOpenBtn} onClick={() => setIsScheduleOpen(true)}>
-                <Calendar size={18} style={{ marginRight: '8px' }} /> Schedule & Send Invites
+                <Calendar size={18} style={{ marginRight: '8px' }} /> Meeting Invitation Draft
               </button>
             </div>
           </div>
@@ -473,7 +489,8 @@ Room Code: ${newCode}`;
                 type="text" 
                 placeholder="Enter 9-digit Room Code (e.g. meet-928-401-382)..." 
                 value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
+                onChange={
+( e) => setRoomCode(e.target.value)}
                 style={styles.joinInput}
               />
             </div>
@@ -620,7 +637,8 @@ Room Code: ${newCode}`;
                     type="text" 
                     placeholder="Type a message..." 
                     value={chatInput} 
-                    onChange={(e) => setChatInput(e.target.value)}
+                    onChange={
+( e) => setChatInput(e.target.value)}
                     style={styles.chatInputField}
                   />
                 </form>
@@ -676,10 +694,11 @@ Room Code: ${newCode}`;
       {/* SCHEDULE MEETING MODAL */}
       {isScheduleOpen && (
         <div style={styles.modalOverlay} onClick={() => setIsScheduleOpen(false)}>
-          <div style={styles.modalContent} className="glass-panel" onClick={(e) => e.stopPropagation()}>
+          <div style={styles.modalContent} className="glass-panel" onClick={
+( e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
               <h3 style={{ color: '#f0f6fc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Calendar size={20} color="#58a6ff" /> Schedule Business Meeting & Send Email Invites
+                <Calendar size={20} color="#58a6ff" /> Meeting and Invitation Draft
               </h3>
             </div>
 
@@ -690,7 +709,8 @@ Room Code: ${newCode}`;
                   type="text" 
                   placeholder="e.g. Stehouwer Publishing Q3 Strategy & Review" 
                   value={formTitle}
-                  onChange={(e) => setFormTitle(e.target.value)}
+                  onChange={
+( e) => setFormTitle(e.target.value)}
                   required
                   style={styles.input}
                 />
@@ -702,7 +722,8 @@ Room Code: ${newCode}`;
                   <input 
                     type="date" 
                     value={formDate}
-                    onChange={(e) => setFormDate(e.target.value)}
+                    onChange={
+( e) => setFormDate(e.target.value)}
                     style={styles.input}
                   />
                 </div>
@@ -712,7 +733,8 @@ Room Code: ${newCode}`;
                   <input 
                     type="time" 
                     value={formTime}
-                    onChange={(e) => setFormTime(e.target.value)}
+                    onChange={
+( e) => setFormTime(e.target.value)}
                     style={styles.input}
                   />
                 </div>
@@ -721,7 +743,8 @@ Room Code: ${newCode}`;
                   <label style={styles.label}>Duration</label>
                   <select 
                     value={formDuration}
-                    onChange={(e) => setFormDuration(e.target.value)}
+                    onChange={
+( e) => setFormDuration(e.target.value)}
                     style={styles.input}
                   >
                     <option value="15 mins">15 mins</option>
@@ -737,7 +760,8 @@ Room Code: ${newCode}`;
                 <label style={styles.label}>Host Account</label>
                 <select 
                   value={formHost}
-                  onChange={(e) => setFormHost(e.target.value)}
+                  onChange={
+( e) => setFormHost(e.target.value)}
                   style={styles.input}
                 >
                   <option value="brett@StehouwerPublishing.com">Brett Stehouwer (brett@StehouwerPublishing.com)</option>
@@ -747,7 +771,7 @@ Room Code: ${newCode}`;
               </div>
 
               <div style={styles.formGroup}>
-                <label style={styles.label}>Invite Team Members (Dispatches Live Email Invites)</label>
+                <label style={styles.label}>Invitees (external delivery is held)</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '6px', border: '1px solid #334155' }}>
                   {TEAM_MEMBERS.map(m => (
                     <label key={m.email} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.88rem' }}>
@@ -769,7 +793,8 @@ Room Code: ${newCode}`;
                     type="email" 
                     placeholder="client@externalcompany.com" 
                     value={customInvitee}
-                    onChange={(e) => setCustomInvitee(e.target.value)}
+                    onChange={
+( e) => setCustomInvitee(e.target.value)}
                     style={styles.input}
                   />
                   <button type="button" onClick={addCustomInvitee} style={styles.addInviteeBtn}>
@@ -784,7 +809,8 @@ Room Code: ${newCode}`;
                   rows={3} 
                   placeholder="Detail meeting goals, action items, and topic outlines..." 
                   value={formAgenda}
-                  onChange={(e) => setFormAgenda(e.target.value)}
+                  onChange={
+( e) => setFormAgenda(e.target.value)}
                   style={{ ...styles.input, resize: 'vertical' }}
                 />
               </div>
@@ -801,7 +827,7 @@ Room Code: ${newCode}`;
                 </button>
 
                 <button type="submit" disabled={isScheduling} style={styles.submitScheduleBtn}>
-                  <Mail size={16} style={{ marginRight: '6px' }} /> {isScheduling ? 'Dispatching Invites...' : 'Schedule & Send Invites'}
+                  <Mail size={16} style={{ marginRight: '6px' }} /> {isScheduling ? 'Preparing Draft...' : 'Review Held Draft'}
                 </button>
               </div>
             </form>
@@ -812,6 +838,7 @@ Room Code: ${newCode}`;
   );
 }
 
+/** @type {Record<string, import('react').CSSProperties>} */
 const styles = {
   container: {
     padding: '24px',

@@ -1,0 +1,11 @@
+{
+  "utc": "2026-11-02T01:07:59.612727+00:00",
+  "free_bytes": {
+    "C": 103142768640,
+    "D": 184193118208,
+    "E": 146813599744
+  },
+  "drive_quota": "not exposed",
+  "cleanup": false,
+  "model_download": false
+}

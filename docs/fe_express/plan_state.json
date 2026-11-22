@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "project_id": "fe-express-driver-portal-personal-finance",
+  "updated_date": "2026-11-14",
+  "status": "ACTIVE_IMPLEMENTATION_AUTHORIZED",
+  "canonical_plan": "docs/fe_express/DRIVER_PORTAL_PERSONAL_FINANCE_PLAN.md",
+  "source_authority": "Current user-authored directive and subsequent Android clarification in this chat",
+  "relationship": "Additive AI-BS workstream; does not replace or pause unrelated existing program work",
+  "confirmed": {
+    "role": "company driver for FE Express",
+    "phone_platform": "Android",
+    "phone_model": "Samsung Galaxy S25 Ultra",
+    "truck_description": "30-foot cargo box; overall vehicle length and complete dimensions/weights unconfirmed",
+    "loads_per_week_minimum": 5,
+    "offline_trip_and_attachment_capture_required": true,
+    "work_and_personal_access_separate": true,
+    "original_documents_preserved": true
+  },
+  "private_intake_notes": {
+    "source": "Latest user clarification; supersedes earlier tentative fixed 1000/week figure",
+    "reported_weekly_pay_range": {
+      "minimum": 700,
+      "maximum": 1000,
+      "currency_symbol": "$",
+      "status": "PROVISIONAL_TO_BE_DETERMINED"
+    },
+    "confirmed_salary_or_pay_formula": false,
+    "gross_or_net": "UNCONFIRMED",
+    "transfer_method_used": "Venmo; not proof every transfer is job income",
+    "pay_statements_received": false,
+    "tax_record_intent": "User organizes and files own year-end taxes for this job",
+    "employee_contractor_or_tax_classification": "UNCONFIRMED",
+    "initial_workflow": "Manual weekly load/expense/payment ledger with original evidence; no statement dependency",
+    "financial_account_connected": false,
+    "shared_engineering_backup": "OMIT_THIS_PRIVATE_INTAKE_SECTION"
+  },
+  "requested_features": [
+    "One record per load with stops, appointments, actual times, delays, notes, expenses and pay issues",
+    "Arrived/Departed actions, voice notes, receipt photos and delivery paperwork",
+    "Offline durable phone capture and acknowledged reconnect synchronization",
+    "Incomplete-delivery reminders with schedule undecided",
+    "Pay-statement comparison against confirmed FE Express pay rules",
+    "Personal pay/receipt/ledger/tax document intake and organization",
+    "Configurable truck GPS with maintained restriction data, spoken/visual guidance, recalculation and load-stop navigation"
+  ],
+  "open_decisions": [
+    "Exact employer systems, existing portal and supported access/imports",
+    "No current statements; available payment evidence and applicable pay rules",
+    "Employee/contractor classification, gross/net, pay basis and confirmed terms",
+    "Personal record sources and available import methods",
+    "Android version/storage and web versus native client",
+    "First features, reminder time and daily versus active-load-day schedule",
+    "Hosting, synchronization and phone/workstation connection",
+    "Truck height/width/overall length/loaded gross and axle weights/restrictions",
+    "Operating region and mapping/truck-routing provider coverage/licensing/cost/offline behavior"
+  ],
+  "implementation_status": {
+    "requested_portal_extension": "SOURCE_INTEGRATED_SYNTHETIC_AND_BUILT_OFFLINE_SHELL_CHECKS_PASS_OWNER_ACCEPTANCE_OPEN",
+    "source_checkpoint": "docs/agent_sync/FE_DRIVER_SOURCE_INTEGRATION_2026-11-14.md",
+    "live_driver_route_enabled": false,
+    "truck_gps": "SOURCE151_PROFILE_PHONE_AND_COMPILED_COLD_OFFLINE_SYNTHETIC_PASS_REAL_DEVICE_AND_ROUTING_OPEN",
+    "compiled_driver_checkpoint": "docs/agent_sync/DRIVER151_COMPILED_OFFLINE_2026-11-14.md",
+    "signed_gateway_composition_checkpoint": "docs/agent_sync/DRIVER151_SIGNED_GATEWAY_2026-11-14.md",
+    "truck_profile_checkpoint": "docs/agent_sync/TRUCK_PROFILE_PHONE_2026-11-14.md",
+    "live_company_or_financial_integrations": "NOT_CONFIGURED_BY_THIS_PLAN",
+    "automatic_imports": "NOT_CONFIGURED_BY_THIS_PLAN",
+    "delivery_reminders": "NOT_SCHEDULED",
+    "existing_ai_bs_components": "SOURCE_REUSE_CANDIDATES_WITH_SEPARATE_QUALIFICATION_REQUIRED",
+    "reviewed_existing_limits": [
+      "Shared FE session/workspace; individual driver isolation not established",
+      "Financial routes require separate administrator authorization",
+      "Service worker has no offline application cache; FE offline upload queue not found",
+      "Navigation hazard helper is a demo heuristic, not qualified truck GPS"
+    ],
+    "android_acceptance_required": [
+      "App/browser restart and device reboot",
+      "Interrupted and duplicate uploads",
+      "Insufficient storage and storage eviction",
+      "Visible unsynced status, recovery and export"
+    ]
+  },
+  "historical_access_context": {
+    "tailscale_ip": "100.104.31.50",
+    "magicdns": "ai-bs.tail6dd4a6.ts.net",
+    "screenshot_status": "Not connected at the time supplied",
+    "terminal_endpoint": "https://api.brettstehouwer.live/api/terminal/run",
+    "reported_terminal_error": "Failed to fetch",
+    "current_connectivity": "UNVERIFIED_FOR_THIS_WORKSTREAM",
+    "hardware": "Historical Windows 11 Home / Ryzen 9 9950X / RTX 4090 / Wake-on-LAN disabled; revalidate before relying on it"
+  },
+  "authorization": {
+    "planning_and_local_continuity_save": true,
+    "development_and_integration_setup": "ACTIVE_IMPLEMENTATION_AUTHORIZED",
+    "account_connections_or_reminders": false,
+    "provider_selection_or_navigation_activation": false,
+    "cloud_publication_of_private_financial_or_location_records": false
+  },
+  "authorization_history_20261114": {
+    "earlier_development_and_integration_setup": "PAUSED",
+    "superseding_status": "ACTIVE_IMPLEMENTATION_AUTHORIZED",
+    "source": "Explicit user resume, recorded in docs/agent_sync/MASTER_WORK_CHECKPOINT_2026-11-14.md",
+    "scope": "Local development and supported integration setup; live account connections, provider/navigation activation, reminders and publication retain separate authorization boundaries."
+  },
+  "next_implementation_steps": [
+    "Implement driver-owned offline load/attachment contracts using current source reuse and ownership review.",
+    "Implement the personal payment-evidence ledger under separate financial-owner access; preserve original evidence and private intake.",
+    "Qualify Android restart/reboot, duplicate/interrupted synchronization and visible unsynced recovery before claiming portal acceptance.",
+    "Resolve complete vehicle dimensions/weights and maintained truck-routing provider before routing activation."
+  ]
+}

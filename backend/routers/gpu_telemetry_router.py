@@ -4,20 +4,47 @@ Sovereign GPU Telemetry FastAPI Router
 AI-BS Port 8080 Endpoint Matrix for Hardware Telemetry & Thermal Control
 """
 
-from fastapi import APIRouter, HTTPException, Query, Body
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from typing import Dict, Any, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 import logging
+import json
+import asyncio
+from sse_starlette.sse import EventSourceResponse
 
 from modules.gpu_hardware_telemetry import gpu_telemetry_engine
+from security.financial_auth import require_financial_owner
 
 router = APIRouter(prefix="/api/v1/hardware/gpu", tags=["GPU Hardware Telemetry"])
 logger = logging.getLogger("gpu_telemetry_router")
 
 
+@router.get("/controller")
+async def get_adaptive_gpu_controller_status():
+    """Measured admission state; reads never load models or change GPU settings."""
+    from gpu.compute_scheduler import get_controller
+    from orchestrator.gpu_task_dispatcher import get_dispatcher
+    from starlette.responses import JSONResponse
+    snapshot = await get_controller().snapshot()
+    snapshot["rollout"] = {
+        "enabled": get_dispatcher().enabled,
+        "setting": "AIBS_ADAPTIVE_GPU_ENABLED=true",
+        "scope": "Cooperative chat, agent-router and chat embedding adapter calls in this process.",
+        "acceptance": "Application performance and real-time acceptance required before production enablement.",
+    }
+    return JSONResponse(snapshot, headers={"Cache-Control": "no-store"})
+
+
 class FanControlPayload(BaseModel):
-    speed: int = 100
-    auto: bool = False
+    model_config = {"extra": "forbid"}
+    speed: int = Field(default=100, ge=0, le=100, strict=True)
+    auto: bool = Field(default=False, strict=True)
+
+    @model_validator(mode="after")
+    def validate_manual_speed(self):
+        if not self.auto and self.speed < 30:
+            raise ValueError("Manual fan speed must be between 30 and 100 percent")
+        return self
 
 
 @router.get("/telemetry")
@@ -50,7 +77,7 @@ async def get_gpu_history(limit: int = Query(default=50, ge=1, le=500)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/fan-control")
+@router.post("/fan-control", dependencies=[Depends(require_financial_owner)])
 async def control_gpu_fan(payload: FanControlPayload):
     """Sets GPU fan speed or toggles automatic driver curve mode."""
     try:
@@ -59,8 +86,10 @@ async def control_gpu_fan(payload: FanControlPayload):
             "status": "success" if result.get("success") else "warning",
             "result": result
         }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.error("GPU fan control failed")
+        raise HTTPException(status_code=500, detail="GPU fan control is unavailable. Refresh telemetry before retrying.",
+                            headers={"Cache-Control": "private, no-store"}) from None
 
 
 @router.get("/compute-target")
@@ -76,4 +105,26 @@ async def get_compute_target():
     except Exception as e:
         logger.error(f"Error checking compute target: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/stream")
+async def stream_gpu_telemetry():
+    """Streams real-time GPU telemetry snapshots via Server-Sent Events (SSE)."""
+    async def event_generator():
+        while True:
+            try:
+                telemetry = gpu_telemetry_engine.query_nvml_telemetry()
+                yield {
+                    "event": "telemetry",
+                    "data": json.dumps(telemetry, allow_nan=False, separators=(",", ":"))
+                }
+            except Exception as e:
+                yield {
+                    "event": "error",
+                    "data": json.dumps({"error": str(e)})
+                }
+            await asyncio.sleep(2.0)
+
+    return EventSourceResponse(event_generator())
+
 

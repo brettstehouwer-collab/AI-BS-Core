@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "9e14dafd19044ba6969a3eefbfd65ea6",
+  "plan_id": "aef1e80d00314fb087356a561445f2ec",
+  "snapshot_sha256": "ec20dcc5b9d67cd062d6e9fc1ff75ce0fd0d78ca131fcfa0b94b18851e945f86",
+  "review_digest": "47413dd57e96d6200fd85dd6d9595508c0105775115bc1ce68712c1e6d5f8ba3",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "50bed36875a44e1690f5b10269101f16",
+  "reviewed_plan_sha256": "7d99b99a52178dc5dcbb91308f46540e65aa3b9c82fef2aa868f49e51133a921",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 39148,
+    "created": 1794665372.484454
+  },
+  "created_at_utc": "2026-11-14T14:09:37.997670+00:00",
+  "entry_sha256": "5ea64da79bb8c872b58c30af4a3a051fca47eef5386dd9da466d42278734bd59"
+}

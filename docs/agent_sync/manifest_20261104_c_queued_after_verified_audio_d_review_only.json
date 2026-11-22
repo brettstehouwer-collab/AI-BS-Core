@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "utc": "2026-11-04T22:39:05.819093+00:00",
+  "status": "E_AUDIO_COPY_RUNNING_C_QUEUED_WAITING_ENTIRE_VERIFIED_AUDIO_OWNER_D_REVIEW_ONLY",
+  "scope": [
+    "C regular file backup with declared exclusions and coverage gaps",
+    "198 E Muse music files"
+  ],
+  "d_scope": "read-only metadata audit; not backed up; no cleanup/compression authorized by latest selection",
+  "audio_progress": {
+    "stage": "RUNNING_ENCRYPTED_COPY_OR_CHECK",
+    "updated_utc": "2026-11-04T22:38:56.454568+00:00",
+    "source_moves_or_deletes": false,
+    "action": "backup",
+    "pid": 39828,
+    "files_done": 40,
+    "total_files": 198,
+    "bytes_done": 16620379850,
+    "total_bytes": 85686866220
+  },
+  "c_started": false,
+  "c_queued": true,
+  "c_queue": {
+    "pid": 46660,
+    "creation_filetime": 134383054949176767,
+    "plan_sha256": "5d3d0bd53dfb2fec4b63e786f3c940b3c035957c86c4b80bc008e99b64ad0dca",
+    "progress": {
+      "stage": "WAITING_ENTIRE_AUDIO_COORDINATOR",
+      "sequence": 10,
+      "utc_ns": 1793831940997477300,
+      "phase": "audio"
+    },
+    "reboot_or_logoff_survival_claimed": false,
+    "wait_contract": "entire exact old owner actual exit0 plus immutable COMPLETE plus E VERIFIED and owned shadow released before C starts"
+  },
+  "backup_complete": false,
+  "free_bytes": {
+    "C": 308741005312,
+    "D": 25896067072,
+    "E": 97106456576
+  },
+  "source_moved_or_deleted_at_checkpoint": false,
+  "d_audit": {
+    "summary_sha256": "d10bd3cf48e89ec7d95b76a48c8eed6ed4a9e365896e8149a6c8686a6fb4e732",
+    "top_allocated_gib": {
+      "models": 196.55,
+      "game_resources": 121.36,
+      "windows_backup": 67.79,
+      "huggingface_cache": 24.13,
+      "gradle": 7.75
+    },
+    "reclaimable_space_proven": false
+  },
+  "next_step": "Continue observing owned background audio and queued C workers. Require real repository checks and sample restores before content qualification. Read documents fully before any later source move/deletion; preserve original data. D stays review only."
+}

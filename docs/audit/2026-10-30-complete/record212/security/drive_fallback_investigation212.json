@@ -1,0 +1,18 @@
+{
+  "record": 212,
+  "destination_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "uploaded": false,
+  "credential_files_modified": false,
+  "trading_settings_modified": false,
+  "ui_used": false,
+  "verified_writable_alternative_found": false,
+  "observations": [
+    "Repository shared_cloud_drive scripts and routers manage a local filesystem vault; they are not independent Google Drive upload clients.",
+    "Repository OAuth token scope inventory contains Gmail read-only only; no Drive grant. Token values were never displayed.",
+    "Existing gcloud authorized-user credentials were used only in memory for one read-only Drive metadata request to the designated folder. Result: HTTP 403 PERMISSION_DENIED, reason insufficientPermissions. No credential file was refreshed on disk or changed.",
+    "GoogleDriveFS process and G: mount were absent. Checked rclone configuration locations were absent.",
+    "Prior record209/210 cloud helpers depend on connector-provided authenticated references; they do not provide independent Google Drive upload credentials.",
+    "Connected Drive metadata reads reportedly work, while write attempts failed. Read access does not prove upload access. No further write retries were performed in this investigation."
+  ],
+  "next_step": "Restore connected Google Drive write capability and confirm write permission for the existing destination folder; upload sanitized audit212 records there and verify readback. Until then retain records locally and report upload pending."
+}

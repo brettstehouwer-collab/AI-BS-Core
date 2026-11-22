@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "archive": "C:/AI-BS/backups/native_game94_20261101_m3/AI_BS_Engine_0.8.0_M3_Milestone_Source.zip",
+  "bytes": 1438265,
+  "selected_complete_files": 259,
+  "zip_crc": "passed",
+  "selected_source_byte_readback": "passed",
+  "compiled_fetched_models_originals_usersaves": "excluded",
+  "synthetic_db_bytes": 208896,
+  "drive": {
+    "sdk": "0.8.0",
+    "studio": "5.329.94",
+    "milestone": "M3",
+    "id": "1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A",
+    "url": "https://drive.google.com/file/d/1HRV8P63cHvak0F1n8BMtjUxeBhaVbF8A/view?usp=drivesdk",
+    "bytes": 1438265,
+    "files": 259
+  },
+  "metadata_readback": "verified1438265bytes,parentCoreEngineArchitecture"
+}

@@ -1,0 +1,184 @@
+{
+  "audit": "M5 subsystem health",
+  "timestamp": "2026-11-12T03:44:39.383795+00:00",
+  "subsystems": {
+    "native_studio": {
+      "exe_path": "C:\\AI-BS\\engine\\out\\windows-msvc\\Debug\\aibs_creator_viewport.exe",
+      "exe_exists": true,
+      "failures": [],
+      "exit_code": 0,
+      "output_tail": "======================================================================\nAI-BS STUDIO 144: SHELTERED HUB & SPATIAL VIEWPORT VERIFICATION\n======================================================================\n\n--- Verifying 7 Spatial Audio Trigger Zones Containment ---\n  Zone nook_awakening      : Pt (-32.5, 0.0, -26.0) -> CONTAINED [PASS]\n  Zone corridor_approach   : Pt (-36.5, 0.0, -15.0) -> CONTAINED [PASS]\n  Zone fault_trench        : Pt (-33.0, 0.0, -4.5) -> CONTAINED [PASS]\n  Zone relay_bypass_socket : Pt (-42.0, 0.0, -4.5) -> CONTAINED [PASS]\n  Zone threshold_aperture  : Pt (-37.0, 0.0, 2.5) -> CONTAINED [PASS]\n  Zone sheltered_hub       : Pt (-36.5, 0.0, 9.5) -> CONTAINED [PASS]\n  Zone pencil_room         : Pt (-36.5, 0.0, 18.0) -> CONTAINED [PASS]\n\n--- Validating Station Field Schemas ---\n  Writing Desk Validation:  [PASS] (Mode: record, Notes: 5)\n  Memory Shelves Validation:[PASS] (Items: 4, Secret: True)\n  Shared Play Validation:   [PASS] (Display Powered: True, Session Active: True)\n\n--- Running Native DX12 Creator Viewport Projection ---\n  Encoding AIBV binary snapshot with 12 scene entities...\n  Snapshot encoded: 2,651 bytes (magic: AIBV)\n  Viewport execution finished in 0.435s (State: closed)\n  DX12 Projection Report:\n    Non-background Pixels: 65,536\n    Debug Errors:          0\n    Objects Rendered:      12\n    Selected UUID:         df889261-5c1c-43bb-9d1c-1eb2afb79117\n  Rendered Viewport Frame Captured: C:\\AI-BS\\docs\\viewport_telemetry\\probe_run\\viewport.bmp (3,256,054 bytes)\n\n======================================================================\nSTUDIO 144 VIEWPORT SESSION VALIDATION COMPLETE: ALL PASS\n======================================================================\n\n",
+      "duration_s": 0.53,
+      "debug_errors": 0,
+      "nonbackground_pixels": 65536,
+      "passed": true
+    },
+    "fastapi": {
+      "failures": [],
+      "health": {
+        "url": "http://localhost:8080/health",
+        "method": "GET",
+        "status_code": 200,
+        "latency_ms": 2040.5,
+        "json": {
+          "status": "online",
+          "service": "AI-BS Central Cognitive Engine API",
+          "process_id": 33676,
+          "local_maintenance_protocol": 1,
+          "gpu_accelerated": true,
+          "daemons": {
+            "context_ingestor_daemon": false,
+            "researcher_daemon": false,
+            "discord_bot_daemon": false,
+            "chroma_daemon": false,
+            "chroma_edrive_daemon": false,
+            "crypto_trader_bot": false,
+            "broadcast_daemon": false,
+            "bullshit_writer_daemon": false,
+            "bullshit_senses": false,
+            "bullshit_medic": false,
+            "bullshit_memory": false,
+            "bullshit_trainer": false,
+            "news_firehose_daemon": false,
+            "unreal_signaling_daemon": false,
+            "finance_ingest_daemon": false,
+            "news_ingest_daemon": false,
+            "unified_crypto_pearl_watchdog": false
+          },
+          "timestamp": 1794455081.9517698
+        }
+      },
+      "gpu_accelerated": true,
+      "rag_query": {
+        "url": "http://localhost:8080/api/rag/query",
+        "method": "POST",
+        "status_code": 200,
+        "latency_ms": 2202.6,
+        "json_snippet": "{\"status\": \"success\", \"collection\": \"ai_bs_synced_drive_assets\", \"count\": 3, \"results\": [{\"id\": \"drive_2327008_chunk_0\", \"document\": \"\", \"metadata\": {\"chunk_index\": 0, \"total_chunks\": 1, \"is_zero_byte\": true, \"file_path\": \"02_Memoirs_Manuscripts\\\\Creative_Screenplays\\\\Red Line No More.md\", \"file_size_bytes\": 0, \"file_extension\": \".md\", \"subcategory\": \"Creative_Screenplays\", \"file_name\": \"Red Line No More.md\", \"category\": \"02_Memoirs_Manuscripts\", \"abs_path\": \"C:\\\\AI-BS\\\\synced_drive_assets\\\\02_M"
+      },
+      "omnidrive_search": {
+        "url": "http://localhost:8080/api/omnidrive/search",
+        "method": "POST",
+        "status_code": 200,
+        "latency_ms": 7259.6,
+        "json_snippet": "{\"query\": \"engineering\", \"latency_us\": 2130.03, \"results\": [{\"filepath\": \"C:\\\\AI-BS\\\\docs\\\\engineering_spec.md\", \"filename\": \"engineering_spec.md\", \"distance\": 0.12, \"match_type\": \"VECTOR_SEMANTIC\"}]}"
+      },
+      "passed": true
+    },
+    "comfyui": {
+      "failures": [],
+      "instances": {
+        "8188": {
+          "/health": {
+            "url": "http://localhost:8188/health",
+            "method": "GET",
+            "status_code": 200,
+            "latency_ms": 2010.4,
+            "json": {
+              "status": "healthy",
+              "service": "ComfyUI Primary Service",
+              "port": 8188,
+              "target_port": 8189,
+              "timestamp": "2026-11-11 22:44:53"
+            }
+          },
+          "/system_stats": {
+            "url": "http://localhost:8188/system_stats",
+            "method": "GET",
+            "status_code": 200,
+            "latency_ms": 2219.2,
+            "json": {
+              "system": {
+                "os": "nt",
+                "python_version": "3.12",
+                "embedded_python": false,
+                "comfyui_version": "v0.3.14-sovereign-jit"
+              },
+              "devices": [
+                {
+                  "name": "cuda:0 NVIDIA GeForce RTX 4090 : cudaMallocAsync",
+                  "type": "cuda",
+                  "index": 0,
+                  "vram_total": 25757220864,
+                  "vram_free": 22548578304,
+                  "torch_vram_total": 0,
+                  "torch_vram_free": 0
+                }
+              ]
+            }
+          },
+          "gpu_name": "cuda:0 NVIDIA GeForce RTX 4090 : cudaMallocAsync",
+          "vram_total_gb": 23.99,
+          "vram_free_gb": 21.0,
+          "passed": true
+        },
+        "8189": {
+          "/health": {
+            "url": "http://localhost:8189/health",
+            "method": "GET",
+            "status_code": 200,
+            "latency_ms": 2017.5,
+            "json": {
+              "status": "healthy",
+              "service": "ComfyUI Diffusion Studio (JIT Standby)",
+              "port": 8189,
+              "mode": "zero_vram_standby",
+              "timestamp": "2026-11-11 22:44:57"
+            }
+          },
+          "/system_stats": {
+            "url": "http://localhost:8189/system_stats",
+            "method": "GET",
+            "status_code": 200,
+            "latency_ms": 2029.6,
+            "json": {
+              "system": {
+                "os": "nt",
+                "python_version": "3.12",
+                "embedded_python": false,
+                "comfyui_version": "v0.3.14-sovereign-jit"
+              },
+              "devices": [
+                {
+                  "name": "cuda:0 NVIDIA GeForce RTX 4090 : cudaMallocAsync",
+                  "type": "cuda",
+                  "index": 0,
+                  "vram_total": 25757220864,
+                  "vram_free": 22548578304,
+                  "torch_vram_total": 0,
+                  "torch_vram_free": 0
+                }
+              ]
+            }
+          },
+          "gpu_name": "cuda:0 NVIDIA GeForce RTX 4090 : cudaMallocAsync",
+          "vram_total_gb": 23.99,
+          "vram_free_gb": 21.0,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    "vite": {
+      "failures": [],
+      "dev_server": {
+        "url": "http://localhost:5173/",
+        "method": "GET",
+        "status_code": 200,
+        "latency_ms": 2023.0,
+        "body_snippet": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n  <head>\n    <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-refresh\";\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () => {};\nwindow.$RefreshSig$ = () => (type) => type;</script>\n\n    <script type=\"module\" src=\"/@vite/client\"></script>\n\r\n"
+      },
+      "build_check": {
+        "command": "npm run build",
+        "exit_code": 0,
+        "duration_s": 25.72,
+        "build_errors": 0
+      },
+      "dist_index_exists": true,
+      "dist_index_mtime": "2026-11-11T22:45:26.072419",
+      "dist_asset_count": 116,
+      "passed": true
+    }
+  },
+  "overall_passed": true
+}

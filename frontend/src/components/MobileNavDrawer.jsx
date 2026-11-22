@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 /**
  * MobileNavDrawer: Fullscreen Slide-over Navigation Hub for smartphone users.
  * Houses all 35+ tools in clean, thumb-friendly categorized sections with live search.
  */
+/** @param {{isOpen:boolean,onClose:()=>void,activeTab:string,onTabChange:(key:string)=>void,momMode:boolean,onToggleMomMode:()=>void,hwTelemetry?:{core_temp_c?:number,memory_used_mb?:number},currentUser?:{displayName?:string|null,email?:string|null}|null}} props */
 export default function MobileNavDrawer({
   isOpen,
   onClose,
@@ -18,6 +19,17 @@ export default function MobileNavDrawer({
 
   // Categorized Tool Registry
   const toolCategories = [
+    {
+      id: 'swarm_specialists',
+      title: '🤖 64-Specialist Sovereign Swarm',
+      desc: '7 Operational Domains & SQLite WAL Registry',
+      accent: '#38bdf8',
+      tools: [
+        { key: 'specialist_swarm', label: '64-Specialist Swarm Explorer', icon: '🤖', badge: '64 Roles' },
+        { key: 'immutable_scribe', label: 'Fire & Forge Verbatim Scribe', icon: '📜', badge: 'Role 49' },
+        { key: 'agent_apps', label: 'Sovereign Agent Apps & DAGs', icon: '⚡', badge: 'DAG' }
+      ]
+    },
     {
       id: 'noco',
       title: '🏛️ Project NoCo Sovereign Enclave',
@@ -106,7 +118,7 @@ export default function MobileNavDrawer({
 
   if (!isOpen) return null;
 
-  const handleSelectTool = (key) => {
+  const handleSelectTool = (/** @type {string} */ key) => {
     onTabChange(key);
     onClose();
   };

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-14T15:00:43.230624+00:00",
+  "status": "SOURCE_IMPLEMENTED_SYNTHETIC_QUALIFIED_LIVE_ACTIVATION_PENDING",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "64fad2871e0a716d9964f506bdef1050612b173d",
+  "source_baseline": "5.329.146",
+  "configuration_file_written": true,
+  "live_configuration_applied": false,
+  "live_database_wal_verified": false,
+  "ownership_enforcement_verified": "SYNTHETIC_COOPERATIVE_ADMISSION_AND_END_STATE_AUDIT_ONLY",
+  "resource_enforcement_verified": "SYNTHETIC_ADMISSION_ONLY_NOT_HARDWARE_PARTITION",
+  "integrated_tests": {
+    "passed": 62,
+    "failed": 0,
+    "log": "integrated-tests-v02.log"
+  },
+  "prior_integrated_failure": {
+    "passed": 61,
+    "failed": 1,
+    "log": "integrated-tests-v01.log",
+    "cause": "Ownership-violation cancellation suppressed EngineBus error delivery; current failing lease is now allowed to report its error while peers cancel"
+  },
+  "creative_manifest_unchanged": true,
+  "source_pins": [
+    {
+      "path": "config/swarm_orchestration.json",
+      "bytes": 1205,
+      "sha256": "b56b4ce046d6b84c5882a5a09949a520b654f3e1366467d44f8309dab36b6873"
+    },
+    {
+      "path": "backend/core/swarm_orchestration.py",
+      "bytes": 16181,
+      "sha256": "078b4a15ca9d41b11d68d1bb3c3f2e9139feb7af7bbaf77c6923bc84d558419b"
+    },
+    {
+      "path": "backend/core/swarm_runtime.py",
+      "bytes": 2436,
+      "sha256": "c8a50ee830480bba2e6cf65b9ab6fe24f0dcd783f2148f1b3f7298dad70c9dfb"
+    },
+    {
+      "path": "backend/db/swarm_sqlite.py",
+      "bytes": 13470,
+      "sha256": "d6794dd71e2dc2c8db63923e06e5034802f4b11ffac00bfbc54adb30ceaac573"
+    },
+    {
+      "path": "native_studio/swarm_adapter.py",
+      "bytes": 4965,
+      "sha256": "f9e6ed286f4e41b66fbf2e0e33f27f773a301a34dac341ae5a2da17eb2f54644"
+    },
+    {
+      "path": "scripts/tests/test_swarm_orchestration.py",
+      "bytes": 11635,
+      "sha256": "32f168900e24a213fb6d6d3d3c6f80b3a7c2ab354862ee0c01f46e6a0792bb87"
+    },
+    {
+      "path": "scripts/tests/test_swarm_sqlite.py",
+      "bytes": 11110,
+      "sha256": "606a104a3f1540c80c3688c56ca6b471cd15a2c936a9037fe705c4e77591a53f"
+    },
+    {
+      "path": "scripts/tests/test_swarm_runtime.py",
+      "bytes": 1405,
+      "sha256": "6d8dadeaf792d6d7cd9edadf1df229140c0aa6326e51acf2dee444510d8230fe"
+    },
+    {
+      "path": "scripts/tests/test_native_swarm_adapter.py",
+      "bytes": 5496,
+      "sha256": "8455d25ef4947e157a9a736bebc5f6a8a8f66bf9401ed36a1a3074b436e287f3"
+    },
+    {
+      "path": "docs/architecture/SWARM_ORCHESTRATION_2026-11-14.md",
+      "bytes": 7721,
+      "sha256": "4515c1d970e0f5e55dcf7d381a02f137aa4e7e8fecff9959332defb1a9f1b4c0"
+    }
+  ],
+  "model_calls": 0,
+  "service_restarts": 0,
+  "original_database_operations": 0,
+  "scope": "New opt-in adapters and config; no replacement of existing scheduler, database helper, runtime or locked coding checkpoint",
+  "next": "Review a selected caller in an isolated workspace; separately qualify/authorize each live store activation with private verified backup. Do not auto-enable from configuration.",
+  "remaining": [
+    "Live caller/store activation",
+    "Actual application pilot acceptance",
+    "Installed/hosted packaging",
+    "OS-level isolation and machine-wide GPU enforcement are not provided"
+  ],
+  "drive_status": "PENDING_SEPARATE_UPLOAD_AND_DOWNLOAD_VERIFICATION"
+}

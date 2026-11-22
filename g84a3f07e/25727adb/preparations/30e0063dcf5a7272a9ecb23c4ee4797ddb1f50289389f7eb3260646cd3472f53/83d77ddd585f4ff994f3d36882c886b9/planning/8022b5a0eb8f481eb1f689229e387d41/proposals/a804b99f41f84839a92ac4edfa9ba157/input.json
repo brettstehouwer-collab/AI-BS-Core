@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "83d77ddd585f4ff994f3d36882c886b9",
+  "plan_id": "8022b5a0eb8f481eb1f689229e387d41",
+  "snapshot_sha256": "889f3eda7cab8635a0b2829053f38e28d2877960d9ee1b0126fc0de8ae1608c5",
+  "review_digest": "57aaca6e546e8775a92fc938a94e727d3daa787b16062c89810b31f770b98a9b",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "a804b99f41f84839a92ac4edfa9ba157",
+  "reviewed_plan_sha256": "3c757019f9c6d196e0a441ea31c64a220ea9db3b519be7220bc2a31ad073c5b2",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "34c1c057b9a15c17e225e71939b719c489009af44a9133744c964da1d4baf347",
+        "content": "\ufeffvalue = 1\r\nother = 2\r\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "92110865e9647d0e58f1224419faa31007961ec6dd13b70d3f4ce7fda25fc8df",
+  "worker": {
+    "pid": 33764,
+    "created": 1794666055.1427324
+  },
+  "created_at_utc": "2026-11-14T14:20:57.622467+00:00",
+  "entry_sha256": "fe4ed46e16bf5e5e63bcaf8775efb84e61ea55a74243a0ca11c63f72a2e72fe8"
+}

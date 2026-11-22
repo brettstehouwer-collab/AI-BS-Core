@@ -1,0 +1,183 @@
+{
+  "record": 208,
+  "version": "v5.329.83",
+  "utc": "2026-10-31T19:50:56.472353+00:00",
+  "status": "ACTUAL_NATIVE_GUI_START_AND_FRESH_FORTNITE_PUBLIC_HLS_VERIFIED",
+  "source_base_commit": "dedea53af3a130697bd21f68047b983b3ccf8a78",
+  "source_changes": false,
+  "source_commit_identity": "ROOT_POST_COMMIT_RECEIPT",
+  "launch": {
+    "utc": "2026-10-31T19:44:16Z",
+    "pid": 4540,
+    "exe": "C:\\AI-BS\\native_studio\\releases\\v5.329.83\\AI_BS_Studio\\AI_BS_Studio.exe",
+    "sha256": "5ce8d96b7152ab62f81926ef51693d6c86a5f3db325beb66db6fab8de5c17c52",
+    "navigation": "Creative Media \u2192 Ctrl+K Omni \u2192 Universal AV \u2192 Broadcast, maximized",
+    "normal_native_gui_launched": true,
+    "whole_app_gui_certified": false
+  },
+  "corrective_start": {
+    "utc": "2026-10-31T19:46:40.502Z",
+    "actual_gui_start_clicks": 1,
+    "ancestry": [
+      4540,
+      21188,
+      52852,
+      43860
+    ],
+    "observed_ui": "Stop broadcast; coordinator capturing selected source; remote ingest unverified;720p30H2644500kb/s;preview unavailable"
+  },
+  "initial_failure": {
+    "status": "STALE_OUTPUT_NOT_A_CURRENT_LIVE_SENDER",
+    "cause": "CALLER_UNKNOWN_NOT_ATTRIBUTED",
+    "evidence": "backups/windows_v83_live_verification_20261031_record208/stream/20261031T194523Z",
+    "retained": true,
+    "corrective_action": "One explicit GUI Start; no stale playlist success claim"
+  },
+  "fresh_acceptance": {
+    "utc_start": "2026-10-31T19:47:27Z",
+    "utc_end": "2026-10-31T19:47:31Z",
+    "controller_pid": 52852,
+    "encoder_pid": 43860,
+    "frames": [
+      1250,
+      1341
+    ],
+    "out_time_us": [
+      41666667,
+      44714667
+    ],
+    "local_public_hls_sequences": [
+      15,
+      16
+    ],
+    "segment": 21,
+    "segment_bytes": 916312,
+    "segment_sha256": "77ec84060e91969e26c52f18e30b5c2ecd248d5f5a7b612336b5b55675ff39f7",
+    "local_public_exact_bytes": true,
+    "video": "H2641280x720",
+    "audio": "AAC stereo;192000 decoded samples exactly zero",
+    "root_visual_review": "Genuine Fortnite Thrills & Chills menu; no desktop",
+    "source_mode": "auto_game",
+    "capture_state": "capturing",
+    "game_frame_verified": true,
+    "evidence": "backups/windows_v83_live_verification_20261031_record208/stream/20261031T194727Z/proof.json"
+  },
+  "safety": {
+    "obs_processes": [],
+    "obs_in_ancestry": false,
+    "listeners_8007_4455": [],
+    "child_flags": {
+      "DRY_RUN": "true",
+      "HOLD_DISPATCH": "true",
+      "LIVE_TRADING_ENABLED": "false",
+      "RECDEBUT_SENDING_ENABLED": "false"
+    },
+    "microphone_changes": false,
+    "audio_mode": "generated_silence",
+    "live_trading": "DISABLED",
+    "ffmpeg_arguments_read": false
+  },
+  "verification_scope": {
+    "new_source_tests_run": false,
+    "prior_record207_guarded_cases": 304,
+    "prior_tests_are_historical_not_rerun": true,
+    "no_all_tabs_games_workflows_claim": true,
+    "rtmp_dashboard_acceptance": "NOT_ALL_VERIFIED",
+    "per_output_classification": {
+      "record": 208,
+      "encoder_pid": 43860,
+      "controller_pid": 52852,
+      "ffmpeg_argv_read": false,
+      "current_session_found": true,
+      "target_order_verified_from_credential_free_controller_args": [
+        "twitch",
+        "youtube",
+        "kick",
+        "facebook"
+      ],
+      "outputs": [
+        {
+          "output_index": 0,
+          "destination": "twitch",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_INGEST_UNVERIFIED"
+        },
+        {
+          "output_index": 1,
+          "destination": "youtube",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_INGEST_UNVERIFIED"
+        },
+        {
+          "output_index": 2,
+          "destination": "kick",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_INGEST_UNVERIFIED"
+        },
+        {
+          "output_index": 3,
+          "destination": "facebook",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_INGEST_UNVERIFIED"
+        },
+        {
+          "output_index": 4,
+          "destination": "local_recording",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_MEDIA_CHECK_SEPARATE"
+        },
+        {
+          "output_index": 5,
+          "destination": "local_hls",
+          "failure_codes": [],
+          "assessment": "NO_FIXED_FAILURE_OBSERVED_MEDIA_CHECK_SEPARATE"
+        }
+      ],
+      "global_fixed_errors": [],
+      "external_dashboards_verified": false,
+      "old_stop_caller": "UNKNOWN",
+      "scope": "Only fixed per-output error classes and numeric indexes extracted from current-session bounded logtail; raw lines/URLs/keys not persisted. No-failure is not remote ingest acceptance."
+    },
+    "fixed_error_class_scan": {
+      "current_session_found": true,
+      "fixed_class_counts": {
+        "SLAVE_MUXER_FAILED": 0,
+        "SLAVE_OPEN_FAILED": 0,
+        "ERROR_OPENING_OUTPUT": 0,
+        "PERMISSION_DENIED": 0,
+        "HTTP_403": 0,
+        "HTTP_404": 0,
+        "RTMP_HANDSHAKE_FAILED": 0,
+        "BROKEN_PIPE": 0,
+        "NEGATIVE_ERROR_NUMBER": 0,
+        "FAILED": 0
+      },
+      "unindexed_errors": []
+    },
+    "source_hold_integrity": "PARENT_VERIFIED_ALL70_NATIVE_PLUS_VERSION71_PINS_AND4_CRYPTO_HASHES_UNCHANGED"
+  },
+  "cloud": {
+    "folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+    "uploads": "ROOT_OWNED_SAME_EXISTING_FOLDER",
+    "reporter_upload_actions": false,
+    "encrypted_source_binary_backup": "STILL_BLOCKED_E_KEY_CUSTODY"
+  },
+  "reporter_effects": {
+    "production_edits": false,
+    "env_E_DB_reads": false,
+    "network_GUI_Drive_actions": false
+  },
+  "report": "docs/audit/2026-10-30-complete/WINDOWS_V83_LIVE_VERIFICATION_RECORD208.md",
+  "next_step": "Root commits scoped records and uploads sanitized report/evidence to existing folder; no all-RTMP acceptance claimed; retain live silent sender and trading holds.",
+  "user_workspace": {
+    "utc": "2026-10-31T19:49:10.629Z",
+    "focusedWindow": {
+      "app": "436609B6.FortniteClient_9ncxwbgmmv7m8!AppFortniteShipping",
+      "id": 8130456,
+      "title": "Fortnite  "
+    },
+    "windowsAppLeftOpen": true,
+    "gameInputSent": false
+  },
+  "scope_status": "FROZEN_DOCS_ONLY_NO_PRODUCTION_CHANGES"
+}

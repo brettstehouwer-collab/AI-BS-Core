@@ -1,0 +1,42 @@
+{
+  "at": "2026-11-03T15:38:12.751901+00:00",
+  "classification": "progress: exact return failure reproduced/fixed with CPU contracts; actual current tour progressed through repair and main door; next input-vs-collision timeout remains unverified",
+  "previous_goal_turn": "Progress: both installed-player route restarts passed, current tour compiled and first four readings proven, checkpoint36A authenticated-restored.",
+  "goal_complete": false,
+  "native_current_tour": "FAILED_R03_return_then_FAILED_R04_postdoor_timeout; all owned Jobs joined; no further runtime retry this turn",
+  "cpu": "One registered CTest passed;27checks in actual-snapshot/controller invocation, overlapping default fixture checks are not added",
+  "source_files": {
+    "engine/CMakeLists.txt": "07b896b09e33700fb0e7f35aa25bd6a3ca0d154897bf32bb2e76a98bb22cfd63",
+    "engine/apps/durable_world.cpp": "4c913ecf2d89b560488b1662ea2daf6c414c524eeaab231a07871fec6f460b04",
+    "engine/apps/opening_tour_runtime.inl": "8ff79c9333bafad3eab5a25e279ed7d266554d16e572b10dea7702c4a15b2033",
+    "engine/apps/workshop_tour_runtime.inl": "d6d8ab20300706bd143de1a909384be1356265933ae098ba2449c735d4c0efc3",
+    "engine/apps/workshop_tour_path.hpp": "eac30a47ee075ce633fc4b423483634f5a8849762ab59134bf81d6aea5f0aa34",
+    "engine/tests/workshop_tour_path_tests.cpp": "8ba0e3c739bb00a32342033e6fdb75d0c12670729cf0023993c8f2b62acdabe9"
+  },
+  "retained": "Studio102/SDK0.16.3, actual saves and family originals unchanged",
+  "next_step": "Run the freshly compiled instrumented current tour in a new owned timeline and inspect its exact timeout input/focus/feet evidence. Preserve the earlierR03/R04slots. Correct diagnosed input/route handling, complete both canonical routes, then record and measure. Do not infer whole-opening completion from CPU checks.",
+  "space_free_bytes": {
+    "C": 68324741120,
+    "D": 86788304896,
+    "E": 146813599744
+  },
+  "backup37A": {
+    "status": "verified_authenticated_raw_restore_all_members",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\37A_Tested_Return_Path_And_Tour_Diagnostics.zip",
+    "bytes": 424199,
+    "sha256": "16e4cd28a15bbe60d3a4e0ae9759c5ba38a7016696706a14a7ba717f6de92246",
+    "members": 80,
+    "goal_complete": false,
+    "at": "2026-11-03T15:39:06.900474+00:00",
+    "file_id": "1xg2h_G5a2tyYKlF2H3VZzNvLODYJEroL",
+    "folder_id": "1Xa8Pt37lmyjB1X9QHw_n6gH3uX-_alUk",
+    "url": "https://drive.google.com/file/d/1xg2h_G5a2tyYKlF2H3VZzNvLODYJEroL/view?usp=drivesdk",
+    "all_member_sizes_hashes_crc_and_exact_set_verified": true,
+    "runtime_acceptance": "Current canonical tour remains incomplete and undeployed; return-path CPU contracts pass"
+  },
+  "space_free_bytes_closeout": {
+    "C": 68320653312,
+    "D": 86787444736,
+    "E": 146813599744
+  }
+}

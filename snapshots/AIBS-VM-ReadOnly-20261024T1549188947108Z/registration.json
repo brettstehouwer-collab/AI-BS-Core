@@ -1,0 +1,13 @@
+{
+  "TaskName": "AIBS-VM-ReadOnly-20261024T1549188947108Z",
+  "TaskPath": "\\",
+  "RegisteredUTC": "2026-10-24T15:49:19.4912402Z",
+  "WorkerSID": "S-1-5-21-2133766663-4066672948-2456486318-1005",
+  "LogonType": "InteractiveToken",
+  "RunLevel": "Limited",
+  "PasswordStored": false,
+  "Triggers": 0,
+  "ScriptSHA256": "4E89B6E16F656AC82B975E14C12C5490FC5DED7603EC1D033F4D4CB77935E3C4",
+  "ScriptPath": "C:\\AI-BS\\isolated_workers\\windows\\control\\Read-CurrentVMState.ps1",
+  "Scope": "Two read-only VBoxManage queries; no VM/account/policy mutation."
+}

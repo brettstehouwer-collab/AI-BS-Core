@@ -1,0 +1,39 @@
+{
+  "utc": "2026-11-14T21:50:36.015528+00:00",
+  "status": "VERIFIED_LIVE",
+  "project": "stehouwer-productions",
+  "pages_url": "https://stehouwer-productions.pages.dev",
+  "domain": "stehouwerproductions.com",
+  "zone": "31cdb37677c9879df48254d2d8490c67",
+  "nameservers": [
+    "howard.ns.cloudflare.com",
+    "mckinley.ns.cloudflare.com"
+  ],
+  "source": "C:/AI-BS/work/stehouwer-productions-20261114",
+  "shipping_files_verified": 13,
+  "original_mail_dns_preserved": true,
+  "nginx_candidate": "NOT_ACTIVATED; original nginx.conf restored without reload",
+  "unused_dedicated_tunnel": "Deleted after static deployment; never started or DNS-routed. Protected local failed-attempt evidence retained.",
+  "zip_sha256": "0D82AE1EA01EDFF01D0B529F5FDC79AE582C3CC0B7A5007541F86317D232B615",
+  "pending": [],
+  "failed_evidence": [
+    "Local tunnel launch auto-review rejection retained",
+    "Python urllib public verifier HTTP errors retained; PowerShell verified13exactfilehashes",
+    "Early custom domain TLS/DNS propagation failures retained"
+  ],
+  "private_records_uploaded": false,
+  "paid_plan_or_aws_resources_created": false,
+  "domain_url": "https://stehouwerproductions.com/",
+  "www_url": "https://www.stehouwerproductions.com/",
+  "custom_domains": "Both Active; SSL enabled in Cloudflare Pages",
+  "checks": {
+    "custom_domain_https": 200,
+    "www_https": 200,
+    "assets_exact_sha256": "7/7",
+    "html_matches_after_verified_Cloudflare_email_protection": "6/6",
+    "missing_route": 404,
+    "publishing_site_still": 200
+  },
+  "dns_cache_note": "Existing local OS/Chrome resolver caches retain old IONOS IP/negative www answer. Fresh public1.1.1.1 DNS and TLS-validated curl --resolve to its current addresses return200 for both names; browser custom-domain visual still affected by stale cache. No TLS bypass, resolver reconfiguration or global cache clearing.",
+  "screenshot": "C:\\AI-BS\\backups\\productions_publish_20261114\\domains-live.jpg"
+}

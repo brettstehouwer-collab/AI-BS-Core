@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
+/** @param {{title: string; logs: string[]; statusColor?: string}} props */
 function TerminalWindow({ title, logs, statusColor = "#4ade80" }) {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -53,24 +54,25 @@ function TerminalWindow({ title, logs, statusColor = "#4ade80" }) {
   );
 }
 
+/** @param {Pick<import('/types/domain').AppStore, 'nocoTelemetry' | 'nocoAlert' | 'nocoCodeType' | 'setNocoCodeType' | 'nocoCodePrompt' | 'setNocoCodePrompt' | 'isGeneratingNocoCode' | 'nocoGeneratedCode'> & { BACKEND_URL?: string; activeTab: string; handleTriggerNocoAlert: () => void; handleGenerateNocoCode: () => void }} props */
 export default function BullshitTelemetrySuite(props) {
   const { BACKEND_URL = `http://${window.location.hostname}:8000`, activeTab } = props;
 
   // SYSTEM ANALYTICS STATE
-  const [daemonLogs, setDaemonLogs] = useState({
+  const [daemonLogs, setDaemonLogs] = useState(/** @type {Record<string, string[]>} */ ({
     ollama: [], backend: [], remote_bridge: [], hunter: [], trainer: [], refactoring: []
-  });
+  }));
   const [isPolling, setIsPolling] = useState(true);
 
   // AGENT MEMORY DASHBOARD STATE
-  const [memoryItems, setMemoryItems] = useState([]);
+  const [memoryItems, setMemoryItems] = useState(/** @type {{ id: string; content: string; metadata: Record<string, unknown> }[]} */ ([]));
   const [sandboxState, setSandboxState] = useState("{}");
   const [newMemoryInput, setNewMemoryInput] = useState("");
   const [newMemoryMeta, setNewMemoryMeta] = useState("");
   const [isMemLoading, setIsMemLoading] = useState(false);
 
   // MEMORY VISUALIZER STATE
-  const [memoryStream, setMemoryStream] = useState([]);
+  const [memoryStream, setMemoryStream] = useState(/** @type {{ timestamp: string; content: string }[]} */ ([]));
 
   // FETCHING LOGIC
   useEffect(() => {
@@ -96,7 +98,7 @@ export default function BullshitTelemetrySuite(props) {
       const memRes = await fetch(`${BACKEND_URL}/api/memory`);
       if (memRes.ok) {
         const data = await memRes.json();
-        const formatted = (data.ids || []).map((id, i) => ({
+        const formatted = (data.ids || []) .map(/** @param {string} id @param {number} i */ (id, i) => ({
           id, content: data.documents[i], metadata: data.metadatas[i] || {}
         }));
         setMemoryItems(formatted);
@@ -141,6 +143,7 @@ export default function BullshitTelemetrySuite(props) {
     } catch (err) { alert("Error adding memory or invalid metadata JSON"); }
   };
 
+  /** @param {string} id */
   const handleDeleteMemory = async (id) => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/memory/${id}`, { method: 'DELETE' });
@@ -225,7 +228,7 @@ export default function BullshitTelemetrySuite(props) {
         <div className="glass-panel" style={{ flex: 1, padding: '20px', borderRadius: '12px', overflowY: 'auto', background: '#111' }}>
           {memoryStream.length > 0 ? memoryStream.map((mem, idx) => (
             <div key={idx} style={{ padding: '10px', borderBottom: '1px solid #333' }}>
-              <span style={{ color: '#4ade80' }}>[{mem.timestamp || 'Just Now'}]</span> {mem.content || mem}
+              <span style={{ color: '#4ade80' }}>[{mem.timestamp || 'Just Now'}]</span> {typeof mem === 'string' ? mem : mem.content}
             </div>
           )) : <div style={{ color: '#555', textAlign: 'center', marginTop: '50px' }}>[Memory Stream is Idle.]</div>}
         </div>

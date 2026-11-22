@@ -1,0 +1,377 @@
+.screenwriting-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0d1017;
+  color: #e2e8f0;
+  font-family: sans-serif;
+  max-width: 100%;
+  overflow: hidden;
+  flex-wrap: nowrap !important;
+}
+
+/* 1. Main Menu Bar */
+.sw-menu-bar {
+  display: flex;
+  gap: 16px;
+  padding: 4px 16px;
+  background: #090a0f;
+  border-bottom: 1px solid #1f2937;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.sw-menu-item {
+  cursor: pointer;
+}
+
+/* 2. The Ribbon */
+.sw-ribbon {
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  gap: 4px;
+  padding: 2px 12px;
+  background: #111827;
+  border-bottom: 1px solid #1f2937;
+  align-items: center;
+}
+
+.sw-ribbon-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #374151;
+  padding-right: 16px;
+  padding-left: 8px;
+  flex-shrink: 0;
+  gap: 0px;
+}
+
+.sw-ribbon-btn {
+  background: transparent;
+  border: none;
+  color: #e5e7eb;
+  font-size: 13px;
+  line-height: 1.1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.sw-ribbon-btn-blue {
+  background: #0284c7;
+  color: white;
+  font-weight: bold;
+}
+
+.sw-ribbon-btn-red {
+  background: #dc2626;
+  color: white;
+  font-weight: bold;
+}
+
+.sw-ribbon-btn-active {
+  background: #374151;
+}
+
+.sw-ribbon-label {
+  font-size: 9px;
+  line-height: 1;
+  color: #6b7280;
+  margin-top: 2px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.sw-ribbon-select {
+  background: #1f2937;
+  color: #fff;
+  border: 1px solid #374151;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  outline: none;
+  width: 120px;
+}
+
+.sw-save-btn {
+  background: #4ade80;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 3. Main Workspace */
+.sw-workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+}
+
+.sw-left-panel {
+  width: 250px;
+  background: #0d1017;
+  border-right: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.sw-panel-header {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.sw-panel-input {
+  background: #000;
+  border: 1px solid #1f2937;
+  color: #fff;
+  padding: 4px;
+  font-size: 0.8rem;
+}
+
+.sw-sprint-active {
+  background: rgba(168,139,250,0.1);
+  border: 1px solid #a78bfa;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.sw-scene-list {
+  font-size: 0.8rem;
+  color: #d1d5db;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sw-scene-item {
+  padding-left: 8px;
+  border-left: 2px solid #374151;
+  cursor: pointer;
+}
+
+/* 4. Central Area & Beat Board */
+.sw-central-area {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+}
+
+.sw-editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.sw-preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+
+.sw-beat-board {
+  display: flex;
+  min-width: min-content;
+  position: relative;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.sw-beat-timeline {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(244, 63, 94, 0.2));
+  z-index: 0;
+  border-radius: 2px;
+}
+
+.sw-beat-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 12px;
+  box-sizing: border-box;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.sw-beat-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.8) !important;
+}
+
+.sw-beat-index {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  background: #38bdf8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(56,189,248,0.5);
+}
+
+.sw-beat-heading {
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.sw-beat-page {
+  margin-top: auto;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* 5. Bottom Panel */
+.sw-bottom-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px;
+  background: #090a0f;
+  border-top: 1px solid #1f2937;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* 6. Fountain Preview - Hollywood Standard Alignment */
+.fountain-preview {
+  font-family: "Courier Prime", "Courier New", Courier, monospace;
+  max-width: 850px;
+  margin: 0 auto;
+  line-height: 1.1;
+}
+
+/* Reset default margins */
+.fountain-preview h1, 
+.fountain-preview h2, 
+.fountain-preview h3, 
+.fountain-preview h4, 
+.fountain-preview h5, 
+.fountain-preview h6, 
+.fountain-preview p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: inherit;
+}
+
+/* Scene Heading */
+.fountain-preview h3 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  text-transform: uppercase;
+}
+
+/* Action */
+.fountain-preview > p {
+  margin-bottom: 1em;
+  max-width: 60ch;
+}
+
+/* Dialogue Block */
+.fountain-preview .dialogue {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+/* Character */
+.fountain-preview .dialogue h4 {
+  margin-left: 22ch;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+/* Dialogue Text */
+.fountain-preview .dialogue p {
+  margin-left: 10ch;
+  max-width: 35ch;
+  margin-bottom: 0;
+}
+
+/* Parenthetical */
+.fountain-preview .dialogue p.parenthetical {
+  margin-left: 16ch;
+  max-width: 25ch;
+  margin-bottom: 0;
+}
+
+/* Transition */
+.fountain-preview h2 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  margin-left: 45ch;
+  text-transform: uppercase;
+}
+
+/* Centered Text */
+.fountain-preview .centered {
+  text-align: center;
+}
+
+/* 7. Editor Gutter Badges & Hover Controls */
+.sw-gutter-badge {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sw-gutter-badge:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+.sw-ribbon-btn:hover {
+  background: #1f2937;
+  color: #facc15;
+}
+
+.sw-telemetry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+}
+

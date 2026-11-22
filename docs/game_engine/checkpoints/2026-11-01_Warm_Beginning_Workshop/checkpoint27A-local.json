@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "checkpoint": "27A",
+  "status": "locally_sealed_verified",
+  "archive_path": "D:\\AI-BS-Game-Resources\\Backups\\27A_SDK0162_SavedChapter_Software_Increment.zip",
+  "archive_bytes": 3736086,
+  "archive_sha256": "cdf9497c1cf8bf6a0a6b5beca7356e1d9ce024ce206236b34c74cf13b80d8184",
+  "manifest_sha256": "9c589e5bad14e5106f9840161f3ae15c5501614051a24240e07abbd246b757ca",
+  "selected_files": 1124,
+  "selected_bytes": 12236137,
+  "zip_members": 1127,
+  "every_member_size_SHA256_CRC_exact": true,
+  "base26A_required": true,
+  "cloud_uploaded": false,
+  "goal_complete": false,
+  "created_at": "2026-11-03T00:39:55.714509+00:00",
+  "private_status_retained_not_in_archive": true,
+  "drive_free_bytes": {
+    "C": 72543203328,
+    "D": 94884212736,
+    "E": 146813599744
+  }
+}

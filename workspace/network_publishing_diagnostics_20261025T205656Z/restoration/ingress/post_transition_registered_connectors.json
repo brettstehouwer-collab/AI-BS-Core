@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-25T21:34:18.377661+00:00",
+  "exit_code": 0,
+  "raw_output_not_retained": true,
+  "live_file_mutations": false,
+  "process_mutations": false,
+  "tunnel_name": "ai-bs",
+  "connectors": [
+    {
+      "identity_sha256": "6d5a1f2d6bf69b1a9c85a7a77a13c9321620432e0b71b129e3aa96a32e75cc9c",
+      "run_at": "2026-10-25T21:32:21.72461Z",
+      "version": "2026.10.0",
+      "edge_connections": 4
+    },
+    {
+      "identity_sha256": "741d2fc82bd607a1c3adc933072ce7a985d913c89778bb9935d7913f80459e4a",
+      "run_at": "2026-10-25T21:32:25.914784Z",
+      "version": "2026.10.0",
+      "edge_connections": 4
+    }
+  ]
+}

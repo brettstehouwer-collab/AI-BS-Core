@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { getApiBase } from '../config/api.js';
 
 const getEffectiveApiBase = () => {
@@ -7,20 +7,20 @@ const getEffectiveApiBase = () => {
     if (base) return base;
   } catch (e) {}
   if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:8080';
+    return 'http://127.0.0.1:8000';
   }
   return 'https://api.brettstehouwer.live';
 };
 
 export default function PearlMiningHubTab() {
-  const [poolStats, setPoolStats] = useState(null);
-  const [localStats, setLocalStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [poolStats, setPoolStats] = useState(/** @type {{stats?: {balance?: number | string, minPayoutLevel?: number | string, paid?: number | string, networkHeight?: number, hashrate_1h?: number, hashrate_24h?: number, hashrate?: number, roundScore?: number, poolRoundScore?: number, lastShare?: number, shares_good?: number, shares_invalid?: number, hashes?: number | string}, unconfirmed?: Array<{reward: number | string}>, prices?: {PRL?: {USD?: number}}, payments?: Array<string | [string, number | string, number | string] | {txHash?: string, tx_hash?: string, tx?: string, timestamp?: number | string, time?: number | string, amount?: number | string}>} | null} */ (null));
+  const [localStats, setLocalStats] = useState(/** @type {{status?: string, gpu?: {utilization_pct?: number, power_w?: number, power_limit_w?: number, temperature_c?: number, fan_speed_pct?: number, clock_core_mhz?: number, clock_mem_mhz?: number}, miner?: {hashrate?: number, shares_good?: number, shares_invalid?: number, hashes?: number | string}} | null} */ (null));
+  const [, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(/** @type {string | null} */ (null));
   const [gpuPowerLoading, setGpuPowerLoading] = useState(false);
-  const [gpuPowerStatus, setGpuPowerStatus] = useState(null); // null | 'locked' | 'mining_mode'
+  const [gpuPowerStatus, setGpuPowerStatus] = useState(/** @type {string | null} */ (null)); // null | 'locked' | 'mining_mode'
 
   const WALLET_ADDRESS = "prl1p5r4kvz636h2pa9fuww723s4r02flt25rec9qs6yjckk7lyejkvjs67a4n5";
   const POOL_WEB_URL = `https://pearl.herominers.com/?address=${WALLET_ADDRESS}`;
@@ -65,7 +65,8 @@ export default function PearlMiningHubTab() {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleControl = async (action) => {
+  /** @param {string} action */
+const handleControl = async ( action) => {
     setActionLoading(true);
     try {
       const apiBase = getEffectiveApiBase();
@@ -105,13 +106,14 @@ export default function PearlMiningHubTab() {
     }
   };
 
-  const isMining = localStats?.status === 'mining' || (localStats?.gpu?.utilization_pct > 50 && localStats?.gpu?.power_w > 200);
+  const isMining = localStats?.status === 'mining' || ((localStats?.gpu?.utilization_pct ?? 0) > 50 && (localStats?.gpu?.power_w ?? 0) > 200);
   const stats = poolStats?.stats || {};
   const gpu = localStats?.gpu || {};
   const miner = localStats?.miner || {};
   const unconfirmedBlocks = poolStats?.unconfirmed || [];
   const matureBalance = stats.balance ? (Number(stats.balance) / 1e8) : 0.0;
-  const pendingRewards = unconfirmedBlocks.reduce((acc, b) => acc + (Number(b.reward) || 0), 0) / 1e8;
+  const pendingRewards = unconfirmedBlocks.reduce(
+( acc,  b) => acc + (Number(b.reward) || 0), 0) / 1e8;
   const payoutThreshold = stats.minPayoutLevel ? (Number(stats.minPayoutLevel) / 1e8) : 1.0;
   const thresholdPct = Math.min(100, Math.round((matureBalance / payoutThreshold) * 100));
   const prlUsdPrice = poolStats?.prices?.PRL?.USD || 0.15;
@@ -126,7 +128,7 @@ export default function PearlMiningHubTab() {
       for (let i = 0; i < raw.length; i += 2) {
         const payStr = raw[i];
         const timeStr = raw[i + 1];
-        if (!payStr) continue;
+        if (typeof payStr !== 'string' || !payStr) continue;
         const parts = payStr.split(':');
         const txHash = parts[0] || '';
         const amountUnits = Number(parts[1]) || 0;
@@ -163,10 +165,12 @@ export default function PearlMiningHubTab() {
   const totalPaidFromStats = stats.paid ? (Number(stats.paid) / 1e8) : 0.0;
   const verifiedPayouts = totalPaidFromStats > 0 
     ? totalPaidFromStats 
-    : parsedPayments.reduce((acc, p) => acc + (p.amountPrl || 0), 0);
+    : parsedPayments.reduce(
+( acc, p) => acc + (p.amountPrl || 0), 0);
 
   // Formatter helpers
-  const formatHashrate = (hr) => {
+  /** @param {number | undefined} hr */
+const formatHashrate = ( hr) => {
     if (!hr || isNaN(hr)) return '0 H/s';
     if (hr >= 1e12) return (hr / 1e12).toFixed(2) + ' TH/s';
     if (hr >= 1e9) return (hr / 1e9).toFixed(2) + ' GH/s';
@@ -175,7 +179,8 @@ export default function PearlMiningHubTab() {
     return Number(hr).toFixed(0) + ' H/s';
   };
 
-  const formatHashes = (h) => {
+  /** @param {string | number | undefined} h */
+const formatHashes = ( h) => {
     if (!h) return '0';
     const num = Number(h);
     if (num >= 1e9) return (num / 1e9).toFixed(2) + ' B';
@@ -661,6 +666,7 @@ export default function PearlMiningHubTab() {
 }
 
 // Styles
+/** @type {import('react').CSSProperties} */
 const cardStyle = {
   backgroundColor: '#121824',
   border: '1px solid #222d3d',
@@ -669,6 +675,7 @@ const cardStyle = {
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)'
 };
 
+/** @type {import('react').CSSProperties} */
 const metricLabelStyle = {
   fontSize: '11px',
   fontWeight: '700',
@@ -676,6 +683,7 @@ const metricLabelStyle = {
   letterSpacing: '0.5px'
 };
 
+/** @type {import('react').CSSProperties} */
 const panelCardStyle = {
   backgroundColor: '#121824',
   border: '1px solid #222d3d',
@@ -684,6 +692,7 @@ const panelCardStyle = {
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
 };
 
+/** @type {import('react').CSSProperties} */
 const panelHeaderStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -696,6 +705,7 @@ const panelHeaderStyle = {
   color: '#ffffff'
 };
 
+/** @type {import('react').CSSProperties} */
 const rowStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -704,11 +714,13 @@ const rowStyle = {
   borderBottom: '1px solid #1c2638'
 };
 
+/** @type {import('react').CSSProperties} */
 const rowLabel = {
   color: '#8b949e',
   fontSize: '13px'
 };
 
+/** @type {import('react').CSSProperties} */
 const rowVal = {
   color: '#e6edf3',
   fontWeight: '600',

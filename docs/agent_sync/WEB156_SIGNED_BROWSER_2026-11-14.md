@@ -1,0 +1,9 @@
+# Exact web156 signed-browser composition
+
+The actual combined156artifact passed13signed-browser checks: compiled Firebase SDK persistence, production Gateway.Handler routing, actual selected FastAPI registrations and SDK RSA verification with an ephemeral synthetic certificate trust root. Actual profile submission, true offline capture, a fresh Chrome process cold-loading cached shell/SDK identity/profile/load without reseeding, reconnect synchronization and sign-out passed. No external network request was sent. Both owned API/gateway children exited0; owned browser/server closed.
+
+All3190canonical source pins and1155emitted output hashes still matched at final freeze. The copied fixture retained source_version151in its raw receipt; that literal is stale metadata, not the selected artifact. Its base path selects web156and the staged package version is156. Original code/result are preserved and the exact raw receipt hash plus reconciliation are recorded. No functional rerun was performed to change a label.
+
+This does not qualify real Google login, physical Android, personal cached identity, Studio/writer/chat authenticated workflows, the full monolithic backend, ordinary gameplay or full release. Existing156Hosting12checks remain separate evidence. No deployment, canonical dist/mirror replacement, live flag/service/provider/account or private-data change occurred. Source remains156.
+
+Evidence: backups/web156_combined_20261114_v01/attempt01/ and signed156-checkpoint/. Next real-owner/device and original creative/game/release gates; retain the frozen-native input gap and prior browser policy stop. Goal ACTIVE/incomplete. The scoped engineering archive excludes profiles, identities/tokens/email, private stores, raw logs, hidden environment inputs and the full compiled site/media. Closing annotations may postdate seal.

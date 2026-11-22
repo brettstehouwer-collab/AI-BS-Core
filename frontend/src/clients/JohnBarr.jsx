@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
+/** @param {{"BACKEND_URL": string}} props */
 export default function JohnBarr({ BACKEND_URL }) {
   const [activeTab, setActiveTab] = useState("orders");
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(/** @type {Array<{"order_id": string, "fulfillment_status": string, "total": number, "id": number, "created_at": string, "customer_name": string, "email": string, "phone": string, "shipping_address": string, "items": Array<{"name": string, "price": number, "qty": number}>, "subtotal": number, "tax": number, "shipping": number, "payment_method": string, "payment_status": string, "card_last4": string, "notes": string}>} */ ([]));
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [filterStatus, setFilterStatus] = useState("All");
   const [orderActionMsg, setOrderActionMsg] = useState("");
-  const [stats, setStats] = useState({ total_orders: 0, gross_revenue: 0 });
+  const [, setStats] = useState({ total_orders: 0, gross_revenue: 0 });
 
   // Analytics state
-  const [analyticsOverview, setAnalyticsOverview] = useState(null);
-  const [webTelemetry, setWebTelemetry] = useState(null);
-  const [monthlyReport, setMonthlyReport] = useState(null);
+  const [analyticsOverview, setAnalyticsOverview] = useState(/** @type {{"total_events": number, "unique_visitors": string, "bot_probes_blocked": string} | null} */ (null));
+  const [webTelemetry, setWebTelemetry] = useState(/** @type {{"total_pageviews": number, "unique_visitors": string, "avg_dwell_time_sec": string, "scroll_completion_rate": number, "web_vitals": {"lcp_ms": string, "cls_score": number}, "human_traffic_pct": string, "top_pages": Array<{"path": string, "hits": string}>, "top_referrers": Array<{"referrer": string, "hits": string}>, "live_events": Array<{"id": string, "formatted_time": string, "session_id": Array<string>, "city": string, "page_path": string, "event_type": string, "dwell_time_sec": string, "scroll_depth_pct": string, "gpu_renderer": string}>} | null} */ (null));
+  const [monthlyReport, setMonthlyReport] = useState(/** @type {{"billing_cycle": string, "retainer_tier": string, "infrastructure_uptime": string, "client_name": string, "business_name": string, "total_customer_interactions": number, "estimated_unique_diners": string, "top_performing_rub": number, "security_bot_probes_neutralized": string, "mobile_traffic_percentage": string, "executive_recommendation": string} | null} */ (null));
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
   const [semanticQuery, setSemanticQuery] = useState("");
-  const [semanticResults, setSemanticResults] = useState([]);
+  const [semanticResults, setSemanticResults] = useState(/** @type {Array<{"document": string, "similarity_score": number}>} */ ([]));
   const [searchingSemantic, setSearchingSemantic] = useState(false);
   const [copiedReportMsg, setCopiedReportMsg] = useState("");
 
@@ -172,7 +173,8 @@ export default function JohnBarr({ BACKEND_URL }) {
     }
   };
 
-  const handleSemanticSearch = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSemanticSearch = async ( e) => {
     if (e) e.preventDefault();
     if (!semanticQuery.trim()) return;
     setSearchingSemantic(true);
@@ -219,7 +221,8 @@ ${monthlyReport.executive_recommendation}
     fetchAnalyticsData();
   }, []);
 
-  const handleUpdateStatus = async (orderId, newStatus) => {
+  /** @param {string} orderId @param {string} newStatus */
+const handleUpdateStatus = async ( orderId,  newStatus) => {
     try {
       const res = await fetch(`${resolvedBackend}/api/v1/chef/order/${orderId}/status`, {
         method: "POST",
@@ -238,7 +241,8 @@ ${monthlyReport.executive_recommendation}
     }
   };
 
-  const handleAddNote = (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleAddNote = ( e) => {
     e.preventDefault();
     if (!newNoteTitle || !newNoteContent) return;
     const note = {
@@ -458,7 +462,8 @@ ${monthlyReport.executive_recommendation}
                       <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b' }}>Status:</span>
                       <select 
                         value={order.fulfillment_status || 'Pending'}
-                        onChange={(e) => handleUpdateStatus(order.order_id, e.target.value)}
+                        onChange={
+( e) => handleUpdateStatus(order.order_id, e.target.value)}
                         style={{
                           padding: '4px 10px',
                           borderRadius: '6px',
@@ -680,7 +685,8 @@ ${monthlyReport.executive_recommendation}
                       </tr>
                     </thead>
                     <tbody>
-                      {webTelemetry.live_events.slice(0, 10).map((e) => (
+                      {webTelemetry.live_events.slice(0, 10).map(
+( e) => (
                         <tr key={e.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                           <td style={{ padding: '6px 8px', fontFamily: 'monospace', color: '#64748b' }}>{e.formatted_time}</td>
                           <td style={{ padding: '6px 8px', fontFamily: 'monospace', color: '#0284c7' }}>{e.session_id.slice(0, 14)}...</td>
@@ -838,7 +844,8 @@ ${monthlyReport.executive_recommendation}
                 type="text"
                 placeholder="e.g. customers looking for poultry seasonings or wings, checkout dropouts..."
                 value={semanticQuery}
-                onChange={(e) => setSemanticQuery(e.target.value)}
+                onChange={
+( e) => setSemanticQuery(e.target.value)}
                 style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
               />
               <button 
@@ -960,14 +967,16 @@ ${monthlyReport.executive_recommendation}
                 type="text" 
                 placeholder="Note Title (e.g., Domain renewal update)..."
                 value={newNoteTitle}
-                onChange={(e) => setNewNoteTitle(e.target.value)}
+                onChange={
+( e) => setNewNoteTitle(e.target.value)}
                 style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
               />
               <textarea 
-                rows="3" 
+                rows={3} 
                 placeholder="Write correspondence details, client requests, or strategy notes..."
                 value={newNoteContent}
-                onChange={(e) => setNewNoteContent(e.target.value)}
+                onChange={
+( e) => setNewNoteContent(e.target.value)}
                 style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
               />
               <button type="submit" style={{ padding: '10px 22px', background: '#0e1618', color: '#f7e4cb', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', alignSelf: 'flex-start' }}>

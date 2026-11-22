@@ -1,0 +1,1562 @@
+{
+  "total_main_sections": 4,
+  "total_subtabs": 52,
+  "crowded_hbox_layouts": [
+    {
+      "file": "app.py",
+      "layout_var": "lay",
+      "widget_count": 12
+    },
+    {
+      "file": "creation_suite_subtools.py",
+      "layout_var": "c_lay",
+      "widget_count": 16
+    },
+    {
+      "file": "creation_suite_subtools.py",
+      "layout_var": "t_lay",
+      "widget_count": 11
+    },
+    {
+      "file": "creative_suite_views.py",
+      "layout_var": "h_lay",
+      "widget_count": 11
+    },
+    {
+      "file": "ecosystem_blueprint_view.py",
+      "layout_var": "top_row",
+      "widget_count": 9
+    },
+    {
+      "file": "intelligence_views.py",
+      "layout_var": "h_lay",
+      "widget_count": 10
+    },
+    {
+      "file": "music_daw_view.py",
+      "layout_var": "t_lay",
+      "widget_count": 15
+    },
+    {
+      "file": "omni_broadcast_studio.py",
+      "layout_var": "hdr",
+      "widget_count": 10
+    },
+    {
+      "file": "omni_broadcast_studio.py",
+      "layout_var": "pb_lay",
+      "widget_count": 11
+    },
+    {
+      "file": "operations_views.py",
+      "layout_var": "h_lay",
+      "widget_count": 10
+    },
+    {
+      "file": "screenwriting_view.py",
+      "layout_var": "btn_row",
+      "widget_count": 9
+    },
+    {
+      "file": "screenwriting_view.py",
+      "layout_var": "ab_lay",
+      "widget_count": 11
+    },
+    {
+      "file": "screenwriting_view.py",
+      "layout_var": "dp_lay",
+      "widget_count": 11
+    },
+    {
+      "file": "screenwriting_view.py",
+      "layout_var": "dv_lay",
+      "widget_count": 10
+    },
+    {
+      "file": "screenwriting_view.py",
+      "layout_var": "ns_lay",
+      "widget_count": 15
+    }
+  ],
+  "total_web_jsx_files": 193,
+  "top_25_largest_web_components": [
+    {
+      "name": "ChatTab.jsx",
+      "lines": 8441,
+      "bytes": 361539,
+      "buttons": 89,
+      "fetch_calls": 99,
+      "modals_refs": 32,
+      "tab_states": 0
+    },
+    {
+      "name": "ScreenwritingTab.jsx",
+      "lines": 2886,
+      "bytes": 136913,
+      "buttons": 94,
+      "fetch_calls": 27,
+      "modals_refs": 85,
+      "tab_states": 0
+    },
+    {
+      "name": "BroadcastStudio.jsx",
+      "lines": 2676,
+      "bytes": 142393,
+      "buttons": 40,
+      "fetch_calls": 9,
+      "modals_refs": 65,
+      "tab_states": 0
+    },
+    {
+      "name": "EmailClientTab.jsx",
+      "lines": 2473,
+      "bytes": 94765,
+      "buttons": 28,
+      "fetch_calls": 8,
+      "modals_refs": 11,
+      "tab_states": 0
+    },
+    {
+      "name": "MediaStudioTab.jsx",
+      "lines": 2322,
+      "bytes": 95497,
+      "buttons": 33,
+      "fetch_calls": 6,
+      "modals_refs": 14,
+      "tab_states": 0
+    },
+    {
+      "name": "BetaAnalyticsTab.jsx",
+      "lines": 2175,
+      "bytes": 114718,
+      "buttons": 33,
+      "fetch_calls": 19,
+      "modals_refs": 11,
+      "tab_states": 0
+    },
+    {
+      "name": "PhoneRepairGuideTab.jsx",
+      "lines": 2129,
+      "bytes": 108207,
+      "buttons": 20,
+      "fetch_calls": 7,
+      "modals_refs": 0,
+      "tab_states": 0
+    },
+    {
+      "name": "MobileStehouwerChat.jsx",
+      "lines": 1992,
+      "bytes": 75394,
+      "buttons": 18,
+      "fetch_calls": 7,
+      "modals_refs": 12,
+      "tab_states": 0
+    },
+    {
+      "name": "ProcessMemoryLabTab.jsx",
+      "lines": 1699,
+      "bytes": 71780,
+      "buttons": 37,
+      "fetch_calls": 13,
+      "modals_refs": 21,
+      "tab_states": 7
+    },
+    {
+      "name": "MobileGeminiChat.jsx",
+      "lines": 1659,
+      "bytes": 60227,
+      "buttons": 16,
+      "fetch_calls": 5,
+      "modals_refs": 12,
+      "tab_states": 0
+    },
+    {
+      "name": "ExecutiveCockpitTab.jsx",
+      "lines": 1603,
+      "bytes": 66142,
+      "buttons": 14,
+      "fetch_calls": 14,
+      "modals_refs": 0,
+      "tab_states": 0
+    },
+    {
+      "name": "NdaModuleTab.jsx",
+      "lines": 1588,
+      "bytes": 73309,
+      "buttons": 19,
+      "fetch_calls": 4,
+      "modals_refs": 0,
+      "tab_states": 11
+    },
+    {
+      "name": "SovereignAgentAppsTab.jsx",
+      "lines": 1535,
+      "bytes": 60193,
+      "buttons": 10,
+      "fetch_calls": 8,
+      "modals_refs": 2,
+      "tab_states": 0
+    },
+    {
+      "name": "AdminSharedDriveTab.jsx",
+      "lines": 1472,
+      "bytes": 58778,
+      "buttons": 57,
+      "fetch_calls": 13,
+      "modals_refs": 21,
+      "tab_states": 0
+    },
+    {
+      "name": "BsMediaCreatorTab.jsx",
+      "lines": 1460,
+      "bytes": 72820,
+      "buttons": 26,
+      "fetch_calls": 11,
+      "modals_refs": 0,
+      "tab_states": 13
+    },
+    {
+      "name": "BullshitKnowledgeSuite.jsx",
+      "lines": 1372,
+      "bytes": 91793,
+      "buttons": 56,
+      "fetch_calls": 14,
+      "modals_refs": 2,
+      "tab_states": 12
+    },
+    {
+      "name": "UserSessionTelemetryWidget.jsx",
+      "lines": 1347,
+      "bytes": 54856,
+      "buttons": 6,
+      "fetch_calls": 2,
+      "modals_refs": 0,
+      "tab_states": 0
+    },
+    {
+      "name": "DocumentsTab.jsx",
+      "lines": 1312,
+      "bytes": 59960,
+      "buttons": 27,
+      "fetch_calls": 10,
+      "modals_refs": 28,
+      "tab_states": 0
+    },
+    {
+      "name": "NotosEnterpriseOSTab.jsx",
+      "lines": 1297,
+      "bytes": 70089,
+      "buttons": 15,
+      "fetch_calls": 2,
+      "modals_refs": 0,
+      "tab_states": 0
+    },
+    {
+      "name": "HospitalityDemoSuiteTab.jsx",
+      "lines": 1289,
+      "bytes": 69626,
+      "buttons": 19,
+      "fetch_calls": 12,
+      "modals_refs": 1,
+      "tab_states": 0
+    },
+    {
+      "name": "VideoStreamingTab.jsx",
+      "lines": 1281,
+      "bytes": 43173,
+      "buttons": 16,
+      "fetch_calls": 2,
+      "modals_refs": 5,
+      "tab_states": 0
+    },
+    {
+      "name": "ProjectNoCoStudioTab.jsx",
+      "lines": 1254,
+      "bytes": 83774,
+      "buttons": 8,
+      "fetch_calls": 0,
+      "modals_refs": 0,
+      "tab_states": 20
+    },
+    {
+      "name": "PowerWashingTab.jsx",
+      "lines": 1235,
+      "bytes": 59624,
+      "buttons": 22,
+      "fetch_calls": 11,
+      "modals_refs": 15,
+      "tab_states": 13
+    },
+    {
+      "name": "OperationsAuditHubTab.jsx",
+      "lines": 1186,
+      "bytes": 53354,
+      "buttons": 6,
+      "fetch_calls": 17,
+      "modals_refs": 17,
+      "tab_states": 20
+    },
+    {
+      "name": "NotoBarInventoryHub.jsx",
+      "lines": 1114,
+      "bytes": 59481,
+      "buttons": 24,
+      "fetch_calls": 12,
+      "modals_refs": 8,
+      "tab_states": 0
+    }
+  ],
+  "native_classes_summary": {
+    "AddTransactionDialog": {
+      "file": "accounting_view.py",
+      "lines": 115,
+      "methods": 2,
+      "dialogs_or_alerts": 3,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "MasterAccountingNativeView": {
+      "file": "accounting_view.py",
+      "lines": 291,
+      "methods": 8,
+      "dialogs_or_alerts": 2,
+      "tables": 10,
+      "stacks_or_tabs": 0,
+      "buttons": 3
+    },
+    "JobContext": {
+      "file": "ai_compute.py",
+      "lines": 4,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AiComputeWorker": {
+      "file": "ai_compute.py",
+      "lines": 35,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "DummyHub": {
+      "file": "analyze_tab_redundancies.py",
+      "lines": 2,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MockMainWindow": {
+      "file": "analyze_tab_redundancies.py",
+      "lines": 8,
+      "methods": 1,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "CommandPaletteDialog": {
+      "file": "app.py",
+      "lines": 57,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MomModeView": {
+      "file": "app.py",
+      "lines": 74,
+      "methods": 1,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 3
+    },
+    "TrippyRootWidget": {
+      "file": "app.py",
+      "lines": 51,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MainWindow": {
+      "file": "app.py",
+      "lines": 628,
+      "methods": 22,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 1,
+      "buttons": 38
+    },
+    "SpscRing": {
+      "file": "audio_kernel.py",
+      "lines": 34,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "_Voice": {
+      "file": "audio_kernel.py",
+      "lines": 8,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "EngineStats": {
+      "file": "audio_kernel.py",
+      "lines": 16,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AudioEngine": {
+      "file": "audio_kernel.py",
+      "lines": 291,
+      "methods": 19,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AutomationConsoleNativeView": {
+      "file": "automation_console_view.py",
+      "lines": 306,
+      "methods": 10,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "TableGraphicsItem": {
+      "file": "banquet_cad_view.py",
+      "lines": 38,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "BanquetCadNativeView": {
+      "file": "banquet_cad_view.py",
+      "lines": 213,
+      "methods": 9,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "BibleHubNativeView": {
+      "file": "bible_hub_view.py",
+      "lines": 192,
+      "methods": 5,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "Blueprint": {
+      "file": "boilerplate_pyqt6_dpg_cuda.py",
+      "lines": 55,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "PlatformPingProbeThread": {
+      "file": "broadcast_stream_engine.py",
+      "lines": 72,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "StreamProfileManager": {
+      "file": "broadcast_stream_engine.py",
+      "lines": 127,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "StreamRequirementsDialog": {
+      "file": "broadcast_stream_engine.py",
+      "lines": 666,
+      "methods": 17,
+      "dialogs_or_alerts": 3,
+      "tables": 9,
+      "stacks_or_tabs": 2,
+      "buttons": 12
+    },
+    "BsChatBrowser": {
+      "file": "bs_chat_ide_full.py",
+      "lines": 86,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "BsCodeEditor": {
+      "file": "bs_chat_ide_full.py",
+      "lines": 39,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "BsChatIdeFullView": {
+      "file": "bs_chat_ide_full.py",
+      "lines": 2284,
+      "methods": 40,
+      "dialogs_or_alerts": 18,
+      "tables": 0,
+      "stacks_or_tabs": 1,
+      "buttons": 68
+    },
+    "AddEventDialog": {
+      "file": "calendar_view.py",
+      "lines": 93,
+      "methods": 2,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "CalendarScheduleNativeView": {
+      "file": "calendar_view.py",
+      "lines": 165,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 6,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "SafePopen": {
+      "file": "comprehensive_interactive_audit.py",
+      "lines": 17,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AddClientDialog": {
+      "file": "clients_crm_view.py",
+      "lines": 95,
+      "methods": 2,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "ClientsCrmNativeView": {
+      "file": "clients_crm_view.py",
+      "lines": 377,
+      "methods": 11,
+      "dialogs_or_alerts": 2,
+      "tables": 7,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "CloudDriveNativeView": {
+      "file": "cloud_drive_view.py",
+      "lines": 340,
+      "methods": 12,
+      "dialogs_or_alerts": 3,
+      "tables": 8,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "ClusterEngineNativeView": {
+      "file": "cluster_view.py",
+      "lines": 241,
+      "methods": 9,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "ComfyWorkspaceNativeView": {
+      "file": "comfy_workspace_view.py",
+      "lines": 400,
+      "methods": 11,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 8
+    },
+    "DryRunGate": {
+      "file": "comprehensive_interactive_audit.py",
+      "lines": 32,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "ComputeLabView": {
+      "file": "compute_view.py",
+      "lines": 165,
+      "methods": 8,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 3
+    },
+    "VideoStudioPage": {
+      "file": "creation_suite_subtools.py",
+      "lines": 365,
+      "methods": 13,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 5
+    },
+    "ComfyUIStudioPage": {
+      "file": "creation_suite_subtools.py",
+      "lines": 226,
+      "methods": 10,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 5
+    },
+    "NodeGraphicsItem": {
+      "file": "creation_suite_subtools.py",
+      "lines": 67,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "VisualScriptingPage": {
+      "file": "creation_suite_subtools.py",
+      "lines": 251,
+      "methods": 9,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 9
+    },
+    "LockScreenPage": {
+      "file": "creation_suite_subtools.py",
+      "lines": 80,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "StudioGuideDialog": {
+      "file": "creation_suite_subtools.py",
+      "lines": 60,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "BvMediaCreatorNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 119,
+      "methods": 4,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 3
+    },
+    "PersonalBrandNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 85,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "AdvertisingStudioNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 71,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "DigitalStorefrontNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 89,
+      "methods": 3,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "UnifiedMediaGalleryNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 53,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 3,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "TheatricalPrompterProjectorNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 104,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "NeonLoungeStudioNativeView": {
+      "file": "creative_suite_views.py",
+      "lines": 64,
+      "methods": 3,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "CryptoSwarmNativeView": {
+      "file": "crypto_swarm_view.py",
+      "lines": 224,
+      "methods": 7,
+      "dialogs_or_alerts": 0,
+      "tables": 8,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "StehouwerWaveStudioWidget": {
+      "file": "daw_subviews.py",
+      "lines": 228,
+      "methods": 15,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 8
+    },
+    "WaveformTrackCanvas": {
+      "file": "daw_subviews.py",
+      "lines": 60,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AiVocalStemSuiteWidget": {
+      "file": "daw_subviews.py",
+      "lines": 159,
+      "methods": 6,
+      "dialogs_or_alerts": 5,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 6
+    },
+    "DedicatedChannelRackPianoRollWidget": {
+      "file": "daw_subviews.py",
+      "lines": 54,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "InteractivePianoRollCanvas": {
+      "file": "daw_subviews.py",
+      "lines": 80,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "DedicatedPlaylistArrangerWidget": {
+      "file": "daw_subviews.py",
+      "lines": 32,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "DedicatedMixerFxRackWidget": {
+      "file": "daw_subviews.py",
+      "lines": 28,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "TheatricalVstVisualizerWidget": {
+      "file": "daw_subviews.py",
+      "lines": 34,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "SpectrumFftCanvas": {
+      "file": "daw_subviews.py",
+      "lines": 43,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "FullStudioLayoutWidget": {
+      "file": "daw_subviews.py",
+      "lines": 26,
+      "methods": 1,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "EcosystemBlueprintNativeView": {
+      "file": "ecosystem_blueprint_view.py",
+      "lines": 651,
+      "methods": 21,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 12
+    },
+    "ComposeEmailDialog": {
+      "file": "email_client_view.py",
+      "lines": 130,
+      "methods": 3,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "EmailClientNativeView": {
+      "file": "email_client_view.py",
+      "lines": 342,
+      "methods": 12,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 12
+    },
+    "WorkerSignals": {
+      "file": "engine.py",
+      "lines": 4,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "Task": {
+      "file": "engine.py",
+      "lines": 30,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "EngineBus": {
+      "file": "engine.py",
+      "lines": 54,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "GpuProbe": {
+      "file": "engine.py",
+      "lines": 65,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "ProjectNoCoNativeView": {
+      "file": "engineering_views.py",
+      "lines": 70,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "NocoVisionNativeView": {
+      "file": "engineering_views.py",
+      "lines": 52,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "GamingLabNativeView": {
+      "file": "engineering_views.py",
+      "lines": 76,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "ExecutiveCockpitFullView": {
+      "file": "executive_cockpit_full.py",
+      "lines": 484,
+      "methods": 15,
+      "dialogs_or_alerts": 6,
+      "tables": 1,
+      "stacks_or_tabs": 0,
+      "buttons": 9
+    },
+    "InstallWorker": {
+      "file": "installer_wizard.py",
+      "lines": 71,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "InstallerWizard": {
+      "file": "installer_wizard.py",
+      "lines": 326,
+      "methods": 12,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 1,
+      "buttons": 10
+    },
+    "SovereignChatView": {
+      "file": "intelligence_views.py",
+      "lines": 170,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "ExecutiveCockpitView": {
+      "file": "intelligence_views.py",
+      "lines": 120,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 5,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "SovereignSwarmView": {
+      "file": "intelligence_views.py",
+      "lines": 93,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "DeepLearningStudioNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 70,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AgentMemoryNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 128,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 4,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "ReasoningAttentionNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 54,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "VirtualMachinesNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 86,
+      "methods": 3,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "DefinitionsLoreNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 60,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "WorkflowDagNativeView": {
+      "file": "intelligence_views.py",
+      "lines": 185,
+      "methods": 9,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "LexiconNativeView": {
+      "file": "lexicon_view.py",
+      "lines": 223,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 5
+    },
+    "SynthwaveVideoMonitor": {
+      "file": "music_daw_view.py",
+      "lines": 96,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "SoundVaultBrowser": {
+      "file": "music_daw_view.py",
+      "lines": 246,
+      "methods": 10,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 10
+    },
+    "ChannelRackGrid": {
+      "file": "music_daw_view.py",
+      "lines": 138,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "PlaylistTimeline": {
+      "file": "music_daw_view.py",
+      "lines": 58,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MixerAndFxRack": {
+      "file": "music_daw_view.py",
+      "lines": 118,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "MusicDawView": {
+      "file": "music_daw_view.py",
+      "lines": 569,
+      "methods": 19,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 1,
+      "buttons": 26
+    },
+    "SubTabSpec": {
+      "file": "navigation_registry.py",
+      "lines": 6,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MasterHubSpec": {
+      "file": "navigation_registry.py",
+      "lines": 6,
+      "methods": 0,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "NotoInventoryNativeView": {
+      "file": "noto_inventory_view.py",
+      "lines": 280,
+      "methods": 7,
+      "dialogs_or_alerts": 1,
+      "tables": 10,
+      "stacks_or_tabs": 0,
+      "buttons": 6
+    },
+    "NutritionNativeView": {
+      "file": "nutrition_view.py",
+      "lines": 223,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 7,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "NativeScreenCaptureThread": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 35,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "LiveBroadcastCanvas": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 493,
+      "methods": 22,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "LiveScenesAndSourcesWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 154,
+      "methods": 8,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "ChannelVuMeter": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 38,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "AudioChannelStrip": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 69,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "AdvancedAudioMixerWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 57,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "ActiveGameDiscoveryWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 94,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "MultiRtmpSettingsWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 298,
+      "methods": 10,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "UnifiedStreamChatWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 81,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "NeuralAudioVoiceWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 108,
+      "methods": 4,
+      "dialogs_or_alerts": 2,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "VideoMeetingsWebRtcWidget": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 84,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 4,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "UniversalOmniStudioNativeView": {
+      "file": "omni_broadcast_studio.py",
+      "lines": 544,
+      "methods": 23,
+      "dialogs_or_alerts": 1,
+      "tables": 0,
+      "stacks_or_tabs": 1,
+      "buttons": 19
+    },
+    "OnboardingNativeView": {
+      "file": "onboarding_view.py",
+      "lines": 297,
+      "methods": 8,
+      "dialogs_or_alerts": 0,
+      "tables": 3,
+      "stacks_or_tabs": 0,
+      "buttons": 7
+    },
+    "OperationsAuditNativeView": {
+      "file": "operations_views.py",
+      "lines": 166,
+      "methods": 8,
+      "dialogs_or_alerts": 0,
+      "tables": 7,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "LeadMatrixNativeView": {
+      "file": "operations_views.py",
+      "lines": 74,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 8,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "OsintReconNativeView": {
+      "file": "operations_views.py",
+      "lines": 120,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "SovereignNdaNativeView": {
+      "file": "operations_views.py",
+      "lines": 103,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "LostPropertyNativeView": {
+      "file": "operations_views.py",
+      "lines": 65,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 3,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "PhoneRepairNativeView": {
+      "file": "phone_repair_view.py",
+      "lines": 188,
+      "methods": 4,
+      "dialogs_or_alerts": 3,
+      "tables": 6,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "PowerWashingNativeView": {
+      "file": "power_washing_view.py",
+      "lines": 283,
+      "methods": 5,
+      "dialogs_or_alerts": 2,
+      "tables": 7,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "RecDebutNativeView": {
+      "file": "rec_debut_view.py",
+      "lines": 429,
+      "methods": 9,
+      "dialogs_or_alerts": 6,
+      "tables": 10,
+      "stacks_or_tabs": 0,
+      "buttons": 11
+    },
+    "BeatCardWidget": {
+      "file": "screenwriting_view.py",
+      "lines": 67,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 3
+    },
+    "BeatBoardWidget": {
+      "file": "screenwriting_view.py",
+      "lines": 68,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "ScreenplayPageViewerWidget": {
+      "file": "screenwriting_view.py",
+      "lines": 77,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "ScreenwritingNativeView": {
+      "file": "screenwriting_view.py",
+      "lines": 1940,
+      "methods": 64,
+      "dialogs_or_alerts": 31,
+      "tables": 8,
+      "stacks_or_tabs": 4,
+      "buttons": 101
+    },
+    "ScreenMirrorNativeView": {
+      "file": "screen_mirror_view.py",
+      "lines": 205,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 4
+    },
+    "SteamGamingNativeView": {
+      "file": "steam_gaming_view.py",
+      "lines": 190,
+      "methods": 9,
+      "dialogs_or_alerts": 5,
+      "tables": 5,
+      "stacks_or_tabs": 0,
+      "buttons": 6
+    },
+    "StehouwerBroadcastStudioWindow": {
+      "file": "stehouwer_broadcast_studio.py",
+      "lines": 62,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "UnifiedSubsystemView": {
+      "file": "subsystem_views.py",
+      "lines": 169,
+      "methods": 7,
+      "dialogs_or_alerts": 1,
+      "tables": 2,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "HostTerminalView": {
+      "file": "subsystem_views.py",
+      "lines": 78,
+      "methods": 6,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "SyndicationNativeView": {
+      "file": "syndication_view.py",
+      "lines": 366,
+      "methods": 11,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 10
+    },
+    "SystemHealthNativeView": {
+      "file": "system_health_view.py",
+      "lines": 415,
+      "methods": 11,
+      "dialogs_or_alerts": 0,
+      "tables": 6,
+      "stacks_or_tabs": 1,
+      "buttons": 17
+    },
+    "TelemetryHub": {
+      "file": "telemetry_hub.py",
+      "lines": 99,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "TelemetryWriter": {
+      "file": "telemetry_shm.py",
+      "lines": 36,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "TelemetryReader": {
+      "file": "telemetry_shm.py",
+      "lines": 19,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "HardwareView": {
+      "file": "views.py",
+      "lines": 91,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 4,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "GpuView": {
+      "file": "views.py",
+      "lines": 93,
+      "methods": 4,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "PortMatrixView": {
+      "file": "views.py",
+      "lines": 88,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 5,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "OllamaFleetView": {
+      "file": "views.py",
+      "lines": 92,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 5,
+      "stacks_or_tabs": 0,
+      "buttons": 2
+    },
+    "VaultBrowserView": {
+      "file": "views.py",
+      "lines": 126,
+      "methods": 7,
+      "dialogs_or_alerts": 0,
+      "tables": 5,
+      "stacks_or_tabs": 0,
+      "buttons": 1
+    },
+    "WebTelemetryNativeView": {
+      "file": "web_telemetry_view.py",
+      "lines": 379,
+      "methods": 12,
+      "dialogs_or_alerts": 0,
+      "tables": 50,
+      "stacks_or_tabs": 1,
+      "buttons": 6
+    },
+    "Card": {
+      "file": "widgets.py",
+      "lines": 20,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "MetricCard": {
+      "file": "widgets.py",
+      "lines": 27,
+      "methods": 3,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "GaugeCard": {
+      "file": "widgets.py",
+      "lines": 42,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "StatusBadge": {
+      "file": "widgets.py",
+      "lines": 17,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "InteractiveLaunchCard": {
+      "file": "widgets_web_parity.py",
+      "lines": 70,
+      "methods": 5,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 0
+    },
+    "FilterPillBar": {
+      "file": "widgets_web_parity.py",
+      "lines": 40,
+      "methods": 2,
+      "dialogs_or_alerts": 0,
+      "tables": 0,
+      "stacks_or_tabs": 0,
+      "buttons": 5
+    }
+  }
+}

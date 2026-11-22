@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "primary_backend": "DirectX12",
+  "fallback_chain": [
+    "DirectX11On12",
+    "DirectX11_FeatureLevel_10_0",
+    "DirectX11_FeatureLevel_9_3",
+    "DXVK_Bridge",
+    "D8VK_Bridge",
+    "WARP_Software"
+  ],
+  "feature_level_requested": "11_0",
+  "minimum_feature_level": "9_3",
+  "allow_software_warp": true,
+  "translation_bridges": {
+    "dxvk_enabled": false,
+    "d8vk_enabled": false,
+    "search_paths": [
+      "third_party/dxvk",
+      "bin/bridges"
+    ]
+  }
+}

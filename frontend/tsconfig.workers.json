@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "WebWorker"
+    ],
+    "types": [],
+    "moduleDetection": "force"
+  },
+  "files": [],
+  "include": [
+    "public/sw.js",
+    "public/dyadic/sw.js",
+    "types/service-worker-env.d.ts"
+  ]
+}

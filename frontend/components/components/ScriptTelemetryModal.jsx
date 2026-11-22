@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 /**
  * ScriptTelemetryModal.jsx
  * Real-time floating telemetry HUD to watch screenplay pages being written,
  * live AI thinking steps, element metrics, tokens/s, chunk synthesis, and memory context.
  */
+/** @param {{"isOpen"?: boolean, "onClose"?: () => void, "projectName"?: string, "screenplayText"?: string, "ast"?: Array<{id: string, type: string, text: string, dual?: boolean}>, "totalScriptPages"?: number, "autoSaveStatus"?: string, "lastSavedTime"?: string, "backendUrl"?: string}} props */
 export default function ScriptTelemetryModal({
   isOpen = false,
   onClose,
@@ -34,8 +35,8 @@ export default function ScriptTelemetryModal({
       text: 'Integrity Shield Active: Local snapshot backup verified. Git auto-commit enabled on all write mutations.'
     }
   ]);
-  const [activeJob, setActiveJob] = useState(null);
-  const logEndRef = useRef(null);
+  const [activeJob, setActiveJob] = useState(/** @type {{"status": string, "current_chunk": number, "total_chunks": number, "progress": number, "previous_summary": string} | null} */ (null));
+  const logEndRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // Poll adaptation task if one is running
   useEffect(() => {
@@ -123,7 +124,7 @@ export default function ScriptTelemetryModal({
   };
 
   const words = (screenplayText.trim().match(/\S+/g) || []).length;
-  const charactersCount = screenplayText.length;
+  (screenplayText.length);
   const estRuntime = `${Math.max(1, Math.round(totalScriptPages))} mins`;
 
   return (

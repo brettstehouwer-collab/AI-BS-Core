@@ -1,0 +1,215 @@
+{
+  "record": 205,
+  "version": "v5.329.81",
+  "utc": "2026-10-31T18:14:54.674914+00:00",
+  "parent_commit": "a3c9430f74fee1352630c0e4ed64f8b011556770",
+  "status": "FACEBOOK_USER_CONFIRMED_C_LOCAL_CLOSE_PREPARED_ROOT_COMMIT_CLOUD_PENDING",
+  "findings": [
+    {
+      "id": "G205-01",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_AND_ACTUAL_SURFACE_VERIFIED",
+      "title": "Lost capture identity or implicit desktop/foreground fallback",
+      "change": "Carry exact raw title, HWND and selection-time PID. Preserve caption whitespace; reject closed/minimized/changed identity. Selected-window WGC replaces occlusion-dependent GDI capture; no monitor/GDI/OBS fallback."
+    },
+    {
+      "id": "G205-02",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_AND_RUNTIME_CONTROL_VERIFIED",
+      "title": "Native broadcast service startup/cleanup lacked verified ownership",
+      "change": "Fixed localhost8005 single worker, bounded mutex/environment holds, exact command/socket/health PID and virtualenv ancestry checks, bounded cleanup only for the captured launcher and proven child."
+    },
+    {
+      "id": "G205-03",
+      "severity": "HIGH",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Missing DAW or audio device could open an unrequested microphone",
+      "change": "Explicit microphone intent and actual enumeration only; unavailable/unselected audio becomes a valid silent AAC track. Accepted Facebook session intentionally uses silence."
+    },
+    {
+      "id": "G205-04",
+      "severity": "HIGH",
+      "status": "FIXED_EMPIRICALLY_AND_USER_INGEST_CONFIRMED",
+      "title": "Tee FLV/fMP4 lacked codec headers and produced invalid video/archive",
+      "change": "Add +global_header. CPU-only local fixture reproduced decode failure without it and passed both outputs after it. Actual readable WGC H.2641080+AAC game frame and subsequent Facebook LIVE screenshots confirm the corrected path."
+    },
+    {
+      "id": "G205-05",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Stale FFmpeg progress overwrote current-session telemetry",
+      "change": "Newline progress pipe, current captured-process/epoch ownership and parsed measured values."
+    },
+    {
+      "id": "G205-06",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED",
+      "title": "Generic credential validation and stale destination/preset controls blocked a configured target",
+      "change": "Aggregate fixed platform names without private URL/key echo; explain unsupported local SRT/HLS; synchronize saved controls and retain explicit destination selections."
+    },
+    {
+      "id": "G205-07",
+      "severity": "MEDIUM",
+      "status": "FIXED_OFFLINE_VERIFIED_LIVE_PREVIEW_LIMITED",
+      "title": "Worker-thread QScreen preview could remain blank or stale",
+      "change": "GUI-owned100ms timer, explicit selected-window/separate desktop opt-in, inactive offscreen capture, unavailable-frame clearing and shutdown. QScreen occlusion/layered-window limitations remain."
+    },
+    {
+      "id": "G205-STORAGE",
+      "severity": "HIGH",
+      "status": "OPEN_INTEGRITY_ANOMALY_C_FALLBACK_VERIFIED",
+      "title": "Recent E audit writes could not be trusted on readback",
+      "change": "Release-summary read failed via Python Errno22 and .NET device-does-not-exist. Newly written close script subsequently read as NUL bytes. Further E writes by this audit close stopped; running encoder untouched. Complete current source, exact verified old preimages, readable receipts and safe user screenshots were copied/readback-verified on C. E health/new archive integrity remain unverified."
+    }
+  ],
+  "tests": {
+    "combined_python_cases": 255,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "guard_denials": 0,
+    "source_hashes_stable": 43,
+    "protected_crypto_ledger_hashes_unchanged": 4,
+    "cohorts_overlap_not_summed": true,
+    "canonical191_python_75_clients": "REFERENCED_RECORD204_NOT_RERUN_205",
+    "version_paths": 16
+  },
+  "release": {
+    "version": "v5.329.81",
+    "status": "VERIFIED_INDEPENDENT_RELEASE_RECEIPTS_COPIED_TO_C",
+    "windows": {
+      "installed_executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.81\\AI_BS_Studio\\AI_BS_Studio.exe",
+      "executable_sha256": "c22bb8ee28cb6d871712f5144c4f2bb8258f3dc7e4bc17f3b98daf64e645ffa5",
+      "pe_version": "5.329.81.0",
+      "source_modules": 68,
+      "file_count": 2257,
+      "package_bytes": 561023621,
+      "frozen_support_verified": true,
+      "signing": "UNSIGNED",
+      "full_gui_acceptance_verified": false
+    },
+    "hosting": {
+      "record": 205,
+      "utc": "2026-10-31T17:40:52.077897+00:00",
+      "status": "VERIFIED_DEPLOYED",
+      "version": "v5.329.81",
+      "project": "ai-bs-dashboard",
+      "site": "ai-bs-dashboard",
+      "production_url": "https://ai-bs-dashboard.web.app",
+      "preview_url": "https://ai-bs-dashboard--audit-v81-2jfdpw68.web.app",
+      "hosting_stage_files": 1127,
+      "hosting_stage_bytes": 921347226,
+      "compiled_files": 143,
+      "preserved_public_files": 983,
+      "modules_transformed": 5679,
+      "preview_files_verified": 156,
+      "live_files_verified": 156,
+      "all_compiled_and_version_verified": true,
+      "preserved_public_samples": 12,
+      "all_preserved_public_files_remotely_verified": false,
+      "stage_manifest_sha256": "7af44889bd97f32c339345a08c1fa6e5f2a5aea6f809c75f1bc655aaae4cf64c",
+      "preview_proof_sha256": "dba44829a7256a5a4953651234704716dd68bef31ec49d941a4fe0cd9759c52b",
+      "live_proof_sha256": "b7618d2569abbe05c0cbfa2f547c28bf4848c911f8cd6fde60cfa4f422ed8b84",
+      "rollback_clone_command_exit": 0,
+      "rollback_preview_url_or_readback_verified": false,
+      "rollout": "preview upload, exact static readback, server-side clone to live, exact live static readback",
+      "hosting_only": true,
+      "backend_or_firestore_deployed": false,
+      "application_javascript_executed": false,
+      "provider_or_trading_dispatch_invoked": false,
+      "secrets_exported": false,
+      "same_cloud_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k"
+    },
+    "original_E_release_summary_unreadable_not_overwritten": true,
+    "cloud_native_roundtrip_not_inferred": true
+  },
+  "facebook_acceptance": {
+    "status": "USER_CONFIRMED_SCREENSHOT",
+    "public_facebook_ingest_verified": true,
+    "scope": "User Facebook LIVE screenshots, not independent Meta API attestation.",
+    "content": "Fortnite",
+    "observed_fps_approximately": 29,
+    "observed_bitrate_mbps_approximately": [
+      5.6,
+      5.8
+    ],
+    "lag": "USER_REPORTED_NO_LAG_NOT_A_BENCHMARK",
+    "encoder_pid_at_evidence": 24044,
+    "decoded_codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "audio": "aac explicit silence",
+    "growing_readable_archive_at_evidence_time": true,
+    "archive_finalization_verified": false,
+    "stream_left_running": true,
+    "historical_false_ingest_attempt_receipts_preserved": true,
+    "screenshots": [
+      {
+        "path": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\context\\codex-clipboard-d3f4a61f-bfd7-49f7-bce8-69cdfc98f05c.png",
+        "bytes": 1134500,
+        "sha256": "9c74a8fe287d055c491025dea38f8f07f5a47c4383e09dda8a0a839e520120da",
+        "root_confirmed_no_keys_visible": true
+      },
+      {
+        "path": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\context\\codex-clipboard-73ddebd3-3135-42cd-8996-7d4e1777b04f.png",
+        "bytes": 549277,
+        "sha256": "098b9e1a687f852b81ca5d1231c87e680b2efbd0f144f8b54a2d0b2dd67c4d98",
+        "root_confirmed_no_keys_visible": true
+      },
+      {
+        "path": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\context\\codex-clipboard-f85d6e61-2d94-4895-843a-ae496f9d9ab9.png",
+        "bytes": 542494,
+        "sha256": "49f97922ddc74bd646df8241096b8fea5e7f778dffb516dca3ed4fb1676a8364",
+        "root_confirmed_no_keys_visible": true
+      }
+    ]
+  },
+  "source_paths": [
+    "backend/aibs_broadcast_daemon.py",
+    "backend/core/native_window_capture.py",
+    "backend/core/window_capture_pipe.py",
+    "backend/requirements.txt",
+    "BroadcastStudioApp/package-lock.json",
+    "BroadcastStudioApp/package.json",
+    "BroadcastStudioApp/src/version.js",
+    "frontend/components/components/version.js",
+    "frontend/components/version.js",
+    "frontend/package-lock.json",
+    "frontend/package.json",
+    "frontend/public/version.json",
+    "frontend/src/components/components/version.js",
+    "frontend/src/components/version.js",
+    "frontend/src/version.js",
+    "frontend/version.js",
+    "native_studio/broadcast_control.py",
+    "native_studio/broadcast_service.py",
+    "native_studio/omni_broadcast_studio.py",
+    "package-lock.json",
+    "package.json",
+    "release.json",
+    "requirements.txt",
+    "scripts/tests/test_broadcast_capture_inputs205.py",
+    "scripts/tests/test_broadcast_daemon_integrity.py",
+    "scripts/tests/test_broadcast_service205.py",
+    "scripts/tests/test_native_broadcast_preview205.py",
+    "scripts/tests/test_native_broadcast_setup205.py",
+    "scripts/tests/test_native_broadcast_validation205.py",
+    "scripts/tests/test_native_window_capture205.py",
+    "scripts/tests/test_window_capture_pipe205.py",
+    "version.txt"
+  ],
+  "source_snapshot": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\source205",
+  "preimages": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\preimages",
+  "source_snapshot_manifest": "C:\\AI-BS\\backups\\record205_close_storage_fallback_20261031\\manifest.json",
+  "source_files": 33,
+  "changed_source_paths": 32,
+  "live_trading": "DISABLED",
+  "stream_action_by_close": "NONE_LEFT_RUNNING",
+  "source_edits_by_close": false,
+  "credentials_profiles_env_selected": false,
+  "later_key_bearing_screenshots_excluded": true,
+  "google_drive_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "cloud_close": "ROOT_PENDING_C_SOURCE_ONLY_UNTIL_E_VERIFIED",
+  "full_system_audit": "IN_PROGRESS",
+  "record206": "Subsequent YouTube/relay work; not claimed completed here."
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const DEFAULT_LAYOUT_CONFIG = {
   fontScale: 1.0,           // 0.75 to 1.50
@@ -99,7 +99,7 @@ export const LAYOUT_PRESETS = [
   }
 ];
 
-export function applyLayoutConfigToDom(config) {
+export function applyLayoutConfigToDom(/** @type {typeof DEFAULT_LAYOUT_CONFIG} */ config) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
   const selectedFont = FONT_OPTIONS.find(f => f.key === config.fontFamilyKey) || FONT_OPTIONS[0];
@@ -114,8 +114,9 @@ export function applyLayoutConfigToDom(config) {
   root.style.setProperty('--aibs-primary-font', selectedFont.family);
 }
 
+/** @param {{isOpen: boolean, onClose: () => void}} props */
 export default function GlobalLayoutCustomizerModal({ isOpen, onClose }) {
-  const [config, setConfig] = useState(() => {
+  const [config, setConfig] = useState(/** @returns {typeof DEFAULT_LAYOUT_CONFIG} */ () => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('aibs_layout_customizer_settings');
@@ -131,6 +132,7 @@ export default function GlobalLayoutCustomizerModal({ isOpen, onClose }) {
   const [copiedNotification, setCopiedNotification] = useState(false);
 
   // Sync to DOM and localStorage on any config change
+  /** @template {keyof typeof DEFAULT_LAYOUT_CONFIG} K @param {K} key @param {(typeof DEFAULT_LAYOUT_CONFIG)[K]} value */
   const updateConfig = (key, value) => {
     setConfig(prev => {
       const updated = { ...prev, [key]: value };
@@ -142,7 +144,7 @@ export default function GlobalLayoutCustomizerModal({ isOpen, onClose }) {
     });
   };
 
-  const handleApplyPreset = (presetConfig) => {
+  const handleApplyPreset = (/** @type {Partial<typeof DEFAULT_LAYOUT_CONFIG>} */ presetConfig) => {
     const updated = { ...config, ...presetConfig };
     setConfig(updated);
     applyLayoutConfigToDom(updated);

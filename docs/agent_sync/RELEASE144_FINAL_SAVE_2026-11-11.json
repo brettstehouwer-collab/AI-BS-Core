@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-11T17:49:05.428567+00:00",
+  "goal_status": "PAUSED",
+  "source_version": "5.329.144",
+  "firebase_status": "VERIFIED_LIVE_STATIC_5.329.144",
+  "native_status": "V02_STATIC_AND_NORMAL_GAME_ENTRY_AND_PACKAGED_VERSION_CHECK_VERIFIED",
+  "native_runtime_limit": "Creator/reopen/viewports/saved-player evidence is v01 unchanged-implementation scope, not full new v02 gameplay qualification.",
+  "native_executable": "C:/AI-BS/native_studio/releases/v5.329.144/AI_BS_Studio/AI_BS_Studio.exe",
+  "native_executable_sha256": "cf2ba3743058769e4c593871a535dd8f80772435713fcc2008ee36d1d2d5db34",
+  "normal_game_entry": {
+    "window_id": 524980,
+    "version": "5.329.144",
+    "game_workspace_visible": true,
+    "normal_close_observed": true,
+    "existing_project_opened": false
+  },
+  "work_controls_entry": {
+    "window_id": 1181926,
+    "launcher_cmd_executed": true,
+    "dialog_visible": true,
+    "actual_version_child_exit": 0,
+    "version": "5.329.144",
+    "drift": [],
+    "idle_after_check": true,
+    "left_open_after_user_input": true
+  },
+  "launcher_paths": [
+    "Launch-AI-BS-Game-Development.cmd",
+    "Launch-AI-BS-Work-Controls.cmd"
+  ],
+  "desktop_shortcuts": [
+    {
+      "path": "C:\\Users\\Administrator\\Desktop\\AI-BS Game Development.lnk",
+      "working_directory": "C:\\AI-BS",
+      "arguments": "--game-development",
+      "sha256": "fc63252b8128ad35a76287a82078aaf913d7a4c4c799d6fe3558807912d5ce92",
+      "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.144\\AI_BS_Studio\\AI_BS_Studio.exe"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Desktop\\AI-BS Work Controls.lnk",
+      "working_directory": "C:\\AI-BS",
+      "arguments": "--work-controls",
+      "sha256": "aa6de9e816ea106e02c23d6bb7ec3d8f9e3b3f917cb5018ac823319751dbf97c",
+      "target": "C:\\AI-BS\\native_studio\\releases\\v5.329.144\\AI_BS_Studio\\AI_BS_Studio.exe"
+    }
+  ],
+  "history_paths": [
+    "docs/architecture/AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.md",
+    "docs/architecture/AI_BS_RECOVERY_SOURCE_HISTORY_2026-11-11.json"
+  ],
+  "evidence_paths": [
+    "backups/studio144_package_20261111_v02/static-verification.json",
+    "backups/studio144_package_20261111_v02/source-delta-vs-v01.json",
+    "backups/studio144_package_20261111_v01/runtime-postflight.json",
+    "backups/firebase144_release_20261111_v01/public144-verification.json",
+    "backups/release144_launchers_20261111_v01/shortcut-verification.json"
+  ],
+  "backup_scope": "Source/log/history overlay plus separately manifested clean frozen runtime; not all profile contents or a complete saved-data backup.",
+  "drive_folder_id": "1siuY6PGT0MFtfzFN6SWsgtgTyhHt9d6m",
+  "drive_folder_shared": true,
+  "drive_permissions_changed": false,
+  "original_profiles_saves_assets_and_old_shortcuts_preserved": true,
+  "unmet_gates": [
+    "authenticated creative/browser workflow",
+    "ordinary human pacing",
+    "checked captions",
+    "likeness",
+    "signing",
+    "clean machine",
+    "full subsystem parity",
+    "Nsight injection"
+  ],
+  "runtime_backup": {
+    "local_receipt": "backups/release144_runtime_archive_20261111_v01/runtime-archive.json",
+    "drive_id": "1zrH8DjmcxcBG1Bhulq3_uaLMiOOtOKcw",
+    "url": "https://drive.google.com/file/d/1zrH8DjmcxcBG1Bhulq3_uaLMiOOtOKcw/view?usp=drivesdk",
+    "status": "UPLOADED_METADATA_CHECKED_ROUNDTRIP_PENDING"
+  },
+  "history_status": "SAVED_REFERENCE_REGISTER_CONTENT_COVERAGE_SEPARATE"
+}

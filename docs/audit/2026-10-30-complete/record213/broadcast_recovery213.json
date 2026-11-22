@@ -1,0 +1,31 @@
+{
+  "utc": "2026-11-01T01:47:08.173774+00:00",
+  "root_cause": "Previous-boot IPC claimed a running coordinator whose process epochs predate the current boot",
+  "fix": "Source client permits a fresh locked start; core boot preserves and resets proven previous-boot state for older installed clients",
+  "observed_before_repair": {
+    "boot_epoch": 1793495005.833926,
+    "controller_create_time": 1793486066.3001533,
+    "encoder_create_time": 1793486066.871256,
+    "controller_present": false,
+    "client_status": "owner_unverified",
+    "status_fresh": false
+  },
+  "status": {
+    "status": "running_unverified",
+    "active": true,
+    "capture_state": "capturing",
+    "game_frame_verified": false,
+    "frames_encoded": 6060,
+    "out_time_us": 202026667,
+    "source_mode": "window",
+    "controller_pid": 38748,
+    "encoder_pid": 13352
+  },
+  "preview_http_status": 200,
+  "decoded_fortnite_frame": "preview_frame213.jpg",
+  "decoded_frame_sha256": "cd633926e3bfdb04dc34adfb5057520f19e96f6015bf5acbc0557d2de195c5f1",
+  "platform_acceptance_verified": false,
+  "physical_in_app_display_observed": false,
+  "audio": "generated_silence",
+  "cloud": "LOCAL_ONLY_PER_USER"
+}

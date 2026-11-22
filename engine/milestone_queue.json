@@ -1,0 +1,1099 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-03T16:38:26.774951+00:00",
+  "title": "AI-BS continuing engine build",
+  "game_identity": "Adam's Infinite-Brett Stehouwer Living Learning Memoir",
+  "current_milestone": "M5",
+  "status_contract": {
+    "milestone_statuses": [
+      "planned",
+      "in_progress",
+      "complete"
+    ],
+    "gate_statuses": [
+      "PROPOSED",
+      "UNVERIFIED",
+      "VERIFIED",
+      "FAILED"
+    ],
+    "completion_rule": "A milestone is complete only when every gate is VERIFIED with relevant actual implementation/evidence. Planned scope, an installed dependency or a declared status alone is not a passing verification.",
+    "evidence_rule": "Evidence entries are repository-relative paths or supporting official URLs. A path's presence is not a claim that every scenario passed; consult the actual result and timestamp. Empty evidence does not verify a gate.",
+    "monitor_rule": "Display declared execution status separately from actual report status, missing evidence and source-stale evidence."
+  },
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Baseline and executable delivery queue",
+      "depends_on": [],
+      "status": "complete",
+      "gates": [
+        {
+          "id": "M0-G01",
+          "description": "Classify the current engine, SDK, native package, known failures and storage from actual records.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/BUILD_STATUS.md"
+          ]
+        },
+        {
+          "id": "M0-G02",
+          "description": "Current roadmap and next three slices are present; old plan is explicitly historical.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/BUILD_ROADMAP.md",
+            "docs/game_engine/implementation_plan.md"
+          ]
+        },
+        {
+          "id": "M0-G03",
+          "description": "The build monitor reads declared milestones separately from verification evidence.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/tests/test_build_monitor.py",
+            "engine/tests/test_native_build_view.py",
+            "engine/out/milestone-monitor.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Grounded BS movement",
+      "depends_on": [
+        "M0"
+      ],
+      "status": "complete",
+      "gates": [
+        {
+          "id": "M1-G01",
+          "description": "An immutable Jolt dependency builds behind AI-BS physics types and redistributable installed SDK targets.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug06-consolidated.log",
+            "engine/out/release06-consolidated.log",
+            "engine/out/obstacle_course_verification.json",
+            "engine/tests/physics_tests.cpp",
+            "engine/tests/scene_tests.cpp",
+            "engine/tests/player_tests.cpp"
+          ]
+        },
+        {
+          "id": "M1-G02",
+          "description": "Capsule, gravity, floor, wall, step, slope, jump/fall and live collider updates pass obstacle-course tests.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug06-consolidated.log",
+            "engine/out/release06-consolidated.log",
+            "engine/out/obstacle_course_verification.json",
+            "engine/tests/physics_tests.cpp",
+            "engine/tests/scene_tests.cpp",
+            "engine/tests/player_tests.cpp"
+          ]
+        },
+        {
+          "id": "M1-G03",
+          "description": "Fixed 60 Hz stepping, bounded catch-up, pause/focus recovery and first/third-person camera obstruction work in the native board.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug06-consolidated.log",
+            "engine/out/release06-consolidated.log",
+            "engine/out/obstacle_course_verification.json",
+            "engine/tests/physics_tests.cpp",
+            "engine/tests/scene_tests.cpp",
+            "engine/tests/player_tests.cpp"
+          ]
+        },
+        {
+          "id": "M1-G04",
+          "description": "Debug/Release regressions, actual DX12 movement evidence and installed SDK consumer pass; current format-1 checkpoints remain readable.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug06-consolidated.log",
+            "engine/out/release06-consolidated.log",
+            "engine/out/obstacle_course_verification.json",
+            "engine/tests/physics_tests.cpp",
+            "engine/tests/scene_tests.cpp",
+            "engine/tests/player_tests.cpp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Durable gameplay and Adam continuity",
+      "depends_on": [
+        "M1"
+      ],
+      "status": "complete",
+      "gates": [
+        {
+          "id": "M2-G01",
+          "description": "Versioned components and typed semantic events preserve project/world/branch/entity identities.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug07-native-final.log",
+            "engine/out/release07-native-final.log",
+            "engine/GAMEPLAY_CONTRACT.md",
+            "engine/tests/gameplay_tests.cpp",
+            "engine/tests/gameplay_world_tests.cpp"
+          ]
+        },
+        {
+          "id": "M2-G02",
+          "description": "Bounded save worker atomically commits world deltas and corresponding semantic events to local SQLite; duplicates and stale writers are handled.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug07-native-final.log",
+            "engine/out/release07-native-final.log",
+            "engine/GAMEPLAY_CONTRACT.md",
+            "engine/tests/gameplay_worker_tests.cpp",
+            "engine/tests/gameplay_store_tests.cpp",
+            "engine/out/gameplay_store_verification.json"
+          ]
+        },
+        {
+          "id": "M2-G03",
+          "description": "Non-destructive format-1 import preserves identities and original edit history; kill/restart, malformed input, migration and recovery tests pass.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/out/debug07-native-final.log",
+            "engine/out/release07-native-final.log",
+            "engine/GAMEPLAY_CONTRACT.md",
+            "engine/tests/legacy_import_tests.cpp",
+            "engine/out/gameplay_store_verification.json"
+          ],
+          "scope": "Imports preserve the original checkpoint baseline and full old evidence. Restoring the old CreatorSession does not project later typed gameplay deltas back into format1."
+        },
+        {
+          "id": "M2-G04",
+          "description": "HUD and monitor distinguish accepted, visible, unsaved and durable completion; offline Adam recall resolves to actual event records.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/NATIVE_DURABLE_WORLD.md",
+            "engine/tests/durable_first_boot_tests.cpp",
+            "engine/out/debug07-native-final.log",
+            "engine/out/release07-native-final.log",
+            "engine/out/durable_world_verification.json",
+            "engine/out/packaged92-durable-world/durable_world_verification.json",
+            "engine/out/m2-native-monitor-final.log",
+            "engine/out/native92-release-smoke.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "First Boot power-fault chapter route",
+      "depends_on": [
+        "M2"
+      ],
+      "status": "complete",
+      "gates": [
+        {
+          "id": "M3-G01",
+          "description": "Telegraphed arcs, diagnostic clues, objectives and doors support isolation/repair and relay bypass.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/tests/first_boot_chapter_tests.cpp",
+            "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json"
+          ]
+        },
+        {
+          "id": "M3-G02",
+          "description": "Secured respawn, the sheltered hub and Pencil Room remain reachable through alternate progression.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/tests/first_boot_chapter_traversal_tests.cpp",
+            "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json"
+          ]
+        },
+        {
+          "id": "M3-G03",
+          "description": "One friendly NPC supplies contextual hints and an optional side task; Adam guidance follows actual route outcomes.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/games/first_boot_chapter.cpp",
+            "engine/apps/durable_world.cpp",
+            "engine/tests/verify_first_boot_chapter.py",
+            "docs/game_engine/m3_acceptance_audit.md",
+            "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json"
+          ]
+        },
+        {
+          "id": "M3-G04",
+          "description": "Open/close, build/dismantle, depart/return, help/decline and save/reload both routes preserve coherent hints and consequences.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/tests/first_boot_chapter_tests.cpp",
+            "engine/tests/first_boot_chapter_traversal_tests.cpp",
+            "engine/tests/verify_first_boot_chapter.py",
+            "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Minimum creator inside AI-BS",
+      "depends_on": [
+        "M3"
+      ],
+      "status": "complete",
+      "gates": [
+        {
+          "id": "M4-G01",
+          "description": "Project browser, outliner, inspector, picking, placement/transforms and history operate on UUID targets.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/CREATOR_WORKSPACE.md",
+            "engine/tests/test_creator_workspace.py",
+            "engine/out/creator-workspace-regression.log",
+            "engine/out/creator-workspace.png",
+            "engine/CREATOR_VIEWPORT.md",
+            "engine/tests/test_creator_viewport.py",
+            "engine/out/creator_viewport_verification.json",
+            "engine/CONTENT_AUTHORING.md",
+            "engine/tests/content_authoring_tests.cpp",
+            "engine/tests/test_content_proposals.py",
+            "engine/out/content_authoring_verification.json",
+            "engine/out/chapter_creator_verification.json",
+            "engine/tests/test_content_view.py",
+            "engine/tests/test_content_job_process.py",
+            "engine/out/chapter_play_verification.json",
+            "engine/out/chapter-play-installed-verification.json",
+            "docs/game_engine/m4_acceptance_audit.md"
+          ]
+        },
+        {
+          "id": "M4-G02",
+          "description": "Visual tools, SDK code and AI proposals submit the same validated transactions.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/CREATOR_WORKSPACE.md",
+            "engine/tests/test_creator_workspace.py",
+            "engine/FIRST_BOOT_CONTENT.md",
+            "engine/tests/first_boot_content_tests.cpp",
+            "engine/out/first_boot_content_verification.json",
+            "engine/CONTENT_AUTHORING.md",
+            "engine/tests/content_authoring_tests.cpp",
+            "engine/tests/test_content_proposals.py",
+            "engine/out/content_authoring_verification.json",
+            "engine/out/chapter_creator_verification.json",
+            "engine/tests/test_content_view.py",
+            "engine/tests/test_content_job_process.py",
+            "engine/out/chapter_play_verification.json",
+            "engine/out/chapter-play-installed-verification.json",
+            "docs/game_engine/m4_acceptance_audit.md"
+          ]
+        },
+        {
+          "id": "M4-G03",
+          "description": "Previews explain affected render/collision/navigation/power/quest dependencies and save compatibility.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/FIRST_BOOT_CONTENT.md",
+            "engine/tests/first_boot_content_tests.cpp",
+            "engine/out/first_boot_content_verification.json",
+            "engine/CONTENT_AUTHORING.md",
+            "engine/tests/content_authoring_tests.cpp",
+            "engine/tests/test_content_proposals.py",
+            "engine/out/content_authoring_verification.json",
+            "engine/out/chapter_creator_verification.json",
+            "engine/tests/test_content_view.py",
+            "engine/tests/test_content_job_process.py",
+            "engine/out/chapter_play_verification.json",
+            "engine/out/chapter-play-installed-verification.json",
+            "docs/game_engine/m4_acceptance_audit.md"
+          ]
+        },
+        {
+          "id": "M4-G04",
+          "description": "Isolated Play/Stop does not silently publish transient player state; undo/reload preserve authored state.",
+          "status": "VERIFIED",
+          "evidence": [
+            "engine/FIRST_BOOT_CONTENT.md",
+            "engine/tests/first_boot_content_tests.cpp",
+            "engine/out/first_boot_content_verification.json",
+            "engine/out/chapter_play_verification.json",
+            "engine/out/chapter-play-installed-verification.json",
+            "engine/tests/test_content_view.py",
+            "docs/game_engine/m4_acceptance_audit.md"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Private First Boot alpha and RTX showcase",
+      "depends_on": [
+        "M4"
+      ],
+      "status": "in_progress",
+      "gates": [
+        {
+          "id": "M5-G01",
+          "description": "Asset registry/import/cooker and packaged models/materials/shadows load without source paths.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M5-G02",
+          "description": "Sound, subtitles and supported PC settings work; native RTX awakening follows restored power.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M5-G03",
+          "description": "A complete 20\u201330 minute Jenison-to-Pencil-Room chapter works through tested branches in a private PC package.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M5-G04",
+          "description": "Recovery, licensing, SDK reuse sample, measured reference profile and clean-machine checks accompany the package.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Combat, computer-part equipment and NPC quests",
+      "depends_on": [
+        "M5"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M6-G01",
+          "description": "Equipment inventory, computer-part weapons/armor and damage/status/cost rules work together.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M6-G02",
+          "description": "One virus regime and boss support readable threats and persisted outcomes.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M6-G03",
+          "description": "NPC hints/side quests and surviving influence react coherently to choices and reload; earlier environmental alternate progression remains valid.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "title": "Scalable construction and open-world substrate",
+      "depends_on": [
+        "M6"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M7-G01",
+          "description": "Cells/streaming and bounded simulation/render/save budgets support expanding claimed architecture.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M7-G02",
+          "description": "Each introduced modular/mesh/terrain/volume construction mode updates collision and navigation safely.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M7-G03",
+          "description": "Build/remove/return/reload routes preserve references, upgrades and alternate progression.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "title": "Garage, engineering vehicles and coolant traversal",
+      "depends_on": [
+        "M7"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M8-G01",
+          "description": "Prebuilt skimmer leads into assisted assembly, donor rebuilds and original vehicle construction.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M8-G02",
+          "description": "Weight, balance, power, cooling, handling and reliability cause measurable handling/failure behavior and useful diagnoses.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M8-G03",
+          "description": "Improve a poor build and preserve its behavior after reload; personal-core recovery and cargo/upgrade loss follow declared rules.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M9",
+      "title": "Territory, agent army and logistics",
+      "depends_on": [
+        "M8"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M9-G01",
+          "description": "Recruit/rebuild/upgrade agents and use autonomous roles, squad orders and strategic view.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M9-G02",
+          "description": "Supply, ownership, defenses, losses and surviving opposition persist through return/reload.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M9-G03",
+          "description": "Territorial simulation advances while playing and pauses/stops with the game; return attacks require actual surviving influence.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "title": "Personal campaign and later hardware worlds",
+      "depends_on": [
+        "M9"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M10-G01",
+          "description": "First Tower restoration opens another PC world with declared adaptation of carried progress.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M10-G02",
+          "description": "Generated stories preserve initial facts, Echos Within provenance and durable player outcomes.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M10-G03",
+          "description": "Authored dialogue remains distinct from remembered quotations; returning enemies have recorded surviving influence.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "title": "External release quality",
+      "depends_on": [
+        "M10"
+      ],
+      "status": "planned",
+      "gates": [
+        {
+          "id": "M11-G01",
+          "description": "Representative hardware/driver profiles, measured budgets, accessibility/controller/settings coverage pass.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M11-G02",
+          "description": "Save migration matrix, crash/recovery, installer/update/uninstall, licensing and clean-machine checks pass.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        },
+        {
+          "id": "M11-G03",
+          "description": "External release decision uses a concrete tested package and known limits; private alpha approval does not imply public publication.",
+          "status": "UNVERIFIED",
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "next_slices": [
+    {
+      "id": "WB-OPENING-PLAY",
+      "title": "Deliver both playable Warm Beginning routes with essential Adam guidance",
+      "milestone": "M5",
+      "status": "in_progress",
+      "acceptance": "Real packaged chapter repairs or bypasses power, supports construction/doors/Adam/restart, reaches actual shelter without soft lock; record remaining player-facing issues."
+    },
+    {
+      "id": "WB-OPENING-MEASURE",
+      "title": "Measure first-time8\u201312minute opening, performance and walkthrough",
+      "milestone": "M5",
+      "status": "in_progress",
+      "acceptance": "Actual real-time routes, first-time human feedback,1080p Release frame-time/memory capture with optional inference off and fresh walkthrough; then expand toward existing20\u201330minute M5 chapter."
+    },
+    {
+      "id": "WB-OPENING-EXPAND",
+      "title": "Expand proven opening into the20\u201330minute M5 chapter",
+      "milestone": "M5",
+      "status": "planned",
+      "acceptance": "Meaningful construction/exploration/choices toward sheltered hub and Pencil Room; re-measure human pacing and performance; keep all original gates."
+    }
+  ],
+  "parallel_tracks": [
+    {
+      "id": "GRAPHICS",
+      "status": "planned",
+      "sequence": [
+        "materials_and_lighting",
+        "shadows_and_spatial_aa",
+        "temporal_history_and_reconstruction",
+        "reflections_volumetrics_lod",
+        "optional_dxr"
+      ],
+      "reference_profile": {
+        "target_resolution": "1920x1080",
+        "target_fps": 60,
+        "hardware": "Creator's current AI-BS PC",
+        "optional_inference": "off",
+        "measurement_status": "UNVERIFIED"
+      },
+      "contract": "Only implemented supported paths expose settings; device preferences remain separate from story/world saves."
+    },
+    {
+      "id": "COMPANION",
+      "status": "planned",
+      "starts_after": "M5",
+      "sequence": [
+        "stabilize_versioned_event_api",
+        "paired_read_only_progression_pilot",
+        "reconnect_and_resync",
+        "later_validated_allowed_commands"
+      ],
+      "authority": "PC",
+      "contract": "Phone follows the active PC session; it is not a competing save writer."
+    },
+    {
+      "id": "SDK_REUSE",
+      "status": "planned",
+      "gate": "M5-G04",
+      "contract": "Build and package a small mechanically different sample through installed SDK targets without adding First Boot rules to generic engine source."
+    }
+  ],
+  "release_policy": {
+    "first_major_release": "private_pc_alpha",
+    "first_chapter_minutes": [
+      20,
+      30
+    ],
+    "first_challenge": "environmental_power_fault",
+    "adam_delivery": [
+      "text",
+      "sound_cues"
+    ],
+    "voice": "later_selection",
+    "creator_timing": "during_first_alpha_after_route_works",
+    "visual_showcase": "native_rtx_4090_fe_awakening",
+    "public_playground": "separate_prototype_and_state",
+    "cadence": "tested_slices_and_coherent_milestone_packages"
+  },
+  "retention_policy": {
+    "ordinary_dev_packages_to_keep": 2,
+    "retain_all_marked_milestones": true,
+    "retain": [
+      "source",
+      "design",
+      "verification_evidence",
+      "original_memories",
+      "original_art",
+      "user_saves"
+    ],
+    "protect_from_automatic_pruning": [
+      "active_releases",
+      "unclassified_historical_packages"
+    ],
+    "pruning_scope": "Only positively identified disposable generated artifacts; policy does not assert an automatic cleanup job.",
+    "drive_quota_status": "unavailable_via_current_connector",
+    "space_observation_required_before": [
+      "large_download",
+      "build",
+      "package"
+    ],
+    "bulky_development_output_root": "D:/AI-BS-Game-Resources/Builds",
+    "historical_evidence_archive": "D:\\AI-BS-Game-Resources\\Archived_Test_Evidence\\20261102T074409Z"
+  },
+  "links": {
+    "roadmap": "engine/BUILD_ROADMAP.md",
+    "actual_results": "engine/BUILD_STATUS.md",
+    "ledger": "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "historical_plan": "docs/game_engine/implementation_plan.md",
+    "architecture_intake": "engine/ARCHITECTURE_CONCEPT_INTAKE.md",
+    "memory_sources": "docs/game_engine/first_boot_memory_sources.md",
+    "chapter_guide": "engine/FIRST_BOOT_CHAPTER.md",
+    "m3_audit": "docs/game_engine/m3_acceptance_audit.md",
+    "m4_notes": "docs/game_engine/m4_creator_implementation_notes.md",
+    "alpha_content": "docs/game_engine/first_boot_alpha_content_plan.md"
+  },
+  "completed_slices": [
+    {
+      "id": "S1",
+      "milestone": "M1",
+      "title": "Grounded movement foundation",
+      "status": "complete",
+      "depends_on": [],
+      "acceptance": [
+        "Pinned physics dependency and AI-BS capsule/scene adapter",
+        "Floor/wall/step/fall and fixed-step fixtures",
+        "Native grounded movement with preserved world-edit/checkpoint behavior",
+        "Camera/focus/live-edit proofs before M1 completion",
+        "Remaining: represent/render inclined geometry and verify true slope transitions before closing M1"
+      ],
+      "evidence": [
+        "engine/out/obstacle_course_verification.json",
+        "engine/out/debug06-consolidated.log",
+        "engine/out/release06-consolidated.log"
+      ]
+    },
+    {
+      "id": "S3",
+      "milestone": "M3",
+      "title": "Power-fault branch",
+      "status": "complete",
+      "depends_on": [
+        "S2"
+      ],
+      "acceptance": [
+        "Compact fault with isolation/repair and relay-bypass routes",
+        "Secured return point and outcome-specific Adam guidance",
+        "Both paths plus help/decline, leave/return and reload",
+        "No soft lock after legal construction/dismantling"
+      ],
+      "evidence": [
+        "engine/out/m3-final94-debug.log",
+        "engine/out/m3-final94-release.log",
+        "engine/out/first_boot_chapter_verification.Debug.json",
+        "engine/out/first_boot_chapter_verification.Release.json",
+        "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json",
+        "engine/out/packaged94-chapter-world/durable_world_verification.json",
+        "engine/out/native94-release-smoke.json"
+      ]
+    },
+    {
+      "id": "S4",
+      "milestone": "M4",
+      "title": "Minimum creator for the First Boot chapter",
+      "status": "complete",
+      "depends_on": [
+        "S3"
+      ],
+      "acceptance": [
+        "Project/outliner/inspector with UUID picking and placement/transforms",
+        "Dependency and save-compatibility previews",
+        "Shared validated authoring transactions and undo/redo",
+        "Isolated Play/Stop with explicit publication"
+      ],
+      "evidence": [
+        "engine/out/chapter_play_verification.json",
+        "engine/out/chapter-play-installed-verification.json",
+        "engine/tests/test_content_view.py",
+        "docs/game_engine/m4_acceptance_audit.md"
+      ]
+    },
+    {
+      "id": "S5AI",
+      "milestone": "M5",
+      "title": "Live AI-assisted authoring through the validated creator",
+      "status": "complete",
+      "depends_on": [
+        "S4"
+      ],
+      "acceptance": [
+        "Explicit provider/job selection and cancellable asynchronous generation",
+        "Pinned context and schema validation; show native Preview before explicit Apply",
+        "Unavailable providers/stale replies fail visibly without modifying authoring",
+        "Keep personal-source provenance separate from generated text"
+      ],
+      "evidence": [
+        "engine/out/ai_authoring_verification.json",
+        "engine/AI_AUTHORING.md",
+        "engine/tests/test_content_ai.py",
+        "engine/tests/test_content_ai_view.py"
+      ]
+    },
+    {
+      "id": "S5P",
+      "milestone": "M5",
+      "title": "Package and deploy the native AI-BS creator",
+      "status": "complete",
+      "depends_on": [
+        "S5AI"
+      ],
+      "acceptance": [
+        "Ship current creator/QtNetwork/localAI modules and native owner/viewport/player assets",
+        "Frozen discovery/Preview/Apply/Save/close smoke with no automatic inference",
+        "Preserve prior releases, privacy/asset licenses and actual save compatibility",
+        "Update local launchers only after verified packaged result"
+      ],
+      "evidence": [
+        "backups/native_game95_20261101_creator/static_package_verification_v2.json",
+        "backups/native_game95_20261101_creator/frozen_monitor.json",
+        "backups/native_game95_20261101_creator/frozen_fixture.json",
+        "backups/native_game95_20261101_creator/frozen_fixture_windows.json",
+        "backups/native_game95_20261101_creator/frozen_live.json",
+        "backups/native_game95_20261101_creator/shortcut_deployment.json",
+        "engine/out/native_creator_release_verification.json"
+      ]
+    },
+    {
+      "id": "S5A",
+      "milestone": "M5",
+      "title": "Native mesh/material pipeline and Assets workspace",
+      "status": "complete",
+      "depends_on": [
+        "S5P"
+      ],
+      "acceptance": [
+        "Bounded deterministicimport/cookedcatalog/materials/source-licenseprovenance",
+        "ActualstandaloneGPUgeometry+materialreadback,corruptdependencyrejection",
+        "InstalledSDK0.9 Debug/Releaseconsumers andfullnativematrices",
+        "UsableAssetsworkspaceandverifiedfrozenrelease"
+      ],
+      "evidence": [
+        "backups/native_game96_20261101_assets/static_package_verification.json",
+        "backups/native_game96_20261101_assets/frozen_assets.json",
+        "backups/native_game96_20261101_assets/frozen_creator.json",
+        "backups/native_game96_20261101_assets/frozen_monitor.json",
+        "backups/native_game96_20261101_assets/shortcut_deployment.json",
+        "engine/out/assets09-full-tests.Release.log",
+        "engine/out/assets09-full-tests.Debug.log",
+        "engine/out/assets09-sdk-tests.Release.log",
+        "engine/out/assets09-sdk-tests.Debug.log",
+        "engine/out/assets09-report-close-gpu-final.log",
+        "engine/out/assets09-python-full-final.log",
+        "engine/out/assets96-package-tests.log",
+        "engine/out/asset_pipeline_verification.json"
+      ]
+    },
+    {
+      "id": "S5BP",
+      "milestone": "M5",
+      "title": "Persistent visual asset placement and exact dependency ownership",
+      "status": "complete",
+      "depends_on": [
+        "S5A"
+      ],
+      "evidence": [
+        "backups/native_game97_20261101_placement/static_package_verification.json",
+        "backups/native_game97_20261101_placement/frozen_placement.json",
+        "backups/native_game97_20261101_placement/frozen_reopen.json",
+        "backups/native_game97_20261101_placement/frozen_creator.json",
+        "backups/native_game97_20261101_placement/frozen_assets.json",
+        "backups/native_game97_20261101_placement/frozen_monitor.json",
+        "backups/native_game97_20261101_placement/shortcut_deployment.json",
+        "engine/out/placements010-verify.Release.log",
+        "engine/out/placements010-verify.Debug.log",
+        "engine/out/placements010-python-full.log",
+        "engine/out/placements97-package-tests.log",
+        "engine/out/asset_store_cooker_verification.Release.v3.json",
+        "engine/out/placement_ui_gpu_20261102_1/verification.json",
+        "engine/out/persistent_placement_verification.json"
+      ]
+    }
+  ],
+  "development_state": {
+    "source_sdk": "0.14.0",
+    "retained_installed_sdk": "0.10.0",
+    "retained_studio": "5.329.97",
+    "status": "M5_PERSISTENT_PLACEMENT_DEPLOYED_ALPHA_IN_PROGRESS",
+    "foundation_tests": {
+      "Debug": "34/34 + installedconsumer1/1",
+      "Release": "34/34 + installedconsumer1/1"
+    },
+    "monitor_ui_tests": 183,
+    "evidence": [
+      "engine/out/m3-final94-debug.log",
+      "engine/out/m3-final94-release.log",
+      "engine/out/first_boot_chapter_verification.Debug.json",
+      "engine/out/first_boot_chapter_verification.Release.json",
+      "engine/out/packaged94-chapter-world/first_boot_chapter_verification.json",
+      "engine/out/packaged94-chapter-world/durable_world_verification.json",
+      "engine/out/native94-release-smoke.json",
+      "backups/native_game94_20261101_m3/static_package_verification.json",
+      "backups/native_game94_20261101_m3/shortcut_deployment.json",
+      "docs/game_engine/m3_acceptance_audit.md",
+      "backups/native_game95_20261101_creator/static_package_verification_v2.json",
+      "backups/native_game95_20261101_creator/frozen_monitor.json",
+      "backups/native_game95_20261101_creator/frozen_fixture.json",
+      "backups/native_game95_20261101_creator/frozen_fixture_windows.json",
+      "backups/native_game95_20261101_creator/frozen_live.json",
+      "backups/native_game95_20261101_creator/shortcut_deployment.json",
+      "engine/out/native_creator_release_verification.json",
+      "engine/out/asset_pipeline_verification.json",
+      "engine/out/persistent_placement_verification.json"
+    ],
+    "next": "Integrate authored initial view, all7-stop tour, measured real-time1080p performance and renderer-owned recorder; finish Adam likeness and reviewed original captions",
+    "source_creator_status": "M4_SOURCE_AND_PACKAGED95_CREATOR_VERIFIED_M5_IN_PROGRESS",
+    "foundation_tests_scope": "Retained Studio94 native baseline; current source proof is chapter_play_verification.json and retained full44 matrices plus targeted new app proofs, not a full51 matrix",
+    "monitor_ui_tests_scope": "183 current Python/Qt, 68 packaging, 59 native per configuration and one installed consumer each",
+    "previous_sdks": [
+      "0.9.0",
+      "0.8.0"
+    ],
+    "previous_studios": [
+      "5.329.96",
+      "5.329.95"
+    ],
+    "current_focus": "Native opening source/tour/recording verified; environment/likeness/caption/pacing/package work active",
+    "next_step": "Finish staged art and optional reviewed recording, then package/restart/launcher and final delivery backup",
+    "resume_progress": {
+      "character_asset_pipeline": "VERIFIED native/SDK glTF import/cook, embedded textures/animation and full model reference persistence; likeness remains next"
+    },
+    "incremental_verification": {
+      "scope": "Checkpoint18B SDK0.14 current source, creator, all-seven-stop native, measured stationary1080p presentation and owned-window video evidence; not packaged Warm Beginning delivery",
+      "report": "engine/out/warm_beginning/presentation_integration_verification.json",
+      "report_sha256": "c2fba034f11ac968f109fe628f628d8805afcc1cd521a827678a4cfd9bf5b2ff",
+      "native_tests_per_configuration": 113,
+      "native_tests_method": "component aggregate, not one full113 run",
+      "installed_consumer_per_configuration": 2,
+      "actual_creator_restart_per_configuration": 2,
+      "native_opening_checks": {
+        "Release": 104,
+        "Debug": 76
+      },
+      "runtime_source_fingerprint": "1c5f02c563a6cef9b57ba9af2e962678a5f6f443ffb56decc5bfa5509eb547d9",
+      "completed_at": "2026-11-02T14:46:58.666157+00:00",
+      "full_opening_complete": false
+    },
+    "backup_status": "18A authenticated restore verified;18B source seal prepared, final archive pending",
+    "last_verified_checkpoint": "https://drive.google.com/file/d/1ChgCGu7qPCVObE9VHOmCu5HGXpwb5hOL/view?usp=drivesdk",
+    "incremental_checkpoint": "https://drive.google.com/file/d/1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC/view?usp=drivesdk",
+    "native_release": {
+      "version": "5.329.98",
+      "sdk_version": "0.11.0",
+      "status": "VERIFIED_DEPLOYED",
+      "executable": "C:\\AI-BS\\native_studio\\releases\\v5.329.98\\AI_BS_Studio\\AI_BS_Studio.exe",
+      "sha256": "05b42903df4341c4834f670007918bc1d97c1fabd8662782006a2af9dc49ab33",
+      "shortcuts": 5,
+      "report": "backups/native_game98_checkpoint09/shortcut_deployment.json",
+      "full_opening_complete": false,
+      "launcher_repair": {
+        "status": "VERIFIED_NORMAL_GUI_AND71_PACKAGING_TESTS",
+        "receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint14B-launcher-repair.json",
+        "backup": "https://drive.google.com/file/d/1THGxQxxQgftWrQUuKsB0yyzZ1FkVzHUx/view?usp=drivesdk",
+        "executable_rebuilt": false,
+        "retained_sdk": "0.11.0"
+      }
+    },
+    "storage_checkpoint": {
+      "status": "VERIFIED_LOCAL_ARCHIVE",
+      "receipt": "engine/out/warm_beginning/storage_checkpoint13.json",
+      "archive": "D:\\AI-BS-Game-Resources\\Archived_Test_Evidence\\20261102T074409Z",
+      "reclaimed_c_bytes": 8831352832,
+      "source_freshness_changed": false,
+      "full_opening_complete": false,
+      "backup_receipt": "docs/game_engine/checkpoints/2026-11-01_Warm_Beginning_Workshop/checkpoint13-drive.json"
+    },
+    "staged_memory_audio": {
+      "status": "INTEGRATED_SOURCE_VERIFIED",
+      "canonical_integrated": true,
+      "caption_review": "DRAFT_REQUIRES_LISTENING_REVIEW",
+      "memory_session_release_checks": 102,
+      "memory_session_debug": "VERIFIED102FULLMATRIX",
+      "content_latest_release": "VERIFIED102FULLMATRIX",
+      "workshop_root": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44"
+    },
+    "runtime_candidate_binaries_root": "D:/AI-BS-Game-Resources/Builds/WarmBeginningOpening",
+    "candidate_sdk_prefixes": {
+      "Release": "D:/AI-BS-Game-Resources/SDK/0.13.0/release",
+      "Debug": "D:/AI-BS-Game-Resources/SDK/0.13.0/debug"
+    },
+    "previous_incremental_verification": {
+      "scope": "SDK0.13 opening source/creator/mechanical native acceptance checkpoint; not completed Warm Beginning goal or packaged game delivery",
+      "report": "engine/out/warm_beginning/opening_integration_verification.json",
+      "report_sha256": "464c3cc72d54f6b9b17a5e2783e10bee44cbc1cc15fc0f9411f0356d3d897d25",
+      "native_tests_per_configuration": 105,
+      "installed_consumer_per_configuration": 2,
+      "actual_creator_restart_per_configuration": 2,
+      "dressed_opening_checks_per_configuration": 465,
+      "runtime_source_fingerprint": "d945bd0d806c5bfdace4efbe9db9ca2b2ecca57d2969fd327e17aef306ef739e",
+      "completed_at": "2026-11-02T12:01:21.657328+00:00",
+      "full_opening_complete": false
+    }
+  },
+  "execution_control": {
+    "work_status": "active_user_explicitly_resumed",
+    "previous_pause_checkpoint": "https://drive.google.com/drive/folders/16Jo_c7Dwm8oZIjBqmb2NCJ9Lik3I30_E",
+    "resume_authorization": "User requested finish verifying95/update launchers/ledger/Drive; all1480 restart files matched before authorized verifier/docs changes.",
+    "next_step": "Finish staged art and optional reviewed recording, then package/restart/launcher and final delivery backup",
+    "resume_progress": {
+      "creator_host": "VERIFIED genericnumericSDKowner;originalM4sourcegatesverified",
+      "engine_tests_per_configuration": 44,
+      "installed_consumer_per_configuration": 1,
+      "host_checks_per_configuration": 211,
+      "core_introspection_checks_per_configuration": 69,
+      "python_monitor_tests": 183,
+      "evidence": "engine/out/ai_authoring_verification.json",
+      "native_owner": "VERIFIED numericandtypedprocesses;originalM4sourcegatesverified",
+      "native_process_checks_per_configuration": 49,
+      "installed_native_process_checks_per_configuration": 49,
+      "qt_creator_client": "VERIFIED packaged95 numeric/typed creator with DX12 preview,isolatedPlay and actual selected-model field proposal",
+      "creator_workspace_tests": 16,
+      "creator_workspace_evidence": "engine/out/creator-workspace-regression.log",
+      "creator_viewport_tests": 3,
+      "native_viewport": "VERIFIED source and installed Debug/Release actual GPU/click/join/save-invariance proof",
+      "native_viewport_evidence": "engine/out/creator_viewport_verification.json",
+      "chapter_content": "VERIFIED typed SDK/runtime, Qt authoring, native preview and isolated Play from exact bound content",
+      "chapter_content_evidence": "engine/out/first_boot_content_verification.json",
+      "typed_authoring": "VERIFIED packaged95 native typed editing/Preview/Apply/history/Save/reopen and selected localAI proposal",
+      "typed_authoring_evidence": "engine/out/chapter_creator_verification.json",
+      "registered_native_tests": 51,
+      "new_native_endpoint_checks_per_configuration": 54,
+      "native_chapter_play": "VERIFIED source/installed Debug/Release Play44 + pendingStop10 each",
+      "native_chapter_play_evidence": "engine/out/chapter_play_verification.json",
+      "retained_host_evidence": "engine/out/m4-host-verification.json",
+      "live_ai_authoring": "VERIFIED actual selected Qwen model/nativePreview/explicitApply/Save; fields only; model-quality limitations recorded",
+      "live_ai_authoring_evidence": "engine/out/ai_authoring_verification.json",
+      "native_creator_release": "VERIFIED Studio95 packaged runtime and five launcher readbacks",
+      "native_creator_release_evidence": "engine/out/native_creator_release_verification.json",
+      "packaging_tests": 68,
+      "asset_pipeline": "VERIFIED opaque/emission native import/cook/catalog/DX12 +frozen96Assets; persistentbindings/textures remain next",
+      "asset_pipeline_evidence": "engine/out/asset_pipeline_verification.json",
+      "persistent_placement": "VERIFIED native save/restart, exact project packs, frozen97 viewport/Play and five launchers",
+      "persistent_placement_evidence": "engine/out/persistent_placement_verification.json",
+      "warm_beginning_workshop": "VERIFIED realMCP/capacitor/nativeplacement; 15targetedtests",
+      "image_assets": "VERIFIED PNG/mips and post-hardening native textureGPU bothconfigs; fullmaterialPBRpending",
+      "typed_surface_assets": "VERIFIED source codec/store/cooker and native typed albedo; complete creator/Play GPU proof both configs; final art/frozen acceptance pending",
+      "adam_guide_core": "VERIFIED74native checks/config with actual articulated placeholder pixels, choices/routes/save/restart; likeness unfinished",
+      "monitor_freshness": "VERIFIED52monitor+22Qtviewtests; runtime/content vs documentation independent; mtime limitations explicit",
+      "typed_surface_placements": "VERIFIED77 current-renderer GPU/process checks each config, exact Save/restart, picking, corruption rollback and isolated Play",
+      "authored_lighting": "VERIFIED CPU contracts, native27-frame GPU shadow/light oracle and76 actual chapter route/restart checks each config",
+      "indexed_character_cpu": "VERIFIED144 CPU contracts/config, central export and installed SDK; GPU separately VERIFIED210 checks/config; import/likeness unfinished",
+      "indexed_character_gpu": "VERIFIED asymmetric CPU skin/normal oracle, actual animation/linear alpha/depth/shadows/rollback, stable GPU buffers and installed SDK bothconfigs"
+    },
+    "last_verified_checkpoint": "https://drive.google.com/drive/folders/12tZrIZmt1mQtyd3Tt_OeAAE-gJoWTG5k",
+    "current_focus": "Dedicated indexed hologram renderer and animated temporary guide verified in native routes and installed SDK; bounded character import and likeness next",
+    "backup_status": "Incremental08 VERIFIED778complete selectedfiles/6581867bytes, localall-file CRC/SHA/currentbytes plus authenticatedDrivefullretrievalSHA/CRC/manifest; source and documentation freshness separate; post-seal receipts explicit",
+    "incremental_verification": {
+      "scope": "Incremental08 dedicated indexed GPU character renderer and temporary articulated native guide; GLB/likeness/audio and full opening unfinished",
+      "report": "engine/out/warm_beginning/indexed_character_integration_verification.json",
+      "native_tests_per_configuration": 83,
+      "installed_consumer_per_configuration": 2,
+      "native_companion_checks_per_configuration": 74,
+      "creator_checks_per_configuration": 23,
+      "source_fingerprint": "1973b9531e7687715b3f3f7e11ce4bb1157850fdf143895df692cf6b07fb1bca",
+      "completed_at": "2026-11-02T05:47:25.727520+00:00",
+      "backup_sha256": "1750f4fda95ed8ce8d13ab3f30653b1382d114bfd752c78e27074768b7b16000"
+    },
+    "incremental_checkpoint": "https://drive.google.com/file/d/1DuUDdnxyimEXDtAZfR33AQO-5kTwhCBY/view?usp=drivesdk",
+    "web_ui_release": {
+      "version": "v5.329.97",
+      "status": "VERIFIED_PRODUCTION",
+      "origin": "https://ai-bs-dashboard.web.app",
+      "hosting_version": "df57a83b8e7ff813",
+      "report": "docs/agent_sync/firebase_ui_deploy_20261102.json",
+      "scope": "Web UI release; native launcher/SDK binaries unchanged",
+      "backup_url": "https://drive.google.com/file/d/1CjazcHVmevR7AdEvktmkOGL_4AQtA75L/view?usp=drivesdk",
+      "backup_sha256": "c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a"
+    }
+  },
+  "priority_decisions": [
+    {
+      "id": "USER-PRIORITY-20261103-OPENING-FIRST",
+      "status": "APPROVED_BY_USER",
+      "at": "2026-11-03T14:15:33.135520+00:00",
+      "instruction": "If it makes sense to do shift priorities while keeping the full plan just add to the plan with priorities being the new updated proposal. If the logic is on point.",
+      "basis": "Read-only review recommended a playable, measured opening first, with essential Adam guidance retained; user subsequently authorizes the priority update.",
+      "original_design": "Complete checkpoints3\u20138 delivering8\u201312minute Warm Beginning; existing M5 private alpha targets20\u201330minute Jenison-to-Pencil-Room chapter.",
+      "change": "Reorder execution toward playable routes and measurements before supporting expansions, retaining every original checkpoint and M0\u2013M11 gate.",
+      "justification": "Packaged smoke/unit tests establish components, not a coherent enjoyable timed chapter. Player experience and pacing are the largest remaining uncertainties.",
+      "compatibility": "Documentation/queue priority only; no runtime/source/SDK/save schema or existing gate-status change.",
+      "plan": "docs/game_engine/OPENING_FIRST_PRIORITY_PLAN.md",
+      "priorities": [
+        "P0_finish_existing_Studio102_backup_launcher_handoff",
+        "P1_playable_measured8_12minute_opening_with_essential_Adam",
+        "P2_expand_measured20_30minute_M5_chapter",
+        "P3_retained_Warm_Beginning_finish_and_polish",
+        "P4_Unreal_phone_companion_monitor_UI_and_extra_tools"
+      ],
+      "full_scope_preserved": true,
+      "goal_complete": false
+    }
+  ],
+  "retained_slice_history": [
+    {
+      "at": "2026-11-03T14:15:33.135520+00:00",
+      "reason": "USER-PRIORITY-20261103-OPENING-FIRST",
+      "next_slices_before_reprioritization": [
+        {
+          "id": "S5B",
+          "milestone": "M5",
+          "title": "Persistent visual asset bindings, textured surfaces and lighting",
+          "status": "in_progress",
+          "depends_on": [
+            "S5A"
+          ],
+          "acceptance": [
+            "VersionedassetID/revision/hash bindings andplacementdependency previews preserve Save/Undo/Redo/Play compatibility",
+            "BoundedUV/tangent/image import and actualGPUtexture sampling/materialsettings",
+            "Documentedlighting/shadowpaths with measuredbudgets; preserve constantmaterials fallback"
+          ],
+          "evidence": [],
+          "partial_completion": "S5BP placements verified; UV/image/material/lighting/shadow scope remains"
+        },
+        {
+          "id": "S5",
+          "milestone": "M5",
+          "title": "First Boot presentation and private chapter package",
+          "status": "planned",
+          "depends_on": [
+            "S4"
+          ],
+          "acceptance": [
+            "Cooked assets/materials/shadows and supported PC settings",
+            "Sound/subtitles and in-engine RTX4090 awakening follow actual power restoration",
+            "A complete20\u201330 minute branch-tested Jenison-to-Pencil-Room chapter",
+            "Packaged recovery/licensing/performance/clean-machine evidence"
+          ],
+          "evidence": []
+        },
+        {
+          "id": "S6",
+          "milestone": "M6",
+          "title": "First virus regime and computer-part equipment",
+          "status": "planned",
+          "depends_on": [
+            "S5"
+          ],
+          "acceptance": [
+            "Computer-part inventory, equipment and damage/status rules",
+            "One virus regime and boss with contextual NPC hints and side quests",
+            "Persistent outcomes/costs/influence; preserve earlier alternate power-fault progression"
+          ],
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "completed_slice_history": [
+    {
+      "id": "WB-CLOSEOUT102",
+      "title": "Finish verified Studio102 backup and launcher handoff",
+      "milestone": "M5",
+      "status": "complete",
+      "acceptance": "Exact package/old releases retained; source and portable backups restored from Drive; five launchers read back correctly. Not whole chapter acceptance.",
+      "evidence": [
+        "D:\\AI-BS-Game-Resources\\P32\\Studio102\\launcher-deployment.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint32A-drive.json",
+        "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint32B-drive.json"
+      ]
+    }
+  ]
+}

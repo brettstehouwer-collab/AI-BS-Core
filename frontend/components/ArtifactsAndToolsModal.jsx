@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
+/** @typedef {{name: string, content?: string}} ArtifactFile */
+/** @typedef {{name?: string, display_name?: string, path?: string, modified_at?: string, size_bytes?: number, description?: string, preview?: string, project_name?: string, files?: ArtifactFile[], language?: string, created_at?: string}} Artifact */
+/** @typedef {{id: string | number, category: string, fact_key: string, fact_text: string, importance_score: number, is_pinned: boolean, source?: string}} PersonalMemory */
+/** @typedef {{id: string | number, event_type: string, summary: string, timestamp: string, metadata?: unknown}} ActivityEvent */
+import { useState, useEffect, useRef } from 'react';
 
-export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, onAttachFile, backendUrl }) {
-  const [activeTab, setActiveTab] = useState('memory');
+/** @param {{isOpen: boolean, onClose: () => void, onInsertText?: (text: string) => void, onAttachFile?: (file: {name: string, path: string, type?: string}) => void, backendUrl?: string}} props */
+export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, backendUrl }) {
+  const modalRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const [activeTab, setActiveTab] = useState('tasks');
   const [artifacts, setArtifacts] = useState({
-    tasks: [],
-    plans: [],
-    manuals: [],
-    media: [],
-    programs: [],
+    tasks: /** @type {Artifact[]} */ ([]),
+    plans: /** @type {Artifact[]} */ ([]),
+    manuals: /** @type {Artifact[]} */ ([]),
+    media: /** @type {Artifact[]} */ ([]),
+    programs: /** @type {Artifact[]} */ ([]),
     timestamp: ''
   });
-  const [personalMemories, setPersonalMemories] = useState([]);
-  const [activityTimeline, setActivityTimeline] = useState([]);
+  const [personalMemories, setPersonalMemories] = useState(/** @type {PersonalMemory[]} */ ([]));
+  const [activityTimeline, setActivityTimeline] = useState(/** @type {ActivityEvent[]} */ ([]));
   const [memorySubTab, setMemorySubTab] = useState('facts'); // 'facts' or 'timeline'
   const [memoryFilter, setMemoryFilter] = useState('all');
   const [memorySearch, setMemorySearch] = useState('');
@@ -25,12 +31,15 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
   });
 
   const [loading, setLoading] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [runningProgram, setRunningProgram] = useState(null);
-  const [programOutput, setProgramOutput] = useState(null);
+  const [loadError, setLoadError] = useState('');
+  const [downloadBusy, setDownloadBusy] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(/** @type {Artifact | null} */ (null));
+  const [runningProgram, setRunningProgram] = useState(/** @type {string | null} */ (null));
+  const [programOutput, setProgramOutput] = useState(/** @type {{exit_code?: number, status: string, stdout?: string, stderr?: string} | null} */ (null));
 
   const fetchArtifacts = async () => {
     setLoading(true);
+    setLoadError('');
     try {
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/artifacts/live`, {
         headers: {
@@ -38,6 +47,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
           'X-Client-ID': 'stehouwer_publishing'
         }
       });
+      if (!res.ok) throw new Error(res.status===401||res.status===403?'Sign in to open workspace artifacts.':`Artifacts unavailable (HTTP ${res.status}).`);
       if (res.ok) {
         const data = await res.json();
         setArtifacts(data);
@@ -46,7 +56,8 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
         }
       }
     } catch (err) {
-      console.error("Error fetching live artifacts:", err);
+      setArtifacts({tasks:[],plans:[],manuals:[],media:[],programs:[],timestamp:''});setSelectedItem(null);
+      setLoadError(errorMessage(err) || 'Artifacts unavailable.');
     } finally {
       setLoading(false);
     }
@@ -92,9 +103,10 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
       fetchMemories();
       fetchActivity();
     }
-  }, [isOpen]);
+  }, [isOpen, backendUrl]);
 
-  const handleRunProgram = async (projectName) => {
+  /** @param {string} projectName */
+const handleRunProgram = async (projectName) => {
     setRunningProgram(projectName);
     setProgramOutput(null);
     try {
@@ -116,7 +128,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     }
   };
 
-  const handleSaveMemory = async (e) => {
+  const handleSaveMemory = async (/** @type {import("react").FormEvent} */ e) => {
     e.preventDefault();
     if (!newMemory.fact_key.trim() || !newMemory.fact_text.trim()) return;
 
@@ -146,7 +158,8 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     }
   };
 
-  const handleDeleteMemory = async (factId) => {
+  /** @param {string | number} factId */
+const handleDeleteMemory = async (factId) => {
     if (!window.confirm("Delete this personal intelligence memory fact permanently from local NVMe vault?")) return;
     try {
       const res = await fetch(`${backendUrl || 'http://127.0.0.1:8080'}/api/memory/personal/delete/${factId}`, {
@@ -172,10 +185,39 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
     return matchesCat && matchesSearch;
   });
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous=document.activeElement;
+    modalRef.current?.querySelector('button')?.focus();
+    /** @param {KeyboardEvent} event */
+const keydown=event=>{
+      if(event.key==='Escape'){event.preventDefault();onClose();}
+      if(event.key!=='Tab')return;
+      const items=[...(modalRef.current?.querySelectorAll('button,input,select,textarea,a[href]') || [])].filter((el) => el instanceof HTMLElement && !('disabled' in el && el.disabled) && el.getClientRects().length);
+      const first=items[0],last=items[items.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();if (last instanceof HTMLElement) last.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();if (first instanceof HTMLElement) first.focus();}
+    };
+    document.addEventListener('keydown',keydown);
+    return()=>{document.removeEventListener('keydown',keydown);if(previous instanceof HTMLElement)previous.focus();};
+  },[isOpen]);
+
+  const downloadProgram = async () => {
+    if (!selectedItem?.project_name || downloadBusy) return;
+    setDownloadBusy(true);setLoadError('');
+    try {
+      const response=await fetch(`${backendUrl}/api/artifacts/programs/download/${encodeURIComponent(selectedItem.project_name)}`,{redirect:'error',cache:'no-store'});
+      if(!response.ok)throw new Error(response.status===401||response.status===403?'Sign in to download this artifact.':`Download unavailable (HTTP ${response.status}).`);
+      const blob=await response.blob();
+      if(!blob.size || !['application/zip','application/octet-stream','application/x-zip-compressed'].includes(blob.type.split(';')[0]))throw new Error('The service did not return a ZIP archive.');
+      const url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download=selectedItem.project_name+'.zip';anchor.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
+    } catch(error){setLoadError(errorMessage(error)||'Download unavailable.');}finally{setDownloadBusy(false);}
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div style={{
+    <div className="chat-artifacts-backdrop" style={{
       position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
       background: 'rgba(7, 11, 20, 0.88)',
@@ -186,7 +228,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
       justifyContent: 'center',
       padding: '24px'
     }}>
-      <div style={{
+      <div ref={modalRef} role="dialog" aria-modal="true" aria-label="Workspace artifacts" className="chat-artifacts-drawer" style={{
         width: '95%',
         maxWidth: '1150px',
         height: '88vh',
@@ -237,6 +279,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
             </button>
             <button
               onClick={onClose}
+              aria-label="Close artifacts"
               style={{
                 background: 'rgba(255, 255, 255, 0.06)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -256,6 +299,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
           </div>
         </div>
 
+        {loadError && <p role="alert" style={{padding:12,color:'#fca5a5',margin:0}}>{loadError}</p>}
         {/* Tab Navigation */}
         <div style={{
           display: 'flex',
@@ -276,7 +320,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
               key={tab.id}
               onClick={() => {
                 setActiveTab(tab.id);
-                const list = artifacts[tab.id] || [];
+                const list = (tab.id === 'tasks' ? artifacts.tasks : tab.id === 'plans' ? artifacts.plans : tab.id === 'manuals' ? artifacts.manuals : tab.id === 'programs' ? artifacts.programs : artifacts.media);
                 setSelectedItem(list.length > 0 ? list[0] : null);
               }}
               style={{
@@ -377,7 +421,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                       <div style={{ fontSize: '0.82rem', color: '#f1f5f9', fontWeight: 600 }}>
                         {ev.summary}
                       </div>
-                      {ev.metadata && Object.keys(ev.metadata).length > 0 && (
+                      {typeof ev.metadata === 'object' && ev.metadata !== null && Object.keys(ev.metadata).length > 0 && (
                         <div style={{ fontSize: '0.7rem', color: '#94a3b8', background: 'rgba(0,0,0,0.3)', padding: '4px 8px', borderRadius: '4px', marginTop: '4px' }}>
                           <code>{JSON.stringify(ev.metadata)}</code>
                         </div>
@@ -591,7 +635,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
             )}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', flex: 1, overflow: 'hidden' }}>
+          <div className="chat-artifacts-content" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', flex: 1, overflow: 'hidden' }}>
             {/* Item List Sidebar */}
             <div style={{
               borderRight: '1px solid rgba(255, 255, 255, 0.08)',
@@ -631,12 +675,12 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                   ))
                 )
               ) : (
-                (artifacts[activeTab] || []).length === 0 ? (
+                (artifacts[/** @type {'tasks' | 'plans' | 'manuals' | 'media' | 'programs'} */ (activeTab)] || []).length === 0 ? (
                   <div style={{ padding: '20px', color: '#64748b', fontSize: '0.82rem', textAlign: 'center' }}>
                     No items found in this category.
                   </div>
                 ) : (
-                  (artifacts[activeTab] || []).map((item, idx) => (
+                  (artifacts[/** @type {'tasks' | 'plans' | 'manuals' | 'media' | 'programs'} */ (activeTab)] || []).map((item, idx) => (
                     <div
                       key={idx}
                       onClick={() => setSelectedItem(item)}
@@ -653,7 +697,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                         {item.name}
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b', marginTop: '4px' }}>
-                        <span>{(item.size_bytes / 1024).toFixed(1)} KB</span>
+                        <span>{item.size_bytes === undefined ? 'Unavailable' : (item.size_bytes / 1024).toFixed(1)} KB</span>
                         <span>{item.modified_at}</span>
                       </div>
                     </div>
@@ -676,7 +720,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                       </div>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <button
-                          onClick={() => handleRunProgram(selectedItem.project_name)}
+                          onClick={() => handleRunProgram(selectedItem.project_name || '')}
                           disabled={runningProgram === selectedItem.project_name}
                           style={{
                             background: 'linear-gradient(135deg, #10b981, #059669)',
@@ -694,9 +738,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                         >
                           {runningProgram === selectedItem.project_name ? '⚡ Executing...' : '▶ Run Program'}
                         </button>
-                        <a
-                          href={`${backendUrl || 'http://127.0.0.1:8080'}/api/artifacts/programs/download/${selectedItem.project_name}`}
-                          download
+                        <button type="button" onClick={downloadProgram} disabled={downloadBusy}
                           style={{
                             background: 'rgba(56, 189, 248, 0.15)',
                             border: '1px solid rgba(56, 189, 248, 0.4)',
@@ -712,7 +754,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                           }}
                         >
                           📥 Download ZIP
-                        </a>
+                        </button>
                       </div>
                     </div>
 
@@ -762,7 +804,7 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                           onClick={() => {
-                            onInsertText(`\n[Reference Artifact: ${selectedItem.name}]\nPath: ${selectedItem.path}\n`);
+                            onInsertText?.(`\n[Reference Artifact: ${selectedItem.name}]\nPath: ${selectedItem.path}\n`);
                             onClose();
                           }}
                           style={{
@@ -808,4 +850,10 @@ export default function ArtifactsAndToolsModal({ isOpen, onClose, onInsertText, 
       </div>
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

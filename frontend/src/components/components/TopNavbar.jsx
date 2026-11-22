@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import { masterHubs, simpleModeNavItems, PINNED_QUICK_TABS } from './navigationConfig';
 import { useAppStore } from './useAppStore';
 import AIProviderSettingsModal from './AIProviderSettingsModal';
@@ -7,40 +7,13 @@ import TourGuideEngine from './TourGuideEngine';
 import GlobalCommandPalette from './GlobalCommandPalette';
 import TeamLiveChatModal from './TeamLiveChatModal';
 import { subscribeToPresence, startPresenceHeartbeat } from './collaborationService';
-import { filterNavigationByTier, USER_TIERS } from './accessControl';
+import { filterNavigationByTier } from "./accessControl";
 import { auth } from '../firebase';
 import { SYSTEM_VERSION } from './version';
 import './MomMode.css';
 
-export default function TopNavbar({ 
-  activeTab, 
-  onTabChange, 
-  navLayout, 
-  onToggleNavLayout,
-  backendUrl, 
-  backendOnline,
-  backendStatus = 'online', 
-  comfyOnline, 
-  selectedModel,
-  onSelectModel,
-  availableModels = [],
-  onOpenProfile, 
-  userProfile,
-  currentUser,
-  userTier,
-  isAdmin = true,
-  simulatedTier,
-  onSimulateTier,
-  workspaceMode = 'simple',
-  onToggleWorkspaceMode,
-  momMode = false,
-  onToggleMomMode,
-  zoomLevel = 125,
-  onZoomChange,
-  zenMode = false,
-  onToggleZenMode,
-  onOpenMobileDrawer
-}) {
+/** @param {{"localTrustEnabled"?: boolean, "trustedUserEmails"?: string[], "activeTab": string, "onTabChange": (arg0: string) => void, "navLayout"?: string, "onToggleNavLayout"?: () => void, "backendUrl": string, "backendOnline"?: boolean, "backendStatus"?: string, "comfyOnline"?: boolean, "selectedModel"?: string, "onSelectModel": (arg0: string) => void, "availableModels"?: string[], "onOpenProfile"?: () => void, "userProfile"?: unknown, "currentUser": import('firebase/auth').User | null, "userTier": {"id": string}, "isAdmin"?: boolean, "simulatedTier"?: string, "onSimulateTier"?: (tierKey: string) => void, "workspaceMode"?: string, "onToggleWorkspaceMode": () => void, "momMode"?: boolean, "onToggleMomMode": () => void, "zoomLevel"?: number, "onZoomChange": (zoom: number) => void, "zenMode"?: boolean, "onToggleZenMode": () => void, "onOpenMobileDrawer": () => void, "onSignOut"?: () => void | Promise<void>}} props */
+export default function TopNavbar({ activeTab, onTabChange, backendUrl, currentUser, userTier, workspaceMode = 'simple', onToggleWorkspaceMode, momMode = false, onToggleMomMode, zoomLevel = 125, onZoomChange, zenMode = false, onToggleZenMode, onOpenMobileDrawer, onSignOut }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
 
   useEffect(() => {
@@ -50,9 +23,9 @@ export default function TopNavbar({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  const [openGroup, setOpenGroup] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [openGroup, setOpenGroup] = useState(/** @type {string | null} */ (null));
+  const [] = useState('');
+  const [] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
   const [showGuideModal, setShowGuideModal] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -66,12 +39,11 @@ export default function TopNavbar({
   const [showChatModal, setShowChatModal] = useState(false);
   const [onlineCount, setOnlineCount] = useState(1);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [activeAIProvider, setActiveAIProvider] = useState(localStorage.getItem('aibs_active_ai_provider') || 'local');
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
-  const navRef = useRef(null);
-  const scrollRibbonRef = useRef(null);
-  const efficiencyMode = useAppStore(state => state.efficiencyMode);
-  const [hwTelemetry, setHwTelemetry] = useState(null);
+  const navRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  const scrollRibbonRef = useRef(/** @type {HTMLDivElement | null} */ (null));
+  (useAppStore(state => state.efficiencyMode));
+  const [hwTelemetry, setHwTelemetry] = useState(/** @type {{"core_temp_c": number, "fan_speed_pct": number, "memory_used_mb": number, "memory_total_mb": number, "cpu_util_pct": number} | null} */ (null));
 
   // Poll Live GPU/CPU Hardware Telemetry for Ambient Navbar HUD
   useEffect(() => {
@@ -84,7 +56,8 @@ export default function TopNavbar({
     const fetchTelemetry = async () => {
       if (failStreak > 3) return; // Prevent network churn and thread blocking if core unreachable
       try {
-        const apiBase = isLocalDev ? 'http://127.0.0.1:8080' : 'https://api.brettstehouwer.live';
+        const resolvedLocal = backendUrl && !backendUrl.includes(':8080') ? backendUrl : 'http://127.0.0.1:8000';
+        const apiBase = isLocalDev ? resolvedLocal : (backendUrl || 'https://api.brettstehouwer.live');
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 1200);
 
@@ -112,9 +85,11 @@ export default function TopNavbar({
       isMounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [backendUrl]);
 
-  const handleGroupHover = (groupName, event) => {
+  
+/** @param {string} groupName @param {import('react').MouseEvent<HTMLElement>} event */
+const handleGroupHover = ( groupName,  event) => {
     if (event && event.currentTarget) {
       const rect = event.currentTarget.getBoundingClientRect();
       setDropdownPos({
@@ -134,8 +109,10 @@ export default function TopNavbar({
 
   // Subscribe to live online presence count
   useEffect(() => {
-    const unsub = subscribeToPresence((members) => {
-      const online = members.filter(m => m.status === 'online').length;
+    const unsub = subscribeToPresence(/** @param {Array<{"status": string}>} members */
+( members) => {
+      const online = members.filter( 
+m => m.status === 'online').length;
       setOnlineCount(Math.max(1, online));
     });
     return () => unsub && unsub();
@@ -151,17 +128,17 @@ export default function TopNavbar({
   };
 
   // Horizontal Pan Handlers
-  const handleScrollLeft = () => {
+  (() => {
     if (scrollRibbonRef.current) {
       scrollRibbonRef.current.scrollBy({ left: -260, behavior: 'smooth' });
     }
-  };
+  });
 
-  const handleScrollRight = () => {
+  (() => {
     if (scrollRibbonRef.current) {
       scrollRibbonRef.current.scrollBy({ left: 260, behavior: 'smooth' });
     }
-  };
+  });
 
   // Sync Guide URL parameter
   useEffect(() => {
@@ -180,11 +157,13 @@ export default function TopNavbar({
 
   // Global Keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    
+/** @param {KeyboardEvent} e */
+const handleKeyDown = ( e) => {
       if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         setShowCmdPalette(prev => !prev);
-      } else if ((e.key === '?' || e.key === 'F1') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+      } else if ((e.key === '?' || e.key === 'F1') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName || '')) {
         e.preventDefault();
         setShowGuideModal(prev => !prev);
       }
@@ -194,14 +173,17 @@ export default function TopNavbar({
   }, []);
 
   const visibleHubs = filterNavigationByTier(masterHubs, userTier?.id || 'admin');
-  const groupedCategories = visibleHubs.map(hub => ({
+  const groupedCategories = visibleHubs.filter(hub => hub !== null).map( 
+hub => ({
     group: hub.label,
     icon: hub.icon,
     items: hub.subTabs
   }));
 
-  const activeGroupObj = groupedCategories.find(g => 
-    g.items.some(item => item.key === activeTab)
+  const activeGroupObj = groupedCategories.find( 
+g => 
+    g.items.some( 
+item => item.key === activeTab)
   );
 
   return (
@@ -218,7 +200,9 @@ export default function TopNavbar({
           flexWrap: 'nowrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '6px 12px',
+          paddingLeft: '12px',
+          paddingRight: '12px',
+          paddingBottom: '6px',
           paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)',
           color: '#c9d1d9',
           userSelect: 'none',
@@ -352,7 +336,10 @@ export default function TopNavbar({
         borderBottom: '1px solid #30363d',
         display: 'flex',
         alignItems: 'center',
-        padding: '6px 12px',
+        paddingLeft: '12px',
+        paddingRight: '12px',
+        paddingBottom: '6px',
+        paddingTop: '6px',
         color: '#c9d1d9',
         fontSize: '0.88rem',
         userSelect: 'none',
@@ -403,13 +390,15 @@ export default function TopNavbar({
                   boxShadow: isDockActive ? '0 0 8px rgba(56, 189, 248, 0.4)' : 'none',
                   whiteSpace: 'nowrap'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={
+( e) => {
                   if (!isDockActive) {
                     e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
                     e.currentTarget.style.color = '#ffffff';
                   }
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={
+( e) => {
                   if (!isDockActive) {
                     e.currentTarget.style.background = 'transparent';
                     e.currentTarget.style.color = '#94a3b8';
@@ -498,11 +487,13 @@ export default function TopNavbar({
             boxShadow: '0 0 10px rgba(56, 189, 248, 0.15)',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={
+( e) => {
             e.currentTarget.style.borderColor = '#38bdf8';
             e.currentTarget.style.background = 'rgba(56, 189, 248, 0.12)';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={
+( e) => {
             e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
             e.currentTarget.style.background = 'rgba(15, 23, 42, 0.8)';
           }}
@@ -577,7 +568,8 @@ export default function TopNavbar({
         <div 
           ref={scrollRibbonRef}
           onScroll={() => setOpenGroup(null)}
-          onWheel={(e) => {
+          onWheel={
+( e) => {
             if (scrollRibbonRef.current && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
               scrollRibbonRef.current.scrollLeft += e.deltaY;
             }
@@ -599,7 +591,8 @@ export default function TopNavbar({
           {/* Navigation Items (Simple Mode vs. Pro Cockpit) */}
           {workspaceMode === 'simple' ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {simpleModeNavItems.map(item => {
+              {simpleModeNavItems.map( 
+item => {
                 const isSelected = activeTab === item.key;
                 return (
                   <button
@@ -652,21 +645,24 @@ export default function TopNavbar({
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {groupedCategories.map((group) => {
+              {groupedCategories.map(
+( group) => {
                 const isGroupActive = activeGroupObj?.group === group.group;
                 const isOpen = openGroup === group.group;
 
                 return (
                   <div key={group.group} style={{ position: 'relative', flexShrink: 0 }}>
                     <button
-                      onClick={(e) => {
+                      onClick={
+( e) => {
                         if (isOpen) {
                           setOpenGroup(null);
                         } else {
                           handleGroupHover(group.group, e);
                         }
                       }}
-                      onMouseEnter={(e) => handleGroupHover(group.group, e)}
+                      onMouseEnter={
+( e) => handleGroupHover(group.group, e)}
                       style={{
                         background: isGroupActive ? '#1f242d' : (isOpen ? '#161b22' : 'transparent'),
                         color: isGroupActive ? '#58a6ff' : '#c9d1d9',
@@ -708,7 +704,8 @@ export default function TopNavbar({
                         <div style={{ fontSize: '0.7rem', color: '#8b949e', textTransform: 'uppercase', padding: '4px 8px 6px 8px', borderBottom: '1px solid #21262d', marginBottom: '4px' }}>
                           {group.group}
                         </div>
-                        {group.items.map((item) => {
+                        {group.items.map(
+( item) => {
                           const isSelected = activeTab === item.key;
                           return (
                             <button
@@ -955,8 +952,12 @@ export default function TopNavbar({
                 <button
                   onClick={() => {
                     if (window.confirm('Sign out of AI-BS Dashboard?')) {
-                      auth.signOut();
-                      localStorage.removeItem('aibs_cached_user');
+                      if (onSignOut) {
+                        onSignOut();
+                      } else {
+                        auth.signOut();
+                        localStorage.removeItem('aibs_cached_user');
+                      }
                     }
                   }}
                   style={{ background: 'transparent', color: '#f85149', border: '1px solid rgba(248, 81, 73, 0.4)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.72rem', cursor: 'pointer', fontWeight: '600' }}
@@ -980,8 +981,10 @@ export default function TopNavbar({
         activeTab={activeTab} 
         onNavigateTab={onTabChange} 
       />
-      <AIProviderSettingsModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} backendUrl={backendUrl} onProviderChange={(p, m) => { setActiveAIProvider(p); if (onSelectModel && m) onSelectModel(m); }} />
-      <GlobalWalkthroughGuide isOpen={showGuideModal} onClose={() => setShowGuideModal(false)} onNavigateTab={onTabChange} initialTab={activeTab} onStartTour={(tabKey) => { if (tabKey && onTabChange) onTabChange(tabKey); setShowTour(true); }} />
+      <AIProviderSettingsModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} backendUrl={backendUrl} onProviderChange={
+(p,  m) => { useAppStore.getState().setAIProviderSelection(p, m); }} />
+      <GlobalWalkthroughGuide isOpen={showGuideModal} onClose={() => setShowGuideModal(false)} onNavigateTab={onTabChange} initialTab={activeTab} onStartTour={
+( tabKey) => { if (tabKey && onTabChange) onTabChange(tabKey); setShowTour(true); }} />
       <TourGuideEngine activeTab={activeTab} isOpen={showTour} onClose={() => setShowTour(false)} />
       <GlobalCommandPalette isOpen={showCmdPalette} onClose={() => setShowCmdPalette(false)} onNavigateTab={onTabChange} onOpenGuide={() => setShowGuideModal(true)} onStartTour={() => setShowTour(true)} workspaceMode={workspaceMode} onToggleWorkspaceMode={onToggleWorkspaceMode} />
     </div>

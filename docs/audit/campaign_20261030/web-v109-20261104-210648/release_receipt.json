@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "verified_at": "2026-11-05T02:45:07.334088+00:00",
+  "version": "v5.329.109",
+  "release_id": "web-v109-20261104-210648",
+  "origin": "https://ai-bs-dashboard.web.app",
+  "hosting_version": "cc4229899104e8ba",
+  "production_release": "projects/ai-bs-dashboard/sites/ai-bs-dashboard/channels/live/releases/1793846584186000",
+  "release_time": "2026-11-05T02:43:04.186Z",
+  "preview_origin": "https://ai-bs-dashboard--web-v109-20261104-210648-rr96n1ch.web.app",
+  "same_verified_preview_promoted": true,
+  "client_files": 1137,
+  "cloud_files": 1139,
+  "rollback": {
+    "channel": "pre-web-v109-20261104-210648",
+    "url": "https://ai-bs-dashboard--pre-web-v109-20261104-210648-4phyy6du.web.app",
+    "hosting_version": "df57a83b8e7ff813"
+  },
+  "frontend_tests": 150,
+  "typescript": "passed in canonical project context",
+  "mirrors": {
+    "files": 499,
+    "status": "passed"
+  },
+  "http_checks": {
+    "selected_files": 18,
+    "excluded_urls": 7,
+    "preview": "passed",
+    "production": "passed"
+  },
+  "source_unchanged_during_build": true,
+  "credential_scan": "passed",
+  "native_updated": false,
+  "game_sdk_published": false,
+  "live_trading_enabled": false,
+  "limitations": [
+    "Relocated frontend dependency-junction typecheck failed and remains unqualified; it was not deployed.",
+    "This release verified hosted bytes and source contracts, not every authenticated production workflow."
+  ],
+  "records_workspace": "C:\\AI-BS\\backups\\firebase_web-v109-20261104-210648"
+}

@@ -1,0 +1,3517 @@
+{
+  "summary": {
+    "status": "FAILED",
+    "total_tests": 275,
+    "passed": 272,
+    "failed": 3,
+    "skipped": 0,
+    "duration_seconds": 330.17,
+    "exit_code": 1,
+    "filter_tier": "all",
+    "filter_feature": null,
+    "timestamp": "2026-11-12T02:55:13.282234+00:00"
+  },
+  "tier_breakdown": {
+    "tier1": {
+      "tier_num": "1",
+      "name": "Tier 1: Feature Coverage (\u22655/feature)",
+      "total": 112,
+      "passed": 111,
+      "failed": 1,
+      "skipped": 0,
+      "duration_seconds": 102.381,
+      "status": "FAILED"
+    },
+    "tier2": {
+      "tier_num": "2",
+      "name": "Tier 2: Boundary & Corner Cases (\u22655/feature)",
+      "total": 110,
+      "passed": 109,
+      "failed": 1,
+      "skipped": 0,
+      "duration_seconds": 94.684,
+      "status": "FAILED"
+    },
+    "tier3": {
+      "tier_num": "3",
+      "name": "Tier 3: Pairwise Cross-Feature Integration",
+      "total": 37,
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 38.629,
+      "status": "PASSED"
+    },
+    "tier4": {
+      "tier_num": "4",
+      "name": "Tier 4: Real-World Workload Scenarios",
+      "total": 16,
+      "passed": 15,
+      "failed": 1,
+      "skipped": 0,
+      "duration_seconds": 94.1,
+      "status": "FAILED"
+    }
+  },
+  "feature_coverage": [
+    {
+      "feature_id": 1,
+      "code": "F01",
+      "name": "Sheltered Hub Stations (3)",
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 2,
+      "code": "F02",
+      "name": "Spatial Trigger Zones (7)",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 3,
+      "code": "F03",
+      "name": "Adam Blend Tree Animations",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 4,
+      "code": "F04",
+      "name": "Native DX12 Viewport Session",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 5,
+      "code": "F05",
+      "name": "Legacy DirectX 8/9/10 Fallbacks",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 6,
+      "code": "F06",
+      "name": "Engine Graphics Configuration",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 7,
+      "code": "F07",
+      "name": "Local ML Training Pipeline",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 8,
+      "code": "F08",
+      "name": "Distributed Training Driver",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 9,
+      "code": "F09",
+      "name": "Dataproc Serverless Template",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 10,
+      "code": "F10",
+      "name": "Dataproc Batch Deployment Script",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 11,
+      "code": "F11",
+      "name": "Synced Drive Assets 177 Files",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 12,
+      "code": "F12",
+      "name": "ChromaDB Vector Ingestion",
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 13,
+      "code": "F13",
+      "name": "Microservice Vector Retrieval",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 14,
+      "code": "F14",
+      "name": "Chapter Creator & Native Studio Audit",
+      "total": 17,
+      "passed": 16,
+      "failed": 1,
+      "skipped": 0,
+      "status": "FAILED"
+    },
+    {
+      "feature_id": 15,
+      "code": "F15",
+      "name": "FastAPI Master Engine Audit",
+      "total": 21,
+      "passed": 20,
+      "failed": 1,
+      "skipped": 0,
+      "status": "FAILED"
+    },
+    {
+      "feature_id": 16,
+      "code": "F16",
+      "name": "ComfyUI RTX 4090 Bridge Audit",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "status": "PASSED"
+    },
+    {
+      "feature_id": 17,
+      "code": "F17",
+      "name": "Vite Frontend Build & Dev Audit",
+      "total": 15,
+      "passed": 14,
+      "failed": 1,
+      "skipped": 0,
+      "status": "FAILED"
+    },
+    {
+      "feature_id": 18,
+      "code": "F18",
+      "name": "Opaque-Box E2E Test Suite",
+      "total": 13,
+      "passed": 10,
+      "failed": 3,
+      "skipped": 0,
+      "status": "FAILED"
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "test_f01_cpp_contracts_validation",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.024,
+      "message": null
+    },
+    {
+      "name": "test_f01_writing_desk_state_transitions",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f01_memory_shelves_capacity_and_secret",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f01_shared_play_power_and_session",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f01_hub_entities_payload_construction",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f01_station_type_constants_and_capabilities",
+      "classname": "tier1_features.test_f01_sheltered_hub_stations.TestShelteredHubStationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f02_spatial_zones_catalog_and_bounds_registered",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f02_narrative_route_sequential_containment",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f02_podium_spatial_captions_map_cpp_execution",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.021,
+      "message": null
+    },
+    {
+      "name": "test_f02_zone_centers_and_extents_derivation",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f02_route_z_continuity_and_ordering",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f02_podium_key_route_waypoints",
+      "classname": "tier1_features.test_f02_spatial_trigger_zones.TestSpatialTriggerZonesTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f03_adam_blend_tree_2201_checks_execution",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.026,
+      "message": null
+    },
+    {
+      "name": "test_f03_guide_presentation_cpp_suite",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.111,
+      "message": null
+    },
+    {
+      "name": "test_f03_guide_controller_cpp_suite",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.111,
+      "message": null
+    },
+    {
+      "name": "test_f03_hermite_smoothstep_mathematical_properties",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f03_adam_podium_guide_entity_payload",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f03_guide_presentation_continuity_suite",
+      "classname": "tier1_features.test_f03_adam_blend_tree_animations.TestAdamBlendTreeAnimationsTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 1.287,
+      "message": null
+    },
+    {
+      "name": "test_f04_creator_viewport_cpp_unit_tests",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.036,
+      "message": null
+    },
+    {
+      "name": "test_f04_chapter_viewport_cpp_unit_tests",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 2.103,
+      "message": null
+    },
+    {
+      "name": "test_f04_native_dx12_viewport_self_test_execution",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.387,
+      "message": null
+    },
+    {
+      "name": "test_f04_viewport_json_telemetry_schema",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.392,
+      "message": null
+    },
+    {
+      "name": "test_f04_viewport_bmp_raster_integrity",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.392,
+      "message": null
+    },
+    {
+      "name": "test_f04_viewport_uuid_selection_fidelity",
+      "classname": "tier1_features.test_f04_native_dx12_viewport_session.TestNativeDx12ViewportSessionTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.376,
+      "message": null
+    },
+    {
+      "name": "test_f05_legacy_render_validation_native_execution",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.291,
+      "message": null
+    },
+    {
+      "name": "test_f05_render_validation_enabled_and_skip_modes",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.577,
+      "message": null
+    },
+    {
+      "name": "test_f05_motherboard_renderer_tests_execution",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.028,
+      "message": null
+    },
+    {
+      "name": "test_f05_fallback_chain_hierarchy_order",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f05_warp_software_fallback_enabled",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f05_translation_bridges_schema",
+      "classname": "tier1_features.test_f05_legacy_directx_fallbacks.TestLegacyDirectXFallbacksTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f06_graphics_pipeline_config_file_validity",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f06_graphics_config_schema_fields",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f06_primary_backend_and_feature_level_types",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f06_environment_override_backend_precedence",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f06_environment_override_feature_level_precedence",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f06_configuration_roundtrip_persistence",
+      "classname": "tier1_features.test_f06_engine_graphics_config.TestEngineGraphicsConfigTier1",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.002,
+      "message": null
+    },
+    {
+      "name": "test_f07_pipeline_execution_success",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 7.347,
+      "message": null
+    },
+    {
+      "name": "test_f07_all_eight_assertions_logged",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f07_dataset_generation_and_standard_scaling",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f07_gridsearch_convergence",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f07_predictive_metric_thresholds",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f07_model_artifact_created_and_verified",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.002,
+      "message": null
+    },
+    {
+      "name": "test_f07_pytorch_dl_architecture_pass",
+      "classname": "tier1_features.test_f07_local_ml_pipeline.TestF07LocalMLPipeline",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f08_cli_help_options",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 0.12,
+      "message": null
+    },
+    {
+      "name": "test_f08_pytorch_training_execution",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.289,
+      "message": null
+    },
+    {
+      "name": "test_f08_pytorch_epoch_progression_and_loss",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.24,
+      "message": null
+    },
+    {
+      "name": "test_f08_framework_choice_flag_validation",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.051,
+      "message": null
+    },
+    {
+      "name": "test_f08_driver_custom_num_samples_arg",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.03,
+      "message": null
+    },
+    {
+      "name": "test_f08_driver_custom_export_uri_arg",
+      "classname": "tier1_features.test_f08_distributed_training_driver.TestF08DistributedTrainingDriver",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.216,
+      "message": null
+    },
+    {
+      "name": "test_f09_template_json_exists_and_valid",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f09_resource_name_conforms_to_dataproc_rest_uri",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f09_labels_specification",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f09_execution_config_contract",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f09_runtime_dynamic_allocation_properties",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f09_executor_and_driver_compute_specs",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f09_jupyter_session_and_pip_packages",
+      "classname": "tier1_features.test_f09_dataproc_serverless_template.TestF09DataprocServerlessTemplate",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f10_validate_exits_zero",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.067,
+      "message": null
+    },
+    {
+      "name": "test_f10_validate_all_eight_points_logged",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.057,
+      "message": null
+    },
+    {
+      "name": "test_f10_terraform_hcl_output",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.058,
+      "message": null
+    },
+    {
+      "name": "test_f10_batch_json_schema",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.057,
+      "message": null
+    },
+    {
+      "name": "test_f10_show_cli_gcloud_command",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.057,
+      "message": null
+    },
+    {
+      "name": "test_f10_custom_project_region_flags",
+      "classname": "tier1_features.test_f10_dataproc_batch_deployment.TestF10DataprocBatchDeployment",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.055,
+      "message": null
+    },
+    {
+      "name": "test_f11_directory_structure_exists",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f11_exact_177_files_count",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.008,
+      "message": null
+    },
+    {
+      "name": "test_f11_exact_seven_categories_present",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f11_exact_thirty_one_subdirectories",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f11_exact_three_zero_byte_files",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f11_inventory_json_parity",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f11_all_files_readable_zero_io_errors",
+      "classname": "tier1_features.test_f11_synced_drive_assets.TestF11SyncedDriveAssets",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.007,
+      "message": null
+    },
+    {
+      "name": "test_f12_chromadb_storage_directory_exists",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f12_master_collection_exists",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 1.395,
+      "message": null
+    },
+    {
+      "name": "test_f12_master_collection_chunk_count_gte_177",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f12_all_177_unique_files_indexed",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f12_metadata_schema_contract",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f12_all_seven_categories_represented",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f12_per_category_collections_populated",
+      "classname": "tier1_features.test_f12_chromadb_vector_ingestion.TestF12ChromaDBVectorIngestion",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f13_rag_service_bridge_import_and_schema",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 0.99,
+      "message": null
+    },
+    {
+      "name": "test_f13_rag_query_retrieval_across_seven_categories",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 2.069,
+      "message": null
+    },
+    {
+      "name": "test_f13_retrieved_results_metadata_payload",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f13_category_filter_isolation",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f13_omnidrive_hybrid_search_response_contract",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 0.329,
+      "message": null
+    },
+    {
+      "name": "test_f13_omnidrive_search_result_items_structure",
+      "classname": "tier1_features.test_f13_microservice_vector_retrieval.TestF13MicroserviceVectorRetrieval",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 0.281,
+      "message": null
+    },
+    {
+      "name": "test_f14_ctest_target_inventory_count",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.037,
+      "message": null
+    },
+    {
+      "name": "test_f14_native_creator_viewport_binary_artifact",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f14_sheltered_hub_viewport_session_probe",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.478,
+      "message": null
+    },
+    {
+      "name": "test_f14_sheltered_hub_fields_unit_suite",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.07,
+      "message": null
+    },
+    {
+      "name": "test_f14_ctest_core_contracts_execution",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.428,
+      "message": null
+    },
+    {
+      "name": "test_f14_m5_audit_native_studio_pass",
+      "classname": "tier1_features.test_f14_chapter_creator_audit.TestF14ChapterCreatorAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 41.718,
+      "message": null
+    },
+    {
+      "name": "test_f15_backend_health_status_online",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.037,
+      "message": null
+    },
+    {
+      "name": "test_f15_backend_openapi_schema_discovery",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.074,
+      "message": null
+    },
+    {
+      "name": "test_f15_rag_query_endpoint",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.233,
+      "message": null
+    },
+    {
+      "name": "test_f15_omnidrive_hybrid_search_endpoint",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.051,
+      "message": null
+    },
+    {
+      "name": "test_f15_backend_source_and_daemons_contract",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.037,
+      "message": null
+    },
+    {
+      "name": "test_f15_m5_audit_fastapi_pass",
+      "classname": "tier1_features.test_f15_fastapi_backend_audit.TestF15FastAPIEngineAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f16_comfyui_primary_health",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.049,
+      "message": null
+    },
+    {
+      "name": "test_f16_comfyui_standby_system_stats_rtx_4090",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.044,
+      "message": null
+    },
+    {
+      "name": "test_f16_comfyui_proxy_transparent_forwarding",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.2,
+      "message": null
+    },
+    {
+      "name": "test_f16_comfyui_queue_and_prompt_endpoints",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 4.433,
+      "message": null
+    },
+    {
+      "name": "test_f16_bridge_source_script_architecture",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f16_m5_audit_comfyui_pass",
+      "classname": "tier1_features.test_f16_comfyui_bridge_audit.TestF16ComfyUIBridgeAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f17_vite_dev_server_responds_200",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 2.022,
+      "message": null
+    },
+    {
+      "name": "test_f17_production_build_artifacts_exist",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f17_package_json_scripts_contract",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f17_vite_config_architecture",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f17_dev_server_serves_static_headers",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 2.027,
+      "message": null
+    },
+    {
+      "name": "test_f17_m5_audit_vite_pass",
+      "classname": "tier1_features.test_f17_vite_frontend_audit.TestF17ViteFrontendAudit",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_f18_runner_cli_help_flag",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.058,
+      "message": null
+    },
+    {
+      "name": "test_f18_runner_feature_registry_integrity",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.01,
+      "message": null
+    },
+    {
+      "name": "test_f18_runner_scenario_feature_map_completeness",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f18_conftest_fixtures_availability",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f18_pytest_ini_markers_registration",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_f18_runner_single_feature_execution",
+      "classname": "tier1_features.test_f18_e2e_suite_self_test.TestF18E2ESuiteSelfTest",
+      "file": "",
+      "tier": "tier1",
+      "features": [
+        18
+      ],
+      "outcome": "failed",
+      "duration": 4.474,
+      "message": "AssertionError: Subprocess failed with exit code 1 (expected 0).\nCommand: ['C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\AI-BS\\\\packaging_python_20261111_v03\\\\python.exe', 'C:\\\\AI-BS\\\\tests\\\\e2e\\\\run_e2e_tests.py', '--tier', '1', '--feature', '17', '--json-report', 'C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Administrator\\\\pytest-47\\\\test_f18_runner_single_feature0\\\\test_report_f17.json']\nDuration: 4.47s\n--- STDOUT ---\n============================= test session starts =============================\r\nplatform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0\r\nPyQt6 6.11.0 -- Qt runtime 6.11.2 -- Qt compiled 6.11.0\r\nrootdir: C:\\AI-BS\\tests\\e2e\r\nconfigfile: pytest.ini\r\nplugins: anyio-4.13.0, qt-4.5.0, timeout-2.4.0\r\ncollected 112 items / 106 deselected / 6 selected\r\n\r\ntests\\e2e\\tier1_features\\test_f17_vite_frontend_audit.py ......          [100%]\r\n\r\n-- generated xml file: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\tmpq1hlw0w0.xml ---\r\n====================== 6 passed, 106 deselected in 4.13s ======================\r\n\r\n================================================================================\r\n                     AI-BS E2E TEST RUNNER EXECUTION SUMMARY\r\n================================================================================\r\n Status:             PASSED\r\n Total Tests Ran:    6\r\n Passed:             6\r\n Failed / Errors:    0\r\n Skipped:            0\r\n Total Duration:     4.11 seconds\r\n Timestamp:          2026-11-12T02:51:25.586170+00:00\r\n Tier Filter:        Tier 1\r\n Feature Filter:     Feature #17\r\n--------------------------------------------------------------------------------\r\n TIER BREAKDOWN\r\n Tier     Name                                       Total   Pass   Fail   Status  \r\n ------------------------------------------------------------------------------\r\n\n--- STDERR ---\nTraceback (most recent call last):\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 589, in <module>\r\n    sys.exit(main())\r\n             ^^^^^^\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 583, in main\r\n    print_summary_table(report_data)\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 390, in print_summary_table\r\n    print(\r\n  File \"C:\\Users\\Administrator\\AppData\\Local\\AI-BS\\packaging_python_20261111_v03\\Lib\\encodings\\cp1252.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode character '\\u2265' in position 36: character maps to <undefined>\r\n\nContext: Runner invocation for --tier 1 --feature 17 failed"
+    },
+    {
+      "name": "test_b01_writing_desk_unclaimed_pencil_note_rejection",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b01_writing_desk_invalid_modes",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_writing_desk_negative_notes_and_type_mismatches",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_memory_shelves_exceed_capacity",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_memory_shelves_premature_secret_revelation",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_memory_shelves_zero_or_negative_capacity",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_shared_play_unpowered_session_rejection",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b01_non_finite_coordinates_rejection",
+      "classname": "tier2_boundary.test_b01_sheltered_hub_boundary.TestShelteredHubBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        1
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_exact_bounding_box_corners",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_infinitesimal_out_of_bounds_epsilon",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_void_coordinates_return_none",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_parallel_zone_separation_fault_vs_relay",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_non_finite_coordinate_query_safety",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b02_cross_sectional_boundary_plane",
+      "classname": "tier2_boundary.test_b02_spatial_trigger_boundary.TestSpatialTriggerBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        2
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_blend_factor_extreme_boundaries",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_out_of_range_blend_factor_clamping",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_smoothstep_derivative_boundary_invariance",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_quaternion_normalization_and_antipodal_slerp",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_guide_velocity_movement_threshold_boundary",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b03_reset_invariance_during_partial_transition",
+      "classname": "tier2_boundary.test_b03_adam_blend_tree_boundary.TestAdamBlendTreeBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        3
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b04_missing_cli_arguments_rejection",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.024,
+      "message": null
+    },
+    {
+      "name": "test_b04_unknown_cli_flag_rejection",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.01,
+      "message": null
+    },
+    {
+      "name": "test_b04_corrupted_snapshot_payload_rejection",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.013,
+      "message": null
+    },
+    {
+      "name": "test_b04_stop_file_immediate_termination",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.333,
+      "message": null
+    },
+    {
+      "name": "test_b04_empty_scene_snapshot_rendering",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.37,
+      "message": null
+    },
+    {
+      "name": "test_b04_unwritable_output_path_handling",
+      "classname": "tier2_boundary.test_b04_native_dx12_viewport_boundary.TestNativeDx12ViewportBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        4
+      ],
+      "outcome": "passed",
+      "duration": 0.279,
+      "message": null
+    },
+    {
+      "name": "test_b05_invalid_mode_rejected_by_native_renderer",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.018,
+      "message": null
+    },
+    {
+      "name": "test_b05_existing_directory_collision_rejected",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.012,
+      "message": null
+    },
+    {
+      "name": "test_b05_missing_arguments_rejected",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.009,
+      "message": null
+    },
+    {
+      "name": "test_b05_unrecognized_mode_argument",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.015,
+      "message": null
+    },
+    {
+      "name": "test_b05_camera_aspect_ratio_boundary_and_rejection",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b05_empty_fallback_chain_validation",
+      "classname": "tier2_boundary.test_b05_legacy_directx_boundary.TestLegacyDirectXBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        5
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b06_missing_config_file_defaults",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b06_malformed_json_syntax",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.002,
+      "message": null
+    },
+    {
+      "name": "test_b06_invalid_schema_types",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b06_inverted_feature_levels",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b06_empty_or_whitespace_environment_overrides",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b06_unrecognized_backend_string_handling",
+      "classname": "tier2_boundary.test_b06_engine_graphics_boundary.TestEngineGraphicsBoundaryTier2",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b07_minimum_viable_sample_size",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 4.508,
+      "message": null
+    },
+    {
+      "name": "test_b07_metric_strict_bounds_and_roc_curve",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 4.597,
+      "message": null
+    },
+    {
+      "name": "test_b07_zero_samples_handling",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.977,
+      "message": null
+    },
+    {
+      "name": "test_b07_negative_sample_size_handling",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.975,
+      "message": null
+    },
+    {
+      "name": "test_b07_corrupted_model_deserialization_safety",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 0.003,
+      "message": null
+    },
+    {
+      "name": "test_b07_missing_features_matrix_guard",
+      "classname": "tier2_boundary.test_b07_local_ml_boundary.TestB07LocalMLBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        7
+      ],
+      "outcome": "passed",
+      "duration": 1.051,
+      "message": null
+    },
+    {
+      "name": "test_b08_invalid_framework_choice_rejection",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 0.099,
+      "message": null
+    },
+    {
+      "name": "test_b08_use_gpu_fallback_on_cpu",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.087,
+      "message": null
+    },
+    {
+      "name": "test_b08_pytorch_loss_finite_and_positive",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 1.999,
+      "message": null
+    },
+    {
+      "name": "test_b08_zero_processes_boundary",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.119,
+      "message": null
+    },
+    {
+      "name": "test_b08_custom_export_uri_path_handling",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 2.103,
+      "message": null
+    },
+    {
+      "name": "test_b08_unrecognized_flag_rejected",
+      "classname": "tier2_boundary.test_b08_distributed_training_boundary.TestB08DistributedTrainingBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        8
+      ],
+      "outcome": "passed",
+      "duration": 0.103,
+      "message": null
+    },
+    {
+      "name": "test_b09_dynamic_allocation_min_max_ordering",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b09_ttl_duration_bounds",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b09_memory_units_and_scaling_bounds",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b09_gcs_staging_bucket_naming_rules",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b09_service_account_domain_constraints",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b09_gcp_labels_character_and_length_boundaries",
+      "classname": "tier2_boundary.test_b09_dataproc_serverless_boundary.TestB09DataprocServerlessBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        9
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b10_invalid_staging_bucket_without_gs_scheme",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.05,
+      "message": null
+    },
+    {
+      "name": "test_b10_terraform_cluster_prohibition_boundary",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.05,
+      "message": null
+    },
+    {
+      "name": "test_b10_runtime_version_supported_boundary",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.031,
+      "message": null
+    },
+    {
+      "name": "test_b10_invalid_cli_arguments_exit_code_two",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.058,
+      "message": null
+    },
+    {
+      "name": "test_b10_batch_payload_structure_integrity",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.051,
+      "message": null
+    },
+    {
+      "name": "test_b10_dynamic_allocation_executor_bounds",
+      "classname": "tier2_boundary.test_b10_dataproc_batch_boundary.TestB10DataprocBatchBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.052,
+      "message": null
+    },
+    {
+      "name": "test_b11_no_stray_files_in_root_asset_dir",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b11_zero_byte_files_isolation_and_exact_cardinality",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.013,
+      "message": null
+    },
+    {
+      "name": "test_b11_file_extensions_diversity_and_no_tmp_locks",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b11_category_file_distribution_boundaries",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.009,
+      "message": null
+    },
+    {
+      "name": "test_b11_path_length_and_windows_safety",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.004,
+      "message": null
+    },
+    {
+      "name": "test_b11_zero_byte_files_safe_open",
+      "classname": "tier2_boundary.test_b11_synced_drive_assets_boundary.TestB11SyncedDriveAssetsBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        11
+      ],
+      "outcome": "passed",
+      "duration": 0.009,
+      "message": null
+    },
+    {
+      "name": "test_b12_zero_byte_files_stored_gracefully_with_metadata",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 1.166,
+      "message": null
+    },
+    {
+      "name": "test_b12_zero_byte_record_names_match",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 1.094,
+      "message": null
+    },
+    {
+      "name": "test_b12_text_sanitization_removes_null_bytes",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.815,
+      "message": null
+    },
+    {
+      "name": "test_b12_embedding_vector_dimensionality_consistency",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.98,
+      "message": null
+    },
+    {
+      "name": "test_b12_per_category_collection_isolation",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.951,
+      "message": null
+    },
+    {
+      "name": "test_b12_nonexistent_metadata_filter_empty_handling",
+      "classname": "tier2_boundary.test_b12_chromadb_vector_boundary.TestB12ChromaDBVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        12
+      ],
+      "outcome": "passed",
+      "duration": 0.997,
+      "message": null
+    },
+    {
+      "name": "test_b13_empty_query_string_safety",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 1.318,
+      "message": null
+    },
+    {
+      "name": "test_b13_top_k_zero_boundary",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 1.247,
+      "message": null
+    },
+    {
+      "name": "test_b13_nonexistent_collection_fallback_behavior",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 1.427,
+      "message": null
+    },
+    {
+      "name": "test_b13_large_top_k_upper_bound",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 1.268,
+      "message": null
+    },
+    {
+      "name": "test_b13_sql_injection_pattern_query_safety",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 10.625,
+      "message": null
+    },
+    {
+      "name": "test_b13_omnidrive_extension_filtering_nonexistent",
+      "classname": "tier2_boundary.test_b13_microservice_vector_boundary.TestB13MicroserviceVectorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        13
+      ],
+      "outcome": "passed",
+      "duration": 5.482,
+      "message": null
+    },
+    {
+      "name": "test_b14_writing_desk_unclaimed_pencil_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b14_memory_shelves_secret_item_count_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b14_shared_play_power_active_dependency_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b14_spatial_zone_exact_perimeter_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_b14_ctest_empty_filter_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.028,
+      "message": null
+    },
+    {
+      "name": "test_b14_viewport_telemetry_missing_dir_boundary",
+      "classname": "tier2_boundary.test_b14_chapter_creator_boundary.TestB14ChapterCreatorBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b15_rag_query_empty_query_boundary",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 3.88,
+      "message": null
+    },
+    {
+      "name": "test_b15_rag_query_zero_top_k_boundary",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 7.349,
+      "message": null
+    },
+    {
+      "name": "test_b15_rag_query_nonexistent_collection",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.167,
+      "message": null
+    },
+    {
+      "name": "test_b15_omnidrive_search_invalid_http_method",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.045,
+      "message": null
+    },
+    {
+      "name": "test_b15_backend_nonexistent_route_404",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.03,
+      "message": null
+    },
+    {
+      "name": "test_b15_backend_malformed_json_payload",
+      "classname": "tier2_boundary.test_b15_fastapi_backend_boundary.TestB15FastAPIBackendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.023,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_nonexistent_forwarded_endpoint",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.181,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_standby_empty_prompt_payload",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.028,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_cors_preflight_options",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.039,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_standby_zero_vram_contract",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 4.072,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_object_info_schema",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 2.037,
+      "message": null
+    },
+    {
+      "name": "test_b16_comfyui_dual_port_socket_separation",
+      "classname": "tier2_boundary.test_b16_comfyui_bridge_boundary.TestB16ComfyUIBridgeBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        16
+      ],
+      "outcome": "passed",
+      "duration": 0.014,
+      "message": null
+    },
+    {
+      "name": "test_b17_frontend_missing_asset_404_handling",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 2.034,
+      "message": null
+    },
+    {
+      "name": "test_b17_frontend_dist_zero_byte_integrity",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b17_frontend_html_tags_integrity",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b17_vite_dev_server_strict_port_boundary",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b17_frontend_sensitive_data_isolation",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.079,
+      "message": null
+    },
+    {
+      "name": "test_b17_package_dependencies_schema",
+      "classname": "tier2_boundary.test_b17_vite_frontend_boundary.TestB17ViteFrontendBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        17
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b18_runner_invalid_tier_rejected",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.061,
+      "message": null
+    },
+    {
+      "name": "test_b18_runner_invalid_feature_out_of_bounds",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.191,
+      "message": null
+    },
+    {
+      "name": "test_b18_runner_empty_test_set_summary_no_div_zero",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b18_runner_malformed_junit_xml_recovery",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.003,
+      "message": null
+    },
+    {
+      "name": "test_b18_feature_extractor_comprehensive_boundaries",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_b18_runner_json_report_write_to_protected_or_temp_dir",
+      "classname": "tier2_boundary.test_b18_e2e_boundary.TestB18E2EBoundary",
+      "file": "",
+      "tier": "tier2",
+      "features": [
+        18
+      ],
+      "outcome": "failed",
+      "duration": 11.008,
+      "message": "AssertionError: Subprocess failed with exit code 1 (expected 0).\nCommand: ['C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\AI-BS\\\\packaging_python_20261111_v03\\\\python.exe', 'C:\\\\AI-BS\\\\tests\\\\e2e\\\\run_e2e_tests.py', '--tier', '1', '--feature', '16', '--json-report', 'C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Administrator\\\\pytest-47\\\\test_b18_runner_json_report_wr0\\\\subdir\\\\nested\\\\report.json']\nDuration: 11.01s\n--- STDOUT ---\n============================= test session starts =============================\r\nplatform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0\r\nPyQt6 6.11.0 -- Qt runtime 6.11.2 -- Qt compiled 6.11.0\r\nrootdir: C:\\AI-BS\\tests\\e2e\r\nconfigfile: pytest.ini\r\nplugins: anyio-4.13.0, qt-4.5.0, timeout-2.4.0\r\ncollected 112 items / 106 deselected / 6 selected\r\n\r\ntests\\e2e\\tier1_features\\test_f16_comfyui_bridge_audit.py ......         [100%]\r\n\r\n-- generated xml file: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\tmprmcmeuqt.xml ---\r\n===================== 6 passed, 106 deselected in 10.63s ======================\r\n\r\n================================================================================\r\n                     AI-BS E2E TEST RUNNER EXECUTION SUMMARY\r\n================================================================================\r\n Status:             PASSED\r\n Total Tests Ran:    6\r\n Passed:             6\r\n Failed / Errors:    0\r\n Skipped:            0\r\n Total Duration:     10.61 seconds\r\n Timestamp:          2026-11-12T02:53:00.381558+00:00\r\n Tier Filter:        Tier 1\r\n Feature Filter:     Feature #16\r\n--------------------------------------------------------------------------------\r\n TIER BREAKDOWN\r\n Tier     Name                                       Total   Pass   Fail   Status  \r\n ------------------------------------------------------------------------------\r\n\n--- STDERR ---\nTraceback (most recent call last):\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 589, in <module>\r\n    sys.exit(main())\r\n             ^^^^^^\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 583, in main\r\n    print_summary_table(report_data)\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 390, in print_summary_table\r\n    print(\r\n  File \"C:\\Users\\Administrator\\AppData\\Local\\AI-BS\\packaging_python_20261111_v03\\Lib\\encodings\\cp1252.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode character '\\u2265' in position 36: character maps to <undefined>"
+    },
+    {
+      "name": "test_p01_viewport_config_schema_compatibility",
+      "classname": "tier3_pairwise.test_p01_viewport_graphics_config.TestP01ViewportGraphicsConfig",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p01_viewport_execution_with_config_env_override",
+      "classname": "tier3_pairwise.test_p01_viewport_graphics_config.TestP01ViewportGraphicsConfig",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.477,
+      "message": null
+    },
+    {
+      "name": "test_p02_writing_desk_inside_pencil_room_zone",
+      "classname": "tier3_pairwise.test_p02_hub_stations_spatial_zones.TestP02HubStationsSpatialZones",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p02_shared_play_inside_sheltered_hub_zone",
+      "classname": "tier3_pairwise.test_p02_hub_stations_spatial_zones.TestP02HubStationsSpatialZones",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p02_memory_shelves_inside_pencil_room_zone",
+      "classname": "tier3_pairwise.test_p02_hub_stations_spatial_zones.TestP02HubStationsSpatialZones",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p03_adam_podium_node_creation_and_attributes",
+      "classname": "tier3_pairwise.test_p03_adam_blend_and_stations.TestP03AdamBlendAndStations",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p03_adam_blend_tree_native_test_executable",
+      "classname": "tier3_pairwise.test_p03_adam_blend_and_stations.TestP03AdamBlendAndStations",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.012,
+      "message": null
+    },
+    {
+      "name": "test_p04_fallback_chain_specifies_d3d11_warp_and_bridges",
+      "classname": "tier3_pairwise.test_p04_viewport_legacy_fallbacks.TestP04ViewportLegacyFallbacks",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p04_minimum_feature_level_floor_and_warp",
+      "classname": "tier3_pairwise.test_p04_viewport_legacy_fallbacks.TestP04ViewportLegacyFallbacks",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p05_driver_cli_supports_mllib_and_pytorch",
+      "classname": "tier3_pairwise.test_p05_ml_pipeline_distributed_driver.TestP05MLPipelineDistributedDriver",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.099,
+      "message": null
+    },
+    {
+      "name": "test_p05_local_ml_pipeline_model_export_directory",
+      "classname": "tier3_pairwise.test_p05_ml_pipeline_distributed_driver.TestP05MLPipelineDistributedDriver",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p06_dataproc_template_runtime_and_executors",
+      "classname": "tier3_pairwise.test_p06_driver_dataproc_template.TestP06DriverDataprocTemplate",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p06_dataproc_template_environment_and_service_account",
+      "classname": "tier3_pairwise.test_p06_driver_dataproc_template.TestP06DriverDataprocTemplate",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p07_deployment_script_validation_mode_passes",
+      "classname": "tier3_pairwise.test_p07_dataproc_template_deploy_script.TestP07DataprocTemplateDeployScript",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.051,
+      "message": null
+    },
+    {
+      "name": "test_p07_terraform_generation_contract",
+      "classname": "tier3_pairwise.test_p07_dataproc_template_deploy_script.TestP07DataprocTemplateDeployScript",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.046,
+      "message": null
+    },
+    {
+      "name": "test_p08_synced_assets_file_count_and_categories",
+      "classname": "tier3_pairwise.test_p08_drive_assets_chroma_ingest.TestP08DriveAssetsChromaIngest",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.008,
+      "message": null
+    },
+    {
+      "name": "test_p08_chromadb_storage_directory_presence",
+      "classname": "tier3_pairwise.test_p08_drive_assets_chroma_ingest.TestP08DriveAssetsChromaIngest",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p09_vector_retrieval_returns_ranked_results",
+      "classname": "tier3_pairwise.test_p09_chroma_rag_retrieval.TestP09ChromaRAGRetrieval",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.164,
+      "message": null
+    },
+    {
+      "name": "test_p09_vector_retrieval_respects_top_k_parameter",
+      "classname": "tier3_pairwise.test_p09_chroma_rag_retrieval.TestP09ChromaRAGRetrieval",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.145,
+      "message": null
+    },
+    {
+      "name": "test_p10_fastapi_rag_endpoint_contract_schema",
+      "classname": "tier3_pairwise.test_p10_rag_fastapi_backend.TestP10RAGFastAPIBackend",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.169,
+      "message": null
+    },
+    {
+      "name": "test_p10_fastapi_rag_endpoint_handles_missing_collection_fallback",
+      "classname": "tier3_pairwise.test_p10_rag_fastapi_backend.TestP10RAGFastAPIBackend",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.181,
+      "message": null
+    },
+    {
+      "name": "test_p11_fastapi_comfyui_client_registration",
+      "classname": "tier3_pairwise.test_p11_fastapi_comfyui_bridge.TestP11FastAPIComfyUIBridge",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.004,
+      "message": null
+    },
+    {
+      "name": "test_p11_concurrent_health_and_stats_query",
+      "classname": "tier3_pairwise.test_p11_fastapi_comfyui_bridge.TestP11FastAPIComfyUIBridge",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 4.067,
+      "message": null
+    },
+    {
+      "name": "test_p12_backend_cors_allows_vite_origin",
+      "classname": "tier3_pairwise.test_p12_fastapi_vite_frontend.TestP12FastAPIViteFrontend",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.037,
+      "message": null
+    },
+    {
+      "name": "test_p12_concurrent_frontend_and_backend_availability",
+      "classname": "tier3_pairwise.test_p12_fastapi_vite_frontend.TestP12FastAPIViteFrontend",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 4.047,
+      "message": null
+    },
+    {
+      "name": "test_p13_native_studio_audit_validates_viewport_json",
+      "classname": "tier3_pairwise.test_p13_studio_audit_dx12_viewport.TestP13StudioAuditDX12Viewport",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p13_native_studio_audit_validates_viewport_bmp",
+      "classname": "tier3_pairwise.test_p13_studio_audit_dx12_viewport.TestP13StudioAuditDX12Viewport",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p14_graphics_config_referenced_by_engine_tests",
+      "classname": "tier3_pairwise.test_p14_studio_audit_graphics_config.TestP14StudioAuditGraphicsConfig",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p14_audit_report_engine_configuration_consistency",
+      "classname": "tier3_pairwise.test_p14_studio_audit_graphics_config.TestP14StudioAuditGraphicsConfig",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p15_comfyui_cors_for_vite_dashboard",
+      "classname": "tier3_pairwise.test_p15_comfyui_vite_integration.TestP15ComfyUIViteIntegration",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.032,
+      "message": null
+    },
+    {
+      "name": "test_p15_system_stats_for_dashboard_display",
+      "classname": "tier3_pairwise.test_p15_comfyui_vite_integration.TestP15ComfyUIViteIntegration",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 2.168,
+      "message": null
+    },
+    {
+      "name": "test_p16_vector_dimension_compatibility",
+      "classname": "tier3_pairwise.test_p16_local_ml_chromadb_embedding.TestP16LocalMLChromaEmbedding",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p16_embedding_vector_distance_contract",
+      "classname": "tier3_pairwise.test_p16_local_ml_chromadb_embedding.TestP16LocalMLChromaEmbedding",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_p17_omnidrive_returns_synced_asset_references",
+      "classname": "tier3_pairwise.test_p17_drive_assets_fastapi_omnidrive.TestP17DriveAssetsFastAPIOmnidrive",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 7.638,
+      "message": null
+    },
+    {
+      "name": "test_p17_omnidrive_latency_bounds",
+      "classname": "tier3_pairwise.test_p17_drive_assets_fastapi_omnidrive.TestP17DriveAssetsFastAPIOmnidrive",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 7.249,
+      "message": null
+    },
+    {
+      "name": "test_p18_all_four_subsystems_pass_in_m5_audit_report",
+      "classname": "tier3_pairwise.test_p18_e2e_runner_subsystem_audits.TestP18E2ERunnerSubsystemAudits",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_p18_all_subsystem_ports_verified_active",
+      "classname": "tier3_pairwise.test_p18_e2e_runner_subsystem_audits.TestP18E2ERunnerSubsystemAudits",
+      "file": "",
+      "tier": "tier3",
+      "features": [],
+      "outcome": "passed",
+      "duration": 0.025,
+      "message": null
+    },
+    {
+      "name": "test_s01_chapter1_stations_and_spatial_containment_walkthrough",
+      "classname": "tier4_scenarios.test_s01_authoring_to_viewport_e2e.TestS01AuthoringToViewportE2E",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_s01_dx12_native_viewport_projection_execution",
+      "classname": "tier4_scenarios.test_s01_authoring_to_viewport_e2e.TestS01AuthoringToViewportE2E",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "outcome": "passed",
+      "duration": 0.514,
+      "message": null
+    },
+    {
+      "name": "test_s02_graphics_fallback_chain_and_translation_bridges",
+      "classname": "tier4_scenarios.test_s02_legacy_dx_fallback_recovery.TestS02LegacyDXFallbackRecovery",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        4,
+        5,
+        6,
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_s02_native_viewport_survives_fallback_configuration",
+      "classname": "tier4_scenarios.test_s02_legacy_dx_fallback_recovery.TestS02LegacyDXFallbackRecovery",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        4,
+        5,
+        6,
+        14
+      ],
+      "outcome": "passed",
+      "duration": 0.48,
+      "message": null
+    },
+    {
+      "name": "test_s03_local_ml_training_artifacts_and_metrics",
+      "classname": "tier4_scenarios.test_s03_distributed_ml_dataproc_lifecycle.TestS03DistributedMLDataprocLifecycle",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.001,
+      "message": null
+    },
+    {
+      "name": "test_s03_dataproc_session_template_and_deployment_validation",
+      "classname": "tier4_scenarios.test_s03_distributed_ml_dataproc_lifecycle.TestS03DistributedMLDataprocLifecycle",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "outcome": "passed",
+      "duration": 0.092,
+      "message": null
+    },
+    {
+      "name": "test_s04_assets_inventory_and_category_completeness",
+      "classname": "tier4_scenarios.test_s04_cloud_assets_vectorization_search.TestS04CloudAssetsVectorizationSearch",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        11,
+        12,
+        13,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.013,
+      "message": null
+    },
+    {
+      "name": "test_s04_semantic_search_and_metadata_retrieval_lifecycle",
+      "classname": "tier4_scenarios.test_s04_cloud_assets_vectorization_search.TestS04CloudAssetsVectorizationSearch",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        11,
+        12,
+        13,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 13.731,
+      "message": null
+    },
+    {
+      "name": "test_s05_studio_notes_to_generative_prompt_dispatch",
+      "classname": "tier4_scenarios.test_s05_cognitive_studio_comfyui_generation.TestS05CognitiveStudioComfyUIGeneration",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        13,
+        15,
+        16
+      ],
+      "outcome": "passed",
+      "duration": 8.677,
+      "message": null
+    },
+    {
+      "name": "test_s06_execute_m5_master_audit_script",
+      "classname": "tier4_scenarios.test_s06_full_stack_subsystem_audit.TestS06FullStackSubsystemAudit",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "outcome": "passed",
+      "duration": 46.586,
+      "message": null
+    },
+    {
+      "name": "test_s06_direct_endpoint_matrix_verification",
+      "classname": "tier4_scenarios.test_s06_full_stack_subsystem_audit.TestS06FullStackSubsystemAudit",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "outcome": "passed",
+      "duration": 8.123,
+      "message": null
+    },
+    {
+      "name": "test_s07_drive_assets_vector_retrieval_and_viewport_entity_mapping",
+      "classname": "tier4_scenarios.test_s07_multimodal_drive_assets_viewport.TestS07MultimodalDriveAssetsViewport",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        1,
+        4,
+        11,
+        12,
+        13
+      ],
+      "outcome": "passed",
+      "duration": 2.68,
+      "message": null
+    },
+    {
+      "name": "test_s08_backend_resilience_under_missing_external_credentials",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 2.02,
+      "message": null
+    },
+    {
+      "name": "test_s08_distributed_driver_local_execution_without_gcp_dataproc",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.103,
+      "message": null
+    },
+    {
+      "name": "test_s08_graphics_warp_fallback_availability",
+      "classname": "tier4_scenarios.test_s08_disaster_recovery_graceful_fallback.TestS08DisasterRecoveryGracefulFallback",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        5,
+        8,
+        12,
+        15
+      ],
+      "outcome": "passed",
+      "duration": 0.0,
+      "message": null
+    },
+    {
+      "name": "test_s09_execute_runner_with_json_and_xml_reporting",
+      "classname": "tier4_scenarios.test_s09_test_suite_telemetry_export.TestS09TestSuiteTelemetryExport",
+      "file": "",
+      "tier": "tier4",
+      "features": [
+        14,
+        15,
+        17,
+        18
+      ],
+      "outcome": "failed",
+      "duration": 11.078,
+      "message": "AssertionError: Subprocess failed with exit code 1 (expected 0).\nCommand: ['C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\AI-BS\\\\packaging_python_20261111_v03\\\\python.exe', 'C:\\\\AI-BS\\\\tests\\\\e2e\\\\run_e2e_tests.py', '--tier', '1', '--feature', '16', '--json-report', 'C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Administrator\\\\pytest-47\\\\test_s09_execute_runner_with_j0\\\\scenario_report.json', '--xml-report', 'C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Administrator\\\\pytest-47\\\\test_s09_execute_runner_with_j0\\\\scenario_report.xml']\nDuration: 11.08s\n--- STDOUT ---\n============================= test session starts =============================\r\nplatform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0\r\nPyQt6 6.11.0 -- Qt runtime 6.11.2 -- Qt compiled 6.11.0\r\nrootdir: C:\\AI-BS\\tests\\e2e\r\nconfigfile: pytest.ini\r\nplugins: anyio-4.13.0, qt-4.5.0, timeout-2.4.0\r\ncollected 112 items / 106 deselected / 6 selected\r\n\r\ntests\\e2e\\tier1_features\\test_f16_comfyui_bridge_audit.py ......         [100%]\r\n\r\n- generated xml file: C:\\Users\\Administrator\\AppData\\Local\\Temp\\pytest-of-Administrator\\pytest-47\\test_s09_execute_runner_with_j0\\scenario_report.xml -\r\n===================== 6 passed, 106 deselected in 10.68s ======================\r\n\r\n================================================================================\r\n                     AI-BS E2E TEST RUNNER EXECUTION SUMMARY\r\n================================================================================\r\n Status:             PASSED\r\n Total Tests Ran:    6\r\n Passed:             6\r\n Failed / Errors:    0\r\n Skipped:            0\r\n Total Duration:     10.66 seconds\r\n Timestamp:          2026-11-12T02:55:13.147655+00:00\r\n Tier Filter:        Tier 1\r\n Feature Filter:     Feature #16\r\n--------------------------------------------------------------------------------\r\n TIER BREAKDOWN\r\n Tier     Name                                       Total   Pass   Fail   Status  \r\n ------------------------------------------------------------------------------\r\n\n--- STDERR ---\nTraceback (most recent call last):\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 589, in <module>\r\n    sys.exit(main())\r\n             ^^^^^^\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 583, in main\r\n    print_summary_table(report_data)\r\n  File \"C:\\AI-BS\\tests\\e2e\\run_e2e_tests.py\", line 390, in print_summary_table\r\n    print(\r\n  File \"C:\\Users\\Administrator\\AppData\\Local\\AI-BS\\packaging_python_20261111_v03\\Lib\\encodings\\cp1252.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode character '\\u2265' in position 36: character maps to <undefined>\r\n\nContext: Runner execution failed for scenario 09"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "ece0f416123c4793b5f1cba949e05385",
+  "plan_id": "0aadf7792db545848015d9a02ef54a96",
+  "snapshot_sha256": "50d887ea43fcabba9cdcd0ad40c22c99a1e286792ad1d9c37e40a4bb37a0369f",
+  "review_digest": "3be42870bd30a89d8d16860589b0f98489703228925d2286501771e83890bdb6",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "1087f95f8e2145fead45b9fcea14c477",
+  "reviewed_plan_sha256": "83d1e32f0ebc951a9e65a3213b3d2a6ac9db158e5f9fc5c29fb77211f5afa4fb",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 25572,
+    "created": 1794664365.8543262
+  },
+  "created_at_utc": "2026-11-14T13:52:48.910143+00:00",
+  "entry_sha256": "8558e91ec3f9912478598b20f24b79372c89451b8e3893f3d878ca79b53b3d72"
+}

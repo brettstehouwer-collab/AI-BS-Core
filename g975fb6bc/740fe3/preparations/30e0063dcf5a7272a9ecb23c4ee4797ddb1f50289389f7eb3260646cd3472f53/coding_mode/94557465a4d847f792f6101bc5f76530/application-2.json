@@ -1,0 +1,17 @@
+{
+  "input_sha256": "1b3ae4cdf3e3b64114b9b4da9f40e3a3f65f1805118857039376583e84a28765",
+  "state": "PARTIAL",
+  "files": [
+    "src/app.py",
+    "src/other.py"
+  ],
+  "completed": [
+    "src/app.py"
+  ],
+  "backup": "C:\\AI-BS\\g975fb6bc\\740fe3\\preparations\\30e0063dcf5a7272a9ecb23c4ee4797ddb1f50289389f7eb3260646cd3472f53\\coding_mode\\94557465a4d847f792f6101bc5f76530\\application_backups",
+  "started_at": 1794779775.8588881,
+  "previous_sha256": "13baf0c5342cc382fcf6f1f8bfb54e68605896f10032693937614812393ec61c",
+  "error": "OSError",
+  "runtime_seal": "0ad13de2640cda6d746bad594f5e71de6f029a37da9abf4ca48e0df439ecd984",
+  "entry_sha256": "529b2c140bd793ee4d8bd174d6a3bffec06e1e3ca8445ae0f4da3bf9fb6dd264"
+}

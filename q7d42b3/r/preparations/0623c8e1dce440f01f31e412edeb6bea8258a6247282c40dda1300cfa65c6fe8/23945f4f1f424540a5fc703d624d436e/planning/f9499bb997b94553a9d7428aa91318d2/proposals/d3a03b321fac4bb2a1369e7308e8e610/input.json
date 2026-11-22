@@ -1,0 +1,62 @@
+{
+  "owner": "local_admin",
+  "request_id": "23945f4f1f424540a5fc703d624d436e",
+  "plan_id": "f9499bb997b94553a9d7428aa91318d2",
+  "snapshot_sha256": "27a54a766f25db3b804141de74401e9fa643f266170b38b42d976d5afc0df85d",
+  "review_digest": "801480612eedc3abb99463622281b07352ab5dade973e222496565071a986499",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "d3a03b321fac4bb2a1369e7308e8e610",
+  "reviewed_plan_sha256": "a63a6f00d6fe162856c2cd8508b310be0716043787bc172e293685aeb8342d3e",
+  "model_payload": {
+    "objective": "Synthetic native UI acceptance: change value from 1 to 42",
+    "reviewed_plan": {
+      "summary": "Synthetic fixture: change value from1 to42.",
+      "steps": [
+        {
+          "path": "native_app.py",
+          "change": "Replace value = 1 with value = 42; preserve tests."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "native_app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "test_native_app.py",
+        "role": "verification",
+        "sha256": "619e0d3458c24a2059863dc0d980243b13fb37c03091ece0f3e4b67dada1d0cf",
+        "content": "import unittest\nfrom native_app import value\n\nclass NativeValueTests(unittest.TestCase):\n    def test_value(self):\n        self.assertEqual(value, 42)\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python_unittest",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "test_native_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "native_app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "0b7a68942b93278f0b7f13d2dc1df96ba79f6290a4087c3a4bc9573777a8e652",
+  "worker": {
+    "pid": 51928,
+    "created": 1794697448.1195896
+  },
+  "created_at_utc": "2026-11-14T23:07:53.853974+00:00",
+  "entry_sha256": "65424c4c1c0e36a3483d68155e1dee4895cfb4b8faf13e5f96adfd814a158cd0"
+}

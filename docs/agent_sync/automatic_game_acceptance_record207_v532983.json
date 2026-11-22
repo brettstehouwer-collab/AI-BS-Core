@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-31T19:39:31Z",
+  "status": "VERIFIED_V83_AUTOMATIC_GAME_REACQUISITION_AFTER_HOLD",
+  "before": {
+    "status": "running_unverified",
+    "active": true,
+    "controller_pid": 42344,
+    "encoder_pid": 10552,
+    "source_mode": "auto_game",
+    "capture_state": "capturing",
+    "game_frame_verified": true,
+    "holding_reason": "VERIFIED_GAME",
+    "frames_encoded": 11594,
+    "out_time_us": 386466667,
+    "audio_mode": "generated_silence"
+  },
+  "after": {
+    "status": "running_unverified",
+    "active": true,
+    "controller_pid": 42344,
+    "encoder_pid": 10552,
+    "source_mode": "auto_game",
+    "capture_state": "capturing",
+    "game_frame_verified": true,
+    "holding_reason": "VERIFIED_GAME",
+    "frames_encoded": 11655,
+    "out_time_us": 388500000,
+    "audio_mode": "generated_silence"
+  },
+  "fortnite_window_present": true,
+  "advancing": true,
+  "source_change_request_sent": false,
+  "runtime_restart_for_game_open": false,
+  "additional_games_tested": false,
+  "audio_mode": "generated_silence",
+  "microphone_enabled": false,
+  "live_trading": "DISABLED",
+  "supersedes_runtime_hold_only": "Earlier v83 migration/report receipts accurately describe no-game holding before user opened Fortnite; this later receipt records automatic reacquisition."
+}

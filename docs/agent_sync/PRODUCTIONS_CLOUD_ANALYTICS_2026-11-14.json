@@ -1,0 +1,70 @@
+{
+  "status": "VERIFIED_LIVE_CLOUD_COLLECTION",
+  "checked_utc": "2026-11-14T23:18:10.059574+00:00",
+  "website": "https://stehouwerproductions.com",
+  "dashboard": "http://localhost:5173/?tab=beta",
+  "scope": "Stehouwer Productions only",
+  "aws_region": "us-east-2",
+  "stack": "stehouwer-productions-analytics",
+  "stack_status": "CREATE_COMPLETE",
+  "lambda_source_matches_deployed_template": true,
+  "historical_events_copied": 23,
+  "historical_source_unchanged_count": 23,
+  "second_import_accepted": 0,
+  "second_import_duplicates": 23,
+  "actual_browser_acknowledgment": 204,
+  "actual_browser_event_marker_verified": true,
+  "actual_authenticated_cloud_report": 200,
+  "anonymous_report_rejected": 401,
+  "malformed_public_event_rejected": 400,
+  "report_preflight": 204,
+  "dashboard_snapshot": {
+    "events": 30,
+    "pageviews": 11,
+    "browser_sessions": 4
+  },
+  "tests": {
+    "handler": 15,
+    "cloud_frontend": 15,
+    "worker": 15,
+    "scope_guards": 3,
+    "cloudformation_validation": "passed",
+    "independent_security_review": "passed with stated integration gates resolved"
+  },
+  "authentication": "API Gateway verifies existing Firebase issuer/audience/JWT signature; Lambda requires verified owner email. Browser helper and CSP pin exact AWS report origin. No browser AWS keys.",
+  "preservation": "Original local database unchanged; DynamoDB retains data on stack deletion/replacement and deletion protection/PITR enabled; no TTL.",
+  "cost_controls": {
+    "monthly_monitor_usd": 5,
+    "hard_dollar_cap": false,
+    "api_request_rate": 2,
+    "api_burst": 10,
+    "max_table_read_units": 20,
+    "max_table_write_units": 50,
+    "on_demand": true,
+    "provisioned_concurrency": false
+  },
+  "aws_free_plan_credits_reported_usd": 160,
+  "aws_free_plan_expiration": "2027-05-14",
+  "privacy": [
+    "No visitor IP or user-agent stored",
+    "No form contents or private contact database uploaded",
+    "Only Productions events migrated",
+    "No telemetry/token payload logging"
+  ],
+  "limitations": [
+    "PC was not physically powered off; verified live AWS path and absence of local collection dependencies.",
+    "Temporary browser blocks tested browser-level access only; they do not simulate Cloudflare server egress failure.",
+    "Local localhost dashboard requires the PC running; cloud collection continues independently.",
+    "Other websites retain their existing collection paths.",
+    "AWS availability depends on account/credits; free plan expiration unchanged.",
+    "Throttles can reject bursts; browser has no durable offline delivery queue.",
+    "Top dimension metadata is bounded to1000items and partial coverage is marked; totals remain untruncated."
+  ],
+  "temporary_browser_settings_restored": true,
+  "backend_restarted": false,
+  "paid_plan_upgrade": false,
+  "bundle_sha256": "04d3b4c320df2a47988bb196a239e0714d9da09e549212b5b48d62552e9bed3c",
+  "source_patch": "work/productions-cloud-analytics-20261114/changes.patch",
+  "screenshot": "work/productions-cloud-analytics-20261114/dashboard-live.jpg",
+  "backup": "Local preservation; no Drive backup claimed"
+}

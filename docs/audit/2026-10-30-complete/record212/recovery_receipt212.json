@@ -1,0 +1,10 @@
+{
+  "utc": "2026-11-01T00:32:09.612771+00:00",
+  "recovery_copy": "C:\\AI-BS-Recovery\\October7_Audit212\\pre_repair",
+  "manifest": "C:\\AI-BS-Recovery\\October7_Audit212\\recovery_manifest212.json",
+  "manifest_sha256": "f45f0f696b15cb989c7e6129c67aa21da4c7e5cbbee24aa5e76329916c55fc19",
+  "files": 10614,
+  "bytes": 7147109206,
+  "all_file_hashes_match": true,
+  "first_party_source_files": 23
+}

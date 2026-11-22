@@ -1,0 +1,26 @@
+PASS exact offline guest admitted
+PASS null rejected
+PASS wrong UUID
+PASS malformed UUID
+PASS host model
+PASS unknown manufacturer
+PASS Oracle VirtualBox
+PASS host worker SID
+PASS host operator SID
+PASS missing SID
+PASS x86 rejected
+PASS non-medium rejected
+PASS enabled NIC rejected
+PASS unobserved NICs rejected
+PASS actual stdout stderr exit
+PASS combined bytes bounded
+PASS actual monotonic deadline
+PASS cancel before start
+PASS newline args rejected
+PASS relative executable rejected
+PASS exclusive intent retained
+PASS real exclusive lease
+
+Unhandled Exception: System.IO.IOException: INVALID_RESULT_CODE
+   at WheelAttempt.Complete(String state, String reason)
+   at WheelSetupTests.Main(String[] args)

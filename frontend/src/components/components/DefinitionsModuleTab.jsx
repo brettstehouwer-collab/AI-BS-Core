@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
   BookOpen, History, Layers, GraduationCap, Search, Sparkles,
@@ -8,6 +8,7 @@ import {
 import ContentGovernanceRiskModal from './ContentGovernanceRiskModal';
 
 // ── Shared design tokens (GitHub dark palette matching AI-BS system) ──────────
+/** @type {Record<string,import("react").CSSProperties>} */
 const S = {
   page:        { padding: '28px', background: '#0b0f19', minHeight: '100vh', color: '#f0f6fc', display: 'flex', flexDirection: 'column', gap: '24px' },
   hero:        { background: 'linear-gradient(135deg, #0d1117 0%, #1a1f35 50%, #1e1330 100%)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: '14px', padding: '28px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', position: 'relative', overflow: 'hidden' },
@@ -25,10 +26,15 @@ const S = {
   verBadge:    { fontSize: '0.72rem', fontFamily: 'monospace', fontWeight: '700', padding: '2px 10px', borderRadius: '6px', background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' },
 };
 
+/** @param {boolean} active @param {string} c0 @param {string} c1 */
 const tabBtn   = (active, c0, c1) => ({ display: 'flex', alignItems: 'center', gap: '7px', padding: '8px 18px', borderRadius: '8px', fontWeight: '600', fontSize: '0.82rem', cursor: 'pointer', border: active ? 'none' : '1px solid #30363d', background: active ? `linear-gradient(135deg,${c0},${c1})` : '#161b22', color: active ? '#fff' : '#8b949e', boxShadow: active ? `0 4px 14px ${c0}44` : 'none', transition: 'all 0.2s' });
+/** @param {boolean} active @param {string} color */
 const pill     = (active, color) => ({ padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '600', cursor: 'pointer', border: active ? 'none' : '1px solid #30363d', background: active ? color : '#161b22', color: active ? '#fff' : '#8b949e', transition: 'all 0.15s' });
+/** @param {string} color */
 const tagChip  = (color) => ({ fontSize: '0.68rem', fontFamily: 'monospace', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '2px 8px', borderRadius: '4px', background: `${color}18`, color, border: `1px solid ${color}44` });
+/** @param {string} state @returns {import("react").CSSProperties} */
 const ansBtn   = (state) => {
+  /** @type {import("react").CSSProperties} */
   const b = { width: '100%', textAlign: 'left', padding: '12px 16px', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: state === 'locked' ? 'default' : 'pointer', transition: 'all 0.15s' };
   if (state === 'correct') return { ...b, background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.5)', color: '#6ee7b7', fontWeight: '700' };
   if (state === 'wrong')   return { ...b, background: 'rgba(239,68,68,0.12)',   border: '1px solid rgba(239,68,68,0.5)',  color: '#fca5a5', fontWeight: '700' };
@@ -36,6 +42,7 @@ const ansBtn   = (state) => {
   return { ...b, background: '#0d1117', border: '1px solid #30363d', color: '#c9d1d9' };
 };
 
+/** @param {{label:string,value:import("react").ReactNode,color:string}} props */
 function StatTile({ label, value, color }) {
   return (
     <div style={{ background: '#0d1117', border: '1px solid #21262d', borderRadius: '8px', padding: '12px' }}>
@@ -44,14 +51,17 @@ function StatTile({ label, value, color }) {
     </div>
   );
 }
+/** @param {{color:string,text:string}} props */
 function LoadingState({ color, text }) {
   return <div style={{ padding: '60px', textAlign: 'center', color, fontFamily: 'monospace', fontSize: '0.88rem' }}>⟳ {text}</div>;
 }
+/** @param {{text:string}} props */
 function ErrorState({ text }) {
   return <div style={{ padding: '20px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '10px', color: '#f87171', fontSize: '0.85rem' }}>{text}</div>;
 }
 
 // ── Root ─────────────────────────────────────────────────────────────────────
+/** @param {{backendUrl?: string}} props */
 export default function DefinitionsModuleTab({ backendUrl: propBackendUrl }) {
   const backendUrl = propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : 'https://ai-bs-dashboard.web.app');
   const [activeTab, setActiveTab] = useState('timeline');
@@ -124,10 +134,11 @@ export default function DefinitionsModuleTab({ backendUrl: propBackendUrl }) {
 }
 
 // ── 1. ARCHITECTURAL TIMELINE ─────────────────────────────────────────────────
+/** @param {{backendUrl?: string}} props */
 function ArchitecturalTimelinePanel({ backendUrl }) {
-  const [history, setHistory]             = useState([]);
+  const [history, setHistory]             = useState(/** @type {{title:string,version:string,body:string,date:string}[]} */ ([]));
   const [loading, setLoading]             = useState(true);
-  const [error, setError]                 = useState(null);
+  const [error, setError]                 = useState(/** @type {string|null} */ (null));
   const [expandedIndex, setExpandedIndex] = useState(0);
   const [searchTerm, setSearchTerm]       = useState('');
 
@@ -216,11 +227,14 @@ function ArchitecturalTimelinePanel({ backendUrl }) {
 }
 
 // ── 2. JARGON GLOSSARY ────────────────────────────────────────────────────────
+/** @type {Record<string,string>} */
 const CAT_COLOR = { 'Architecture': '#6366f1', 'Memory & Storage': '#34d399', 'AI / LLM': '#f472b6', 'Security': '#f59e0b', 'Finance': '#38bdf8', 'Networking': '#a855f7' };
+/** @param {string} cat */
 const catColor = cat => CAT_COLOR[cat] || '#8b949e';
 
+/** @param {{backendUrl?: string}} props */
 function JargonGlossaryPanel({ backendUrl }) {
-  const [terms, setTerms]                   = useState([]);
+  const [terms, setTerms]                   = useState(/** @type {{category:string,term:string,definition:string,tag:string,impact:string}[]} */ ([]));
   const [loading, setLoading]               = useState(true);
   const [filterCategory, setFilterCategory] = useState('ALL');
   const [search, setSearch]                 = useState('');
@@ -285,8 +299,9 @@ function JargonGlossaryPanel({ backendUrl }) {
 }
 
 // ── 3. MASTER RECORDS CHRONOLOGY ─────────────────────────────────────────────
+/** @param {{backendUrl?: string}} props */
 function MasterRecordsChronologyPanel({ backendUrl }) {
-  const [data, setData]               = useState(null);
+  const [data, setData]               = useState(/** @type {Record<string,string>|null} */ (null));
   const [loading, setLoading]         = useState(true);
   const [selectedRecord, setSelected] = useState('tasks_chronology');
 
@@ -341,11 +356,12 @@ function MasterRecordsChronologyPanel({ backendUrl }) {
 }
 
 // ── 4. INTERACTIVE STUDY GUIDE ────────────────────────────────────────────────
+/** @param {{backendUrl?: string}} props */
 function InteractiveStudyGuidePanel({ backendUrl }) {
-  const [questions, setQuestions]       = useState([]);
+  const [questions, setQuestions]       = useState(/** @type {{question:string,answerIndex:number,options:string[],explanation:string}[]} */ ([]));
   const [loading, setLoading]           = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedOption, setSelected]   = useState(null);
+  const [selectedOption, setSelected]   = useState(/** @type {number|null} */ (null));
   const [score, setScore]               = useState(0);
   const [showExplanation, setShowExp]   = useState(false);
   const [completed, setCompleted]       = useState(false);
@@ -362,7 +378,7 @@ function InteractiveStudyGuidePanel({ backendUrl }) {
   const pct         = Math.round(((currentIndex + 1) / questions.length) * 100);
   const scorePercent = Math.round((score / questions.length) * 100);
 
-  const handleSelect = (idx) => {
+  const handleSelect = (/** @type {number} */ idx) => {
     if (selectedOption !== null) return;
     setSelected(idx); setShowExp(true);
     if (idx === q.answerIndex) setScore(s => s + 1);
@@ -391,7 +407,7 @@ function InteractiveStudyGuidePanel({ backendUrl }) {
           </div>
           <h3 style={{ color: '#f0f6fc', fontSize: '1rem', fontWeight: '700', lineHeight: '1.5', margin: 0 }}>{q.question}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {q.options.map((opt, idx) => {
+            {q.options.map(/** @param {string} opt @param {number} idx */ (opt, idx) => {
               let state = 'default';
               if (selectedOption !== null) { if (idx === q.answerIndex) state = 'correct'; else if (idx === selectedOption) state = 'wrong'; else state = 'locked'; }
               return (

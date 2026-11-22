@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { collection, addDoc, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase';
-import { 
-  FileText, Send, User, Briefcase, Target, Database, CheckCircle, 
-  Clock, Shield, Sparkles, Building, Layers, ArrowRight, Zap, RefreshCw
-} from 'lucide-react';
+import { FileText, Send, User, Briefcase, Target, Database, CheckCircle, Clock, Shield, Building, Layers, Zap } from "lucide-react";
 
 const TIER_OPTIONS = [
   { id: 'starter', name: 'Phase 1 MVP', desc: 'Fast MVP Prototype & Architecture Audit', price: '$2,500' },
@@ -23,9 +20,9 @@ export default function OnboardingTab() {
     deploymentPreference: 'Firebase Hosting + Cloudflare Workers',
     slaRequirements: '24/7 Agent Monitoring'
   });
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(/** @type {{"type": string, "text": string} | null} */ (null));
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [recentClients, setRecentClients] = useState([]);
+  const [recentClients, setRecentClients] = useState(/** @type {Array<{"id": string, "companyName"?: string, "clientName"?: string, "techStack"?: string, "tier"?: string}>} */ ([]));
 
   useEffect(() => {
     try {
@@ -40,11 +37,13 @@ export default function OnboardingTab() {
     }
   }, []);
 
-  const handleChange = (e) => {
+  /** @param {import('react').ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e */
+const handleChange = ( e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleApplyTemplate = (type) => {
+  /** @param {string} type */
+const handleApplyTemplate = ( type) => {
     if (type === 'ai_pipeline') {
       setFormData({
         clientName: 'Sarah Jenkins',
@@ -70,7 +69,8 @@ export default function OnboardingTab() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  /** @param {import('react').SyntheticEvent<HTMLElement>} e */
+const handleSubmit = async ( e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setStatus({ type: 'info', text: 'Transmitting client dossier to database...' });
@@ -101,7 +101,7 @@ export default function OnboardingTab() {
         slaRequirements: '24/7 Agent Monitoring'
       });
     } catch (error) {
-      setStatus({ type: 'error', text: `❌ Error: ${error.message}` });
+      setStatus({ type: 'error', text: `❌ Error: ${(error instanceof Error ? error.message : String(error))}` });
     } finally {
       setIsSubmitting(false);
     }

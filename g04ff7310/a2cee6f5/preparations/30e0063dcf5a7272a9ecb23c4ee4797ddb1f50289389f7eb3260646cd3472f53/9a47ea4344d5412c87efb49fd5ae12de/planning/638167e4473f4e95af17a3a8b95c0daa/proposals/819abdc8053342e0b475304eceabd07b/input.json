@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "9a47ea4344d5412c87efb49fd5ae12de",
+  "plan_id": "638167e4473f4e95af17a3a8b95c0daa",
+  "snapshot_sha256": "d86dccb31e5aea5920aef811704c9bc1d7063d43287045b73112a0cfc35aea5c",
+  "review_digest": "1c2c98f377293ffad5583aa0d34821dbae45a8f3c1f8cf14b0b1ac1e00e6bfd2",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "819abdc8053342e0b475304eceabd07b",
+  "reviewed_plan_sha256": "18e8ed777ab8eb64c649ded2f530fd0a0cf0106d0450b3cd364a16c53456d1e2",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:56:01.864131+00:00",
+  "entry_sha256": "d3a99a9da711f0b8015da234e330b3f9e1bb0aa16ecf32d165c2a4dbfdb53790"
+}

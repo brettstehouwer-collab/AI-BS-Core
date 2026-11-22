@@ -1,11 +1,18 @@
+/** @typedef {{path: string, name?: string, ext?: string, isPdf?: boolean, isBinary?: boolean, isNew?: boolean, isRecovery?: boolean, isIntakeOriginal?: boolean, created?: string, modified?: string, rawFile?: File}} DocumentMetadata */
+/** @typedef {{doc: DocumentMetadata | null, content: string}} DocumentSnapshot */
+/** @typedef {(Partial<DocumentMetadata> & {path: string, implicit?: boolean}) | {implicit: boolean, path?: undefined}} DocumentDestination */
+/** @typedef {{name: string, path: string, type: string, children?: DocumentTreeNode[]}} DocumentTreeNode */
+/** @typedef {{id: number, target: number, current: number, completed: boolean, createdAt: string}} WritingGoal */
 import { isDriveIntakeOriginal, createIntakeWorkingCopy } from '/src/utils/driveIntakeDocuments.js';
 import { AuthenticatedDriveMedia, AuthenticatedDriveDownload } from '/src/components/AuthenticatedDriveMedia.jsx';
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { createDocumentDraftCoordinator, documentPathIdentity, isDocumentRevision, retainDocumentRecovery, listDocumentRecovery, documentRecoveryDraft } from '/src/utils/documentDraftSafety.js';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import AdaptationStatusBar from './AdaptationStatusBar.jsx';
 import WordDocsPaperCanvas from './WordDocsPaperCanvas.jsx';
+import './StudioLayout.css';
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
+(import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000');
 
 // ═══════════════════════════════════════════════════════════════════════
 // DOCUMENT TEMPLATES — Create new documents from scratch
@@ -90,6 +97,7 @@ const TEMPLATES = [
 // FILE TYPE REGISTRY
 // ═══════════════════════════════════════════════════════════════════════
 
+/** @type {Record<string, {label: string, language: string, icon: string}>} */
 const FILE_TYPE_MAP = {
   '.txt': { label: 'Text', language: 'plaintext', icon: '📄' },
   '.md': { label: 'Markdown', language: 'markdown', icon: '📝' },
@@ -112,10 +120,12 @@ const FILE_TYPE_MAP = {
   '.log': { label: 'Log', language: 'plaintext', icon: '📃' },
 };
 
+/** @param {string | undefined} ext */
 function getLanguageForExt(ext) {
-  return FILE_TYPE_MAP[ext]?.language || 'plaintext';
+  return FILE_TYPE_MAP[ext || '']?.language || 'plaintext';
 }
 
+/** @param {string | undefined} ext */
 function getFileTypeInfo(ext) {
   return FILE_TYPE_MAP[ext?.startsWith('.') ? ext : `.${ext}`] || { label: 'Unknown', language: 'plaintext', icon: '📄' };
 }
@@ -124,6 +134,7 @@ function getFileTypeInfo(ext) {
 // MAIN COMPONENT — DOCUMENT EDITOR & CREATOR
 // ═══════════════════════════════════════════════════════════════════════
 
+/** @param {{backendUrl?: string, sharedContent: string, setSharedContent: (value: string) => void, sharedActiveDoc: DocumentMetadata | null, setSharedActiveDoc: (doc: DocumentMetadata | null) => void, onSwitchToScreenwriting?: (content: string|undefined, projectName?: string) => void}} props */
 export default function DocumentsTab({ backendUrl, sharedContent, setSharedContent, sharedActiveDoc, setSharedActiveDoc, onSwitchToScreenwriting }) {
   const baseUrl = backendUrl || 'http://127.0.0.1:8000';
 
@@ -132,13 +143,30 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   const setActiveDoc = setSharedActiveDoc;
   const content = sharedContent;
   const setContent = setSharedContent;
-  const currentDocumentRef = useRef(null);
-  currentDocumentRef.current = { doc: activeDoc, content };
-  const lastSavedDocumentRef = useRef({ path: null, content: null });
-  const savedNewPathsRef = useRef(new Set());
-  const saveQueueRef = useRef(Promise.resolve());
-  const saveFileRef = useRef(null);
+  const currentDocumentRef = useRef({ doc: activeDoc, content });
+  const localEditGenerationRef = useRef(0);
+  const documentIdentityRef = useRef(0);
+  // External shared-state changes invalidate pending transitions too. Local
+  // handlers update these refs synchronously before React schedules a render.
+  if (currentDocumentRef.current.doc !== activeDoc || currentDocumentRef.current.content !== content) {
+    if (currentDocumentRef.current.doc?.path !== activeDoc?.path) documentIdentityRef.current++;
+    localEditGenerationRef.current++;
+    currentDocumentRef.current = { doc: activeDoc, content };
+  }
+  const saveFileRef = useRef(/** @type {((destination?: DocumentDestination) => Promise<boolean>) | null} */ (null));
   const documentLoadSequenceRef = useRef(0);
+  const documentWriteRef = useRef(/** @type {((payload: import("/types/domain").DocumentSavePayload) => Promise<import("/types/domain").DocumentSaveAck>) | null} */ (null));
+  documentWriteRef.current = async (payload) => {
+    const response = await fetch(`${baseUrl}/api/save`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : `HTTP ${response.status}`);
+    return result;
+  };
+  const draftCoordinatorRef = useRef(/** @type {ReturnType<typeof createDocumentDraftCoordinator> | null} */ (null));
+  if (!draftCoordinatorRef.current) draftCoordinatorRef.current = createDocumentDraftCoordinator({ write: payload => { const write = documentWriteRef.current; if (!write) throw new Error("Document writer unavailable."); return write(payload); } });
+  const draftCoordinator = draftCoordinatorRef.current;
   const [loading, setLoading] = useState(false);
 
   // ── Adaptation & Conversion State ──
@@ -149,32 +177,126 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   const [isAdapting, setIsAdapting] = useState(false);
 
   // ── UI state ──
-  const [showFileTree, setShowFileTree] = useState(true);
+  const [showFileTree, setShowFileTree] = useState(() => typeof window === 'undefined' || window.innerWidth > 900);
   const [docCanvasMode, setDocCanvasMode] = useState('paper'); // 'paper' (Word/Docs White Sheet) | 'code' (Monaco IDE)
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [error, setError] = useState(null);
+  const [, setUnsavedChanges] = useState(false);
+  const [error, setError] = useState(/** @type {string|null} */ (null));
   const [showNewDocModal, setShowNewDocModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
 
+  const [autoSaveStatus, setAutoSaveStatus] = useState('unsaved');
+  const [lastSavedTime, setLastSavedTime] = useState(/** @type {string | null} */ (null));
+  const autoSaveTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryCopies, setRecoveryCopies] = useState(/** @type {ReturnType<typeof listDocumentRecovery>} */ ([]));
+  const [recoveryWarning, setRecoveryWarning] = useState('');
+  const latestRecoveryRef = useRef(/** @type {{path: string, content: string} | null} */ (null));
+  const recoveryTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
+  const retainDraftRef = useRef(/** @type {((reason: string, snapshot?: DocumentSnapshot) => boolean) | null} */ (null));
+
+  const refreshRecovery = useCallback(() => {
+    try { setRecoveryCopies(listDocumentRecovery(localStorage)); }
+    catch { setRecoveryWarning('Browser recovery storage is unavailable. Download your draft before leaving or reloading.'); }
+  }, []);
+  useEffect(() => { refreshRecovery(); }, [refreshRecovery]);
+
+  const retainDraft = useCallback((/** @type {string} */ reason, snapshot = currentDocumentRef.current) => {
+    if (!snapshot.doc || typeof snapshot.content !== 'string' || snapshot.doc.isPdf || snapshot.doc.isBinary) return true;
+    if (reason === 'edit' && latestRecoveryRef.current?.path === snapshot.doc.path && latestRecoveryRef.current.content === snapshot.content) return true;
+    try {
+      retainDocumentRecovery(localStorage, { ...snapshot.doc, content: snapshot.content, reason });
+      latestRecoveryRef.current = { path: snapshot.doc.path, content: snapshot.content };
+      if (showRecovery) refreshRecovery();
+      return true;
+    } catch {
+      setRecoveryWarning('Browser recovery storage failed. Download your draft now; reload is blocked until a copy can be retained.');
+      return false;
+    }
+  }, [showRecovery, refreshRecovery]);
+  retainDraftRef.current = retainDraft;
+
+  // Coalesce typing bursts; full draft copies are immediate at mutation and
+  // replacement boundaries, rather than one whole document per keystroke.
+  useEffect(() => {
+    if (!activeDoc || typeof content !== 'string' || activeDoc.isPdf || activeDoc.isBinary) return;
+    recoveryTimerRef.current = setTimeout(() => retainDraftRef.current?.('edit'), 750);
+    return () => clearTimeout(recoveryTimerRef.current ?? undefined);
+  }, [content, activeDoc?.path]);
+  useEffect(() => {
+    const preserve = () => retainDraftRef.current?.('leaving Documents');
+    window.addEventListener('beforeunload', preserve);
+    window.addEventListener('pagehide', preserve);
+    return () => {
+      window.removeEventListener('beforeunload', preserve);
+      window.removeEventListener('pagehide', preserve);
+      clearTimeout(recoveryTimerRef.current ?? undefined);
+      preserve();
+    };
+  }, []);
+
+  const handleContentChange = useCallback((/** @type {unknown} */ value) => {
+    const text = typeof value === 'string' ? value : '';
+    localEditGenerationRef.current++;
+    currentDocumentRef.current = { ...currentDocumentRef.current, content: text };
+    setContent(text);
+    setUnsavedChanges(true);
+  }, [setContent]);
+
+  const installDocument = useCallback((/** @type {DocumentMetadata | null} */ doc, /** @type {string} */ text) => {
+    documentIdentityRef.current++;
+    localEditGenerationRef.current++;
+    ++documentLoadSequenceRef.current;
+    currentDocumentRef.current = { doc, content: text };
+    setActiveDoc(doc);
+    setContent(text);
+    setLoading(false);
+    setLastSavedTime(null);
+    const dirty = !!doc && !doc.isPdf && !doc.isBinary && draftCoordinator.isDirty(doc.path, text);
+    setUnsavedChanges(dirty);
+    setAutoSaveStatus(dirty ? 'unsaved' : 'saved');
+  }, [setActiveDoc, setContent]);
+
+  const beginDocumentTransition = () => ({ sequence: ++documentLoadSequenceRef.current, generation: localEditGenerationRef.current, identity: documentIdentityRef.current });
+  const transitionIsCurrent = (/** @type {{sequence:number,generation:number,identity:number}} */ token) => token.sequence === documentLoadSequenceRef.current
+    && token.generation === localEditGenerationRef.current && token.identity === documentIdentityRef.current;
+  const cancelChangedTransition = (/** @type {{sequence:number,generation:number,identity:number}} */ token) => {
+    if (token.sequence === documentLoadSequenceRef.current) {
+      setError('Open cancelled because your draft changed while waiting. Your current edits are kept.');
+      setLoading(false);
+    }
+  };
+
+  const downloadRecoveryText = (/** @type {string} */ text, /** @type {string|undefined} */ name) => {
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+    const anchor = document.createElement('a');
+    anchor.href = url; anchor.download = name || 'document-recovery.txt';
+    document.body.appendChild(anchor); anchor.click(); anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
+
   // ── Signature Canvas State ──
-  const canvasRef = useRef(null);
-  const drawingPointerRef = useRef(null);
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const drawingPointerRef = useRef(/** @type {number | null} */ (null));
   const filingInFlightRef = useRef(false);
   const [isFiling, setIsFiling] = useState(false);
 
-  const signaturePosition = (e) => {
-    const canvas = canvasRef.current;
+  /** @param {import("react").PointerEvent<HTMLCanvasElement>} e @returns {[number, number]} */
+const signaturePosition = (e) => {
+    const canvas = e.currentTarget;
     const bounds = canvas.getBoundingClientRect();
     return [(e.clientX - bounds.left) * canvas.width / bounds.width,
             (e.clientY - bounds.top) * canvas.height / bounds.height];
   };
 
-  const startDrawing = (e) => {
+  /** @param {import("react").PointerEvent<HTMLCanvasElement>} e */
+const startDrawing = (e) => {
     if (isFiling || e.isPrimary === false) return;
-    const canvas = canvasRef.current;
+    const canvas = e.currentTarget;
     canvas.setPointerCapture(e.pointerId);
     drawingPointerRef.current = e.pointerId;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#111111';
@@ -183,16 +305,18 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
     e.preventDefault();
   };
 
-  const draw = (e) => {
+  /** @param {import("react").PointerEvent<HTMLCanvasElement>} e */
+const draw = (e) => {
     if (drawingPointerRef.current !== e.pointerId) return;
-    const ctx = canvasRef.current.getContext('2d');
+    const ctx = e.currentTarget.getContext('2d');
+    if (!ctx) return;
     ctx.lineTo(...signaturePosition(e));
     ctx.stroke();
   };
 
   const stopDrawing = () => {
     if (drawingPointerRef.current !== null) {
-      canvasRef.current?.getContext('2d').closePath();
+      canvasRef.current?.getContext('2d')?.closePath();
       drawingPointerRef.current = null;
     }
   };
@@ -201,22 +325,23 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
+      if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   };
 
 
-  const [fileTree, setFileTree] = useState([]);
-  const [showTemplates, setShowTemplates] = useState(false);
-  const [recentFiles, setRecentFiles] = useState(() => {
+  const [fileTree, setFileTree] = useState(/** @type {DocumentTreeNode[]} */ ([]));
+  useState(false);
+  const [recentFiles] = useState(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem('ai-bs-recent-files')) || [];
+      const stored = /** @type {string[]} */ (JSON.parse(localStorage.getItem('ai-bs-recent-files') || '[]') || []);
       return stored.filter(f => f && f !== 'undefined');
     } catch { return []; }
   });
   const [zoom, setZoom] = useState(100);
   const [viewMode, setViewMode] = useState('editor'); // 'editor' | 'preview' | 'split'
-  const [showProperties, setShowProperties] = useState(false);
+  const [showProperties] = useState(false);
 
   // ═══════════════════════════════════════════════════════════════════
   // FD13 FEATURE: SPRINT TRACKER (Chronometric Writing Timer)
@@ -226,25 +351,25 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   const [sprintElapsed, setSprintElapsed] = useState(0); // seconds
   const [sprintWords, setSprintWords] = useState(0);
   const [sprintPages, setSprintPages] = useState(0);
-  const [sprintStartTime, setSprintStartTime] = useState(null);
-  const sprintTimerRef = useRef(null);
+  const [, setSprintStartTime] = useState(/** @type {number | null} */ (null));
+  const sprintTimerRef = useRef(/** @type {ReturnType<typeof setTimeout> | null} */ (null));
 
   // ═══════════════════════════════════════════════════════════════════
   // FD13 FEATURE: TYPEWRITER VIEW (Active Line Centering)
   // ═══════════════════════════════════════════════════════════════════
-  const [typewriterView, setTypewriterView] = useState(false);
-  const editorContainerRef = useRef(null);
+  const [typewriterView] = useState(false);
+  const editorContainerRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   // ═══════════════════════════════════════════════════════════════════
   // FD13 FEATURE: GOAL TRACKING (Writing Milestones)
   // ═══════════════════════════════════════════════════════════════════
-  const [showGoals, setShowGoals] = useState(false);
-  const [goals, setGoals] = useState(() => {
+  useState(false);
+  const [goals] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('ai-bs-writing-goals') || '[]');
+      return /** @type {WritingGoal[]} */ (JSON.parse(localStorage.getItem('ai-bs-writing-goals') || '[]'));
     } catch { return []; }
   });
-  const [dailyGoal, setDailyGoal] = useState(() => {
+  useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('ai-bs-daily-goal') || '{"pages":1,"date":""}');
       const today = new Date().toISOString().slice(0, 10);
@@ -264,21 +389,22 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
 
   // Track word count changes
   useEffect(() => {
-    if (content) {
+    if (activeDoc?.path && content) {
       const words = content.trim().split(/\s+/).filter((w) => w.length > 0).length;
       setSprintWords(words);
-    }
-  }, [content]);
+    } else setSprintWords(0);
+  }, [content, activeDoc?.path]);
 
-  // Track page count (~500 words per screenplay page)
+  // Document estimate only: 250 words/page, independent of screenplay layout.
   useEffect(() => {
-    if (content) {
+    if (activeDoc?.path && content) {
       const pages = Math.max(1, Math.ceil(content.trim().split(/\s+/).filter((w) => w.length > 0).length / 250));
       setSprintPages(pages);
-    }
-  }, [content]);
+    } else setSprintPages(0);
+  }, [content, activeDoc?.path]);
 
-  const formatTime = (seconds) => {
+  /** @param {number} seconds */
+const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
@@ -294,11 +420,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
 
   const pauseSprint = () => setSprintPaused(true);
   const resumeSprint = () => setSprintPaused(false);
-  const stopSprint = () => {
-    setSprintActive(false);
-    setSprintPaused(false);
-    if (sprintTimerRef.current) clearInterval(sprintTimerRef.current);
-  };
+  
 
   // ── Typewriter View Logic ──
   useEffect(() => {
@@ -312,27 +434,15 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
 
   // ── Goal Tracking Logic ──
   useEffect(() => {
-    localStorage.setItem('ai-bs-writing-goals', JSON.stringify(goals));
+    try { localStorage.setItem('ai-bs-writing-goals', JSON.stringify(goals)); }
+    catch { setRecoveryWarning('Browser storage is unavailable. Download your draft before leaving or reloading.'); }
   }, [goals]);
 
-  const addGoal = (targetPages) => {
-    const newGoal = {
-      id: Date.now(),
-      target: targetPages,
-      current: 0,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    };
-    setGoals((prev) => [...prev, newGoal]);
-  };
+  
 
-  const completeGoal = (goalId) => {
-    setGoals((prev) => prev.map((g) => g.id === goalId ? { ...g, completed: true } : g));
-  };
+  
 
-  const deleteGoal = (goalId) => {
-    setGoals((prev) => prev.filter((g) => g.id !== goalId));
-  };
+  
 
   // ── File tree refresh ──
   const refreshFileTree = useCallback(async () => {
@@ -351,170 +461,197 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   useEffect(() => { refreshFileTree(); }, [refreshFileTree]);
 
   // ── Load file from backend ──
-  const loadFile = useCallback(async (filePath) => {
-    if (saveFileRef.current && (await saveFileRef.current()) === false) return;
-    const sequence = ++documentLoadSequenceRef.current;
-    setLoading(true);
-    setError('');
+  /** @param {string} filePath @param {{reload?: boolean}} [options] */
+const loadFile = useCallback(async (/** @type {string} */ filePath, { reload = false } = {}) => {
+    const token = beginDocumentTransition(); // Includes edits made during the preceding save.
+    setLoading(true); setError('');
     try {
-      const ext = filePath.split('.').pop().toLowerCase();
-      
+      if (reload) {
+        if (!retainDraft('before explicit reload')) { setLoading(false); return false; }
+        await draftCoordinator.idle();
+      } else if (saveFileRef.current && (await saveFileRef.current({ implicit: true })) === false) {
+        if (token.sequence === documentLoadSequenceRef.current) setLoading(false);
+        return false;
+      }
+      if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return false; }
+      const ext = (filePath.split('.').pop() || '').toLowerCase();
       const isIntakeOriginal = isDriveIntakeOriginal(filePath);
       const isBinary = ['docx', 'doc', 'odt', 'epub'].includes(ext);
-      if (ext === 'pdf' || isBinary) {
-        setActiveDoc({
-          name: filePath.split('/').pop().split('\\').pop(),
-          path: filePath,
-          ext,
-          isPdf: ext === 'pdf',
-          isBinary, isIntakeOriginal,
-          created: new Date().toISOString(),
-          modified: new Date().toISOString(),
-        });
-        setContent('');
-        setViewMode('editor');
-      } else {
+      let path = filePath, text = '';
+      if (ext !== 'pdf' && !isBinary) {
         const res = await fetch(`${baseUrl}/api/read?filepath=${encodeURIComponent(filePath)}`);
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.detail || `HTTP ${res.status}`);
-        }
         const data = await res.json();
-        if (sequence !== documentLoadSequenceRef.current) return;
-        lastSavedDocumentRef.current = { path: data.path || filePath, content: data.content };
-
-        setActiveDoc({
-          name: filePath.split('/').pop().split('\\').pop(),
-          path: data.path || filePath,
-          ext,
-          isPdf: false,
-          isIntakeOriginal,
-          created: new Date().toISOString(),
-          modified: new Date().toISOString(),
-        });
-        setContent(data.content);
-        if (ext === 'fdx' || ext === 'fountain') setDocCanvasMode('code');
-        setViewMode('editor');
+        if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `HTTP ${res.status}`);
+        if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return false; }
+        if (typeof data.content !== 'string' || !data.path || documentPathIdentity(data.path) !== documentPathIdentity(filePath) || !isDocumentRevision(data.revision)) {
+          throw new Error('Document read has no valid path, text or revision. Your current draft is kept; saving this response is disabled.');
+        }
+        path = data.path; text = data.content;
+        draftCoordinator.load(path, text, data.revision);
       }
+      if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return false; }
+      installDocument({ name: filePath.replace(/\\/g, '/').split('/').pop(), path, ext,
+        isPdf: ext === 'pdf', isBinary, isIntakeOriginal,
+        created: new Date().toISOString(), modified: new Date().toISOString() }, text);
+      if (ext === 'fdx' || ext === 'fountain') setDocCanvasMode('code');
+      setViewMode('editor');
+      return true;
     } catch (err) {
-      setError(err.message);
+      if (token.sequence === documentLoadSequenceRef.current) setError(errorMessage(err));
+      return false;
     } finally {
-      if (sequence === documentLoadSequenceRef.current) setLoading(false);
+      if (token.sequence === documentLoadSequenceRef.current) setLoading(false);
     }
-  }, [baseUrl]);
+  }, [baseUrl, retainDraft, installDocument]);
 
   // ── Create new document from template ──
-  const createDocument = useCallback(async (template) => {
-    if (saveFileRef.current && (await saveFileRef.current()) === false) return;
-    ++documentLoadSequenceRef.current;
-    setLoading(false);
-    const timestamp = new Date().toISOString().slice(0, 10);
+  /** @param {(typeof TEMPLATES)[number]} template */
+const createDocument = useCallback(async (/** @type {(typeof TEMPLATES)[number]} */ template) => {
+    const token = beginDocumentTransition();
+    if (saveFileRef.current && (await saveFileRef.current({ implicit: true })) === false) return;
+    if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return; }
     const name = `untitled-${Date.now()}-${crypto.randomUUID().slice(0, 8)}${template.ext}`;
-    const path = `Documents/${name}`;
+    const doc = { name, path: `Documents/${name}`, isNew: true, ext: template.ext.slice(1),
+      created: new Date().toISOString(), modified: new Date().toISOString() };
+    draftCoordinator.registerNew(doc.path);
+    installDocument(doc, template.content);
+    retainDraft('new document');
+    setShowNewDocModal(false); setViewMode('editor');
+  }, [installDocument, retainDraft]);
 
-    setActiveDoc({
-      name,
-      path,
-      isNew: true,
-      ext: template.ext.slice(1),
-      created: new Date().toISOString(),
-      modified: new Date().toISOString(),
-    });
-    setContent(template.content);
-    setShowNewDocModal(false);
-    setViewMode('editor');
-  }, []);
-
-  const [autoSaveStatus, setAutoSaveStatus] = useState('saved'); // 'saved' | 'saving' | 'error'
-  const [lastSavedTime, setLastSavedTime] = useState(null);
-  const autoSaveTimerRef = useRef(null);
-
-  const saveFile = useCallback(async (destination) => {
+  /** @param {DocumentDestination} [destination] */
+const saveFile = useCallback(async (/** @type {DocumentDestination | undefined} */ destination = undefined) => {
     const snapshot = currentDocumentRef.current;
     const doc = destination?.path ? destination : snapshot.doc;
     if (!doc || doc.isPdf || doc.isBinary) return true;
+    if (doc.isRecovery && destination?.implicit) return retainDraft('before leaving unsaved recovery', snapshot);
     if (isDriveIntakeOriginal(doc.path)) return !destination?.path;
     const text = snapshot.content;
     if (typeof text !== 'string') return false;
-    if (!destination?.path && lastSavedDocumentRef.current.path === doc.path && lastSavedDocumentRef.current.content === text) return true;
-    const sourcePath = snapshot.doc?.path;
-    const performSave = async () => {
+    const sourceIdentity = documentIdentityRef.current;
+    if (destination?.path) {
+      if (documentPathIdentity(destination.path) === documentPathIdentity(snapshot.doc?.path)) {
+        setError('Save As needs a new filename. Use Save for the current document.'); return false;
+      }
+      // A reused Save As destination is never treated as an acknowledged existing file.
+      if (draftCoordinator.snapshot(doc.path)) {
+        setError('This destination is already known. Choose a new filename.'); return false;
+      }
+      draftCoordinator.registerNew(doc.path);
+    } else if (doc.isNew) draftCoordinator.registerNew(doc.path);
+    retainDraft('before save', { doc, content: text });
     setAutoSaveStatus('saving');
     try {
-      const res = await fetch(`${baseUrl}/api/save`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: doc.path, content: text, create_only: !!destination?.path || (!!doc.isNew && !savedNewPathsRef.current.has(doc.path)) }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
-      savedNewPathsRef.current.add(doc.path);
-      if (currentDocumentRef.current.doc?.path !== sourcePath || currentDocumentRef.current.content !== text) return true;
-      const savedPath = data.path || doc.path;
-      lastSavedDocumentRef.current = { path: savedPath, content: text };
-      setActiveDoc((prev) => ({ ...prev, ...doc, path: savedPath, isNew: false, modified: new Date().toISOString() }));
-      setAutoSaveStatus('saved');
+      const data = await draftCoordinator.save(doc.path, text);
+      const current = currentDocumentRef.current;
+      if (documentIdentityRef.current !== sourceIdentity || documentPathIdentity(current.doc?.path) !== documentPathIdentity(snapshot.doc?.path)) return true;
+      const savedDoc = { ...current.doc, ...doc, path: data.path, isNew: false, isRecovery: false, modified: new Date().toISOString() };
+      // Acknowledged text may be older than the editor. Keep the newer text dirty.
+      currentDocumentRef.current = { doc: savedDoc, content: current.content };
+      setActiveDoc(savedDoc);
+      const dirty = draftCoordinator.isDirty(data.path, current.content);
+      setAutoSaveStatus(dirty ? 'unsaved' : 'saved');
       setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-      setUnsavedChanges(false);
+      setUnsavedChanges(dirty);
+      if (destination?.path) { documentIdentityRef.current++; localEditGenerationRef.current++; }
       await refreshFileTree();
       return true;
     } catch (err) {
-      setError(`Save failed: ${err.message}`);
-      setAutoSaveStatus('error');
+      if (documentIdentityRef.current === sourceIdentity) {
+        setError(`Save failed: ${errorMessage(err)}`); setAutoSaveStatus('error');
+      }
       return false;
     }
-    };
-    const pending = saveQueueRef.current.then(performSave, performSave);
-    saveQueueRef.current = pending.catch(() => false);
-    return pending;
-  }, [baseUrl, refreshFileTree, setActiveDoc]);
+  }, [refreshFileTree, setActiveDoc, retainDraft]);
   saveFileRef.current = saveFile;
 
-  // 💾 Automated Continuous Auto-Save for Admins (1500ms debounced)
+  // Browser copies are retained before writes. A failed or uncertain write pauses
+  // this path until an explicit reload; no automatic read/rebase/retry occurs.
   useEffect(() => {
     if (!activeDoc || typeof content !== 'string' || activeDoc.isPdf || activeDoc.isBinary || isDriveIntakeOriginal(activeDoc.path) || loading) return;
-    if (lastSavedDocumentRef.current.path === activeDoc.path && lastSavedDocumentRef.current.content === content) return;
+    if (!draftCoordinator.isDirty(activeDoc.path, content)) return;
     setUnsavedChanges(true);
+    if (draftCoordinator.snapshot(activeDoc.path)?.blocked) { setAutoSaveStatus('error'); return; }
+    if (activeDoc.isRecovery) { setAutoSaveStatus('unsaved'); return; }
+    setAutoSaveStatus('unsaved');
+    autoSaveTimerRef.current = setTimeout(() => { saveFile(); }, 1500);
+    return () => clearTimeout(autoSaveTimerRef.current ?? undefined);
+  }, [content, activeDoc, saveFile, loading, retainDraft]);
 
-    // 1. Immediate client snapshot backup
+  const openRecoveryCopy = (/** @type {ReturnType<typeof listDocumentRecovery>[number]} */ copy) => {
+    if (!retainDraft('before opening recovery')) return;
+    const recovered = documentRecoveryDraft(copy);
+    draftCoordinator.registerNew(recovered.doc.path);
+    installDocument(recovered.doc, recovered.content);
+    retainDraft('opened recovery copy');
+    setShowRecovery(false); setViewMode('editor'); setError('');
+  };
+
+  const handleImportFile = useCallback(async (/** @type {File|null|undefined} */ file) => {
+    if (!file) return;
+    const token = beginDocumentTransition();
+    setLoading(true); setError('');
     try {
-      const docKey = activeDoc.path || activeDoc.name;
-      localStorage.setItem(`aibs_doc_backup_${docKey}`, content);
-      localStorage.setItem(`aibs_doc_backup_time_${docKey}`, String(Date.now()));
-    } catch {}
-
-    // 2. Debounced save to backend
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    setAutoSaveStatus('saving');
-
-    autoSaveTimerRef.current = setTimeout(async () => {
-      await saveFile();
-    }, 1500);
-
-    return () => {
-      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    };
-  }, [content, activeDoc, saveFile, loading]);
+      if (saveFileRef.current && (await saveFileRef.current({ implicit: true })) === false) return;
+      if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return; }
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'txt';
+      let doc, text = '';
+      if (ext === 'pdf') {
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('target_path', `Documents/PDF-Imports/${crypto.randomUUID()}`);
+        const res = await fetch(`${baseUrl}/api/drive/upload`, { method: 'POST', body: formData });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'PDF upload failed');
+        const uploaded = data.uploaded?.[0];
+        if (!uploaded?.path) throw new Error('The server did not return a saved PDF path');
+        doc = { path: uploaded.path.replace(/^\/+/, ''), name: uploaded.name || file.name, ext: 'pdf', isPdf: true };
+        await refreshFileTree();
+      } else {
+        let name = file.name;
+        if (ext === 'docx' || ext === 'doc') {
+          const formData = new FormData(); formData.append('file', file);
+          const res = await fetch(`${baseUrl}/api/documents/import_docx`, { method: 'POST', body: formData });
+          const data = await res.json();
+          if (!res.ok || typeof data.content !== 'string') throw new Error(typeof data.detail === 'string' ? data.detail : 'Could not parse Word document');
+          text = data.content; name = name.replace(/\.(docx|doc)$/i, '.md');
+        } else { text = await file.text(); }
+        doc = { path: `Documents/imported-${crypto.randomUUID()}-${name}`, name,
+          ext: ext === 'docx' || ext === 'doc' ? 'md' : ext, isNew: true, isPdf: false };
+      }
+      if (!transitionIsCurrent(token)) { cancelChangedTransition(token); return; }
+      if (doc.isNew) draftCoordinator.registerNew(doc.path);
+      installDocument({ ...doc, rawFile: file, created: new Date().toISOString(), modified: new Date().toISOString() }, text);
+      retainDraft('imported document'); setViewMode('editor');
+      if (ext === 'docx' || ext === 'doc') setDocCanvasMode('paper');
+    } catch (err) {
+      if (token.sequence === documentLoadSequenceRef.current) setError(`Import failed: ${errorMessage(err)}`);
+    } finally {
+      if (token.sequence === documentLoadSequenceRef.current) setLoading(false);
+    }
+  }, [baseUrl, refreshFileTree, installDocument, retainDraft]);
 
   const createEditableIntakeCopy = async () => {
     const original = activeDoc;
     if (!original || !isDriveIntakeOriginal(original.path) || loading) return;
-    const sequence = ++documentLoadSequenceRef.current;
+    const token = beginDocumentTransition();
     setLoading(true); setError('');
     try {
       const path = await createIntakeWorkingCopy({ backendUrl: baseUrl, path: original.path });
       await refreshFileTree();
-      if (sequence === documentLoadSequenceRef.current) await loadFile(path);
+      if (transitionIsCurrent(token)) await loadFile(path);
+      else cancelChangedTransition(token);
     } catch (error) {
-      if (sequence === documentLoadSequenceRef.current) setError(error.message);
+      if (token.sequence === documentLoadSequenceRef.current) setError(errorMessage(error));
     } finally {
-      if (currentDocumentRef.current.doc?.path === original.path) setLoading(false);
+      if (token.sequence === documentLoadSequenceRef.current) setLoading(false);
     }
   };
 
   // ── Convert PDF ──
   const convertPdf = useCallback(async () => {
     if (!activeDoc || !activeDoc.isPdf) return;
+    const token = beginDocumentTransition();
     setLoading(true);
     setError('');
     try {
@@ -526,13 +663,12 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Conversion failed');
       await refreshFileTree();
-      if (currentDocumentRef.current?.doc?.path === activeDoc.path) {
-        await loadFile(data.new_filepath);
-      }
+      if (transitionIsCurrent(token)) await loadFile(data.new_filepath);
+      else cancelChangedTransition(token);
     } catch (err) {
-      setError(`Convert failed: ${err.message}`);
+      if (token.sequence === documentLoadSequenceRef.current) setError(`Convert failed: ${errorMessage(err)}`);
     } finally {
-      setLoading(false);
+      if (token.sequence === documentLoadSequenceRef.current) setLoading(false);
     }
   }, [baseUrl, activeDoc, refreshFileTree, loadFile]);
 
@@ -614,7 +750,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       }
     } catch (err) {
       console.error("Adaptation error:", err);
-      alert(`Adaptation error: ${err.message}`);
+      alert(`Adaptation error: ${errorMessage(err)}`);
     } finally {
       setIsAdapting(false);
     }
@@ -630,7 +766,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       setError('Choose a filename without path separators or reserved characters.');
       return;
     }
-    const ext = newName.split('.').pop().toLowerCase();
+    const ext = (newName.split('.').pop() || '').toLowerCase();
     const newPath = `Documents/${newName}`;
     await saveFile({ ...activeDoc, name: newName, path: newPath, ext, isNew: true });
   }, [activeDoc, saveFile]);
@@ -643,7 +779,8 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
     setTimeout(clearCanvas, 100);
   }, [activeDoc]);
 
-  const submitSignature = useCallback(async (includeGraphic) => {
+  /** @param {boolean} includeGraphic */
+const submitSignature = useCallback(async (/** @type {boolean} */ includeGraphic) => {
     if (!activeDoc || activeDoc.isPdf || filingInFlightRef.current) return;
     filingInFlightRef.current = true;
     setIsFiling(true);
@@ -683,8 +820,8 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       setTimeout(() => window.URL.revokeObjectURL(url), 1000);
       alert(`PDF saved to ${data.path}. Download requested. ${data.signature_type === 'drawn_mark' ? 'Your drawn signature is included.' : 'Filed without a signature.'} No certificate-based digital signature was applied.`);
     } catch (err) {
-      setError(saved ? `PDF saved to ${saved.path}, but download failed: ${err.message}. Open it from the file tree.`
-        : `PDF filing failed: ${err.message}`);
+      setError(saved ? `PDF saved to ${saved.path}, but download failed: ${errorMessage(err)}. Open it from the file tree.`
+        : `PDF filing failed: ${errorMessage(err)}`);
     } finally {
       filingInFlightRef.current = false;
       setIsFiling(false);
@@ -696,14 +833,15 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
     if (!activeDoc) return;
     if (!confirm(`Delete "${activeDoc.name}"?`)) return;
 
-    setActiveDoc(null);
-    setContent('');
+    if (!retainDraft('before closing document')) return;
+    installDocument(null, '');
     refreshFileTree();
-  }, [activeDoc, refreshFileTree]);
+  }, [activeDoc, refreshFileTree, retainDraft, installDocument]);
 
   // ── Keyboard shortcuts ──
   useEffect(() => {
-    const handler = (e) => {
+    /** @param {KeyboardEvent} e */
+const handler = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         saveFile();
@@ -718,7 +856,8 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   }, [saveFile]);
 
   // ── Render file tree ──
-  const renderFileTree = (files, depth = 0) => {
+  /** @param {DocumentTreeNode[]} files @param {number} [depth] @returns {import("react").ReactNode} */
+const renderFileTree = (files, depth = 0) => {
     if (!Array.isArray(files)) return null;
     return files.map((item) => (
       <div key={item.path} style={{ marginLeft: depth * 16 }}>
@@ -747,7 +886,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
   // ═══════════════════════════════════════════════════════════════════
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#0a0a0f' }}>
+    <div className="documents-workspace" style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#0a0a0f' }}>
       {/* ── Top Bar ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -755,7 +894,9 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
         fontSize: 12, color: '#8b949e',
       }}>
         <span style={{ fontWeight: 700, color: '#58a6ff' }}>📂 Document Editor & Creator</span>
-        <span>{activeDoc ? activeDoc.name : 'No document open'}</span>
+        <span title={activeDoc?.name}>{activeDoc ? activeDoc.name : 'No document open'}</span>
+        <button type="button" className="documents-explorer-toggle" aria-expanded={showFileTree}
+          onClick={() => setShowFileTree(value => !value)}>Files</button>
       </div>
 
       {/* ── Live AI Adaptation Status & Progress Bar ── */}
@@ -787,97 +928,17 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
           type="file" 
           accept=".pdf,.docx,.doc,.epub,.txt,.rtf,.md,.markdown,.fountain,.fdx,.json,.csv,.yaml,.yml,.py,.html,.css" 
           style={{ display: 'none' }} 
-          onChange={async (e) => {
+          onChange={e => {
             const file = e.target.files?.[0];
-            if (!file) return;
-            if (saveFileRef.current && (await saveFileRef.current()) === false) return;
-            ++documentLoadSequenceRef.current;
-            setLoading(false);
-            const ext = file.name.split('.').pop()?.toLowerCase() || 'txt';
-            const isPdf = ext === 'pdf';
-            const isWordDoc = ext === 'docx' || ext === 'doc';
-
-            if (isPdf) {
-              const importSequence = documentLoadSequenceRef.current;
-              setLoading(true);
-              setError('');
-              try {
-                const formData = new FormData();
-                formData.append('files', file);
-                formData.append('target_path', `Documents/PDF-Imports/${crypto.randomUUID()}`);
-                const res = await fetch(`${baseUrl}/api/drive/upload`, { method: 'POST', body: formData });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.detail || 'PDF upload failed');
-                const uploaded = data.uploaded?.[0];
-                if (!uploaded?.path) throw new Error('The server did not return a saved PDF path');
-                await refreshFileTree();
-                if (importSequence !== documentLoadSequenceRef.current) return;
-                setActiveDoc({
-                  path: uploaded.path.replace(/^\/+/, ''),
-                  name: uploaded.name,
-                  ext: 'pdf',
-                  isPdf: true,
-                  rawFile: file,
-                  created: new Date().toISOString(),
-                  modified: new Date().toISOString(),
-                });
-                setContent('');
-                setViewMode('editor');
-              } catch (err) {
-                if (importSequence === documentLoadSequenceRef.current) setError(`PDF import failed: ${err.message}`);
-              } finally {
-                if (importSequence === documentLoadSequenceRef.current) setLoading(false);
-              }
-            } else if (isWordDoc) {
-              try {
-                const formData = new FormData();
-                formData.append('file', file);
-                const res = await fetch(`${baseUrl}/api/documents/import_docx`, {
-                  method: 'POST',
-                  body: formData
-                });
-                if (res.ok) {
-                  const data = await res.json();
-                  setActiveDoc({
-                    path: `Documents/imported-${crypto.randomUUID().slice(0, 8)}-${file.name.replace(/\.(docx|doc)$/i, '.md')}`,
-                    name: file.name.replace(/\.(docx|doc)$/i, '.md'),
-                    ext: 'md',
-                    isNew: true,
-                    isPdf: false,
-                    rawFile: file,
-                    created: new Date().toISOString(),
-                    modified: new Date().toISOString(),
-                  });
-                  setContent(data.content || '');
-                  setDocCanvasMode('paper');
-                  setError('');
-                } else {
-                  throw new Error('Could not parse Word document');
-                }
-              } catch (err) {
-                setError(`Failed to read Word document: ${err.message}`);
-              }
-            } else {
-              try {
-                const text = await file.text();
-                setActiveDoc({
-                  path: `Documents/imported-${crypto.randomUUID().slice(0, 8)}-${file.name}`,
-                  isNew: true,
-                  name: file.name,
-                  ext: ext,
-                  isPdf: false,
-                  rawFile: file,
-                  created: new Date().toISOString(),
-                  modified: new Date().toISOString(),
-                });
-                setContent(text);
-                setError('');
-              } catch (err) {
-                setError(`Failed to read file: ${err.message}`);
-              }
-            }
+            e.target.value = '';
+            handleImportFile(file);
           }} 
         />
+
+        <button type="button" onClick={() => { refreshRecovery(); setShowRecovery(value => !value); }} style={{ padding: '6px 12px', fontSize: 12 }}>Recovery copies</button>
+        {activeDoc && !activeDoc.isPdf && !activeDoc.isBinary && (
+          <button type="button" onClick={() => { const path = currentDocumentRef.current.doc?.path; if (path) loadFile(path, { reload: true }); }} style={{ padding: '6px 12px', fontSize: 12 }} title="Retain your current draft, then read the latest saved version">Reload latest</button>
+        )}
 
         {/* Save & Adapt */}
         {activeDoc && !activeDoc.isBinary && !isDriveIntakeOriginal(activeDoc.path) && (
@@ -894,10 +955,10 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                     {autoSaveStatus === 'saving' ? '🟡' : autoSaveStatus === 'error' ? '🔴' : '🟢'}
                   </span>
                   <span style={{ color: autoSaveStatus === 'error' ? '#f85149' : (autoSaveStatus === 'saving' ? '#d29922' : '#58a6ff'), fontWeight: 600 }}>
-                    {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'error' ? 'Autosave Failed' : `Autosaved ${lastSavedTime ? lastSavedTime : ''}`}
+                    {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'error' ? 'Autosave paused' : autoSaveStatus === 'unsaved' ? 'Unsaved draft' : `Saved ${lastSavedTime || ''}`}
                   </span>
                 </div>
-                <button onClick={saveFile} style={{
+                <button onClick={() => saveFile()} style={{
                   padding: '6px 14px', fontSize: 12, border: '1px solid #58a6ff', borderRadius: 6,
                   background: '#1f6feb22', color: '#58a6ff', cursor: 'pointer', fontWeight: 600,
                 }}>💾 Save</button>
@@ -959,7 +1020,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
         </div>
         <div style={{ display: 'flex', gap: 24, marginTop: 8, fontSize: 11, color: '#8b949e' }}>
             <span>Words: {sprintWords}</span>
-            <span>Pages: {sprintPages}</span>
+            <span title="Document estimate at 250 words per page; not screenplay pagination">Estimated pages: {sprintPages}</span>
         </div>
 
         {/* Zoom */}
@@ -982,11 +1043,31 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
         </div>
       )}
 
+      {recoveryWarning && (
+        <div role="alert" style={{ padding: '8px 16px', background: '#5c430f', color: '#fff2c2', fontSize: 12 }}>
+          {recoveryWarning} <button type="button" onClick={() => downloadRecoveryText(currentDocumentRef.current.content || '', currentDocumentRef.current.doc?.name)}>Download current draft</button>
+        </div>
+      )}
+      {showRecovery && (
+        <section aria-label="Document recovery copies" style={{ padding: 12, maxHeight: 240, overflow: 'auto', border: '1px solid #48566b', background: '#172033', color: '#e2e8f0', fontSize: 12 }}>
+          <strong>Retained browser copies</strong>
+          <p>Open a copy as a new unsaved text document. It stays unsaved until you choose Save or Save As. Download copies before clearing browser storage.</p>
+          {!recoveryCopies.length && <p>No readable browser copies are available.</p>}
+          {recoveryCopies.map(copy => (
+            <div key={copy.storageKey} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+              <span style={{ flex: 1, overflowWrap: 'anywhere' }}>{copy.name || copy.path} — {Number.isNaN(Date.parse(copy.savedAt)) ? 'time unknown' : new Date(copy.savedAt).toLocaleString()} ({copy.reason || 'saved copy'})</span>
+              <button type="button" onClick={() => downloadRecoveryText(copy.content, copy.name)}>Download</button>
+              <button type="button" onClick={() => openRecoveryCopy(copy)}>Open as new unsaved</button>
+            </div>
+          ))}
+        </section>
+      )}
+
       {/* ── Main Content ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="documents-workspace-body" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* File Tree */}
         {showFileTree && (
-          <div style={{
+          <div className="documents-explorer" style={{
             width: 240, background: '#161b22', borderRight: '1px solid #2a2a3e',
             overflow: 'auto', display: 'flex', flexDirection: 'column',
           }}>
@@ -1029,12 +1110,12 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                       {isDriveIntakeOriginal(activeDoc.path) && activeDoc.isPdf && (
                         <button type="button" disabled={loading} onClick={convertPdf} style={{ marginLeft: '12px' }}>Extract text to working copy</button>
                       )}
-                      {isDriveIntakeOriginal(activeDoc.path) && ['docx', 'txt', 'md', 'markdown', 'fdx', 'fountain'].includes(activeDoc.ext) && (
+                      {isDriveIntakeOriginal(activeDoc.path) && ['docx', 'txt', 'md', 'markdown', 'fdx', 'fountain'].includes(activeDoc.ext || '') && (
                         <button type="button" disabled={loading} onClick={createEditableIntakeCopy} style={{ marginLeft: '12px' }}>Create editable working copy</button>
                       )}
                       <p>Originals and earlier versions stay unchanged. Editable copies are saved separately in Working_Copies.</p>
                       {activeDoc.ext === 'docx' && <p>Word conversion extracts text into Markdown. Images, tables, page layout, and some formatting are not preserved in that working copy. Use the original DOCX or paired PDF to review the layout.</p>}
-                      {['fdx', 'fountain'].includes(activeDoc.ext) && <p>For screenplay formatting, use Screenwriting → Import and choose a new project name. No AI adaptation is needed.</p>}
+                      {['fdx', 'fountain'].includes(activeDoc.ext || '') && <p>For screenplay formatting, use Screenwriting → Import and choose a new project name. No AI adaptation is needed.</p>}
                     </div>
                     {activeDoc.isPdf ? <AuthenticatedDriveMedia backendUrl={baseUrl} path={activeDoc.path} title="Original PDF preview" width="100%" height="100%" style={{ border: 0, flex: 1 }} />
                       : activeDoc.isBinary ? <p style={{ padding: '16px' }}>This file is preserved in its native format. Download it to open in Word or another compatible application.</p>
@@ -1072,11 +1153,11 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                 ) : docCanvasMode === 'paper' ? (
                   <WordDocsPaperCanvas
                     value={content}
-                    onChange={setContent}
+                    onChange={handleContentChange}
                     filename={activeDoc.name}
                     onSave={saveFile}
                     autoSaveStatus={autoSaveStatus}
-                    lastSavedTime={lastSavedTime}
+                    lastSavedTime={lastSavedTime || undefined}
                     extraHeaderActions={
                       <button
                         onClick={() => setDocCanvasMode('code')}
@@ -1120,7 +1201,7 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
                         value={content}
                         language={getLanguageForExt(activeDoc.ext)}
                         theme="vs-dark"
-                        onChange={setContent}
+                        onChange={handleContentChange}
                         options={{
                           fontSize: 13,
                           fontFamily: "'JetBrains Mono', Consolas, monospace",
@@ -1207,11 +1288,11 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8b949e', textTransform: 'uppercase' }}>Created</label>
-                <div style={{ fontSize: 11, color: '#c9d1d9', marginTop: 4 }}>{new Date(activeDoc.created).toLocaleString()}</div>
+                <div style={{ fontSize: 11, color: '#c9d1d9', marginTop: 4 }}>{activeDoc.created ? new Date(activeDoc.created).toLocaleString() : 'Not recorded'}</div>
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8b949e', textTransform: 'uppercase' }}>Modified</label>
-                <div style={{ fontSize: 11, color: '#c9d1d9', marginTop: 4 }}>{new Date(activeDoc.modified).toLocaleString()}</div>
+                <div style={{ fontSize: 11, color: '#c9d1d9', marginTop: 4 }}>{activeDoc.modified ? new Date(activeDoc.modified).toLocaleString() : 'Not recorded'}</div>
               </div>
             </div>
           </div>
@@ -1443,4 +1524,10 @@ export default function DocumentsTab({ backendUrl, sharedContent, setSharedConte
       )}
     </div>
   );
+}
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
 }

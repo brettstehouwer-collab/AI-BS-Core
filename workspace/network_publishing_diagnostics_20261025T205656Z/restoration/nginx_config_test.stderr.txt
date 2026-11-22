@@ -1,0 +1,2 @@
+nginx: [emerg] could not build server_names_hash, you should increase server_names_hash_bucket_size: 32
+nginx: configuration file C:/StehouwerPublishing.com/restoration_staging/20261025T205656Z/nginx.static.conf test failed

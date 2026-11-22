@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "789ccbcb313d4f25b6d6e80f3f512b4d",
+  "plan_id": "0f397920cd574755a9d1cdc6d2c1ae40",
+  "snapshot_sha256": "a871253aa526861bc4215c5aeaa7c3ea3c939feaa674975f2c25c2a944909250",
+  "review_digest": "9782dcb65e086a83e1902145ff05d79bcc11402519d3c5a869430fbe6c7cb16a",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "c8e173db7d394accba15626fbeb0783e",
+  "reviewed_plan_sha256": "5c0135b98439f708157eb3956803858bf32d83aa27fc1ec2fd2f20ea773e42c1",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "203570af44fafe55a952f7421ec38a929c0a02ca49a4c058897b04a6562f1fc5",
+        "content": "value = 1\nlabel = \"old\"\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "79928e0b8ec7724695f28bff48860d7cc166c48809fc6df3c17e93d291f27c76",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:55:55.900000+00:00",
+  "entry_sha256": "92f82443de3c7bff8e695f1e94e71fbeb749fe2fda89634547caaae310e22117"
+}

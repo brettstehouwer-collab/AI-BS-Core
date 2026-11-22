@@ -1,0 +1,55 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "e8554a3b4d95cb6de642f4baff6eee065b98024d466783ed56e413960e3014b3",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "proposed_sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682",
+        "content": "value = 42\n",
+        "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+      },
+      {
+        "path": "src/other.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "proposed_sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682",
+        "content": "value = 42\n",
+        "diff": "--- a/src/other.py\n+++ b/src/other.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+      }
+    ],
+    "diff": "--- a/src/app.py\n+++ b/src/app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n--- a/src/other.py\n+++ b/src/other.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      },
+      {
+        "path": "src/other.py",
+        "base_sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.015,
+  "finished_at_utc": "2026-11-14T14:21:18.877393+00:00",
+  "response_sha256": "e3d0eba72f51b0b65fe44c8c9d3c9a2658fa99e23c89a3f972203a9934087718",
+  "response_bytes": 400,
+  "entry_sha256": "81f83fffd5b980b3f4fc26aa29feadbd3e2c2fb8e1018dad46e2872aa00a8950"
+}

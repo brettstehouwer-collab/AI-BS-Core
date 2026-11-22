@@ -1,0 +1,15 @@
+# P78 - Normal companion controls and current route edges
+
+Normal Persistent Play: PASS for exactly four accepted choices (Wait, Follow, Recall, Wait), repeated Wait without an event, actual F9 restored-status HUD, and a new native process retaining exact scope, component data, complete six-table logical history, sequence and waiting anchor. Two normal native children exited zero. This follows P77's preserved failures and verified offline big-endian counter correction; prior failures are not reclassified. Inputs target only PID-owned windows, without global keyboard/mouse or foreground forcing. No destructive proof flags run against Persistent Play.
+
+Current bundled repair chapter: isolated occupied-door close rejection, clear close/reopen, accepted Caretaker help and table-lamp connection, physical depart/return, F9 and exact new-process scope/components/events all PASS. Current bypass opening tour and Caretaker decline PASS. Both tours use the actual Workshop route including its probe/stations. These diagnostic runs use temporary_play and GPU readback/debug checks; they are not human movement, pacing or current FPS acceptance.
+
+Three retained failed process calls: (1) legacy repair-route does not prepare the current Workshop path/interaction approach and fails at isolation; (2) tour-only sidecar passed to door-cycle was correctly rejected before its execution; (3) current bypass feed-loss dismantled the relay and captured the offline-feed HUD, then failed at post-Pencil fault reactivation. Its arc-priority and unpowered latched-door checks were not reached. Full bypass feed-loss is FAILED, not passed.
+
+Source shows the older chapter_prepare_fault/feed-loss helpers press the switch from hardcoded x=-35.5. The current workshop_tour::isolation helper explicitly approaches authored switch.x-1.3 and walks back. Review and adapt only the diagnostic approach to current authored geometry before another feed-loss attempt; never weaken reach, occlusion or progression rules. Preserve the partial failure database and reports. No runtime or SDK code was changed in this checkpoint.
+
+Visual issue: normal restarted scene capture faces mostly toward a wall. Saved intent/history are valid, but startup/return camera readability needs review. The capture does not prove a clear view of Adam or final presentation.
+
+Remaining: complete current bypass feed-loss and rebuild, fall/recovery and remaining route matrix; improve the return camera; finish naturalistic Adam likeness, genuinely checked captions and original recording integration; measure actual human 8-12 minute pacing and current Release1080p60; final packaged regression and verified backup. The complete goal remains active.
+
+Evidence: D:/AI-BS-Game-Resources/P78/Normal106Controls and D:/T78/Normal106. All owned jobs drained to zero active children without forced termination. Existing user saves, releases, SDK and original family references remain unchanged. Test databases stay local and are excluded from cloud software backups.

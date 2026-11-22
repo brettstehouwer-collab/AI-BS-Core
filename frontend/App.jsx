@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo, Suspense, lazy } from 'react';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import Sidebar from './components/Sidebar.jsx';
 import TopNavbar from './components/TopNavbar.jsx';
@@ -10,7 +10,9 @@ import { auth, db } from './firebase.js';
 import { SYSTEM_VERSION } from './version.js';
 import { useBackendHealth } from './components/useBackendHealth.js';
 import { useAppStore } from './components/useAppStore.js';
-import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS, USER_TIERS } from './components/accessControl.js';
+import { chatAuthHeaders } from './src/utils/chatAuth.js';
+import { readBSChatProviderConfig, discoverBSChatModels } from './src/utils/bsChatProvider.js';
+import { getUserTier, canAccessTab, ADMIN_EMAILS, ADMIN_UIDS } from './components/accessControl.js';
 import FeatureGateLockedCard from './components/FeatureGateLockedCard.jsx';
 import MomAccessibilityHUD from './components/MomAccessibilityHUD.jsx';
 import './components/MomMode.css';
@@ -19,8 +21,8 @@ import { applyLayoutConfigToDom, DEFAULT_LAYOUT_CONFIG } from './components/Glob
 import MobileStehouwerChat from './components/MobileStehouwerChat.jsx';
 import MobileBottomNav from './components/MobileBottomNav.jsx';
 import MobileNavDrawer from './components/MobileNavDrawer.jsx';
-import { isNativeMobile } from './config/api.js';
 import { useUserSessionTelemetry } from './src/hooks/useUserSessionTelemetry.js';
+import { resolveInitialWorkspaceTab, rememberedWorkspaceTab } from './components/portalRouting.js';
 
 // Loading placeholder
 const TabLoader = () => (
@@ -33,9 +35,13 @@ const TabLoader = () => (
 );
 
 // Safe lazy import wrapper with auto-reload recovery for new production deployments
+/**
+ * @template P
+ * @param {() => Promise<{default: import('react').ComponentType<P>}>} importFn
+ */
 function safeLazy(importFn) {
   return lazy(() => 
-    importFn().catch((err) => {
+    importFn().catch(/** @param {unknown} err */ (err) => {
       console.warn("Failed to load component chunk, auto-reloading page for new deployment...", err);
       const lastReload = sessionStorage.getItem('chunk_reload_timestamp');
       const now = Date.now();
@@ -57,7 +63,6 @@ const ClientServicePortalModal = safeLazy(() => import('./components/ClientServi
 
 // Lazy load components
 const BullshitLeadMatrix = safeLazy(() => import('./components/BullshitLeadMatrix.jsx'));
-const VisualScriptingTab = safeLazy(() => import('./components/VisualScriptingTab.jsx'));
 const VisualWorkflowDAGTab = safeLazy(() => import('./src/components/VisualWorkflowDAGTab.jsx'));
 const TerminalPanelWrapper = safeLazy(() => import('./components/TerminalPanelWrapper.jsx'));
 const AutomationConsole = safeLazy(() => import('./components/AutomationConsole.jsx'));
@@ -65,16 +70,14 @@ const PhoneRepairGuideTab = safeLazy(() => import('./src/components/PhoneRepairG
 const BibleStudyTab = safeLazy(() => import('./src/components/BibleStudyTab.jsx'));
 const DashboardView = safeLazy(() => import('./components/CommandCenterTab'));
 const IdeView = safeLazy(() => import('./components/SplitPaneIDEWorkspace.jsx'));
-const ChatTab = safeLazy(() => import('./components/ChatTab'));
 const CentralGamingHubTab = safeLazy(() => import('./components/CentralGamingHubTab.jsx'));
+const BSGameHubTab = safeLazy(() => import('./components/BSGameHubTab.jsx'));
 
 const AdvertisingTab = safeLazy(() => import('./components/AdvertisingTab'));
 const SyndicationTab = safeLazy(() => import('./components/SyndicationTab.jsx'));
-const StudioWorkspaceTab = safeLazy(() => import('./components/StudioWorkspaceTab.jsx'));
 const VirtualMachineTab = safeLazy(() => import('./src/components/VirtualMachineTab.jsx'));
 const ClientsModuleTab = safeLazy(() => import('./src/clients/ClientsModule.jsx'));
 const MoneyTrackTab = safeLazy(() => import('./components/MoneyTrackTab.jsx'));
-const BullshitEvolutionHistory = safeLazy(() => import('./components/BullshitEvolutionHistory.jsx'));
 const BetaAnalyticsTab = safeLazy(() => import('./components/BetaAnalyticsTab'));
 const AgentMemoryDashboardTab = safeLazy(() => import('./components/AgentMemoryDashboardTab.jsx'));
 const UniversalCreationSuite = safeLazy(() => import('./components/UniversalCreationSuite.jsx'));
@@ -90,15 +93,11 @@ const PersonalBrandStudioTab = safeLazy(() => import('./components/PersonalBrand
 const AutomatedClientSchedulerTab = safeLazy(() => import('./components/AutomatedClientSchedulerTab.jsx'));
 const DeepLearningStudioTab = safeLazy(() => import('./components/DeepLearningStudioTab.jsx'));
 const ReasoningAttentionTab = safeLazy(() => import('./components/ReasoningAttentionTab.jsx'));
-const VideoStreamingTab = safeLazy(() => import('./components/VideoStreamingTab.jsx'));
 const VideoStudioTab = safeLazy(() => import('./components/VideoStudioTab.jsx'));
 const DigitalStorefrontTab = safeLazy(() => import('./components/DigitalStorefrontTab.jsx'));
-const GpuNetworkTab = safeLazy(() => import('./components/GpuNetworkTab.jsx'));
 const DefinitionsModuleTab = safeLazy(() => import('./components/DefinitionsModuleTab.jsx'));
-const CryptoSwarmMobileController = safeLazy(() => import('./components/CryptoSwarmMobileController.jsx'));
 const LearningMaterialHub = safeLazy(() => import('./components/LearningMaterialHub.jsx'));
 const RapidApiReconTab = safeLazy(() => import('./components/RapidApiReconTab.jsx'));
-const NoCoVisionTab = safeLazy(() => import('./components/NoCoVisionTab.jsx'));
 const TheatricalTeleprompter = safeLazy(() => import('./components/TheatricalTeleprompter.jsx'));
 const TheatricalProjector = safeLazy(() => import('./components/TheatricalProjector.jsx'));
 const LostPropertyTab = safeLazy(() => import('./components/LostPropertyTab.jsx'));
@@ -106,23 +105,19 @@ const EmailClientTab = safeLazy(() => import('./components/EmailClientTab.jsx'))
 const UnifiedMediaVaultTab = safeLazy(() => import('./components/UnifiedMediaVaultTab.jsx'));
 const AdminSharedDriveTab = safeLazy(() => import('./components/AdminSharedDriveTab.jsx'));
 const PowerWashingTab = safeLazy(() => import('./components/PowerWashingTab.jsx'));
-const ProcessMemoryLabTab = safeLazy(() => import('./components/ProcessMemoryLabTab.jsx'));
 
 // Unified Hub Wrappers
 const UnifiedOsintHub = safeLazy(() => import('./components/UnifiedOsintHub.jsx'));
 const UnifiedCalendarHub = safeLazy(() => import('./components/UnifiedCalendarHub.jsx'));
 const UnifiedFinancialHub = safeLazy(() => import('./components/UnifiedFinancialHub.jsx'));
-const UnifiedCreationHub = safeLazy(() => import('./components/UnifiedCreationHub.jsx'));
 const UnifiedCryptoHub = safeLazy(() => import('./components/UnifiedCryptoHub.jsx'));
 const UnifiedSystemEconomics = safeLazy(() => import('./components/UnifiedSystemEconomics.jsx'));
 const NotosEnterpriseOSTab = safeLazy(() => import('./components/NotosEnterpriseOSTab.jsx'));
 const NotoBarInventoryHub = safeLazy(() => import('./components/NotoBarInventoryHub.jsx'));
-const NeuralAudioStudioTab = safeLazy(() => import('./components/NeuralAudioStudioTab.jsx'));
-const CampaignAutomationTab = safeLazy(() => import('./components/CampaignAutomationTab.jsx'));
+const BrandCampaignManager = safeLazy(() => import('./components/BrandCampaignManager.jsx'));
 const BanquetArchitectTab = safeLazy(() => import('./components/BanquetArchitectTab.jsx'));
 const SystemHealthTab = safeLazy(() => import('./components/SystemHealthTab.jsx'));
 const EnterpriseIndustryHubTab = safeLazy(() => import('./components/EnterpriseIndustryHubTab.jsx'));
-const UnrealViewport = safeLazy(() => import('./src/components/UnrealViewport.jsx'));
 const OnboardingTab = safeLazy(() => import('./components/OnboardingTab.jsx'));
 const ClientsTab = safeLazy(() => import('./components/ClientsTab.jsx'));
 const FuturisticNeonLoungeStudio = safeLazy(() => import('./src/components/FuturisticNeonLoungeStudio.jsx'));
@@ -141,18 +136,23 @@ const GpuHardwareTelemetryTab = safeLazy(() => import('./src/components/GpuHardw
 const SovereignAgentAppsTab = safeLazy(() => import('./src/components/SovereignAgentAppsTab.jsx'));
 const NutritionSubsystemLedger = safeLazy(() => import('./components/NutritionSubsystemLedger.jsx'));
 const RecreationalDebutTab = safeLazy(() => import('./src/components/clients/RecreationalDebut.jsx'));
-const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressDispatcher.jsx'));
+const FEExpressDispatcherTab = safeLazy(() => import('./src/components/FEExpressPinPortal.jsx'));
 const ClusterEngineDashboard = safeLazy(() => import('./src/components/ClusterEngineDashboard.jsx'));
+const SpecialistSwarmExplorer = safeLazy(() => import('./src/components/SpecialistSwarmExplorer.jsx'));
 
+/** @extends {React.Component<{children?: import('react').ReactNode}, {hasError: boolean; error: unknown}>} */
 class TabErrorBoundary extends React.Component {
 
+  /** @param {{children?: import('react').ReactNode}} props */
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = /** @type {{hasError: boolean; error: unknown}} */ ({ hasError: false, error: null });
   }
+  /** @param {unknown} error */
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
+  /** @param {unknown} error @param {import('react').ErrorInfo} errorInfo */
   componentDidCatch(error, errorInfo) {
     console.error("Tab ErrorBoundary caught error:", error, errorInfo);
     const errStr = error?.toString() || '';
@@ -198,9 +198,29 @@ class TabErrorBoundary extends React.Component {
   }
 }
 
+const UnifiedChatOverlay = lazy(() => import('./src/components/UnifiedChat.jsx'));
+
+/** Shown when a navigation key has no registered tab (instead of silently opening tabs[0]). */
+const UnavailableTab = ({ onNavigateTab, tabKey }) => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', padding: '32px 16px' }}>
+    <div style={{ maxWidth: '480px', textAlign: 'center', background: '#0d1117', border: '1px solid #30363d', borderRadius: '12px', padding: '32px 24px', color: '#e6edf3' }}>
+      <div style={{ fontSize: '40px', marginBottom: '12px' }}>🚧</div>
+      <h2 style={{ margin: '0 0 8px', fontSize: '20px' }}>This section isn't available yet</h2>
+      <p style={{ margin: '0 0 20px', color: '#8b949e', fontSize: '14px' }}>
+        No tool is registered for <code>{tabKey}</code>.
+      </p>
+      <button type="button" onClick={() => onNavigateTab?.('dashboard')}
+        style={{ background: '#1f6feb', color: '#fff', border: 'none', borderRadius: '6px', padding: '8px 16px', cursor: 'pointer' }}>
+        Go to Dashboard
+      </button>
+    </div>
+  </div>
+);
+
 const ACTIVE_TAB_STORAGE_KEY = 'sp-ai-active-tab';
 
 const tabs = [
+  { key: 'specialist_swarm', label: '🤖 64-Specialist Swarm Explorer', description: 'SQLite WAL Specialist Registry, 7 Operational Domains & Verification Gates', Component: SpecialistSwarmExplorer },
   { key: 'chat', label: '💬 BS-CHAT Assistant', description: 'Autonomous Sovereign Mobile & Desktop AI Assistant & Swarm', Component: MobileStehouwerChat },
   { key: 'video_streaming', label: '🎬 VLC Media Player & Video Studio', description: 'Integrated VLC Player for Rendered & Uploaded Videos, HLS Streaming & UE5 Bridge', Component: VideoStudioTab },
   { key: 'executive_cockpit', label: '⚡ Executive Cockpit', description: 'Unified Autonomous Command Bus, 4-Pillar Matrix & Tiered Governance HUD', Component: ExecutiveCockpitTab },
@@ -208,6 +228,7 @@ const tabs = [
   { key: 'sovereign_apps', label: '🤖 Sovereign Agent Apps Hub', description: '14-Tool Sovereign Agent Suite (Claude Code, Codex, OpenClaw, OpenCode, Hermes, Droid, Pi, Cline, Copilot) & MoE Specialist Router', Component: SovereignAgentAppsTab },
   { key: 'gpu_telemetry', label: '🔥 GPU Hardware Telemetry Hub', description: 'NVIDIA GeForce RTX 4090 NVML Hardware Telemetry, Fan Speed Lock & SQLite Thermal Vault', Component: GpuHardwareTelemetryTab },
   { key: 'central_gaming_hub', label: '🎮 Central Gaming Hub', description: 'Unified Ludic Nexus: 2-Player P2P Dyadic Hub, Steam Game Library & Win32 Memory Trainer', Component: CentralGamingHubTab },
+  { key: 'bs_game', label: '🛠️ BS Game · First Boot', description: 'Custom PC engine progress & playable motherboard concept', Component: BSGameHubTab },
   { key: 'dashboard', label: 'Command Center', description: 'System overview and live status at a glance', Component: DashboardView },
   { key: 'operations_audit', label: 'Omni Operations & Live Audit Hub', description: 'Live User Tasks, Media Queue, Continuous Autosaves, Admin Vault & Daemon Error Diagnostics', Component: OperationsAuditHubTab },
   { key: 'workflow_dag', label: '⚡ Multi-Agent DAG Builder', description: 'Visual Node-Based Autonomous Agent Pipeline & DAG Builder', Component: VisualWorkflowDAGTab },
@@ -231,7 +252,7 @@ const tabs = [
   { key: 'syndication', label: '🌐 Automated Syndication', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite', Component: SyndicationTab },
   { key: 'clients', label: 'Clients Hub', description: 'Master Workspace for all clients', Component: ClientsModuleTab },
   { key: 'fe_express', label: '🚚 FE Express Box Truck Automation Hub (Devin)', description: 'Real-Time Trulos Public Load Board, Smart Backhaul Radar, Broker Credit Sentinel, Spot Rate Benchmarks & 1-Tap Mobile Dispatch Suite for Devin', Component: FEExpressDispatcherTab },
-  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite', Component: RecreationalDebutTab },
+  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut — Families, Recruiting Workflow, Services & Review', Component: RecreationalDebutTab },
   { key: 'nda_module', label: '📜 Sovereign NDA & Anti-Tamper', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal', Component: NdaModuleTab },
   { key: 'moneytrack', label: 'Money Track', description: 'Financial dashboard for revenue, expenses, and invoices', Component: MoneyTrackTab },
   { key: 'definitions', label: 'Definitions & Lore', description: 'Interactive AI-BS dictionary and architectural timeline', Component: DefinitionsModuleTab },
@@ -261,7 +282,7 @@ const tabs = [
   { key: 'noto_inventory', label: 'Notō Multi-Bar Stock & Dispatch', description: 'Live Multi-Bar Inventory, Barback Dispatch & MLCC Distributor PO Engine', Component: NotoBarInventoryHub },
   { key: 'banquet_architect', label: 'Banquet Architect Studio', description: '2D Generative & 3D Unreal Engine Studio', Component: BanquetArchitectTab },
   { key: 'industry_grid', label: '70-Vertical Module Grid', description: 'Enterprise Expansion Suite', Component: EnterpriseIndustryHubTab },
-  { key: 'campaign_automation', label: 'Campaign & Audience Engine', description: 'Mailchimp-Style Event Campaign Automation & Telemetry', Component: CampaignAutomationTab },
+  { key: 'campaign_automation', label: 'Email & SMS Campaigns', description: 'Brand contacts, drafts and verified provider connections', Component: BrandCampaignManager },
   { key: 'unified_media_gallery', label: 'Unified Media Gallery', description: 'Unified Media and Asset Vault', Component: UnifiedMediaVaultTab },
   { key: 'neon_lounge_studio', label: 'Neon Lounge Studio', description: 'Futuristic Neon Lounge Architectural Design Studio & AI Autograd Engine', Component: FuturisticNeonLoungeStudio },
   { key: 'project_noco', label: 'Project NoCo & Living Stage Studio', description: 'Autonomous Acoustic-Agricultural Enclave & Living Stage Studio', Component: ProjectNoCoStudioTab },
@@ -275,54 +296,88 @@ const tabs = [
   { key: 'cluster_engine', label: '⚡ Cluster Engine', description: 'Granian Rust ASGI, NATS JetStream, Temporal Durability, Dragonfly Cache & gRPC IPC', Component: ClusterEngineDashboard }
 ];
 
+const isLocalDesktopHost = () => typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+);
+
+/** @param {unknown} candidate @returns {import("firebase/auth").User | null} */
+function normalizeLocalDesktopAdmin(candidate) {
+  if (!isLocalDesktopHost() || !candidate || typeof candidate !== 'object') return null;
+  const obj = /** @type {{uid?: unknown, email?: unknown, displayName?: unknown, photoURL?: unknown}} */ (candidate);
+  const uid = typeof obj.uid === 'string' ? obj.uid : '';
+  const email = typeof obj.email === 'string' ? obj.email.toLowerCase().trim() : '';
+  if (uid !== 'local_admin_brett' || !ADMIN_EMAILS.includes(email)) return null;
+  return /** @type {import("firebase/auth").User} */ (/** @type {unknown} */ ({
+    email,
+    displayName: typeof obj.displayName === 'string' ? obj.displayName : 'Brett Stehouwer (Desktop Admin)',
+    uid: 'local_admin_brett',
+    photoURL: typeof obj.photoURL === 'string' ? obj.photoURL : null,
+    emailVerified: true,
+  }));
+}
+
+/** @returns {import("firebase/auth").User | null} */
+function readLocalDesktopAdminSession() {
+  if (!isLocalDesktopHost()) return null;
+  try {
+    const raw = localStorage.getItem('aibs_cached_user');
+    if (!raw) return null;
+    return normalizeLocalDesktopAdmin(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
 
 export default function App() {
   const selectedModel = useAppStore(state => state.selectedModel);
   const setSelectedModel = useAppStore(state => state.setSelectedModel);
   const availableModels = useAppStore(state => state.availableModels);
-  const setAvailableModels = useAppStore(state => state.setAvailableModels);
   const efficiencyMode = useAppStore(state => state.efficiencyMode);
   const isEditingLayout = useAppStore(state => state.isEditingLayout);
   const toggleEditMode = useAppStore(state => state.toggleEditMode);
   const [zenMode, setZenMode] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const urlTab = params.get('tab') || (params.get('portal') === 'nda' ? 'nda_module' : null);
-      if (urlTab) {
-        if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') return 'central_gaming_hub';
-        if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) return 'unified_crypto';
-        return urlTab;
-      }
-    }
-    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY) || 'dashboard';
-    if (stored === 'steam_gaming' || stored === 'gaming_lab') return 'central_gaming_hub';
-    if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(stored)) return 'unified_crypto';
-    return stored;
+    if (typeof window === 'undefined') return 'dashboard';
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'clients' && params.get('client') === 'fe_express') return 'fe_express';
+    return resolveInitialWorkspaceTab(window.location.search, localStorage.getItem(ACTIVE_TAB_STORAGE_KEY));
   });
+  const [wirelessCastOpenRequest, setWirelessCastOpenRequest] = useState(0);
+  const navigateWorkspaceTab = useCallback(/** @param {string} tab */ (tab) => {
+    if (tab === 'screen_mirror') setWirelessCastOpenRequest(request => request + 1);
+    setActiveTab(tab);
+  }, []);
   const { backendUrl, backendStatus } = useBackendHealth();
-  const [localTrustState, setLocalTrustState] = useState({ enabled: false, allowedUsers: [] });
-  const [authLoading, setAuthLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
-  // Mobile View Mode: 'chat' (default on mobile devices/APK) vs 'desktop'
-  const isMobileDevice = typeof window !== 'undefined' && (isNativeMobile() || window.innerWidth <= 768);
-  const [mobileViewMode, setMobileViewMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aibs_mobile_view_mode');
-      if (saved) return saved === 'gemini' ? 'chat' : saved;
-      return (isNativeMobile() || window.innerWidth <= 768) ? 'chat' : 'desktop';
-    }
-    return 'desktop';
-  });
+  const [localTrustState, setLocalTrustState] = useState(/** @type {import('/types/aibs').LocalTrustState} */ ({ enabled: false, allowedUsers: [] }));
+  const [initialLocalAdmin] = useState(() => readLocalDesktopAdminSession());
+  const [authLoading, setAuthLoading] = useState(() => !initialLocalAdmin);
+  const [currentUser, setCurrentUser] = useState(/** @type {import("firebase/auth").User | null} */ (initialLocalAdmin));
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(initialLocalAdmin));
+  const currentUserRef = useRef(currentUser);
+  currentUserRef.current = currentUser;
+  const explicitSignOutRef = useRef(false);
 
-  const handleSetMobileViewMode = (mode) => {
-    setMobileViewMode(mode);
+  const handleSignOut = useCallback(async () => {
+    explicitSignOutRef.current = true;
+    currentUserRef.current = null;
     try {
-      localStorage.setItem('aibs_mobile_view_mode', mode);
+      localStorage.removeItem('aibs_cached_user');
     } catch {}
-  };
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    useAppStore.getState().setCurrentUser(null);
+    setAntiTamperUser(null);
+    try {
+      await auth.signOut();
+    } catch {}
+  }, []);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    if (initialLocalAdmin) {
+      useAppStore.getState().setCurrentUser(initialLocalAdmin);
+      setAntiTamperUser(initialLocalAdmin);
+    }
+  }, [initialLocalAdmin]);
   const [viewMode, setViewMode] = useState('2D');
   const [workspaceMode, setWorkspaceMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -426,11 +481,13 @@ export default function App() {
     }
   }, [momMode, momZoomLevel]);
 
+  /** @param {number} newZoom */
   const handleZoomChange = (newZoom) => {
     setMomZoomLevel(newZoom);
     localStorage.setItem('aibs_mom_zoom', newZoom.toString());
   };
 
+  /** @param {string} tierKey */
   const handleSimulateTier = (tierKey) => {
     setSimulatedTier(tierKey);
     localStorage.setItem('aibs_preview_tier', tierKey);
@@ -457,6 +514,8 @@ export default function App() {
         ));
 
         if (isAuthorized) {
+          explicitSignOutRef.current = false;
+          currentUserRef.current = user;
           setIsAuthenticated(true);
           setCurrentUser(user);
           useAppStore.getState().setCurrentUser(user);
@@ -465,12 +524,13 @@ export default function App() {
               email: user.email,
               displayName: user.displayName,
               uid: user.uid,
-              photoURL: user.photoURL
+              photoURL: user.photoURL,
+              emailVerified: Boolean(user.emailVerified),
             }));
           } catch (e) {
             console.warn('Failed to cache user session:', e);
           }
-          setAntiTamperUser(user.email);
+          setAntiTamperUser(user);
 
           // Update Firestore Presence (Online)
           if (user && user.uid && db) {
@@ -501,7 +561,7 @@ export default function App() {
               })).catch(() => console.warn('Login notification could not be confirmed.'));
             } else {
               const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-              const targetUrl = isLocalHost ? 'http://127.0.0.1:8080/api/analytics/notify-login' : 'https://api.brettstehouwer.live/api/analytics/notify-login';
+              const targetUrl = isLocalHost ? 'http://127.0.0.1:8000/api/analytics/notify-login' : 'https://api.brettstehouwer.live/api/analytics/notify-login';
               fetch(targetUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -524,17 +584,32 @@ export default function App() {
           }
 
         } else {
+          currentUserRef.current = null;
           setIsAuthenticated(false);
           setCurrentUser(null);
           useAppStore.getState().setCurrentUser(null);
           localStorage.removeItem('aibs_cached_user');
+          setAntiTamperUser(null);
           auth.signOut().catch(() => {});
         }
       } else {
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        useAppStore.getState().setCurrentUser(null);
-        localStorage.removeItem('aibs_cached_user');
+        const activeLocalAdmin = !explicitSignOutRef.current
+          ? (normalizeLocalDesktopAdmin(currentUserRef.current) || readLocalDesktopAdminSession())
+          : null;
+        if (activeLocalAdmin) {
+          currentUserRef.current = activeLocalAdmin;
+          setIsAuthenticated(true);
+          setCurrentUser(activeLocalAdmin);
+          useAppStore.getState().setCurrentUser(activeLocalAdmin);
+          setAntiTamperUser(activeLocalAdmin);
+        } else {
+          currentUserRef.current = null;
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+          useAppStore.getState().setCurrentUser(null);
+          localStorage.removeItem('aibs_cached_user');
+          setAntiTamperUser(null);
+        }
       }
       setAuthLoading(false);
     });
@@ -564,7 +639,7 @@ export default function App() {
   }, [currentUser, activeTab]);
 
   // Live User Presence, Session Dwell-Time & Activity Telemetry
-  useUserSessionTelemetry({ currentUser, activeTab });
+  useUserSessionTelemetry({ currentUser, activeTab, enabled: isAuthenticated });
 
   // Universal Deep Linking & URL Search Parameter Synchronization
   useEffect(() => {
@@ -578,14 +653,17 @@ export default function App() {
         window.sendDashboardAnalyticsBeacon('tab_switch', activeTab);
       }
     }
-    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTab);
+    const rememberedTab = rememberedWorkspaceTab(activeTab);
+    if (rememberedTab) localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, rememberedTab);
   }, [activeTab]);
 
   // Handle Browser Back / Forward Button Navigation
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
-      let urlTab = params.get('tab');
+      let urlTab = params.get('tab') || 'dashboard';
+      if (urlTab === 'clients' && params.get('client') === 'fe_express') urlTab = 'fe_express';
+      if (urlTab === 'website_home') urlTab = 'dashboard';
       if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') urlTab = 'central_gaming_hub';
       if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) urlTab = 'unified_crypto';
       if (urlTab && urlTab !== activeTab) {
@@ -601,6 +679,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!currentUser?.uid || !auth.currentUser) return;
+    let current = true;
+    const revision = useAppStore.getState().aiProviderSelectionRevision;
+    const uid = currentUser.uid;
+    const loadProviders = async () => {
+      try {
+        const response = await fetch(`${backendUrl}/api/ai/providers`, {
+          headers: await chatAuthHeaders({}, uid),
+        });
+        if (!response.ok) return;
+        const configuration = readBSChatProviderConfig(await response.json());
+        if (current && auth.currentUser?.uid === uid) {
+          useAppStore.getState().setAIProviderConfiguration(configuration, revision);
+        }
+      } catch (error) {
+        console.warn('Unable to load AI provider selection.', error);
+      }
+    };
+    loadProviders();
+    return () => { current = false; };
+  }, [backendUrl, currentUser?.uid]);
+
+  useEffect(() => {
     fetch(`${backendUrl}/api/models`)
       .then(res => res.json())
       .then(data => {
@@ -608,24 +709,18 @@ export default function App() {
         if (Array.isArray(data.models)) {
           modelList = data.models;
         } else if (Array.isArray(data.data)) {
-          modelList = data.data.map(m => typeof m === 'string' ? m : (m.id || m.name));
+          modelList = data.data.map(/** @param {string | {id?: string; name?: string}} m */ m => typeof m === 'string' ? m : (m.id || m.name));
         } else if (Array.isArray(data)) {
-          modelList = data.map(m => typeof m === 'string' ? m : (m.id || m.name));
+          modelList = data.map(/** @param {string | {id?: string; name?: string}} m */ m => typeof m === 'string' ? m : (m.id || m.name));
         }
 
         // Append Gemini backup fallback models
         const geminiModels = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-2.0-flash'];
-        modelList = [...new Set([...modelList, ...geminiModels])];
-
-        if (modelList.length > 0) {
-          setAvailableModels(modelList);
-          if (!selectedModel || !modelList.includes(selectedModel)) {
-            setSelectedModel(modelList[0]);
-          }
-        }
+        // Use current state after the request; discovery cannot overwrite a cloud choice.
+        useAppStore.setState(discoverBSChatModels(useAppStore.getState(), [...modelList, ...geminiModels]));
       })
       .catch(err => console.error('Failed to fetch models:', err));
-  }, [backendUrl, setAvailableModels, selectedModel, setSelectedModel]);
+  }, [backendUrl]);
 
   const [navLayout, setNavLayout] = useState(
     () => localStorage.getItem('sp-ai-nav-layout') || 'top'
@@ -637,10 +732,18 @@ export default function App() {
     localStorage.setItem('sp-ai-nav-layout', nextLayout);
   };
 
+  /** @type {Record<string, string>} */
   const TAB_ALIASES = {
+    video_agent: 'video_streaming',
+    documents: 'shared_cloud_drive',
+    media_vault: 'unified_media_gallery',
+    definitions_module: 'definitions',
     chat: 'chat',
     team_chat: 'chat',
     mobile_chat: 'chat',
+    steam_gaming: 'central_gaming_hub',
+    gaming_lab: 'central_gaming_hub',
+    screen_mirror: 'ide',
     vlc: 'video_streaming',
     vlc_player: 'video_streaming',
     video_streaming: 'video_streaming',
@@ -660,7 +763,9 @@ export default function App() {
     cea_agriculture: 'project_noco',
   };
   const effectiveTab = TAB_ALIASES[activeTab] || activeTab;
-  const activeTabConfig = tabs.find((tab) => tab.key === effectiveTab) ?? tabs[0];
+  const unavailableTabConfig = useMemo(() => ({ key: effectiveTab, label: 'Unavailable', Component: (props) => <UnavailableTab {...props} tabKey={effectiveTab} /> }), [effectiveTab]);
+  const activeTabConfig = tabs.find((tab) => tab.key === effectiveTab)
+    ?? unavailableTabConfig;
   const ActiveComponent = activeTabConfig.Component;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -694,7 +799,6 @@ export default function App() {
   }
 
   if (isOverlayRoute) {
-    const UnifiedChatOverlay = lazy(() => import('./src/components/UnifiedChat.jsx'));
     return (
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: 'transparent' }}>
         <TabErrorBoundary key="overlay">
@@ -712,7 +816,7 @@ export default function App() {
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#090d16' }}>
         <TabErrorBoundary key={isCheckout ? 'checkout' : 'playground'}>
           <Suspense fallback={<TabLoader />}>
-            {isCheckout ? <PublicCheckoutTab backendUrl={backendUrl} /> : <PublicPlaygroundTab backendUrl={backendUrl} />}
+            {isCheckout ? <PublicCheckoutTab /> : <PublicPlaygroundTab backendUrl={backendUrl} />}
           </Suspense>
         </TabErrorBoundary>
       </div>
@@ -758,22 +862,28 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
+      <TabErrorBoundary key="main-login"><Suspense fallback={<TabLoader />}>
       <LoginModal 
         onLoginSuccess={(user) => {
+          explicitSignOutRef.current = false;
+          currentUserRef.current = user;
           setIsAuthenticated(true);
           setCurrentUser(user);
+          useAppStore.getState().setCurrentUser(user);
           try {
             localStorage.setItem('aibs_cached_user', JSON.stringify({
               email: user.email,
               displayName: user.displayName,
               uid: user.uid,
-              photoURL: user.photoURL
+              photoURL: user.photoURL,
+              emailVerified: Boolean(user.emailVerified),
             }));
           } catch {}
-          setAntiTamperUser(user.email);
+          setAntiTamperUser(user);
         }} 
         backendUrl={backendUrl} 
       />
+      </Suspense></TabErrorBoundary>
     );
   }
 
@@ -796,9 +906,13 @@ export default function App() {
     <>
       <div className={`app-shell ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`} style={{ flexDirection: navLayout === 'top' ? 'column' : 'row', height: '100vh', width: '100vw' }}>
         {!zenMode && navLayout === 'top' && (
+          <details style={{ flexShrink: 0, background: '#0d1117', color: '#e2e8f0', borderBottom: '1px solid #253044' }}>
+          <summary style={{ cursor: 'pointer', padding: '6px 14px', fontSize: '0.85rem' }}>Workspace · {activeTabConfig.label || activeTabConfig.key}</summary>
+          <div style={{ maxHeight: '40dvh', overflow: 'auto' }}>
           <TopNavbar 
+            backendUrl={backendUrl}
             activeTab={activeTab}
-            onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
+            onTabChange={/** @param {string} t */ (t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
             onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
             navLayout={navLayout}
             onToggleNavLayout={handleToggleNavLayout}
@@ -821,16 +935,19 @@ export default function App() {
             onZoomChange={handleZoomChange}
             zenMode={zenMode}
             onToggleZenMode={() => setZenMode(!zenMode)}
+            onSignOut={handleSignOut}
           />
+          </div>
+          </details>
         )}
 
         {navLayout === 'sidebar' ? (
-          <PanelGroup direction="horizontal" style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
+          <PanelGroup orientation="horizontal" style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
             {!zenMode && (
               <>
-                <Panel key="sidebar-panel" id="sidebar-panel" order={1} defaultSize={15} minSize={10} maxSize={30}>
+                <Panel key="sidebar-panel" id="sidebar-panel" defaultSize="15%" minSize="10%" maxSize="30%">
                   <aside className="sidebar-panel" style={{ height: '100%', overflow: 'hidden' }}>
-                    <Sidebar activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); }} />
+                    <Sidebar activeTab={activeTab} onTabChange={/** @param {string} t */ (t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); }} />
                   </aside>
                 </Panel>
 
@@ -838,7 +955,7 @@ export default function App() {
               </>
             )}
 
-            <Panel key="main-panel" id="main-panel" order={2} minSize={50}>
+            <Panel key="main-panel" id="main-panel" minSize="50%">
               <main className="main-panel" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 {!zenMode && (
                   <div className="topbar">
@@ -916,13 +1033,13 @@ export default function App() {
                       ● Backend {backendStatus.toUpperCase()}
                     </span>
                     <span className="identity-pill">
-                      {currentUser ? `${currentUser.displayName || currentUser.email.split('@')[0]} (Admin / Partner)` : 'Brett Adam Stehouwer (CTO)'}
+                      {currentUser ? `${currentUser.displayName || (currentUser.email || '').split('@')[0]} (Admin / Partner)` : 'Brett Adam Stehouwer (CTO)'}
                     </span>
                   </div>
                 </div>
                 )}
 
-                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
+                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
 
                 <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
                   <div
@@ -939,7 +1056,8 @@ export default function App() {
                               backendUrl={backendUrl} 
                               currentUser={currentUser} 
                               selectedModel={selectedModel} 
-                              onNavigateTab={setActiveTab}
+                              onNavigateTab={navigateWorkspaceTab}
+                              wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
                               workspaceMode={workspaceMode}
                               onToggleWorkspaceMode={handleToggleWorkspaceMode}
                             />
@@ -948,7 +1066,7 @@ export default function App() {
                               tabKey={activeTabConfig.key}
                               tabLabel={activeTabConfig.label}
                               activeTier={userTier}
-                              onNavigateToPricing={() => setActiveTab('public_checkout')}
+                              onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
                             />
                           )}
                         </Suspense>
@@ -961,7 +1079,7 @@ export default function App() {
           </PanelGroup>
         ) : (
           <main className="main-panel" style={{ flex: 1, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
+            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
 
             <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
               <div
@@ -978,7 +1096,8 @@ export default function App() {
                           backendUrl={backendUrl} 
                           currentUser={currentUser} 
                           selectedModel={selectedModel} 
-                          onNavigateTab={setActiveTab}
+                          onNavigateTab={navigateWorkspaceTab}
+                          wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
                           workspaceMode={workspaceMode}
                           onToggleWorkspaceMode={handleToggleWorkspaceMode}
                         />
@@ -987,7 +1106,7 @@ export default function App() {
                           tabKey={activeTabConfig.key}
                           tabLabel={activeTabConfig.label}
                           activeTier={userTier}
-                          onNavigateToPricing={() => setActiveTab('public_checkout')}
+                          onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
                         />
                       )}
                     </Suspense>
@@ -1059,8 +1178,8 @@ export default function App() {
         {/* Native Mobile Bottom Navigation Bar (Active on Mobile Viewports) */}
         <MobileBottomNav
           activeTab={activeTab}
-          onTabChange={(t) => {
-            setActiveTab(t);
+          onTabChange={/** @param {string} t */ (t) => {
+            navigateWorkspaceTab(t);
             setIsMobileDrawerOpen(false);
           }}
           onOpenDrawer={() => setIsMobileDrawerOpen(true)}
@@ -1071,8 +1190,8 @@ export default function App() {
           isOpen={isMobileDrawerOpen}
           onClose={() => setIsMobileDrawerOpen(false)}
           activeTab={activeTab}
-          onTabChange={(t) => {
-            setActiveTab(t);
+          onTabChange={/** @param {string} t */ (t) => {
+            navigateWorkspaceTab(t);
             setIsMobileDrawerOpen(false);
           }}
           momMode={momMode}
@@ -1083,6 +1202,7 @@ export default function App() {
     </>
   );
 }
+
 
 
 

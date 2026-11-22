@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './AgentPlanReviewCard.css';
 
+/** @param {{planData: import("/types/domain").PlanData, onExecutePlan: (planId: string, steps: number[]) => void, onRequestRevisions: () => void}} props */
 export default function AgentPlanReviewCard({ planData, onExecutePlan, onRequestRevisions }) {
   if (!planData) return null;
 
   const [approvedSteps, setApprovedSteps] = useState(planData.steps ? planData.steps.map(s => s.step_num) : []);
 
-  const toggleStep = (stepNum) => {
+  /** @param {number} stepNum */
+const toggleStep = (stepNum) => {
     if (approvedSteps.includes(stepNum)) {
       setApprovedSteps(approvedSteps.filter(s => s !== stepNum));
     } else {

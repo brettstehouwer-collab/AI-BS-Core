@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 import { theme } from '../../styles/theme';
 import { useDawStore, masterAnalyser } from './dawStore';
 import { 
@@ -13,6 +13,7 @@ const PROCEDURAL_PRESETS = [
   { id: 'glitch_nebula', name: 'Cosmic Nebula & Glitch', color: '#8b5cf6', desc: 'Audio-reactive particle matrix' }
 ];
 
+/** @param {{isTheater?: boolean; onToggleTheater?: (() => void) | null}} props */
 export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater = null }) {
   const isPlaying = useDawStore(state => state.isPlaying);
   const currentBar = useDawStore(state => state.currentBar);
@@ -21,7 +22,7 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
 
   const [aspectRatio, setAspectRatio] = useState('16:9'); // '16:9', '9:16', '21:9', '4:3'
   const [fitMode, setFitMode] = useState('fit'); // 'fit' (contain), 'fill' (cover), 'stretch'
-  const [selectedVideo, setSelectedVideo] = useState(null); // Blob URL or stream if loaded
+  const [selectedVideo, setSelectedVideo] = useState(/** @type {string | null} */ (null)); // Blob URL or stream if loaded
   const [activePresetId, setActivePresetId] = useState('cyber_city');
   const [isMuted, setIsMuted] = useState(true);
   const [latencyOffsetMs, setLatencyOffsetMs] = useState(0); // -300ms to +300ms
@@ -30,10 +31,10 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
   const [promptText, setPromptText] = useState('Cinematic 4k neon cyberpunk city street in rain with reflections');
   const [showPromptModal, setShowPromptModal] = useState(false);
 
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const animFrameRef = useRef(null);
+  const videoRef = useRef(/** @type {HTMLVideoElement | null} */ (null));
+  const canvasRef = useRef(/** @type {HTMLCanvasElement | null} */ (null));
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const animFrameRef = useRef(/** @type {number | null} */ (null));
   const lastRenderTimeRef = useRef(performance.now());
   const visualizerPhaseRef = useRef(0);
 
@@ -83,10 +84,12 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    if (!ctx) return;
 
     let isRunning = true;
     const fftBuffer = new Float32Array(64);
 
+    /** @param {number} now */
     const render = (now) => {
       if (!isRunning) return;
       const dt = Math.min(0.1, (now - lastRenderTimeRef.current) / 1000);
@@ -98,7 +101,8 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
       let midEnergy = 0;
       try {
         if (masterAnalyser) {
-          const values = masterAnalyser.getValue();
+          const analysed = masterAnalyser.getValue();
+          const values = Array.isArray(analysed) ? analysed[0] : analysed;
           if (values && values.length) {
             for (let i = 0; i < Math.min(values.length, 64); i++) {
               // Normalize dB (-100 to 0) to 0.0 - 1.0
@@ -365,11 +369,13 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
     };
   }, [selectedVideo, activePresetId, isPlaying, bpm, fitMode, getAspectDimensions]);
 
+  /** @param {typeof PROCEDURAL_PRESETS[number]} preset */
   const handleSelectPreset = (preset) => {
     setActivePresetId(preset.id);
     setSelectedVideo(null);
   };
 
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
   const handleLocalVideoUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -400,6 +406,7 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
     }
   };
 
+  /** @param {import("react").WheelEvent} e */
   const handleScrollForward = (e) => {
     const canvas = document.querySelector('.daw-center-canvas');
     if (canvas) {
@@ -412,7 +419,7 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
       onWheel={handleScrollForward}
       style={{
         background: 'rgba(10, 13, 18, 0.98)',
-        border: `1px solid ${theme.colors.border}`,
+        border: `1px solid ${'#30363d'}`,
         borderRadius: '8px',
         height: '100%',
         display: 'flex',
@@ -423,7 +430,7 @@ export default function VideoPreviewMonitor({ isTheater = false, onToggleTheater
       {/* Monitor Header */}
       <div style={{
         padding: '5px 8px',
-        borderBottom: `1px solid ${theme.colors.border}`,
+        borderBottom: `1px solid ${'#30363d'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

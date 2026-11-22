@@ -21,7 +21,7 @@ except (ImportError, OSError):
     WEASYPRINT_AVAILABLE = False
 
 try:
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak, Spacer
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib.pagesizes import letter
     from reportlab.lib.units import inch
@@ -68,21 +68,38 @@ class FountainParser:
     def parse(self):
         """Main parsing loop — consume lines and emit structured elements"""
         self.elements = []  # Re-parsing must replace the previous result, not append duplicates.
-        i = 0
+        i = self._parse_title_page()
+        dialogue_active = False
         while i < len(self.lines):
             line = self.lines[i]
             stripped = line.strip()
 
             if not stripped:
+                # Fountain uses two literal spaces for an intentional empty
+                # dialogue line; a genuinely blank line ends the speech block.
+                if dialogue_active and re.fullmatch(r' {2,}', line.rstrip('\r')):
+                    self.elements.append(FountainElement('Dialogue', '', i))
+                else:
+                    dialogue_active = False
                 i += 1
                 continue
 
+            # Classify all lines of an active speech before generic uppercase,
+            # scene-heading or transition heuristics. Page breaks end the block.
+            if dialogue_active and not re.match(self.PATTERNS['page_break'], stripped):
+                parenthetical = re.match(self.PATTERNS['parenthetical'], stripped)
+                self.elements.append(FountainElement(
+                    'Parenthetical' if parenthetical else 'Dialogue',
+                    parenthetical.group(1) if parenthetical else stripped, i))
+                i += 1
+                continue
+
+            dialogue_active = False
             # Scene heading (must be uppercase and match pattern)
             if re.match(self.PATTERNS['scene_heading'], stripped):
-                match = re.match(self.PATTERNS['scene_heading'], stripped)
-                heading = f"{match.group(1)}. {match.group(2)}"
-                if match.group(4):
-                    heading += f" - {match.group(4)}"
+                # Classification must not insert punctuation or normalize a dash
+                # in authored text when the screenplay is saved/exported.
+                heading = stripped
                 self.elements.append(
                     FountainElement(
                         'Scene Heading', heading, i))
@@ -107,9 +124,11 @@ class FountainParser:
                         'Transition', stripped, i))
                 i += 1
 
-            # Character (all caps, optionally preceded by asterisks for
-            # emphasis)
-            elif stripped.isupper() and len(stripped.split()) <= 3 and not any(c.isdigit() for c in stripped):
+            # A cue starts a block and has a following nonblank speech line.
+            # Character names may contain digits and lowercase extensions.
+            elif ((i == 0 or not self.lines[i-1].strip())
+                  and i+1 < len(self.lines) and self.lines[i+1].strip()
+                  and re.sub(r'\s*\([^)]*\)\s*$', '', stripped).isupper()):
                 char_name = stripped.replace('*', '')
                 self.elements.append(
                     FountainElement(
@@ -117,27 +136,8 @@ class FountainParser:
                         char_name,
                         i,
                         character_name=char_name))
+                dialogue_active = True
                 i += 1
-
-            # Parenthetical
-            elif re.match(self.PATTERNS['parenthetical'], stripped):
-                match = re.match(self.PATTERNS['parenthetical'], stripped)
-                self.elements.append(
-                    FountainElement(
-                        'Parenthetical',
-                        match.group(1),
-                        i))
-                i += 1
-
-            # Dialogue (follows character, not in parens, starts with alpha)
-            elif self.elements and self.elements[-1].element_type in ['Character', 'Parenthetical']:
-                if stripped and not stripped.startswith('('):
-                    self.elements.append(
-                        FountainElement(
-                            'Dialogue', stripped, i))
-                    i += 1
-                else:
-                    i += 1
 
             # Action (default fallback)
             else:
@@ -146,6 +146,53 @@ class FountainParser:
                         FountainElement(
                             'Action', stripped, i))
                 i += 1
+
+    def _parse_title_page(self) -> int:
+        """Read only an initial metadata block; preserve source and body line offsets.
+
+        Admit a known first key to avoid eating ordinary ``Warning:`` action or
+        ``FADE IN:`` transitions. Retain additional keys once metadata is admitted.
+        Fountain continuation values use a tab or at least three spaces.
+        """
+        self.title_page = {}
+        known = {'title', 'credit', 'author', 'authors', 'source', 'draft date',
+                 'date', 'contact', 'copyright', 'notes'}
+        field = re.compile(r'^([A-Za-z][A-Za-z ]*):[ \t]*(.*)$')
+        first = field.match(self.lines[0].lstrip('\ufeff')) if self.lines else None
+        if not first or first.group(1).strip().lower() not in known:
+            return 0
+        current = None
+        i = 0
+        while i < len(self.lines):
+            line = self.lines[i].rstrip('\r')
+            if not line.strip():
+                break
+            match = field.match(line.lstrip('\ufeff') if i == 0 else line)
+            if match:
+                current = match.group(1).strip().lower()
+                value = match.group(2).strip()
+                previous = self.title_page.get(current, '')
+                self.title_page[current] = '\n'.join(x for x in (previous, value) if x)
+            elif current and (line.startswith('\t') or line.startswith('   ')):
+                self.title_page[current] = '\n'.join(
+                    x for x in (self.title_page[current], line.strip()) if x)
+            else:
+                break
+            i += 1
+        return i
+
+    def _title_blocks(self, title: str, author: str):
+        """One metadata policy for PDF and FDX; keep additional fields visible."""
+        data = self.title_page
+        blocks = [('title', data.get('title') or title),
+                  ('credit', data.get('credit') or 'by'),
+                  ('author', data.get('author') or data.get('authors') or author)]
+        if data.get('source'):
+            blocks.append(('source', data['source']))
+        centered = {'title', 'credit', 'author', 'authors', 'source'}
+        blocks.extend((key, value) for key, value in data.items()
+                      if key not in centered and value)
+        return blocks
 
     def estimate_pages(self):
         """Rough page count estimation using industry standard (55 lines per page)"""
@@ -170,32 +217,26 @@ class FountainParser:
     def to_html(self) -> str:
         """Compile AST to styled HTML for browser rendering"""
         self.estimate_pages()
-        html = '<div class="screenplay" style="font-family: Courier New, monospace; max-width: 8.5in; margin: 0 auto; padding: 1in;">'
+        output = '<div class="screenplay" style="font-family: Courier New, monospace; max-width: 8.5in; margin: 0 auto; padding: 1in;">'
 
         for elem in self.elements:
+            text = html.escape(elem.element_text)
             if elem.element_type == 'Scene Heading':
-                html += f'<h3 style="font-weight: bold; text-transform: uppercase; margin-top: 1em; margin-bottom: 0.5em;">{
-                    elem.element_text}</h3>'
+                output += f'<h3 style="font-weight: bold; text-transform: uppercase; margin-top: 1em; margin-bottom: 0.5em;">{text}</h3>'
             elif elem.element_type == 'Action':
-                html += f'<p style="margin: 0.5em 0; text-align: justify;">{
-                    elem.element_text}</p>'
+                output += f'<p style="margin: 0.5em 0; text-align: justify;">{text}</p>'
             elif elem.element_type == 'Character':
-                html += f'<div style="margin-left: 2.5in; font-weight: bold; text-transform: uppercase; margin-top: 0.5em;">{
-                    elem.element_text}</div>'
+                output += f'<div style="margin-left: 2.5in; font-weight: bold; text-transform: uppercase; margin-top: 0.5em;">{text}</div>'
             elif elem.element_type == 'Parenthetical':
-                html += f'<div style="margin-left: 2in; margin-right: 1.5in; font-style: italic;">({
-                    elem.element_text})</div>'
+                output += f'<div style="margin-left: 2in; margin-right: 1.5in; font-style: italic;">({text})</div>'
             elif elem.element_type == 'Dialogue':
-                html += f'<div style="margin-left: 1.5in; margin-right: 1in;">{
-                    elem.element_text}</div>'
+                output += f'<div style="margin-left: 1.5in; margin-right: 1in;">{text}</div>'
             elif elem.element_type == 'Transition':
-                html += f'<p style="text-align: right; font-weight: bold; text-transform: uppercase; margin: 1em 0;">{
-                    elem.element_text}</p>'
+                output += f'<p style="text-align: right; font-weight: bold; text-transform: uppercase; margin: 1em 0;">{text}</p>'
             elif elem.element_type == 'Page Break':
-                html += '<div style="page-break-after: always; margin: 2em 0; border-top: 1px dashed #ccc;"></div>'
+                output += '<div style="page-break-after: always; margin: 2em 0; border-top: 1px dashed #ccc;"></div>'
 
-        html += '</div>'
-        return html
+        return output + '</div>'
 
     def to_pdf(self, title: str = "Untitled",
                author: str = "Unknown",
@@ -282,33 +323,45 @@ class FountainParser:
             parent=styles['Normal'],
             fontName='Courier-Bold',
             fontSize=24,
+            leading=28,
             alignment=TA_CENTER,
-            spaceBefore=3 * inch,
             spaceAfter=0.5 * inch)
         author_style = ParagraphStyle(
             'Author',
             parent=styles['Normal'],
             fontName='Courier',
             fontSize=12,
+            leading=16,
             alignment=TA_CENTER)
-        story.append(Paragraph(title, title_style))
-        story.append(Paragraph(f"by<br/>{author}", author_style))
+        metadata_style = ParagraphStyle('TitleMetadata', parent=author_style,
+                                       alignment=0, spaceBefore=8)
+        story.append(Spacer(1, 1.5 * inch))
+        for key, value in self._title_blocks(title, author):
+            text = html.escape(value).replace('\n', '<br/>')
+            if key == 'title':
+                story.append(Paragraph(text, title_style))
+            elif key in {'credit', 'author', 'source'}:
+                story.append(Paragraph(text, author_style))
+            else:
+                story.append(Paragraph(html.escape(key.title()) + ':<br/>' + text,
+                                       metadata_style))
         story.append(PageBreak())
 
         for elem in self.elements:
+            text = html.escape(elem.element_text)
             if elem.element_type == 'Scene Heading':
-                story.append(Paragraph(elem.element_text, scene_heading_style))
+                story.append(Paragraph(text, scene_heading_style))
             elif elem.element_type == 'Action':
-                story.append(Paragraph(elem.element_text, action_style))
+                story.append(Paragraph(text, action_style))
             elif elem.element_type == 'Character':
-                story.append(Paragraph(elem.element_text, character_style))
+                story.append(Paragraph(text, character_style))
             elif elem.element_type == 'Parenthetical':
                 story.append(
-                    Paragraph(f"({elem.element_text})", parenthetical_style))
+                    Paragraph(f"({text})", parenthetical_style))
             elif elem.element_type == 'Dialogue':
-                story.append(Paragraph(elem.element_text, dialogue_style))
+                story.append(Paragraph(text, dialogue_style))
             elif elem.element_type == 'Transition':
-                story.append(Paragraph(elem.element_text, transition_style))
+                story.append(Paragraph(text, transition_style))
             elif elem.element_type == 'Page Break':
                 story.append(PageBreak())
 
@@ -327,6 +380,16 @@ class FountainParser:
 
     def _to_pdf_weasyprint(self, title: str, author: str) -> bytes:
         raw_html = self.to_html()
+        title_blocks = self._title_blocks(title, author)
+        title_html = []
+        for key, value in title_blocks:
+            text = html.escape(value).replace('\n', '<br>')
+            if key == 'title':
+                title_html.append(f'<h1 style="font-size:24pt;line-height:28pt">{text}</h1>')
+            elif key in {'credit', 'author', 'source'}:
+                title_html.append(f'<p>{text}</p>')
+            else:
+                title_html.append(f'<p style="text-align:left">{html.escape(key.title())}:<br>{text}</p>')
 
         css = """
         @page {
@@ -364,13 +427,12 @@ class FountainParser:
         <html>
         <head>
             <meta charset="utf-8">
-            <title>{html.escape(title)}</title>
+            <title>{html.escape(title_blocks[0][1])}</title>
             <style>{css}</style>
         </head>
         <body>
-            <div style="text-align: center; margin-top: 40vh; page-break-after: always;">
-                <h1>{html.escape(title)}</h1>
-                <p>by<br>{html.escape(author)}</p>
+            <div style="text-align: center; padding-top: 1.5in; page-break-after: always;">
+                {''.join(title_html)}
             </div>
             {raw_html}
         </body>
@@ -435,13 +497,23 @@ class FountainParser:
         for elem in self.elements:
             fd_type = type_mapping.get(
                 elem.element_type, 'Action')  # fallback to Action
-            text = html.escape(elem.element_text)
+            text = html.escape(f'({elem.element_text})' if elem.element_type == 'Parenthetical'
+                               else elem.element_text)
 
             # Simple conversion
             paragraph = f'    <Paragraph Type="{fd_type}">\n      <Text>{text}</Text>\n    </Paragraph>'
             fdx.append(paragraph)
 
         fdx.append('  </Content>')
+        fdx.append('  <TitlePage><Content>')
+        for key, value in self._title_blocks(title, author):
+            centered = key in {'title', 'credit', 'author', 'source'}
+            text = value if centered else f'{key.title()}:\n{value}'
+            alignment = 'Center' if centered else 'Left'
+            for line in text.splitlines():
+                fdx.append(f'    <Paragraph Type="Action" Alignment="{alignment}">'
+                           f'<Text>{html.escape(line)}</Text></Paragraph>')
+        fdx.append('  </Content></TitlePage>')
         fdx.append('</FinalDraft>')
 
         return "\n".join(fdx)

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppStore } from './useAppStore';
 import { getApiBase } from '../config/api';
 
+/** @param {{missionData: import("/types/domain").MissionData, onMissionUpdated?: (mission: import("/types/domain").MissionData) => void}} props */
 export default function AutonomousMissionCard({ missionData: initialMission, onMissionUpdated }) {
   const storeBackendUrl = useAppStore(state => state.BACKEND_URL);
   const BACKEND_URL = storeBackendUrl || getApiBase();
   const [mission, setMission] = useState(initialMission || {});
   const [isRunning, setIsRunning] = useState(false);
-  const [activeTaskRunning, setActiveTaskRunning] = useState(null);
-  const [expandedTask, setExpandedTask] = useState(null);
+  const [activeTaskRunning, setActiveTaskRunning] = useState(/** @type {number | null} */ (null));
+  const [expandedTask, setExpandedTask] = useState(/** @type {number | null} */ (null));
   const [showJson, setShowJson] = useState(false);
   const [requestError, setRequestError] = useState('');
 
@@ -49,7 +50,8 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
     }
   };
 
-  const handleExecuteStep = async (taskId) => {
+  /** @param {number} taskId */
+const handleExecuteStep = async (taskId) => {
     if (!mission.mission_id || isRunning || activeTaskRunning !== null) return;
     setRequestError('');
     setActiveTaskRunning(taskId);
@@ -83,7 +85,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
   };
 
   const isCompleted = mission.status === 'completed';
-  const isFailed = ['failed', 'blocked', 'unimplemented', 'error'].includes(mission.status);
+  const isFailed = ['failed', 'blocked', 'unimplemented', 'error'].includes(mission.status || '');
   const statusLabel = mission.status === 'unimplemented' ? 'NOT IMPLEMENTED' : String(mission.status || 'planned').toUpperCase();
   const completedCount = mission.completed_tasks || 0;
   const totalCount = mission.total_tasks || (mission.tasks ? mission.tasks.length : 5);
@@ -200,6 +202,8 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
             const isDone = t.status === 'completed';
             const isTaskRunning = activeTaskRunning === t.task_id;
             const isExpanded = expandedTask === t.task_id;
+            const output = typeof t.result === 'object' && t.result !== null && 'output' in t.result ? t.result.output : undefined;
+            const outputText = typeof output === 'string' ? output : output == null ? '' : JSON.stringify(output);
 
             return (
               <div key={t.task_id} style={{
@@ -227,7 +231,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
                         {t.duration_ms}ms
                       </span>
                     )}
-                    {t.result?.output && (
+                    {outputText && (
                       <button
                         onClick={() => setExpandedTask(isExpanded ? null : t.task_id)}
                         style={{
@@ -264,7 +268,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
                 </div>
 
                 {/* Expanded Output Details */}
-                {isExpanded && t.result?.output && (
+                {isExpanded && outputText && (
                   <pre style={{
                     marginTop: '6px',
                     padding: '6px 8px',
@@ -277,7 +281,7 @@ export default function AutonomousMissionCard({ missionData: initialMission, onM
                     overflowY: 'auto',
                     border: '1px solid rgba(255, 255, 255, 0.05)'
                   }}>
-                    {t.result.output}
+                    {outputText}
                   </pre>
                 )}
               </div>

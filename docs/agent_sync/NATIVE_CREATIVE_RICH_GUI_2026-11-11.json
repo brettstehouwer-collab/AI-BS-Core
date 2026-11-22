@@ -1,0 +1,64 @@
+{
+  "status": "CONTROLLED_RICH_SOURCE_GUI_PASS",
+  "tests": {
+    "python": 96,
+    "seconds": 18.203,
+    "log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-qt-undo-final.log",
+    "javascript": 16,
+    "javascript_log": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-browser-launch.log"
+  },
+  "receipts": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-pipe-gui-20261111T104006437913Z\\result.json",
+      "sha256": "93c2d43750a2c3a6c9468ddf9b135590f1a4a6c792d62d94ae19d62856bc0fa5",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-pipe-gui-20261111T104008811390Z\\result.json",
+      "sha256": "9947248651a962a9a3ab33879b0ed5a43d44d62d4d245e5d7927d8d84a4db29f",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-backend-loss-20261111T104010681391Z\\result.json",
+      "sha256": "fd81274f12e9a56b4eb22b340772793eac6edf6d72e4e6de0ced7f37062719b8",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-crash-restore-20261111T104011891436Z\\result.json",
+      "sha256": "21f7a0fc2cf5c053dc4c363f3b4603963c746dbf181aa4a931c44c018cd962c7",
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-gui-20261111T104016175067Z\\result.json",
+      "sha256": "25781fec4793fc8a00a36c7f1de96390ce2f90fcf7a5edc202f4962f832b1834",
+      "status": "PASS"
+    }
+  ],
+  "rich_gui_processes": 3,
+  "real_editor_undo_redo": true,
+  "original_and_initial_version_unchanged": true,
+  "preserved_export": {
+    "bytes": 1005,
+    "sha256": "b494f2b902437b4f2f35a613c4bc3b8d9d9a191f6cb4614b21d6d1f887913688",
+    "independent_xml_sections": [
+      "DocumentInfo",
+      "HeaderAndFooter",
+      "TitlePage",
+      "DualDialogue"
+    ]
+  },
+  "source_admission": "Existing owner-bound PDF/FDX authority, exclusive source kind, retained original/current-version integrity; ambiguous or unfenced projects denied",
+  "browser": "Four actual source handlers accept FDX metadata and refuse missing/malformed/ambiguous source; fresh auth required; mounted real-account check pending",
+  "scope": "Synthetic owned Windows GUI jobs and real service source; no real Firebase login/original manuscripts/production activation",
+  "remaining": [
+    "Fresh real Firebase owner and mounted browser/native handoff",
+    "Original manuscript workflow, candidate configuration and installed/release qualification"
+  ],
+  "failed_evidence": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-source-first.log",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-gui-integrated-final.log",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-11-10\\c-ai-bs\\work\\native-rich-gui-20261111T103444457946Z\\result.json"
+  ],
+  "cloud_status": "VERIFIED_PRIVATE_SCOPED_RICH_GUI_CHECKPOINT",
+  "drive_receipt": "C:\\AI-BS\\backups\\native_rich_gui_20261111T104217Z\\drive_verified.json"
+}

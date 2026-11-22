@@ -1,0 +1,20 @@
+# Codex alignment check
+
+**A — AGREE. Verified now.** The requested git cat-file -t command returned commit. git rev-parse HEAD returned 64fad2871e0a716d9964f506bdef1050612b173d on codex/audit-v532976-20261031.
+
+**B — AGREE that broader rules exist. Verified now.** git show 64fad2871e0a716d9964f506bdef1050612b173d:AGENTS.md lines 28, 103, 111 and 162 preapprove writes, waive exclusive ownership, call for tests before handoff acceptance, and allow carrying required dirty source into worktrees. Applying those defaults here would exceed this check. Line 151 explicitly gives current instructions and verified state precedence. The working copy retains these provisions (including lines 1220–1235 and 1280). git diff --numstat -- AGENTS.md reported 1,201 additions and zero deletions. The committed file describes the older paused program; working-copy line 1115 records its later resumption. Neither grants authority to start project work in this check.
+
+**C — AGREE. Verified now in working-copy source.** frontend/components/ChatTab.jsx lines 6637–6651 route /health and /doctor through POST /api/tools/execute with get_ecosystem_health and component all. backend/tools/tool_registry.py lines 4380–4390 invoke hardware telemetry and Matrix Doctor. ChatTab.jsx lines 4200–4222 route /status to GET /api/executive/daemons. backend/AI_BS_Backend.py lines 7147–7153 delegate to the supervisor; backend/core/daemon_manager.py line 421 emits timestamp via time.time() in Unix seconds. ChatTab.jsx lines 4158–4169 show the conditional GET /api/health for /backend status.
+
+**D — AGREE on configuration. Verified now in source.** backend/aibs_ecosystem_spawner.py lines 119–133 specify primary 8001 and secondary 8002 with separate store path arguments. backend/core/memory_service.py line 24 defaults CHROMA_PORT to 8001 and allows an environment override. backend/AI_BS_Backend.py line 12073 explicitly selects 127.0.0.1:8001. From older notes (Antigravity inventory and docs/drafts/PROJECT_MAP.md section 6), only 8002 was observed listening among these two. Primary availability remains unresolved.
+
+**E — AGREE. Verified now.** pendingProjectMaintenance() reads browser local storage key aibs.local-maintenance.pending.v1 and validates a 32-character lowercase hexadecimal job_id and string target. A missing, malformed or inaccessible record yields null (frontend/src/utils/projectMaintenance.js lines 1–3 and 17–22). ChatTab.jsx lines 4158–4169 wait for the recorded job when present and fetch /api/health otherwise. This detects a locally remembered operation; a null result cannot establish that the server has no pending jobs.
+
+**F — DISAGREE with item 7 as a description of the current draft.** Verified now by reading docs/drafts/PROJECT_MAP.md. It labels historical listener/PID observations “verified now” and provides no explicit inventory date. From older notes (the pasted Antigravity inventory), neither ComfyUI port was observed listening. That observation alone cannot establish current service state or intent. The project map also lacks a ComfyUI entry.
+
+Two clarifications verified now:
+
+- git --no-optional-locks status --porcelain=v1 -unormal reported 137 tracked changes and 6,961 untracked entries before this report was added. With -uall Git listed 180,547 untracked entries. Five release directories returned permission warnings. “About 6,960” is accurate for grouped entries and should be labeled with the counting mode.
+- The four drafts are inside the checkout and absent from both git ls-files -- docs/drafts and git ls-tree -r HEAD -- docs/drafts. They are outside the index and pinned snapshot. The handoff template and collaboration proposal were read as drafts. The latter is not part of committed AGENTS.md.
+
+**Open item F.** Agree on the inventory capture date from a dated source, or explicitly label it “date unverified,” and distinguish dated runtime observations from code verified in this check. The project-map task has not started. This report records Codex's assessment only.

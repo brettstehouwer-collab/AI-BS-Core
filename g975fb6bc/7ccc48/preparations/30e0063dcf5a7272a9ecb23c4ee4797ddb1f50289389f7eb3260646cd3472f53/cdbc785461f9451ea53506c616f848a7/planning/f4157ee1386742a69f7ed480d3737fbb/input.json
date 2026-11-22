@@ -1,0 +1,49 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "cdbc785461f9451ea53506c616f848a7",
+  "plan_id": "f4157ee1386742a69f7ed480d3737fbb",
+  "snapshot_sha256": "010b30af03e5b85a34aca8ebc7d4d65cbb62ecc022dbbce652351d1c0ebb281f",
+  "review_digest": "cff059dd92783de69afcb42b34b5c5cd4957f98e967761b60353ada08be9f6e6",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.js",
+        "role": "editable",
+        "sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "excerpt": "const value = 1;\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/app.test.cjs",
+        "role": "verification",
+        "sha256": "4878515595f0f3bb6db1673888eec442335ebf7805dfabd039a57aecee1bd9f8",
+        "excerpt": "const test=require('node:test'); const assert=require('node:assert/strict');\ntest('candidate',()=>assert.match(require('node:fs').readFileSync('src/app.js','utf8'),/value = 42/));\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "node",
+        "argv": [
+          "node",
+          "--test",
+          "tests/app.test.cjs"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.js"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "f243ecd55e767bd76452e805c5f55795cebc442f4e9a9059f743e2d8c1ceb52a",
+  "worker": {
+    "pid": 32992,
+    "created": 1794779768.2750049
+  },
+  "created_at_utc": "2026-11-15T21:56:09.388625+00:00",
+  "entry_sha256": "6f6c7640e59ebfd9956163ce256db9457abda377f77fa77c4ae1a4b9bf0c2e27"
+}

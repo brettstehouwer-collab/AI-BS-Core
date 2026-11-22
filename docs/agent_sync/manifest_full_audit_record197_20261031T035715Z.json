@@ -1,0 +1,540 @@
+{
+  "handoff_id": "full_audit_record197_20261031T035715Z",
+  "utc": "2026-10-31T03:58:31Z",
+  "outgoing_agent": "OpenAI Codex",
+  "receiving_agent": "next authorized Codex/Antigravity executor",
+  "repository": {
+    "source_commit_sha": "1163f3d101460f1eeb2ead14154d69bf7a4d21fe",
+    "branch": "codex/audit-v532976-20261031",
+    "source_snapshot_parent": "9f7e1750a90ee491d8cbd191cb6f4c22f2d71214",
+    "dirty_workspace_preserved": true,
+    "unrelated_status_entries": 53920
+  },
+  "source_manifest_sha256": "e3b3a89adcb6c4d2cc5e55c7adea4f9817e942d145309550c9f8dd2465f4dd8c",
+  "source_manifest_path": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/batch002_source_manifest.json",
+  "source_files": [
+    {
+      "path": "AI_BS_MASTER_ARCHITECTURAL_LEDGER.md",
+      "sha256": "4f3c9992c8c56ffed904f6f06a30f142431d2eaafb25c63fd5e88a8c1448f7c1",
+      "bytes": 1127644
+    },
+    {
+      "path": "BroadcastStudioApp/package-lock.json",
+      "sha256": "f0d4defb87ffb7003ebaeb86ee52c04595d4d1b6925f811a6a9eb34782d78606",
+      "bytes": 222035
+    },
+    {
+      "path": "BroadcastStudioApp/package.json",
+      "sha256": "d55615b5e6f649ec685051904f3338cb7f1d9494d4a54098064bb89986699217",
+      "bytes": 3011
+    },
+    {
+      "path": "BroadcastStudioApp/src/App.jsx",
+      "sha256": "97bc5af363cf161097640b8f43f923d9ad9a27e3a4cbcdcd185176102f6924fd",
+      "bytes": 23101
+    },
+    {
+      "path": "BroadcastStudioApp/src/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "MASTER_HISTORICAL_INDEX.md",
+      "sha256": "0b448d76a41c2b447ced0b456b23b5f6f0dfe99c279004d1a601b242a407f9a1",
+      "bytes": 102088
+    },
+    {
+      "path": "MASTER_IMPLEMENTATION_PLANS_CHRONOLOGY.md",
+      "sha256": "ff56986e287d3689d14733b0f957d59ec70a84a21080c8ccb8855267c81aa416",
+      "bytes": 87685
+    },
+    {
+      "path": "MASTER_TASKS_CHRONOLOGY.md",
+      "sha256": "63bea549654d4a6a7c989e4400ea50baca34ba358a5006a4d806760ebbf54bd0",
+      "bytes": 212630
+    },
+    {
+      "path": "NotebookLM_Records/artifact_history.md",
+      "sha256": "3992ca20d7f594f930212c8ca6789f6b7b070d5ff038bf846c56c0c9ac2533f0",
+      "bytes": 150723
+    },
+    {
+      "path": "SAVED_CHECKPOINT.md",
+      "sha256": "5ffb9417115063fceb01f3442fa40fc476b3e06a4f8f966c87473ab58e31be69",
+      "bytes": 9491
+    },
+    {
+      "path": "apps/digital_storefront_mobile/src/App.jsx",
+      "sha256": "668eaff675992797b460089793128c0f9135feef9e987542bd783b186b8521f9",
+      "bytes": 1909
+    },
+    {
+      "path": "apps/digital_storefront_mobile/src/components/CryptoSwarmMobileController.jsx",
+      "sha256": "80d473585d2c2cd5965395d854b449b2802f63f7f4d14ea040b5f54e96b8a204",
+      "bytes": 21954
+    },
+    {
+      "path": "apps/digital_storefront_mobile/src/components/DigitalStorefrontTab.jsx",
+      "sha256": "18fbe9f26efb0df845d0d3810c226ec936ccd2741dd71351e3aca571c8f5348d",
+      "bytes": 36757
+    },
+    {
+      "path": "backend/AI_BS_Backend.py",
+      "sha256": "86fa627664d35c08f1e53ac6cc6c15fec47e6c9afa591312bda3b7e82c61ab4c",
+      "bytes": 366753
+    },
+    {
+      "path": "backend/commercial_gateway/storefront_router.py",
+      "sha256": "472be94819f5b95f56397e31789cdf8f3115a955bdca188769dca3b297307f9f",
+      "bytes": 7980
+    },
+    {
+      "path": "backend/core/cro_quantitative_ledger.py",
+      "sha256": "76bab00c354453ed0e005adc70241c69ec7f8062f95dc04c037f1e1d87c0139f",
+      "bytes": 9422
+    },
+    {
+      "path": "backend/core/media_chromadb_vault.py",
+      "sha256": "ac304835dcf4c92c379a108b053b1705d4e918db58f2e072dd88dedbe9cc2cbc",
+      "bytes": 3990
+    },
+    {
+      "path": "backend/core/media_render_engine.py",
+      "sha256": "4ccf182d283c1d1eaa25a64f68ebd4d7901d8c5c8edb2a14286f56d97d57ef50",
+      "bytes": 58738
+    },
+    {
+      "path": "backend/core/phone_repair_knowledge.py",
+      "sha256": "291252e20dd1d6f8fca3988f9967073feac10ce4ab0dd2bf346e3e5e8f4c64c2",
+      "bytes": 89820
+    },
+    {
+      "path": "backend/core/plugin_loader.py",
+      "sha256": "4a23a171c9c003d930bc8301c7c4e138015a9d706afe4575e332bed166fa049b",
+      "bytes": 9101
+    },
+    {
+      "path": "backend/modules/master_accounting/__init__.py",
+      "sha256": "6d06a5b97a8c19efcece82c3b666f5f1d8e812b010f0cba5cdd3f17e914ab8fa",
+      "bytes": 1472
+    },
+    {
+      "path": "backend/routers/audio_demucs_router.py",
+      "sha256": "04979ac1349f23049fb444be6085cb16fd153df53ad30d155cbf456b228bebac",
+      "bytes": 3311
+    },
+    {
+      "path": "backend/routers/audit_ledger_router.py",
+      "sha256": "e1017cdde5b09e080ea80ae40ec18bf319792cac9ae6cbc9cfe6219ac5f276a9",
+      "bytes": 2451
+    },
+    {
+      "path": "backend/routers/cro_ledger_router.py",
+      "sha256": "3524c54df4ec99b908945ea214cbab705af69294e954d527d95bc1607802bb83",
+      "bytes": 5535
+    },
+    {
+      "path": "backend/routers/email_client_router.py",
+      "sha256": "880de049671dfb96509a599bd4ee8737b8043e45a7520aceea626233f4ec2416",
+      "bytes": 26647
+    },
+    {
+      "path": "backend/routers/executive_cockpit_router.py",
+      "sha256": "b6f985bdeac7d26239cdd696a327fc764d95b7d11c8cc2b7f75d0f1169617302",
+      "bytes": 27866
+    },
+    {
+      "path": "backend/routers/media_render_router.py",
+      "sha256": "9d9ccf68b8bca44781a464cb5df217980c0b4c34423ccc6b4883b8af8d89f114",
+      "bytes": 18514
+    },
+    {
+      "path": "backend/routers/nda_signer_router.py",
+      "sha256": "d7af6ba2d08000db1fb0ee144f44f9ddf73f80cfb407cb17fd90e87093bbc1ba",
+      "bytes": 14484
+    },
+    {
+      "path": "backend/routers/phone_repair_router.py",
+      "sha256": "045860c01fc00238ea2c292a2dee58745cf214d57bde813f60e3d8d805ccc095",
+      "bytes": 10542
+    },
+    {
+      "path": "backend/routers/self_healing_router.py",
+      "sha256": "ae28ef5d303156dcfa721b5743729f5c7464fbd0e95301cae010c2f3b2107258",
+      "bytes": 2768
+    },
+    {
+      "path": "backend/routers/telemetry_websocket.py",
+      "sha256": "2820dce096544c2b2ed2faaeb8eef63fa8dcee99996b9ea6534c39fa0efddfb7",
+      "bytes": 2214
+    },
+    {
+      "path": "backend/routers/trading_router.py",
+      "sha256": "180d3afaf39c411c6d9b67d8bedd13e240a2ea37dc4c91ffaeaba227d5af3916",
+      "bytes": 7741
+    },
+    {
+      "path": "backend/routers/usb_recovery_router.py",
+      "sha256": "b7f51c3a7e43e4d5d587e1f9eab50e15586c5f03768273f9e52e46b922c36c67",
+      "bytes": 13252
+    },
+    {
+      "path": "backend/security/contained_file_access.py",
+      "sha256": "fcfa7f372bbe09563c5698137c3cf0db493663cea73acfa122bbe85d60fc1453",
+      "bytes": 10534
+    },
+    {
+      "path": "backend/security/document_access.py",
+      "sha256": "c9bbdfd105300ada01d61236eb700975a6d4110c90c6370512186779ddf9dced",
+      "bytes": 3943
+    },
+    {
+      "path": "backend/security/host_control_access.py",
+      "sha256": "36bd0316acba3ed290daed0d0f561dc1f181a9e69b089bcf998fc882c7a7e741",
+      "bytes": 6787
+    },
+    {
+      "path": "backend/server.js",
+      "sha256": "e8d41fd9029b8fffc7acb247e3a45925e0c08a71e968a984de037c91561f1e8d",
+      "bytes": 1558
+    },
+    {
+      "path": "docs/CODEX_DECISIONS.md",
+      "sha256": "5a6d1d6e8d732d77ac9164bcf6b5bd3f3f614c65bf5f49a4166b85203210cb73",
+      "bytes": 226290
+    },
+    {
+      "path": "docs/CODEX_HANDOFF.md",
+      "sha256": "ac9acb9a6b137f663a3593726c4342271bc199802fb07f983d4211bff6a368fc",
+      "bytes": 1110496
+    },
+    {
+      "path": "docs/CODEX_JOURNAL.md",
+      "sha256": "3f50b1379b3cc0cbc34b6f9db57ea61639d0c7c0bcc23fc5b38f648bcb0e3335",
+      "bytes": 736323
+    },
+    {
+      "path": "docs/CODEX_TASKS.md",
+      "sha256": "e387bd50eb762a8233eda40d5bb4efe80f4368516b2f080f62316c8038778c1b",
+      "bytes": 332490
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/README.md",
+      "sha256": "9acc105a61b7abcf306f59a0487fc61db9034c4ce194261369820c5c2f45bb7a",
+      "bytes": 6505
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/coverage.json",
+      "sha256": "1628a9f9437045a2179037ed9fc3f1c3a065ee95e7fef89e5a86cd21259d47bf",
+      "bytes": 9041
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/findings.json",
+      "sha256": "58a980aa9a7cb0cf96a83a79d1acbcb5328bd6959f1566aebfbb842f62d541c2",
+      "bytes": 45949
+    },
+    {
+      "path": "docs/audit/2026-10-30-complete/recovery_gate.json",
+      "sha256": "517d77729f6b2b77bc3b7475f9f2d809f339b9bc2cfbad828fcff965e4c93897",
+      "bytes": 1666
+    },
+    {
+      "path": "frontend/components/BsMediaCreatorTab.jsx",
+      "sha256": "e86595b1b762759a2ecc51225f8fa70a5ff214d30337329cc1751f17c613c93a",
+      "bytes": 71001
+    },
+    {
+      "path": "frontend/components/ClusterEngineDashboard.jsx",
+      "sha256": "b3026ffc04275701915636d4fb2f8796c220b8ce5e2dcb05f234def91e258324",
+      "bytes": 9100
+    },
+    {
+      "path": "frontend/components/MediaStudioTab.jsx",
+      "sha256": "237f3aff579376c90a60b8b72e7d7002dcd8c8b9fb09239753616b838c423e5b",
+      "bytes": 96562
+    },
+    {
+      "path": "frontend/components/MoneyTrackTab.jsx",
+      "sha256": "bd5610fa4ef6cd3146aec1368180142e7ca606e1332b0ec263e38926923a64f5",
+      "bytes": 8593
+    },
+    {
+      "path": "frontend/components/accessControl.js",
+      "sha256": "f785371891cdbbe91a2a69bac29cf152a867a0a72cf069f5dd47f522f30c871c",
+      "bytes": 9682
+    },
+    {
+      "path": "frontend/components/components/BsMediaCreatorTab.jsx",
+      "sha256": "e86595b1b762759a2ecc51225f8fa70a5ff214d30337329cc1751f17c613c93a",
+      "bytes": 71001
+    },
+    {
+      "path": "frontend/components/components/ClusterEngineDashboard.jsx",
+      "sha256": "b3026ffc04275701915636d4fb2f8796c220b8ce5e2dcb05f234def91e258324",
+      "bytes": 9100
+    },
+    {
+      "path": "frontend/components/components/MediaStudioTab.jsx",
+      "sha256": "237f3aff579376c90a60b8b72e7d7002dcd8c8b9fb09239753616b838c423e5b",
+      "bytes": 96562
+    },
+    {
+      "path": "frontend/components/components/MoneyTrackTab.jsx",
+      "sha256": "bd5610fa4ef6cd3146aec1368180142e7ca606e1332b0ec263e38926923a64f5",
+      "bytes": 8593
+    },
+    {
+      "path": "frontend/components/components/accessControl.js",
+      "sha256": "f785371891cdbbe91a2a69bac29cf152a867a0a72cf069f5dd47f522f30c871c",
+      "bytes": 9682
+    },
+    {
+      "path": "frontend/components/components/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/components/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/main.jsx",
+      "sha256": "f15d08c7fbf48a66cd62520a228abd839ae433deb6ec852f6ec9f50f6e04f0ae",
+      "bytes": 4717
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "d989096f03c036d0213949f0fb6abe5b873e3814916af3cf73f74f45dbdd729c",
+      "bytes": 762043
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "3e8e2fa3773445bb1ce3e3b5a194b543c9cfce362c16f456c1b897b946b7b1ff",
+      "bytes": 3299
+    },
+    {
+      "path": "frontend/public/version.json",
+      "sha256": "f247cfffce5f06d8f03a770e373ede2d8e4451560f6edad73623395681a8b9d9",
+      "bytes": 194
+    },
+    {
+      "path": "frontend/src/components/BsMediaCreatorTab.jsx",
+      "sha256": "e86595b1b762759a2ecc51225f8fa70a5ff214d30337329cc1751f17c613c93a",
+      "bytes": 71001
+    },
+    {
+      "path": "frontend/src/components/ClusterEngineDashboard.jsx",
+      "sha256": "b3026ffc04275701915636d4fb2f8796c220b8ce5e2dcb05f234def91e258324",
+      "bytes": 9100
+    },
+    {
+      "path": "frontend/src/components/MediaStudioTab.jsx",
+      "sha256": "237f3aff579376c90a60b8b72e7d7002dcd8c8b9fb09239753616b838c423e5b",
+      "bytes": 96562
+    },
+    {
+      "path": "frontend/src/components/MoneyTrackTab.jsx",
+      "sha256": "bd5610fa4ef6cd3146aec1368180142e7ca606e1332b0ec263e38926923a64f5",
+      "bytes": 8593
+    },
+    {
+      "path": "frontend/src/components/accessControl.js",
+      "sha256": "f785371891cdbbe91a2a69bac29cf152a867a0a72cf069f5dd47f522f30c871c",
+      "bytes": 9682
+    },
+    {
+      "path": "frontend/src/components/components/BsMediaCreatorTab.jsx",
+      "sha256": "e86595b1b762759a2ecc51225f8fa70a5ff214d30337329cc1751f17c613c93a",
+      "bytes": 71001
+    },
+    {
+      "path": "frontend/src/components/components/ClusterEngineDashboard.jsx",
+      "sha256": "b3026ffc04275701915636d4fb2f8796c220b8ce5e2dcb05f234def91e258324",
+      "bytes": 9100
+    },
+    {
+      "path": "frontend/src/components/components/MediaStudioTab.jsx",
+      "sha256": "237f3aff579376c90a60b8b72e7d7002dcd8c8b9fb09239753616b838c423e5b",
+      "bytes": 96562
+    },
+    {
+      "path": "frontend/src/components/components/MoneyTrackTab.jsx",
+      "sha256": "bd5610fa4ef6cd3146aec1368180142e7ca606e1332b0ec263e38926923a64f5",
+      "bytes": 8593
+    },
+    {
+      "path": "frontend/src/components/components/accessControl.js",
+      "sha256": "f785371891cdbbe91a2a69bac29cf152a867a0a72cf069f5dd47f522f30c871c",
+      "bytes": 9682
+    },
+    {
+      "path": "frontend/src/components/components/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/src/components/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/src/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "frontend/version.js",
+      "sha256": "560b21b64acadb31176d01ba3a51254f87c6131eaff6bb88beacdebe7ddd08e8",
+      "bytes": 354
+    },
+    {
+      "path": "genkit_server/index.ts",
+      "sha256": "e19c51b6dc1522c2dc75be0557b26355b0d4cc6d892c872e89a14ba0b4c4757a",
+      "bytes": 1689
+    },
+    {
+      "path": "mobile-app/App.tsx",
+      "sha256": "1df61e365a950c43645564c178d6276af27907d4eb149ee6b92d71996ba28c99",
+      "bytes": 63927
+    },
+    {
+      "path": "native_studio/web_telemetry_view.py",
+      "sha256": "b39b61b3948f36d94cb802884e160f520f01fa2d412f1c52c81be4229f40fcca",
+      "bytes": 15600
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "e7faf7c89e9d00947e8edc8644c1335050d8c37484f9ee81a3271e9dc50d51a2",
+      "bytes": 199
+    },
+    {
+      "path": "package.json",
+      "sha256": "71f6f19d8ad9e14058586cac7146bf631cb408821da8f0202329ceaa71d27f9b",
+      "bytes": 429
+    },
+    {
+      "path": "release.json",
+      "sha256": "e0c67757872e78493f4b63ce19ec43b78ff854bb6d24289ff8f123eff6a61987",
+      "bytes": 193
+    },
+    {
+      "path": "scripts/tests/test_contained_file_access.py",
+      "sha256": "590a984465318d5eae8fae821b7ec6c17122eb6280f75bedab3f9c3ddcc372bf",
+      "bytes": 19455
+    },
+    {
+      "path": "scripts/tests/test_financial_media_truth_client.mjs",
+      "sha256": "12cd1a1b970797468b31c9efe8812fba759ac4d47654de979b145c40891236c8",
+      "bytes": 10152
+    },
+    {
+      "path": "scripts/tests/test_host_control_containment.py",
+      "sha256": "fd6c3281e7132e78cf9b344758785c2c361fbeb02d69b83a1d78abfa88d34025",
+      "bytes": 43044
+    },
+    {
+      "path": "scripts/tests/test_independent_service_containment.mjs",
+      "sha256": "82dfa19c68ea16bd5fd7ae93a5cd8cb626742a0931a67f72f98c260a16da5ea8",
+      "bytes": 3119
+    },
+    {
+      "path": "scripts/tests/test_legacy_financial_privacy.py",
+      "sha256": "19c3cf91865f9c5ad3b72d574e5b2424cd5e7ea62db37b5f6f6122f1a09a9b21",
+      "bytes": 9758
+    },
+    {
+      "path": "scripts/tests/test_media_pipeline_and_signing_integrity.py",
+      "sha256": "78c89f18a2dd671ffd2776f042444f56e8bc047f86533151269f199a102d5747",
+      "bytes": 6790
+    },
+    {
+      "path": "scripts/tests/test_native_telemetry_truth.py",
+      "sha256": "0fc8fa8eeed12e5f3411b3ee5ab7e0a175011f190135b218f8539b7d38458be0",
+      "bytes": 3144
+    },
+    {
+      "path": "scripts/tests/test_route_registration_integrity.py",
+      "sha256": "56b6935d0d97aca85395fdda58c4ffd1bdece9478111ccdf6739bc57b9200101",
+      "bytes": 10281
+    },
+    {
+      "path": "scripts/tests/test_runtime_truthfulness_client.mjs",
+      "sha256": "ac3514d0f14a52471cb4694a5c9e460f226c288d8272d85df20202b4f95e49c3",
+      "bytes": 22326
+    },
+    {
+      "path": "version.txt",
+      "sha256": "85ecca2b1c69cf271c2348d0dbcb16dc2c8465664424976ff57b938a5a110e4c",
+      "bytes": 10
+    }
+  ],
+  "full_source_preservation": "Authenticated encrypted batch002_after package; keys separate from repository/Drive. Exact before packages and source patch in E: evidence.",
+  "patch_reference": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/batch002_source_changes.patch",
+  "source_version": "v5.329.76",
+  "campaign_status": "IN_PROGRESS",
+  "completed": {
+    "host_and_legacy_financial_admission": "VERIFIED_SOURCE_AND_FOCUSED_FIXTURES",
+    "synthetic_outcome_containment": "VERIFIED_SOURCE_AND_FOCUSED_FIXTURES",
+    "runtime_read_only_admission": "VERIFIED_BOUNDED",
+    "hosting": "VERIFIED17REMOTE_FILES_V532976",
+    "python_focused_tests": 151,
+    "client_focused_tests": 66,
+    "recovery_tests": 14,
+    "production_build_modules": 7344,
+    "sqlite_clone_candidates": 160,
+    "sqlite_clone_backup_passes": 158,
+    "runtime_recovery_files": 6049,
+    "ledger_prefixes_preserved": 9
+  },
+  "incomplete": [
+    {
+      "status": "FAILED",
+      "item": "2preserved Chroma FTS index integrity checks; no repair/adoption"
+    },
+    {
+      "status": "FAILED",
+      "item": "Full TypeScript9584baseline diagnostics;0new normalized additions"
+    },
+    {
+      "status": "UNVERIFIED",
+      "item": "All runtime routes beyond1000budget, duplicate first-match behaviors, every control/action, providers/devices"
+    },
+    {
+      "status": "PROPOSED",
+      "item": "Browser WebSocket credential adapter, FE010deep links/FE012IPC/FE013navigation repair, external project integration"
+    },
+    {
+      "status": "UNVERIFIED",
+      "item": "Kraken read activity from initial unsafe financial fixture; corrected fixture forbids imports/effects"
+    }
+  ],
+  "architecture_decisions": [
+    "ADR-121",
+    "ADR-122"
+  ],
+  "operational_holds": {
+    "live_trading": "HELD",
+    "crypto8007": "NOT_STARTED",
+    "payments": "disabled",
+    "email_smtp_gmail": "unconditional503",
+    "background_and_outreach_flags": "seven false process-local flags"
+  },
+  "credential_incident_retirement": {
+    "status": "REVOKED_AND_LOCAL_SESSION_CLEARED",
+    "google_revocation_http_status": 200,
+    "local_session_cleared": true,
+    "future_cli_sign_in_required": true,
+    "secrets_in_handoff": false
+  },
+  "tests_and_actual_results": {
+    "commands_evidence": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/final_v76_20261031T0300Z/commands.json",
+    "final_python_log": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/final_v76_151_tests.txt",
+    "runtime": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/controlled_runtime_acceptance.json",
+    "hosting": "E:/AI_BS_Resources/AI-BS-Audit/2026-10-30-complete/evidence/hosting_v76_verification.json"
+  },
+  "cloud_single_folder_id": "1yglgqXtK12MWL-6_9FaQ_I9OI44bhB2k",
+  "next_executable_step": "Prepare a complete-directory isolated recovery copy for database/ChromaDB_local and rootchroma_db, establish same-store provenance and FTS/vector segment consistency, without replacing originals; then finish bounded route/duplicate/control tracing.",
+  "hidden_reasoning_transfer_claimed": false,
+  "acceptance": "Receiver must verify repository identity, source hashes, dirty-workspace state and evidence before continuing."
+}

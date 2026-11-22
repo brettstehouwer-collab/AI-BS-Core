@@ -1,0 +1,311 @@
+diff --git a/frontend/App.jsx b/frontend/App.jsx
+index 23af23e7..695fc0cd 100644
+--- a/frontend/App.jsx
++++ b/frontend/App.jsx
+@@ -1,4 +1,4 @@
+-import React, { useState, useEffect, Suspense, lazy } from 'react';
++import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+ import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
+ import Sidebar from './components/Sidebar.jsx';
+ import TopNavbar from './components/TopNavbar.jsx';
+@@ -21,6 +21,7 @@ import MobileBottomNav from './components/MobileBottomNav.jsx';
+ import MobileNavDrawer from './components/MobileNavDrawer.jsx';
+ import { isNativeMobile } from './config/api.js';
+ import { useUserSessionTelemetry } from './src/hooks/useUserSessionTelemetry.js';
++import { resolveInitialWorkspaceTab, rememberedWorkspaceTab } from './components/portalRouting.js';
+ 
+ // Loading placeholder
+ const TabLoader = () => (
+@@ -231,7 +232,7 @@ const tabs = [
+   { key: 'syndication', label: '🌐 Automated Syndication', description: '1-Click Fire Send Broadcaster & Multi-Channel Ad Suite', Component: SyndicationTab },
+   { key: 'clients', label: 'Clients Hub', description: 'Master Workspace for all clients', Component: ClientsModuleTab },
+   { key: 'fe_express', label: '🚚 FE Express Box Truck Automation Hub (Devin)', description: 'Real-Time Trulos Public Load Board, Smart Backhaul Radar, Broker Credit Sentinel, Spot Rate Benchmarks & 1-Tap Mobile Dispatch Suite for Devin', Component: FEExpressDispatcherTab },
+-  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut & Dennis Bell Sports Program — College Recruiting Portal & Mass SMS Broadcast Suite', Component: RecreationalDebutTab },
++  { key: 'rec_debut', label: '🏀 Recreational Debut', description: 'Recreational Debut — Families, Recruiting Workflow, Services & Review', Component: RecreationalDebutTab },
+   { key: 'nda_module', label: '📜 Sovereign NDA & Anti-Tamper', description: 'Interactive Master NDA Signer, Clause Reviewer, Watermarking & Cryptographic Tamper Seal', Component: NdaModuleTab },
+   { key: 'moneytrack', label: 'Money Track', description: 'Financial dashboard for revenue, expenses, and invoices', Component: MoneyTrackTab },
+   { key: 'definitions', label: 'Definitions & Lore', description: 'Interactive AI-BS dictionary and architectural timeline', Component: DefinitionsModuleTab },
+@@ -286,20 +287,16 @@ export default function App() {
+   const toggleEditMode = useAppStore(state => state.toggleEditMode);
+   const [zenMode, setZenMode] = useState(false);
+   const [activeTab, setActiveTab] = useState(() => {
+-    if (typeof window !== 'undefined') {
+-      const params = new URLSearchParams(window.location.search);
+-      const urlTab = params.get('tab') || (params.get('portal') === 'nda' ? 'nda_module' : null);
+-      if (urlTab) {
+-        if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') return 'central_gaming_hub';
+-        if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) return 'unified_crypto';
+-        return urlTab;
+-      }
+-    }
+-    const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY) || 'dashboard';
+-    if (stored === 'steam_gaming' || stored === 'gaming_lab') return 'central_gaming_hub';
+-    if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(stored)) return 'unified_crypto';
+-    return stored;
++    if (typeof window === 'undefined') return 'dashboard';
++    const params = new URLSearchParams(window.location.search);
++    if (params.get('tab') === 'clients' && params.get('client') === 'fe_express') return 'fe_express';
++    return resolveInitialWorkspaceTab(window.location.search, localStorage.getItem(ACTIVE_TAB_STORAGE_KEY));
+   });
++  const [wirelessCastOpenRequest, setWirelessCastOpenRequest] = useState(0);
++  const navigateWorkspaceTab = useCallback((tab) => {
++    if (tab === 'screen_mirror') setWirelessCastOpenRequest(request => request + 1);
++    setActiveTab(tab);
++  }, []);
+   const { backendUrl, backendStatus } = useBackendHealth();
+   const [localTrustState, setLocalTrustState] = useState({ enabled: false, allowedUsers: [] });
+   const [authLoading, setAuthLoading] = useState(true);
+@@ -564,7 +561,7 @@ export default function App() {
+   }, [currentUser, activeTab]);
+ 
+   // Live User Presence, Session Dwell-Time & Activity Telemetry
+-  useUserSessionTelemetry({ currentUser, activeTab });
++  useUserSessionTelemetry({ currentUser, activeTab, enabled: isAuthenticated });
+ 
+   // Universal Deep Linking & URL Search Parameter Synchronization
+   useEffect(() => {
+@@ -578,14 +575,17 @@ export default function App() {
+         window.sendDashboardAnalyticsBeacon('tab_switch', activeTab);
+       }
+     }
+-    localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTab);
++    const rememberedTab = rememberedWorkspaceTab(activeTab);
++    if (rememberedTab) localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, rememberedTab);
+   }, [activeTab]);
+ 
+   // Handle Browser Back / Forward Button Navigation
+   useEffect(() => {
+     const handlePopState = () => {
+       const params = new URLSearchParams(window.location.search);
+-      let urlTab = params.get('tab');
++      let urlTab = params.get('tab') || 'dashboard';
++      if (urlTab === 'clients' && params.get('client') === 'fe_express') urlTab = 'fe_express';
++      if (urlTab === 'website_home') urlTab = 'dashboard';
+       if (urlTab === 'steam_gaming' || urlTab === 'gaming_lab') urlTab = 'central_gaming_hub';
+       if (['crypto', 'wallets', 'wallet', 'crypto_accounting', 'accounting', 'transfers'].includes(urlTab)) urlTab = 'unified_crypto';
+       if (urlTab && urlTab !== activeTab) {
+@@ -641,6 +641,9 @@ export default function App() {
+     chat: 'chat',
+     team_chat: 'chat',
+     mobile_chat: 'chat',
++    steam_gaming: 'central_gaming_hub',
++    gaming_lab: 'central_gaming_hub',
++    screen_mirror: 'ide',
+     vlc: 'video_streaming',
+     vlc_player: 'video_streaming',
+     video_streaming: 'video_streaming',
+@@ -758,6 +761,7 @@ export default function App() {
+ 
+   if (!isAuthenticated) {
+     return (
++      <TabErrorBoundary key="main-login"><Suspense fallback={<TabLoader />}>
+       <LoginModal 
+         onLoginSuccess={(user) => {
+           setIsAuthenticated(true);
+@@ -774,6 +778,7 @@ export default function App() {
+         }} 
+         backendUrl={backendUrl} 
+       />
++      </Suspense></TabErrorBoundary>
+     );
+   }
+ 
+@@ -798,7 +803,7 @@ export default function App() {
+         {!zenMode && navLayout === 'top' && (
+           <TopNavbar 
+             activeTab={activeTab}
+-            onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
++            onTabChange={(t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); setIsMobileDrawerOpen(false); }}
+             onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
+             navLayout={navLayout}
+             onToggleNavLayout={handleToggleNavLayout}
+@@ -830,7 +835,7 @@ export default function App() {
+               <>
+                 <Panel key="sidebar-panel" id="sidebar-panel" order={1} defaultSize={15} minSize={10} maxSize={30}>
+                   <aside className="sidebar-panel" style={{ height: '100%', overflow: 'hidden' }}>
+-                    <Sidebar activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setIsMobileMenuOpen(false); }} />
++                    <Sidebar activeTab={activeTab} onTabChange={(t) => { navigateWorkspaceTab(t); setIsMobileMenuOpen(false); }} />
+                   </aside>
+                 </Panel>
+ 
+@@ -922,7 +927,7 @@ export default function App() {
+                 </div>
+                 )}
+ 
+-                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
++                {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
+ 
+                 <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
+                   <div
+@@ -939,7 +944,8 @@ export default function App() {
+                               backendUrl={backendUrl} 
+                               currentUser={currentUser} 
+                               selectedModel={selectedModel} 
+-                              onNavigateTab={setActiveTab}
++                              onNavigateTab={navigateWorkspaceTab}
++                              wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
+                               workspaceMode={workspaceMode}
+                               onToggleWorkspaceMode={handleToggleWorkspaceMode}
+                             />
+@@ -948,7 +954,7 @@ export default function App() {
+                               tabKey={activeTabConfig.key}
+                               tabLabel={activeTabConfig.label}
+                               activeTier={userTier}
+-                              onNavigateToPricing={() => setActiveTab('public_checkout')}
++                              onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
+                             />
+                           )}
+                         </Suspense>
+@@ -961,7 +967,7 @@ export default function App() {
+           </PanelGroup>
+         ) : (
+           <main className="main-panel" style={{ flex: 1, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+-            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={setActiveTab} />}
++            {!zenMode && <SubTabBar activeTab={activeTab} onTabChange={navigateWorkspaceTab} />}
+ 
+             <div className="content-area flex-1 w-full h-full m-0 p-0" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: 0 }}>
+               <div
+@@ -978,7 +984,8 @@ export default function App() {
+                           backendUrl={backendUrl} 
+                           currentUser={currentUser} 
+                           selectedModel={selectedModel} 
+-                          onNavigateTab={setActiveTab}
++                          onNavigateTab={navigateWorkspaceTab}
++                          wirelessCastOpenRequest={activeTab === 'screen_mirror' ? wirelessCastOpenRequest + 1 : 0}
+                           workspaceMode={workspaceMode}
+                           onToggleWorkspaceMode={handleToggleWorkspaceMode}
+                         />
+@@ -987,7 +994,7 @@ export default function App() {
+                           tabKey={activeTabConfig.key}
+                           tabLabel={activeTabConfig.label}
+                           activeTier={userTier}
+-                          onNavigateToPricing={() => setActiveTab('public_checkout')}
++                          onNavigateToPricing={() => navigateWorkspaceTab('public_checkout')}
+                         />
+                       )}
+                     </Suspense>
+@@ -1060,7 +1067,7 @@ export default function App() {
+         <MobileBottomNav
+           activeTab={activeTab}
+           onTabChange={(t) => {
+-            setActiveTab(t);
++            navigateWorkspaceTab(t);
+             setIsMobileDrawerOpen(false);
+           }}
+           onOpenDrawer={() => setIsMobileDrawerOpen(true)}
+@@ -1072,7 +1079,7 @@ export default function App() {
+           onClose={() => setIsMobileDrawerOpen(false)}
+           activeTab={activeTab}
+           onTabChange={(t) => {
+-            setActiveTab(t);
++            navigateWorkspaceTab(t);
+             setIsMobileDrawerOpen(false);
+           }}
+           momMode={momMode}
+diff --git a/frontend/src/components/GlobalCommandPalette.jsx b/frontend/src/components/GlobalCommandPalette.jsx
+index 2f9b3555..d4b4711f 100644
+--- a/frontend/src/components/GlobalCommandPalette.jsx
++++ b/frontend/src/components/GlobalCommandPalette.jsx
+@@ -68,28 +68,6 @@ export default function GlobalCommandPalette({
+         if (onNavigateTab) onNavigateTab('screenwriting');
+       }
+     },
+-    {
+-      id: 'action-portal-fe-express',
+-      type: 'action',
+-      label: '🚚 Open FE Express Box Truck Dispatch Portal (Devin) (?tab=clients&client=fe_express)',
+-      icon: '🚚',
+-      category: 'Client Portals',
+-      action: () => {
+-        onClose();
+-        if (onNavigateTab) {
+-          onNavigateTab('clients');
+-          setTimeout(() => {
+-            const select = document.querySelector('select');
+-            if (select) {
+-              select.value = 'fe_express';
+-              select.dispatchEvent(new Event('change', { bubbles: true }));
+-            }
+-          }, 150);
+-        } else {
+-          window.location.href = '?tab=clients&client=fe_express';
+-        }
+-      }
+-    },
+     {
+       id: 'action-portal-banquet',
+       type: 'action',
+diff --git a/frontend/src/components/LoginModal.jsx b/frontend/src/components/LoginModal.jsx
+index f150b79e..976ae535 100644
+--- a/frontend/src/components/LoginModal.jsx
++++ b/frontend/src/components/LoginModal.jsx
+@@ -1,3 +1,4 @@
++import DevinPhoneLogin from './DevinPhoneLogin.jsx';
+ import React, { useState, useEffect } from 'react';
+ import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+ import { auth, googleProvider } from '../firebase';
+@@ -14,6 +15,7 @@ const isLocalDesktop = () => typeof window !== 'undefined' && (
+   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+ );
+ 
++/** @param {{onLoginSuccess: (user: any) => void, backendUrl: string}} props */
+ export default function LoginModal({ onLoginSuccess }) {
+   const [errorMsg, setErrorMsg] = useState('');
+   const [isSubmitting, setIsSubmitting] = useState(false);
+@@ -107,6 +109,9 @@ export default function LoginModal({ onLoginSuccess }) {
+           {isSubmitting ? 'Verifying...' : 'Sign in with Google'}
+         </button>
+ 
++        <DevinPhoneLogin onLoginSuccess={onLoginSuccess} />
++
++
+         <div style={{ margin: '15px 0', color: '#64748b', fontSize: '0.8rem' }}>— OR —</div>
+ 
+         {isLocalDesktop() && <button 
+@@ -145,6 +150,9 @@ const styles = {
+     padding: '40px',
+     borderRadius: '16px',
+     width: '350px',
++    maxWidth: 'calc(100vw - 32px)',
++    maxHeight: '90vh',
++    overflowY: 'auto',
+     textAlign: 'center',
+     border: '1px solid rgba(255, 255, 255, 0.1)',
+     background: 'rgba(15, 23, 42, 0.95)',
+diff --git a/frontend/src/components/clients/ClientsModule.jsx b/frontend/src/components/clients/ClientsModule.jsx
+index d4ac370f..7258a890 100644
+--- a/frontend/src/components/clients/ClientsModule.jsx
++++ b/frontend/src/components/clients/ClientsModule.jsx
+@@ -3,13 +3,13 @@ import JoeyHamilton from './JoeyHamilton.jsx';
+ import ActionGlass from './ActionGlass.jsx';
+ import JohnBarr from './JohnBarr.jsx';
+ import RecreationalDebut from './RecreationalDebut.jsx';
+-import FEExpressDispatcher from '../components/FEExpressDispatcher.jsx';
+ 
+ export default function ClientsModule({ backendUrl }) {
+   const getInitialClient = () => {
+     try {
+       const params = new URLSearchParams(window.location.search);
+-      return params.get("client") || "rec_debut";
++      const client = params.get("client");
++      return client && client !== "fe_express" ? client : "rec_debut";
+     } catch {
+       return "rec_debut";
+     }
+@@ -19,7 +19,6 @@ export default function ClientsModule({ backendUrl }) {
+ 
+   const clients = [
+     { id: "rec_debut", name: "🏀 Dennis Bell (Recreational Debut - RecDebut.com)" },
+-    { id: "fe_express", name: "🚚 FE Express (Box Truck Automation Hub)" },
+     { id: "john_barr", name: "John Barr (The Simple Chef)" },
+     { id: "joey_hamilton", name: "Joey Hamilton" },
+     { id: "action_glass", name: "ActionGlass" },
+@@ -77,8 +76,6 @@ export default function ClientsModule({ backendUrl }) {
+       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+         {selectedClient === "rec_debut" ? (
+           <RecreationalDebut BACKEND_URL={backendUrl} />
+-        ) : selectedClient === "fe_express" ? (
+-          <FEExpressDispatcher BACKEND_URL={backendUrl} />
+         ) : selectedClient === "john_barr" ? (
+           <JohnBarr BACKEND_URL={backendUrl} />
+         ) : selectedClient === "joey_hamilton" ? (

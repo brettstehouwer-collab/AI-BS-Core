@@ -1,0 +1,87 @@
+{
+  "observed_utc": "2026-10-25T22:26:20.3365824Z",
+  "scope": "read-only UDP67 owner, address adapter and ICS COM status; no mutations or network probes",
+  "udp67": [
+    {
+      "LocalAddress": "192.168.137.1",
+      "LocalPort": 67,
+      "OwningProcess": 5736
+    }
+  ],
+  "owners": [
+    {
+      "pid": 5736,
+      "exe": "C:\\WINDOWS\\System32\\svchost.exe",
+      "created_utc": "2026-10-25T22:13:06.0070420Z",
+      "owner": "NT AUTHORITY\\SYSTEM",
+      "services": [
+        {
+          "Name": "SharedAccess",
+          "State": "Running",
+          "StartMode": "Auto"
+        }
+      ]
+    }
+  ],
+  "matching_addresses": [
+    {
+      "IPAddress": "192.168.137.1",
+      "PrefixLength": 24,
+      "InterfaceIndex": 15,
+      "InterfaceAlias": "Wi-Fi 4",
+      "AddressState": 4
+    }
+  ],
+  "matching_adapters": [
+    {
+      "Name": "Wi-Fi 4",
+      "InterfaceDescription": "MediaTek Wi-Fi 7 MT7925 Wireless LAN Card",
+      "ifIndex": 15,
+      "Status": "Up",
+      "LinkSpeed": "0 bps",
+      "Virtual": false,
+      "HardwareInterface": true
+    }
+  ],
+  "ics_bindings": [
+    {
+      "name": "vEthernet (WSL (Hyper-V firewall))",
+      "device": "Hyper-V Virtual Ethernet Adapter",
+      "sharing_enabled": false,
+      "sharing_type": null
+    },
+    {
+      "name": "Bluetooth Network Connection",
+      "device": "Bluetooth Device (Personal Area Network)",
+      "sharing_enabled": false,
+      "sharing_type": null
+    },
+    {
+      "name": "Ethernet 2",
+      "device": "Realtek PCIe 2.5GbE Family Controller #2",
+      "sharing_enabled": false,
+      "sharing_type": null
+    },
+    {
+      "name": "Wi-Fi",
+      "device": "MediaTek Wi-Fi 7 MT7925 Wireless LAN Card",
+      "sharing_enabled": false,
+      "sharing_type": null
+    },
+    {
+      "name": "Ethernet",
+      "device": "Realtek PCIe 2.5GbE Family Controller",
+      "sharing_enabled": false,
+      "sharing_type": null
+    },
+    {
+      "name": "Tailscale",
+      "device": "Tailscale Tunnel",
+      "sharing_enabled": false,
+      "sharing_type": null
+    }
+  ],
+  "ics_read_error_type": null,
+  "ip_enable_router": 0,
+  "household_forwarding_path": "not established by this inspection"
+}

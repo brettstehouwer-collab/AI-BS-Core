@@ -35,7 +35,8 @@ export function useBackendHealth(intervalMs = 10000) {
 
     const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
 
-    const markOnline = (targetUrl) => {
+    /** @param {typeof backendUrl} targetUrl */
+const markOnline = ( targetUrl) => {
       if (!isMounted) return;
       setApiBase(targetUrl);
       setBackendUrl(targetUrl);
@@ -69,8 +70,8 @@ export function useBackendHealth(intervalMs = 10000) {
       // 1. Confirm the configured local core, then the optional Go gateway.
       if (isLocal) {
         const localTargets = [...new Set([
-          getApiBase(), 'http://127.0.0.1:8080', 'http://127.0.0.1:8000'
-        ])].filter(target => ['http://127.0.0.1:8080', 'http://127.0.0.1:8000'].includes(target));
+          getApiBase(), 'http://127.0.0.1:8000', 'http://127.0.0.1:8080'
+        ])].filter(target => ['http://127.0.0.1:8000', 'http://127.0.0.1:8080'].includes(target));
         for (const target of localTargets) {
           for (const path of ['/v1/health', '/api/health', '/health']) {
             if (!isMounted) return;

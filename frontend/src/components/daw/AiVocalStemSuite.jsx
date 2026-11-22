@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Sliders, Mic, Sparkles, RefreshCw, Download, Play, Square, Layers, 
-  Zap, CheckCircle2, AlertCircle, Volume2, Award, Music, Check, 
-  UploadCloud, FileAudio, Plus, HardDrive
-} from 'lucide-react';
-import { theme } from '../../styles/theme';
+import { useState, useEffect, useRef } from "react";
+import { Sliders, Mic, Sparkles, RefreshCw, Download, Play, Square, Layers, Zap, CheckCircle2, AlertCircle, Award, Check, UploadCloud } from "lucide-react";
+import "../../styles/theme";
 
+/** @param {{onSendStemToPlaylist?: (url: string, name: string) => void; onSendAllStemsToPlaylist?: (stems: import("/types/daw").Stem[], projectName: string) => void}} props */
 export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsToPlaylist }) {
   const [activeSubTab, setActiveSubTab] = useState('stems'); // 'stems' | 'vocal_gen' | 'projects'
   const [isProcessing, setIsProcessing] = useState(false);
@@ -15,18 +12,18 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
   const [stemProgress, setStemProgress] = useState(0);
   const [statusMessage, setStatusMessage] = useState('Demucs v4 CUDA Engine Ready on RTX 4090.');
   
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState(/** @type {import("/types/wave").StemSession[]} */ ([]));
   const [selectedSessionId, setSelectedSessionId] = useState('october_7v2_remastered');
-  const [activeAudioKey, setActiveAudioKey] = useState(null);
+  const [activeAudioKey, setActiveAudioKey] = useState(/** @type {string | null} */ (null));
   const [audioProgress, setAudioProgress] = useState(0);
-  const audioRef = useRef(null);
+  const audioRef = useRef(/** @type {HTMLAudioElement | null} */ (null));
 
   // Drag and Drop & Upload State
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(/** @type {File | null} */ (null));
+  const [uploadError, setUploadError] = useState(/** @type {string | null} */ (null));
   const [selectedModel, setSelectedModel] = useState('htdemucs');
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
 
   // Fetch real Demucs sessions from backend
   const fetchSessions = async () => {
@@ -73,6 +70,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
   };
 
   // Audio Play/Pause Handler
+  /** @param {string} stemKey @param {import("/types/wave").StemDetail} stemObj */
   const handlePlayToggle = (stemKey, stemObj) => {
     if (activeAudioKey === stemKey) {
       if (audioRef.current) {
@@ -109,18 +107,21 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
   };
 
   // File Drop and Selection Handlers
+  /** @param {import("react").DragEvent} e */
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   };
 
+  /** @param {import("react").DragEvent} e */
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   };
 
+  /** @param {import("react").DragEvent} e */
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -133,6 +134,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
     }
   };
 
+  /** @param {import("react").ChangeEvent<HTMLInputElement>} e */
   const handleFileInputChange = (e) => {
     setUploadError(null);
     if (e.target.files && e.target.files.length > 0) {
@@ -140,6 +142,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
     }
   };
 
+  /** @param {File} file */
   const processSelectedFile = (file) => {
     const validExts = ['.mp3', '.wav', '.flac', '.ogg', '.m4a', '.aac', '.wma', '.aiff'];
     const lowerName = file.name.toLowerCase();
@@ -155,6 +158,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
   };
 
   // Upload to Backend and Trigger Demucs v4
+  /** @param {File} fileToUpload */
   const handleUploadAndSeparate = async (fileToUpload) => {
     const file = fileToUpload || selectedFile;
     if (!file) return;
@@ -197,18 +201,20 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
       setSelectedFile(null);
     } catch (err) {
       console.error('Stem extraction failed:', err);
-      setUploadError(`Separation failed: ${err.message}`);
+      setUploadError(`Separation failed: ${(err instanceof Error ? err.message : String(err))}`);
       setStatusMessage('Separation halted. Check backend logs.');
     } finally {
       setIsProcessing(false);
     }
   };
 
+  /** @param {number} bytes */
   const formatSize = (bytes) => {
     if (!bytes) return '';
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  /** @param {string} key */
   const getStemColor = (key) => {
     switch (key) {
       case 'vocals': return '#a855f7';
@@ -224,6 +230,7 @@ export default function AiVocalStemSuite({ onSendStemToPlaylist, onSendAllStemsT
     }
   };
 
+  /** @param {string} key */
   const getStemLabel = (key) => {
     switch (key) {
       case 'vocals': return '🎤 Isolated Vocals';

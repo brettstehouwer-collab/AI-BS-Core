@@ -1,0 +1,33 @@
+{
+  "timestamp_utc": "2026-11-14T20:21:24.832313+00:00",
+  "status": "VERIFIED_LIVE",
+  "url": "https://stehouwer-publishing.com/",
+  "backup": "C:\\AI-BS\\backups\\publishing_live_20261114T201454Z",
+  "retained_dist": "C:\\StehouwerPublishing.com\\website-rebuild\\dist-before-20261114T201454Z",
+  "reviewed_local_files_sha256_verified": 37,
+  "preserved_extra_files": 17,
+  "public_release_file_checks": {
+    "passed": 37,
+    "total": 37
+  },
+  "public_route_checks": {
+    "passed": 15,
+    "total": 15
+  },
+  "preflight": {
+    "node_tests": 24,
+    "browser_checks": 14,
+    "parsed_shipping_modules": 21,
+    "build_exit": 0
+  },
+  "nginx_reloaded": true,
+  "cloudflare_targeted_purge_urls": 30,
+  "cloudflare_security_preferences_unchanged": true,
+  "backend_changed": false,
+  "dashboard_changed": false,
+  "production_synthetic_events_seeded": false,
+  "source_patch": "C:\\AI-BS\\backups\\publishing_live_20261114T201454Z\\website-source.patch",
+  "nginx_patch": "C:\\AI-BS\\backups\\publishing_live_20261114T201454Z\\nginx-final.patch",
+  "screenshot": "C:\\AI-BS\\backups\\publishing_live_20261114T201454Z\\live-home.png",
+  "statistics_candidates": "staged; not activated"
+}

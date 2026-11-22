@@ -1,0 +1,14 @@
+D drive read-only space review — 2026-11-04T22:26:11.914096+00:00
+
+24.1GiB freeof475.7GiB. No D file was moved, deleted, compressed or uploaded. Backup scope remains C plus the198E music files.
+
+Largest allocated folders:
+D:\AI-BS-ComfyUI-Models: 196.55GiB
+D:\AI-BS-Game-Resources: 121.36GiB
+D:\Windows_Backup_2026: 67.79GiB
+D:\huggingface_cache: 24.13GiB
+D:\.gradle: 7.75GiB
+
+Old derived test captures and compiler artifacts are candidates for further compression review, not a deletion/compression allowlist. The49.29GiB of BMP files and large symbol/linker files are occupied sizes, not proven reclaimable amounts. Models, backup sets, family references, recordings, saves, releases and failure evidence remain retained.
+
+Metadata-only census:646453files/161464directories. One inaccessible system directory,36HuggingFace links notfollowed. No semantic document review is claimed. Full evidence: E:\AI_BS_Resources\Storage_Recovery\2026-11-04\phase2_project_review\d_space_review_summary.json

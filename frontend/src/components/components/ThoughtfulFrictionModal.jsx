@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { getApiBase } from '../config/api';
 
 const ADMIN_EMAILS = [
@@ -15,9 +15,10 @@ const ADMIN_EMAILS = [
   'devin@feexpress.com'
 ];
 
+/** @param {{"currentUser": import('firebase/auth').User | null}} props */
 export default function ThoughtfulFrictionModal({ currentUser }) {
-  const [frictionPayload, setFrictionPayload] = useState(null);
-  const [socket, setSocket] = useState(null);
+  const [frictionPayload, setFrictionPayload] = useState(/** @type {{"action": string, "friction_id": string, "diagnostic_trace": string} | null} */ (null));
+  const [] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check if current user is an Admin
@@ -52,7 +53,8 @@ export default function ThoughtfulFrictionModal({ currentUser }) {
 
   const [password, setPassword] = useState('');
   
-  const handleResolve = async (approved) => {
+  /** @param {boolean} approved */
+const handleResolve = async ( approved) => {
     if (!frictionPayload) return;
     
     // Admin password check for destructive actions

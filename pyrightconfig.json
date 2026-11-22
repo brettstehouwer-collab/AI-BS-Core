@@ -1,0 +1,8 @@
+{
+  "extraPaths": [
+    "c:/AI-BS/backend",
+    "c:/AI-BS"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "none"
+}

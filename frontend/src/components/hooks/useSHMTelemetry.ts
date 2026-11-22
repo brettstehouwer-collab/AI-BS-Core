@@ -24,103 +24,71 @@ export interface GPUStats {
   fps: number;
 }
 
-export function useSHMTelemetry() {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [heartbeatActive, setHeartbeatActive] = useState<boolean>(true);
-  const [lastHealedEvent, setLastHealedEvent] = useState<string | null>(null);
-  const [astEvents, setAstEvents] = useState<ASTEvent[]>([]);
-  const [tensorEvents, setTensorEvents] = useState<TensorEvent[]>([]);
-  const [gpuStats, setGpuStats] = useState<GPUStats>({
-    model: 'SDXL_Turbo',
-    step: 18,
-    total_steps: 30,
-    vram_used_mb: 18432,
-    vram_total_mb: 24576,
-    fps: 24.5
-  });
+export interface SHMTelemetryFrame {
+  timestamp: number; status: string; shm_active: true; magic: string;
+  head: number; tail: number; total_pushed: number; total_popped: number;
+  topics: Record<string, {name: string; latency_us: number; status: string}>;
+}
 
-  const [telemetryData, setTelemetryData] = useState<any>({
-    status: 'OFFLINE',
-    head: 0,
-    tail: 0,
-    total_pushed: 0,
-    total_popped: 0,
-    topics: {
-      '0x0001': { name: 'TOPIC_PREDICTIVE_TENSORS', latency_us: 2.61, status: 'OK' },
-      '0x0002': { name: 'TOPIC_VNC_FRAME_METRICS', latency_us: 4.36, status: 'OK' },
-      '0x0003': { name: 'TOPIC_HEURISTICS_TELEMETRY', latency_us: 5.06, status: 'OK' },
-      '0x0004': { name: 'TOPIC_SYSTEM_STATE_HEARTBEAT', latency_us: 1.00, status: 'OK' },
-      '0x0005': { name: 'TOPIC_ZERO_COPY_VECTOR_TENSORS', latency_us: 1.80, status: 'OK' },
-      '0x0006': { name: 'TOPIC_COMFYUI_GPU_RENDER', latency_us: 3.20, status: 'OK' }
-    }
-  });
+function readFrame(value: unknown): SHMTelemetryFrame | null {
+  if (!value || typeof value !== 'object') return null;
+  const data = value as Record<string, unknown>;
+  if (data.shm_active !== true || data.magic !== '0xA1B51996' || data.status !== 'HEALTHY'
+      || typeof data.timestamp !== 'number' || !Number.isFinite(data.timestamp)) return null;
+  const count = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+  if (!count(data.head) || !count(data.tail) || !count(data.total_pushed) || !count(data.total_popped)) return null;
+  // The current gateway's topic timings are constants, not observations. It emits no event/GPU frames.
+  return {timestamp: data.timestamp, status: data.status, shm_active: true, magic: data.magic,
+    head: data.head, tail: data.tail, total_pushed: data.total_pushed, total_popped: data.total_popped, topics: {}};
+}
 
+export function useSHMTelemetry(options: {fallbackUrl?: string; useBackendUrl?: boolean; retryDelay?: number} = {}) {
+  const [isConnected, setIsConnected] = useState(false);
+  const [heartbeatActive, setHeartbeatActive] = useState(false);
+  const [lastHealedEvent] = useState<string | null>(null);
+  const [astEvents] = useState<ASTEvent[]>([]);
+  const [tensorEvents] = useState<TensorEvent[]>([]);
+  const [gpuStats] = useState<GPUStats | null>(null);
+  const [telemetryData, setTelemetryData] = useState<SHMTelemetryFrame | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const {fallbackUrl, useBackendUrl, retryDelay = 3000} = options;
 
   useEffect(() => {
-    let wsUrl = (import.meta as any).env?.VITE_WS_URL;
-    if (!wsUrl) {
-      if (typeof window !== 'undefined') {
-        if ((import.meta as any).env?.DEV) {
-          wsUrl = 'ws://127.0.0.1:8000/ws/shm_telemetry';
-        } else {
-          wsUrl = 'ws://localhost:8000/ws/shm_telemetry';
-        }
-      } else {
-        wsUrl = 'ws://localhost:8000/ws/shm_telemetry';
-      }
-    }
-
-    const connectWebSocket = () => {
+    const env = import.meta.env;
+    const wsUrl = env.VITE_WS_URL || (useBackendUrl && env.VITE_BACKEND_URL
+      ? env.VITE_BACKEND_URL.replace(/^http/, 'ws') + '/ws/shm_telemetry'
+      : fallbackUrl || (env.DEV ? 'ws://127.0.0.1:8000/ws/shm_telemetry' : 'ws://localhost:8000/ws/shm_telemetry'));
+    let mounted = true;
+    let retry: ReturnType<typeof setTimeout> | null = null;
+    const unavailable = () => { setIsConnected(false); setHeartbeatActive(false); setTelemetryData(null); };
+    const schedule = () => { if (mounted && retry === null) retry = setTimeout(() => {retry = null; connect();}, retryDelay); };
+    const connect = () => {
+      if (!mounted) return;
       try {
         const ws = new WebSocket(wsUrl);
         wsRef.current = ws;
-
-        ws.onopen = () => {
-          setIsConnected(true);
-          setHeartbeatActive(true);
-        };
-
-        ws.onmessage = (event) => {
+        ws.onopen = () => { if (mounted && wsRef.current === ws) setIsConnected(true); };
+        ws.onmessage = event => {
+          if (!mounted || wsRef.current !== ws) return;
           try {
-            const data = JSON.parse(event.data);
-            setTelemetryData(data);
-            setIsConnected(true);
-            setHeartbeatActive(true);
-
-            if (data.ast_event) setAstEvents((prev) => [data.ast_event, ...prev.slice(0, 19)]);
-            if (data.tensor_event) setTensorEvents((prev) => [data.tensor_event, ...prev.slice(0, 19)]);
-            if (data.gpu_stats) setGpuStats(data.gpu_stats);
-          } catch (e) {
-            console.error('Failed to parse SHM telemetry frame', e);
-          }
+            const data: unknown = typeof event.data === 'string' ? JSON.parse(event.data) : null;
+            const frame = readFrame(data);
+            if (!frame) {unavailable(); return;}
+            setTelemetryData(frame); setIsConnected(true); setHeartbeatActive(true);
+          } catch { unavailable(); }
         };
-
-        ws.onerror = () => setIsConnected(false);
-        ws.onclose = () => {
-          setIsConnected(false);
-          setTimeout(connectWebSocket, 3000);
-        };
-      } catch (err) {
-        setIsConnected(false);
-        setTimeout(connectWebSocket, 3000);
-      }
+        ws.onerror = () => {if (mounted && wsRef.current === ws) unavailable();};
+        ws.onclose = () => {if (mounted && wsRef.current === ws) {unavailable(); schedule();}};
+      } catch {unavailable(); schedule();}
     };
-
-    connectWebSocket();
-
+    connect();
     return () => {
-      if (wsRef.current) wsRef.current.close();
+      mounted = false;
+      if (retry !== null) clearTimeout(retry);
+      const ws = wsRef.current;
+      if (ws) {ws.onopen = null; ws.onmessage = null; ws.onerror = null; ws.onclose = null; ws.close();}
+      wsRef.current = null;
     };
-  }, []);
-
-  return {
-    isConnected,
-    heartbeatActive,
-    lastHealedEvent,
-    astEvents,
-    tensorEvents,
-    gpuStats,
-    telemetryData
-  };
+  }, [fallbackUrl, useBackendUrl, retryDelay]);
+  return {isConnected, heartbeatActive, lastHealedEvent, astEvents, tensorEvents, gpuStats, telemetryData};
 }

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-14T16:46:25.012029+00:00",
+  "status": "ANDROID_INSTALLATION_AND_LOGIN_ACCEPTED",
+  "version": "1.0/1",
+  "installation": "Assistant package-manager verified",
+  "login": "USER_REPORTED_PASS",
+  "evidence_source": "Explicit user report in this chat",
+  "app_workflow_fully_qualified": false,
+  "optional_1_0_1_candidate_promoted": false,
+  "accepted_source_and_apk_preserved": true,
+  "private_identifiers_included": false,
+  "remaining": [
+    "Chat response/streaming/reconnect qualification",
+    "Production signing and broader release acceptance"
+  ]
+}

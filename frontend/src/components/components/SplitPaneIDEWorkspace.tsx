@@ -1,5 +1,5 @@
-import React from 'react';
-import ChatTab from '../../components/ChatTab';
+import "react";
+import ChatTab from './ChatTab';
 import WebGLRenderBridge from './WebGLRenderBridge';
 import ChatToolControlBar from './ChatToolControlBar';
 
@@ -33,7 +33,7 @@ export default function SplitPaneIDEWorkspace() {
         <ChatToolControlBar />
 
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          <ChatTab />
+          <ChatTab isNested />
         </div>
       </div>
 

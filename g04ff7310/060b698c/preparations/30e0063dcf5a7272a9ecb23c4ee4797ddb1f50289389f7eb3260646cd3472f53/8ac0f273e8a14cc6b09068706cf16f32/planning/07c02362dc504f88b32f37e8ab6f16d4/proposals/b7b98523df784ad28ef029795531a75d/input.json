@@ -1,0 +1,96 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "8ac0f273e8a14cc6b09068706cf16f32",
+  "plan_id": "07c02362dc504f88b32f37e8ab6f16d4",
+  "snapshot_sha256": "c1abbd650159605a98c8679ca7ba947f8c712de55de737c7fac0526deb4682b0",
+  "review_digest": "fd6259daee7a360f28a806bb3a984f7d09fd1b3e635481fad7d2cd96bb833d52",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "b7b98523df784ad28ef029795531a75d",
+  "reviewed_plan_sha256": "d002b2a9fa5567f8479734c3025229684c03109db06cc23c928d87173cd1581e",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        },
+        {
+          "path": "src/App.jsx",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      },
+      {
+        "path": "src/App.jsx",
+        "role": "editable",
+        "sha256": "7d6571bf1b9756186d93f0f105e6ae88746da743b70020b4d9139eb1bf712bb4",
+        "content": "export default function App() { const value = 1; return <span>{value}</span>; }\n",
+        "source_complete": true
+      },
+      {
+        "path": "package.json",
+        "role": "dependency",
+        "sha256": "0d0ab98503da8f39fbef4ba5d6321a4dc0c39307cd2c5abfa97f05e42d6d2914",
+        "content": "{\"scripts\":{\"test\":\"do-not-execute\"}}",
+        "source_complete": true
+      },
+      {
+        "path": "package-lock.json",
+        "role": "dependency",
+        "sha256": "2086223f909ecaf4b063cfc7e8187ab73e8e8a24ec7029d54e0403dee55a3265",
+        "content": "{\"lockfileVersion\":3}",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      },
+      {
+        "check_id": "frontend",
+        "argv": [
+          "npm",
+          "run",
+          "test"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py",
+      "src/App.jsx"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "5cd4e84b061b5e23862c482d55bdf0d130425ff884c4ce612c2f63f3ea28af65",
+  "worker": {
+    "pid": 33296,
+    "created": 1794779753.3821661
+  },
+  "created_at_utc": "2026-11-15T21:56:00.368199+00:00",
+  "entry_sha256": "a072892f701636cb169048a2f5056b5b3d2226963bcf20de6a1eceb905ba4491"
+}

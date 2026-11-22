@@ -1,0 +1,4 @@
+RESTORATION COMPLETE — 2026-10-25T21:41:10.858939+00:00
+Public root and www both200; functional homepage boots at390/1440 with JS/CSS loaded. Reviewed19-file static origin is loopback-only and logon-task managed. Original dist unchanged; private/tracking files excluded and8publicnegativepaths404. Paired ingress/config admission consistent; API/core/SYSTEM peers preserved. No household or nonhyphenatedDNSchange.
+Known limits: mobile135px overflow; missing background and3samplePDFs; legacy unsafe form-value analytics omitted; existingCloudflareInsights blocked during smoke; one handoffhealthassertion failed with unknownspecificresponse, currentAPIhealthy. No zero-outage/full-API/reboot acceptanceclaim.
+Next peroperator: verifyCodexPID33936/memorycommit/pagefile/disk snapshot before othermajorwork. No Codex/pagefile changeauthorized yet.

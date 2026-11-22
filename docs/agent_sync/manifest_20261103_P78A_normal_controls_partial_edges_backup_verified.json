@@ -1,0 +1,34 @@
+{
+  "at": "2026-11-04T03:41:51.651780+00:00",
+  "status": "MIXED_NORMAL_CONTROLS_REPAIR_EDGES_PASS_RETAINED_FEED_LOSS_FAILURE_BACKUP_VERIFIED",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "working_tree_status_local": "D:\\AI-BS-Game-Resources\\P78\\Normal106Controls\\local-worktree-status.txt",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\78A_Normal106_Controls_Partial_Edges.zip",
+    "bytes": 541463,
+    "sha256": "3e9257d29be8914ead6a3fb8822a4cdbc410123ddda36247d5de915b246f8e15",
+    "members": 98,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T03:41:24.633479+00:00",
+    "drive_folder_id": "1uA0sQuTWctcaqdxexVuFKhpE73fmMtWC",
+    "drive_file_id": "1oLaBpt1dICsisCcpDM_cZeL1cdHXQtuP",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "verification": "D:\\AI-BS-Game-Resources\\P78\\Normal106Controls\\verification.json",
+  "project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "39269fce55ee4e812011c016609f254d0b41de212a14c10e60a9a412ea2d58b3",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "0ee5cd82ae502b290b47bf703eab3c894487b068ca9a29bf0780e4cea4fc7ed3",
+    "C:\\AI-BS\\docs\\game_engine\\NORMAL106_CONTROL_ACCEPTANCE.md": "e96091ce8e8a8f1c895ff94dd83f3df6a9ee90503e2813287eab17db99d650d7",
+    "C:\\AI-BS\\docs\\game_engine\\WARM_BEGINNING_ACCEPTANCE_AUDIT.md": "9b35665a17666bcdc1ac29968607aa5d7d21ea4582656acd9e92a41903a08fa9"
+  },
+  "owned_job_count": 13,
+  "expected_or_failed_exit1_jobs": 3,
+  "all_jobs_drained_without_forced_termination": true,
+  "runtime_and_SDK_unchanged": true,
+  "next_step": "Adapt legacy diagnostic isolation approach to current authored switch geometry before completing bypass feed-loss/rebuild; preserve all failed evidence and normal proof guard. Review wall-facing normal return camera. P78normal companion/F9/restart and repair edge checks pass; full route matrix, human pacing/FPS, likeness/captions and final package/backup remain.",
+  "goal_complete": false
+}

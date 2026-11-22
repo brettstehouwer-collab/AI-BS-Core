@@ -1,0 +1,5 @@
+{
+  "ExpectedRed": true,
+  "ExitCode": 5,
+  "Cause": "Missing bounded worker launcher module"
+}

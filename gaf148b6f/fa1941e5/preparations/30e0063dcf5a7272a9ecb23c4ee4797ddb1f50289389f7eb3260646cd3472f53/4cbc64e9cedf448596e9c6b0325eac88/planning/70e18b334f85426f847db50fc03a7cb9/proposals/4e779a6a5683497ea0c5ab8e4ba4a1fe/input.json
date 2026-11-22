@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "4cbc64e9cedf448596e9c6b0325eac88",
+  "plan_id": "70e18b334f85426f847db50fc03a7cb9",
+  "snapshot_sha256": "f99295942d95811e66bca0f3ee71e9cc89704e974bc2442094f90dc4c7959d7e",
+  "review_digest": "bc85db9aece22bd1dc23dc2f09ec9f8dfc47695748f64f011a02897130e14514",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "4e779a6a5683497ea0c5ab8e4ba4a1fe",
+  "reviewed_plan_sha256": "2dcc981ead0077feb139b51dc8fc83074331bda4ef153d9ee08b1230106f273e",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 40304,
+    "created": 1794782619.3812244
+  },
+  "created_at_utc": "2026-11-15T22:43:45.076610+00:00",
+  "entry_sha256": "cefb47cbec1d9cd1f77560964c93c90d593f3b61f1a220924383f3db365e3045"
+}

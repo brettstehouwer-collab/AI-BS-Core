@@ -7,6 +7,7 @@ const routes = [
   ['emailConfig', 'email-api/config'],
 ];
 
+/** @param {string} baseUrl @param {{fetchImpl?: typeof fetch; signal?: AbortSignal}} [options] */
 export async function loadRecdebutSnapshot(baseUrl, { fetchImpl = globalThis.fetch, signal } = {}) {
   const entries = await Promise.all(routes.map(async ([name, route]) => {
     const response = await fetchImpl(`${baseUrl.replace(/\/$/, '')}/api/v1/recdebut/${route}`, {
@@ -20,7 +21,8 @@ export async function loadRecdebutSnapshot(baseUrl, { fetchImpl = globalThis.fet
     }
     const data = await response.json();
     if (!data || data.success !== true) throw new Error(`RecDebut could not load ${route}.`);
-    const arrayKey = {athletes:'athletes', campaigns:'campaigns', coaches:'coaches', smtp:'accounts', replies:'replies'}[name];
+    const arrayKeys = /** @type {Record<string, string>} */ ({athletes:'athletes', campaigns:'campaigns', coaches:'coaches', smtp:'accounts', replies:'replies'});
+    const arrayKey = arrayKeys[name];
     if (arrayKey && !Array.isArray(data[arrayKey])) throw new Error(`Invalid ${route} response.`);
     if (name === 'stats' && ['total','contacted','pending','emails','coaches','campaigns'].some(key =>
       !Number.isFinite(data[key]) || data[key] < 0)) throw new Error('Invalid stats response.');

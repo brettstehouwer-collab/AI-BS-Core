@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "SOURCE_ONLY_CONSUMER_INVENTORY",
+  "private_data_access": "No key, environment-file, ciphertext or private-store contents read; no target modules imported or executed.",
+  "consumers": [
+    {
+      "path": "backend/crypto_trader_bot.py",
+      "role": "reader",
+      "source_lines": [36, 51, 126, 138],
+      "format": "cryptography.fernet.Fernet, detected by gAAAAA prefix",
+      "key_precedence": ["backend/vault_master.key", "vault_master.key only when backend key absent"],
+      "environment_precedence": "root .env then backend .env, later fields override; decryption helper applied to parsed values during import",
+      "failure": "Generic log and empty credential on decryption failure; nonmatching values pass through unchanged"
+    },
+    {
+      "path": "backend/Vault_Auto_Scanner.py",
+      "role": "writer",
+      "source_lines": [218, 260, 265, 280],
+      "behavior": "Generates missing backend key; encrypts three named credential fields; rewrites backend environment file in place",
+      "migration_limits": "No inspected transactional migration, key-version envelope or rollback; main then initiates multi-drive ingestion, so do not run as a migration utility"
+    },
+    {
+      "path": "backend/test_ccxt.py",
+      "role": "credential-backed test consumer",
+      "source_lines": [8, 18],
+      "behavior": "Uses real trader decryption helper; not a safe synthetic migration unit test"
+    },
+    {
+      "path": "backend/test_web3.py",
+      "role": "held legacy reference, not an actual current key-file reader",
+      "behavior": "Imports commercial_gateway/gpu_network_router.py compatibility helper, which currently calls the verified-network execution hold rather than decrypting a key"
+    }
+  ],
+  "risks": [
+    "Missing-key generation can leave old Fernet tokens unreadable under a new key",
+    "Root/backend precedence can conceal which preserved key each encrypted value needs",
+    "No inspected application-level key ID/version",
+    "Prefix-only writer check can double-encrypt quoted ciphertext",
+    "In-place environment rewriting lacks inspected atomic publication or rollback",
+    "Untracking/replacing a key neither migrates ciphertext nor removes old copies"
+  ],
+  "coverage": "Scoped current readable source search across backend/core/security, root Python and native/security references; archive/vendor/release trees excluded; native_studio/sign_exe.py inaccessible to reviewer",
+  "unverified": ["key presence/validity", "encrypted record counts", "decryptability", "private ACLs", "running consumers", "complete remote/history exposure"],
+  "next": "Design inert format/canary and interruption/rollback tests before any private preservation or migration; never use live credential tests or scanner startup as validation."
+}

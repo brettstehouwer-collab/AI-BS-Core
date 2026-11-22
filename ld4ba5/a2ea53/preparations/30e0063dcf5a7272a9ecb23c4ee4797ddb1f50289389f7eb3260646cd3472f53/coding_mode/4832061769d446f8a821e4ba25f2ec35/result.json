@@ -1,0 +1,36 @@
+{
+  "kind": "trusted_local_result",
+  "input_sha256": "3e3b18d7c613f1f6d18e3eb222470b236c73036cc9598e84837f2a3f6f0906aa",
+  "state": "FAILED",
+  "checks": [
+    {
+      "check_id": "python",
+      "returncode": 1,
+      "error": null,
+      "execution_time_ms": 94,
+      "stdout": "",
+      "stderr": "F\r\n======================================================================\r\nFAIL: test_failure (tests.test_app.Check.test_failure)\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"C:\\AI-BS\\",
+      "preview_truncated": true,
+      "log_file": "check_logs\\python.json",
+      "log_sha256": "1999c4cdaedaa421e4eecee3707a8e8a9deeb251a416bb6e5f7585704de9455f"
+    }
+  ],
+  "static_checks": [
+    {
+      "path": "src/app.py",
+      "kind": "syntax",
+      "status": "passed"
+    }
+  ],
+  "started_at": 1794665605.9478123,
+  "worker": null,
+  "resource_limits": {
+    "cpu_percent": 20,
+    "job_memory_bytes": 536870912,
+    "below_normal_priority": true
+  },
+  "npm_policy": "Selected script may use a shell; pre/post lifecycle hooks disabled; no installation requested.",
+  "finished_at": 1794665606.0674913,
+  "runtime_seal": "a67f1149eaed82ff330f76e60dee1492c72130cbb4aca058b35d66a9d428aa84",
+  "entry_sha256": "3874de5b325241336cb4abbd56410a042d704ea4b2c453c37f6dafd49ab1486c"
+}

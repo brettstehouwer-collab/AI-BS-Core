@@ -1,0 +1,72 @@
+{
+  "record": 194,
+  "status": "history_uploaded; names, sizes and folder read back",
+  "files": [
+    {
+      "id": "1AYHWCSxxzChBZp03AVnL2J9HBu-bSEeN",
+      "title": "NETWORK_WORKSPACE_AUDIT_2026-10-30.md",
+      "mime_type": null,
+      "size": "12061",
+      "url": "https://drive.google.com/file/d/1AYHWCSxxzChBZp03AVnL2J9HBu-bSEeN/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1AYHWCSxxzChBZp03AVnL2J9HBu-bSEeN/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1p_IjrsLZYQtDXvPX-RmQv8wDp3Tfo4ca",
+      "title": "AI-BS_Network_Audit_Record194_2026-10-30.zip",
+      "mime_type": null,
+      "size": "1254985",
+      "url": "https://drive.google.com/file/d/1p_IjrsLZYQtDXvPX-RmQv8wDp3Tfo4ca/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1p_IjrsLZYQtDXvPX-RmQv8wDp3Tfo4ca/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    {
+      "id": "1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_",
+      "title": "2026-10-30_Codex_Engineering_Ledger.md",
+      "mime_type": null,
+      "size": "728661",
+      "url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1oORsuPpXiQjrWzLqoWu4xw_Dp5DFM7i_/view?usp=drivesdk",
+      "file_or_folder": null,
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1EP7kfZ2zxEzS6WdvB2ipzQXlc3LbAHse"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  ],
+  "archive_payload_files": 12,
+  "credentials_raw_traffic_and_source_backups_uploaded": false,
+  "application_source_changed": false,
+  "service_or_financial_actions_performed": false,
+  "critical_findings_open": 2,
+  "provider_checksum_readback": "not exposed by connector; no cloud byte-equivalence claim"
+}

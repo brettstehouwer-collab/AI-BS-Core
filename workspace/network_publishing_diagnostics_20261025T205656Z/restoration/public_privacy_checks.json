@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-25T21:39:52.955251+00:00",
+  "checks": [
+    {
+      "path": "/ledger.html",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/invoice.html",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/invoice.pdf",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/.env",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/indexnow_key.txt",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/analytics.js",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/security-shield.js",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    },
+    {
+      "path": "/api/health",
+      "status": 404,
+      "body_not_retained": true,
+      "not_published": true
+    }
+  ],
+  "all_pass": true
+}

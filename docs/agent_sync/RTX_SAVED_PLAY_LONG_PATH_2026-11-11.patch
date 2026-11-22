@@ -1,0 +1,198 @@
+--- a/native_studio/game_engine/saved_play_storage.py
++++ b/native_studio/game_engine/saved_play_storage.py
+@@ -73,6 +73,27 @@
+     return value
+ 
+ 
++def _io_path(path, *, recursive=False):
++    """Use extended Windows spelling for I/O, keeping public identities lexical.
++
++    This is not a resolver or an admission check. Callers still validate every
++    logical ancestor and pin directory handles before reading or mutating it.
++    """
++    p = Path(path)
++    if os.name != 'nt':
++        return p
++    value = os.path.abspath(p)
++    if value.startswith('\\\\?\\'):
++        return Path(value)
++    # Preserve ordinary spelling where Windows APIs already support it. The
++    # directory creation boundary is lower than MAX_PATH's file boundary.
++    if not recursive and len(value) < 248:
++        return p
++    if value.startswith('\\\\'):
++        return Path('\\\\?\\UNC\\' + value[2:])
++    return Path('\\\\?\\' + value)
++
++
+ def checked_path(path, *, directory=None, missing=False):
+     """Inspect every lexical ancestor before resolving or using an owned path."""
+     p = Path(path)
+@@ -81,7 +102,7 @@
+     p = Path(os.path.abspath(p))
+     for member in (*reversed(p.parents), p):
+         try:
+-            info = member.lstat()
++            info = _io_path(member).lstat()
+         except FileNotFoundError:
+             if missing:
+                 continue
+@@ -90,7 +111,7 @@
+             raise ValueError('Saved-play paths cannot use links or junctions')
+         if member != p and not stat.S_ISDIR(info.st_mode):
+             raise ValueError('Saved-play ancestor is not a directory')
+-    if p.exists() and directory is not None and p.is_dir() != directory:
++    if _io_path(p).exists() and directory is not None and _io_path(p).is_dir() != directory:
+         raise ValueError('Unexpected saved-play path type')
+     return p
+ 
+@@ -113,7 +134,7 @@
+     # OPEN_REPARSE_POINT inspects the terminal entry itself. Omitting
+     # SHARE_DELETE pins directory names; a read also denies concurrent writes.
+     flags = 0x00200000 | (0x02000000 if directory else 0x08000000)
+-    handle = create(str(path), 0x80000000 if read else 0, 1 if read else 3,
++    handle = create(str(_io_path(path)), 0x80000000 if read else 0, 1 if read else 3,
+                     None, 3, flags, None)
+     if handle == ctypes.c_void_p(-1).value:
+         raise ctypes.WinError(ctypes.get_last_error())
+@@ -156,12 +177,12 @@
+                 close(handle);raise
+             with os.fdopen(fd, 'rb') as stream:yield stream
+         else:
+-            with p.open('rb') as stream:yield stream
++            with _io_path(p).open('rb') as stream:yield stream
+ 
+ 
+ def _new_directory(path):
+     p = checked_path(path, directory=True, missing=True)
+-    with _pinned_directory(p.parent):p.mkdir()
++    with _pinned_directory(p.parent):_io_path(p).mkdir()
+     return checked_path(p, directory=True)
+ 
+ 
+@@ -169,14 +190,14 @@
+     checked_path(source, directory=True)
+     checked_path(destination, directory=True, missing=True)
+     with _pinned_directory(source.parent), _pinned_directory(destination.parent):
+-        os.rename(source, destination)
++        os.rename(_io_path(source), _io_path(destination))
+ 
+ 
+ def _mkdir(path):
+     p = checked_path(path, directory=True, missing=True)
+     with _pinned_directory(p.parent):
+         try:
+-            p.mkdir()
++            _io_path(p).mkdir()
+         except FileExistsError:
+             pass
+     return checked_path(p, directory=True)
+@@ -184,7 +205,7 @@
+ 
+ def _read(path, limit):
+     p = checked_path(path, directory=False)
+-    size = p.stat().st_size
++    size = _io_path(p).stat().st_size
+     if not 0 < size <= limit:
+         raise ValueError('Saved-play file byte limit')
+     with _reader(p) as stream:
+@@ -200,7 +221,7 @@
+ def _write_new(path, raw):
+     p = checked_path(path, directory=False, missing=True)
+     with _pinned_directory(p.parent):
+-        with p.open('xb') as stream:
++        with _io_path(p).open('xb') as stream:
+             stream.write(raw)
+             stream.flush()
+             os.fsync(stream.fileno())
+@@ -321,10 +342,12 @@
+ 
+ def _entries(directory, maximum):
+     values = []
+-    for entry in directory.iterdir():
++    for entry in _io_path(directory).iterdir():
+         if len(values) == maximum:
+             raise ValueError('Saved publication directory member limit')
+-        values.append(entry)
++        # Extended spelling belongs only to the filesystem call, not records,
++        # relative membership checks, native arguments or public return values.
++        values.append(directory / entry.name)
+     return values
+ 
+ 
+@@ -355,7 +378,7 @@
+                 raise ValueError('Staged saved chapter payload identity/type changed')
+             for p in entries:
+                 checked_path(p, directory=False)
+-                size = p.stat().st_size
++                size = _io_path(p).stat().st_size
+                 maximum = (48 if row['kind'] == 2 else 32) * 1024 * 1024 if p == payload else 1024 * 1024 if p.name == 'catalog.aibcat' else 65536
+                 if not 0 < size <= maximum or total + size > CLOSURE_LIMIT:
+                     raise ValueError('Saved chapter dependency encoded byte limit')
+@@ -365,10 +388,10 @@
+     pending = [stage]
+     while pending:
+         directory = pending.pop()
+-        for path in directory.iterdir():
++        for path in _entries(directory, 1 + 4 * MAX_DEPENDENCIES):
+             checked_path(path)
+             relative = path.relative_to(stage).as_posix()
+-            if path.is_dir():
++            if _io_path(path).is_dir():
+                 actual_dirs.add(relative)
+                 if relative not in expected_dirs:
+                     raise ValueError('Unexpected saved publication directory')
+@@ -420,10 +443,10 @@
+     pending = [publication]
+     while pending:
+         directory = pending.pop()
+-        for p in directory.iterdir():
++        for p in _entries(directory, 2 + 4 * MAX_DEPENDENCIES):
+             checked_path(p)
+             relative = p.relative_to(publication).as_posix()
+-            if p.is_dir():
++            if _io_path(p).is_dir():
+                 if relative not in expected_dirs:
+                     raise ValueError('Unexpected existing saved publication directory')
+                 actual_dirs.add(relative);pending.append(p)
+@@ -442,7 +465,7 @@
+ def _slot(root, identity):
+     destination = root / 'saves' / identity['content_fingerprint']
+     expected = {'version': 1, 'identity': identity}
+-    if destination.exists():
++    if _io_path(destination).exists():
+         checked_path(destination, directory=True)
+         value = _json(_read(destination / 'slot.json', SLOT_LIMIT), SLOT_LIMIT)
+         if (type(value) is not dict or set(value) != {'version', 'identity', 'timeline_id'}
+@@ -482,7 +505,7 @@
+     destination = p.root / 'content' / p.identity['content_fingerprint']
+     checked_path(destination, directory=True, missing=True)
+     reused = False
+-    if destination.exists():
++    if _io_path(destination).exists():
+         _verify_existing(destination, record)
+         discard_staging(p);reused = True
+     else:
+@@ -539,16 +562,18 @@
+     staging_root = checked_path(root / 'staging', directory=True)
+     if target.parent != staging_root or not _UUID.fullmatch(target.name):
+         raise ValueError('Refusing cleanup outside the owned saved-play staging directory')
+-    if not target.exists():
++    if not _io_path(target).exists():
+         return
+     pending = [checked_path(target, directory=True)]
+     inspected = 0
+     while pending:
+-        for p in pending.pop().iterdir():
++        for p in _entries(pending.pop(), 6 + 5 * MAX_DEPENDENCIES):
+             inspected += 1
+             if inspected > 6 + 5 * MAX_DEPENDENCIES:
+                 raise ValueError('Owned saved-play staging cleanup member limit')
+             checked_path(p)
+-            if p.is_dir():pending.append(p)
++            if _io_path(p).is_dir():pending.append(p)
+     with _pinned_directory(staging_root):
+-        shutil.rmtree(target)
++        # A short root can contain long hashed descendants. Recursive APIs
++        # must keep extended spelling throughout their own child traversal.
++        shutil.rmtree(_io_path(target, recursive=True))

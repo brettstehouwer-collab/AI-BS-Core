@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "31b25ef340124c278e025afb66ada6ce",
+  "plan_id": "6eb317cd60da4fad8a02246fbc945f17",
+  "snapshot_sha256": "adff7af91c5b11f0661bccc1c928200d295c0a2d76c0454f6c9ac2d5442449b1",
+  "review_digest": "86caff1a5a3c353a403540e8dcb0cc2f2a378adfa4317db76ed873838005ffec",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "d92e52fa53424c9fa5604cb0e8bb0933",
+  "reviewed_plan_sha256": "d6a51f2fcbe67c32d6bde1c69f1b013efb804ffa5356fa09e9caf81c02f1dbf9",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 34044,
+    "created": 1794771319.110771
+  },
+  "created_at_utc": "2026-11-15T19:35:29.986524+00:00",
+  "entry_sha256": "aebf349720c265c01b47e57145c398b72dcde666380b7226c295b33d746cd619"
+}

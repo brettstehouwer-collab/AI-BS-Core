@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-04T02:43:06.013847+00:00",
+  "status": "VERIFIED_TECHNICAL_ART_CHECKPOINT",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "shared_dirty_checkout_preserved": true,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\74A_Adam_v26_Surface_Hair_Technical_Study.zip",
+    "bytes": 25528172,
+    "sha256": "c7f7b02804f37a45d166808879d9ecbb096af382ff0a919f14ef62f0e78ebee2",
+    "members": 183,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-04T02:42:14.901676+00:00",
+    "drive_folder_id": "1V9HGMvl9UmFYemA1brrqrfy8g05N-liE",
+    "drive_file_id": "1mhZZT_G9n-8FikdbTcFUbkrsy5Mdvwt3",
+    "all_members_verified": true,
+    "goal_complete": false
+  },
+  "receipt_drive_id": "1rPuqHFZHHViYqBXR8QXgrEjLUjVHGPDk",
+  "verification": "D:\\AI-BS-Game-Resources\\P74\\Adam_HairSurfaceStudy\\verification.json",
+  "gallery": "D:\\AI-BS-Game-Resources\\P74\\Adam_HairSurfaceStudy\\Review\\Adam_v26_Native_Hair_Comparison.html",
+  "project_files": {
+    "C:\\AI-BS\\docs\\game_engine\\AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": "65b734218027f58739b6d1c706ce9cd02fcc92da3a5624cec3776e3057210458",
+    "C:\\AI-BS\\engine\\out\\warm_beginning\\monitor_summary.json": "90a71daf80784c3f6aa585e2415e304cae04f1c508e0493f0549399861a07d86",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_CHARACTER_REFERENCE_NOTES.md": "e452b13ee9472dc49099993ad1dc89dc6f82906426aad23335fe947e6226b069",
+    "C:\\AI-BS\\docs\\game_engine\\ADAM_V26_HAIR_SURFACE_STUDY.md": "16cd36a8678b03a378f02fb55d5e9c875969378621cfbe2ac780aa4877a9cff6"
+  },
+  "all_owned_processes_joined": true,
+  "installed106_unchanged": true,
+  "neck_fairing_still_stopped": true,
+  "new_study": "v26, private/unapproved/cap-like close-up",
+  "measured_GPU_content_bytes_saved": 4194304,
+  "FPS_or_temporal_shimmer_claim": false,
+  "goal_complete": false,
+  "incomplete": [
+    "Naturalistic overall likeness, hair silhouette/grooming, clothing and stopped neck correction",
+    "First-time8\u201312minute human pacing and current active-play performance",
+    "Caption listening review deferred by user",
+    "Final packaged acceptance and verified final backup"
+  ],
+  "next_step": "Audit remaining opening acceptance against current implementation and evidence before further cosmetic variants. Assess offline reference-fitting only if it addresses a concrete likeness gap. Do not repeat stopped P73neck recipes. Human pacing/performance, caption listening, naturalistic likeness and final packaged acceptance remain required."
+}

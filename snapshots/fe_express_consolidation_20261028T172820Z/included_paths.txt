@@ -1,0 +1,14 @@
+frontend/App.jsx
+frontend/components/clients/ClientsModule.jsx
+frontend/components/components/FEExpressDispatcher.jsx
+frontend/components/FEExpressDispatcher.jsx
+frontend/src/components/components/FEExpressDispatcher.jsx
+frontend/src/components/FEExpressDispatcher.jsx
+frontend/src/components/FEExpressPinPortal.jsx
+frontend/src/components/GlobalCommandPalette.jsx
+frontend/src/components/LoginModal.jsx
+frontend/src/components/navigationConfig.js
+scripts/__pycache__/generate_fe_express_application_pdf.cpython-312.pyc
+scripts/generate_fe_express_application_pdf.py
+scripts/tests/__pycache__/test_native_fe_express.cpython-312.pyc
+scripts/tests/test_native_fe_express.py

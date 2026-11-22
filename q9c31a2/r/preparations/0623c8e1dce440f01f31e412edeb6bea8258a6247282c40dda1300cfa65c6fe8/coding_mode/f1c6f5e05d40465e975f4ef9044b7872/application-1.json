@@ -1,0 +1,15 @@
+{
+  "input_sha256": "8efcc6e445c3cab4b4eaac9fbfcaddc5e20ce550f0a8944e03f3ea17ace53ae9",
+  "state": "APPLYING",
+  "files": [
+    "app.py"
+  ],
+  "completed": [
+    "app.py"
+  ],
+  "backup": "C:\\AI-BS\\q9c31a2\\r\\preparations\\0623c8e1dce440f01f31e412edeb6bea8258a6247282c40dda1300cfa65c6fe8\\coding_mode\\f1c6f5e05d40465e975f4ef9044b7872\\application_backups",
+  "started_at": 1794696765.395109,
+  "previous_sha256": "63123e57f1676d1dc847ccc857a4bf619bab6e7fa1dc0a0006632767a08bbf56",
+  "runtime_seal": "fc15f9436b8dbd463a1ddc0999c20e55fb18cc9bf39f9a47779b41c73505cbbf",
+  "entry_sha256": "6fd53cf5a62088c9c7a2fa8f372bdae2e2373d1d4063ad733220aa16986d6dcd"
+}

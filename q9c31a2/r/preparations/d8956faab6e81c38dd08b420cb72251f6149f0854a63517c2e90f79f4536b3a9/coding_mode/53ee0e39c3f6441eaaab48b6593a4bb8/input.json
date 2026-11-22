@@ -1,0 +1,42 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "payload": {
+    "execution_id": "53ee0e39c3f6441eaaab48b6593a4bb8",
+    "request_id": "c9aa17a42fbf43b39a3c760b6bb480dd",
+    "plan_id": "bdbcd32bc24b43d7b807ba5a9294a06f",
+    "proposal_id": "5742af14c0ef491c9ecbddac3411fba3",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "8ae5da32f046471646f1061bfe82efeaf6e3d01c8efd789431aa16ff7c27dfb6",
+  "files": [
+    {
+      "relative_path": "native_app.py",
+      "role": "editable",
+      "length": 11,
+      "sha256": "88f92d58d9706e16b293aacf471dd930213780b70cbf773d31c716c3e1e84682"
+    },
+    {
+      "relative_path": "test_native_app.py",
+      "role": "verification",
+      "length": 151,
+      "sha256": "619e0d3458c24a2059863dc0d980243b13fb37c03091ece0f3e4b67dada1d0cf"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_native_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/native_app.py\n+++ b/native_app.py\n@@ -1 +1 @@\n-value = 1\n+value = 42\n",
+  "created_at_utc": "2026-11-14T22:58:25.389444+00:00",
+  "entry_sha256": "6c82d0c3ac83e8ba0700f0bbf5581238bb2a043c5ea18bc879fa6e4fb12736f2"
+}

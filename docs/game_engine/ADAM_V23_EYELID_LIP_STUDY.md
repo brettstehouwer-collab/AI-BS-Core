@@ -1,0 +1,11 @@
+# Adam v23: eyelid and lip study
+
+2026-11-04T02:07:50.404938+00:00. A separate copy of the preserved v22 master refines upper/lower eyelid coverage and lip volume, with smooth deformation into adjacent skin and restrained lip pigment. The unchanged eyeballs retain their actual iris and pupil dimensions. This uses adult references qualitatively, not calibrated reconstruction. No photograph pixels, new age assertion or invented memory are embedded.
+
+The maximum source-vertex movement is 0.002054 m across 10081 vertices. Minimum triangle-area ratio is 0.6369, with normal dot above 0.9560. Source topology, UVs, weights, binds and material scalars are exact. All 13 non-skin exported primitives retain expanded positions, normals, colors, UVs and weights. All 22 joint nodes, inverse binds, 528 animation accessor comparisons, material definitions and the owned cloth PNG remain exact. Local face geometry and surrounding skin do change; no exact cheek/jaw preservation is claimed.
+
+Installed SDK0.17.0 cooks and renders the candidate, including four clips and real animation with 69,200 changed native pixels. Sixteen actual DX12 head/body views and a separate chapter admission pass with zero GPU warnings/errors. All eight full-body frames retain margins; right-wrist pixels remain byte-identical. This is an asset-render/admission check, not another full gameplay route or FPS acceptance run. All 2,301 installed Studio106 files were rehashed unchanged; no real save or family original is modified.
+
+Gallery: D:/AI-BS-Game-Resources/P71/Adam_EyelidAndLipStudy/Review-v2/Adam_v23_Native_All_Sides.html. Opaque diagnostic renders show a less wide-eyed expression and thinner lips. Hair, eyebrows, skin and clothing remain unfinished and overall likeness needs personal review. This candidate is private, unapproved and not installed. No final naturalistic likeness claim is made.
+
+The first gallery recipe had a wrong parent-version path; failure was retained, then an explicit corrected parent path and fresh output directory passed the same comparison/margin checks. Engineering preservation tests and native render evidence do not substitute for human opening pacing, current active-play measurements or caption listening review. The active full goal remains incomplete.

@@ -1,0 +1,6 @@
+{
+    "task":  "Stehouwer-Publishing-Reviewed-Static-Origin",
+    "registered":  true,
+    "principal":  "AI-BS\\footb",
+    "runlevel":  "Limited"
+}

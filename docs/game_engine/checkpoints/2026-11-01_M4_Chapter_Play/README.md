@@ -1,0 +1,9 @@
+# Native chapter preview and Play checkpoint
+
+M4 minimum creator is VERIFIED for source: typed chapter authoring now opens a native DX12 preview and isolated PC Play from the exact visible immutable definition. BS can walk, repair, build/connect the relay, open doors and receive authored Adam guidance; runtime changes stay in a temporary Play world. Stop drains pending saves and joins children. Editor changes/Undo/Redo/Save/reopen remain independent. Source and installed Debug/Release each pass Play44, pendingStop10, export/GPU56 and300 rapid updates without replacement errors. All136 Python/Qt tests, both installed SDK consumers and fresh legacy36/23-process regressions pass. M5 is active; live model generation, packaged creator deployment and the full personal20–30minute alpha remain unfinished. Studio94/public87 remain retained.
+
+Consolidated complete selected source/design/evidence, including exact diff from the prior creator checkpoint. No earlier overlay is needed for this selected set. Restore into a review directory and reconcile current changes. This is not a whole-workstation snapshot or new frozen Studio release. Generated binaries/dependencies, model weights, original memoir/photos, personal saves and separate Unreal are excluded. Retained native proof saves are labeled synthetic. PROGRESS_IN_FLIGHT.json is an earlier evidence-only historical record; this README and final proof supersede its remaining-work list.
+
+Connect live AI-BS generation to pinned proposal jobs with cancellation and explicit Preview/Apply, then package the creator and finish the personal20–30minute First Boot alpha/RTX awakening.
+
+Local archive CRC/exact bytes/SHA and cloud size/parent checks are distinct. Remote hash/account remaining quota are unavailable. Uploads do not free local disk space; no cleanup/deletions occurred.

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function NocoMicrogridSimulator() {
   // Grid Operating Mode
@@ -8,25 +8,25 @@ export default function NocoMicrogridSimulator() {
   const [solarIrradiance, setSolarIrradiance] = useState(850); // W/m²
   const [solarOutputKw, setSolarOutputKw] = useState(115.5); // Max 150 kW
   const [biogasOutputKw, setBiogasOutputKw] = useState(24.0); // Max 35 kW
-  const [geothermalThermalKw, setGeothermalThermalKw] = useState(14.5);
-  const [mfcOutputKw, setMfcOutputKw] = useState(1.8);
+  const [] = useState(14.5);
+  const [mfcOutputKw] = useState(1.8);
 
   // BESS Battery Energy Storage System (500 kWh Capacity)
-  const [batterySoc, setBatterySoc] = useState(82.4); // %
-  const [batteryCapacityKwh] = useState(500);
-  const [batteryCellTemp, setBatteryCellTemp] = useState(23.2); // °C
-  const [batteryHealth] = useState(99.4); // %
-  const [bessCycleCount] = useState(412);
+  const [batterySoc] = useState(82.4); // %
+  const [] = useState(500);
+  const [] = useState(23.2); // °C
+  const [] = useState(99.4); // %
+  const [] = useState(412);
 
   // Load Shedding States
-  const [tier1Active, setTier1Active] = useState(true); // Life Support / Freeze (6.5 kW)
+  const [tier1Active] = useState(true); // Life Support / Freeze (6.5 kW)
   const [tier2Active, setTier2Active] = useState(true); // Living Stage (21.0 kW)
   const [tier3Active, setTier3Active] = useState(true); // CEA Hydroponics (12.5 kW)
   const [tier4Active, setTier4Active] = useState(true); // EV Charging / Non-critical (15.0 kW)
   
   // Simulation Alarms & Logs
-  const [gridAlarm, setGridAlarm] = useState(null);
-  const [autoTransferSwitchActive, setAutoTransferSwitchActive] = useState(true);
+  const [gridAlarm, setGridAlarm] = useState(/** @type {string | null} */ (null));
+  const [] = useState(true);
 
   // Calculate Solar Output based on Irradiance slider
   useEffect(() => {

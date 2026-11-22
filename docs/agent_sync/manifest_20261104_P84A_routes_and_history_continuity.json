@@ -1,0 +1,33 @@
+{
+  "id": "20261104_P84A_routes_and_history_continuity",
+  "at": "2026-11-04T17:41:38.027405+00:00",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "branch": "codex/audit-v532976-20261031",
+  "checkpoint": {
+    "at": "2026-11-04T17:41:13.119771+00:00",
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\84A_Route_Diagnostics_And_History_Continuity.zip",
+    "bytes": 802665,
+    "sha256": "6594d8f7c1d3fa954752f695a7e2f585e9d08520738c6e1a6f7f259d07b42224",
+    "members": 106,
+    "all_members_verified": true,
+    "goal_complete": false,
+    "drive_folder_id": "1gY0o0FmOyCpT8N9XelwVm2LGfs5WPpSM",
+    "drive_file_id": "1ZP0q_9EDncqw17sgr1O2um0ELymxYC0Y",
+    "drive_restore_verified": true
+  },
+  "result": "Partial:11native reports pass,2diagnostic precondition failures retained; all14owned jobs naturally joined",
+  "changed_paths": [
+    "AGENTS.md",
+    "docs/game_engine/PROJECT_INDEX.md",
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/out/warm_beginning/monitor_summary.json"
+  ],
+  "installed_version": "Studio107/SDK0171 unchanged",
+  "user_steering": "Before programming, retrieve and reconcile relevant previous work, decisions, failures and acceptance evidence. AGENTS XI enforces workflow; current PROJECT_INDEX supersedes stale header while preserving historical snapshots. No all-chat-reading claim.",
+  "known_failures": [
+    "Generic door-cycle uses main door, not bypass service door",
+    "Generic departure helper routes through locked main door on bypass"
+  ],
+  "next_step": "Read current prior-work index and P84 diagnostics; make diagnostic route selection depend on claimed repair/bypass path, add explicit fall and replacement-relay identity probes, and qualify candidate source independently before replacing installed package. Do not retry unchanged failed generic diagnostics.",
+  "goal_complete": false
+}

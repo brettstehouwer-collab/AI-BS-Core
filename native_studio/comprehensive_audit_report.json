@@ -1,0 +1,273 @@
+{
+  "timestamp": "2026-10-15T18:57:56Z",
+  "verdict": "PASS",
+  "ast_static_analysis": {
+    "scanned_files": 26,
+    "ast_wired_buttons": 140,
+    "ast_potential_orphans": [
+      {
+        "file": "comfy_workspace_view.py",
+        "variable": "btn_4k",
+        "line": 119
+      },
+      {
+        "file": "comfy_workspace_view.py",
+        "variable": "btn_8k",
+        "line": 120
+      },
+      {
+        "file": "comfy_workspace_view.py",
+        "variable": "btn_16k",
+        "line": 121
+      }
+    ]
+  },
+  "ui_verification": {
+    "visited_tab_indices": 60,
+    "counts": {
+      "buttons_discovered": 832,
+      "buttons_clicked": 657,
+      "buttons_dry_run_gated": 7,
+      "buttons_auto_remediated": 21,
+      "line_edits_discovered": 127,
+      "line_edits_exercised": 123,
+      "combos_discovered": 55,
+      "combos_exercised": 54,
+      "sliders_discovered": 45,
+      "sliders_exercised": 45,
+      "checkboxes_discovered": 28,
+      "checkboxes_exercised": 28,
+      "tables_discovered": 26,
+      "lists_discovered": 10
+    },
+    "remediated_button_labels": [
+      "[/] Commands \u25b2",
+      "\ud83d\udce5 Import",
+      "\ud83d\udcc4 Export FDX",
+      "\ud83d\udcd1 Export PDF",
+      "\ud83e\udde9 Elements",
+      "\ud83d\udc41\ufe0f Views & Split",
+      "\ud83d\ude80 Production & CMS",
+      "\ud83d\udce5 Import",
+      "\ud83d\udcc4 Export FDX",
+      "\ud83d\udcd1 Export PDF",
+      "\ud83e\udde9 Elements",
+      "\ud83d\udc41\ufe0f Views & Split",
+      "\ud83d\ude80 Production & CMS",
+      "\u2795 Schedule New Meeting",
+      "\ud83c\udfa4 Mic: ON",
+      "\ud83d\udcf9 Camera: ON",
+      "\ud83d\udda5\ufe0f Share Screen",
+      "\u23fa Record Call",
+      "\ud83d\udcde End Call",
+      "\ud83c\udf9b\ufe0f Studio Mode: OFF",
+      "\ud83d\udee1\ufe0f Safe Areas: ON"
+    ],
+    "gated_destructive_buttons": [
+      "\u26a1 16K Large-Format (15360\u00d78640)",
+      "Delete (D)",
+      "Delete (D)",
+      "Drag & Drop Audio Files\n+ Import WAV / MP3",
+      "\ud83d\ude80 Dispatch Omni-Broadcast Across Matrix",
+      "\ud83d\udce1 Broadcast Studio (OBS)",
+      "\ud83d\udd34 Start Hardware NVENC Broadcast"
+    ],
+    "max_ui_dispatch_latency_ms": 5842.49,
+    "unhandled_exceptions": []
+  },
+  "hardware_telemetry": {
+    "gpu": {
+      "available": true,
+      "source": "pynvml",
+      "name": "NVIDIA GeForce RTX 4090",
+      "temperature_c": 44,
+      "temp_within_45c_target": true,
+      "vram_used_mb": 24307.69,
+      "vram_total_mb": 24564.0,
+      "sm_clock_mhz": 2700,
+      "mem_clock_mhz": 5001,
+      "power_draw_w": 74.42
+    },
+    "cpu": {
+      "logical_cores": 32,
+      "physical_cores": 16,
+      "usage_percent": 84.9
+    },
+    "ram": {
+      "total_gb": 61.65,
+      "available_gb": 22.46,
+      "percent_used": 63.6
+    },
+    "nvme_disks": [
+      {
+        "mount": "C:\\",
+        "total_gb": 1673.46,
+        "free_gb": 125.3,
+        "percent_used": 92.5
+      },
+      {
+        "mount": "D:\\",
+        "total_gb": 475.69,
+        "free_gb": 42.01,
+        "percent_used": 91.2
+      },
+      {
+        "mount": "E:\\",
+        "total_gb": 837.66,
+        "free_gb": 113.12,
+        "percent_used": 86.5
+      }
+    ],
+    "audio_wasapi": {
+      "active_output_endpoints": 1,
+      "operational": true
+    }
+  },
+  "daemon_verification": {
+    "ports_online": 23,
+    "ports_total": 25,
+    "port_matrix": {
+      "80": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.55
+      },
+      "3001": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 12.11
+      },
+      "4455": {
+        "status": "OFFLINE",
+        "tcp_latency_ms": null
+      },
+      "5173": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 1.25
+      },
+      "5174": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.87
+      },
+      "8000": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.48
+      },
+      "8001": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.27
+      },
+      "8002": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.65
+      },
+      "8005": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 10.5
+      },
+      "8006": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.8
+      },
+      "8007": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.26
+      },
+      "8008": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.21
+      },
+      "8010": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 14.33
+      },
+      "8013": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.76
+      },
+      "8055": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.74
+      },
+      "8080": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.29
+      },
+      "8085": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 14.34
+      },
+      "8088": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 1.31
+      },
+      "8089": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 13.78
+      },
+      "8099": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 1.0
+      },
+      "8188": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.29
+      },
+      "8189": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 13.52
+      },
+      "8888": {
+        "status": "OFFLINE",
+        "tcp_latency_ms": null
+      },
+      "11434": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.41
+      },
+      "11435": {
+        "status": "ONLINE",
+        "tcp_latency_ms": 0.16
+      }
+    },
+    "http_handshakes": {
+      "FastAPI_Core": {
+        "port": 8080,
+        "url": "http://127.0.0.1:8080/docs",
+        "http_status": 200,
+        "latency_ms": 3.5,
+        "payload_bytes": 1033,
+        "valid": true
+      },
+      "ComfyUI": {
+        "port": 8189,
+        "url": "http://127.0.0.1:8189/system_stats",
+        "http_status": 200,
+        "latency_ms": 14.72,
+        "payload_bytes": 1156,
+        "valid": true
+      },
+      "Ollama_Primary": {
+        "port": 11434,
+        "url": "http://127.0.0.1:11434/api/tags",
+        "http_status": 200,
+        "latency_ms": 137.78,
+        "payload_bytes": 14081,
+        "valid": true
+      },
+      "Ollama_Secondary": {
+        "port": 11435,
+        "url": "http://127.0.0.1:11435/api/tags",
+        "http_status": 200,
+        "latency_ms": 123.49,
+        "payload_bytes": 14081,
+        "valid": true
+      },
+      "ChromaDB": {
+        "port": 8002,
+        "url": "http://127.0.0.1:8002/api/v1/heartbeat",
+        "http_status": 410,
+        "latency_ms": 5.56,
+        "valid": true
+      }
+    }
+  }
+}

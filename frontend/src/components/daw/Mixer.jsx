@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { theme } from '../../styles/theme';
-import { SlidersHorizontal, Activity, Zap, Radio } from 'lucide-react';
+import { SlidersHorizontal, Zap } from "lucide-react";
 import { useDawStore } from './dawStore';
 
 import { LatencyMonitorHUD } from './LatencyMonitorHUD';
@@ -20,22 +20,24 @@ const Mixer = () => {
   const toggleFX = useDawStore(state => state.toggleFX);
   const isPlaying = useDawStore(state => state.isPlaying);
   const fetchAvailableVstPlugins = useDawStore(state => state.fetchAvailableVstPlugins);
-  const loadVstPlugin = useDawStore(state => state.loadVstPlugin);
+  void (useDawStore(state => state.loadVstPlugin));
 
   useEffect(() => {
     fetchAvailableVstPlugins();
   }, []);
 
   // Meter Animation Level Simulation (Throttled to 16 FPS to prevent main-thread garbage collection stutter)
-  const [meterLevels, setMeterLevels] = useState({});
+  const [meterLevels, setMeterLevels] = useState(/** @type {Record<string, number>} */ ({}));
 
   useEffect(() => {
-    let animId;
+    let animId = 0;
     let lastUpdate = 0;
+    /** @param {number} time */
     const updateMeters = (time) => {
       if (isPlaying) {
         if (time - lastUpdate >= 60) {
           lastUpdate = time;
+          /** @type {Record<string, number>} */
           const levels = { master: Math.random() * 0.7 + 0.2 };
           channels.forEach(ch => {
             levels[ch.id] = ch.mute ? 0 : Math.random() * 0.6 + 0.1;
@@ -54,7 +56,7 @@ const Mixer = () => {
   return (
     <div style={{
       background: 'rgba(10, 12, 16, 0.98)',
-      borderTop: `1px solid ${theme.colors.border}`,
+      borderTop: `1px solid ${'#30363d'}`,
       height: '100%',
       padding: '12px',
       display: 'flex',
@@ -137,7 +139,7 @@ const Mixer = () => {
           </div>
 
           {/* Sub-Mix Summing Buses (A: Drums, B: Inst, C: Vocals, D: FX) */}
-          {useDawStore.getState().subBuses?.map((bus, bIdx) => (
+          {useDawStore.getState().subBuses?.map((bus, _bIdx) => (
             <div
               key={bus.id}
               style={{
@@ -452,15 +454,15 @@ const Mixer = () => {
                     </span>
                     <input
                       type="range"
-                      min={param.min_value}
-                      max={param.max_value}
-                      step={(param.max_value - param.min_value) / 100}
+                      min={param.min_value ?? param.min}
+                      max={param.max_value ?? param.max}
+                      step={typeof (param.max_value ?? param.max) === "number" && typeof (param.min_value ?? param.min) === "number" ? ((param.max_value ?? param.max ?? 0) - (param.min_value ?? param.min ?? 0)) / 100 : undefined}
+                      disabled={typeof (param.max_value ?? param.max) !== "number" || typeof (param.min_value ?? param.min) !== "number"}
                       value={param.raw_value}
-                      onChange={(e) => useDawStore.getState().setVstParameter(
-                        useDawStore.getState().activeLoadedVstId,
-                        param.name,
-                        Number(e.target.value)
-                      )}
+                      onChange={(e) => {
+                        const pluginId = useDawStore.getState().activeLoadedVstId;
+                        if (pluginId) useDawStore.getState().setVstParameter(pluginId, param.name, Number(e.target.value));
+                      }}
                       style={{ width: '70px', height: '3px', accentColor: '#ffbd5e', cursor: 'pointer' }}
                     />
                     <span style={{ fontSize: '8px', color: '#888', width: '24px', textAlign: 'right' }}>

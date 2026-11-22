@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { useAppStore } from './useAppStore.js';
 import './CommandCenterTab.css';
 
+/** @param {{"backendUrl": string}} props */
 const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
-  const backendUrl = propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
+  (propBackendUrl || import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:8000' : ''));
   
   const [inputText, setInputText] = useState('');
-  const [detectedAction, setDetectedAction] = useState(null);
+  const [detectedAction, setDetectedAction] = useState(/** @type {{"taskType": string, "target": string, "label": string} | null} */ (null));
 
   const {
     rapidApiIsFetching: isFetching,
@@ -87,7 +88,8 @@ const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
     setDetectedAction(match);
   }, [inputText]);
 
-  const handleFetch = async (taskType, target) => {
+  /** @param {string} taskType @param {string} target */
+const handleFetch = async ( taskType,  target) => {
     if (!target) {
       useAppStore.setState({ rapidApiError: 'Target cannot be empty.' });
       return;
@@ -195,7 +197,7 @@ const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
           </div>
         )}
 
-        {!isFetching && resultData && (
+        {!isFetching && Boolean(resultData) && (
           <div>
             <div style={{ marginBottom: '16px', fontSize: '0.85rem', color: '#38bdf8' }}>
               ✓ Target acquired. Data has been automatically saved to the OSINT Data Vault.
@@ -203,23 +205,12 @@ const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
               {(() => {
-                let itemsToRender = [];
-                const res = resultData;
-                
-                if (res.data && res.data.videos) itemsToRender = res.data.videos;
-                else if (res.data && Array.isArray(res.data)) itemsToRender = res.data;
-                else if (res.videos) itemsToRender = res.videos;
-                else if (res.records && Array.isArray(res.records)) itemsToRender = res.records;
-                else if (res.results && Array.isArray(res.results)) itemsToRender = res.results;
-                else if (res.result && Array.isArray(res.result)) itemsToRender = res.result;
-                else if (res.data) itemsToRender = [res.data];
-                else if (res.record) itemsToRender = [res.record];
-                else if (res.result) itemsToRender = [res.result];
-                else itemsToRender = [res];
+                const itemsToRender = reconRows(resultData);
 
                 if (itemsToRender.length === 0) return <div style={{ color: '#94a3b8' }}>No visual items to display. See Data Vault for raw output.</div>;
                 
-                return itemsToRender.map((item, idx) => (
+                return itemsToRender.map(
+( item,  idx) => (
                   <div key={idx} style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', padding: '16px', wordBreak: 'break-word' }}>
                     {Object.entries(item).slice(0, 15).map(([key, val]) => (
                       <div key={key} style={{ marginBottom: '8px' }}>
@@ -245,8 +236,10 @@ const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
           <h4 style={{ margin: '0 0 16px 0', color: '#94a3b8' }}>Saved Recon Data (from Vault)</h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
             {osintVaultItems
-              .filter(item => item.category === 'RapidAPI')
-              .map(item => (
+              .filter( 
+item => item.category === 'RapidAPI')
+              .map( 
+item => (
                 <div key={item.id} style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(51, 65, 85, 0.5)', borderRadius: '8px', padding: '16px', wordBreak: 'break-word' }}>
                   <div style={{ marginBottom: '12px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                     <span style={{ fontSize: '0.7rem', color: '#10b981', textTransform: 'uppercase', display: 'block' }}>{item.source}</span>
@@ -262,7 +255,8 @@ const RapidApiReconTab = ({ backendUrl: propBackendUrl }) => {
                   )}
                 </div>
               ))}
-            {osintVaultItems.filter(item => item.category === 'RapidAPI').length === 0 && (
+            {osintVaultItems.filter( 
+item => item.category === 'RapidAPI').length === 0 && (
               <div style={{ color: '#64748b', fontSize: '0.85rem' }}>No historical data saved yet.</div>
             )}
           </div>
@@ -553,5 +547,19 @@ func main() {
     </div>
   );
 };
+
+/** @param {unknown} value @returns {value is Record<string, unknown>} */
+function isReconRecord(value) { return !!value && typeof value === 'object' && !Array.isArray(value); }
+/** @param {unknown} payload @returns {Record<string, unknown>[]} */
+function reconRows(payload) {
+  const root = isReconRecord(payload) ? payload : null;
+  const data = root?.data;
+  const videos = isReconRecord(data) ? data.videos : undefined;
+  const candidates = [videos, data, root?.videos, root?.records, root?.results, root?.result];
+  /** @type {unknown[] | undefined} */
+  const array = candidates.find(Array.isArray);
+  const values = array || [data || root?.record || root?.result || payload];
+  return values.map(value => isReconRecord(value) ? value : { value });
+}
 
 export default RapidApiReconTab;

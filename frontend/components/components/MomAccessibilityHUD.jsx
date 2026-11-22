@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './MomMode.css';
 
 // Gentle Web Audio API sound cue
@@ -22,6 +22,7 @@ function playSoundCue(frequency = 520, duration = 0.06) {
   }
 }
 
+/** @param {{momMode: boolean, onToggleMomMode: () => void, zoomLevel?: number, onZoomChange: (zoom: number) => void}} props */
 export default function MomAccessibilityHUD({ 
   momMode, 
   onToggleMomMode, 
@@ -37,7 +38,7 @@ export default function MomAccessibilityHUD({
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('aibs_mom_font') || 'sans');
   const [spacingMode, setSpacingMode] = useState(() => localStorage.getItem('aibs_mom_spacing') || 'relaxed');
   const [audioCues, setAudioCues] = useState(() => localStorage.getItem('aibs_mom_audio_cues') !== 'false');
-  const [speechRate, setSpeechRate] = useState(() => parseFloat(localStorage.getItem('aibs_mom_speech_rate') || '0.85'));
+  const [speechRate] = useState(() => parseFloat(localStorage.getItem('aibs_mom_speech_rate') || '0.85'));
 
   // Sync classes to document.body
   useEffect(() => {
@@ -93,19 +94,19 @@ export default function MomAccessibilityHUD({
     }
   };
 
-  const handleSetTheme = (theme) => {
+  const handleSetTheme = (/** @type {string} */ theme) => {
     triggerFeedback(540);
     setContrastTheme(theme);
     localStorage.setItem('aibs_mom_theme', theme);
   };
 
-  const handleSetFont = (font) => {
+  const handleSetFont = (/** @type {string} */ font) => {
     triggerFeedback(540);
     setFontFamily(font);
     localStorage.setItem('aibs_mom_font', font);
   };
 
-  const handleSetSpacing = (spacing) => {
+  const handleSetSpacing = (/** @type {string} */ spacing) => {
     triggerFeedback(540);
     setSpacingMode(spacing);
     localStorage.setItem('aibs_mom_spacing', spacing);
@@ -127,7 +128,7 @@ export default function MomAccessibilityHUD({
       }
 
       const mainContent = document.querySelector('.subinterface-content') || document.querySelector('main') || document.body;
-      const textToRead = mainContent?.innerText?.slice(0, 600) || "Welcome to AI-BS Mom Version. You are on the main dashboard.";
+      const textToRead = (mainContent instanceof HTMLElement ? mainContent.innerText : mainContent?.textContent)?.slice(0, 600) || "Welcome to AI-BS Mom Version. You are on the main dashboard.";
       
       const utterance = new SpeechSynthesisUtterance(textToRead);
       utterance.rate = speechRate;

@@ -1,0 +1,12 @@
+tunnel: d1acbd25-06c3-4be0-a7f4-ae3943263aed
+credentials-file: C:/Users/footb/.cloudflared/d1acbd25-06c3-4be0-a7f4-ae3943263aed.json
+ingress:
+  - hostname: api.brettstehouwer.live
+    path: /sse
+    service: http_status:404
+  - hostname: api.brettstehouwer.live
+    path: /messages
+    service: http_status:404
+  - hostname: api.brettstehouwer.live
+    service: http://127.0.0.1:8000
+  - service: http_status:404

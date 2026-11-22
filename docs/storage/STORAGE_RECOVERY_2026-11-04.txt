@@ -1,0 +1,45 @@
+C DRIVE STORAGE RECOVERY — 2026-11-04
+
+Completed: 2026-11-04T18:06:49.310207+00:00
+Recorded C: space reclaimed: 104.99 GiB (112.73 GB).
+C: currently free: 189.32 GiB. E: currently free: 54.65 GiB.
+Other active work changed free-space counters; do not attribute the entire before/after difference to this cleanup.
+
+WHAT CHANGED
+1. Offloaded198secondary Muse WAV samples (79.80 GiB) to:
+   E:\AI_BS_Resources\AI-BS-Cache\Muse\Secondary_Samples
+   Every source and copy was read fully and SHA256-compared. All100primary WAVs remain on C: with unchanged hashes. The fully reviewed index retains all298sample references, with only198secondary paths changed. Independent review verified every indexed path, size and WAV header. No unique sample audio or original Muse archives were discarded. Keep E: available. A manually invoked full predecode can refill C:; it was not run here.
+2. Removed8unindexed WAV duplicates (9.99 GiB) only after proving full-file SHA256 equality with indexed copies retained on E:. The restore map identifies each exact retained counterpart.
+3. Removed2373synthetic SQLite test files in127exact UUID test directories (12.75 GiB). Each source and archive member was read fully and hashed. Signatures/schemas and owning generator source identify disposable tests, including intentional corrupt/failure fixtures. These are not user saves. A complete local archive and cloud roundtrip were verified before removal.
+4. Removed recorded package caches (2.45 GiB). The broad cache job was stopped when the user added stricter per-file/document review requirements. The interrupted log was preserved, and the summary counts complete recorded rows only. Remaining caches are preserved.
+
+REVIEW SCOPE AND PRESERVATION
+The project metadata scan counted1382223files with0enumeration errors and419reparse entries skipped. Outside-project metadata scanning recorded7access errors and skipped362reparse entries; linked targets were not followed. The supplied488path list was fully read:341files and147directories exist. Its77document files were classified by metadata, not all semantically read. Selected relevant documents, the complete sample index, sampler/predecoder source and historical music decisions were fully reviewed. Do not claim every document or prior chat was read. No personal document, family reference, user save, distinct installer/release, source file or credential file was selected for deletion/movement.16listed installer/archive files were fully hashed and found distinct; no installer duplicates were assumed.
+
+GOOGLE DRIVE BACKUP STATUS — NOT A WHOLE-C BACKUP
+Root (private owner-only permission metadata verified):
+https://drive.google.com/drive/folders/1LkvLlv26CtdvJgYNvuR-Yw03r1eMyJA4
+Organized folders: Index and Restore Guide; AI-BS Project (source/configuration, databases/saves, assets/originals, releases/evidence); Personal Files and Creative Work; Programs and Installers; Windows Recovery; Large Archives; Verification and Cleanup Receipts.
+The initial cloud archive covers ONLY the synthetic gameplay fixtures. The relocated80GiB music cache remains on E:, outside this cloud archive. Source, personal files, games, installed programs, Windows and the fullC: volume have NOT been newly backed up by this task.
+Screenshot quota evidence:2.88TB of5TB used, approximately2.12TB remaining. This is rounded screenshot evidence, not a fresh API quota attestation.
+
+RESTORE THE REMOVED SYNTHETIC FIXTURES
+Download gameplay_test_fixtures_before_cleanup.zip.001 and .002 from06 - Verification and Cleanup Receipts, together with fixture_cloud_parts_manifest.json. Concatenate the binary parts in numeric order into gameplay_test_fixtures_before_cleanup.zip (do not join as text). Expected complete SHA256:
+5cc618c2bc741a2f3f509e7b64179a69ebbf07a53fbb70e3848acf5ca4b87cdc
+Extract into a NEW empty recovery folder, preserving member paths. MANIFEST.json lists every original path, size and hash. Do not overwrite newer live files.
+The complete verified local ZIP is also at:
+E:\AI_BS_Resources\Storage_Recovery\2026-11-04\gameplay_test_fixtures_before_cleanup.zip
+
+RESTORE MUSIC STORAGE IF NEEDED
+Current predecoded_index.json points to all available files. The original complete index is preserved on E: and atC:\AI-BS-Recovery\StorageRecovery20261104\predecoded_index.before_storage_offload.json. muse_offload_receipt.json lists198source/destination pairs and hashes. Restore only to missing original paths and verify each hash before switching back to the old index; keep enough C: space. muse_duplicate_cleanup_receipt.json maps the8removed duplicates to byte-identical retained files. No unique original must be recovered from an unverified old encrypted backup.
+
+FULL-C BACKUP NEXT STEP
+Use a resumable bulk-backup client with versioned, encrypted backups and recovery keys verified in two independent locations before archiving private/source data. Avoid staging a full1.5+TB ZIP on C:, D: orE:, because current free space cannot hold it. Prioritize original personal/creative files, source and dirty/untracked work, consistent databases/saves, then large assets and program metadata. Include E: offloaded data explicitly. Verify representative downloaded restores and every backup manifest before considering local removal. Review each proposed document in full before deleting/moving it.
+A file archive or synchronized folder does not establish complete Windows recovery. Windows/boot/system-state recovery needs a consistent system backup and sufficiently large non-source destination; no whole-system image was started. Do not enable bidirectional mirroring of the entire existing Drive onto C:.
+Reference: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-start-backup
+Reference: https://support.google.com/drive/answer/10838124?hl=en
+
+All local audit inventories, retained failures, before images and receipts:
+E:\AI_BS_Resources\Storage_Recovery\2026-11-04
+Git branch:codex/audit-v532976-20261031. HEAD:55c99f116e2c05025dd03e4b5e8a8f53b93cced7.
+Only intended existing application-file change:backend/muse_samples_cache/predecoded_index.json. No source-code change, version bump, commit, deployment or service restart. Current playback acceptance was not run; file/index integrity and path preservation were verified.

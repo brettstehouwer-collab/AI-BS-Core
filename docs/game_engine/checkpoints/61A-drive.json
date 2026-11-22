@@ -1,0 +1,12 @@
+{
+  "archive": "D:\\AI-BS-Game-Resources\\Backups\\61A_Partial_Surface_Foundation_Release_Evidence_Source.zip",
+  "bytes": 245249,
+  "sha256": "1c5fc3002734022ac678d9108ec259d561bdc22d822827b86d036d5b8082216c",
+  "members": 70,
+  "local_verified": true,
+  "drive_restore_verified": true,
+  "drive_file_id": "1zFpryKi4q9053t3rNUx6TSd9HZWtCL_o",
+  "drive_folder_id": "1-wFJjczshzh4oaLcSPXRwKzcJ15YShK8",
+  "at": "2026-11-03T23:44:30.588495+00:00",
+  "verification": "Metadata readback and raw download: SHA256, CRC, exact member set, embedded manifest and every member SHA256/length verified. Partial source checkpoint; Debug/GPU/import/shading/fullSDK qualification and live build drain remain pending."
+}

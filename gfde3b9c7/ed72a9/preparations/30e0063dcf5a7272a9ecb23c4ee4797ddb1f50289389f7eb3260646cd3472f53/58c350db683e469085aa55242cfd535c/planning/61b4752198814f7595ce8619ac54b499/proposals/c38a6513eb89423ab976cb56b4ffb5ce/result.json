@@ -1,0 +1,38 @@
+{
+  "state": "PROPOSAL_READY",
+  "input_sha256": "2210d85139741d1c78b7c37de3ceabd680c3ed9c6ec6804a1c1e8f1e1a236d47",
+  "proposal": {
+    "summary": "Selected implementations now return42.",
+    "files": [
+      {
+        "path": "src/app.js",
+        "base_sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "proposed_sha256": "b31b59a228ebb473ed1b57cd3f7b2a72dc859b8a7fae9795738575722da5182d",
+        "content": "const value = 42;\n",
+        "diff": "--- a/src/app.js\n+++ b/src/app.js\n@@ -1 +1 @@\n-const value = 1;\n+const value = 42;\n"
+      }
+    ],
+    "diff": "--- a/src/app.js\n+++ b/src/app.js\n@@ -1 +1 @@\n-const value = 1;\n+const value = 42;\n"
+  },
+  "model_output": {
+    "summary": "Selected implementations now return42.",
+    "changes": [
+      {
+        "path": "src/app.js",
+        "base_sha256": "8de5c07db8deb3b75dedd9b5bc999669936cea181ae0033c27c4e2071a6e434d",
+        "hunks": [
+          {
+            "before": "value = 1",
+            "after": "value = 42"
+          }
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "elapsed_seconds": 0.0,
+  "finished_at_utc": "2026-11-15T22:43:57.372267+00:00",
+  "response_sha256": "fa7985ef1dd10db17948dda4edd175a32092589c9286953d87c543702d5e1ca3",
+  "response_bytes": 232,
+  "entry_sha256": "2820096af8a734447413a37f24f413467588764d36bb3cbc45b98ca048290ccb"
+}

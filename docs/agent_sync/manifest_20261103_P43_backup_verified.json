@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-03T18:53:26.638513+00:00",
+  "classification": "progress",
+  "previous_goal_turn": "No new work: user benchmark result acknowledgment; revalidated and advanced by completing P43 provenance and verified art backup.",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "scope": "P43 authored form candidate and verified backup; installed103 unchanged",
+  "source_status_scoped": "?? docs/game_engine/checkpoints/43A-drive.json\n",
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\43A_Adam_Form_Study_And_Native_Evidence.zip",
+    "bytes": 15569668,
+    "sha256": "393bdcd6abfa36b96b076da12edd81926dd1f16e24acd95ad82e8e8c5da958ec",
+    "members": 146,
+    "local_zip_verified": true,
+    "drive_restore_verified": true,
+    "disk_free_gib": {
+      "C": 61.94,
+      "D": 69.69,
+      "E": 136.73
+    },
+    "at": "2026-11-03T18:53:26.638513+00:00",
+    "archive_and_every_member_sha256_verified": true,
+    "exact_member_set_and_crc_verified": true,
+    "drive_file_id": "1Ds1H5-ZyKdJyfEGxazlAtL1oNAiyfo4s",
+    "drive_folder_id": "1zjq6gxNdkwVso6mrcuaYBHIFmwlCPaGd",
+    "drive_url": "https://drive.google.com/file/d/1Ds1H5-ZyKdJyfEGxazlAtL1oNAiyfo4s/view",
+    "scope": "Selected editable v16 art masters, owned cooked data, recipes, diagnostics and native evidence. No original family media, private reference annotations, user saves or compiled executables."
+  },
+  "likeness_approved": false,
+  "installed_model": "v10",
+  "study": "v16",
+  "evidence_paths": [
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\PROVENANCE.json",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\ART_REVIEW.md",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\independent-master-verification.json",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\v16-rig-animation-preservation.json",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\native-comparison-verification.json",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\v16-chapter-admission-verification.json",
+    "D:\\AI-BS-Game-Resources\\P43\\Adam_v16\\visible-change-and-preservation-verification.json"
+  ],
+  "remaining": [
+    "Personal close-up/full-body likeness review and refinement",
+    "Actual first-time8\u201312minute playthrough and gameplay performance",
+    "Optional original-recording caption listening review deferred",
+    "Final packaged acceptance, walkthrough and complete source/art backup"
+  ],
+  "next_step": "Inspect actual opening readiness and provide a repeatable manual playthrough/performance capture without altering existing saves. No automated-duration substitution for human pacing."
+}

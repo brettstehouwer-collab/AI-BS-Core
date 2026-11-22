@@ -1,0 +1,26 @@
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+# Install any potential required dependencies into a virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+# RUN pip install --no-cache-dir requests
+
+# Stage 2: Air-Gapped Executor Sandbox Runtime
+FROM python:3.11-slim
+
+# Set working directory inside the locked-down container
+WORKDIR /sandbox
+
+# Copy minimal python environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Do NOT run as root - create a low-privilege user
+RUN useradd -m sandbox_user
+RUN chown -R sandbox_user:sandbox_user /sandbox
+USER sandbox_user
+
+# Set execution entrypoint
+# The sandbox expects bullshit_sandbox_executor.py to pipe files here.
+CMD ["python", "-m", "unittest", "discover"]

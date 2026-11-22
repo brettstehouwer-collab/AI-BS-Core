@@ -1,7 +1,8 @@
-import React from 'react';
+import 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+/** @param {{id:string|number,children:import("react").ReactNode,disabled?:boolean,className?:string}} props */
 export default function DraggableItem({ id, children, disabled = false, className = '' }) {
   const {
     attributes,
@@ -12,6 +13,7 @@ export default function DraggableItem({ id, children, disabled = false, classNam
     isDragging,
   } = useSortable({ id, disabled });
 
+  /** @type {import("react").CSSProperties} */
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,

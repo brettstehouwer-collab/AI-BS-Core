@@ -1,0 +1,24 @@
+{
+    "State":  "READ_ONLY_CURRENT_STATE_COLLECTED",
+    "SID":  "S-1-5-21-2133766663-4066672948-2456486318-1005",
+    "Administrator":  false,
+    "VMUUID":  "6c5a53da-ab80-4ecb-8be6-4059266f736e",
+    "Commands":  [
+                     {
+                         "Operation":  "showvminfo",
+                         "ExitCode":  0,
+                         "OutputBytes":  4207,
+                         "ErrorBytes":  0
+                     },
+                     {
+                         "Operation":  "snapshot",
+                         "ExitCode":  0,
+                         "OutputBytes":  520,
+                         "ErrorBytes":  0
+                     }
+                 ],
+    "GuestStarted":  false,
+    "ConfigurationChanged":  false,
+    "PasswordStored":  false,
+    "TimestampUTC":  "2026-10-24T16:09:12.5180412Z"
+}

@@ -1,0 +1,245 @@
+diff --git a/BroadcastStudioApp/package-lock.json b/BroadcastStudioApp/package-lock.json
+index 4e1f8d2e..1660686e 100644
+--- a/BroadcastStudioApp/package-lock.json
++++ b/BroadcastStudioApp/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "cai-bsbroadcaststudioapp",
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "cai-bsbroadcaststudioapp",
+-      "version": "5.329.86",
++      "version": "5.329.94",
+       "dependencies": {
+         "electron-is-dev": "^3.0.1",
+         "electron-updater": "^6.8.9",
+diff --git a/BroadcastStudioApp/package.json b/BroadcastStudioApp/package.json
+index 73739efd..14779e96 100644
+--- a/BroadcastStudioApp/package.json
++++ b/BroadcastStudioApp/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "bs-studio",
+   "private": true,
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "description": "BS-Studio - Unified Broadcast & Neural Music DAW Workstation",
+   "author": "Brett Stehouwer",
+   "type": "module",
+diff --git a/BroadcastStudioApp/src/version.js b/BroadcastStudioApp/src/version.js
+index cb7da767..27de55ca 100644
+--- a/BroadcastStudioApp/src/version.js
++++ b/BroadcastStudioApp/src/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/components/components/version.js b/frontend/components/components/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/components/components/version.js
++++ b/frontend/components/components/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/components/version.js b/frontend/components/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/components/version.js
++++ b/frontend/components/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+index c48b7989..062ca764 100644
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "ai-bs-frontend",
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "ai-bs-frontend",
+-      "version": "5.329.86",
++      "version": "5.329.94",
+       "dependencies": {
+         "@capacitor/android": "^8.4.2",
+         "@capacitor/cli": "^8.4.2",
+diff --git a/frontend/package.json b/frontend/package.json
+index 7d8b85b0..ce1a4b3a 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "ai-bs-frontend",
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "description": "AI-BS Sovereign Intelligence Studio",
+   "author": "Brett Stehouwer / Stehouwer Publishing",
+   "private": true,
+diff --git a/frontend/public/version.json b/frontend/public/version.json
+index 18cec13e..ddc9d309 100644
+--- a/frontend/public/version.json
++++ b/frontend/public/version.json
+@@ -1,8 +1,8 @@
+ {
+   "schema_version": 1,
+-  "version": "v5.329.86",
+-  "release_tag": "v5.329.86",
+-  "release_date": "2026-10-31",
++  "version": "v5.329.94",
++  "release_tag": "v5.329.94",
++  "release_date": "2026-11-01",
+   "version_authority": "version.txt",
+   "artifact_scope": "application-source"
+ }
+diff --git a/frontend/src/components/components/version.js b/frontend/src/components/components/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/src/components/components/version.js
++++ b/frontend/src/components/components/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/src/components/version.js b/frontend/src/components/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/src/components/version.js
++++ b/frontend/src/components/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/src/version.js b/frontend/src/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/src/version.js
++++ b/frontend/src/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/frontend/version.js b/frontend/version.js
+index cb7da767..27de55ca 100644
+--- a/frontend/version.js
++++ b/frontend/version.js
+@@ -1,7 +1,7 @@
+ // Generated from repository version.txt by scripts/release-version.cjs.
+ // Run npm run version:check before building; do not edit this mirror by hand.
+-export const SYSTEM_VERSION = 'v5.329.86';
+-export const SYSTEM_VERSION_NUM = '5.329.86';
+-export const RELEASE_DATE = '2026-10-31';
+-export const RELEASE_TAG = 'v5.329.86';
++export const SYSTEM_VERSION = 'v5.329.94';
++export const SYSTEM_VERSION_NUM = '5.329.94';
++export const RELEASE_DATE = '2026-11-01';
++export const RELEASE_TAG = 'v5.329.94';
+ export default SYSTEM_VERSION;
+diff --git a/package-lock.json b/package-lock.json
+index e8bb9886..541e3d56 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "ai-bs-ecosystem",
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "ai-bs-ecosystem",
+-      "version": "5.329.86"
++      "version": "5.329.94"
+     }
+   }
+ }
+diff --git a/package.json b/package.json
+index d4969ed2..62e8b8f8 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "ai-bs-ecosystem",
+-  "version": "5.329.86",
++  "version": "5.329.94",
+   "description": "AI-BS Sovereign Intelligence Ecosystem - Executive Command Cockpit",
+   "author": "Brett Stehouwer / Stehouwer Publishing",
+   "private": true,
+diff --git a/release.json b/release.json
+index 5a4526a6..492a1979 100644
+--- a/release.json
++++ b/release.json
+@@ -1,8 +1,8 @@
+ {
+   "schema_version": 1,
+-  "version": "5.329.86",
+-  "release_tag": "v5.329.86",
+-  "release_date": "2026-10-31",
++  "version": "5.329.94",
++  "release_tag": "v5.329.94",
++  "release_date": "2026-11-01",
+   "version_authority": "version.txt",
+   "artifact_scope": "application-source"
+ }
+diff --git a/version.txt b/version.txt
+index 3b14a6d7..3a33970f 100644
+--- a/version.txt
++++ b/version.txt
+@@ -1 +1 @@
+-v5.329.86
++v5.329.94

@@ -1,0 +1,9 @@
+{
+  "state": "FAILED",
+  "input_sha256": "c1860f88d985caadd8daaeb594cdc41f9b9a4a23994239a03c3d294cea375503",
+  "proposal": null,
+  "error_code": "retained_evidence_changed",
+  "finished_at_utc": "2026-11-14T13:59:44.722547+00:00",
+  "elapsed_seconds": null,
+  "entry_sha256": "67394f7588f4d0b3329600c3ab2740a1e02371f9453ddc9c58e20a3b2ba74137"
+}

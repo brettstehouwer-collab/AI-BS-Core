@@ -43,7 +43,7 @@ window.fetch = async function (resource, config = {}) {
     ADMIN_EMAILS.includes(userEmail) || ADMIN_UIDS.includes(user.uid)
   ));
 
-  if ((localApi || localDevProxy || hostedApi) && isAdmin) {
+  if ((localApi || localDevProxy || hostedApi) && isAdmin && user) {
     const headers = new Headers(resource instanceof Request ? resource.headers : undefined);
     new Headers(config.headers || {}).forEach((value, name) => headers.set(name, value));
     if (!headers.has('Authorization') && !headers.has('X-Admin-Key') && !headers.has('X-API-Key')) {
@@ -60,7 +60,7 @@ window.fetch = async function (resource, config = {}) {
 };
 
 const StandaloneWriterApp = () => {
-  const [session, setSession] = useState({ ready: false, user: null });
+  const [session, setSession] = useState(/** @type {{ ready: boolean; user: import("firebase/auth").User | null }} */ ({ ready: false, user: null }));
   useEffect(() => onAuthStateChanged(auth, user => setSession({ ready: true, user })), []);
   const user = session.user;
   const allowed = Boolean(user?.emailVerified && (
@@ -77,6 +77,8 @@ const StandaloneWriterApp = () => {
   return <div className="mobile-writer-root"><ScreenwritingTab backendUrl={backendUrl} /></div>;
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Missing application root element.');
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode><StandaloneWriterApp /></React.StrictMode>
 );

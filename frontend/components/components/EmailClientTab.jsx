@@ -1,17 +1,12 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  Mail, MessageSquare, Video, Settings, Plus, Star, Clock, AlertOctagon, Send, 
-  FileText, ShoppingBag, Users, Info, MessageCircle, Tag, Trash2, Search, 
-  RotateCcw, ShieldCheck, Sparkles, Check, Filter, ExternalLink, ChevronRight, 
-  ChevronLeft, X, CheckSquare, Square, Inbox as InboxIcon, User, RefreshCw, AlertTriangle, 
-  CheckCircle2, Globe, Shield, Radio, ArrowUpRight, Key, Eye, EyeOff, CornerUpLeft, 
-  CornerUpRight, Sliders, Server, Cpu
-} from 'lucide-react';
+/** @typedef {{id: string, account?: string, sender?: string, email?: string, subject?: string, snippet?: string, body?: string, folder?: string, category?: string, starred?: boolean, read?: boolean, unread?: boolean, label?: string, time?: string, date?: string, timestamp?: number | string, created_at?: string}} EmailRecord */
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Mail, MessageSquare, Settings, Plus, Star, Send, FileText, ShoppingBag, Users, Info, MessageCircle, Tag, Trash2, Search, RotateCcw, Sparkles, ExternalLink, ChevronRight, ChevronLeft, X, CheckSquare, Square, Inbox as InboxIcon, RefreshCw, AlertTriangle, CheckCircle2, Globe, Radio, ArrowUpRight, Eye, EyeOff, CornerUpLeft, CornerUpRight, Sliders, Server } from 'lucide-react';
 import { useBackendHealth } from './useBackendHealth';
 import { db } from '../firebase';
-import { collection, onSnapshot, query, doc, updateDoc } from 'firebase/firestore';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import CampaignAutomationTab from './CampaignAutomationTab';
 import ContentGovernanceRiskModal from './ContentGovernanceRiskModal';
+import RecDebutEmailLiveFeed from './RecDebutEmailLiveFeed';
 
 // Active business domain: stehouwer-publishing.com (Cloudflare Email Routing + IMAP/SMTP Gateway)
 const TEAM_ACCOUNTS = [
@@ -20,19 +15,20 @@ const TEAM_ACCOUNTS = [
   { id: 'julie', name: 'Julie Stehouwer', email: 'julie@stehouwer-publishing.com', label: '[Imap]/Julie', avatar: '👩‍💼' }
 ];
 
+/** @param {unknown} raw */
 const decodeMimeHeader = (raw) => {
   if (!raw) return 'No Subject';
   let val = String(raw).trim();
 
   // 1. Decode RFC 2047 standard encoded words: =?UTF-8?Q?...?= or =?UTF-8?B?...?=
   if (val.includes('=?')) {
-    val = val.replace(/=\?([\w-]+)\?([QBqb])\?([^?]+)\?=/g, (match, charset, encoding, text) => {
+    val = val.replace(/=\?([\w-]+)\?([QBqb])\?([^?]+)\?=/g, (match, _charset, encoding, text) => {
       try {
         if (encoding.toUpperCase() === 'B') {
           return decodeURIComponent(escape(atob(text)));
         } else if (encoding.toUpperCase() === 'Q') {
           const qp = text.replace(/_/g, ' ');
-          return qp.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+          return qp.replace(/=([0-9A-Fa-f]{2})/g, /** @param {string} _match @param {string} hex */ (_match, hex) => String.fromCharCode(parseInt(hex, 16)));
         }
       } catch (e) {
         return text;
@@ -60,6 +56,7 @@ const decodeMimeHeader = (raw) => {
   return val.trim() || 'No Subject';
 };
 
+/** @param {unknown} raw */
 const cleanEmailBody = (raw) => {
   if (!raw) return '';
   let str = String(raw);
@@ -117,6 +114,7 @@ const cleanEmailBody = (raw) => {
 // CHRONOLOGICAL TIMESTAMP PARSING & INTELLIGENT FORMATTING
 // ═══════════════════════════════════════════════════════════════════════
 
+/** @param {EmailRecord} item */
 export const parseEmailTimestamp = (item) => {
   if (!item) return 0;
   if (item.timestamp && typeof item.timestamp === 'number') {
@@ -158,6 +156,7 @@ export const parseEmailTimestamp = (item) => {
   return 0;
 };
 
+/** @param {EmailRecord} item */
 export const formatEmailDateDisplay = (item) => {
   const ts = parseEmailTimestamp(item);
   if (!ts) return item.time || item.date || 'Unknown';
@@ -186,6 +185,7 @@ export const formatEmailDateDisplay = (item) => {
   }
 };
 
+/** @param {EmailRecord} item */
 export const formatEmailFullDate = (item) => {
   const ts = parseEmailTimestamp(item);
   if (!ts) return `${item.date || ''} ${item.time || ''}`.trim() || 'Unknown date';
@@ -210,22 +210,24 @@ export const formatEmailFullDate = (item) => {
   return `${dateStr} at ${timeStr} (${relative})`;
 };
 
+/** @param {{onTabChange?: (tab: string) => void}} props */
 export default function EmailClientTab({ onTabChange }) {
-  const { isBackendHealthy, backendUrl } = useBackendHealth();
-  const [emails, setEmails] = useState([]);
+  const { backendStatus, backendUrl } = useBackendHealth();
+  const isBackendHealthy = backendStatus === 'online';
+  const [emails, setEmails] = useState(/** @type {EmailRecord[]} */ ([]));
   const [selectedAccount, setSelectedAccount] = useState('brett@stehouwer-publishing.com');
   const [activeFolder, setActiveFolder] = useState('Inbox');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [activeLabel, setActiveLabel] = useState(null);
+  const [activeLabel, setActiveLabel] = useState(/** @type {string | null} */ (null));
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [selectedEmail, setSelectedEmail] = useState(/** @type {EmailRecord | null} */ (null));
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 50;
   
   // Selection & Bulk Actions state
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState(/** @type {string[]} */ ([]));
   
   // Compose modal state
   const [isComposeOpen, setIsComposeOpen] = useState(false);
@@ -246,13 +248,14 @@ export default function EmailClientTab({ onTabChange }) {
 
   // Sync & Diagnostic state
   const [isSyncing, setIsSyncing] = useState(false);
-  const [syncNotice, setSyncNotice] = useState(null);
+  const [syncNotice, setSyncNotice] = useState(/** @type {{type: string, message: string, code?: string} | null} */ (null));
   const [isGeneratingReply, setIsGeneratingReply] = useState(false);
   const [emailStatus, setEmailStatus] = useState({
     domain: 'stehouwer-publishing.com',
-    imap_status: { connected: false, error: 'Checking...' },
-    smtp_status: { ready: true },
-    mailbox_stats: { total: 0, unread: 0, sent: 0 }
+    imap_status: /** @type {{connected: boolean, error?: string, host?: string, port?: number}} */ ({ connected: false, error: 'Checking...' }),
+    relay_user: /** @type {string|undefined} */ (undefined),
+    smtp_status: /** @type {{ready:boolean,host?:string,port?:number}} */ ({ ready: false }),
+    mailbox_stats: /** @type {{total:number,unread:number,sent:number,total_cached?:number,unread_inbox?:number,trash?:number}} */ ({ total: 0, unread: 0, sent: 0 })
   });
 
   // Reset page when filtering changes
@@ -284,7 +287,7 @@ export default function EmailClientTab({ onTabChange }) {
             const mergedMap = new Map();
             // Preserve user's optimistic local states (read, starred, folder)
             prev.forEach(p => mergedMap.set(p.id, p));
-            data.data.forEach(bItem => {
+            (/** @type {EmailRecord[]} */ (data.data)).forEach(bItem => {
               const existing = mergedMap.get(bItem.id);
               mergedMap.set(bItem.id, {
                 ...bItem,
@@ -390,7 +393,8 @@ export default function EmailClientTab({ onTabChange }) {
   };
 
   // Generate Smart Reply with Stehouwer LLM
-  const handleGenerateSmartReply = async (emailItem) => {
+  /** @param {EmailRecord} emailItem */
+const handleGenerateSmartReply = async (emailItem) => {
     setIsGeneratingReply(true);
     try {
       const res = await fetch(`${backendUrl}/api/v1/emails/generate-reply`, {
@@ -405,8 +409,8 @@ export default function EmailClientTab({ onTabChange }) {
       });
       const data = await res.json();
       if (data.status === 'success' && data.draft) {
-        setComposeTo(emailItem.email);
-        const subj = emailItem.subject.toLowerCase().startsWith('re:') ? emailItem.subject : `Re: ${emailItem.subject}`;
+        setComposeTo(emailItem.email || '');
+        const subj = (emailItem.subject || '').toLowerCase().startsWith('re:') ? (emailItem.subject || '') : `Re: ${emailItem.subject}`;
         setComposeSubject(subj);
         setComposeBody(data.draft);
         setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
@@ -423,8 +427,8 @@ export default function EmailClientTab({ onTabChange }) {
     // Deterministic Stehouwer fallback
     const senderName = emailItem.sender ? emailItem.sender.split(' ')[0] : 'there';
     const fallbackDraft = `Hi ${senderName},\n\nThank you for reaching out to Stehouwer Publishing regarding "${emailItem.subject}".\n\nI have received your message and will review the details right away. We will follow up with you shortly with our assessment.\n\nBest regards,\nBrett Stehouwer\nStehouwer Publishing\nbrett@stehouwer-publishing.com`;
-    setComposeTo(emailItem.email);
-    setComposeSubject(emailItem.subject.toLowerCase().startsWith('re:') ? emailItem.subject : `Re: ${emailItem.subject}`);
+    setComposeTo(emailItem.email || '');
+    setComposeSubject((emailItem.subject || '').toLowerCase().startsWith('re:') ? (emailItem.subject || '') : `Re: ${emailItem.subject}`);
     setComposeBody(fallbackDraft);
     setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
     setIsComposeOpen(true);
@@ -528,7 +532,8 @@ export default function EmailClientTab({ onTabChange }) {
   // PERSISTENT ACTION HANDLERS (LOCAL STATE + BACKEND API)
   // ═══════════════════════════════════════════════════════════════════════
 
-  const handleUpdateEmail = async (id, patch) => {
+  /** @param {string} id @param {Partial<EmailRecord>} patch */
+const handleUpdateEmail = async (id, patch) => {
     // 1. Optimistic local update
     setEmails(prev => prev.map(em => (em.id === id ? { ...em, ...patch } : em)));
     if (selectedEmail && selectedEmail.id === id) {
@@ -547,28 +552,29 @@ export default function EmailClientTab({ onTabChange }) {
     }
   };
 
-  const toggleStar = (id) => {
+  /** @param {string} id */
+const toggleStar = (id) => {
     const current = emails.find(e => e.id === id);
     const newStarred = !current?.starred;
     handleUpdateEmail(id, { starred: newStarred });
   };
 
-  const toggleReadStatus = (id) => {
+  /** @param {string} id */
+const toggleReadStatus = (id) => {
     const current = emails.find(e => e.id === id);
     const newRead = !current?.read;
     handleUpdateEmail(id, { read: newRead });
   };
 
-  const moveToTrash = (id) => {
+  /** @param {string} id */
+const moveToTrash = (id) => {
     handleUpdateEmail(id, { folder: 'Trash' });
     if (selectedEmail && selectedEmail.id === id) {
       setSelectedEmail(null);
     }
   };
 
-  const restoreFromTrash = (id) => {
-    handleUpdateEmail(id, { folder: 'Inbox' });
-  };
+  
 
   // Selection handlers
   const toggleSelectAll = () => {
@@ -581,12 +587,14 @@ export default function EmailClientTab({ onTabChange }) {
     }
   };
 
-  const toggleSelectOne = (id) => {
+  /** @param {string} id */
+const toggleSelectOne = (id) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
   // Bulk actions
-  const handleBulkAction = async (action) => {
+  /** @param {string} action */
+const handleBulkAction = async (action) => {
     if (selectedIds.length === 0) return;
     const ids = [...selectedIds];
 
@@ -621,34 +629,38 @@ export default function EmailClientTab({ onTabChange }) {
     }
   };
 
-  const handleOpenEmail = (em) => {
+  /** @param {EmailRecord} em */
+const handleOpenEmail = (em) => {
     setSelectedEmail(em);
     if (!em.read) {
       handleUpdateEmail(em.id, { read: true });
     }
   };
 
-  const handleReply = (emailItem) => {
+  /** @param {EmailRecord} emailItem */
+const handleReply = (emailItem) => {
     setIsComposeOpen(true);
     setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
-    setComposeTo(emailItem.email || emailItem.sender);
-    const subj = emailItem.subject.toLowerCase().startsWith('re:') ? emailItem.subject : `Re: ${emailItem.subject}`;
+    setComposeTo(emailItem.email || emailItem.sender || '');
+    const subj = (emailItem.subject || '').toLowerCase().startsWith('re:') ? (emailItem.subject || '') : `Re: ${emailItem.subject}`;
     setComposeSubject(subj);
     setComposeBody(`\n\n--- On ${emailItem.date} at ${emailItem.time}, ${emailItem.sender} wrote ---\n> ${cleanEmailBody(emailItem.body || emailItem.snippet).replace(/\n/g, '\n> ')}`);
     setSelectedEmail(null);
   };
 
-  const handleForward = (emailItem) => {
+  /** @param {EmailRecord} emailItem */
+const handleForward = (emailItem) => {
     setIsComposeOpen(true);
     setComposeFrom(emailItem.account || 'brett@stehouwer-publishing.com');
     setComposeTo('');
-    const subj = emailItem.subject.toLowerCase().startsWith('fwd:') ? emailItem.subject : `Fwd: ${emailItem.subject}`;
+    const subj = (emailItem.subject || '').toLowerCase().startsWith('fwd:') ? (emailItem.subject || '') : `Fwd: ${emailItem.subject}`;
     setComposeSubject(subj);
     setComposeBody(`\n\n---------- Forwarded message ---------\nFrom: ${emailItem.sender} <${emailItem.email}>\nDate: ${emailItem.date} at ${emailItem.time}\nSubject: ${emailItem.subject}\nTo: ${emailItem.account}\n\n${cleanEmailBody(emailItem.body || emailItem.snippet)}`);
     setSelectedEmail(null);
   };
 
-  const handleSendEmail = async (e) => {
+  /** @param {import("react").FormEvent} e */
+const handleSendEmail = async (e) => {
     e.preventDefault();
     setSendingEmail(true);
     setSendStatusMsg('Dispatching message over Stehouwer SMTP bridge...');
@@ -678,7 +690,7 @@ export default function EmailClientTab({ onTabChange }) {
         smtpErrorNote = resJson.detail || resJson.message || 'SMTP Authentication required';
       }
     } catch (err) {
-      smtpErrorNote = err.message || 'Backend unreachable';
+      smtpErrorNote = errorMessage(err) || 'Backend unreachable';
     }
 
     // 2. Persist to Firebase Firestore under Sent folder for persistence
@@ -753,7 +765,7 @@ export default function EmailClientTab({ onTabChange }) {
   // Safe formatting for IMAP/SMTP status
   const imapConnected = typeof emailStatus.imap_status === 'object'
     ? Boolean(emailStatus.imap_status?.connected)
-    : Boolean(emailStatus.imap_status?.includes('Connected'));
+    : Boolean(String(emailStatus.imap_status).includes('Connected'));
 
   const imapDisplayLabel = typeof emailStatus.imap_status === 'object'
     ? (emailStatus.imap_status?.connected ? 'Connected' : 'App Password Req.')
@@ -844,7 +856,7 @@ export default function EmailClientTab({ onTabChange }) {
             <span style={{ fontSize: '0.70rem', color: '#8b949e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Business Account</span>
             <span style={{ fontSize: '0.68rem', color: '#3fb950', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#3fb950' }}></span>
-              Online
+              {isBackendHealthy ? 'Backend reachable' : 'Backend unavailable'}
             </span>
           </div>
           <select 
@@ -878,9 +890,9 @@ export default function EmailClientTab({ onTabChange }) {
             <ArrowUpRight size={12} color="#8b949e" />
           </div>
           <div style={{ fontSize: '0.68rem', color: '#8b949e', lineHeight: '1.4' }}>
-            Cloudflare Routing: <strong style={{ color: '#3fb950' }}>Active</strong> (MX/SPF)<br />
+            Routing: <strong>See provider diagnostics</strong><br />
             IMAP: <span style={{ color: imapConnected ? '#3fb950' : '#e3b341', fontWeight: '600' }}>{imapDisplayLabel}</span><br />
-            SMTP: <span style={{ color: '#3fb950', fontWeight: '600' }}>Ready (TLS 587)</span>
+            SMTP: <span style={{ fontWeight: '600' }}>{emailStatus.smtp_status?.ready ? 'Configuration ready' : 'Unverified'}</span>
           </div>
         </div>
 
@@ -1039,6 +1051,7 @@ export default function EmailClientTab({ onTabChange }) {
         </div>
       ) : (
         <div style={styles.mainContent}>
+          <RecDebutEmailLiveFeed backendUrl={backendUrl} />
           {/* SEARCH & TOOLBAR HEADER */}
           <div style={styles.toolbar}>
             {selectedIds.length > 0 ? (
@@ -1156,7 +1169,7 @@ export default function EmailClientTab({ onTabChange }) {
                         color="#8b949e" 
                         style={{ marginRight: '12px', cursor: 'pointer', flexShrink: 0 }}
                         onClick={() => setSearchQuery('')}
-                        title="Clear search"
+                        aria-label="Clear search"
                       />
                     )}
                   </div>
@@ -1857,6 +1870,7 @@ export default function EmailClientTab({ onTabChange }) {
   );
 }
 
+/** @type {Record<string, import("react").CSSProperties>} */
 const styles = {
   container: {
     display: 'flex',
@@ -2026,6 +2040,8 @@ const styles = {
   },
   mainContent: {
     flex: 1,
+    minWidth: 0,
+    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#0d1117',
@@ -2471,3 +2487,9 @@ const styles = {
     marginTop: '2px'
   }
 };
+
+/** @param {unknown} error @returns {string} */
+function errorMessage(error) {
+  if (error instanceof Error) return error.message;
+  return typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error);
+}

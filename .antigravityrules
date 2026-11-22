@@ -1,0 +1,28 @@
+# Antigravity Rules Pointer & Authority Directive
+
+> **SINGLE SOURCE OF TRUTH (SSOT) NOTICE**
+> All agent behavior, environment constraints, socket topologies, and operational directives are canonicalized in:
+> [`C:\AI-BS\.agents\AGENTS.md`](file:///C:/AI-BS/.agents/AGENTS.md)
+>
+> Granular modular rules are maintained in:
+> [`C:\AI-BS\.agents\rules/`](file:///C:/AI-BS/.agents/rules)
+
+## Deferral Mandate
+All Antigravity, Gemini, and autonomous agent instances operating in this workspace must defer unconditionally to:
+1. **Master Directive:** [`C:\AI-BS\.agents\AGENTS.md`](file:///C:/AI-BS/.agents/AGENTS.md)
+2. **Modular Rules Tree:**
+   - [`01_COST_CONSTRAINTS.md`](file:///C:/AI-BS/.agents/rules/01_COST_CONSTRAINTS.md) (Zero-cost mandate)
+   - [`02_DEPLOYMENT_STANDARD.md`](file:///C:/AI-BS/.agents/rules/02_DEPLOYMENT_STANDARD.md) (Automated frontend build & Firebase deploy)
+   - [`03_MASTER_LEDGER_MAINTENANCE.md`](file:///C:/AI-BS/.agents/rules/03_MASTER_LEDGER_MAINTENANCE.md) (Milestone commit standard & Q&A exemption)
+   - [`04_OBJECTIVE_COMMUNICATION.md`](file:///C:/AI-BS/.agents/rules/04_OBJECTIVE_COMMUNICATION.md) (Blunt, objective tone)
+   - [`05_SAFETY_FILTER_DIRECTIVE.md`](file:///C:/AI-BS/.agents/rules/05_SAFETY_FILTER_DIRECTIVE.md) (S1, S3, S4 locked; S2, S5-S13 unlocked)
+   - [`06_ZERO_MOCK_INTEGRITY.md`](file:///C:/AI-BS/.agents/rules/06_ZERO_MOCK_INTEGRITY.md) (Zero synthetic financial data)
+   - [`07_INTERACTIVE_PROCEED_STANDARD.md`](file:///C:/AI-BS/.agents/rules/07_INTERACTIVE_PROCEED_STANDARD.md) (Pre-authorized direct execution)
+   - [`08_IDE_WORKSPACE_INTEGRITY.md`](file:///C:/AI-BS/.agents/rules/08_IDE_WORKSPACE_INTEGRITY.md) (AI-BS.code-workspace binding)
+   - [`09_WSL2_SCRIPT_PATCHING.md`](file:///C:/AI-BS/.agents/rules/09_WSL2_SCRIPT_PATCHING.md) (WSL2 script patching over dual-booting)
+   - [`10_MULTI_TENANT_MEDIA_ROUTING.md`](file:///C:/AI-BS/.agents/rules/10_MULTI_TENANT_MEDIA_ROUTING.md) (Multi-tenant schema & dynamic URL)
+   - [`11_UI_VERSION_PARITY.md`](file:///C:/AI-BS/.agents/rules/11_UI_VERSION_PARITY.md) (Multi-mirror sync law across 4 trees)
+   - [`FIRE_WRITING_RULE.md`](file:///C:/AI-BS/.agents/rules/FIRE_WRITING_RULE.md) (Verbatim transcription fidelity)
+   - [`permissions.md`](file:///C:/AI-BS/.agents/rules/permissions.md) (Full-privilege machine & external resources access)
+
+Do not duplicate rule definitions in this file. Refer directly to the canonical sources above.

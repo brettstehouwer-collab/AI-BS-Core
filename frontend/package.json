@@ -1,6 +1,6 @@
 {
   "name": "ai-bs-frontend",
-  "version": "5.329.56",
+  "version": "5.329.192",
   "description": "AI-BS Sovereign Intelligence Studio",
   "author": "Brett Stehouwer / Stehouwer Publishing",
   "private": true,
@@ -13,12 +13,17 @@
     "version:check": "node ../scripts/release-version.cjs check",
     "prebuild": "npm run version:check",
     "build": "npm run sync-mirrors && vite build",
+    "build:bs-chat": "npm run version:check && vite build --config vite.bs-chat.config.mjs",
+    "build:driver": "npm run version:check && vite build --config vite.driver.config.mjs",
+    "build:personal": "npm run version:check && vite build --config vite.personal.config.mjs",
+    "build:release": "npm run version:check && vite build --config vite.release.config.mjs",
     "preview": "vite preview",
     "electron:start": "electron .",
     "build:exe": "npm run build && electron-builder --win",
     "build:dir": "npm run build && electron-builder --win --dir",
     "lint": "eslint src --ext js,jsx",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check:types": "tsc --noEmit --pretty false -p tsconfig.json"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.2",
@@ -55,6 +60,11 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@types/react": "18.3.31",
+    "@types/react-big-calendar": "1.16.3",
+    "@types/react-dom": "18.3.7",
+    "@types/react-syntax-highlighter": "15.5.13",
+    "@types/three": "0.187.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.5.5",
     "compression": "^1.7.4",
@@ -64,6 +74,7 @@
     "postcss": "^8.5.28",
     "tailwindcss": "^3.4.19",
     "terser": "^5.49.0",
+    "typescript": "7.0.2",
     "vite": "^5.4.1"
   },
   "build": {

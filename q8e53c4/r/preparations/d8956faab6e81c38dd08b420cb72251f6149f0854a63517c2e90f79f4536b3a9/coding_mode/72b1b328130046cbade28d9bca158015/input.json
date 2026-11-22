@@ -1,0 +1,42 @@
+{
+  "kind": "coding_mode_execution_input",
+  "owner": "firebase:ai-bs-dashboard:Y0WF5eDChuSrVUdXQoWTMs6oyUE2",
+  "payload": {
+    "execution_id": "72b1b328130046cbade28d9bca158015",
+    "request_id": "e612286eb00b4e51b32c03e81630df52",
+    "plan_id": "162fec506ed94a74be310b92524a1b35",
+    "proposal_id": "8564c763b14b48b986eabf792c33ff22",
+    "execution_backend": "trusted_host",
+    "trusted_local_ack": true
+  },
+  "proposal_sha256": "f83bf644586a4a0e2710a0e11736d0082b92683d68b749244c28ac4ddf293d1f",
+  "files": [
+    {
+      "relative_path": "app.py",
+      "role": "editable",
+      "length": 73,
+      "sha256": "5e2322eabfe8ee0b149e5527b78a89a7ba47b46666f8b3571be6d7062ac2fd54"
+    },
+    {
+      "relative_path": "test_app.py",
+      "role": "verification",
+      "length": 303,
+      "sha256": "965a9f7b9d3d826245ecd2d02f1d9175c1be86d1969cef31189580ed83c38b3c"
+    }
+  ],
+  "checks": [
+    {
+      "check_id": "python",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "test_app"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "review_diff": "--- a/app.py\n+++ b/app.py\n@@ -1,2 +1,2 @@\n def clamp(value, lower, upper):\n-    return value\n+    return max(lower, min(value, upper))\n",
+  "created_at_utc": "2026-11-14T23:23:57.276052+00:00",
+  "entry_sha256": "b56ae6299017aa9f78be0dc95e0612a07392bf60b176c7af7a489448e4ac723d"
+}

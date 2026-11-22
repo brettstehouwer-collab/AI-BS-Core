@@ -1,0 +1,42 @@
+<!-- ... existing code ... -->
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            const speed = 10 * delta;
+            if (keys['KeyW'] || keys['ArrowUp']) { playerPos.z -= speed; vehicleData.boost = keys['ShiftLeft'] || keys['ShiftRight']; }
+            if (keys['KeyS'] || keys['ArrowDown']) { playerPos.z += speed; vehicleData.boost = false; }
+            if (keys['KeyA'] || keys['ArrowLeft']) playerPos.x -= speed;
+            if (keys['KeyD'] || keys['ArrowRight']) playerPos.x += speed;
+
+            camera.position.x += (playerPos.x - camera.position.x) * 0.05;
+            camera.position.z += (playerPos.z + 9 - camera.position.z) * 0.05;
+
+            if (activeVehicle) {
+                vehicleGroup.position.copy(playerPos);
+                vehicleGroup.rotation.y = 0;
+                if (vehicleData.boost) {
+                    vehicleData.temp += delta * (vehicleData.unpinched ? 1.0 : 4.5);
+                    if (vehicleData.temp > 98) vehicleData.temp = 98;
+                } else {
+                    vehicleData.temp -= delta * 2.0;
+                    if (vehicleData.temp < 42) vehicleData.temp = 42;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "at": "2026-11-03T18:28:54.133751+00:00",
+  "classification": "progress",
+  "previous_goal_turn": "progress: Studio103/SDK0.16.4packaged routes/restarts and launcher deployment with41A/Bverified backups",
+  "goal_complete": false,
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "source_sha256": {
+    "engine/tools/measure_opening.py": "97bc253d95b3eb655213edf74c4aac81146e6b4c797dc65a29dd0e287ecf8125",
+    "engine/tests/test_measure_opening.py": "95cd43d621bd75ab943a6b6866f49c6ae54f0fd2216bd2901f3a0305e9a6b7b6"
+  },
+  "user_stationary_measurement": {
+    "status": "validated_actual_user_started_stationary_1080p_native_report",
+    "scope": "Stationary nook only; not whole-opening performance or human pacing",
+    "summary": {
+      "fps": 59.99740211248853,
+      "frame_ms": {
+        "mean": 16.66738833333333,
+        "p50": 16.6589,
+        "p95": 16.9787,
+        "p99": 17.3701
+      },
+      "scope": "Stationary nook only; not whole-opening performance or human pacing"
+    },
+    "report": "D:\\AI-BS-Game-Resources\\PerformanceSessions\\20261103T181529Z-93a0ea7c-2ccb-41b0-9be8-09f0665ca40e\\performance.json",
+    "user_confirmed": "i ran it",
+    "not_whole_opening_acceptance": true,
+    "causal_speedup_not_established": true,
+    "native_lifecycle_stopped_seen": true,
+    "native_exit_code_independently_recorded": false,
+    "process_observation": {
+      "checked_at": "2026-11-03T18:23:00.9901809+00:00",
+      "matching_benchmark_processes": 0,
+      "scope": "Read-only exact benchmark session command line; no user process stopped"
+    },
+    "limitation": "This first launcher did not retain its process return code. Verified native measured report, stopped lifecycle and absence of the exact session process establish report/terminal observations; no captured exit-code claim. Future launcher records its retained-child return code."
+  },
+  "native_v15": {
+    "status": "passed_actual_v15_native_portrait_and_animation",
+    "vertices": 168068,
+    "indices": 399636,
+    "joints": 22,
+    "clips": 4,
+    "decoded_bytes": 19492948,
+    "content_gpu_bytes": 20119552,
+    "visible_pixel_difference": 283551,
+    "animated_pixel_difference": 69895,
+    "debug_errors": 0,
+    "debug_warnings": 0,
+    "likeness_approved": false,
+    "installed_model_replaced": false
+  },
+  "v15_whole_chapter_admission": "passed_actual_v15_full_chapter_admission_and_native_frame",
+  "master_readonly_probe": {
+    "status": "passed_readonly_editable_master_inspection",
+    "blender": "5.2.3 LTS",
+    "master_sha256": "77f1724db4dc5dca4e56c56a8261a1a601cdd3e588238e0fd3782801b35eb968",
+    "master_unchanged": true,
+    "linked_libraries": 0,
+    "joint_count": 22,
+    "packed_image_names": [
+      "authored-shirt-print.png"
+    ],
+    "actions": [
+      "catchup",
+      "guidance",
+      "idle",
+      "walk"
+    ],
+    "text_block_names": [],
+    "autoexec_enabled": false,
+    "family_reference_pixels_loaded_by_probe": false,
+    "live_blender_scene_touched": false,
+    "likeness_approved": false
+  },
+  "installed_studio_unchanged": "5.329.103/SDK0.16.4with prior v10Adam; no new packaged release or art replacement",
+  "family_originals": {
+    "status": "passed",
+    "reference_files": [
+      {
+        "source": "AdamMainPic.jpg",
+        "unchanged": true
+      },
+      {
+        "source": "20151016_120823.jpg",
+        "unchanged": true
+      },
+      {
+        "source": "20151016_120829.mp4",
+        "unchanged": true
+      }
+    ],
+    "original_pixels_or_audio_copied_into_checkpoint": false
+  },
+  "test_summary": {
+    "developer_tool_tests": 4,
+    "timing_fixtures_are_not_hardware_measurements": true,
+    "new_actual_user_benchmark": true,
+    "all_agent_owned_jobs_joined": true,
+    "first_user_launcher_exit_code_not_captured": true
+  },
+  "known_failures": "Initial dotted unittest path resolved native_studio/engine.py from inherited development import paths. Direct-file/clean owned runner passes; initial failed invocation is not counted as a pass. Blender MCP is offline; separate no-autoexec background Blender inspected the master without changing it.",
+  "likeness_review": "Actual native face remains generic/stylized: lower-face fullness, lid/brow contours, forehead fringe and beard treatment require sculpting. No final resemblance approval; no geometry edit claimed this checkpoint.",
+  "next_step": "Sculpt and compare a new separate likeness candidate against the approved reference appearances; preserve rig/UV/animations, verify native rendering and seek close-up/full-body review. Expand real gameplay performance/pacing evidence beyond the now-measured stationary nook. Keep optional-recording caption review and final packaged source/art backup gates.",
+  "storage_GiB": {
+    "C": 61.97,
+    "D": 69.91,
+    "E": 136.73
+  }
+}

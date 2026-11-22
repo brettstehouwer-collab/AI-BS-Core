@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "state": "SOURCE_READY_REVIEW_PENDING_NO_VM_OPERATIONS",
+  "created_utc": "2026-10-26T18:51:17.6827643Z",
+  "scope": "disposable_probe_host",
+  "files": [
+    {
+      "name": "DisposableProbe.psm1",
+      "length": 51174,
+      "sha256": "fe1f22eebbe9b94a6718e26be3935a3fde72b38029ea58a1d42a950e3c3f4c47"
+    },
+    {
+      "name": "Invoke-WorkerTransport.ps1",
+      "length": 814,
+      "sha256": "d169e943f41138790bd15c0b6953fd53b576eb6ae508df04e6d1d3c52029e650"
+    },
+    {
+      "name": "Readback-And-SnapshotWorker.ps1",
+      "length": 15951,
+      "sha256": "bc227622b2ed0b762f5e7319cbcfdb3e49eec35f8d0fefca96dae662db943fbf"
+    },
+    {
+      "name": "Guest-BootstrapReadback.ps1",
+      "length": 6685,
+      "sha256": "160b2506d57e5376ccc8971fa8f60fd7fee8987cf64f309f97b21a4a3ca1cc51"
+    },
+    {
+      "name": "Start-BootstrapPreparation.ps1",
+      "length": 5187,
+      "sha256": "4f9b2b0d38c500f8df85275613cb4a0ae29d0734d4ee471dc5a5580e3d0e834f"
+    },
+    {
+      "name": "Test-Infrastructure.ps1",
+      "length": 26730,
+      "sha256": "03148049cb8c539c36e73987d0c51a21ce66a029ca2ff7be62cd44a445f3544b"
+    },
+    {
+      "name": "README.md",
+      "length": 13254,
+      "sha256": "54190a8b26e51e8d54648cbbff4e1ec08d76960f8d898b58492f291a68aca797"
+    },
+    {
+      "name": "CONTROLLER_SEAL_CONTRACT.md",
+      "length": 4987,
+      "sha256": "7057ad662c48169e785c7eb4b00ab21896003b2bd75eb071d1dc43f09a2554cd"
+    },
+    {
+      "name": "SealPolicy.ps1",
+      "length": 11342,
+      "sha256": "37612c30603e86ba349cb3fc357f3c52dc739f905527479858501db9134f1f48"
+    },
+    {
+      "name": "Inspect-SealedWorker.ps1",
+      "length": 6443,
+      "sha256": "ce1ffe293e9c71163b0a40a9d94c545069fa8cbf6bbae3c409d6ddd5f6718c55"
+    },
+    {
+      "name": "Seal-WorkerImage.ps1",
+      "length": 16391,
+      "sha256": "cae432804e32cb90dabf3bb1fa8880cca77c39e2bb2710209773666423c08094"
+    },
+    {
+      "name": "Test-SealInfrastructure.ps1",
+      "length": 14157,
+      "sha256": "2452ab0f75cea1d0764341a20dd7b025a8fc4222b1fa9ff39a39cedb66b73304"
+    }
+  ],
+  "infrastructure_evidence": [
+    "infra-20261026T184011Z-cc099d32a7f34228a31221608a75b809/results.json",
+    "seal-infra-20261026T185049Z-545411881c364f1db2aa987613ff262e/results.json"
+  ],
+  "actual_vm_operations_performed_by_this_agent": false,
+  "actual_acl_mutations_performed_by_this_agent": false,
+  "profile_published_by_this_agent": false
+}

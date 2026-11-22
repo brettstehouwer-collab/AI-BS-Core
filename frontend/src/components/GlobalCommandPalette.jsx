@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { getAllToolsFlatList, masterHubs } from './navigationConfig';
+import { useState, useEffect, useRef } from 'react';
+import { getAllToolsFlatList } from './navigationConfig';
 import './GlobalCommandPalette.css';
 
+/** @param {{isOpen: boolean, onClose: () => void, onNavigateTab?: (tab: string) => void, onOpenGuide?: () => void, onStartTour?: () => void, workspaceMode: string, onToggleWorkspaceMode: () => void}} props */
 export default function GlobalCommandPalette({ 
   isOpen, 
   onClose, 
@@ -13,14 +14,14 @@ export default function GlobalCommandPalette({
 }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const inputRef = useRef(null);
-  const listRef = useRef(null);
+  const inputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const listRef = useRef(/** @type {HTMLDivElement | null} */ (null));
 
   const allTools = getAllToolsFlatList();
 
-  const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
-  const [isProcessingAi, setIsProcessingAi] = useState(false);
-  const [aiResponse, setAiResponse] = useState(null);
+  (import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000');
+  useState(false);
+  useState(null);
 
   // Quick Action commands
   const quickActions = [
@@ -66,28 +67,6 @@ export default function GlobalCommandPalette({
       action: () => {
         onClose();
         if (onNavigateTab) onNavigateTab('screenwriting');
-      }
-    },
-    {
-      id: 'action-portal-fe-express',
-      type: 'action',
-      label: '🚚 Open FE Express Box Truck Dispatch Portal (Devin) (?tab=clients&client=fe_express)',
-      icon: '🚚',
-      category: 'Client Portals',
-      action: () => {
-        onClose();
-        if (onNavigateTab) {
-          onNavigateTab('clients');
-          setTimeout(() => {
-            const select = document.querySelector('select');
-            if (select) {
-              select.value = 'fe_express';
-              select.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-          }, 150);
-        } else {
-          window.location.href = '?tab=clients&client=fe_express';
-        }
       }
     },
     {
@@ -192,7 +171,8 @@ export default function GlobalCommandPalette({
   }, [query]);
 
   // Keyboard navigation inside the palette
-  const handleKeyDown = (e) => {
+  /** @param {import("react").KeyboardEvent<HTMLElement>} e */
+const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
       e.preventDefault();
       onClose();
@@ -214,11 +194,12 @@ export default function GlobalCommandPalette({
     }
   };
 
-  const handleSelectItem = (item) => {
-    if (item.type === 'action') {
+  /** @param {{type?: string, action?: () => void, key?: string}} item */
+const handleSelectItem = (item) => {
+    if (item.type === 'action' && item.action) {
       item.action();
     } else {
-      if (onNavigateTab) onNavigateTab(item.key);
+      if (onNavigateTab && item.key) onNavigateTab(item.key);
       onClose();
     }
   };

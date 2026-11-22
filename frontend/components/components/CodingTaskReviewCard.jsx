@@ -9,7 +9,7 @@ function useCodingSession() {
   const [session] = useState(() => {
     let generation = 0;
     const snapshot = () => JSON.stringify([generation, contextStamp(useAppStore.getState())]);
-    return { snapshot, /** @param {()=>void} notify */ subscribe(notify) {
+    return { snapshot, subscribe(/** @type {()=>void} */ notify) {
       const unsubscribe = useAppStore.subscribe((next, previous) => {
         if (contextStamp(next) !== contextStamp(previous)) { generation++; notify(); }
       });

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SYSTEM_VERSION } from './version';
 
-export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
-  const [tools, setTools] = useState({
+/** @param {{onToolToggle?: (tools: Record<string, boolean>) => void, onQuickCommand?: (command: string) => void}} props */
+export default function ChatToolControlBar({ onToolToggle }) {
+  const [tools, setTools] = useState(/** @type {Record<string, boolean>} */ ({
     plan_and_review: false,
     shadow_coder: true,
     media_studio: true,
@@ -13,9 +14,10 @@ export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
     ast_blast_graph: true,
     qlora_distiller: true,
     auto_healer: true
-  });
+  }));
 
-  const TOOL_LABELS = {
+  /** @type {Record<string, string>} */
+const TOOL_LABELS = {
     plan_and_review: '📋 Mode: Plan & Review',
     shadow_coder: '⚡ Shadow Coder',
     media_studio: `🎬 Media Studio (${SYSTEM_VERSION})`,
@@ -28,7 +30,8 @@ export default function ChatToolControlBar({ onToolToggle, onQuickCommand }) {
     auto_healer: '🩺 Stage 1 Auto-Healer (3x)'
   };
 
-  const toggleTool = (name) => {
+  /** @param {string} name */
+const toggleTool = (name) => {
     const next = { ...tools, [name]: !tools[name] };
     setTools(next);
     if (onToolToggle) onToolToggle(next);

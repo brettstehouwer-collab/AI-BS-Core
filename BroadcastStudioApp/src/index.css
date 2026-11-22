@@ -1,0 +1,76 @@
+:root {
+  --bg-dark: #1f0b3e;
+  --bg-darker: #130526;
+  --bg-panel: rgba(20, 5, 45, 0.75);
+  --text-main: #f4e8ff;
+  --text-muted: #b8a3d6;
+  --accent: #d92bb8;
+  --accent-neon: #00e5ff;
+  --accent-glow: rgba(217, 43, 184, 0.5);
+  --border: rgba(0, 229, 255, 0.2);
+  --glass-bg: rgba(30, 10, 60, 0.65);
+  --glass-border: rgba(0, 229, 255, 0.2);
+  --border-glow: rgba(0, 229, 255, 0.4);
+  --success-color: #10b981;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: url('/psychedelic_theme.jpg') center/cover fixed;
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}

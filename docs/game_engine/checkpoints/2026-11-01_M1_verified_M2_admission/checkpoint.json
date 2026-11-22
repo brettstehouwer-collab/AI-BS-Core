@@ -1,0 +1,62 @@
+{
+  "id": "2026-11-01_M1_verified_M2_admission",
+  "created_at": "2026-11-01T09:20:51.336541+00:00",
+  "classification": "small development checkpoint; not a completed alpha or goal handoff",
+  "repository": {
+    "path": "C:/AI-BS",
+    "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "working_tree": "Uncommitted additive engine/docs/native monitor changes plus unrelated pre-existing changes. No commit or hash equivalence asserted."
+  },
+  "sdk": "0.6.0 source + Debug/Release installs",
+  "active_studio": "5.329.90 (SDK0.5 package); next M1 milestone package not built yet",
+  "completed": [
+    "M0 consolidated queue",
+    "M1 implementation/proof: oriented scene + Jolt capsule slopes + swept camera + motherboard obstacle course"
+  ],
+  "verification": {
+    "native_debug": 17,
+    "native_release": 17,
+    "installed_sdk_consumers": "passed Debug and Release; includes separate course and Gameplay admission API",
+    "python_monitor_ui": 33,
+    "native_course": "passed two-process traversal/restart on RTX4090; debug errors0; 313125 captured pixels; stable IDs/orientation/history/pixels",
+    "logs": [
+      "engine/out/debug06-consolidated.log",
+      "engine/out/release06-consolidated.log",
+      "engine/out/obstacle_course_verification.json",
+      "engine/out/gameplay-callback-red.log",
+      "engine/out/gameplay-callback-green.log"
+    ]
+  },
+  "m2_foundation": "Typed/versioned components, four semantic payloads, immutable bounded admission and ordered heads. Reentrant callback/input mutation fixes verified. No SQLite/worker/runtime component world/migration yet.",
+  "new_paths": [
+    "engine/include/aibs/gameplay.hpp",
+    "engine/src/gameplay.cpp",
+    "engine/GAMEPLAY_CONTRACT.md",
+    "engine/include/aibs/movement_course.hpp",
+    "engine/games/movement_course.cpp",
+    "engine/apps/obstacle_course.cpp",
+    "engine/tests/verify_obstacle_course.py"
+  ],
+  "next_steps": [
+    "Mark M1 gates complete and move queue to M2 with actual evidence",
+    "Update README/physics notes/status/ongoing ledger revision0.7",
+    "Build and verify new private Studio M1 package; retain prior releases and verify existing shortcut updates",
+    "Upload source/evidence milestone archive + update Drive files in place; verify readback",
+    "Implement M2 bounded async SQLite adapter and original-format1 import with interruption/dedup tests"
+  ],
+  "resume_commands": [
+    "powershell.exe -NoProfile -ExecutionPolicy Bypass -File engine/scripts/verify.ps1 -Configuration Debug",
+    "powershell.exe -NoProfile -ExecutionPolicy Bypass -File engine/scripts/verify.ps1 -Configuration Release",
+    "python -m unittest discover -s engine/tests -p test_*.py"
+  ],
+  "compatibility": "Original FirstBoot schema/format1 unchanged. Course is separate movement-course project/save. Player pose transient. SDKclients rebuild for0.6.",
+  "context_policy": "Read this durable checkpoint and current worktree before resuming. Do not restart completed M1. Full goal remains private20-30minFirstBoot alpha and long-term roadmap; not achieved.",
+  "synthetic_game_save": {
+    "file": "synthetic-course.aibs",
+    "source": "generated automated movement-course test; no user save or personal memoir content",
+    "source_path": "C:\\AI-BS\\engine\\out\\course-checkpoints\\0dc92d37-5adb-461d-aff6-35c072d9af32\\course.aibs",
+    "world_scope": "movement-course/main",
+    "purpose": "small restartable synthetic game checkpoint"
+  }
+}

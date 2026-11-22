@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "handoff_id": "checkpoint26_studio100_local_20261102",
+  "utc": "2026-11-02T22:08:05.983932+00:00",
+  "outgoing_agent": "OpenAI Codex/root",
+  "receiving_agent": "next executor",
+  "status": "VERIFIED_SCOPED_LOCAL_CHECKPOINT",
+  "repo": {
+    "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+    "branch": "codex/audit-v532976-20261031",
+    "working_tree": "dirty/untracked state preserved; private complete99450-line snapshot retained locally, excluded from public checkpoints",
+    "private_status_capture": "D:/AI-BS-Game-Resources/Backups/P26_Private_Handoff_State/capture.json"
+  },
+  "source_manifest": {
+    "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\phase26_checkpoint_readiness.json",
+    "sha256": "6111f6070b8b11909c6d7a499e3c1105b8340b19b077678e5db74ed73d85de95",
+    "frozen_paths_before_closeout": 480,
+    "runtime_or_content_paths_changed_by_closeout": 0,
+    "unchanged_frozen_paths_after_closeout": 475,
+    "document_monitor_deltas": {
+      "engine/out/warm_beginning/monitor_summary.json": {
+        "before_sha256": "0d1eae64ef092df7dfb220292ab08b81cdac171b63af93aa6ed48be175994cc2",
+        "after_sha256": "f249ceac965fdfcde08d92173869643943ed69e09b64968955b0c30898466d53",
+        "diff_path": "D:\\AI-BS-Game-Resources\\Backups\\P26_Closeout_Preimages\\20261102T220805Z-14dcd6a1\\diffs\\engine__out__warm_beginning__monitor_summary.json.patch",
+        "diff_sha256": "b535304aa2a47d4f172c19397d920f79b53f9a6d116503abae3fbd72e9cbd626"
+      },
+      "engine/out/build_progress.json": {
+        "before_sha256": "3b90189fecee8162141cfb2791b054c7ab202bf21531548617fbca9bd9f88578",
+        "after_sha256": "fc005a9b256616eeba8eb2feea40682d99aa8bd0f5523ac4234d6bdbb66fda80",
+        "diff_path": "D:\\AI-BS-Game-Resources\\Backups\\P26_Closeout_Preimages\\20261102T220805Z-14dcd6a1\\diffs\\engine__out__build_progress.json.patch",
+        "diff_sha256": "3ee3df2d3db457fc507d7cecc78f64e697d4eba1706cfbfd8094c7c416c78161"
+      },
+      "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md": {
+        "before_sha256": "0d58534bffe7ce94df9dd9d0a3dbb0bbc8e7858507952fa9f60930b725b04343",
+        "after_sha256": "e6ee9aa372dfcab82eac9762227c7172d29cac287e91fcfe3454ee62366471a8",
+        "diff_path": "D:\\AI-BS-Game-Resources\\Backups\\P26_Closeout_Preimages\\20261102T220805Z-14dcd6a1\\diffs\\docs__game_engine__AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md.patch",
+        "diff_sha256": "ebfea2012c279c1c59a34e666a1b31ac688366d3b4f384e5e5a827a644a18da1"
+      },
+      "engine/BUILD_STATUS.md": {
+        "before_sha256": "4248ca12409d7239b6ad4ef56c845ab5d59d2fee74cb2c2158da89d5888c38c7",
+        "after_sha256": "65aa318b6fb92444d0a405870e141c8ea09d04e4f2b600db3c8430aa235bc01e",
+        "diff_path": "D:\\AI-BS-Game-Resources\\Backups\\P26_Closeout_Preimages\\20261102T220805Z-14dcd6a1\\diffs\\engine__BUILD_STATUS.md.patch",
+        "diff_sha256": "1d021e41f0b0ea4a63f3f67f4a30ac58814c65dba3518334dcf6b61a90d99b45"
+      },
+      "engine/WARM_BEGINNING.md": {
+        "before_sha256": "09fe1531125203e494a24f8bae86357936893049c5fdc3e07617839bd7af25a9",
+        "after_sha256": "a041da4b1e8b1ba07afcac26215fa3ccfe3bbc09014609163a78216e10a3a3f1",
+        "diff_path": "D:\\AI-BS-Game-Resources\\Backups\\P26_Closeout_Preimages\\20261102T220805Z-14dcd6a1\\diffs\\engine__WARM_BEGINNING.md.patch",
+        "diff_sha256": "ba8af92b387258f539331ad23e5cf138eea99a3d51b1e3ac2bf0d504d7ff042f"
+      }
+    }
+  },
+  "checkpoint_receipts": [
+    {
+      "path": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint26A-local.json",
+      "sha256": "c130d4bf917e35da6b3efbd616ba525115fcdb11cef0e00e4102ec58c7298a7e",
+      "archive": "D:\\AI-BS-Game-Resources\\Backups\\26A_Studio100_Source_Art_Content.zip",
+      "archive_sha256": "faf75c633a7f51035b35ed041df38a14a80d41e3260fff80812bf00a93e6f26c",
+      "bytes": 36634192
+    },
+    {
+      "path": "C:\\AI-BS\\docs\\game_engine\\checkpoints\\2026-11-01_Warm_Beginning_Workshop\\checkpoint26B-local.json",
+      "sha256": "8f8a9c34762fc000e1cb8c674d5a350c4ab0ffc94d4ef3b69d19e95ce5162d1f",
+      "archive": "D:\\AI-BS-Game-Resources\\Backups\\26B_Studio100_Creator_Preview_Portable.zip",
+      "archive_sha256": "56b0739c7e01ea21727770fdb629abfcf33789f7f888a4728aee86c5e8606cbe",
+      "bytes": 239240839
+    }
+  ],
+  "completed_verified": [
+    "Studio100 creator preview deployed through five existing shortcuts",
+    "All113 registered native functional names passed per Release and Debug, aggregated89CPU plus24 separately executed original entries",
+    "154creator source/offscreen cases and35native creation checks",
+    "84package regression cases; frozen104module/resource/code-equivalence and actual hub/creator/limited normal startup checks",
+    "Current v02 native composed preview601CPU/650native assertions and six GPU captures",
+    "Local26A/26B independent full archive verification; originals and older releases preserved"
+  ],
+  "incomplete_unverified": [
+    "persistent saved-chapter gameplay publication/launch",
+    "current full route walking and durable restart acceptance",
+    "first-time8–12minute pacing and1080p60 measurement",
+    "naturalistic Adam likeness approval",
+    "new full-opening walkthrough and final verified Drive backup"
+  ],
+  "known_failures": [
+    "Prior owned console-host teardown timing and empty Debug launch arguments were corrected in the wrapper; diagnostics preserved; original native tests then passed",
+    "Original-caption listening review deferred by user",
+    "Current cloud upload rejected by automatic approval review; specific authorization remains pending"
+  ],
+  "architecture_decisions": [
+    {
+      "id": "WB-CREATOR-26",
+      "status": "IMPLEMENTED",
+      "change": "curated six-role opening creation with native typed dependency validation and additive SDK0.15 runtime resources"
+    },
+    {
+      "id": "WB-SAVED-PLAY-27",
+      "status": "PROPOSED",
+      "change": "separate saved-chapter persistent game launch; preserve isolated CreatorPlay and old saves",
+      "design": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P27_persistent_launch_design\\handoff.json"
+    }
+  ],
+  "verification_evidence": {
+    "schema": 1,
+    "utc": "2026-11-02T22:06:49.765486+00:00",
+    "status": "VERIFIED_LOCAL_ONLY",
+    "reviewer": "root independent reader",
+    "archives": [
+      {
+        "checkpoint": "26A",
+        "archive": "D:\\AI-BS-Game-Resources\\Backups\\26A_Studio100_Source_Art_Content.zip",
+        "bytes": 36634192,
+        "sha256": "faf75c633a7f51035b35ed041df38a14a80d41e3260fff80812bf00a93e6f26c",
+        "selected_files": 1523,
+        "ZIP_members_including_manifest": 1524,
+        "every_member_CRC_size_sha256_verified": true
+      },
+      {
+        "checkpoint": "26B",
+        "archive": "D:\\AI-BS-Game-Resources\\Backups\\26B_Studio100_Creator_Preview_Portable.zip",
+        "bytes": 239240839,
+        "sha256": "56b0739c7e01ea21727770fdb629abfcf33789f7f888a4728aee86c5e8606cbe",
+        "selected_files": 2309,
+        "ZIP_members_including_manifest": 2310,
+        "every_member_CRC_size_sha256_verified": true
+      }
+    ],
+    "ready_source_paths_verified_unchanged": 480,
+    "source_ready_sha256": "6111f6070b8b11909c6d7a499e3c1105b8340b19b077678e5db74ed73d85de95",
+    "Studio100_executable_verified": true,
+    "cloud_uploaded": false,
+    "goal_complete": false
+  },
+  "preserved_build_and_tests": {
+    "native_functional": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\native_remaining26\\completion-summary.json",
+      "sha256": "a9e5e9c7ff98abe1f2b672c26540d6c2ea7b19f11c63465069c5eeacdf288d5b"
+    },
+    "native_visuals": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\detailed_opening_preview26\\completion-summary.json",
+      "sha256": "3e25d99328031b7fe8be21085edd146452ee0c487987b0837a7cf69fc8ef457c"
+    },
+    "creator_source": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P26_opening_creator\\verification.json",
+      "sha256": "6c1460904ebb4077563b81244d9ace638980db7b27a785df0e810f4a188ad479"
+    },
+    "creator_v02": {
+      "path": "D:\\AI-BS-Game-Resources\\P26\\CuratedCreatorNative-v02-01\\verification.json",
+      "sha256": "78392a4832e9d25a307633dffde4d3d0effd7ba0a3564539228a35eea6938472"
+    },
+    "curation": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\curated_v02_setup26.json",
+      "sha256": "1fd14db4f8ccd6282c98220431c2205649d19524b0136e85ac9f48c380eb7e77"
+    },
+    "asset_masters": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\station_polish26\\verification.json",
+      "sha256": "3dfc52a5ddc0524a074e31f99c548e6776c165ffb2339213f6b57c4b62abd07b"
+    },
+    "package": {
+      "path": "D:\\AI-BS-Game-Resources\\P26\\Studio100\\post-runtime-package-verification.json",
+      "sha256": "ffae55b031dde1b74b09d9be1d9f97dc557087be3b9ca1d489a673156a397be5"
+    },
+    "frozen_hub": {
+      "path": "D:\\AI-BS-Game-Resources\\P26\\Studio100\\packaged-hub-smoke.json",
+      "sha256": "554b6fb0bfff85ec1765d2c9f2a690dcba1e1628693608bf95c4caa3747a6292"
+    },
+    "frozen_creator": {
+      "path": "D:\\AI-BS-Game-Resources\\T26\\C100\\creator.json",
+      "sha256": "516eda13d15917c2f599529e64349673cc98c703944736ad41ab6664c3f85144"
+    },
+    "normal_startup": {
+      "path": "D:\\AI-BS-Game-Resources\\P26\\Studio100\\normal-mainwindow-observation.json",
+      "sha256": "8dc66455c62285b3626e41f84ecb76f6325eb85bec98bb3ae76261787b5c518a"
+    },
+    "deployment": {
+      "path": "D:\\AI-BS-Game-Resources\\P26\\Studio100\\launcher-deployment.json",
+      "sha256": "98308e8052cbea912fa0c4835ffb16ee2787abab686e7ed5c6e1a72d0d481793"
+    },
+    "portable_backup": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\checkpoint26_prepare\\26B-local_receipt.json",
+      "sha256": "8f8a9c34762fc000e1cb8c674d5a350c4ab0ffc94d4ef3b69d19e95ce5162d1f"
+    },
+    "persistent_design": {
+      "path": "C:\\Users\\footb\\.codex\\visualizations\\2026\\11\\01\\01a19491-7a5c-71e0-a6ba-0dc4a3f58f44\\P27_persistent_launch_design\\handoff.json",
+      "sha256": "d688e903395928b44e124ee4d47aa74f366f72d79382a23e80650898fe281cce"
+    }
+  },
+  "complete_current_source_and_preimages": "26A archive; complete portable package26B; original non-closeout patch recipes/preimages are retained by those manifests",
+  "next_step": "Read P27_persistent_launch_design/README.md and handoff.json; implement separate saved-chapter read-only Host export/publication plus capability-gated persistent player-world launch and resume without changing isolated Play. Add focused resume/cancellation/binding preflight and real current-route restart checks.",
+  "cloud_uploaded": false,
+  "goal_complete": false,
+  "disk_free_bytes": {
+    "C": 73685741568,
+    "D": 111363391488,
+    "E": 146813599744
+  }
+}

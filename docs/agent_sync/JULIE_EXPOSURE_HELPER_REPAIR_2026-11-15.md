@@ -1,0 +1,9 @@
+# Exposure-only campaign continuation
+
+Repaired the all-zero `work/julie-exposure-20261114/prepare_held08.py` from its intact pre09 source preimage, retaining the damaged bytes. Restored parameterized batch support and added exposure-only, pause, prior-form, duplicate-organization/domain and failed-source guards. Existing IONOS SMTP dispatcher unchanged. Six policy checks and four actual helper admission checks passed without sending test messages. Corruption cause remains unknown; no wider filesystem repair claimed.
+
+Sent one tailored Revue editorial introduction from brett@stehouwerproductions.com, Reply-To stehouwerjulie@gmail.com, after official-source verification, connected Gmail zero-result search, readonly five-folder IONOS history, owner DB/journal and suppression checks. IONOS accepted; recipient delivery unconfirmed. No booking, scheduling or participation request. No attachments, retry or background run.
+
+AI-BS queue reconciled and actual owner-bound receipt reader verified: 86 provider-accepted / 88 unique email attempts, two prior unresolved attempts; 404 research rows. Revue outcome and four reviewed holds recorded. MovieMaker already contacted through another inbox. Film Courage fetch failed; THR has no qualified shared editorial email; Arts and Culture Texas has a Story Ideas form but no established Texas project connection. Indie Film Podcast remains paused. Existing five confirmed form outcomes and WZZM unconfirmed submission retained; do not repeat.
+
+Local receipt: `work/julie-exposure-20261114/repair13-final-receipt.json`. Review: `output/outreach/julie-exposure-20261114/repair13-review.html`. Sender helper integrity receipt: `work/julie-exposure-20261114/helper-repair13-receipt.json`. No app source release, backend restart, mailbox provisioning or website change.

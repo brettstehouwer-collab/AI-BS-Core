@@ -1,0 +1,38 @@
+MEMORY AND DRIVE DIAGNOSIS — 25 October 2026
+Read-only measurements at21:42–21:46UTC /17:42–17:46EDT. Units below are GiB(2^30bytes), not decimalGB. Raw counters retained alongside this report.
+The pasted operator figures are a historical user-reported snapshot. Current numbers differ.
+
+CONFIRMED
+- PID33936 is the current-user Codex app-server executable C:/Users/footb/AppData/Local/OpenAI/Codex/bin/2993767bd1dfb009/codex.exe; parentChatGPT.exe PID31220; created2026-10-25T05:47:46.594381Z. Raw command line/environment not exported.
+- At21:45:10UTC private commit135.392GiB; working set17.258GiB. The first own sample21:43:12 had135.264GiBprivate commit. Increase130.695MiB over117.815seconds. This proves growth in a short window, not the underlying allocator/code path or unbounded leak.
+- System commit189.236GiB /191.609GiB =98.76percent, about2.373GiBcommit headroom.
+- Physical RAM total61.647GiB; used52.042GiB(about84.4percent). Commit pressure is not the same as physical-RAM percentage.
+- WMI pagefile counters21:45: C:/pagefile.sys allocation133080reportedMB=129.961GiB, currentusage51376reportedMB=50.172GiB, peak54210MB=52.939GiB.
+- Separate file-metadata query21:46:04UTC reports length142438567936bytes=132.656GiB. This later reading differs from earlier allocation counter; do not mix timestamps into one exact snapshot. File contents were never opened.
+- Global AutomaticManagedPagefileFalse; per-drive C:InitialSize0/MaximumSize0 and registry C:/pagefile.sys0/0. These indicate per-drive system-managed configuration despite the global all-drives checkbox beingfalse. No settings changed.
+- C:at21:45:free43280969728bytes=40.307GiB(2.41percent). D/E/Fremain approximately56.52/107.47/61.44GiBfree.
+- Selected ComfyUI PythonPID13264 has privatecommit8.441GiB. It was not stopped or modified.
+- C:/Users/footb/.ollama is a Junction to C:/AI-BS/models/ollama. They must not be counted as two independent model stores. No model traversal/hash/delete occurred.
+- Other listed permanent folder sizes remain USER-REPORTED, not freshly measured; existence/link metadata only was checked.
+
+INTERPRETATION
+The dominant confirmed commit consumer is CodexPID33936. Large commit demand and the large active pagefile explain the current resource pressure. Pagefile growth is consistent with the earlier C:free-space decline, but this investigation lacks an initial pagefile-size reading at20:56 and cannot attribute every historical byte of decline to one file.
+Private commit is not equal to bytes physically stored in pagefile.sys. Process PagefileUsage/PrivateUsage are commit accounting despite their names; the pagefile's CurrentUsage is a different metric. Reserving virtual address space alone is not commit.
+No official OpenAI source reviewed establishes the specific cause of this process retaining135GiB or a guaranteed fix/version. The installed process identity is verified; a memory-leak/code-path diagnosis remains UNKNOWN.
+
+SAFE NEXT STEP
+The publishing site is restored and checkpointed. Stop major work here. Fully quit/reopen Codex after this reply and after preserving any other unsent work; then verify the old process ended and remeasure commit, pagefile allocation/currentusage and C:free.
+A process exit releases its commit. It does NOT guarantee immediate pagefile shrink or115GBdisk recovery. Windows may keep an allocated paging file large; persistent paging/crashdump changes require separate review, not blind deletion.
+Do not delete pagefile.sys, shrink/disable paging under this pressure, kill ComfyUI, or delete model/cache/manuscript/archive folders to mask the dominant process issue.
+If quitting the UI leaves33936alive, inspect exact current identity rather than blind PIDkill/reuse. No termination/restart was executed by this task.
+After restart also verify publishing root/www200 and APIhealth through their approved read-only checks. Site origin has its own logon task; connector configuration/admission is saved, but actual application/system restart acceptance has not been performed.
+
+SOURCES
+https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-pagefileusage
+https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex
+https://learn.microsoft.com/en-us/windows/win32/memory/page-state
+https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/how-to-determine-the-appropriate-page-file-size-for-64-bit-versions-of-windows
+https://learn.chatgpt.com/docs/reference/troubleshooting
+OpenAI guidance advises waiting for active chats to complete before an app restart; it does not diagnose this memory footprint.
+No raw logs, credentials, visitor records, memory dumps, recursive disk scans, installs, cleanup, paging edits, process stops or reboot were performed.
+

@@ -1,0 +1,191 @@
+{
+  "utc": "2026-11-02T00:34:30.577158+00:00",
+  "scope": "Incremental in-progress source checkpoint, not final release; source may include pending private-stage long-path fix",
+  "base_checkpoint": "https://drive.google.com/drive/folders/1eSw3hsqo6sbqolVJq_B6Vq7E1mfuIT7q",
+  "base_archive_sha256": "b9d27852e72918a6637fd4c69bbd51a252d10fdafb2c975c83d309ad490ed469",
+  "branch": "codex/audit-v532976-20261031",
+  "commit": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "files": [
+    {
+      "path": "docs/game_engine/game_system_coverage_review.md",
+      "bytes": 11611,
+      "sha256": "b7817065b3c1577be15371c610f3c03e2d00056c2607a1f31633ac080742a714"
+    },
+    {
+      "path": "engine/CMakeLists.txt",
+      "bytes": 26128,
+      "sha256": "2e38ee88ba59526a6ddad4a7b8217f9be2bd0b6d53aca2caca410025a131f483"
+    },
+    {
+      "path": "engine/apps/asset_cooker.cpp",
+      "bytes": 18246,
+      "sha256": "1383f221ead95b05eb9bfeb972edc50e5ba9a0ab6b62865ef014471bf47ddff2"
+    },
+    {
+      "path": "engine/apps/content_host.cpp",
+      "bytes": 16028,
+      "sha256": "5baeac25e063ba0265aac34ac2db3ff4eadfa0a69d5fa4cd211db6b555b1f27c"
+    },
+    {
+      "path": "engine/apps/creator_viewport.cpp",
+      "bytes": 11301,
+      "sha256": "c601e79850c16dc9af791f00bcf7d67dc5f3c6abf34ed94207fe0cddc941ecd1"
+    },
+    {
+      "path": "engine/apps/durable_world.cpp",
+      "bytes": 102657,
+      "sha256": "31d3ccaf8e121cda1652fed249764f2b015102a44a6ba71a01860715f42d2b35"
+    },
+    {
+      "path": "engine/cmake/NativeCapabilities.json.in",
+      "bytes": 332,
+      "sha256": "4f0dd8be9830160033c2eb1696e0f1bf32f60992bb916762f26467b6229f3063"
+    },
+    {
+      "path": "engine/examples/sdk_consumer/CMakeLists.txt",
+      "bytes": 360,
+      "sha256": "0420b1ecad3e6aedda17761f2b6d71460d38281320c56ce22c1a9b52083c8557"
+    },
+    {
+      "path": "engine/games/content_authoring.cpp",
+      "bytes": 36944,
+      "sha256": "66260e8dd9301a219f73bc4b896e8f9e4ddac38eb1912c2d33b796db5df95cba"
+    },
+    {
+      "path": "engine/games/first_boot_content.cpp",
+      "bytes": 30263,
+      "sha256": "cde0a7433a5a4787c2cd3251fa9d1847fc557cad21c0266ae0dab9abe5238018"
+    },
+    {
+      "path": "engine/include/aibs/asset_store.hpp",
+      "bytes": 2179,
+      "sha256": "0a7dbb0cd7a4ff49e50253fca4bc33da78b01fb05ea2413612bc543c87c22725"
+    },
+    {
+      "path": "engine/include/aibs/content_authoring.hpp",
+      "bytes": 5380,
+      "sha256": "d48cf22637d6cd6bc7bfc81e18b07807ceb646d4f06b806d753daeadeb0f28a5"
+    },
+    {
+      "path": "engine/include/aibs/first_boot_content.hpp",
+      "bytes": 4471,
+      "sha256": "4e206a4efe29f3b76ff7c474d6794c7a52e222440d3c8657cc567ff22e6fa19a"
+    },
+    {
+      "path": "engine/include/aibs/placed_assets.hpp",
+      "bytes": 705,
+      "sha256": "fbca243f6cf5496d0d3b085fd9fa38cbc8d55350cbfbfd6520ccfaba07de415e"
+    },
+    {
+      "path": "engine/out/placement_ui_cpu_20261102_2.log",
+      "bytes": 2898,
+      "sha256": "c6d71e479c75c1662ceb6bca4a8a4b17fd402181abe58c94a33877785867b239"
+    },
+    {
+      "path": "engine/out/placement_ui_cpu_20261102_2/verification.json",
+      "bytes": 1977,
+      "sha256": "d79142c0f34bcce27fcb993d795181aa69d18bbc4ddf7b5319b82f6e4c133674"
+    },
+    {
+      "path": "engine/out/placements-core-first-tests.log",
+      "bytes": 920,
+      "sha256": "db139ec2ba13df3a7894e0c74a4a6a3e1505ca6cdc61086eab0f0ecc61b2d7aa"
+    },
+    {
+      "path": "engine/src/asset_store.cpp",
+      "bytes": 15976,
+      "sha256": "3d395002ef51b7cc02a2b31ab83a50c7b89b07a2cea86dc39f5d06ca9a4c7ae6"
+    },
+    {
+      "path": "engine/src/placed_assets.cpp",
+      "bytes": 4381,
+      "sha256": "9ded21f459513073b8c851a1b00fc86d28a197210f6bf4d5966602f3b48ac2b0"
+    },
+    {
+      "path": "engine/tests/asset_placement_content_tests.cpp",
+      "bytes": 12568,
+      "sha256": "220f14f4f9e2ce4ebdf1d675cd09dabd283a8a9cd3fef9d6af9222817e4ccf9e"
+    },
+    {
+      "path": "engine/tests/asset_store_tests.cpp",
+      "bytes": 10968,
+      "sha256": "a73889d2c8a7bb50a0af5b9f931ca31eef1970bdcb0eb51191b34cc1136b41aa"
+    },
+    {
+      "path": "engine/tests/placed_assets_tests.cpp",
+      "bytes": 3957,
+      "sha256": "c39aedaf5821f58157c69a2ea07338060906888dd1f9b1999555b294999c3d97"
+    },
+    {
+      "path": "engine/tests/test_asset_placement_view.py",
+      "bytes": 24173,
+      "sha256": "24aecace1393d98cc210e81cee880e898af66803a52050121a609fe597e9b914"
+    },
+    {
+      "path": "engine/tests/verify_asset_cooker.py",
+      "bytes": 22444,
+      "sha256": "82df8634845e8feed29106551f45cc28f7e2e33b13e62488996615898cf8cdb9"
+    },
+    {
+      "path": "native_studio/game_build_view.py",
+      "bytes": 38079,
+      "sha256": "d4765311053d517dc7d61b190684efdeb221510d4b2044ad6a77814ee55bbfab"
+    },
+    {
+      "path": "native_studio/game_engine/content_commands.py",
+      "bytes": 16788,
+      "sha256": "d9e3afe314f82ad9151c2189863197990a136b3d85c26f5e0130fb78c8aa0042"
+    },
+    {
+      "path": "native_studio/game_engine/content_jobs.py",
+      "bytes": 4497,
+      "sha256": "965799b12d94fde3ac8f0cef9bf743ce0337ffbd88f3d80e5e30e987cc2cf8ca"
+    },
+    {
+      "path": "native_studio/game_engine/content_play.py",
+      "bytes": 11144,
+      "sha256": "556193ed024147c17775c057a517cb667b8ce8f6e51b1cf43414cfa770fa568c"
+    },
+    {
+      "path": "native_studio/game_engine/content_preview.py",
+      "bytes": 10059,
+      "sha256": "30179ddf7db2d397037dbe386cf9e09f1cb67ebc0920a76ff7ada0a1fd1082bd"
+    },
+    {
+      "path": "native_studio/game_engine/content_proposals.py",
+      "bytes": 4828,
+      "sha256": "d0dfaf21a5a5afbd66e30a058f41a0738c43a4f1d49cb58b32adc8b15e6dd090"
+    },
+    {
+      "path": "native_studio/game_engine/content_view.py",
+      "bytes": 53482,
+      "sha256": "735aeee721abb52ea2a0175fbe1e36cc7c57c322a17e15943a0e6526bd592ef3"
+    },
+    {
+      "path": "native_studio/game_engine/creator_client.py",
+      "bytes": 18798,
+      "sha256": "4bdd893485f4e465fe7198665488fe4d93348db13d73a949ad8abc1ae5ca0106"
+    },
+    {
+      "path": "native_studio/game_engine/creator_viewport.py",
+      "bytes": 9037,
+      "sha256": "3c44e86f9bae46db1637376cafce370487a2f84caba9f4c5ac7b6719cc00393d"
+    },
+    {
+      "path": "native_studio/game_engine/project_assets.py",
+      "bytes": 7664,
+      "sha256": "043cfe1d34e1a0960a4198a093336022504c758ac04d5edd00a90312a63a504d"
+    }
+  ],
+  "verified": [
+    "Native placement canonical codec/journal and legacybytecompat tests passed",
+    "ActualUI privatePreview/Apply/UndoRedo/Save/newownerreopen passed14checks; sourcefolder movedaway"
+  ],
+  "pending": [
+    "Private dependency stage extendedWindows paths",
+    "NativeGPU placement/restart/Play checks",
+    "FullnativePythonSDKmatrices",
+    "Frozenrelease97 andfinalcumulativebackup"
+  ],
+  "retained_Studio": "5.329.96 unchanged"
+}

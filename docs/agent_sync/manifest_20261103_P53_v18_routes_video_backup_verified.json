@@ -1,0 +1,52 @@
+{
+  "id": "20261103_P53_v18_routes_video_backup_verified",
+  "at": "2026-11-03T21:34:56.998403+00:00",
+  "branch": "codex/audit-v532976-20261031",
+  "head": "55c99f116e2c05025dd03e4b5e8a8f53b93cced7",
+  "goal_complete": false,
+  "deployed": "Studio104 SDK0.16.5 with installedv10art unchanged",
+  "new_private_scope": "v18right-wristband chapter with complete independent pack closure",
+  "routes_and_normal_restarts": "D:\\AI-BS-Game-Resources\\P53\\V18OpeningIntegration\\packaged-current-routes-verification.json",
+  "recording": "D:\\AI-BS-Game-Resources\\P53\\V18OpeningIntegration\\repair-verification.json",
+  "video": "D:/T53/repair-v18-recorded/walkthrough.mp4",
+  "video_seconds": 87.961,
+  "audio_or_desktop_capture": false,
+  "human_pacing_or_gameplay_fps_measured": false,
+  "backup": {
+    "archive": "D:\\AI-BS-Game-Resources\\Backups\\53A_Private_V18_Chapter_Routes_And_Walkthrough.zip",
+    "bytes": 19943798,
+    "sha256": "91e262da87715552dd80202fc01330f31adc9cf6de098fe42425496623d7da17",
+    "members": 149,
+    "local_verified": true,
+    "drive_restore_verified": true,
+    "at": "2026-11-03T21:34:56.998403+00:00",
+    "drive_file_id": "1Wtf4tD6Ctc5X4rxtvY7tGnWETB0A9Fwg",
+    "drive_parent_id": "1RI6dqX89oLqvdUGU_rcBY04ec7EFUFQg",
+    "loose_video_file_id": "1Hlubhg3j1ufz4bJ5gepcUz11g3zZ1udY",
+    "crc_verified": true,
+    "exact_member_set_verified": true,
+    "all_member_hashes_verified": true,
+    "scope": "Private v18chapter/pack closure, both route and normal restart evidence and88second native recording; no original family media/usersaves or executable binaries; final opening acceptance incomplete"
+  },
+  "monitor_readback": "available",
+  "all_owned_processes_joined": true,
+  "user_feedback_pending": "Optional most-unlike face feature question; no answer assumed",
+  "presentation_findings": [
+    "Small-font white reading panels dominate1080p screen",
+    "Authoring source/XML paragraph references appear in default player reading flow",
+    "Adam visible in sampled moving frames; current face/fabric still stylized/unapproved"
+  ],
+  "remaining": [
+    "Readable warm native story presentation and naturalistic Adam likeness",
+    "Original recording listening/caption review and optional binding",
+    "Actual user combined gameplay performance and8-12minute first-time pacing",
+    "Final accepted packaged opening/launcher verification and final backup"
+  ],
+  "next_step": "Inspect native reading-panel implementation and test its readability/provenance layout without changing memory wording, source attribution, choice or save behavior. Continue adult likeness from supplied references and user feedback.",
+  "storage_free_gib": {
+    "C": 59.89,
+    "D": 58.24,
+    "E": 136.73
+  },
+  "organized_local_video": "D:\\AI-BS-Game-Resources\\P53\\V18OpeningIntegration\\First_Boot_v18_Native_Repair_Walkthrough.mp4"
+}

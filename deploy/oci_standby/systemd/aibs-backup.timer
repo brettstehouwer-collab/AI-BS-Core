@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodic AI-BS Consistent SQLite WAL Backup (Every 5 Minutes)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=aibs-backup.service
+
+[Install]
+WantedBy=timers.target

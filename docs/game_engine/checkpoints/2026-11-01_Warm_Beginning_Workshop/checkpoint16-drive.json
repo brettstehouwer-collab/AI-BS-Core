@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "drive_full_roundtrip_verified",
+  "completed_at": "2026-11-02T12:04:58.633763+00:00",
+  "archive_path": "D:/AI-BS-Game-Resources/Backups/16_Native_Warm_Opening_And_Creator.zip",
+  "archive_bytes": 19554076,
+  "archive_sha256": "7771e446ab750b7862135647ac7427b98415938f64d52b8bc3c23753a74bc199",
+  "embedded_manifest_sha256": "1ed3aa4dd8a74634f086fbd778da6477b8cab295857b3306bac8495df9f2ac88",
+  "selected_file_count": 829,
+  "crc_all_entries_passed": true,
+  "full_member_sha_length_readback_passed": true,
+  "cache_path": "D:\\AI-BS-Game-Resources\\cache\\7771e446ab750b7862135647ac7427b98415938f64d52b8bc3c23753a74bc199.zip",
+  "drive_file_id": "1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC",
+  "drive_url": "https://drive.google.com/file/d/1Cw-sOI-pSihxkz5CG3Uil8aCLsiJyhLC/view?usp=drivesdk",
+  "final_report_sha256": "464c3cc72d54f6b9b17a5e2783e10bee44cbc1cc15fc0f9411f0356d3d897d25",
+  "goal_complete": false,
+  "source_sdk": "0.13.0",
+  "installed_studio": "5.329.98/SDK0.11.0",
+  "base_restore_manifest": "https://drive.google.com/file/d/1HBH2CW74UWc7O8OsorQIznm4erIAPrmC/view?usp=drivesdk",
+  "raw_family_media_included": false,
+  "private_master_ledger_contents_or_fingerprint_included_in16": false,
+  "historical_base_limitation": "Retained base14 includes historical checkpoint13 document-promotion digest metadata for the private MASTER ledger; no MASTER contents.16 omits that metadata; prior archives remain immutable."
+}

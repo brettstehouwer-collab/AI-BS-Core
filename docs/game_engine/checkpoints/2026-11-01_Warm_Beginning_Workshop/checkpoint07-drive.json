@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-02T05:19:29.572937+00:00",
+  "drive_file_id": "1CjazcHVmevR7AdEvktmkOGL_4AQtA75L",
+  "drive_url": "https://drive.google.com/file/d/1CjazcHVmevR7AdEvktmkOGL_4AQtA75L/view?usp=drivesdk",
+  "bytes": 13786782,
+  "sha256": "c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a",
+  "files": 2300,
+  "source_manifest_sha256": "7b65fa92c499f20557243dd6f3efbcc5c7ac5cc42872ad1bda7446666c9a40dd",
+  "cached_path": "D:\\AI-BS-Game-Resources\\cache\\c8dd61b70b430401e259a43666d9f8db0c7e00c9ae599719131866e8b526079a.zip",
+  "remote_full_byte_verification": "Authenticated retrieval length/SHA matched; ZIP CRC and source-manifest byte checksum matched",
+  "scope": "Selected complete UI/frontend code, native UI masters, compiled application JS/CSS, configuration and actual deployment evidence. Unchanged bulk public media is not duplicated; full1144-file cloud manifest is included and full candidate remains onD. Native source checkpoint06 remains separate and exact. No environment files, credential stores or original family media. Not completion of the native opening.",
+  "native_source_unchanged_inputs": 257,
+  "native_source_sha256": "9774833c71487c4d0065b2bf4b15c8f655d4bdbb0a9bce227acd079d694f2539",
+  "post_seal_annotations": [
+    "docs/game_engine/AI_BS_GAME_ARCHITECTURAL_BUILDER_LEDGER.md",
+    "engine/BUILD_STATUS.md",
+    "engine/milestone_queue.json",
+    "docs/game_engine/resource_catalog.json",
+    "deployment/deploy_state.json"
+  ],
+  "post_seal_new_receipts": [
+    "checkpoint07-local.json",
+    "checkpoint07-drive.json"
+  ],
+  "application_version": "v5.329.97",
+  "hosting_version": "df57a83b8e7ff813",
+  "live_url": "https://ai-bs-dashboard.web.app/?tab=executive_cockpit&view=pro",
+  "goal_status": "active; native opening remains unfinished",
+  "free_bytes": {
+    "C": 85087952896,
+    "D": 181118492672,
+    "E": 146813599744
+  },
+  "monitor_observation": {
+    "status": "passed",
+    "stage": "warm-beginning-companion-source-sdk-tested",
+    "source_freshness": {
+      "status": "current",
+      "file_count": 261,
+      "method": "Modification-time inventory; deletions and backdated edits require source-manifest verification"
+    },
+    "documentation_freshness": {
+      "status": "changed",
+      "file_count": 256
+    },
+    "source_changed_since_build": false
+  },
+  "hosting_monitor_version": "v5.329.97"
+}

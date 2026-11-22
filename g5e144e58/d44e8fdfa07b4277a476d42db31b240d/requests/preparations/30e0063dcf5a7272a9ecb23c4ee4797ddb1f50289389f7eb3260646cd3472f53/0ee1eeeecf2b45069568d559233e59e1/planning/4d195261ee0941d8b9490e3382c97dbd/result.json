@@ -1,0 +1,34 @@
+{
+  "state": "NEEDS_CLARIFICATION",
+  "input_sha256": "4db72ec6098cfbc30713767805b55b6c85bf0a672f03813473b76a4ca5403ad7",
+  "proposal": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": [
+      "Should42 apply to every caller?"
+    ]
+  },
+  "error_code": null,
+  "finished_at_utc": "2026-11-15T22:43:37.921766+00:00",
+  "elapsed_seconds": 0.016,
+  "response_sha256": "a8a522c49b79beb6b32b35bd6d042e4e37360433eaf9fe3de52836a97df56c22",
+  "response_bytes": 193,
+  "public_json": {
+    "summary": "Update the selected implementation only.",
+    "steps": [
+      {
+        "path": "src/app.py",
+        "change": "Return42 instead of the previous value."
+      }
+    ],
+    "questions": [
+      "Should42 apply to every caller?"
+    ]
+  },
+  "entry_sha256": "b644c71527d319606e62bcfa8c0c43b1d3094d0e1f94f5a9200993de4d5eba1d"
+}

@@ -1,0 +1,9 @@
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "/usr/bin/nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+    "bip": "172.19.0.1/16"
+}

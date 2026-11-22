@@ -1,0 +1,103 @@
+{
+  "actor": "/root/publishing_origin",
+  "utc": "2026-10-25T21:35:43.075376+00:00",
+  "authorization": "Root GO after direct user publishing restoration authorization",
+  "status": "persistent_runtime_ingress_consistent_api_verified",
+  "restart_performed": false,
+  "original_failed_health_target_status": "UNKNOWN; not retained by first controller",
+  "zero_outage_claimed": false,
+  "live_file_changes": [
+    {
+      "source": "user",
+      "after_sha256": "c93822c6b211ca39fe12553692188b1c160f78ab93f23cea24cc0c6842f57b3c"
+    },
+    {
+      "source": "scoped",
+      "after_sha256": "30bc88a23551fe7eb55e83c33c39b3b5b6b83c15944f0189ba05984856dc0b36"
+    },
+    {
+      "source": "boot",
+      "after_sha256": "9ccbed9820d7afdb2f62ad930d32c002170bf0fc7e7c50cd540eb7c7a0f8fc65"
+    }
+  ],
+  "checks": [
+    {
+      "utc": "2026-10-25T21:35:43.327526+00:00",
+      "phase": "before_source_reconciliation",
+      "target": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "online": true
+    },
+    {
+      "utc": "2026-10-25T21:35:43.526226+00:00",
+      "phase": "before_source_reconciliation",
+      "target": "https://api.brettstehouwer.live/health",
+      "status": 200,
+      "online": true
+    },
+    {
+      "utc": "2026-10-25T21:35:44.092706+00:00",
+      "phase": "after_source_reconciliation",
+      "target": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "online": true
+    },
+    {
+      "utc": "2026-10-25T21:35:44.239502+00:00",
+      "phase": "after_source_reconciliation",
+      "target": "https://api.brettstehouwer.live/health",
+      "status": 200,
+      "online": true
+    }
+  ],
+  "user_connector": {
+    "pid": 14588,
+    "created": 1792963938.9991512,
+    "executable_identity_checked": true,
+    "arguments_identity_checked": true
+  },
+  "api_connector": {
+    "pid": 6720,
+    "created": 1792963947.253989,
+    "executable_identity_checked": true,
+    "arguments_identity_checked": true
+  },
+  "system_connector_untouched": {
+    "pid": 6252,
+    "created": 1792907174.92084,
+    "executable_identity_checked": true,
+    "arguments_identity_checked": true
+  },
+  "protected_peers_unchanged": true,
+  "six_core_controls_false": true,
+  "paired_core_pin_matches": true,
+  "readiness": [
+    {
+      "pid": 14588,
+      "metrics_port": 20242,
+      "ha_connections": 4.0,
+      "raw_metrics_not_retained": true
+    },
+    {
+      "pid": 6720,
+      "metrics_port": 20243,
+      "ha_connections": 4.0,
+      "raw_metrics_not_retained": true
+    }
+  ],
+  "registered_connectors": [
+    {
+      "identity_sha256": "6d5a1f2d6bf69b1a9c85a7a77a13c9321620432e0b71b129e3aa96a32e75cc9c",
+      "run_at": "2026-10-25T21:32:21.72461Z",
+      "edge_connections": 4,
+      "version": "2026.10.0"
+    },
+    {
+      "identity_sha256": "741d2fc82bd607a1c3adc933072ce7a985d913c89778bb9935d7913f80459e4a",
+      "run_at": "2026-10-25T21:32:25.914784Z",
+      "edge_connections": 4,
+      "version": "2026.10.0"
+    }
+  ],
+  "finished_utc": "2026-10-25T21:35:44.756289+00:00"
+}

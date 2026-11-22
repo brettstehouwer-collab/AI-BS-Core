@@ -1,0 +1,78 @@
+{
+  "kind": "project_preparation",
+  "request_id": "6c955691a9ca4f42871403dadbf9faea",
+  "owner": "firebase:fixture:alice",
+  "plan": {
+    "request_id": "6c955691a9ca4f42871403dadbf9faea",
+    "repository_id": "ai-bs",
+    "objective": "Prepare current code without executing it.",
+    "files": [
+      {
+        "relative_path": "src/app.js",
+        "role": "editable"
+      },
+      {
+        "relative_path": "tests/test_app.js",
+        "role": "verification"
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "js",
+        "profile": "node_test",
+        "targets": [
+          "tests/test_app.js"
+        ]
+      }
+    ],
+    "limits": {
+      "check_seconds": 30,
+      "total_seconds": 180,
+      "output_bytes": 262144
+    }
+  },
+  "plan_sha256": "d74e49d8aab6a5bc7a730277c156e9f91ad088aa1f6ab0d5a048d3df23a56536",
+  "repository_policy_sha256": "b42036172fa45265431f5d6cfa2edabf8c295661a708c219f30208df246f4b20",
+  "snapshot": {
+    "schema_version": 1,
+    "state": "SNAPSHOT_ONLY",
+    "authorized": false,
+    "executed": false,
+    "commit": "098fd1b3ff9f99ac3f3a85c609c39f3831502250",
+    "files": [
+      {
+        "relative_path": "src/app.js",
+        "role": "editable",
+        "length": 24,
+        "sha256": "5d8f65d2774e206bc9f7a7a4ad39ca2dc563b5c31e46ab57ef4874961237ce29"
+      },
+      {
+        "relative_path": "tests/test_app.js",
+        "role": "verification",
+        "length": 35,
+        "sha256": "2d61c4be568a2a8a25e07eb3356b46b7884bd9095e66fefc15ec790440f3056c"
+      }
+    ],
+    "byte_count": 59,
+    "captured_at_utc": "2026-11-15T04:57:50.196003+00:00",
+    "snapshot_sha256": "c8669adc6f171e7d07607817156ea49ec32a7058389bc478ec2ba0e39468a4c2"
+  },
+  "checks": [
+    {
+      "check_id": "js",
+      "argv": [
+        "node",
+        "--test",
+        "tests/test_app.js"
+      ]
+    }
+  ],
+  "review_digest": "e9665a827d110518e7641b33b86e7afb4088bed0b99f17f4a35e77502c21b7f1",
+  "state": "PREPARING",
+  "worker": {
+    "pid": 39496,
+    "created": 1794718667.2753737
+  },
+  "created_at_utc": "2026-11-15T04:57:50.197004+00:00",
+  "entry_sha256": "e0a6cb6ffb4f0f8f30b53bb467d2022c28b224b51cae44409d9983b3f59ea6e7"
+}

@@ -1,0 +1,50 @@
+{
+  "kind": "preparation_plan_input",
+  "owner": "firebase:fixture:alice",
+  "request_id": "a83a2525378c48b9a343e21d01d1b820",
+  "plan_id": "41da5858a08d48218359448d63e01a5c",
+  "snapshot_sha256": "5117cda351b38326ef36ccbc470ff34521b6e315ba4a0832c1d593a9d4f1c73d",
+  "review_digest": "9811ef8f8e85b0ddabb05b318f16b4ffa214a8cc3909fb1c67895b8770b11cb0",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "33325c851981980110489b91fdc4ce4b0e6ec2308e11fb8ec74b84eba981e065",
+        "excerpt": "value = 1\n# repeated value = 1\n",
+        "excerpt_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "excerpt": "# selected immutable test fixture; never executed\n",
+        "excerpt_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "c69958e45835b80bff5e89ff37bd77d246b38e145856d8320641c4d6531a1de3",
+  "worker": {
+    "pid": 33764,
+    "created": 1794666055.1427324
+  },
+  "created_at_utc": "2026-11-14T14:21:01.510037+00:00",
+  "entry_sha256": "79366072d07bce1fbdb6c4c6bcfb15dfb1f26f65a259b647949c87b982c178e0"
+}

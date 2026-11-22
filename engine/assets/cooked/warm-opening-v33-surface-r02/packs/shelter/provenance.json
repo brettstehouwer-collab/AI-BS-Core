@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "asset_id":"eb94e6e1-36b9-4466-90ef-82ba371811d0",
+  "name":"Warm Beginning shelter proxy enclosure kit v02",
+  "source":{"sha256":"424f2cce2a6ece816f0c1842a573bb0ce006795580ade86b02d477afd8d0c1b9","bytes":1415376},
+  "materials":{"sha256":"611991dca7584edae6c50e4a294f3a0cd279daa15f40ae2bbbcf4473dfe1a53c","bytes":690},
+  "license":{"sha256":"0799d1bf09687cf7089cf7a32fbbfdcf3317a359e89b6a967ebfee150fdd83c2","bytes":294},
+  "license_review":"Supplied declaration copied verbatim; ownership/permission not inferred",
+  "importer":{"name":"aibs-obj","format_version":1},
+  "options":{"units":"meters","up_axis":"+Y","axis_conversion":"none","material_model":"opaque-base-color-emission-v1","external_material_libraries":"ignored-explicit-material-table-only"},
+  "cooked":{"file":"2a877bab9419b6cc44614ea39e1d2b1469379debfa796d0a4378c7ebafcdeeeb.aibmesh","sha256":"2a877bab9419b6cc44614ea39e1d2b1469379debfa796d0a4378c7ebafcdeeeb","bytes":498568}
+}

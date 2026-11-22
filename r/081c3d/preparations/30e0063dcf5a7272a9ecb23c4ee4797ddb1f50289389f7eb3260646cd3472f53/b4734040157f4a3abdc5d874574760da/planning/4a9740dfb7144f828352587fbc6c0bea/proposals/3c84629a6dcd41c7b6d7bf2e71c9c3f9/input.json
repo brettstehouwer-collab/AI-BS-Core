@@ -1,0 +1,62 @@
+{
+  "owner": "firebase:fixture:alice",
+  "request_id": "b4734040157f4a3abdc5d874574760da",
+  "plan_id": "4a9740dfb7144f828352587fbc6c0bea",
+  "snapshot_sha256": "4a6b0cf47e746f8d67844466229bcce0a02440e4c127ef2e87b55bb6ca354f9e",
+  "review_digest": "812ca8df2a2671093a4a55379762f4f15c65a08b35e5e0e4c6e7429ee48de57a",
+  "kind": "preparation_proposal_input",
+  "proposal_id": "3c84629a6dcd41c7b6d7bf2e71c9c3f9",
+  "reviewed_plan_sha256": "a3dd52c50e88b0bab98a4df0022c9e7fd26c1a307f70793dac914ca583ab01e9",
+  "model_payload": {
+    "objective": "Change value from1 to42; preserve all tests and dependencies.",
+    "reviewed_plan": {
+      "summary": "Change only selected implementation values.",
+      "steps": [
+        {
+          "path": "src/app.py",
+          "change": "Change the selected value to42."
+        }
+      ],
+      "questions": []
+    },
+    "source_files": [
+      {
+        "path": "src/app.py",
+        "role": "editable",
+        "sha256": "585c93666fcb046b7b264d3fa73202aa2a38254ae82a4b3ba19e873c2d5a9886",
+        "content": "value = 1\n",
+        "source_complete": true
+      },
+      {
+        "path": "tests/test_app.py",
+        "role": "verification",
+        "sha256": "53758925376d4e5a2fda904136f8578047e7102a78292fd37882ee6777eaede8",
+        "content": "# selected immutable test fixture; never executed\n",
+        "source_complete": true
+      }
+    ],
+    "checks": [
+      {
+        "check_id": "python",
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "tests.test_app"
+        ]
+      }
+    ],
+    "editable_paths": [
+      "src/app.py"
+    ],
+    "source_status": "retained_inputs",
+    "tests_status": "not_run"
+  },
+  "payload_sha256": "b4f09a141b23227ebe2cdd4eb34de649b2f20f63843e10bf0d732a59cd3b6cfa",
+  "worker": {
+    "pid": 25572,
+    "created": 1794664365.8543262
+  },
+  "created_at_utc": "2026-11-14T13:52:48.606178+00:00",
+  "entry_sha256": "b4f530262768c9ac010c91363d5ab847094316074c538f590bfd90071bff322a"
+}

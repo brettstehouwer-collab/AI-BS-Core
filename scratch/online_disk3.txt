@@ -1,0 +1,4 @@
+select disk 3
+online disk
+attributes disk clear readonly
+detail disk

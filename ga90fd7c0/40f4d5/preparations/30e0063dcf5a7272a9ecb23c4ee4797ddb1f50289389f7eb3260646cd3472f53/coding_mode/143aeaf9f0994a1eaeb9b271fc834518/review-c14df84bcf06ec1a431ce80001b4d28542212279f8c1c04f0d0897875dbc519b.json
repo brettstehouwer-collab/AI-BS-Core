@@ -1,0 +1,9 @@
+{
+  "owner": "firebase:fixture:alice",
+  "execution_id": "143aeaf9f0994a1eaeb9b271fc834518",
+  "result_sha256": "f51f769edb0cebe99dedd8b9647fe4355295c960b9aed693f749a6f3e7127e01",
+  "token_sha256": "c14df84bcf06ec1a431ce80001b4d28542212279f8c1c04f0d0897875dbc519b",
+  "expires_at": 1794719601.5652285,
+  "runtime_seal": "2f0a08b92ea14feb389ba087894d3c034c44f17c957ac63593d00f18ecb98f96",
+  "entry_sha256": "71aa19d73331ed2f9fb8ee67538f3910f399b0303d8dbe05bc3e00d70baa544c"
+}
